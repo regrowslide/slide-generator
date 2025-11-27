@@ -1,13 +1,13 @@
 'use client'
 
-import {ColBuilder} from './ColBuilder'
-import {DetailPagePropType} from '@cm/types/types'
+import { ColBuilder } from './ColBuilder'
+import { DetailPagePropType } from '@cm/types/types'
 import ChildCreator from '@cm/components/DataLogic/RTs/ChildCreator/ChildCreator'
 import MyForm from '@cm/components/DataLogic/TFs/MyForm/MyForm'
-import {R_Stack} from '@cm/components/styles/common-components/common-components'
+import { R_Stack } from '@cm/components/styles/common-components/common-components'
 import MyAccordion from '@cm/components/utils/Accordions/Accordion'
-import {useGlobalPropType} from '@cm/hooks/globalHooks/useGlobal'
-import {Fields} from '@cm/class/Fields/Fields'
+import { useGlobalPropType } from '@cm/hooks/globalHooks/useGlobal'
+import { Fields } from '@cm/class/Fields/Fields'
 import GlobalIdSelector from '@cm/components/GlobalIdSelector/GlobalIdSelector'
 
 export class PageBuilder {
@@ -16,13 +16,13 @@ export class PageBuilder {
       return (
         <R_Stack className={`max-w-xl items-stretch`}>
           <div className={`w-full`}>
-            <MyAccordion {...{label: `基本情報`, defaultOpen: true, closable: true}}>
-              <MyForm {...{...props}} />
+            <MyAccordion {...{ label: `基本情報`, defaultOpen: true, closable: true }}>
+              <MyForm {...{ ...props }} />
             </MyAccordion>
           </div>
 
           <div className={`w-full`}>
-            <MyAccordion {...{label: `ユーザー`, defaultOpen: true, closable: true}}>
+            <MyAccordion {...{ label: `ユーザー`, defaultOpen: true, closable: true }}>
               <ChildCreator
                 {...{
                   ParentData: props.formData ?? {},
@@ -41,10 +41,10 @@ export class PageBuilder {
     },
   }
 
-  static getGlobalIdSelector = (props: {useGlobalProps: useGlobalPropType}) => {
-    const {useGlobalProps} = props
-    const {admin, getAidocumentScopes} = useGlobalProps.accessScopes()
-    const {userId, companyId, fakable} = getAidocumentScopes()
+  static getGlobalIdSelector = (props: { useGlobalProps: useGlobalPropType }) => {
+    const { useGlobalProps } = props
+    const { admin, } = useGlobalProps.accessScopes()
+    // const {userId, companyId, fakable} = getAidocumentScopes()
 
     if (!admin) {
       return undefined
@@ -57,10 +57,10 @@ export class PageBuilder {
         forSelect: {
           config: {
             modelName: 'aidocumentCompany',
-            where: {type: 'self'},
+            where: { type: 'self' },
           },
         },
-        form: {style: {width: 200}},
+        form: { style: { width: 200 } },
       },
       {
         id: 'g_userId',
@@ -68,13 +68,13 @@ export class PageBuilder {
         forSelect: {
           config: {
             modelName: 'user',
-            where: companyId ? {aidocumentCompanyId: companyId} : {},
+
           },
         },
-        form: {style: {width: 200}},
+        form: { style: { width: 200 } },
       },
     ]).transposeColumns()
 
-    return () => <GlobalIdSelector {...{useGlobalProps, columns}} />
+    return () => <GlobalIdSelector {...{ useGlobalProps, columns }} />
   }
 }

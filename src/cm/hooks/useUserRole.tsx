@@ -6,6 +6,7 @@ export type userRoleType = RoleMaster & {name: string; color: string | null}[]
 export default function useUserRole({session}) {
   const {data, isLoading} = useSWR(JSON.stringify(session), async () => {
     const result = await fetchUserRole({session})
+
     return result
   })
 

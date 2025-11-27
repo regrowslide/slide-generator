@@ -2,7 +2,7 @@
 
 import prisma from 'src/lib/prisma'
 
-export const fetchTestProgressData = async ({tbmBaseId, whereQuery}) => {
+export const fetchTestProgressData = async ({ tbmBaseId, whereQuery }) => {
   // 1. 配車設定状況（便別）
   const driveSchedules = await prisma.tbmDriveSchedule.findMany({
     where: {
@@ -22,8 +22,8 @@ export const fetchTestProgressData = async ({tbmBaseId, whereQuery}) => {
     },
     orderBy: [
       //
-      {finished: {sort: 'asc', nulls: 'last'}},
-      {date: 'asc'},
+      { finished: { sort: 'asc', nulls: 'last' } },
+      { date: 'asc' },
     ],
   })
 
@@ -101,7 +101,7 @@ export const fetchTestProgressData = async ({tbmBaseId, whereQuery}) => {
         },
       },
     },
-    orderBy: [{TbmVehicle: {vehicleNumber: 'asc'}}, {date: 'asc'}, {id: 'asc'}],
+    orderBy: [{ TbmVehicle: { vehicleNumber: 'asc' } }, { date: 'asc' }, { id: 'asc' }],
   })
 
   // 直前のオドメータを取得してチェック
@@ -144,7 +144,7 @@ export const fetchTestProgressData = async ({tbmBaseId, whereQuery}) => {
         },
       },
     },
-    orderBy: [{TbmVehicle: {vehicleNumber: 'asc'}}, {date: 'asc'}, {id: 'asc'}],
+    orderBy: [{ TbmVehicle: { vehicleNumber: 'asc' } }, { date: 'asc' }, { id: 'asc' }],
   })
 
   // 直前のオドメータを取得してチェック
@@ -155,12 +155,16 @@ export const fetchTestProgressData = async ({tbmBaseId, whereQuery}) => {
       .filter(i => i.tbmVehicleId === input.tbmVehicleId)
       .pop()
 
-    const previousOdometerEnd = previousInArray?.odometerEnd ?? 0
-    const hasError = previousOdometerEnd > 0 && input.odometerStart < previousOdometerEnd
+
+
+
+    const less = input.odometerStart && input.odometerEnd && input.odometerStart > input.odometerEnd
+    const noInput = input.odometerStart === 0 && input.odometerEnd === 0
+    const hasError = less || noInput
 
     return {
       ...input,
-      previousOdometerEnd,
+      // previousOdometerEnd,
       hasError,
     }
   })

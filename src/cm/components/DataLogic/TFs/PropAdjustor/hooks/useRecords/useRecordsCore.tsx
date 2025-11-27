@@ -3,9 +3,10 @@ import {easySearchDataSwrType} from '@cm/class/builders/QueryBuilderVariables'
 import {getInitModelRecordsProps, serverFetchProps} from '@cm/components/DataLogic/TFs/Server/fetchers/getInitModelRecordsProps'
 import {tableRecord} from './useRecords'
 import {atomKey, useJotaiByKey} from '@cm/hooks/useJotai'
-import useGlobal from '@cm/hooks/globalHooks/useGlobal'
+import {dataModelNameType} from '@cm/types/types'
 
 interface UseRecordsCoreProps {
+  dataModelName: dataModelNameType
   serverFetchProps: serverFetchProps
   initialModelRecords?: Awaited<ReturnType<typeof getInitModelRecordsProps>>
   fetchTime?: Date
@@ -13,6 +14,7 @@ interface UseRecordsCoreProps {
   rootPath: string
   isInfiniteScrollMode: boolean
   resetToFirstPage: () => void
+  countPerPage?: number
 }
 
 interface UseRecordsCoreReturn {
@@ -68,29 +70,20 @@ export const useRecordsCore = (props: UseRecordsCoreProps): UseRecordsCoreReturn
   const {
     serverFetchProps,
     initialModelRecords,
-    // = {
-    //   data: {
-    //     records: [],
-    //     totalCount: 0,
-    //     easySearchPrismaDataOnServer: INITIAL_EASY_SEARCH_DATA,
-    //   },
-    //   queries: {
-    //     EasySearcherQuery: {},
-    //     prismaDataExtractionQuery: {},
-    //   },
-    // },
+    dataModelName,
     query,
     rootPath,
     isInfiniteScrollMode,
     resetToFirstPage,
+    countPerPage,
   } = props
 
   const tableId = useId()
   const globalStateKey = ['table-records', serverFetchProps.dataModelName, tableId].join('_') as atomKey
 
-  const {toggleLoad} = useGlobal()
-  const [refresedAt, setrefresedAt] = useJotaiByKey<Date | null>('useRecords-refreshedAt' as atomKey, null)
-  const [totalCount, settotalCount] = useJotaiByKey<number>('useRecords-totalCount' as atomKey, 0)
+  const jotaiKey = [dataModelName, 'userRecords'].join('_') as atomKey
+  const [refresedAt, setrefresedAt] = useJotaiByKey<Date | null>((jotaiKey + '-refreshedAt') as atomKey, null)
+  const [totalCount, settotalCount] = useJotaiByKey<number>((jotaiKey + '-totalCount') as atomKey, 0)
 
   const [records, setrecords] = useJotaiByKey<tableRecord[] | null>(globalStateKey, null)
   const [easySearchPrismaDataOnServer, seteasySearchPrismaDataOnServer] =
@@ -106,6 +99,7 @@ export const useRecordsCore = (props: UseRecordsCoreProps): UseRecordsCoreReturn
       query,
       env: 'useRecords',
       rootPath: rootPath,
+      countPerPage,
     })
 
     setEasySearcherQuery(queries.EasySearcherQuery)

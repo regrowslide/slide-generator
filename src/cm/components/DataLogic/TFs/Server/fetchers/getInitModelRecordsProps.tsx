@@ -20,10 +20,11 @@ export type serverFetchProps = {
   prismaDataExtractionQuery?: prismaDataExtractionQueryType
 }
 
-export const getInitModelRecordsProps = async (props: serverFetchProps & {query: any; rootPath: string; env: string}) => {
+export const getInitModelRecordsProps = async (
+  props: serverFetchProps & {query: any; rootPath: string; env: string; countPerPage?: number}
+) => {
   const {
     DetailePageId,
-
     dataModelName,
     additional,
     myTable,
@@ -34,6 +35,7 @@ export const getInitModelRecordsProps = async (props: serverFetchProps & {query:
     query,
     rootPath,
     env,
+    countPerPage,
   } = props
 
   const EasySearchBuilder = withEasySearch ? EasySearchBuilderCollection[rootPath] : undefined
@@ -60,9 +62,8 @@ export const getInitModelRecordsProps = async (props: serverFetchProps & {query:
     include,
     easySearchObject,
     disableOrderByFromUrlParams: false,
+    countPerPage,
   })
-
-
 
   const EasySearcherQuery = await makeEasySearcherQuery({
     EasySearchBuilder,

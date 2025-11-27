@@ -50,6 +50,7 @@ const SearchForm = ({dataModelName, col, query, addQuery}) => {
             addQuery,
             searchQueryKey,
             SearchQuery,
+            query,
           })
         }}
       >

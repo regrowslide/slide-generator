@@ -7,7 +7,9 @@ import { TbmReportCl } from '@app/(apps)/tbm/(class)/TbmReportCl'
 export type carHistoryKey = `sokoKyoriInPeriod` | `heikinNempiInPeriod` | `sokyuyuRyoInPeriod` | `fuelCostInPeriod`
 
 export const fetchRuisekiKyoriKichoData = async ({ tbmBaseId, whereQuery, TbmBase_MonthConfig }) => {
-  const { nenpiKanriDataListByCar } = await getNenpiDataByCar({ tbmBaseId, whereQuery, TbmBase_MonthConfig })
+  const { nenpiKanriDataListByCar } = await getNenpiDataByCar({
+    tbmBaseId: undefined, whereQuery, TbmBase_MonthConfig
+  })
 
   const userList = await prisma.user.findMany({
     where: { tbmBaseId },

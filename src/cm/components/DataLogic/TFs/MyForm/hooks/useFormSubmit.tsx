@@ -1,10 +1,10 @@
-import {useState, useCallback} from 'react'
-import {toast} from 'react-toastify'
-import {doStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
-import {UpsertMain} from '@cm/components/DataLogic/TFs/MyForm/helpers/UpsertMain'
+import { useState, useCallback } from 'react'
+import { toast } from 'react-toastify'
+import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
+import { UpsertMain } from '@cm/components/DataLogic/TFs/MyForm/helpers/UpsertMain'
 
-import {requestResultType} from '@cm/types/types'
-import {PrismaModelNames} from '@cm/types/prisma-types'
+import { requestResultType } from '@cm/types/types'
+import { PrismaModelNames } from '@cm/types/prisma-types'
 
 type UseFormSubmitProps = {
   prismaDataExtractionQuery: any
@@ -13,7 +13,7 @@ type UseFormSubmitProps = {
   additional: any
   formData: any
   columns: any[]
-  mutateRecords: (params: {record: any}) => void
+  mutateRecords: (params: { record: any }) => void
   setformData: (data: any) => void
   editType: any
 }
@@ -110,14 +110,14 @@ export const useFormSubmit = ({
 
   // データを取得してレコードを変更
   const findTheDataAndChangeRecord = useCallback(
-    async ({res}: {res: any}) => {
+    async ({ res }: { res: any }) => {
       try {
-        const {result: refetchedDataWithInclude} = await doStandardPrisma(dataModelName as any, 'findUnique', {
-          where: {id: res?.result?.id},
+        const { result: refetchedDataWithInclude } = await doStandardPrisma(dataModelName as any, 'findUnique', {
+          where: { id: res?.result?.id },
           include: additional?.include,
         } as never)
 
-        mutateRecords({record: refetchedDataWithInclude})
+        mutateRecords({ record: refetchedDataWithInclude })
       } catch (error) {
         const errorDetails = classifyError(error)
         setLastError(errorDetails)
@@ -191,7 +191,7 @@ export const useFormSubmit = ({
         }
 
         // データを取得して、レコードを変更する
-        await findTheDataAndChangeRecord({res})
+        await findTheDataAndChangeRecord({ res })
 
         // モーダルを閉じるなどのクローズ処理を実行する
         await handleClosing(res)

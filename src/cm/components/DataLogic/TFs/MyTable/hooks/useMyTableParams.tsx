@@ -160,9 +160,8 @@ const useMyTableParams = ({
 
       const {pageCount, from, to} = calcPaginationInfo(totalCount, page, take)
 
-      const pageKey = `${tableId}_P`
-      const skipKey = `${tableId}_S`
-      const takeKey = `${tableId}_T`
+      // 新しいプレフィックス方式でキーを生成
+      const {page: pageKey, take: takeKey, skip: skipKey} = P_Query.createPaginationKeys(tableId)
 
       const changePage = (pageNumber: number) => {
         const newQuery = {

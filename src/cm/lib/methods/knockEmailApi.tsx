@@ -5,7 +5,9 @@ import {isDev, systemEmailTo} from 'src/cm/lib/methods/common'
 
 export type attachment = {
   filename: string
-  content: string
+  content: string | Buffer
+  encoding?: string
+  contentType?: string
 }
 export const knockEmailApi = async (props: {
   subject: string
@@ -14,9 +16,25 @@ export const knockEmailApi = async (props: {
   cc?: string[]
   html?: string
   attachments?: attachment[]
+  doSentInTest?: boolean
 }) => {
+  // const host = process.env.SMTP_HOST
+  const user = process.env.SMTP_USER
+  const pass = process.env.SMTP_PASS
+  const from = `システムによる自動送信<no-reply@example.com>`
+
+  const smtpConfig = {
+    host: 'smtp.gmail.com',
+    port: 465,
+    pool: true,
+    secure: true, // SSL
+    auth: {user, pass, from},
+  }
+
+  const transporter = nodemailer.createTransport(smtpConfig)
+
   let {to, cc} = props
-  const {subject, text, attachments = [], html} = props
+  const {subject, text, attachments = [], doSentInTest, html} = props
 
   const originalTo = to
   const originCC = cc
@@ -33,25 +51,26 @@ export const knockEmailApi = async (props: {
       html,
     }
 
-    console.debug(result)
+    if (doSentInTest) {
+      const result = await transporter.sendMail({
+        to: process.env.SYSTEM_EMAIL_TO,
+        subject,
+        text,
+        html,
+        attachments,
+      })
+    }
+
+    console.info({text, subject})
+    originalTo.forEach(email => {
+      console.info({to: email.trim()})
+    })
+    originCC?.forEach(email => {
+      console.info({cc: email.trim()})
+    })
 
     return {success: true, message: '開発環境メール', result}
   }
-
-  // const host = process.env.SMTP_HOST
-  const user = process.env.SMTP_USER
-  const pass = process.env.SMTP_PASS
-  const from = `システムによる自動送信<no-reply@example.com>`
-
-  const smtpConfig = {
-    host: 'smtp.gmail.com',
-    port: 465,
-    pool: true,
-    secure: true, // SSL
-    auth: {user, pass, from},
-  }
-
-  const transporter = nodemailer.createTransport(smtpConfig)
 
   try {
     const result = await transporter.sendMail({

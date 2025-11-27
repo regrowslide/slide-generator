@@ -1,12 +1,13 @@
-import React, {useState, useEffect} from 'react'
-import {Button} from '@cm/components/styles/common-components/Button'
-import {Fields} from '@cm/class/Fields/Fields'
+import React, { useState, useEffect } from 'react'
+import { Button } from '@cm/components/styles/common-components/Button'
+import { Fields } from '@cm/class/Fields/Fields'
 import useBasicFormProps from '@cm/hooks/useBasicForm/useBasicFormProps'
-import {doStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
-import {toastByResult} from '@cm/lib/ui/notifications'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
-import {NumHandler} from '@cm/class/NumHandler'
-import {C_Stack, R_Stack} from '@cm/components/styles/common-components/common-components'
+import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
+import { toastByResult } from '@cm/lib/ui/notifications'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
+import { NumHandler } from '@cm/class/NumHandler'
+import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
+import { TbmReportCl } from '@app/(apps)/tbm/(class)/TbmReportCl'
 
 interface EtcScheduleLinkModalProps {
   etcMeisaiId: number
@@ -27,16 +28,21 @@ export const EtcScheduleLinkModal: React.FC<EtcScheduleLinkModalProps> = ({
   const [availableSchedules, setAvailableSchedules] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
-  const {BasicForm, latestFormData} = useBasicFormProps({
+  const { BasicForm, latestFormData } = useBasicFormProps({
     columns: new Fields([
       {
         id: 'tbmDriveScheduleId',
         label: '運行明細',
         forSelect: {
           optionsOrOptionFetcher: availableSchedules.map(schedule => {
+
+            const { routeName, name, serviceNumber, departureTime, finalArrivalTime, pickupTime, vehicleType, productName, seikyuKbn, } = schedule.TbmRouteGroup
+            const { User } = schedule
+
+            const displayName = [formatDate(schedule.date, 'YYYY/MM/DD(ddd)'), routeName, name, User?.name].filter(Boolean).join(' ')
             return {
-              name: `${formatDate(schedule.date, 'MM/DD')} ${schedule.TbmRouteGroup?.name || ''} ${schedule.User?.name || ''}`,
-              label: `${formatDate(schedule.date, 'MM/DD')} ${schedule.TbmRouteGroup?.name || ''} ${schedule.User?.name || ''}`,
+              name: displayName,
+              label: displayName,
               value: schedule.id,
             }
           }),
@@ -47,8 +53,8 @@ export const EtcScheduleLinkModal: React.FC<EtcScheduleLinkModalProps> = ({
         label: '料金種別',
         forSelect: {
           optionsOrOptionFetcher: [
-            {name: '郵便', label: '郵便', value: 'postal'},
-            {name: '一般', label: '一般', value: 'general'},
+            { name: '郵便', label: '郵便', value: 'postal' },
+            { name: '一般', label: '一般', value: 'general' },
           ],
         },
         form: {
@@ -68,7 +74,7 @@ export const EtcScheduleLinkModal: React.FC<EtcScheduleLinkModalProps> = ({
       try {
         // ETCデータを取得
         const etcResponse = await doStandardPrisma('tbmEtcMeisai', 'findUnique', {
-          where: {id: etcMeisaiId},
+          where: { id: etcMeisaiId },
           include: {
             TbmVehicle: true,
             TbmDriveSchedule: {
@@ -91,12 +97,13 @@ export const EtcScheduleLinkModal: React.FC<EtcScheduleLinkModalProps> = ({
             where: {
               tbmVehicleId: etcResponse.result.tbmVehicleId,
               date: scheduleDate,
+              approved: TbmReportCl.allowNonApprovedSchedule ? undefined : true,
             },
             include: {
               TbmRouteGroup: true,
               User: true,
             },
-            orderBy: {date: 'asc'},
+            orderBy: { date: 'asc' },
           })
 
           if (schedulesResponse.result) {
@@ -114,7 +121,7 @@ export const EtcScheduleLinkModal: React.FC<EtcScheduleLinkModalProps> = ({
   const handleSubmit = async (data: any) => {
     setIsLoading(true)
     try {
-      const {feeType} = data
+      const { feeType } = data
       const tbmDriveScheduleId = Number(data.tbmDriveScheduleId)
 
       if (tbmDriveScheduleId) {
@@ -122,13 +129,13 @@ export const EtcScheduleLinkModal: React.FC<EtcScheduleLinkModalProps> = ({
         const feeField = feeType === 'postal' ? 'M_postalHighwayFee' : 'O_generalHighwayFee'
 
         await doStandardPrisma('tbmDriveSchedule', 'update', {
-          where: {id: tbmDriveScheduleId},
-          data: {[feeField]: etcMeisai?.sum || 0},
+          where: { id: tbmDriveScheduleId },
+          data: { [feeField]: etcMeisai?.sum || 0 },
         })
 
         // ETCデータに運行明細IDを紐付け
         const result = await doStandardPrisma('tbmEtcMeisai', 'update', {
-          where: {id: etcMeisaiId},
+          where: { id: etcMeisaiId },
           data: {
             tbmDriveScheduleId: tbmDriveScheduleId,
           },
@@ -138,7 +145,7 @@ export const EtcScheduleLinkModal: React.FC<EtcScheduleLinkModalProps> = ({
       } else {
         // 紐付け解除の場合
         const result = await doStandardPrisma('tbmEtcMeisai', 'update', {
-          where: {id: etcMeisaiId},
+          where: { id: etcMeisaiId },
           data: {
             tbmDriveScheduleId: null,
           },
@@ -147,7 +154,7 @@ export const EtcScheduleLinkModal: React.FC<EtcScheduleLinkModalProps> = ({
         // 運行明細からETC料金を削除
         if (scheduleId) {
           await doStandardPrisma('tbmDriveSchedule', 'update', {
-            where: {id: scheduleId},
+            where: { id: scheduleId },
             data: {
               M_postalHighwayFee: null,
               O_generalHighwayFee: null,
@@ -162,7 +169,7 @@ export const EtcScheduleLinkModal: React.FC<EtcScheduleLinkModalProps> = ({
       onClose()
     } catch (error) {
       console.error('紐付けエラー:', error)
-      toastByResult({success: false, message: '紐付け処理に失敗しました'})
+      toastByResult({ success: false, message: '紐付け処理に失敗しました' })
     } finally {
       setIsLoading(false)
     }
@@ -172,15 +179,15 @@ export const EtcScheduleLinkModal: React.FC<EtcScheduleLinkModalProps> = ({
     try {
       setIsLoading(true)
       const result = await doStandardPrisma('tbmEtcMeisai', 'update', {
-        where: {id: etcMeisaiId},
-        data: {tbmDriveScheduleId: null},
+        where: { id: etcMeisaiId },
+        data: { tbmDriveScheduleId: null },
       })
       toastByResult(result)
       onUpdate()
       onClose()
     } catch (error) {
       console.error('紐付け解除エラー:', error)
-      toastByResult({success: false, message: '紐付け解除処理に失敗しました'})
+      toastByResult({ success: false, message: '紐付け解除処理に失敗しました' })
     } finally {
       setIsLoading(false)
     }

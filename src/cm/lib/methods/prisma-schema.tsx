@@ -1,5 +1,130 @@
 import {obj__initializeProperty} from '@cm/class/ObjHandler/transformers'
+import {StrHandler} from '@cm/class/StrHandler'
 import {prismaSchemaString, prismaDMMF} from '@cm/lib/methods/scheme-json-export'
+
+/**
+ * Prisma DMMF (Data Model Meta Format) の型定義
+ */
+
+/**
+ * デフォルト値の型定義
+ */
+export type PrismaDMMFDefaultValue =
+  | {
+      name: 'autoincrement' | 'now' | 'uuid' | 'cuid' | 'dbgenerated'
+      args: unknown[]
+    }
+  | boolean
+  | number
+  | string
+  | null
+
+/**
+ * リレーション情報の型定義
+ */
+export type PrismaDMMFRelationInfo = {
+  relationName: string
+  relationFromFields: string[]
+  relationToFields: string[]
+  relationOnDelete?: 'Cascade' | 'Restrict' | 'NoAction' | 'SetNull' | 'SetDefault'
+}
+
+/**
+ * スカラーフィールドの型定義
+ */
+export type PrismaDMMFScalarField = {
+  name: string
+  kind: 'scalar' | 'enum'
+  isList: boolean
+  isRequired: boolean
+  isUnique: boolean
+  isId: boolean
+  isReadOnly: boolean
+  hasDefaultValue: boolean
+  type: string
+  nativeType: string | null
+  default?: PrismaDMMFDefaultValue
+  isGenerated: boolean
+  isUpdatedAt: boolean
+}
+
+/**
+ * オブジェクト（リレーション）フィールドの型定義
+ */
+export type PrismaDMMFObjectField = {
+  name: string
+  kind: 'object'
+  isList: boolean
+  isRequired: boolean
+  isUnique: boolean
+  isId: boolean
+  isReadOnly: boolean
+  hasDefaultValue: boolean
+  type: string
+  nativeType: string | null
+  relationName: string
+  relationFromFields: string[]
+  relationToFields: string[]
+  relationOnDelete?: 'Cascade' | 'Restrict' | 'NoAction' | 'SetNull' | 'SetDefault'
+  isGenerated: boolean
+  isUpdatedAt: boolean
+}
+
+/**
+ * フィールドのユニオン型
+ */
+export type PrismaDMMFField = PrismaDMMFScalarField | PrismaDMMFObjectField
+
+/**
+ * モデル構造の型定義
+ */
+export type PrismaDMMFModel = {
+  name: string
+  dbName: string | null
+  schema: string | null
+  fields: PrismaDMMFField[]
+  primaryKey: {
+    name: string | null
+    fields: string[]
+  } | null
+  uniqueFields: string[][]
+  uniqueIndexes: Array<{
+    name: string
+    fields: string[]
+  }>
+  isGenerated: boolean
+}
+
+/**
+ * DMMF全体の型定義
+ */
+export type PrismaDMMF = {
+  enums: Array<{
+    name: string
+    dbName: string | null
+    values: Array<{
+      name: string
+      dbName: string | null
+    }>
+  }>
+  models: PrismaDMMFModel[]
+}
+
+/**
+ * モデル構造のみの型（ユーザーが提供したJSONの構造）
+ */
+export type ModelStructure = {
+  modelStructure: PrismaDMMFModel
+}
+
+/**
+ * Ucarモデル専用の型（オプション）
+ */
+export type UcarModelStructure = {
+  modelStructure: PrismaDMMFModel & {
+    name: 'Ucar'
+  }
+}
 
 /**
  * スキーマをオブジェクト形式で取得する
@@ -108,7 +233,7 @@ export const getRelationalModels = ({schemaAsObj, parentName}) => {
  */
 export const getDMMFModel = (modelName: string) => {
   if (!prismaDMMF || !prismaDMMF.models) return null
-  return prismaDMMF.models.find(m => m.name === modelName)
+  return prismaDMMF.models.find(m => m.name === StrHandler.capitalizeFirstLetter(modelName)) as PrismaDMMFModel | undefined
 }
 
 /**
@@ -119,4 +244,31 @@ export const getAllModelNames = (): string[] => {
     return prismaDMMF.models.map(m => m.name)
   }
   return Object.keys(getSchema())
+}
+
+export const getModelFieldsInfomation = (modelName: string) => {
+  const modelStructure = getDMMFModel(modelName)
+
+  const objectFields: PrismaDMMFObjectField[] = []
+  const primitiveFields: PrismaDMMFScalarField[] = []
+
+  modelStructure?.fields?.forEach(field => {
+    if (field.kind === 'object') {
+      objectFields.push(field)
+    } else {
+      primitiveFields.push(field)
+    }
+  })
+
+  const objectFieldObj: {[key: string]: PrismaDMMFObjectField} = {}
+  const primitiveFieldObj: {[key: string]: PrismaDMMFScalarField} = {}
+
+  objectFields.forEach(field => {
+    objectFieldObj[field.name] = field
+  })
+  primitiveFields.forEach(field => {
+    primitiveFieldObj[field.name] = field
+  })
+
+  return {primitiveFieldObj, objectFieldObj}
 }

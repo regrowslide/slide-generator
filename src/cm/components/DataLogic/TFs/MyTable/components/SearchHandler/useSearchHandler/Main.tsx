@@ -19,6 +19,7 @@ export const Main = ({
   setmodalOpen,
   toggleLoad,
   addQuery,
+  query,
   dataModelName,
   MainColObject,
   SearchColObject,
@@ -51,6 +52,7 @@ export const Main = ({
                       addQuery,
                       searchQueryKey,
                       SearchQuery,
+                      query,
                     })
                     setmodalOpen(false)
                   },

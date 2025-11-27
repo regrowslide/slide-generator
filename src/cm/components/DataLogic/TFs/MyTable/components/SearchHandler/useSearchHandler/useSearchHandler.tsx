@@ -113,6 +113,7 @@ export const useSearchHandler = (props: SearchHandler) => {
                           addQuery,
                           searchQueryKey,
                           SearchQuery,
+                          query,
                         })
                         setmodalOpen(false)
                       },

@@ -31,6 +31,7 @@ export default function Searcher({dataModelName, col, useGlobalProps}) {
             addQuery,
             searchQueryKey,
             SearchQuery,
+            query,
           })
         }}
       >

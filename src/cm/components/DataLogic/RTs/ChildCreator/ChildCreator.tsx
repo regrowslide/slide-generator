@@ -103,6 +103,7 @@ export const ChildCreator = React.memo((props: ChildCreatorProps) => {
   )
 
   const UseRecordsReturn = useRecords({
+    dataModelName,
     serverFetchProps,
     initialModelRecords: undefined,
     fetchTime: undefined,

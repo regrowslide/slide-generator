@@ -1,3 +1,3 @@
 export const getMyTableId = ({dataModelName, myTable}) => {
-  return myTable?.tableId || `tabled-id-${dataModelName}`
+  return myTable?.tableId || `table-id-${dataModelName}`
 }

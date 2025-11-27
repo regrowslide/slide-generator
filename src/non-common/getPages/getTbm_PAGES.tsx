@@ -13,7 +13,7 @@ export const tbm_PAGES = (props: PageGetterType) => {
   const scopes = getScopes(session, { query, roles })
   const { login } = scopes
   const admin = scopes.admin
-  const { isSystemAdmin, isShocho } = scopes.getTbmScopes()
+  const { isSystemAdmin, isShocho, isJimuin } = scopes.getTbmScopes()
 
   const publicPaths = []
 
@@ -51,30 +51,69 @@ export const tbm_PAGES = (props: PageGetterType) => {
 
     {
       tabId: '',
-      label: <IconLetter {...{ Icon: FileText }}>各種レポート等</IconLetter>,
+      label: <IconLetter {...{ Icon: FileText }}>レポート①</IconLetter>,
+      children: [
+        {
+          tabId: 'unkomeisai',
+          label: <IconLetter {...{ Icon: ListIcon }}>運行明細</IconLetter>
+        },
+        {
+          tabId: 'nempiKanri',
+          label: <IconLetter {...{ Icon: JapaneseYenIcon }}>燃費管理</IconLetter>
+        },
+        {
+          tabId: 'ruiseki',
+          label: <IconLetter {...{ Icon: Calculator }}>累積距離記帳</IconLetter>
+        },
+        {
+          tabId: 'seikyu',
+          label: <IconLetter {...{ Icon: ListIcon }}>請求書発行</IconLetter>
+        },
+
+      ],
+    },
+    {
+      tabId: '',
+      label: <IconLetter {...{ Icon: FileText }}>レポート②</IconLetter>,
       children: [
         //
-        { tabId: 'unkomeisai', label: <IconLetter {...{ Icon: ListIcon }}>運行明細</IconLetter> },
-        { tabId: 'nempiKanri', label: <IconLetter {...{ Icon: JapaneseYenIcon }}>燃費管理</IconLetter> },
-        { tabId: 'ruiseki', label: <IconLetter {...{ Icon: Calculator }}>累積距離記帳</IconLetter> },
-        { tabId: 'seikyu', label: <IconLetter {...{ Icon: ListIcon }}>請求書発行</IconLetter> },
+        {
+          tabId: 'eigyosho',
+          label: <IconLetter {...{ Icon: JapaneseYenIcon }}>営業所別売上</IconLetter>
+        },
+        {
+          tabId: 'ninushi',
+          label: <IconLetter {...{ Icon: JapaneseYenIcon }}>荷主別売上</IconLetter>
+        },
+        {
+          tabId: 'sharyoBetsuUriage',
+          label: <IconLetter {...{ Icon: JapaneseYenIcon }}>車両別売上</IconLetter>
+        },
+        {
+          tabId: 'unkokaisu',
+          label: <IconLetter {...{ Icon: ListIcon }}>運行回数</IconLetter>
+        },
 
 
-        { tabId: 'eigyosho', label: <IconLetter {...{ Icon: JapaneseYenIcon }}>営業所別売上</IconLetter> },
-        { tabId: 'ninushi', label: <IconLetter {...{ Icon: JapaneseYenIcon }}>荷主別売上</IconLetter> },
-        { tabId: 'sharyoBetsuUriage', label: <IconLetter {...{ Icon: JapaneseYenIcon }}>車両別売上</IconLetter> },
-        { tabId: 'unkokaisu', label: <IconLetter {...{ Icon: ListIcon }}>運行回数</IconLetter> },
-
-
-        { tabId: 'kyuyoSantei', label: <IconLetter {...{ Icon: JapaneseYenIcon }}>給与算定</IconLetter> },
-        { tabId: 'driver/kintai', label: <IconLetter {...{ Icon: ListIcon }}>出退勤管理</IconLetter> },
-        // {tabId: 'simpleDriveHistory', label: <IconLetter {...{Icon: FileText}}>簡易走行記録（PDF）</IconLetter>},
+        {
+          tabId: 'kyuyoSantei',
+          label: <IconLetter {...{ Icon: JapaneseYenIcon }}>給与算定</IconLetter>,
+          exclusiveTo: isShocho || isSystemAdmin
+        },
+        {
+          tabId: 'driver/kintai',
+          label: <IconLetter {...{ Icon: ListIcon }}>出退勤管理</IconLetter>
+        },
+        {
+          tabId: 'simpleDriveHistory',
+          label: <IconLetter {...{ Icon: FileText }}>簡易走行記録（PDF）</IconLetter>
+        },
         { tabId: `testProgress`, label: 'テストレポート' },
       ],
     },
   ].map(item => ({
     ...item,
-    exclusiveTo: isShocho || isSystemAdmin,
+    exclusiveTo: isJimuin || isShocho || isSystemAdmin,
     ROOT: [rootPath],
   }))
 

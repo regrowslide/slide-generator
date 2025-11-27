@@ -21,6 +21,7 @@ export default function useCustomSession(props?: {session?: Session | null}) {
 
   // fakeSessionの取得
   const {globalUserId} = judgeIsAdmin(realSession, query)
+
   const {data: fakeSession} = useSWR(JSON.stringify({globalUserId, realSession, query}), async () => {
     const fakeSession = await FakeOrKeepSession({query, realSession})
     return fakeSession ?? null
@@ -33,8 +34,9 @@ export default function useCustomSession(props?: {session?: Session | null}) {
       ...fakeSession,
       role: realSession?.role,
     }),
-    [fakeSession, realSession]
+    [fakeSession, realSession, globalUserId]
   )
+
   const {roles, roleIsLoading} = useUserRole({session: userData})
 
   const sessionLoading = fakeSession === undefined || status === 'loading' || roleIsLoading

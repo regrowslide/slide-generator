@@ -5,11 +5,13 @@ import useColumns from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/usePropA
 import useRecords, {UseRecordsReturn} from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/useRecords/useRecords'
 import useInitFormState from '@cm/hooks/useInitFormState'
 import useEditForm from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/usePropAdjusctorLogic/useEditForm'
-import useMyTable from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/usePropAdjusctorLogic/useMyTable'
-import useAdditional from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/usePropAdjusctorLogic/useAdditional'
+import {checkShowHeader} from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/usePropAdjusctorLogic/useMyTable'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 
-import {ClientPropsType2, UsePropAdjustorLogicProps} from '@cm/components/DataLogic/TFs/PropAdjustor/types/propAdjustor-types'
+import {
+  ClientPropsType2,
+  UsePropAdjustorLogicProps,
+} from '@cm/components/DataLogic/TFs/PropAdjustor/types/propAdjustor-types'
 
 // usePropAdjustorLogic
 export const usePropAdjustorLogic = ({
@@ -20,14 +22,21 @@ export const usePropAdjustorLogic = ({
 }: UsePropAdjustorLogicProps) => {
   const useGlobalProps = useGlobal()
 
+  //viewParamBuilderとのマージ
+  useMergeWithCustomViewParams({source: ClientProps, useGlobalProps})
+
   const UseRecordsReturn: UseRecordsReturn = useRecords({
+    dataModelName: ClientProps.dataModelName,
     serverFetchProps,
     initialModelRecords,
     fetchTime,
+    countPerPage: ClientProps.myTable?.pagination?.countPerPage,
   })
 
   const {prismaDataExtractionQuery, easySearchPrismaDataOnServer} = UseRecordsReturn
+
   const modelData = useMemo(() => UseRecordsReturn?.records?.[0], [UseRecordsReturn?.records])
+
   const {formData, setformData} = useInitFormState(null, [modelData], false, ClientProps.dataModelName)
 
   const columns = useColumns({
@@ -38,24 +47,26 @@ export const usePropAdjustorLogic = ({
     ColBuilderExtraProps: ClientProps.ColBuilderExtraProps,
   })
 
-  const additional = useAdditional({
-    additional: ClientProps.additional,
-    prismaDataExtractionQuery,
-  })
-
+  const additional = {
+    ...ClientProps.additional,
+    include: {
+      ...ClientProps.additional?.include,
+      ...prismaDataExtractionQuery.include,
+    },
+  }
   const EditForm = useEditForm({
     PageBuilderGetter: ClientProps.PageBuilderGetter,
     PageBuilder: ClientProps.PageBuilder,
     dataModelName: ClientProps.dataModelName,
   })
 
-  const myTable = useMyTable({
-    columns,
-    displayStyle: ClientProps.displayStyle,
-    myTable: ClientProps.myTable,
-  })
+  const myTable = {
+    ...ClientProps.myTable,
+    style: {...ClientProps.displayStyle, ...ClientProps.myTable?.style},
+    showHeader: checkShowHeader({myTable: ClientProps.myTable, columns}),
+  }
 
-  const ClientProps2: ClientPropsType2 = useMergeWithCustomViewParams({
+  const ClientProps2: ClientPropsType2 = {
     ...ClientProps,
     ...UseRecordsReturn,
     additional,
@@ -67,7 +78,10 @@ export const usePropAdjustorLogic = ({
     setformData,
     UseRecordsReturn,
     prismaDataExtractionQuery,
-  })
+  }
+
+  // 再度マージ
+  useMergeWithCustomViewParams({source: ClientProps2, useGlobalProps})
 
   return {
     ClientProps2,

@@ -30,6 +30,47 @@ export const useEtcGrouping = (etcRawData: EtcRecord[], onSuccess: () => void) =
       return
     }
 
+    // 連続した走行記録かどうかを確認（行番号的連続）
+    // etcRawData内で未グループ化レコードのみを抽出（テーブル表示順と同じ順序）
+    const ungroupedRecords = etcRawData.filter(
+      record => record.tbmVehicleId === records[0].tbmVehicleId && !record.isGrouped
+    )
+
+    // 選択されたレコードのIDセット
+    const selectedRecordIds = new Set(records.map(r => r.id))
+
+    // 未グループ化レコード内で選択されたレコードのインデックスを取得
+    const selectedIndices: number[] = []
+    ungroupedRecords.forEach((record, index) => {
+      if (selectedRecordIds.has(record.id)) {
+        selectedIndices.push(index)
+      }
+    })
+
+    // 選択されたレコードが存在しない場合
+    if (selectedIndices.length === 0) {
+      alert('選択されたレコードが見つかりません。')
+      return
+    }
+
+    // インデックスが連続しているか確認
+    // インデックスをソート
+    selectedIndices.sort((a, b) => a - b)
+
+    // 連続しているか確認（最小インデックスから最大インデックスまで全て選択されている必要がある）
+    const minIndex = selectedIndices[0]
+    const maxIndex = selectedIndices[selectedIndices.length - 1]
+    const expectedIndices = Array.from({ length: maxIndex - minIndex + 1 }, (_, i) => minIndex + i)
+
+    // 期待されるインデックスと実際のインデックスが一致するか確認
+    const isConsecutive = expectedIndices.length === selectedIndices.length &&
+      expectedIndices.every((val, idx) => val === selectedIndices[idx])
+
+    if (!isConsecutive) {
+      alert('連続した走行記録でない限りグルーピングできません。選択範囲内の全ての未グループ化レコードを選択してください。')
+      return
+    }
+
     setIsLoading(true)
     try {
       const vehicleId = records[0].tbmVehicleId

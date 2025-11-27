@@ -1,25 +1,28 @@
 import InvoiceViewer from '@app/(apps)/tbm/(components)/InvoiceViewer'
+import MeisaiViewer from '@app/(apps)/tbm/(components)/MeisaiViewer'
 import CustomerSelector from '@app/(apps)/tbm/(components)/CustomerSelector'
-import {getInvoiceData} from '@app/(apps)/tbm/(server-actions)/getInvoiceData'
-import {FitMargin} from '@cm/components/styles/common-components/common-components'
+import { getInvoiceData } from '@app/(apps)/tbm/(server-actions)/getInvoiceData'
+import { getMeisaiData } from '@app/(apps)/tbm/(server-actions)/getMeisaiData'
+import { FitMargin } from '@cm/components/styles/common-components/common-components'
 import NewDateSwitcher from '@cm/components/utils/dates/DateSwitcher/NewDateSwitcher'
 import Redirector from '@cm/components/utils/Redirector'
-import {dateSwitcherTemplate} from '@cm/lib/methods/redirect-method'
-import {initServerComopnent} from 'src/non-common/serverSideFunction'
+import { dateSwitcherTemplate } from '@cm/lib/methods/redirect-method'
+import { initServerComopnent } from 'src/non-common/serverSideFunction'
 import prisma from 'src/lib/prisma'
-import {BillingHandler} from '@app/(apps)/tbm/(class)/TimeHandler'
-import {Days} from '@cm/class/Days/Days'
-import {toUtc} from '@cm/class/Days/date-utils/calculations'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
-import {getDriveScheduleList} from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
+import { BillingHandler } from '@app/(apps)/tbm/(class)/TimeHandler'
+import { Days } from '@cm/class/Days/Days'
+import { toUtc } from '@cm/class/Days/date-utils/calculations'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
+import { getDriveScheduleList } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
+import BasicTabs from '@cm/components/utils/tabs/BasicTabs'
 
 export default async function Page(props) {
   const query = await props.searchParams
-  const {session, scopes} = await initServerComopnent({query})
-  const {tbmBaseId} = scopes.getTbmScopes()
-  const {redirectPath, whereQuery} = await dateSwitcherTemplate({query})
+  const { session, scopes } = await initServerComopnent({ query })
+  const { tbmBaseId } = scopes.getTbmScopes()
+  const { redirectPath, whereQuery } = await dateSwitcherTemplate({ query })
 
-  if (redirectPath) return <Redirector {...{redirectPath}} />
+  if (redirectPath) return <Redirector {...{ redirectPath }} />
 
   // 顧客IDをクエリパラメータから取得（必須）
   const customerId = query.customerId ? parseInt(query.customerId) : undefined
@@ -122,7 +125,12 @@ export default async function Page(props) {
 
   try {
     const invoiceData = await getInvoiceData({
-      whereQuery: {gte: whereQuery.gte, lte: whereQuery.lte},
+      whereQuery: { gte: whereQuery.gte, lte: whereQuery.lte },
+      customerId,
+    })
+
+    const meisaiData = await getMeisaiData({
+      whereQuery: { gte: whereQuery.gte, lte: whereQuery.lte },
       customerId,
     })
 
@@ -134,7 +142,20 @@ export default async function Page(props) {
 
         <CustomerSelector customers={customersWithCount} currentCustomerId={customerId} />
 
-        <InvoiceViewer invoiceData={invoiceData} customerId={customerId} />
+        <BasicTabs
+          id="seikyuTabs"
+          showAll={false}
+          TabComponentArray={[
+            {
+              label: '請求書',
+              component: <InvoiceViewer invoiceData={invoiceData} customerId={customerId} />,
+            },
+            {
+              label: '請求書用明細',
+              component: <MeisaiViewer meisaiData={meisaiData} />,
+            },
+          ]}
+        />
       </FitMargin>
     )
   } catch (error) {

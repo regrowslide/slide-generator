@@ -1,7 +1,7 @@
 'use client '
-import {useJotaiByKey} from '@cm/hooks/useJotai'
-import {useRouter} from 'next/navigation'
-import {useEffect} from 'react'
+import { useJotaiByKey } from '@cm/hooks/useJotai'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 /**
  *prismaのデータが更新された時にも、ステートを最新に保つ
@@ -16,6 +16,8 @@ export default function useInitFormState(
   dataModelName?: string
 ) {
   const [formData, setformData] = useJotaiByKey<any>(`formData-${dataModelName}`, initialState)
+
+
 
   const router = useRouter()
 
@@ -43,5 +45,5 @@ export default function useInitFormState(
     }
   }, [dataSourceStrOrArray, router])
 
-  return {formData, setformData}
+  return { formData, setformData }
 }

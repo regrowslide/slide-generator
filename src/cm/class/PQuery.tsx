@@ -4,6 +4,8 @@ import {additionalPropsType, MyTableType} from '@cm/types/types'
 import {anyObject} from '@cm/types/utility-types'
 import {DH__switchColType} from '@cm/class/DataHandler/type-converter'
 import {StrHandler} from '@cm/class/StrHandler'
+import {PAGINATION_CONSTANTS, validatePaginationParams} from 'src/cm/class/PQuery/validation'
+import {paginationSearchParamStr} from 'src/non-common/searchParamStr'
 
 // 型定義
 interface WhereQueryItem {
@@ -129,7 +131,16 @@ export class P_Query {
   }
 
   /**
-   * ページネーション設定を取得（型安全性向上）
+   * ページネーションパラメータのキーを生成
+   */
+  static createPaginationKeys = (tableId: string) => ({
+    page: paginationSearchParamStr.getPaginationPage(tableId),
+    take: paginationSearchParamStr.getPaginationTake(tableId),
+    skip: paginationSearchParamStr.getPaginationSkip(tableId),
+  })
+
+  /**
+   * ページネーション設定を取得（型安全性向上・バリデーション強化）
    */
   static getPaginationPropsByQuery = ({
     query,
@@ -140,14 +151,27 @@ export class P_Query {
     tableId?: string
     countPerPage?: number
   }): PaginationProps => {
-    const defaultCount = process.env.NEXT_PUBLIC_ROOTPATH === 'aquapot' ? 10 : defaultCountPerPage
+    const defaultCount = defaultCountPerPage
+
     const finalCountPerPage = countPerPage ?? defaultCount
 
-    const page = Math.max(1, Number(query?.[`${tableId}_P`] ?? 1))
-    const take = Math.max(1, Number(query?.[`${tableId}_T`] ?? finalCountPerPage))
-    const skip = Math.max(0, Number(query?.[`${tableId}_S`] ?? 0))
+    // 新しいプレフィックス方式でキーを生成
+    const keys = P_Query.createPaginationKeys(tableId)
 
-    return {take, skip, page, countPerPage: finalCountPerPage}
+    // URLパラメータから値を取得
+    const rawPage = Number(query?.[keys.page] ?? 1)
+    const rawTake = Number(query?.[keys.take] ?? finalCountPerPage)
+    const rawSkip = Number(query?.[keys.skip] ?? 0)
+
+    // バリデーションとサニタイズ
+    const validation = validatePaginationParams(rawPage, rawTake, rawSkip, PAGINATION_CONSTANTS.MAX_TAKE, finalCountPerPage)
+
+    return {
+      take: validation.sanitized.take,
+      skip: validation.sanitized.skip,
+      page: validation.sanitized.page,
+      countPerPage: finalCountPerPage,
+    }
   }
 
   /**

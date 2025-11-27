@@ -1,6 +1,6 @@
 import {useState, useCallback, useMemo} from 'react'
 import {getMyTableId} from '@cm/components/DataLogic/TFs/MyTable/helpers/getMyTableId'
-import {defaultCountPerPage} from '@cm/class/PQuery'
+import {defaultCountPerPage, P_Query} from '@cm/class/PQuery'
 import {getInitModelRecordsProps, serverFetchProps} from '@cm/components/DataLogic/TFs/Server/fetchers/getInitModelRecordsProps'
 import {tableRecord} from './useRecords'
 
@@ -63,10 +63,14 @@ export const useInfiniteScrollLogic = (props: UseInfiniteScrollLogicProps): UseI
       const nextPage = currentPage + 1
       const tableId = getMyTableId({dataModelName: serverFetchProps.dataModelName, myTable: serverFetchProps.myTable})
 
+      // 新しいプレフィックス方式でキーを生成
+      const {page: pageKey, skip: skipKey} = P_Query.createPaginationKeys(tableId)
+      const countPerPage = serverFetchProps.myTable?.pagination?.countPerPage ?? defaultCountPerPage
+
       const nextPageQuery = {
         ...query,
-        [`${tableId}_P`]: nextPage,
-        [`${tableId}_S`]: (nextPage - 1) * (serverFetchProps.myTable?.pagination?.countPerPage ?? defaultCountPerPage),
+        [pageKey]: nextPage,
+        [skipKey]: (nextPage - 1) * countPerPage,
       }
 
       const {queries, data} = await getInitModelRecordsProps({

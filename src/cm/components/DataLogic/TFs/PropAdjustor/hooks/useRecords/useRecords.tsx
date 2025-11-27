@@ -3,6 +3,7 @@ import {getInitModelRecordsProps, serverFetchProps} from '@cm/components/DataLog
 import useMyNavigation from '@cm/hooks/globalHooks/useMyNavigation'
 import {useRecordsCore} from './useRecordsCore'
 import {useInfiniteScrollLogic} from './useInfiniteScrollLogic'
+import {dataModelNameType} from '@cm/types/types'
 
 // 型定義を改善
 export interface tableRecord {
@@ -11,26 +12,31 @@ export interface tableRecord {
 }
 
 interface UseRecordsProps {
+  dataModelName: dataModelNameType
   serverFetchProps: serverFetchProps
   initialModelRecords?: Awaited<ReturnType<typeof getInitModelRecordsProps>>
   fetchTime?: Date
+  countPerPage?: number
 }
 
 export type UseRecordsReturn = ReturnType<typeof useRecords>
 
 const useRecords = (props: UseRecordsProps) => {
-  const {serverFetchProps, initialModelRecords, fetchTime} = props
+  const {serverFetchProps, initialModelRecords, fetchTime, dataModelName, countPerPage} = props
+
   const {rootPath} = useGlobal()
   const {query} = useMyNavigation()
 
   // 🔧 コア機能とスクロール機能を分離
   const coreLogic = useRecordsCore({
+    dataModelName,
     serverFetchProps,
     initialModelRecords,
     fetchTime,
     query,
     rootPath,
     isInfiniteScrollMode: false, // 一時的にfalse、後で更新
+    countPerPage,
     resetToFirstPage: () => {}, // 一時的に空関数、後で更新
   })
 

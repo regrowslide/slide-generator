@@ -1,26 +1,26 @@
-import {useRef, useMemo, useCallback} from 'react'
-import {getMyTableDefault} from 'src/cm/constants/defaults'
-import {useElementScrollPosition} from '@cm/hooks/scrollPosition/useElementScrollPosition'
-import {useSearchHandler} from '@cm/components/DataLogic/TFs/MyTable/components/SearchHandler/useSearchHandler/useSearchHandler'
-import {Z_INDEX} from '@cm/lib/constants/constants'
+import { useRef, useMemo, useCallback } from 'react'
+import { getMyTableDefault } from 'src/cm/constants/defaults'
+import { useElementScrollPosition } from '@cm/hooks/scrollPosition/useElementScrollPosition'
+import { useSearchHandler } from '@cm/components/DataLogic/TFs/MyTable/components/SearchHandler/useSearchHandler/useSearchHandler'
+import { Z_INDEX } from '@cm/lib/constants/constants'
 
-import {TableConfigPropsType} from '../components/TableConfig'
+import { TableConfigPropsType } from '../components/TableConfig'
 
-import {UseRecordsReturn} from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/useRecords/useRecords'
-import {ClientPropsType2} from '@cm/components/DataLogic/TFs/PropAdjustor/types/propAdjustor-types'
+import { UseRecordsReturn } from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/useRecords/useRecords'
+import { ClientPropsType2 } from '@cm/components/DataLogic/TFs/PropAdjustor/types/propAdjustor-types'
 import useMyTableParams from '@cm/components/DataLogic/TFs/MyTable/hooks/useMyTableParams'
-import {MyTableControls} from '@cm/components/DataLogic/TFs/MyTable/components/MyTableControls/MyTableControls'
+import { MyTableControls } from '@cm/components/DataLogic/TFs/MyTable/components/MyTableControls/MyTableControls'
 
-import {colType} from '@cm/types/col-types'
-import {DraggableTableRow} from '@cm/components/DataLogic/TFs/MyTable/components/MainTable/DraggableTableRow'
-import {cl} from '@cm/lib/methods/common'
-import {ArrowUpDownIcon, SquarePen, Trash2} from 'lucide-react'
-import {T_LINK} from '@cm/components/styles/common-components/links'
-import {HREF} from '@cm/lib/methods/urls'
+import { colType } from '@cm/types/col-types'
+import { DraggableTableRow } from '@cm/components/DataLogic/TFs/MyTable/components/MainTable/DraggableTableRow'
+import { cl } from '@cm/lib/methods/common'
+import { ArrowUpDownIcon, SquarePen, Trash2 } from 'lucide-react'
+import { T_LINK } from '@cm/components/styles/common-components/links'
+import { HREF } from '@cm/lib/methods/urls'
 
-import {FileHandler} from '@cm/class/FileHandler'
-import {toastByResult} from '@cm/lib/ui/notifications'
-import {generalDoStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
+import { FileHandler } from '@cm/class/FileHandler'
+import { toastByResult } from '@cm/lib/ui/notifications'
+import { generalDoStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
 
 interface MyTableLogicProps {
   ClientProps2: ClientPropsType2 & {
@@ -33,11 +33,12 @@ export const useMyTableLogic = (props: MyTableLogicProps) => {
   const ClientProps2 = useMemo(
     () => ({
       ...props.ClientProps2,
-      myTable: {...getMyTableDefault(), ...props.ClientProps2.myTable},
+      myTable: { ...getMyTableDefault(), ...props.ClientProps2.myTable },
       useGlobalProps: props.ClientProps2?.useGlobalProps,
     }),
     [props.ClientProps2]
   )
+
 
   const {
     editType = {
@@ -54,10 +55,10 @@ export const useMyTableLogic = (props: MyTableLogicProps) => {
     deleteRecord,
   } = ClientProps2
 
-  const {toggleLoad, query, pathname, rootPath, addQuery} = useGlobalProps
+  const { toggleLoad, query, pathname, rootPath, addQuery } = useGlobalProps
   // 🔧 無限スクロール関連のデータを分離
   const infiniteScrollData = useMemo(() => {
-    const {fetchNextPage, hasMore, isInfiniteScrollMode, setInfiniteScrollMode} = ClientProps2.UseRecordsReturn || {}
+    const { fetchNextPage, hasMore, isInfiniteScrollMode, setInfiniteScrollMode } = ClientProps2.UseRecordsReturn || {}
 
     return {
       fetchNextPage: fetchNextPage || (() => Promise.resolve()),
@@ -71,7 +72,8 @@ export const useMyTableLogic = (props: MyTableLogicProps) => {
   const tableData = useMemo(() => {
     const recordCount = records?.length ?? 0
     const totalCount = ClientProps2.totalCount ?? 0
-    const {configPosition = 'top', showHeader} = myTable ?? {}
+
+    const { configPosition = 'top', showHeader } = myTable ?? {}
 
     const emptyDataStyle = {
       width: myTable?.style?.width,
@@ -106,8 +108,8 @@ export const useMyTableLogic = (props: MyTableLogicProps) => {
     columnCount,
     tableStyleRef,
     tableStyle,
-    methods: {getPaginationProps, handleDragEndMemo},
-    dndProps: {items, sensors},
+    methods: { getPaginationProps, handleDragEndMemo },
+    dndProps: { items, sensors },
   } = useMyTableParams(myTableParamsArgs)
 
   // 🔧 TrActions関連
@@ -127,7 +129,7 @@ export const useMyTableLogic = (props: MyTableLogicProps) => {
   )
 
   const handleTrashItem = useCallback(
-    async ({record, columns}) => {
+    async ({ record, columns }) => {
       let deleteConfirmed = false
 
       if (confirm(`削除しますか？`)) {
@@ -142,15 +144,15 @@ export const useMyTableLogic = (props: MyTableLogicProps) => {
           .flat()
           .filter(col => col?.type === 'file')
           .map(col => {
-            const {id} = col
+            const { id } = col
             const backetKey = col?.form?.file?.backetKey
 
-            return {id, backetKey, deleteImageUrl: record[col.id]}
+            return { id, backetKey, deleteImageUrl: record[col.id] }
           })
 
         await Promise.all(
           deleteImageUrls.map(async obj => {
-            const {id, deleteImageUrl, backetKey} = obj
+            const { id, deleteImageUrl, backetKey } = obj
             await FileHandler.sendFileToS3({
               file: null,
               formDataObj: {
@@ -161,10 +163,10 @@ export const useMyTableLogic = (props: MyTableLogicProps) => {
           })
         )
 
-        const res = await generalDoStandardPrisma(dataModelName, 'delete', {where: {id: record?.id}})
+        const res = await generalDoStandardPrisma(dataModelName, 'delete', { where: { id: record?.id } })
         toastByResult(res)
         if (res.success) {
-          deleteRecord({record})
+          deleteRecord({ record })
         }
         // })
       } else {
@@ -208,7 +210,7 @@ export const useMyTableLogic = (props: MyTableLogicProps) => {
     .map(row => {
       return row.map(col => {
         const withLabel = tableData.showHeader ? false : true
-        return {...col, td: {...col.td, withLabel}}
+        return { ...col, td: { ...col.td, withLabel } }
       })
     })
 
@@ -243,9 +245,9 @@ export const useMyTableLogic = (props: MyTableLogicProps) => {
     zIndex: Z_INDEX.thead,
   }
 
-  const {isInfiniteScrollMode, setInfiniteScrollMode, hasMore} = infiniteScrollData
+  const { isInfiniteScrollMode, setInfiniteScrollMode, hasMore } = infiniteScrollData
 
-  const {SearchModalMemo, SearchedItemListMemo} = useSearchHandler({
+  const { SearchModalMemo, SearchedItemListMemo } = useSearchHandler({
     columns: ClientProps2.columns,
     dataModelName: ClientProps2.dataModelName,
     useGlobalProps: ClientProps2.useGlobalProps,
@@ -288,7 +290,7 @@ export const useMyTableLogic = (props: MyTableLogicProps) => {
   )
 
   const handleEditItem = useCallback(
-    async ({record}) => {
+    async ({ record }) => {
       if (editType?.type === 'page') {
         return
       } else if (editType?.type === 'pageOnSame') {
@@ -302,14 +304,14 @@ export const useMyTableLogic = (props: MyTableLogicProps) => {
   )
 
   const EditButton = useCallback(
-    ({record}) => {
+    ({ record }) => {
       if (myTable?.update !== false) {
-        const {pathnameBuilder} = editType ?? {}
-        const redirectPath = pathnameBuilder?.({rootPath, record, pathname})
+        const { pathnameBuilder } = editType ?? {}
+        const redirectPath = pathnameBuilder?.({ rootPath, record, pathname })
         const className = cl('text-primary-main', TrActionIconClassName, `w-5`)
         if (editType?.type === `modal`) {
           return (
-            <div {...{className, onClick: () => handleEditItem({record})}}>
+            <div {...{ className, onClick: () => handleEditItem({ record }) }}>
               <SquarePen className={`w-5`} />
             </div>
           )
@@ -317,7 +319,7 @@ export const useMyTableLogic = (props: MyTableLogicProps) => {
           const href = (editType?.type === 'page' ? redirectPath : HREF(`${pathname}/${record.id}`, {}, query)) ?? ''
 
           return (
-            <T_LINK {...{className, href}}>
+            <T_LINK {...{ className, href }}>
               <SquarePen className={`w-5`} />
             </T_LINK>
           )
@@ -330,10 +332,10 @@ export const useMyTableLogic = (props: MyTableLogicProps) => {
   )
 
   const DeleteButton = useCallback(
-    ({record}) => {
+    ({ record }) => {
       if (myTable?.delete !== false) {
         return (
-          <div onClick={() => handleTrashItem({record, columns})}>
+          <div onClick={() => handleTrashItem({ record, columns })}>
             <Trash2 className={cl('text-error-main  opacity-60', TrActionIconClassName, `w-5 `)} />
           </div>
         )
@@ -343,7 +345,7 @@ export const useMyTableLogic = (props: MyTableLogicProps) => {
     [handleTrashItem, myTable, columns]
   )
 
-  const DragButton = useCallback(({dndProps, isDragging}) => {
+  const DragButton = useCallback(({ dndProps, isDragging }) => {
     if (dndProps) {
       return <ArrowUpDownIcon className={`w-4 onHover ${isDragging ? 'text-blue-600' : ''}`} />
     }
@@ -352,13 +354,13 @@ export const useMyTableLogic = (props: MyTableLogicProps) => {
   }, [])
 
   const RowActionButtonList = useCallback(
-    ({record}) => {
+    ({ record }) => {
       const ActionButtonObject = myTable.AdditionalActionButtonObject ?? {}
 
       return (
         <>
           {Object?.keys(ActionButtonObject)?.map(key => {
-            return <div key={key}>{ActionButtonObject[key]({record})}</div>
+            return <div key={key}>{ActionButtonObject[key]({ record })}</div>
           })}
         </>
       )
@@ -367,7 +369,7 @@ export const useMyTableLogic = (props: MyTableLogicProps) => {
   )
 
   const DraggableTableRowCallBack = useCallback(
-    (props: {record: any; recIdx: number; rows: colType[][]}) => {
+    (props: { record: any; recIdx: number; rows: colType[][] }) => {
       return (
         <DraggableTableRow
           key={props.record.id}

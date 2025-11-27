@@ -1,13 +1,14 @@
 'use client'
 
-import {tbmOperationGroup} from '@app/(apps)/tbm/(builders)/PageBuilders/tbmOperationGroup/tbmOperationGroup'
-import {useGlobalPropType} from '@cm/hooks/globalHooks/useGlobal'
-import {Fields} from '@cm/class/Fields/Fields'
+import { tbmOperationGroup } from '@app/(apps)/tbm/(builders)/PageBuilders/tbmOperationGroup/tbmOperationGroup'
+import { useGlobalPropType } from '@cm/hooks/globalHooks/useGlobal'
+import { Fields } from '@cm/class/Fields/Fields'
 import GlobalIdSelector from '@cm/components/GlobalIdSelector/GlobalIdSelector'
 import TbmVehicleDetail from '@app/(apps)/tbm/(builders)/PageBuilders/detailPage/TbmVehicleDetail'
 import TbmRouteGroupDetail from '@app/(apps)/tbm/(builders)/PageBuilders/detailPage/TbmRouteGroupDetail'
 import TbmUserDetail from '@app/(apps)/tbm/(builders)/PageBuilders/detailPage/TbmUserDetail'
-import {DataModelBuilder, roleMaster} from '@cm/class/builders/PageBuilderVariables'
+import { DataModelBuilder, roleMaster } from '@cm/class/builders/PageBuilderVariables'
+import { globalIds } from 'src/non-common/searchParamStr'
 
 export class PageBuilder {
   // static tbmBase = tbmBase
@@ -24,20 +25,47 @@ export class PageBuilder {
   }
   static tbmOperationGroup = tbmOperationGroup
 
-  static getGlobalIdSelector = (props: {useGlobalProps: useGlobalPropType}) => {
-    const {useGlobalProps} = props
-    const {admin, getTbmScopes} = useGlobalProps.accessScopes()
-    const {userId, eigyoshoKirikae, tbmBaseId} = getTbmScopes()
+  static getGlobalIdSelector = (props: { useGlobalProps: useGlobalPropType }) => {
+    const { useGlobalProps } = props
+    const { admin, getTbmScopes } = useGlobalProps.accessScopes()
+    const { userId, isShocho, tbmBaseId } = getTbmScopes()
 
     const columns = admin
       ? new Fields([
-          {id: 'g_tbmBaseId', label: '営', forSelect: {}, form: {style: {width: 85}}},
-          {id: 'g_userId', label: 'ド', forSelect: {}, form: {style: {width: 85}}},
-        ]).transposeColumns()
-      : new Fields([{id: 'g_tbmBaseId', label: '営', forSelect: {}}]).transposeColumns()
+        {
+          id: globalIds.globalTbmBaseId,
+          label: '営',
+          forSelect: {
+            config: {
+              modelName: 'tbmBase',
+            }
+          },
+          form: { style: { width: 85 } }
+        },
 
-    if (admin || eigyoshoKirikae) {
-      return () => <GlobalIdSelector {...{useGlobalProps, columns}} />
+        {
+          id: globalIds.globalUserId,
+          label: 'ド',
+          forSelect: {
+            config: {
+              modelName: 'user',
+            }
+          },
+          form: { style: { width: 85 } }
+        },
+      ]).transposeColumns()
+      : new Fields([{
+        id: globalIds.globalTbmBaseId,
+        label: '営',
+        forSelect: {
+          config: {
+            modelName: 'tbmBase',
+          }
+        }
+      }]).transposeColumns()
+
+    if (admin || isShocho) {
+      return () => <GlobalIdSelector {...{ useGlobalProps, columns }} />
     }
   }
 }

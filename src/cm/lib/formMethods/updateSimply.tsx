@@ -1,14 +1,14 @@
-import {isMultiItem, updateMultiItemInTransaction} from '@cm/lib/methods/multipleItemLib'
-import {PrismaModelNames} from '@cm/types/prisma-types'
-import {requestResultType} from '@cm/types/types'
+import { isMultiItem, updateMultiItemInTransaction } from '@cm/lib/methods/multipleItemLib'
+import { PrismaModelNames } from '@cm/types/prisma-types'
+import { requestResultType } from '@cm/types/types'
 
-import {colType} from '@cm/types/col-types'
-import {doTransaction, transactionQuery} from '@cm/lib/server-actions/common-server-actions/doTransaction/doTransaction'
-import {generalDoStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
-import {StrHandler} from '@cm/class/StrHandler'
-import {separateFormData} from '@cm/lib/formMethods/separateFormData'
-import {anyObject} from '@cm/types/utility-types'
-import {multipleSelectProps} from '@cm/types/select-types'
+import { colType } from '@cm/types/col-types'
+import { doTransaction, transactionQuery } from '@cm/lib/server-actions/common-server-actions/doTransaction/doTransaction'
+import { generalDoStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
+import { StrHandler } from '@cm/class/StrHandler'
+import { separateFormData } from '@cm/lib/formMethods/separateFormData'
+import { anyObject } from '@cm/types/utility-types'
+import { multipleSelectProps } from '@cm/types/select-types'
 
 export const updateSimply = async (props: {
   columns: any[]
@@ -19,17 +19,18 @@ export const updateSimply = async (props: {
   initialModelData: any
   extraFormState: anyObject
 }) => {
-  const {columns, latestFormData, dataModelName, additionalPayload, additionalInclude, initialModelData, extraFormState} = props
+  const { columns, latestFormData, dataModelName, additionalPayload, additionalInclude, initialModelData, extraFormState } = props
 
   //=============複数選択の場合=============
   const MultiItems = columns.flat().filter(col => isMultiItem(col.id))
-  const cleansedFormData = {...latestFormData}
+  const cleansedFormData = { ...latestFormData }
 
   MultiItems.forEach(obj => {
     delete cleansedFormData[obj.id] //親子構造のモデルは除去し、別途処理する
   })
 
-  const {id, modelBasicData, relationIds} = separateFormData({
+  const { id, modelBasicData } = separateFormData({
+    dataModelName,
     latestFormData: cleansedFormData,
     additionalPayload,
     columns,
@@ -47,7 +48,7 @@ export const updateSimply = async (props: {
   const payload = {
     ...additionalPayload, //元々最後に設置してアップデートする予定でだったが、初期値とするように設定
     ...modelBasicData,
-    ...relationIds,
+    // ...relationIds,
     // include: additionalInclude,
   }
 
@@ -65,7 +66,7 @@ export const updateSimply = async (props: {
 
   if (id) {
     updatedModelRes = await generalDoStandardPrisma(dataModelName, 'update', {
-      where: {id: id ?? 0},
+      where: { id: id ?? 0 },
       data: payload,
     })
   } else {
@@ -90,7 +91,7 @@ export const updateSimply = async (props: {
 
     midTableTargetCols.forEach((col: colType) => {
       const {
-        models: {parent, mid, option, uniqueWhereKey},
+        models: { parent, mid, option, uniqueWhereKey },
       } = col.multipleSelect as multipleSelectProps
 
       const selectedValues = extraFormState[col.id]
@@ -108,7 +109,7 @@ export const updateSimply = async (props: {
             model: mid,
             method: `upsert`,
             queryObject: {
-              where: {[uniqueWhereKey]: payload},
+              where: { [uniqueWhereKey]: payload },
               create: payload,
               update: payload,
             },
@@ -120,7 +121,7 @@ export const updateSimply = async (props: {
               model: mid,
               method: `delete`,
               queryObject: {
-                where: {[uniqueWhereKey]: payload},
+                where: { [uniqueWhereKey]: payload },
               },
             })
           }
@@ -128,7 +129,7 @@ export const updateSimply = async (props: {
       })
     })
 
-    await doTransaction({transactionQueryList: midTableTransactionQuery})
+    await doTransaction({ transactionQueryList: midTableTransactionQuery })
   }
 
   return updatedModelRes

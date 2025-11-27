@@ -61,6 +61,6 @@ export interface SurroundingComponentProps {
   ClientProps2: ClientPropsType2
 }
 
-export type ViewParamBuilderProps = (props: {ClientProps2: ClientPropsType2}) => {
+export type ViewParamBuilderProps = (props: {ClientProps: ClientPropsType; useGlobalProps: useGlobalPropType}) => {
   [key in keyof ClientPropsType]?: ClientPropsType[key]
 }
