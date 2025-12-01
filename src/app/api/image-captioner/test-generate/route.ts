@@ -1,7 +1,7 @@
 import {NextRequest, NextResponse} from 'next/server'
 
 const GEMINI_API_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent'
-const MAX_RETRIES = 3
+const MAX_RETRIES = 2
 const RETRY_DELAY_BASE = 1000 // 1秒
 
 async function sleep(ms: number) {

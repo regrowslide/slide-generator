@@ -15,17 +15,17 @@ export const ContextInput: React.FC<ContextInputProps> = ({value, onChange, onAn
     <C_Stack className="gap-4 w-full">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          全体のコンテキスト（シナリオ・目的）
+          画面操作のシナリオ
         </label>
         <textarea
           value={value}
           onChange={e => onChange(e.target.value)}
-          placeholder="例：社内マニュアル作成のため、Webアプリケーションの操作手順を説明する..."
+          placeholder="例：ログイン画面でユーザー名とパスワードを入力し、「ログイン」ボタンをクリックしてダッシュボードに遷移する..."
           className="min-h-[120px] w-full p-2 border rounded"
           disabled={isProcessing}
         />
         <p className="text-xs text-gray-500 mt-2">
-          画像全体の流れや目的を入力してください。AIが各画像のキャプションを生成する際の参考にします。
+          画面操作の流れを説明してください。AIが各画像に適切な注釈（吹き出しなど）を生成する際の参考にします。
         </p>
       </div>
       <button

@@ -1,9 +1,9 @@
 'use client'
 
-import React, {useState} from 'react'
-import {ImageItem} from '../types'
-import {RefreshCw, Edit2, Check, X, Tag} from 'lucide-react'
-import {C_Stack, R_Stack} from '@cm/components/styles/common-components/common-components'
+import React, { useState } from 'react'
+import { ImageItem } from '../types'
+import { RefreshCw, Edit2, Check, X } from 'lucide-react'
+import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
 
 interface ImageCardProps {
   image: ImageItem
@@ -11,25 +11,30 @@ interface ImageCardProps {
   onRegenerate: (id: string) => void
 }
 
-export const ImageCard: React.FC<ImageCardProps> = ({image, onUpdate, onRegenerate}) => {
-  const [isEditing, setIsEditing] = useState(false)
-  const [editedCaption, setEditedCaption] = useState(image.caption)
+export const ImageCard: React.FC<ImageCardProps> = ({ image, onUpdate, onRegenerate }) => {
+  const [isEditingAnnotation, setIsEditingAnnotation] = useState(false)
+  const [isEditingPrompt, setIsEditingPrompt] = useState(false)
+  const [editedAnnotation, setEditedAnnotation] = useState(image.annotation)
+  const [editedAnnotationPrompt, setEditedAnnotationPrompt] = useState(image.annotationPrompt)
 
-  const handleSave = () => {
-    onUpdate(image.id, {caption: editedCaption})
-    setIsEditing(false)
+  const handleSaveAnnotation = () => {
+    onUpdate(image.id, { annotation: editedAnnotation })
+    setIsEditingAnnotation(false)
   }
 
-  const handleCancel = () => {
-    setEditedCaption(image.caption)
-    setIsEditing(false)
+  const handleCancelAnnotation = () => {
+    setEditedAnnotation(image.annotation)
+    setIsEditingAnnotation(false)
   }
 
-  const handleTagToggle = (tag: string) => {
-    const newTags = image.tags.includes(tag)
-      ? image.tags.filter(t => t !== tag)
-      : [...image.tags, tag]
-    onUpdate(image.id, {tags: newTags})
+  const handleSavePrompt = () => {
+    onUpdate(image.id, { annotationPrompt: editedAnnotationPrompt })
+    setIsEditingPrompt(false)
+  }
+
+  const handleCancelPrompt = () => {
+    setEditedAnnotationPrompt(image.annotationPrompt)
+    setIsEditingPrompt(false)
   }
 
   const statusColors = {
@@ -51,7 +56,7 @@ export const ImageCard: React.FC<ImageCardProps> = ({image, onUpdate, onRegenera
   }
 
   return (
-    <div className="border rounded-lg p-4 bg-white shadow-sm">
+    <div className="border rounded-lg p-4 bg-white shadow-sm relative">
       <C_Stack className="gap-3">
         {/* 画像プレビュー */}
         <div className="relative">
@@ -64,14 +69,14 @@ export const ImageCard: React.FC<ImageCardProps> = ({image, onUpdate, onRegenera
         {/* ファイル名 */}
         <p className="text-sm font-medium text-gray-700 truncate">{image.file.name}</p>
 
-        {/* キャプション */}
+        {/* 注釈 */}
         <div className="border-t pt-3">
           <div className="flex items-start justify-between gap-2 mb-2">
-            <label className="text-xs font-medium text-gray-600">キャプション</label>
-            {!isEditing && (
+            <label className="text-xs font-medium text-gray-600">注釈内容</label>
+            {!isEditingAnnotation && (
               <R_Stack className="gap-1">
                 <button
-                  onClick={() => setIsEditing(true)}
+                  onClick={() => setIsEditingAnnotation(true)}
                   className="p-1 text-gray-500 hover:text-blue-600 transition-colors"
                   title="編集"
                 >
@@ -81,7 +86,7 @@ export const ImageCard: React.FC<ImageCardProps> = ({image, onUpdate, onRegenera
                   onClick={() => onRegenerate(image.id)}
                   disabled={image.status === 'analyzing' || image.status === 'generating'}
                   className="p-1 text-gray-500 hover:text-green-600 disabled:text-gray-300 transition-colors"
-                  title="再生成"
+                  title="再分析"
                 >
                   <RefreshCw className="w-4 h-4" />
                 </button>
@@ -89,23 +94,23 @@ export const ImageCard: React.FC<ImageCardProps> = ({image, onUpdate, onRegenera
             )}
           </div>
 
-          {isEditing ? (
+          {isEditingAnnotation ? (
             <C_Stack className="gap-2">
               <textarea
-                value={editedCaption}
-                onChange={e => setEditedCaption(e.target.value)}
+                value={editedAnnotation}
+                onChange={e => setEditedAnnotation(e.target.value)}
                 className="w-full p-2 border rounded text-sm min-h-[60px]"
-                placeholder="キャプションを入力..."
+                placeholder="注釈内容を入力..."
               />
               <R_Stack className="gap-2 justify-end">
                 <button
-                  onClick={handleCancel}
+                  onClick={handleCancelAnnotation}
                   className="px-3 py-1 text-sm border rounded hover:bg-gray-50 transition-colors"
                 >
                   <X className="w-4 h-4" />
                 </button>
                 <button
-                  onClick={handleSave}
+                  onClick={handleSaveAnnotation}
                   className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
                 >
                   <Check className="w-4 h-4" />
@@ -113,38 +118,54 @@ export const ImageCard: React.FC<ImageCardProps> = ({image, onUpdate, onRegenera
               </R_Stack>
             </C_Stack>
           ) : (
-            <p className="text-sm text-gray-700 min-h-[40px]">{image.caption || 'キャプション未設定'}</p>
+            <p className={`text-sm text-gray-700 min-h-[40px] ${image.annotation ? 'bg-green-100 rounded-md p-2' : 'text-gray-400 bg-yellow-100'}`}>{image.annotation || '注釈未設定'}</p>
           )}
 
-          {image.captionPrompt && (
-            <details className="mt-2">
-              <summary className="text-xs text-gray-500 cursor-pointer">キャプション指示（詳細）</summary>
-              <p className="text-xs text-gray-600 mt-1 p-2 bg-gray-50 rounded">{image.captionPrompt}</p>
-            </details>
-          )}
-        </div>
 
-        {/* タグ */}
-        <div className="border-t pt-3">
-          <div className="flex items-center gap-2 mb-2">
-            <Tag className="w-4 h-4 text-gray-500" />
-            <span className="text-xs font-medium text-gray-600">タグ</span>
+
+          {/* 注釈プロンプト */}
+          <div className="mt-3">
+            <div className="flex items-start justify-between gap-2 mb-2">
+              {!isEditingPrompt && (
+                <button
+                  onClick={() => setIsEditingPrompt(true)}
+                  className="p-1 text-gray-500 hover:text-blue-600 transition-colors"
+                  title="編集"
+                >
+                  <Edit2 className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+
+            {isEditingPrompt ? (
+              <C_Stack className="gap-2">
+                <textarea
+                  value={editedAnnotationPrompt}
+                  onChange={e => setEditedAnnotationPrompt(e.target.value)}
+                  className="w-full p-2 border rounded text-sm min-h-[100px]"
+                  placeholder="注釈プロンプトを入力..."
+                />
+                <R_Stack className="gap-2 justify-end">
+                  <button
+                    onClick={handleCancelPrompt}
+                    className="px-3 py-1 text-sm border rounded hover:bg-gray-50 transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={handleSavePrompt}
+                    className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                  >
+                    <Check className="w-4 h-4" />
+                  </button>
+                </R_Stack>
+              </C_Stack>
+            ) : (
+              <p className="text-xs text-gray-600 mt-1 p-2 bg-gray-50 rounded whitespace-pre-wrap">
+                {image.annotationPrompt || '注釈プロンプト未設定'}
+              </p>
+            )}
           </div>
-          <R_Stack className="gap-2 flex-wrap">
-            {['エージェントモード', 'デバッグ', 'コード修正', 'UI説明'].map(tag => (
-              <button
-                key={tag}
-                onClick={() => handleTagToggle(tag)}
-                className={`px-2 py-1 text-xs rounded transition-colors ${
-                  image.tags.includes(tag)
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                {tag}
-              </button>
-            ))}
-          </R_Stack>
         </div>
 
         {/* エラー表示 */}

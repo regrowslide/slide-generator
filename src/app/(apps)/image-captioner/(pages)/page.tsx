@@ -20,7 +20,7 @@ export default function ImageCaptionerPage() {
     addImages,
     removeImage,
     updateImage,
-    setContext,
+    setScenario,
     setIsProcessing,
     addLog,
   } = useImageCaptioner()
@@ -41,59 +41,92 @@ export default function ImageCaptionerPage() {
     let successCount = 0
     let errorCount = 0
 
-    for (let i = 0; i < pendingImages.length; i++) {
-      const image = pendingImages[i]
+    // 並列処理用の関数
+    const analyzeImage = async (image: typeof state.images[0]) => {
       updateImage(image.id, { status: 'analyzing' })
-      addLog('info', `分析中: ${image.file.name}`, image.id)
+      addLog('info', `分析開始: ${image.file.name}`, image.id)
 
       try {
-        const base64Data = image.preview
+        // API送信時は元の高解像度画像を使用
+        const base64Data = image.originalBase64 || image.preview
+        const imageSize = base64Data.length
+        addLog('info', `画像サイズ: ${Math.round(imageSize / 1024)}KB`, image.id)
+
         const response = await fetch('/api/image-captioner/analyze', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             imageBase64: base64Data,
-            context: state.context,
+            scenario: state.scenario,
           }),
         })
+
+        if (!response.ok) {
+          const errorText = await response.text()
+          const errorMessage = `HTTP ${response.status}: ${errorText.substring(0, 200)}`
+          updateImage(image.id, {
+            status: 'error',
+            error: errorMessage,
+          })
+          addLog('error', `分析失敗: ${image.file.name} - ${errorMessage}`, image.id)
+          return { success: false }
+        }
 
         const result: AnalyzeResponse = await response.json()
 
         if (result.success) {
+          // レスポンスの妥当性チェック
+          if (!result.annotation) {
+            addLog('warning', `分析結果が不完全: ${image.file.name}`, image.id)
+          }
           updateImage(image.id, {
-            caption: result.caption,
-            captionPrompt: result.captionPrompt,
+            annotation: result.annotation || '画像の分析に失敗しました。',
+            annotationPrompt: '', // 画像生成時に自動生成されるため空文字列
             status: 'analyzed',
           })
           addLog('success', `分析完了: ${image.file.name}`, image.id)
-          successCount++
+          return { success: true }
         } else {
           updateImage(image.id, {
             status: 'error',
             error: result.error || '分析に失敗しました',
           })
           addLog('error', `分析失敗: ${image.file.name} - ${result.error}`, image.id)
-          errorCount++
+          return { success: false }
         }
       } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+        const errorStack = error instanceof Error ? error.stack : undefined
         updateImage(image.id, {
           status: 'error',
-          error: error instanceof Error ? error.message : 'Unknown error',
+          error: errorMessage,
         })
-        addLog('error', `分析エラー: ${image.file.name}`, image.id)
-        errorCount++
+        addLog('error', `分析エラー: ${image.file.name} - ${errorMessage}`, image.id)
+        if (errorStack) {
+          console.error(`[Analyze Error] ${image.file.name}:`, errorStack)
+        }
+        return { success: false }
       }
-
-      setAnalyzingProgress(Math.round(((i + 1) / pendingImages.length) * 100))
     }
 
+    // すべての画像を同時に並列実行
+    const results = await Promise.allSettled(pendingImages.map(image => analyzeImage(image)))
+
+    // 結果を集計
+    results.forEach((result, index) => {
+      if (result.status === 'fulfilled' && result.value?.success) {
+        successCount++
+      } else {
+        errorCount++
+      }
+      // 進捗を更新
+      setAnalyzingProgress(Math.round(((index + 1) / pendingImages.length) * 100))
+    })
+
     setIsProcessing(false)
-    addLog(
-      'success',
-      `分析完了: 成功 ${successCount}件、失敗 ${errorCount}件`,
-    )
+    addLog('success', `分析完了: 成功 ${successCount}件、失敗 ${errorCount}件`)
     setStep(3)
-  }, [state.images, state.context, setIsProcessing, addLog, updateImage, setStep])
+  }, [state.images, state.scenario, setIsProcessing, addLog, updateImage, setStep])
 
   const handleRegenerate = useCallback(
     async (id: string) => {
@@ -104,13 +137,14 @@ export default function ImageCaptionerPage() {
       addLog('info', `再分析中: ${image.file.name}`, id)
 
       try {
-        const base64Data = image.preview
+        // API送信時は元の高解像度画像を使用
+        const base64Data = image.originalBase64 || image.preview
         const response = await fetch('/api/image-captioner/analyze', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             imageBase64: base64Data,
-            context: state.context,
+            scenario: state.scenario,
           }),
         })
 
@@ -118,8 +152,8 @@ export default function ImageCaptionerPage() {
 
         if (result.success) {
           updateImage(id, {
-            caption: result.caption,
-            captionPrompt: result.captionPrompt,
+            annotation: result.annotation,
+            annotationPrompt: '', // 画像生成時に自動生成されるため空文字列
             status: 'analyzed',
           })
           addLog('success', `再分析完了: ${image.file.name}`, id)
@@ -138,7 +172,7 @@ export default function ImageCaptionerPage() {
         addLog('error', `再分析エラー: ${image.file.name}`, id)
       }
     },
-    [state.images, state.context, addLog, updateImage]
+    [state.images, state.scenario, addLog, updateImage]
   )
 
   const handleGenerate = useCallback(
@@ -147,7 +181,7 @@ export default function ImageCaptionerPage() {
       if (event && !targetImages) {
         event.preventDefault()
       }
-      const imagesToProcess = targetImages || state.images.filter(img => img.status === 'analyzed' && img.caption)
+      const imagesToProcess = targetImages || state.images.filter(img => img.status === 'analyzed' && img.annotation)
       if (imagesToProcess.length === 0) {
         addLog('error', '生成可能な画像がありません')
         return
@@ -160,20 +194,20 @@ export default function ImageCaptionerPage() {
       let successCount = 0
       let errorCount = 0
 
-      for (let i = 0; i < imagesToProcess.length; i++) {
-        const image = imagesToProcess[i]
+      // 並列処理用の関数
+      const generateImage = async (image: typeof imagesToProcess[0], index: number) => {
         updateImage(image.id, { status: 'generating', error: undefined })
-        addLog('info', `生成中: ${image.file.name} (${i + 1}/${imagesToProcess.length})`, image.id)
+        addLog('info', `生成開始: ${image.file.name} (${index + 1}/${imagesToProcess.length})`, image.id)
 
         try {
-          const base64Data = image.preview
+          // API送信時は元の高解像度画像を使用
+          const base64Data = image.originalBase64 || image.preview
           const response = await fetch('/api/image-captioner/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               imageBase64: base64Data,
-              caption: image.caption,
-              captionPrompt: image.captionPrompt,
+              annotation: image.annotation,
               aspectRatio: state.settings.aspectRatio,
               resolution: state.settings.resolution,
             }),
@@ -188,14 +222,14 @@ export default function ImageCaptionerPage() {
               error: undefined,
             })
             addLog('success', `生成完了: ${image.file.name}`, image.id)
-            successCount++
+            return { success: true }
           } else {
             updateImage(image.id, {
               status: 'error',
               error: result.error || '生成に失敗しました',
             })
             addLog('error', `生成失敗: ${image.file.name} - ${result.error}`, image.id)
-            errorCount++
+            return { success: false }
           }
         } catch (error) {
           updateImage(image.id, {
@@ -203,9 +237,23 @@ export default function ImageCaptionerPage() {
             error: error instanceof Error ? error.message : 'Unknown error',
           })
           addLog('error', `生成エラー: ${image.file.name}`, image.id)
-          errorCount++
+          return { success: false }
         }
       }
+
+      // すべての画像を同時に並列実行
+      const results = await Promise.allSettled(
+        imagesToProcess.map((image, index) => generateImage(image, index))
+      )
+
+      // 結果を集計
+      results.forEach(result => {
+        if (result.status === 'fulfilled' && result.value?.success) {
+          successCount++
+        } else {
+          errorCount++
+        }
+      })
 
       setIsProcessing(false)
       addLog('success', `生成完了: 成功 ${successCount}件、失敗 ${errorCount}件`)
@@ -215,7 +263,7 @@ export default function ImageCaptionerPage() {
 
   const handleRetryFailed = useCallback(async () => {
     const failedImages = state.images.filter(
-      img => (img.status === 'error' || img.status === 'analyzed') && img.caption
+      img => (img.status === 'error' || img.status === 'analyzed') && img.annotation
     )
     if (failedImages.length === 0) {
       addLog('error', '再生成可能な画像がありません')
@@ -228,20 +276,20 @@ export default function ImageCaptionerPage() {
     let successCount = 0
     let errorCount = 0
 
-    for (let i = 0; i < failedImages.length; i++) {
-      const image = failedImages[i]
+    // 並列処理用の関数
+    const retryGenerateImage = async (image: typeof failedImages[0], index: number) => {
       updateImage(image.id, { status: 'generating', error: undefined })
-      addLog('info', `再生成中: ${image.file.name} (${i + 1}/${failedImages.length})`, image.id)
+      addLog('info', `再生成開始: ${image.file.name} (${index + 1}/${failedImages.length})`, image.id)
 
       try {
-        const base64Data = image.preview
+        // API送信時は元の高解像度画像を使用
+        const base64Data = image.originalBase64 || image.preview
         const response = await fetch('/api/image-captioner/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             imageBase64: base64Data,
-            caption: image.caption,
-            captionPrompt: image.captionPrompt,
+            annotation: image.annotation,
             aspectRatio: state.settings.aspectRatio,
             resolution: state.settings.resolution,
           }),
@@ -256,14 +304,14 @@ export default function ImageCaptionerPage() {
             error: undefined,
           })
           addLog('success', `再生成完了: ${image.file.name}`, image.id)
-          successCount++
+          return { success: true }
         } else {
           updateImage(image.id, {
             status: 'error',
             error: result.error || '生成に失敗しました',
           })
           addLog('error', `再生成失敗: ${image.file.name} - ${result.error}`, image.id)
-          errorCount++
+          return { success: false }
         }
       } catch (error) {
         updateImage(image.id, {
@@ -271,9 +319,23 @@ export default function ImageCaptionerPage() {
           error: error instanceof Error ? error.message : 'Unknown error',
         })
         addLog('error', `再生成エラー: ${image.file.name}`, image.id)
-        errorCount++
+        return { success: false }
       }
     }
+
+    // すべての画像を同時に並列実行
+    const results = await Promise.allSettled(
+      failedImages.map((image, index) => retryGenerateImage(image, index))
+    )
+
+    // 結果を集計
+    results.forEach(result => {
+      if (result.status === 'fulfilled' && result.value?.success) {
+        successCount++
+      } else {
+        errorCount++
+      }
+    })
 
     setIsProcessing(false)
     addLog('success', `再生成完了: 成功 ${successCount}件、失敗 ${errorCount}件`)
@@ -295,7 +357,7 @@ export default function ImageCaptionerPage() {
           try {
             const response = await fetch(image.generatedImageUrl)
             const blob = await response.blob()
-            const fileName = image.file.name.replace(/\.[^/.]+$/, '') + '_captioned.png'
+            const fileName = image.file.name.replace(/\.[^/.]+$/, '') + '_annotated.png'
             saveAs(blob, fileName)
             // 少し遅延を入れて連続ダウンロードを避ける
             await new Promise(resolve => setTimeout(resolve, 100))
@@ -317,7 +379,7 @@ export default function ImageCaptionerPage() {
         {/* ヘッダー */}
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Image Captioner</h1>
-          <p className="text-gray-600">スクリーンショットにAIキャプションを自動付与</p>
+          <p className="text-gray-600">スクリーンショットに注釈（吹き出しなど）を自動付与</p>
         </div>
 
         {/* ステッパー */}
@@ -394,8 +456,8 @@ export default function ImageCaptionerPage() {
           <C_Stack className="gap-6">
             <div className="bg-white p-6 rounded-lg shadow-sm">
               <ContextInput
-                value={state.context}
-                onChange={setContext}
+                value={state.scenario}
+                onChange={setScenario}
                 onAnalyze={handleAnalyze}
                 isProcessing={state.isProcessing}
               />
@@ -417,12 +479,12 @@ export default function ImageCaptionerPage() {
           </C_Stack>
         )}
 
-        {/* Step 3: 結果確認・編集 */}
+        {/* Step 3: 注釈プロンプト確認・編集 */}
         {state.step === 3 && (
           <C_Stack className="gap-6">
             <div className="bg-white p-6 rounded-lg shadow-sm">
               <R_Stack className="items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold">結果確認・編集</h2>
+                <h2 className="text-xl font-semibold">注釈プロンプト確認・編集</h2>
                 <button
                   onClick={e => handleGenerate(undefined, e)}
                   disabled={state.isProcessing || state.images.filter(img => img.status === 'analyzed').length === 0}
@@ -443,41 +505,30 @@ export default function ImageCaptionerPage() {
         {/* Step 4: 最終生成 */}
         {state.step === 4 && (
           <C_Stack className="gap-6">
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-              <R_Stack className="items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold">処理ログ</h2>
-                {state.images.some(img => img.status === 'error') && !state.isProcessing && (
-                  <button
-                    onClick={handleRetryFailed}
-                    className="px-6 py-3 bg-orange-600 text-white rounded-lg font-medium hover:bg-orange-700 transition-colors flex items-center gap-2"
-                  >
-                    <RefreshCw className="w-5 h-5" />
-                    失敗した画像を再生成
-                  </button>
-                )}
-              </R_Stack>
-              <ProcessLog logs={state.logs} />
-            </div>
-
-            {/* 失敗した画像 */}
-            {state.images.some(img => img.status === 'error') && (
-              <div className="bg-white p-6 rounded-lg shadow-sm border-2 border-red-200">
-                <h2 className="text-xl font-semibold mb-4 text-red-600">生成に失敗した画像</h2>
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
-                  {state.images
-                    .filter(img => img.status === 'error')
-                    .map(image => (
-                      <ImageCard key={image.id} image={image} onUpdate={updateImage} onRegenerate={handleRegenerate} />
-                    ))}
-                </div>
+            {/* 処理ログ（詳細表示） */}
+            {state.logs.length > 0 && (
+              <div className="bg-white p-6 rounded-lg shadow-sm">
+                <R_Stack className="items-center justify-between mb-4">
+                  <h2 className="text-xl font-semibold">処理ログ</h2>
+                  {state.images.some(img => img.status === 'error') && !state.isProcessing && (
+                    <button
+                      onClick={handleRetryFailed}
+                      className="px-6 py-3 bg-orange-600 text-white rounded-lg font-medium hover:bg-orange-700 transition-colors flex items-center gap-2"
+                    >
+                      <RefreshCw className="w-5 h-5" />
+                      失敗した画像を再生成
+                    </button>
+                  )}
+                </R_Stack>
+                <ProcessLog logs={state.logs} />
               </div>
             )}
 
-            {/* 成功した画像 */}
-            {state.images.some(img => img.status === 'completed') && (
-              <div className="bg-white p-6 rounded-lg shadow-sm">
-                <R_Stack className="items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold">生成された画像</h2>
+            {/* すべての画像を表示（進行状況ログをオーバーレイ） */}
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <R_Stack className="items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold">画像一覧</h2>
+                {state.images.some(img => img.status === 'completed') && (
                   <button
                     onClick={handleDownloadAll}
                     className="px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center gap-2"
@@ -485,16 +536,23 @@ export default function ImageCaptionerPage() {
                     <Download className="w-5 h-5" />
                     一括ダウンロード
                   </button>
-                </R_Stack>
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
-                  {state.images
-                    .filter(img => img.status === 'completed' && img.generatedImageUrl)
-                    .map(image => (
-                      <ImageCard key={image.id} image={image} onUpdate={updateImage} onRegenerate={handleRegenerate} />
-                    ))}
-                </div>
+                )}
+              </R_Stack>
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
+                {state.images.map(image => (
+                  <div
+                    key={image.id}
+                    className={`relative${image.status === 'analyzing' || image.status === 'generating' ? ' opacity-50' : ''}`}
+                  >
+                    <ImageCard image={image} onUpdate={updateImage} onRegenerate={handleRegenerate} />
+                    {/* 進行中の画像にはログをオーバーレイ表示 */}
+                    {(image.status === 'analyzing' || image.status === 'generating') && (
+                      <ProcessLog logs={state.logs.filter(log => log.imageId === image.id)} compact />
+                    )}
+                  </div>
+                ))}
               </div>
-            )}
+            </div>
           </C_Stack>
         )}
       </C_Stack>

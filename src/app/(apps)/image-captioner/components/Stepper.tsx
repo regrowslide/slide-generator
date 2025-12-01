@@ -11,8 +11,8 @@ interface StepperProps {
 
 const steps = [
   {number: 1, label: '設定 & アップロード'},
-  {number: 2, label: 'コンテキスト入力'},
-  {number: 3, label: '結果確認・編集'},
+  {number: 2, label: 'シナリオ入力'},
+  {number: 3, label: '注釈プロンプト確認・編集'},
   {number: 4, label: '最終生成'},
 ] as const
 

@@ -100,6 +100,7 @@ ${context ? `【全体のコンテキスト】\n${context}\n` : ''}
 
     const data = await response.json()
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || ''
+    console.log({text}) //logs
 
     if (!text) {
       return NextResponse.json(
@@ -119,7 +120,7 @@ ${context ? `【全体のコンテキスト】\n${context}\n` : ''}
         success: true,
         caption: text.substring(0, 100),
         captionPrompt: text,
-      } as AnalyzeResponse)
+      } as unknown as AnalyzeResponse)
     }
 
     const jsonText = jsonMatch[1] || jsonMatch[0]
@@ -129,7 +130,7 @@ ${context ? `【全体のコンテキスト】\n${context}\n` : ''}
       success: true,
       caption: result.caption || text.substring(0, 100),
       captionPrompt: result.captionPrompt || text,
-    } as AnalyzeResponse)
+    } as unknown as AnalyzeResponse)
   } catch (error) {
     console.error('Analyze error:', error)
     return NextResponse.json(

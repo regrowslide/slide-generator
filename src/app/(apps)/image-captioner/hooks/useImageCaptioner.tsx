@@ -14,7 +14,7 @@ export const useImageCaptioner = () => {
     step: 1,
     settings: defaultSettings,
     images: [],
-    context: '',
+    scenario: '',
     isProcessing: false,
     logs: [],
   })
@@ -47,7 +47,48 @@ export const useImageCaptioner = () => {
   const addImages = useCallback(async (files: File[]) => {
     const newImages: ImageItem[] = await Promise.all(
       files.map(async file => {
+        // プレビュー用の低解像度画像（表示用）
         const preview = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onload = () => {
+            const img = new Image()
+            img.onload = () => {
+              const canvas = document.createElement('canvas')
+              const maxPreviewSize = 800 // プレビュー用の最大サイズ
+              let width = img.width
+              let height = img.height
+
+              if (width > height) {
+                if (width > maxPreviewSize) {
+                  height = (height * maxPreviewSize) / width
+                  width = maxPreviewSize
+                }
+              } else {
+                if (height > maxPreviewSize) {
+                  width = (width * maxPreviewSize) / height
+                  height = maxPreviewSize
+                }
+              }
+
+              canvas.width = width
+              canvas.height = height
+              const ctx = canvas.getContext('2d')
+              if (ctx) {
+                ctx.drawImage(img, 0, 0, width, height)
+                resolve(canvas.toDataURL('image/jpeg', 0.85))
+              } else {
+                resolve(reader.result as string)
+              }
+            }
+            img.onerror = () => resolve(reader.result as string)
+            img.src = reader.result as string
+          }
+          reader.onerror = reject
+          reader.readAsDataURL(file)
+        })
+
+        // 元のファイルのBase64（API送信用、高解像度）
+        const originalBase64 = await new Promise<string>((resolve, reject) => {
           const reader = new FileReader()
           reader.onload = () => resolve(reader.result as string)
           reader.onerror = reject
@@ -58,9 +99,9 @@ export const useImageCaptioner = () => {
           id: uuidv4(),
           file,
           preview,
-          caption: '',
-          captionPrompt: '',
-          tags: [],
+          originalBase64,
+          annotation: '',
+          annotationPrompt: '',
           status: 'pending' as const,
         }
       })
@@ -89,8 +130,8 @@ export const useImageCaptioner = () => {
     }))
   }, [])
 
-  const setContext = useCallback((context: string) => {
-    setState(prev => ({...prev, context}))
+  const setScenario = useCallback((scenario: string) => {
+    setState(prev => ({...prev, scenario}))
   }, [])
 
   const setIsProcessing = useCallback((isProcessing: boolean) => {
@@ -108,7 +149,7 @@ export const useImageCaptioner = () => {
     addImages,
     removeImage,
     updateImage,
-    setContext,
+    setScenario,
     setIsProcessing,
     addLog,
     clearLogs,

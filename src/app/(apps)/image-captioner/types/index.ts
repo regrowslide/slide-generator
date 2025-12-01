@@ -1,10 +1,10 @@
 export interface ImageItem {
   id: string
   file: File
-  preview: string // base64 data URL
-  caption: string
-  captionPrompt: string // AIが生成したキャプション指示
-  tags: string[]
+  preview: string // base64 data URL（プレビュー用、低解像度）
+  originalBase64?: string // 元のファイルのBase64（API送信用、高解像度）
+  annotation: string // 注釈内容（簡潔な説明）
+  annotationPrompt: string // AIが生成した注釈プロンプト（画像生成用の詳細な指示）
   generatedImageUrl?: string // Nano Banana Proで生成された画像のURL
   status: 'pending' | 'analyzing' | 'analyzed' | 'generating' | 'completed' | 'error'
   error?: string
@@ -27,15 +27,14 @@ export interface AppState {
   step: 1 | 2 | 3 | 4
   settings: AppSettings
   images: ImageItem[]
-  context: string
+  scenario: string // 画面操作の流れを説明したテキスト（シナリオ）
   isProcessing: boolean
   logs: LogEntry[]
 }
 
 export interface AnalyzeResponse {
   success: boolean
-  caption: string
-  captionPrompt: string
+  annotation: string // 簡易版の注釈内容（どの箇所に、どんな注釈を入れるか）
   error?: string
 }
 
@@ -44,4 +43,3 @@ export interface GenerateResponse {
   imageUrl: string
   error?: string
 }
-
