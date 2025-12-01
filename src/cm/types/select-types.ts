@@ -47,6 +47,7 @@ export type multipleSelectProps = {
 export type forSelcetType = {
   codeMaster?: Code
   radio?: anyObject
+  inline?: boolean
   searcher?: (props: ControlContextType) => {
     getSearchFormProps?: () => {
       columns: any[][]

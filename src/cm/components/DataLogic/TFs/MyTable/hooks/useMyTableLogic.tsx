@@ -133,7 +133,7 @@ export const useMyTableLogic = (props: MyTableLogicProps) => {
       let deleteConfirmed = false
 
       if (confirm(`削除しますか？`)) {
-        if (prompt(`本当に削除する場合、「削除」と入力してください。`) === `削除`) {
+        if (prompt(`この処理は元に戻すことはできません。本当に削除する場合、「削除」と入力してください。`) === `削除`) {
           deleteConfirmed = true
         }
       }

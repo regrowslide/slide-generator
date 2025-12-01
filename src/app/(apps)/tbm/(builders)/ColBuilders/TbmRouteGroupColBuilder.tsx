@@ -1,20 +1,21 @@
 'use client'
-import {tbmMonthlyConfigForRouteGroupBuilder} from '@app/(apps)/tbm/(builders)/ColBuilders/tbmMonthlyConfigForRouteGroupBuilder'
-import {TBM_CODE} from '@app/(apps)/tbm/(class)/TBM_CODE'
-import {TimeHandler} from '@app/(apps)/tbm/(class)/TimeHandler'
+import { tbmMonthlyConfigForRouteGroupBuilder } from '@app/(apps)/tbm/(builders)/ColBuilders/tbmMonthlyConfigForRouteGroupBuilder'
+import { TBM_CODE } from '@app/(apps)/tbm/(class)/TBM_CODE'
+import { TimeHandler } from '@app/(apps)/tbm/(class)/TimeHandler'
 
-import {defaultRegister} from '@cm/class/builders/ColBuilderVariables'
-import {Fields} from '@cm/class/Fields/Fields'
-import {columnGetterType} from '@cm/types/types'
-import {createUpdate} from '@cm/lib/methods/createUpdate'
-import {doStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
-import {useEffect, useState} from 'react'
-import {toast} from 'react-toastify'
-import {colType} from '@cm/types/col-types'
+import { defaultRegister } from '@cm/class/builders/ColBuilderVariables'
+import { Fields } from '@cm/class/Fields/Fields'
+import { columnGetterType } from '@cm/types/types'
+import { createUpdate } from '@cm/lib/methods/createUpdate'
+import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
+import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
+import { colType } from '@cm/types/col-types'
+import { isDev } from '@cm/lib/methods/common'
 
 const timeVlidator = (value: string) => {
   if (value) {
-    const {isValid, error} = TimeHandler.validateTimeString(value)
+    const { isValid, error } = TimeHandler.validateTimeString(value)
     return error ?? undefined
   }
 }
@@ -26,26 +27,26 @@ const timeFormatter = (value: string) => {
 }
 
 export const TbmRouteGroupColBuilder = (props: columnGetterType) => {
-  const {yearMonth, showMonthConfig = false, tbmBaseId} = props.ColBuilderExtraProps ?? {}
+  const { yearMonth, showMonthConfig = false, tbmBaseId } = props.ColBuilderExtraProps ?? {}
 
-  const {useGlobalProps} = props
+  const { useGlobalProps } = props
 
-  const regularStyle = {color: `#43639a`, fontSize: 14}
+  const regularStyle = { color: `#43639a`, fontSize: 14 }
 
   let colsource: colType[] = [
     ...new Fields([
       {
         id: 'code',
         label: 'CD',
-        form: {defaultValue: null},
-        td: {style: {...regularStyle, minWidth: 75}},
+        form: { defaultValue: null },
+        td: { style: { ...regularStyle, minWidth: 75 } },
         search: {},
       },
       {
         id: 'serviceNumber',
         label: '服務番号',
-        form: {defaultValue: null},
-        td: {style: {...regularStyle, minWidth: 85}},
+        form: { defaultValue: null },
+        td: { style: { ...regularStyle, minWidth: 85 } },
         search: {},
       },
 
@@ -58,13 +59,13 @@ export const TbmRouteGroupColBuilder = (props: columnGetterType) => {
           defaultValue: tbmBaseId,
           disabled: tbmBaseId,
         },
-        td: {style: {...regularStyle, minWidth: 120}},
+        td: { style: { ...regularStyle, minWidth: 120 } },
       },
       {
         id: `_shareBaseIds`,
         label: `共有先営業所`,
-        td: {style: {...regularStyle, minWidth: 160}},
-        form: {hidden: true},
+        td: { style: { ...regularStyle, minWidth: 160 } },
+        form: { hidden: true },
 
         format: (val, routeGroup) => {
           const shares = routeGroup.TbmRouteGroupShare || []
@@ -87,65 +88,68 @@ export const TbmRouteGroupColBuilder = (props: columnGetterType) => {
       {
         id: 'seikyuKbn',
         label: '区分',
-        td: {style: {...regularStyle, minWidth: 180, fontSize: 12}},
-        form: {...defaultRegister, defaultValue: `01`},
-        forSelect: {codeMaster: TBM_CODE.ROUTE_KBN},
+        td: { style: { ...regularStyle, minWidth: 180, fontSize: 12 } },
+        form: { ...defaultRegister, defaultValue: `01` },
+        forSelect: {
+          inline: isDev,
+          codeMaster: TBM_CODE.ROUTE_KBN
+        },
       },
       {
         id: 'name',
         label: '便名',
-        td: {style: {...regularStyle, minWidth: 200}},
-        form: {...defaultRegister},
+        td: { style: { ...regularStyle, minWidth: 200 } },
+        form: { ...defaultRegister },
         search: {},
       },
       {
         id: 'routeName',
         label: '路線名',
-        td: {style: {...regularStyle, minWidth: 200}},
+        td: { style: { ...regularStyle, minWidth: 200 } },
         form: {},
         search: {},
       },
-    ]).buildFormGroup({groupName: '便設定①'}).plain,
+    ]).buildFormGroup({ groupName: '便設定①' }).plain,
     ...new Fields([
       {
         id: 'departureTime',
         label: '出発時刻',
         type: 'text',
-        td: {style: {...regularStyle, minWidth: 80}},
+        td: { style: { ...regularStyle, minWidth: 80 } },
         inputProps: {
           placeholder: '0800',
           minLength: 4,
           maxLength: 4,
         },
-        form: {register: {validate: timeVlidator}},
+        form: { register: { validate: timeVlidator } },
         format: timeFormatter,
       },
       {
         id: 'finalArrivalTime',
         label: '最終到着',
         type: 'text',
-        td: {style: {...regularStyle, minWidth: 100}},
+        td: { style: { ...regularStyle, minWidth: 100 } },
         inputProps: {
           placeholder: '1200',
           minLength: 4,
           maxLength: 4,
         },
-        form: {register: {validate: timeVlidator}},
+        form: { register: { validate: timeVlidator } },
         format: timeFormatter,
       },
       {
         id: 'allowDuplicate',
         label: '重複許可',
         type: 'boolean',
-        td: {style: {...regularStyle, minWidth: 80}},
-        form: {defaultValue: false},
+        td: { style: { ...regularStyle, minWidth: 80 } },
+        form: { defaultValue: false },
         format: val => (val ? '○' : ''),
       },
       {
         id: 'vehicleType',
         label: '車種',
         type: 'text',
-        td: {style: {...regularStyle, minWidth: 60}},
+        td: { style: { ...regularStyle, minWidth: 60 } },
         form: {},
       },
       // {
@@ -157,16 +161,16 @@ export const TbmRouteGroupColBuilder = (props: columnGetterType) => {
       {
         id: `productName`,
         label: `品名`,
-        td: {style: {...regularStyle, minWidth: 60}},
+        td: { style: { ...regularStyle, minWidth: 60 } },
         form: {},
       },
 
       {
         id: `tbmCustomerId`,
         label: `取引先`,
-        td: {style: {...regularStyle, minWidth: 200}},
+        td: { style: { ...regularStyle, minWidth: 200 } },
         form: {
-          defaultValue: ({alreadyRegisteredFormData, formData, col}) => {
+          defaultValue: ({ alreadyRegisteredFormData, formData, col }) => {
             return formData?.Mid_TbmRouteGroup_TbmCustomer?.TbmCustomer?.id
           },
         },
@@ -176,14 +180,14 @@ export const TbmRouteGroupColBuilder = (props: columnGetterType) => {
           return <div>{routeGroup.Mid_TbmRouteGroup_TbmCustomer?.TbmCustomer?.name}</div>
         },
       },
-    ]).buildFormGroup({groupName: '便設定②'}).plain,
+    ]).buildFormGroup({ groupName: '便設定②' }).plain,
   ]
 
   if (showMonthConfig) {
     colsource = [
       ...colsource,
 
-      ...tbmMonthlyConfigForRouteGroupBuilder({useGlobalProps})
+      ...tbmMonthlyConfigForRouteGroupBuilder({ useGlobalProps })
         .flat()
         .map(col => {
           const dataKey = col.id
@@ -204,7 +208,7 @@ export const TbmRouteGroupColBuilder = (props: columnGetterType) => {
                 setvalue(defaultValue)
               }, [defaultValue])
 
-              const unique_yearMonth_tbmRouteGroupId = {yearMonth, tbmRouteGroupId: row.id}
+              const unique_yearMonth_tbmRouteGroupId = { yearMonth, tbmRouteGroupId: row.id }
               const style = col.td?.style
 
               return (
@@ -217,7 +221,7 @@ export const TbmRouteGroupColBuilder = (props: columnGetterType) => {
                     const value = col.type === `number` ? Number(e.target.value) : e.target.value
 
                     const res = await doStandardPrisma(`tbmMonthlyConfigForRouteGroup`, `upsert`, {
-                      where: {unique_yearMonth_tbmRouteGroupId},
+                      where: { unique_yearMonth_tbmRouteGroupId },
                       ...createUpdate({
                         ...unique_yearMonth_tbmRouteGroupId,
                         [dataKey]: value ?? '',

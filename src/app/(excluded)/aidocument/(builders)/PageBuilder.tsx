@@ -9,6 +9,7 @@ import MyAccordion from '@cm/components/utils/Accordions/Accordion'
 import { useGlobalPropType } from '@cm/hooks/globalHooks/useGlobal'
 import { Fields } from '@cm/class/Fields/Fields'
 import GlobalIdSelector from '@cm/components/GlobalIdSelector/GlobalIdSelector'
+import { globalIds } from 'src/non-common/searchParamStr'
 
 export class PageBuilder {
   static masterKeyClient = {
@@ -63,7 +64,7 @@ export class PageBuilder {
         form: { style: { width: 200 } },
       },
       {
-        id: 'g_userId',
+        id: globalIds.globalUserId,
         label: 'ユーザー',
         forSelect: {
           config: {

@@ -1,30 +1,30 @@
 'use client'
 
-import React, {Fragment} from 'react'
-import {onFormItemBlurType} from '@cm/types/types'
-import {colType} from '@cm/types/col-types'
-import {C_Stack, R_Stack} from 'src/cm/components/styles/common-components/common-components'
-import {FormProvider, UseFormReturn} from 'react-hook-form'
-import {AdditionalBasicFormPropType} from 'src/cm/hooks/useBasicForm/useBasicFormProps'
-import {useCacheSelectOptionReturnType} from 'src/cm/hooks/useCacheSelectOptions/useCacheSelectOptions'
+import React, { Fragment } from 'react'
+import { onFormItemBlurType } from '@cm/types/types'
+import { colType } from '@cm/types/col-types'
+import { C_Stack, R_Stack } from 'src/cm/components/styles/common-components/common-components'
+import { FormProvider, UseFormReturn } from 'react-hook-form'
+import { AdditionalBasicFormPropType } from 'src/cm/hooks/useBasicForm/useBasicFormProps'
+import { useCacheSelectOptionReturnType } from 'src/cm/hooks/useCacheSelectOptions/useCacheSelectOptions'
 
-import {adjustBasicFormProps} from '@cm/hooks/useBasicForm/lib/adjustBasicFormProps'
+import { adjustBasicFormProps } from '@cm/hooks/useBasicForm/lib/adjustBasicFormProps'
 import ControlGroup from '@cm/hooks/useBasicForm/molecules/ControlGroup'
-import {Card} from '@cm/shadcn/ui/card'
+import { Card } from '@cm/shadcn/ui/card'
 
-import {obj__initializeProperty} from '@cm/class/ObjHandler/transformers'
-import {cn} from '@shadcn/lib/utils'
+import { obj__initializeProperty } from '@cm/class/ObjHandler/transformers'
+import { cn } from '@shadcn/lib/utils'
 
-import {getUse2ColSpan} from '@cm/hooks/useBasicForm/lib/hookformMethods'
+import { getUse2ColSpan } from '@cm/hooks/useBasicForm/lib/hookformMethods'
 import AutoGridContainer from '@cm/components/utils/AutoGridContainer'
-import {alignModeType} from '@cm/types/form-control-type'
+import { alignModeType } from '@cm/types/form-control-type'
 
-export type useRegisterType = (props: {col: colType; newestRecord: any}) => {
+export type useRegisterType = (props: { col: colType; newestRecord: any }) => {
   currentValue: any
   Register: any
 }
 
-export type useResetValueType = (props: {col: colType; field: any}) => void
+export type useResetValueType = (props: { col: colType; field: any }) => void
 
 export type BasicFormType = {
   formData: any
@@ -43,10 +43,11 @@ export type BasicFormType = {
   // useRegister: useRegisterType
   useResetValue: useResetValueType
   onFormItemBlur?: onFormItemBlurType
+  confirmMessageBeforeSubmit?: string
 } & AdditionalBasicFormPropType
 
 const FormSection = React.memo(
-  ({columns, ControlOptions, children}: {columns: colType[]; ControlOptions: any; children: React.ReactNode}) => {
+  ({ columns, ControlOptions, children }: { columns: colType[]; ControlOptions: any; children: React.ReactNode }) => {
     const colFormIndexGroupName = ControlOptions?.showLabel === false ? undefined : columns[0]?.form?.colIndex
 
     return (
@@ -67,13 +68,25 @@ const FormSection = React.memo(
 )
 
 const BasicForm = (props: BasicFormType) => {
-  const {formRef, formId, alignMode, style, ControlOptions, columns, ReactHookForm} = adjustBasicFormProps(props)
+  const { formRef, confirmMessageBeforeSubmit, formId, alignMode, style, ControlOptions, columns, ReactHookForm } = adjustBasicFormProps(props)
 
   const onSubmit = async e => {
-    const handleFormSubmit = props.onSubmit ? ReactHookForm.handleSubmit(props.onSubmit) : undefined
     e.preventDefault()
+    if (confirmMessageBeforeSubmit) {
+      if (confirm(confirmMessageBeforeSubmit) === false) {
+        return
+      }
+    }
+    const handleFormSubmit = props.onSubmit ? ReactHookForm.handleSubmit(props.onSubmit) : undefined
 
-    const requiredColsRest = columns.flat().filter(col => col.form?.register?.required && !ReactHookForm.getValues(col.id))
+    const requiredColsRest = columns
+      .flat()
+      .filter(col => {
+        if (!col.form?.register?.required) return false;
+        const value = ReactHookForm.getValues(col.id);
+        // undefined, null, '' はダメ、0はOK
+        return value === undefined || value === null || value === '';
+      });
 
     if (requiredColsRest.length > 0) {
       alert(`必須項目が入力されていません: ${requiredColsRest.map(col => col.label).join(', ')}`)
@@ -92,13 +105,13 @@ const BasicForm = (props: BasicFormType) => {
     return <></>
   }
 
-  const {transposedRowsForForm} = makeFormsByColumnObj(columns)
+  const { transposedRowsForForm } = makeFormsByColumnObj(columns)
 
   if (alignMode === `row`) {
     return (
       <div>
         <FormProvider {...ReactHookForm}>
-          <form {...{ref: formRef, id: formId, onSubmit}}>
+          <form {...{ ref: formRef, id: formId, onSubmit }}>
             <R_Stack>
               {transposedRowsForForm.map((columns, i) => {
                 return (
@@ -108,7 +121,7 @@ const BasicForm = (props: BasicFormType) => {
                         const uniqueKey = `${i}-${formItemIndex}`
                         return (
                           <div key={uniqueKey}>
-                            <ControlGroup {...{...props, col, formItemIndex, alignMode}} />
+                            <ControlGroup {...{ ...props, col, formItemIndex, alignMode }} />
                           </div>
                         )
                       })}
@@ -126,12 +139,12 @@ const BasicForm = (props: BasicFormType) => {
   } else if (alignMode === `rowBlock`) {
     return (
       <FormProvider {...ReactHookForm}>
-        <form {...{ref: formRef, id: formId, onSubmit}}>
+        <form {...{ ref: formRef, id: formId, onSubmit }}>
           <R_Stack className={` items-stretch w-full`}>
             {transposedRowsForForm.map((columns, i) => {
               return (
                 <Fragment key={i}>
-                  <FormSection {...{columns, ControlOptions}}>
+                  <FormSection {...{ columns, ControlOptions }}>
                     <C_Stack className={cn(`gap-8`)}>
                       {columns.map((col: colType, formItemIndex) => {
                         const use2ColSpan = getUse2ColSpan(col)
@@ -140,7 +153,7 @@ const BasicForm = (props: BasicFormType) => {
 
                         return (
                           <div key={uniqueKey} className={cn(colSpan)}>
-                            <ControlGroup {...{...props, col, formItemIndex, alignMode}} />
+                            <ControlGroup {...{ ...props, col, formItemIndex, alignMode }} />
                           </div>
                         )
                       })}
@@ -161,13 +174,13 @@ const BasicForm = (props: BasicFormType) => {
     return (
       <div>
         <FormProvider {...ReactHookForm}>
-          <form {...{ref: formRef, id: formId, onSubmit}}>
+          <form {...{ ref: formRef, id: formId, onSubmit }}>
             <C_Stack className={` items-center`}>
               <C_Stack className={`items-center gap-8 `}>
                 {transposedRowsForForm.map((columns, i) => {
                   return (
                     <Fragment key={i}>
-                      <FormSection {...{columns, ControlOptions}}>
+                      <FormSection {...{ columns, ControlOptions }}>
                         <C_Stack className={cn(`gap-8`)}>
                           {columns.map((col: colType, formItemIndex) => {
                             const use2ColSpan = getUse2ColSpan(col)
@@ -176,7 +189,7 @@ const BasicForm = (props: BasicFormType) => {
 
                             return (
                               <div key={uniqueKey} className={cn(colSpan)}>
-                                <ControlGroup {...{...props, col, formItemIndex, alignMode}} />
+                                <ControlGroup {...{ ...props, col, formItemIndex, alignMode }} />
                               </div>
                             )
                           })}
@@ -197,9 +210,9 @@ const BasicForm = (props: BasicFormType) => {
     return (
       <div>
         <FormProvider {...ReactHookForm}>
-          <form {...{ref: formRef, id: formId, onSubmit}}>
+          <form {...{ ref: formRef, id: formId, onSubmit }}>
             <AutoGridContainer
-              maxCols={{xl: 2}}
+              maxCols={{ xl: 2 }}
               className={cn(
                 //
                 'gap-[40px] '
@@ -208,8 +221,8 @@ const BasicForm = (props: BasicFormType) => {
               {transposedRowsForForm.map((columns, i) => {
                 return (
                   <Fragment key={i}>
-                    <FormSection {...{columns, ControlOptions}}>
-                      <AutoGridContainer maxCols={{xl: 2}} className={`gap-[30px] gap-y-[60px]`}>
+                    <FormSection {...{ columns, ControlOptions }}>
+                      <AutoGridContainer maxCols={{ xl: 2 }} className={`gap-[30px] gap-y-[60px]`}>
                         {columns.map((col: colType, formItemIndex) => {
                           const use2ColSpan = getUse2ColSpan(col)
                           const uniqueKey = `${i}-${formItemIndex}`
@@ -217,7 +230,7 @@ const BasicForm = (props: BasicFormType) => {
 
                           return (
                             <div key={uniqueKey} className={cn(colSpan)}>
-                              <ControlGroup {...{...props, col, formItemIndex, alignMode}} />
+                              <ControlGroup {...{ ...props, col, formItemIndex, alignMode }} />
                             </div>
                           )
                         })}
@@ -235,9 +248,9 @@ const BasicForm = (props: BasicFormType) => {
     )
   } else if (alignMode === 'console') {
     return (
-      <form {...{ref: formRef, id: formId, onSubmit}}>
+      <form {...{ ref: formRef, id: formId, onSubmit }}>
         <C_Stack className={` items-start `}>
-          <AutoGridContainer maxCols={{lg: 2}} className={` gap-8 mx-auto w-fit`}>
+          <AutoGridContainer maxCols={{ lg: 2 }} className={` gap-8 mx-auto w-fit`}>
             {transposedRowsForForm.map((columns, i) => {
               const SectionLabel = columns.find(col => col.form?.colIndex)?.form?.colIndex
 
@@ -312,5 +325,5 @@ const makeFormsByColumnObj = (columns: any) => {
   })
   const colIndexes = Object.keys(formsByColumnObj)
 
-  return {transposedRowsForForm, colIndexes}
+  return { transposedRowsForForm, colIndexes }
 }

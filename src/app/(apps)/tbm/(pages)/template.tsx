@@ -9,7 +9,7 @@ import React from 'react'
 import useUnchinChildCreator from '@app/(apps)/tbm/(globalHooks)/useUnchinChildCreator'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 
-export default function Template({children}) {
+export default function Template({ children }) {
   const HK_OdometerInputGMF = useOdometerInputGMF()
   const HK_GasolineGMF = useGasolineGMF()
   const HK_ProductMidEditor = useProductMidEditor()
@@ -18,9 +18,7 @@ export default function Template({children}) {
 
   // const GMF_ROUTE_GROUP_CONFIG =
 
-  const {
-    session,
-    query: {g_tbmBaseId},
+  const { session,
   } = useGlobal()
 
   if (!session?.scopes.getTbmScopes()?.tbmBaseId) {

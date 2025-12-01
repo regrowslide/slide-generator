@@ -51,9 +51,10 @@ export const getScopes = (session: anyObject, options: getScopeOptionsProps) => 
 
       const userId = !fakable ? session?.id : Number(query?.[globalIds.globalUserId] ?? session?.id ?? 0)
       const tbmBaseId = !fakable ? session?.tbmBaseId : Number(query?.[globalIds.globalTbmBaseId] ?? session?.tbmBaseId ?? 0)
+      const tbmDriveInputUserId = !fakable ? session?.id : Number(query?.[globalIds.tbmDriveInputUserId] ?? session?.id ?? 0)
 
 
-      return { userId, tbmBaseId, isSystemAdmin, isShocho, isJimuin, }
+      return { tbmDriveInputUserId, userId, tbmBaseId, isSystemAdmin, isShocho, isJimuin, }
     },
 
 

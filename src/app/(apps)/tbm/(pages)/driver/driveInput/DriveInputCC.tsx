@@ -20,10 +20,16 @@ import { cl } from '@cm/lib/methods/common'
 import { doTransaction, transactionQuery } from '@cm/lib/server-actions/common-server-actions/doTransaction/doTransaction'
 import { DriveScheduleCl } from '@app/(apps)/tbm/(class)/DriveScheduleCl'
 import { DriveScheduleItem } from './DriveScheduleItem'
+import useDoStandardPrisma from '@cm/hooks/useDoStandardPrisma'
 
 export default function DriveInputCC({ driveScheduleList }: { driveScheduleList: driveInputPageType['driveScheduleList'] }) {
   const useGlobalProps = useGlobal()
-  const { toggleLoad, session, query, router } = useGlobalProps
+  const { toggleLoad, session, query, router, accessScopes } = useGlobalProps
+  const { tbmDriveInputUserId } = accessScopes()?.getTbmScopes() ?? {}
+
+  const { data: user } = useDoStandardPrisma('user', 'findUnique', { where: { id: tbmDriveInputUserId } })
+
+
   const HK_HaishaTableEditorGMF = useHaishaTableEditorGMF({
     afterUpdate: ({ res }) => router.refresh(),
     afterDelete: ({ res }) => router.refresh(),
@@ -39,13 +45,15 @@ export default function DriveInputCC({ driveScheduleList }: { driveScheduleList:
   const { unkoCompleted, carInputCompleted, gyomushuryo } = DriveScheduleCl.getStatus(driveScheduleList)
   const { setopen, handleClose, Modal } = useModal()
 
+  const userNameDisplay = <div className={`text-lg font-bold`}>{user?.name}</div>
   return (
     <div>
+
       <HK_HaishaTableEditorGMF.Modal />
       <C_Stack className={` gap-8`}>
         <C_Stack className={gyomushuryo ? 'disabled ' : ''}>
           <div>
-            <h2>あなたの運行予定</h2>
+            <h2 className={` flex items-center gap-2`}>{userNameDisplay}さんの運行予定</h2>
             <div
               className={cl(
                 //
@@ -73,7 +81,8 @@ export default function DriveInputCC({ driveScheduleList }: { driveScheduleList:
             </div>
           </div>
           <div>
-            <h2>あなたの利用予定の車両</h2>
+            <h2 className={` flex items-center gap-2`}>{userNameDisplay}さんの利用予定車両</h2>
+
             <div
               className={cl(
                 //

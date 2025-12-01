@@ -17,6 +17,7 @@ import { TimeHandler } from '@app/(apps)/tbm/(class)/TimeHandler'
 import { T_LINK } from '@cm/components/styles/common-components/links'
 import { HREF } from '@cm/lib/methods/urls'
 import { fetchUnkoMeisaiData } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
+import { globalIds } from 'src/non-common/searchParamStr'
 
 export default function MonthlySchedulePage() {
   const { query, session, addQuery } = useGlobal()
@@ -256,8 +257,8 @@ export default function MonthlySchedulePage() {
                                   '/tbm/driver/driveInput',
                                   {
                                     from: formatDate(date, 'YYYY-MM-DD'),
-                                    g_userId: selectedDriverId,
-                                    g_tbmBaseId: tbmBaseId,
+                                    [globalIds.globalUserId]: selectedDriverId,
+                                    [globalIds.globalTbmBaseId]: tbmBaseId,
                                   },
                                   query
                                 )}

@@ -70,6 +70,7 @@
     "src/app/(apps)/portal/**/*",
     "src/app/(apps)/sbm/**/*",
     "src/app/(apps)/stock/**/*",
+    "src/app/(apps)/tbm/**/*",
     "src/app/(apps)/teamSynapse/**/*",
     "src/app/(apps)/tmp/**/*",
     "src/app/(apps)/training/**/*"

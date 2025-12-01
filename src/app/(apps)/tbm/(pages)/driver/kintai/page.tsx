@@ -19,6 +19,7 @@ import { T_LINK } from '@cm/components/styles/common-components/links'
 import { HREF } from '@cm/lib/methods/urls'
 import { Alert } from '@cm/components/styles/common-components/Alert'
 import { MarkDownDisplay } from '@cm/components/utils/texts/MarkdownDisplay'
+import { globalIds } from 'src/non-common/searchParamStr'
 
 export default function AttendancePage() {
   const { query, session } = useGlobal()
@@ -28,7 +29,7 @@ export default function AttendancePage() {
     isLoading,
     mutate: fetchData,
     error,
-  } = useSWR(JSON.stringify([query.g_userId, query.month]), async () => {
+  } = useSWR(JSON.stringify([query[globalIds.globalUserId], query.month]), async () => {
     const tbmBaseId = session.scopes?.getTbmScopes?.()?.tbmBaseId
     const selectedUserId = session.scopes?.getTbmScopes?.()?.userId
     const theDate = getCurrentMonth()
@@ -43,7 +44,7 @@ export default function AttendancePage() {
 
   const { UserWorkStatus = [], TbmRefuelHistory = [], OdometerInput = [], TbmDriveSchedule = [] } = User ?? {}
 
-  const selectedUserId = query.g_userId ? parseInt(query.g_userId) : undefined
+  const selectedUserId = query[globalIds.globalUserId] ? parseInt(query[globalIds.globalUserId]) : undefined
 
   // 現在の月を取得（クエリパラメータから、または現在の日付から）
   const getCurrentMonth = () => {
@@ -174,7 +175,7 @@ export default function AttendancePage() {
 
       const dateStr = formatDate(date, 'DD(ddd)')
 
-      const driveInputPageHref = HREF('/tbm/driver/driveInput', { g_userId: selectedUserId, from: date }, query)
+      const driveInputPageHref = HREF('/tbm/driver/driveInput', { [globalIds.globalUserId]: selectedUserId, from: date }, query)
 
       return {
         csvTableRow: [
@@ -380,7 +381,7 @@ export default function AttendancePage() {
               <NewDateSwitcher
                 {...{
                   monthOnly: true,
-                  additionalCols: [{ label: '', id: 'g_userId', forSelect: {} }],
+                  additionalCols: [{ label: '', id: globalIds.globalUserId, forSelect: {} }],
                 }}
               />
             </div>

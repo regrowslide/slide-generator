@@ -1,19 +1,19 @@
 'use client'
 import React from 'react'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
-import {R_Stack, C_Stack} from '@cm/components/styles/common-components/common-components'
-import {CarIcon, Clock, MapPinIcon, Notebook, PlusCircleIcon, SquarePen, TruckIcon, UserIcon} from 'lucide-react'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
+import { R_Stack, C_Stack } from '@cm/components/styles/common-components/common-components'
+import { CarIcon, Clock, MapPinIcon, Notebook, PlusCircleIcon, SquarePen, TruckIcon, UserIcon } from 'lucide-react'
 import Link from 'next/link'
-import {HREF} from '@cm/lib/methods/urls'
-import {createUpdate} from '@cm/lib/methods/createUpdate'
-import {TBM_STATUS} from '@app/(apps)/tbm/(constants)/TBM_STATUS'
-import {doStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
-import {VehicleCl} from '@app/(apps)/tbm/(class)/VehicleCl'
-import {TBM_CODE} from '@app/(apps)/tbm/(class)/TBM_CODE'
-import {IconBtn} from '@cm/components/styles/common-components/IconBtn'
-import {RouteGroupCl} from '@app/(apps)/tbm/(class)/RouteGroupCl'
-import {MarkDownDisplay} from '@cm/components/utils/texts/MarkdownDisplay'
-import {cn} from '@cm/shadcn/lib/utils'
+import { HREF } from '@cm/lib/methods/urls'
+import { createUpdate } from '@cm/lib/methods/createUpdate'
+import { TBM_STATUS } from '@app/(apps)/tbm/(constants)/TBM_STATUS'
+import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
+import { VehicleCl } from '@app/(apps)/tbm/(class)/VehicleCl'
+import { TBM_CODE } from '@app/(apps)/tbm/(class)/TBM_CODE'
+import { IconBtn } from '@cm/components/styles/common-components/IconBtn'
+import { RouteGroupCl } from '@app/(apps)/tbm/(class)/RouteGroupCl'
+import { MarkDownDisplay } from '@cm/components/utils/texts/MarkdownDisplay'
+import { cn } from '@cm/shadcn/lib/utils'
 import {
   WorkStatusSelectorProps,
   AddScheduleButtonProps,
@@ -21,13 +21,14 @@ import {
   StatusButtonsProps,
   UserWithWorkStatus,
 } from '../types/haisha-page-types'
-import {shorten} from '@cm/lib/methods/common'
-import {TimeHandler} from '@app/(apps)/tbm/(class)/TimeHandler'
+import { shorten } from '@cm/lib/methods/common'
+import { TimeHandler } from '@app/(apps)/tbm/(class)/TimeHandler'
+import { globalIds } from 'src/non-common/searchParamStr'
 
 const WorkStatusList = TBM_CODE.WORK_STATUS_KBN.array
 
 // 作業ステータス選択コンポーネント
-export const WorkStatusSelector = React.memo(({userWorkStatus, user, date, fetchData}: WorkStatusSelectorProps) => (
+export const WorkStatusSelector = React.memo(({ userWorkStatus, user, date, fetchData }: WorkStatusSelectorProps) => (
   <select
     value={userWorkStatus?.workStatus ?? ''}
     className={`w-[100px] rounded-sm border  p-0.5 ${userWorkStatus?.workStatus ? '' : 'bg-gray-200 opacity-80'}`}
@@ -37,8 +38,8 @@ export const WorkStatusSelector = React.memo(({userWorkStatus, user, date, fetch
         date: date,
       }
       await doStandardPrisma(`userWorkStatus`, `upsert`, {
-        where: {unique_userId_date},
-        ...createUpdate({...unique_userId_date, workStatus: e.target.value}),
+        where: { unique_userId_date },
+        ...createUpdate({ ...unique_userId_date, workStatus: e.target.value }),
       })
       fetchData()
     }}
@@ -53,7 +54,7 @@ export const WorkStatusSelector = React.memo(({userWorkStatus, user, date, fetch
 ))
 
 // 配車追加ボタンコンポーネント
-export const AddScheduleButton = React.memo(({date, tbmBase, user, tbmRouteGroup, setModalOpen}: AddScheduleButtonProps) => (
+export const AddScheduleButton = React.memo(({ date, tbmBase, user, tbmRouteGroup, setModalOpen }: AddScheduleButtonProps) => (
   <PlusCircleIcon
     className="onHover text-gray-500 h-4 w-4 hover:text-gray-700"
     onClick={() =>
@@ -68,10 +69,10 @@ export const AddScheduleButton = React.memo(({date, tbmBase, user, tbmRouteGroup
 ))
 
 // ステータスボタンコンポーネント
-export const StatusButtons = React.memo(({tbmDriveSchedule, fetchData}: StatusButtonsProps) => (
+export const StatusButtons = React.memo(({ tbmDriveSchedule, fetchData }: StatusButtonsProps) => (
   <R_Stack className="justify-end gap-1">
     {Object.entries(TBM_STATUS).map(([key, value], i) => {
-      const {label, color} = value as {label: string; color: string}
+      const { label, color } = value as { label: string; color: string }
       const active = tbmDriveSchedule[key]
 
       return (
@@ -89,8 +90,8 @@ export const StatusButtons = React.memo(({tbmDriveSchedule, fetchData}: StatusBu
               if (isApproved) {
                 if (confirm('承認を取り消してよろしいですか？')) {
                   await doStandardPrisma(`tbmDriveSchedule`, `update`, {
-                    where: {id: tbmDriveSchedule.id},
-                    data: {approved: false},
+                    where: { id: tbmDriveSchedule.id },
+                    data: { approved: false },
                   })
                   fetchData()
                 }
@@ -99,8 +100,8 @@ export const StatusButtons = React.memo(({tbmDriveSchedule, fetchData}: StatusBu
                   if (confirm('ドライバーが確定処理を実施していません。強制承認をしてもよろしいですか？')) {
                     if (confirm('承認してよろしいですか？')) {
                       await doStandardPrisma(`tbmDriveSchedule`, `update`, {
-                        where: {id: tbmDriveSchedule.id},
-                        data: {approved: true},
+                        where: { id: tbmDriveSchedule.id },
+                        data: { approved: true },
                       })
                       fetchData()
                     }
@@ -108,8 +109,8 @@ export const StatusButtons = React.memo(({tbmDriveSchedule, fetchData}: StatusBu
                 } else {
                   if (confirm('承認してよろしいですか？')) {
                     await doStandardPrisma(`tbmDriveSchedule`, `update`, {
-                      where: {id: tbmDriveSchedule.id},
-                      data: {approved: true},
+                      where: { id: tbmDriveSchedule.id },
+                      data: { approved: true },
                     })
                     fetchData()
                   }
@@ -129,8 +130,8 @@ export const StatusButtons = React.memo(({tbmDriveSchedule, fetchData}: StatusBu
 
 // スケジュール詳細カードコンポーネント
 export const ScheduleCard = React.memo(
-  ({tbmDriveSchedule, user, date, setModalOpen, fetchData, query, tbmBase}: ScheduleCardProps) => {
-    const {TbmRouteGroup, TbmVehicle, User, remark} = tbmDriveSchedule
+  ({ tbmDriveSchedule, user, date, setModalOpen, fetchData, query, tbmBase }: ScheduleCardProps) => {
+    const { TbmRouteGroup, TbmVehicle, User, remark } = tbmDriveSchedule
 
     // const foo = new vhi
 
@@ -198,7 +199,9 @@ export const ScheduleCard = React.memo(
                   })
                 }}
               />
-              <Link target="_blank" href={HREF('/tbm/driver/driveInput', {g_userId: User?.id, from: formatDate(date)}, query)}>
+              <Link target="_blank" href={HREF('/tbm/driver/driveInput', {
+                [globalIds.tbmDriveInputUserId]: User?.id, from: formatDate(date)
+              }, query)}>
                 <TruckIcon className="text-yellow-main w-4 h-4 hover:opacity-80" />
               </Link>
             </R_Stack>

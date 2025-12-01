@@ -87,7 +87,6 @@ API制限:
 
 ```tsx
 import {GoogleMapComponent} from '@cm/components/GoogleMap/GoogleMapComponent'
-
 ;<GoogleMapComponent
   locations={[
     {
