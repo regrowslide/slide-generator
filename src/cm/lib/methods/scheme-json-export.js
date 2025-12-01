@@ -1490,6 +1490,8 @@ model TbmRouteGroup {
   // 便共有機能のためのフィールド
   isShared Boolean @default(false) // この便が共有されているかどうか
 
+  displayExpiryDate DateTime? // 表示期限（レポートページでこの日付を超過した便は非表示）
+
   TbmBase   TbmBase @relation(fields: [tbmBaseId], references: [id], onDelete: Cascade)
   tbmBaseId Int
 
@@ -17199,6 +17201,20 @@ export const prismaDMMF = {
           "type": "Boolean",
           "nativeType": null,
           "default": false,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "displayExpiryDate",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "DateTime",
+          "nativeType": null,
           "isGenerated": false,
           "isUpdatedAt": false
         },

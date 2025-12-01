@@ -35,12 +35,20 @@ export const TbmRouteGroupColBuilder = (props: columnGetterType) => {
 
   let colsource: colType[] = [
     ...new Fields([
+
       {
         id: 'code',
         label: 'CD',
         form: { defaultValue: null },
         td: { style: { ...regularStyle, minWidth: 75 } },
         search: {},
+      },
+      {
+        id: 'displayExpiryDate',
+        label: '表示期限',
+        type: 'date',
+        td: { style: { ...regularStyle, minWidth: 100 } },
+        form: {},
       },
       {
         id: 'serviceNumber',
@@ -180,6 +188,7 @@ export const TbmRouteGroupColBuilder = (props: columnGetterType) => {
           return <div>{routeGroup.Mid_TbmRouteGroup_TbmCustomer?.TbmCustomer?.name}</div>
         },
       },
+
     ]).buildFormGroup({ groupName: '便設定②' }).plain,
   ]
 

@@ -64,13 +64,11 @@ export const useInfiniteScrollLogic = (props: UseInfiniteScrollLogicProps): UseI
       const tableId = getMyTableId({dataModelName: serverFetchProps.dataModelName, myTable: serverFetchProps.myTable})
 
       // 新しいプレフィックス方式でキーを生成
-      const {page: pageKey, skip: skipKey} = P_Query.createPaginationKeys(tableId)
-      const countPerPage = serverFetchProps.myTable?.pagination?.countPerPage ?? defaultCountPerPage
+      const {page: pageKey} = P_Query.createPaginationKeys(tableId)
 
       const nextPageQuery = {
         ...query,
         [pageKey]: nextPage,
-        [skipKey]: (nextPage - 1) * countPerPage,
       }
 
       const {queries, data} = await getInitModelRecordsProps({

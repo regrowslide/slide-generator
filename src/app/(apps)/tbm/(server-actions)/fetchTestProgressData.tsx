@@ -3,11 +3,24 @@
 import prisma from 'src/lib/prisma'
 
 export const fetchTestProgressData = async ({ tbmBaseId, whereQuery }) => {
+  // 表示期限のフィルタリング: 指定月の初日時点で表示期限を超過している便は非表示
+  // 期限未入力のものは有効なデータだとみなして表示する
+  const firstDayOfMonth = whereQuery.gte
+  const displayExpiryDateFilter = firstDayOfMonth
+    ? {
+        OR: [
+          {displayExpiryDate: null},
+          {displayExpiryDate: {gte: firstDayOfMonth}},
+        ],
+      }
+    : {}
+
   // 1. 配車設定状況（便別）
   const driveSchedules = await prisma.tbmDriveSchedule.findMany({
     where: {
       tbmBaseId,
       date: whereQuery,
+      TbmRouteGroup: displayExpiryDateFilter,
     },
     include: {
       TbmRouteGroup: {

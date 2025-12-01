@@ -1,11 +1,11 @@
-import {SearchQuery} from '@cm/components/DataLogic/TFs/MyTable/components/SearchHandler/search-methods'
-import {getDMMFModel, getRelationalModels} from 'src/cm/lib/methods/prisma-schema'
-import {additionalPropsType, MyTableType} from '@cm/types/types'
-import {anyObject} from '@cm/types/utility-types'
-import {DH__switchColType} from '@cm/class/DataHandler/type-converter'
-import {StrHandler} from '@cm/class/StrHandler'
-import {PAGINATION_CONSTANTS, validatePaginationParams} from 'src/cm/class/PQuery/validation'
-import {paginationSearchParamStr} from 'src/non-common/searchParamStr'
+import { SearchQuery } from '@cm/components/DataLogic/TFs/MyTable/components/SearchHandler/search-methods'
+import { getDMMFModel, getRelationalModels } from 'src/cm/lib/methods/prisma-schema'
+import { additionalPropsType, MyTableType } from '@cm/types/types'
+import { anyObject } from '@cm/types/utility-types'
+import { DH__switchColType } from '@cm/class/DataHandler/type-converter'
+import { StrHandler } from '@cm/class/StrHandler'
+import { PAGINATION_CONSTANTS, validatePaginationParams } from 'src/cm/class/PQuery/validation'
+import { paginationSearchParamStr } from 'src/non-common/searchParamStr'
 
 // 型定義
 interface WhereQueryItem {
@@ -57,14 +57,14 @@ interface RelationalIncludeProps {
 
 // 定数（メモ化で最適化）
 export const defaultCountPerPage = 30
-export const defaultOrderByArray = Object.freeze([{sortOrder: 'asc'}, {id: 'asc'}] as const)
+export const defaultOrderByArray = Object.freeze([{ sortOrder: 'asc' }, { id: 'asc' }] as const)
 
 // 検索タイプマスター（メモ化）
 const searchTypeAndLabelMaster = Object.freeze({
-  contains: {label: 'を含む'},
-  equals: {label: 'と一致'},
-  gte: {label: '以上'},
-  lte: {label: '以下'},
+  contains: { label: 'を含む' },
+  equals: { label: 'と一致' },
+  gte: { label: '以上' },
+  lte: { label: '以下' },
 } as const)
 
 export class P_Query {
@@ -74,7 +74,7 @@ export class P_Query {
   static create_where_colId_searchType_dataType_key = (() => {
     const cache = new Map<string, string>()
 
-    return (col: {id: string; type?: string}, modelName: string, searchType: string): string => {
+    return (col: { id: string; type?: string }, modelName: string, searchType: string): string => {
       const cacheKey = `${col.id}-${col.type}-${modelName}-${searchType}`
 
       if (cache.has(cacheKey)) {
@@ -82,7 +82,7 @@ export class P_Query {
       }
 
       const colId = col.id
-      const convertedDataType = DH__switchColType({type: col.type ?? ''})
+      const convertedDataType = DH__switchColType({ type: col.type ?? '' })
       const result = `where-${modelName}-${colId}-${searchType}-${convertedDataType}`
 
       cache.set(cacheKey, result)
@@ -155,16 +155,19 @@ export class P_Query {
 
     const finalCountPerPage = countPerPage ?? defaultCount
 
+
     // 新しいプレフィックス方式でキーを生成
     const keys = P_Query.createPaginationKeys(tableId)
 
-    // URLパラメータから値を取得
+    // URLパラメータからpageのみを取得
     const rawPage = Number(query?.[keys.page] ?? 1)
-    const rawTake = Number(query?.[keys.take] ?? finalCountPerPage)
-    const rawSkip = Number(query?.[keys.skip] ?? 0)
+
+    // takeとskipはcountPerPageから計算
+    const take = finalCountPerPage
+    const skip = (rawPage - 1) * finalCountPerPage
 
     // バリデーションとサニタイズ
-    const validation = validatePaginationParams(rawPage, rawTake, rawSkip, PAGINATION_CONSTANTS.MAX_TAKE, finalCountPerPage)
+    const validation = validatePaginationParams(rawPage, take, skip, PAGINATION_CONSTANTS.MAX_TAKE, finalCountPerPage)
 
     return {
       take: validation.sanitized.take,
@@ -178,18 +181,18 @@ export class P_Query {
    * フレックスクエリ作成（最適化）
    */
   static createFlexQuery = (props: FlexQueryProps): FlexQueryResult => {
-    const {dataModelName, additional, take, skip, page, disableOrderByFromUrlParams} = props
+    const { dataModelName, additional, take, skip, page, disableOrderByFromUrlParams } = props
 
     if (disableOrderByFromUrlParams) {
       delete props.query.orderBy
     }
 
     // クエリのマージ（効率化）
-    const mergedQuery = {...props.query, ...additional?.where}
+    const mergedQuery = { ...props.query, ...additional?.where }
 
     // AND条件の構築
-    const searchAND = SearchQuery.createWhere({dataModelName, query: mergedQuery})
-    const additionalAND = Object.entries(additional?.where ?? {}).map(([key, value]) => ({[key]: value}))
+    const searchAND = SearchQuery.createWhere({ dataModelName, query: mergedQuery })
+    const additionalAND = Object.entries(additional?.where ?? {}).map(([key, value]) => ({ [key]: value }))
     const AND = [...searchAND, ...additionalAND]
 
     //OrderBy の構築（効率化）===
@@ -229,7 +232,7 @@ export class P_Query {
 
     const from = (page - 1) * take + 1
 
-    return {AND, orderBy, page, take, skip, from}
+    return { AND, orderBy, page, take, skip, from }
   }
 
   /**
@@ -240,7 +243,7 @@ export class P_Query {
       return includeObject
     }
 
-    const include = {...includeObject}
+    const include = { ...includeObject }
     const processedKeys = new Set<string>()
 
     const setDefaultOrderBy = (targetModel: any, depth = 0): void => {
@@ -265,7 +268,7 @@ export class P_Query {
 
         // デフォルトorderByの設定
         if (value.orderBy === undefined && !isNoOrderProp) {
-          value.orderBy = {sortOrder: 'asc'}
+          value.orderBy = { sortOrder: 'asc' }
         }
 
         // 再帰処理
@@ -285,25 +288,25 @@ export class P_Query {
   /**
    * リレーショナルインクルード作成（最適化）
    */
-  static roopMakeRelationalInclude = ({parentName, parentObj, schemaAsObj, SORT}: RelationalIncludeProps): any => {
+  static roopMakeRelationalInclude = ({ parentName, parentObj, schemaAsObj, SORT }: RelationalIncludeProps): any => {
     if (!parentObj?.include) {
       return parentObj
     }
 
     try {
-      const {hasManyAttributeObj, hasOneAttributeObj} = getRelationalModels({
+      const { hasManyAttributeObj, hasOneAttributeObj } = getRelationalModels({
         schemaAsObj,
         parentName,
       })
 
-      const relationalObj = {...hasManyAttributeObj, ...hasOneAttributeObj}
+      const relationalObj = { ...hasManyAttributeObj, ...hasOneAttributeObj }
 
       Object.keys(parentObj.include).forEach(key => {
         const relation = relationalObj[key]
         const includeItem = parentObj.include[key]
 
         if (relation?.relationalType === 'hasMany' && includeItem?.orderBy === undefined) {
-          parentObj.include[key] = {...includeItem, ...SORT}
+          parentObj.include[key] = { ...includeItem, ...SORT }
 
           // 再帰処理（深度制限付き）
           P_Query.roopMakeRelationalInclude({
@@ -330,4 +333,4 @@ export class P_Query {
 }
 
 // 型エクスポート
-export type {WhereQueryItem, PaginationProps, FlexQueryProps, FlexQueryResult, SearchTypeConfig, RelationalIncludeProps}
+export type { WhereQueryItem, PaginationProps, FlexQueryProps, FlexQueryResult, SearchTypeConfig, RelationalIncludeProps }

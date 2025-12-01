@@ -1,14 +1,14 @@
 //classを切り替える
 
-import {setCustomParams} from '@cm/components/DataLogic/helpers/SetCustomParams'
+import { setCustomParams } from '@cm/components/DataLogic/helpers/SetCustomParams'
 
-import {getScopes} from 'src/non-common/scope-lib/getScopes'
-import {PageBuilder} from '@app/(apps)/tbm/(builders)/PageBuilders/PageBuilder'
-import {ColBuilder} from '@app/(apps)/tbm/(builders)/ColBuilders/ColBuilder'
-import {QueryBuilder} from '@app/(apps)/tbm/(builders)/QueryBuilder'
+import { getScopes } from 'src/non-common/scope-lib/getScopes'
+import { PageBuilder } from '@app/(apps)/tbm/(builders)/PageBuilders/PageBuilder'
+import { ColBuilder } from '@app/(apps)/tbm/(builders)/ColBuilders/ColBuilder'
+import { QueryBuilder } from '@app/(apps)/tbm/(builders)/QueryBuilder'
 
-import {ViewParamBuilder} from '@app/(apps)/tbm/(builders)/ViewParamBuilder'
-import {getMasterPageCommonConfig} from '@cm/components/DataLogic/helpers/getMasterPageCommonConfig'
+import { ViewParamBuilder } from '@app/(apps)/tbm/(builders)/ViewParamBuilder'
+import { getMasterPageCommonConfig } from '@cm/components/DataLogic/helpers/getMasterPageCommonConfig'
 
 export default async function DynamicMasterPage(props) {
   return getMasterPageCommonConfig({
@@ -20,8 +20,8 @@ export default async function DynamicMasterPage(props) {
     QueryBuilder,
   })
 }
-const parameters = async (props: {params; query; session; scopes: ReturnType<typeof getScopes>}) => {
-  const {params, query, session, scopes} = props
+const parameters = async (props: { params; query; session; scopes: ReturnType<typeof getScopes> }) => {
+  const { params, query, session, scopes } = props
 
   //---------------個別設定-------------
   const customParams = await setCustomParams({
@@ -34,7 +34,7 @@ const parameters = async (props: {params; query; session; scopes: ReturnType<typ
             additional: {
               orderBy: [
                 //
-                {date: 'asc'},
+                { date: 'asc' },
               ],
             },
           }
@@ -45,11 +45,11 @@ const parameters = async (props: {params; query; session; scopes: ReturnType<typ
         modelNames: [`user`],
         setParams: async () => {
           return {
-            myTable: {pagination: {countPerPage: 100}},
+            myTable: { pagination: { countPerPage: 100 } },
             additional: {
-              where: {apps: {has: `tbm`}},
-              payload: {apps: [`tbm`]},
-              orderBy: [{code: 'asc'}],
+              where: { apps: { has: `tbm` } },
+              payload: { apps: [`tbm`] },
+              orderBy: [{ code: 'asc' }],
             },
           }
         },
@@ -68,13 +68,13 @@ const parameters = async (props: {params; query; session; scopes: ReturnType<typ
         setParams: async () => {
           return {
             additional: {
-              orderBy: [{vehicleNumber: 'asc'}],
+              orderBy: [{ vehicleNumber: 'asc' }],
             },
-            editType: {type: `pageOnSame`},
+            editType: { type: `pageOnSame` },
           }
         },
       },
-      {modelNames: [`tbmCustomer`], setParams: async () => ({additional: {orderBy: [{code: 'asc'}]}})},
+      { modelNames: [`tbmCustomer`], setParams: async () => ({ additional: { orderBy: [{ code: 'asc' }] } }) },
       {
         modelNames: [`roleMaster`],
         setParams: async () => ({

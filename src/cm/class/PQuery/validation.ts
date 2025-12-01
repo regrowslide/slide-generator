@@ -22,6 +22,7 @@ export interface PaginationValidationResult {
 
 /**
  * ページングパラメータをバリデーションし、サニタイズする
+ * takeとskipは計算値として扱うため、整合性チェックのみ行う
  */
 export function validatePaginationParams(
   page: number,
@@ -35,42 +36,45 @@ export function validatePaginationParams(
   let sanitizedTake = take
   let sanitizedSkip = skip
 
-  // NaNチェックとデフォルト値設定
+  // pageのNaNチェックとデフォルト値設定
   if (isNaN(page) || page === null || page === undefined) {
     sanitizedPage = PAGINATION_CONSTANTS.MIN_PAGE
     errors.push(`Invalid page value: ${page}, using default: ${PAGINATION_CONSTANTS.MIN_PAGE}`)
   }
 
+  // takeのNaNチェック（計算値だが、念のため）
   if (isNaN(take) || take === null || take === undefined) {
     sanitizedTake = defaultTake
     errors.push(`Invalid take value: ${take}, using default: ${defaultTake}`)
   }
 
+  // skipのNaNチェック（計算値だが、念のため）
   if (isNaN(skip) || skip === null || skip === undefined) {
     sanitizedSkip = PAGINATION_CONSTANTS.MIN_SKIP
     errors.push(`Invalid skip value: ${skip}, using default: ${PAGINATION_CONSTANTS.MIN_SKIP}`)
   }
 
-  // 最小値チェック
+  // pageの最小値チェック
   if (sanitizedPage < PAGINATION_CONSTANTS.MIN_PAGE) {
     errors.push(`Page value ${sanitizedPage} is less than minimum ${PAGINATION_CONSTANTS.MIN_PAGE}`)
     sanitizedPage = PAGINATION_CONSTANTS.MIN_PAGE
   }
 
+  // takeの範囲チェック（countPerPageから計算される値の検証）
   if (sanitizedTake < PAGINATION_CONSTANTS.MIN_TAKE) {
     errors.push(`Take value ${sanitizedTake} is less than minimum ${PAGINATION_CONSTANTS.MIN_TAKE}`)
     sanitizedTake = PAGINATION_CONSTANTS.MIN_TAKE
   }
 
-  if (sanitizedSkip < PAGINATION_CONSTANTS.MIN_SKIP) {
-    errors.push(`Skip value ${sanitizedSkip} is less than minimum ${PAGINATION_CONSTANTS.MIN_SKIP}`)
-    sanitizedSkip = PAGINATION_CONSTANTS.MIN_SKIP
-  }
-
-  // 最大値チェック
   if (sanitizedTake > maxTake) {
     errors.push(`Take value ${sanitizedTake} exceeds maximum ${maxTake}`)
     sanitizedTake = maxTake
+  }
+
+  // skipの最小値チェック
+  if (sanitizedSkip < PAGINATION_CONSTANTS.MIN_SKIP) {
+    errors.push(`Skip value ${sanitizedSkip} is less than minimum ${PAGINATION_CONSTANTS.MIN_SKIP}`)
+    sanitizedSkip = PAGINATION_CONSTANTS.MIN_SKIP
   }
 
   // 整合性チェック: skip = (page - 1) * take の関係を検証

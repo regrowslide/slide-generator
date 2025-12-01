@@ -198,6 +198,8 @@ model TbmRouteGroup {
   // 便共有機能のためのフィールド
   isShared Boolean @default(false) // この便が共有されているかどうか
 
+  displayExpiryDate DateTime? // 表示期限（レポートページでこの日付を超過した便は非表示）
+
   TbmBase   TbmBase @relation(fields: [tbmBaseId], references: [id], onDelete: Cascade)
   tbmBaseId Int
 

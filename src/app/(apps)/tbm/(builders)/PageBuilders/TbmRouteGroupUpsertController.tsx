@@ -18,6 +18,7 @@ export const TbmRouteGroupUpsertController = {
       departureTime,
       finalArrivalTime,
       allowDuplicate,
+      displayExpiryDate,
 
       ...rest
     } = item.latestFormData
@@ -35,6 +36,7 @@ export const TbmRouteGroupUpsertController = {
       departureTime,
       finalArrivalTime,
       allowDuplicate: allowDuplicate ?? false,
+      displayExpiryDate,
     }
 
     const { Mid_TbmRouteGroup_TbmCustomer } = item.latestFormData

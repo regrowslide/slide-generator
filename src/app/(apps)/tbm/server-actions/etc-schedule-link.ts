@@ -14,6 +14,15 @@ export async function getDriveSchedules(vehicleId: number, month: Date) {
     endDate.setMonth(endDate.getMonth() + 1)
     endDate.setDate(0) // 月の最終日
 
+    // 表示期限のフィルタリング: 指定月の初日時点で表示期限を超過している便は非表示
+    // 期限未入力のものは有効なデータだとみなして表示する
+    const displayExpiryDateFilter = {
+      OR: [
+        {displayExpiryDate: null},
+        {displayExpiryDate: {gte: startDate}},
+      ],
+    }
+
     const {result} = await doStandardPrisma('tbmDriveSchedule', 'findMany', {
       where: {
         tbmVehicleId: vehicleId,
@@ -21,6 +30,7 @@ export async function getDriveSchedules(vehicleId: number, month: Date) {
           gte: startDate,
           lte: endDate,
         },
+        TbmRouteGroup: displayExpiryDateFilter,
       },
       include: {
         TbmRouteGroup: true,

@@ -33,11 +33,24 @@ export const getDriveScheduleList = async (props: {
 }) => {
   const { allowNonApprovedSchedule, tbmBaseId, whereQuery, userId } = props
 
+  // 表示期限のフィルタリング: 指定月の初日時点で表示期限を超過している便は非表示
+  // 期限未入力のものは有効なデータだとみなして表示する
+  const firstDayOfMonth = whereQuery.gte
+  const displayExpiryDateFilter = firstDayOfMonth
+    ? {
+        OR: [
+          {displayExpiryDate: null},
+          {displayExpiryDate: {gte: firstDayOfMonth}},
+        ],
+      }
+    : {}
+
   const whereArgs = {
     approved: allowNonApprovedSchedule ? undefined : TbmReportCl.allowNonApprovedSchedule ? undefined : true,
     date: whereQuery,
     tbmBaseId,
     userId,
+    TbmRouteGroup: displayExpiryDateFilter,
   }
 
   const tbmDriveSchedule = await prisma.tbmDriveSchedule.findMany({

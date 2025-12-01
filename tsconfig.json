@@ -63,6 +63,7 @@
     "src/app/(apps)/KM/**/*",
     "src/app/(apps)/aidocument/**/*",
     "src/app/(apps)/counseling/**/*",
+    "src/app/(apps)/image-captioner/**/*",
     "src/app/(apps)/keihi/**/*",
     "src/app/(apps)/kickswrap/**/*",
     "src/app/(apps)/migrations/**/*",
@@ -70,7 +71,6 @@
     "src/app/(apps)/portal/**/*",
     "src/app/(apps)/sbm/**/*",
     "src/app/(apps)/stock/**/*",
-    "src/app/(apps)/tbm/**/*",
     "src/app/(apps)/teamSynapse/**/*",
     "src/app/(apps)/tmp/**/*",
     "src/app/(apps)/training/**/*"

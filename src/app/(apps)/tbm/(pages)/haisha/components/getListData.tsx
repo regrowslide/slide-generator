@@ -50,6 +50,18 @@ export const getListData = async (props: GetListDataParams): Promise<HaishaListD
     }
   }
 
+  // 表示期限のフィルタリング: 指定月の初日時点で表示期限を超過している便は非表示
+  // 期限未入力のものは有効なデータだとみなして表示する
+  const firstDayOfMonth = whereQuery.gte
+  const displayExpiryDateFilter = firstDayOfMonth
+    ? {
+        OR: [
+          {displayExpiryDate: null},
+          {displayExpiryDate: {gte: firstDayOfMonth}},
+        ],
+      }
+    : {}
+
   const rawTbmDriveSchedule = await prisma.tbmDriveSchedule.findMany({
     select: {
       id: true,
@@ -99,15 +111,16 @@ export const getListData = async (props: GetListDataParams): Promise<HaishaListD
     },
     where: {
       date: {gte: whereQuery.gte, lte: whereQuery.lt},
-      ...(tbmCustomerId
-        ? {
-            TbmRouteGroup: {
+      TbmRouteGroup: {
+        ...displayExpiryDateFilter,
+        ...(tbmCustomerId
+          ? {
               Mid_TbmRouteGroup_TbmCustomer: {
                 tbmCustomerId,
               },
-            },
-          }
-        : {}),
+            }
+          : {}),
+      },
     },
     orderBy: getOrderBy(),
   })
@@ -229,6 +242,7 @@ export const getListData = async (props: GetListDataParams): Promise<HaishaListD
     },
     where: {
       ...commonWhere,
+      ...displayExpiryDateFilter,
       ...(tbmCustomerId
         ? {
             Mid_TbmRouteGroup_TbmCustomer: {
