@@ -76,6 +76,8 @@ export const ChildCreator = React.memo((props: ChildCreatorProps) => {
   const dataModelName = models.children
 
 
+  const countPerPage = myTable?.pagination?.countPerPage ?? 100
+
 
 
 
@@ -89,7 +91,7 @@ export const ChildCreator = React.memo((props: ChildCreatorProps) => {
       include: tunedAdditional?.include ? tunedAdditional?.include : undefined,
       easySearchObject: null,
       disableOrderByFromUrlParams: true,
-      countPerPage: myTable?.pagination?.countPerPage,
+      countPerPage,
     })
     return prismaDataExtractionQuery
   }, [dataModelName, query, tunedAdditional, myTable])
@@ -113,7 +115,7 @@ export const ChildCreator = React.memo((props: ChildCreatorProps) => {
     serverFetchProps,
     initialModelRecords: undefined,
     fetchTime: undefined,
-    countPerPage: myTable?.pagination?.countPerPage,
+    countPerPage,
   })
 
   const { records, setrecords, mutateRecords, deleteRecord, totalCount, easySearchPrismaDataOnServer } = UseRecordsReturn

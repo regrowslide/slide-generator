@@ -1,13 +1,13 @@
 'use client'
-import {Fields} from '@cm/class/Fields/Fields'
+import { Fields } from '@cm/class/Fields/Fields'
 import useBasicFormProps from '@cm/hooks/useBasicForm/useBasicFormProps'
-import React, {useCallback, useMemo, useRef} from 'react'
+import React, { useCallback, useMemo, useRef } from 'react'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
-import {Days} from '@cm/class/Days/Days'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
-import {getMidnight, toUtc} from '@cm/class/Days/date-utils/calculations'
-import {ChevronsLeft, ChevronsRight} from 'lucide-react'
-import {colType} from '@cm/types/col-types'
+import { Days } from '@cm/class/Days/Days'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
+import { getMidnight, toUtc } from '@cm/class/Days/date-utils/calculations'
+import { ChevronsLeft, ChevronsRight } from 'lucide-react'
+import { colType } from '@cm/types/col-types'
 
 interface DateSwitcherProps {
   additionalCols?: colType[]
@@ -21,7 +21,7 @@ interface QueryInfo {
   noValue: boolean
   from: Date | null
   to: Date | null
-  defaultValue: {from: Date | null; to: Date | null}
+  defaultValue: { from: Date | null; to: Date | null }
 }
 
 interface ColumnBaseParams {
@@ -34,7 +34,7 @@ interface ColumnBaseParams {
 }
 
 export default function useDateSwitcherFunc(props: DateSwitcherProps) {
-  const {query, addQuery, toggleLoad} = useGlobal()
+  const { query, addQuery, setglobalLoaderAtom } = useGlobal()
 
   // FormHookの参照を保持するためのref
   const formHookRef = useRef<any>(null)
@@ -52,88 +52,65 @@ export default function useDateSwitcherFunc(props: DateSwitcherProps) {
   )
 
   // クエリ情報をメモ化
-  const queryInfo = useMemo(() => getQueryInfo({query}), [query])
-  const {noValue, from, to, defaultValue} = queryInfo
+  const queryInfo = useMemo(() => getQueryInfo({ query }), [query])
+  const { noValue, from, to, defaultValue } = queryInfo
 
   // 日付範囲切り替え関数
   const switchFromTo = useCallback(
     (data: any) => {
-      toggleLoad(
-        async () => {
-          const newQuery: Record<string, string | undefined> = {}
-          Object.keys(data).forEach(key => {
-            const value = data[key]
-            newQuery[key] = value && Days.validate.isDate(value) ? formatDate(value) : undefined
-          })
+      setglobalLoaderAtom(true)
+      const newQuery: Record<string, string | undefined> = {}
+      Object.keys(data).forEach(key => {
+        const value = data[key]
+        newQuery[key] = value && Days.validate.isDate(value) ? formatDate(value) : undefined
+      })
 
-          addQuery({...newQuery, ...getAdditionalPayload(data)})
-        },
-        {refresh: false, mutate: false}
-      )
+      addQuery({ ...newQuery, ...getAdditionalPayload(data) })
     },
-    [addQuery, getAdditionalPayload, toggleLoad]
+    [addQuery, getAdditionalPayload, setglobalLoaderAtom]
   )
 
   // 月切り替え関数
   const switchMonth = useCallback(
     (data: any) => {
-      toggleLoad(
-        async () => {
-          const month = data.month
-          if (!month) {
-            addQuery({month: undefined, ...getAdditionalPayload(data)})
-            return
-          }
+      setglobalLoaderAtom(true)
 
-          const {firstDayOfMonth, lastDayOfMonth} = Days.month.getMonthDatum(toUtc(month))
+      const month = data.month
+      if (!month) {
+        addQuery({ month: undefined, ...getAdditionalPayload(data) })
+        return
+      }
 
-          // FormHookが利用可能な場合のみsetValueを実行
-          if (formHookRef.current?.ReactHookForm) {
-            formHookRef.current.ReactHookForm.setValue('from', firstDayOfMonth)
-            formHookRef.current.ReactHookForm.setValue('to', lastDayOfMonth)
-            formHookRef.current.ReactHookForm.setValue('month', null)
-          }
+      const { firstDayOfMonth, lastDayOfMonth } = Days.month.getMonthDatum(toUtc(month))
 
-          const newQuery = {
-            from: formatDate(firstDayOfMonth),
-            to: formatDate(lastDayOfMonth),
-            month: formatDate(month),
-          }
-          addQuery({...newQuery, ...getAdditionalPayload(data)})
-        },
-        {refresh: false, mutate: false}
-      )
+      const newQuery = {
+        from: formatDate(firstDayOfMonth),
+        to: formatDate(lastDayOfMonth),
+        month: formatDate(month),
+      }
+      addQuery({ ...newQuery, ...getAdditionalPayload(data) })
     },
-    [addQuery, getAdditionalPayload, toggleLoad]
+    [addQuery, getAdditionalPayload, setglobalLoaderAtom]
   )
 
   // 日付切り替え関数
   const switchDate = useCallback(
     (data: any) => {
-      toggleLoad(
-        async () => {
-          const date = data.date
-          if (!date) {
-            addQuery({date: undefined, ...getAdditionalPayload(data)})
-            return
-          }
+      setglobalLoaderAtom(true)
 
-          // FormHookが利用可能な場合のみsetValueを実行
-          if (formHookRef.current?.ReactHookForm) {
-            formHookRef.current.ReactHookForm.setValue('from', date)
-            formHookRef.current.ReactHookForm.setValue('to', date)
-          }
+      const date = data.date
+      if (!date) {
+        addQuery({ date: undefined, ...getAdditionalPayload(data) })
+        return
+      }
 
-          const newQuery = {
-            from: formatDate(date),
-            to: formatDate(date),
-          }
-          addQuery({...newQuery, ...getAdditionalPayload(data)})
-        },
-        {refresh: false, mutate: false}
-      )
+      const newQuery = {
+        from: formatDate(date),
+        to: formatDate(date),
+      }
+      addQuery({ ...newQuery, ...getAdditionalPayload(data) })
     },
-    [addQuery, getAdditionalPayload, toggleLoad]
+    [addQuery, getAdditionalPayload, setglobalLoaderAtom]
   )
 
   // 月の加算/減算関数をメモ化
@@ -142,7 +119,7 @@ export default function useDateSwitcherFunc(props: DateSwitcherProps) {
       const currentMonth = new Date(formHookRef.current?.latestFormData?.from || new Date())
       const month = Days.month.add(currentMonth, plus)
       if (Days.validate.isDate(month)) {
-        switchMonth({month, ...additionalDefaultValue})
+        switchMonth({ month, ...additionalDefaultValue })
       }
     },
     [switchMonth, additionalDefaultValue]
@@ -154,7 +131,7 @@ export default function useDateSwitcherFunc(props: DateSwitcherProps) {
       const currentDate = new Date(formHookRef.current?.latestFormData?.from || new Date())
       const date = Days.day.add(currentDate, plus)
       if (Days.validate.isDate(date)) {
-        switchDate({date, ...additionalDefaultValue})
+        switchDate({ date, ...additionalDefaultValue })
       }
     },
     [switchDate, additionalDefaultValue]
@@ -175,10 +152,10 @@ export default function useDateSwitcherFunc(props: DateSwitcherProps) {
   // FormHookの初期化
   const FormHook = useBasicFormProps({
     columns,
-    formData: {...defaultValue, ...additionalDefaultValue},
+    formData: { ...defaultValue, ...additionalDefaultValue },
 
     onFormItemBlur: useCallback(
-      async ({value, name, id, e, newlatestFormData: data, ReactHookForm}) => {
+      async ({ value, name, id, e, newlatestFormData: data, ReactHookForm }) => {
         const isEqual = Object.keys(data).every(key => {
           const value1 = formatDate(data[key])
           const value2 = query[key]
@@ -227,7 +204,7 @@ const getColumnBase = ({
         },
         reverseLabelTitle: true,
         showResetBtn: monthOnly || yearOnly ? false : undefined,
-        style: monthOnly || yearOnly ? {width: 155} : undefined,
+        style: monthOnly || yearOnly ? { width: 155 } : undefined,
       },
     },
   }
@@ -306,7 +283,7 @@ const getColumnBase = ({
 }
 
 // クエリ情報取得関数を最適化
-const getQueryInfo = ({query}: {query: any}): QueryInfo => {
+const getQueryInfo = ({ query }: { query: any }): QueryInfo => {
   const noValue = !query.from && !query.to
   let from: Date | null = null
   let to: Date | null = null
@@ -329,6 +306,6 @@ const getQueryInfo = ({query}: {query: any}): QueryInfo => {
     noValue,
     from,
     to,
-    defaultValue: {from, to},
+    defaultValue: { from, to },
   }
 }

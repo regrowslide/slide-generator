@@ -1,32 +1,32 @@
 'use client'
-import React, {useMemo, useCallback} from 'react'
-import {C_Stack} from '@cm/components/styles/common-components/common-components'
+import React, { useMemo, useCallback } from 'react'
+import { C_Stack } from '@cm/components/styles/common-components/common-components'
 import useHaishaTableEditorGMF from '@app/(apps)/tbm/(globalHooks)/useHaishaTableEditorGMF'
 import PlaceHolder from '@cm/components/utils/loader/PlaceHolder'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import HaishaTableSwitcher from './HaishaTableSwitcher'
 import TableContent from './HaishaTableContent'
 import useDoStandardPrisma from '@cm/hooks/useDoStandardPrisma'
-import {useHaishaData} from '../hooks/useHaishaData'
-import {usePagination} from '../hooks/usePagination'
+import { useHaishaData } from '../hooks/useHaishaData'
+import { usePagination } from '../hooks/usePagination'
 import NewDateSwitcher from '@cm/components/utils/dates/DateSwitcher/NewDateSwitcher'
-import {HaishaTableProps, HaishaTableMode, ModalOpenParams} from '../types/haisha-page-types'
-import {BulkAssignmentModal} from './BulkAssignment/BulkAssignmentModal'
+import { HaishaTableProps, HaishaTableMode, ModalOpenParams } from '../types/haisha-page-types'
+import { BulkAssignmentModal } from './BulkAssignment/BulkAssignmentModal'
 import useModal from '@cm/components/utils/modal/useModal'
 
 export type haishaTableMode = HaishaTableMode
 
-export default function HaishaTable({days, tbmBase, whereQuery}: HaishaTableProps) {
-  const {query, session} = useGlobal()
-  const {admin} = session.scopes
+export default function HaishaTable({ days, tbmBase, whereQuery }: HaishaTableProps) {
+  const { query, session } = useGlobal()
+  const { admin } = session.scopes
   const tbmBaseId = tbmBase?.id ?? 0
   const mode: haishaTableMode = query.mode
 
   // ページネーション管理
-  const {currentPage, itemsPerPage, handlePageChange, handleItemsPerPageChange} = usePagination()
+  const { currentPage, itemsPerPage, handlePageChange, handleItemsPerPageChange } = usePagination()
 
   // データ取得管理
-  const {listDataState, maxRecord, LocalLoader, fetchData} = useHaishaData({
+  const { listDataState, maxRecord, LocalLoader, fetchData } = useHaishaData({
     tbmBaseId,
     whereQuery,
     mode,
@@ -35,16 +35,15 @@ export default function HaishaTable({days, tbmBase, whereQuery}: HaishaTableProp
   })
 
   const HK_HaishaTableEditorGMF = useHaishaTableEditorGMF({
-    afterDelete: ({res, tbmDriveSchedule}) => {
+    afterDelete: ({ res, tbmDriveSchedule }) => {
       fetchData()
     },
-    afterUpdate: ({res}) => {
+    afterUpdate: ({ res }) => {
       fetchData()
     },
   })
 
-  // 一括割り当てモーダル
-  // const bulkAssignmentModal = useBulkAssignmentModal({onComplete: fetchData})
+
 
   const BulkAssignmentModalReturn = useModal()
 
@@ -63,20 +62,20 @@ export default function HaishaTable({days, tbmBase, whereQuery}: HaishaTableProp
         })
       } else {
         // 通常のモーダル
-        ;(HK_HaishaTableEditorGMF.setGMF_OPEN as (props: any) => void)(props)
+        ; (HK_HaishaTableEditorGMF.setGMF_OPEN as (props: any) => void)(props)
       }
     },
     [HK_HaishaTableEditorGMF.setGMF_OPEN, BulkAssignmentModalReturn.setopen, whereQuery]
   )
 
-  const {data: holidays = []} = useDoStandardPrisma(`calendar`, `findMany`, {
-    where: {holidayType: `祝日`},
+  const { data: holidays = [] } = useDoStandardPrisma(`calendar`, `findMany`, {
+    where: { holidayType: `祝日` },
   })
 
   // テーブルコンテンツのメモ化
   const HaishaTableMemo = useMemo(() => {
     if (listDataState) {
-      const {TbmDriveSchedule, userList, tbmRouteGroup, userWorkStatusCount} = listDataState
+      const { TbmDriveSchedule, userList, tbmRouteGroup, userWorkStatusCount } = listDataState
 
       return (
         <TableContent
@@ -105,7 +104,7 @@ export default function HaishaTable({days, tbmBase, whereQuery}: HaishaTableProp
 
   return (
     <C_Stack className="p-3">
-      <NewDateSwitcher {...{monthOnly: true}} />
+      <NewDateSwitcher {...{ monthOnly: true }} />
       <LocalLoader />
       {ModalMemo}
       <HaishaTableSwitcher />

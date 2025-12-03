@@ -59,7 +59,11 @@ const parameters = async (props: { params; query; session; scopes: ReturnType<ty
         modelNames: [`tbmBase`],
         setParams: async () => {
           return {
-            // editType: {type: `pageOnSame`},
+            myTable: {
+              delete: false,
+
+
+            }
           }
         },
       },

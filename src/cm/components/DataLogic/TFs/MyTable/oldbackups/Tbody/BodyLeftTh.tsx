@@ -1,15 +1,15 @@
-import React, {Fragment} from 'react'
+import React, { Fragment } from 'react'
 
-import {R_Stack} from 'src/cm/components/styles/common-components/common-components'
+import { R_Stack } from 'src/cm/components/styles/common-components/common-components'
 
-import {cl} from 'src/cm/lib/methods/common'
+import { cl } from 'src/cm/lib/methods/common'
 
-import {ArrowUpDownIcon} from 'lucide-react'
+import { ArrowUpDownIcon } from 'lucide-react'
 import useWindowSize from '@cm/hooks/useWindowSize'
-import {getColorStyles} from '@cm/lib/methods/colors'
+import { getColorStyles } from '@cm/lib/methods/colors'
 
-export const BodyLeftTh = ({myTable, showHeader, rowColor, dndProps, rowSpan, colSpan, recordIndex, children}) => {
-  const {SP, PC} = useWindowSize()
+export const BodyLeftTh = ({ myTable, showHeader, rowColor, dndProps, rowSpan, colSpan, recordIndex, children }) => {
+  const { SP, PC } = useWindowSize()
 
   const className = cl(`p-0.5  items-center  gap-0.5 gap-x-2 flex-nowrap`, showHeader && !SP ? `row-stack` : `col-stack gap-2`)
   return (
@@ -18,7 +18,7 @@ export const BodyLeftTh = ({myTable, showHeader, rowColor, dndProps, rowSpan, co
         style={{
           background: getColorStyles(rowColor).backgroundColor,
         }}
-        {...{rowSpan, colSpan, className: 'px-0.5  align-top   '}}
+        {...{ rowSpan, colSpan, className: 'px-0.5  align-top   ' }}
         {...dndProps}
       >
         <R_Stack className={`mx-auto px-1  flex-nowrap justify-around  gap-0`}>

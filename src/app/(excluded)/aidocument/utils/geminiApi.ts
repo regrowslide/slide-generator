@@ -8,7 +8,7 @@ const GEMINI_API_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/mo
  * Gemini APIを呼び出してPDFを解析
  */
 export async function analyzePdfWithGemini(request: GeminiApiRequest): Promise<GeminiAnalysisResult> {
-  const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY
+  const apiKey = process.env.GEMINI_API_KEY
 
   if (!apiKey) {
     throw new Error('GEMINI_API_KEY環境変数が設定されていません')
@@ -314,7 +314,7 @@ ${
     }
 
     // ピクセル座標をmm座標に変換（OpenAI APIと同じロジック）
-    const convertedItems = rawResult.items.map((item) => {
+    const convertedItems = rawResult.items.map(item => {
       // pageIndexが未定義の場合のエラーハンドリング
       if (item.pageIndex === undefined || item.pageIndex === null) {
         console.warn(`警告: ${item.componentId}のpageIndexが未定義です。デフォルト値0を使用します。`)
@@ -441,8 +441,8 @@ ${
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
 
     // より詳細なエラーメッセージを提供
-    if (errorMessage.includes('NEXT_PUBLIC_GEMINI_API_KEY')) {
-      throw new Error('Gemini APIキーが設定されていません。環境変数:NEXT_PUBLIC_GEMINI_API_KEYを設定してください。')
+    if (errorMessage.includes('GEMINI_API_KEY')) {
+      throw new Error('Gemini APIキーが設定されていません。環境変数:GEMINI_API_KEY')
     } else if (errorMessage.includes('401') || errorMessage.includes('403')) {
       throw new Error('Gemini APIの認証に失敗しました。APIキーが正しいか確認してください。')
     } else if (errorMessage.includes('429')) {

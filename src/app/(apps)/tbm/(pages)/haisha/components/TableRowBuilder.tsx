@@ -1,12 +1,12 @@
 'use client'
 import React from 'react'
-import {Days} from '@cm/class/Days/Days'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
-import {HaishaCard} from './HaishaCard'
+import { Days } from '@cm/class/Days/Days'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
+import { HaishaCard } from './HaishaCard'
 import UserTh from './UserTh'
 import DateThCell from './DateThCell'
-import {doTransaction} from '@cm/lib/server-actions/common-server-actions/doTransaction/doTransaction'
-import {R_Stack} from '@cm/components/styles/common-components/common-components'
+import { doTransaction } from '@cm/lib/server-actions/common-server-actions/doTransaction/doTransaction'
+import { R_Stack } from '@cm/components/styles/common-components/common-components'
 import {
   TableRowBuilderProps,
   DateCellBuilderParams,
@@ -14,7 +14,7 @@ import {
   TbmRouteGroupWithCalendar,
 } from '../types/haisha-page-types'
 import TbmRouteCl from '@app/(apps)/tbm/(class)/TbmRouteCl'
-import {CalendarIcon} from 'lucide-react'
+import { CalendarIcon } from 'lucide-react'
 
 // 固定列のスタイル定数
 const STICKY_COLUMN_STYLE = {
@@ -59,7 +59,7 @@ export const TableRowBuilder = {
               <R_Stack className={`gap-0.5`}>
                 <span>{i + 1}. </span>
                 <span>
-                  <UserTh {...{user, admin, query, userWorkStatusCount}} />
+                  <UserTh {...{ user, admin, query, userWorkStatusCount }} />
                 </span>
               </R_Stack>
             ),
@@ -89,7 +89,7 @@ export const TableRowBuilder = {
 
   // ルートモード用の行生成
   buildRouteRows: (tbmRouteGroup: TbmRouteGroupWithCalendar[], props: TableRowBuilderProps) => {
-    const {mode, tbmBase, days, holidays, fetchData, setModalOpen, query, scheduleByDateAndRoute = {}} = props
+    const { mode, tbmBase, days, holidays, fetchData, setModalOpen, query, scheduleByDateAndRoute = {} } = props
 
     return tbmRouteGroup
       .sort((a, b) => a.code?.localeCompare(b.code ?? '') ?? 0)
@@ -98,7 +98,7 @@ export const TableRowBuilder = {
           return calendar.holidayType === '稼働'
         })
 
-        const {name, routeName} = route
+        const { name, routeName } = route
 
         const scheduledCount = Object.keys(scheduleByDateAndRoute).reduce((acc, date) => {
           return acc + (scheduleByDateAndRoute[date]?.[String(route.id)]?.length ?? 0)
@@ -164,7 +164,7 @@ export const TableRowBuilder = {
 
               const scheduleListOnDate = scheduleByDateAndRoute[formatDate(date)]?.[String(route.id)] ?? []
 
-              const cellStyle = must ? {background: '#fff1cd'} : undefined
+              const cellStyle = must ? { background: '#fff1cd' } : undefined
 
               return {
                 ...TableRowBuilder.buildDateCell({
@@ -177,7 +177,7 @@ export const TableRowBuilder = {
                   fetchData,
                   setModalOpen,
                   query,
-                  cellStyle,
+                  cellStyle: {},
                   // user: rout,
                 }),
               }
@@ -189,11 +189,11 @@ export const TableRowBuilder = {
 
   // 日付セルの共通ビルダー
   buildDateCell: (params: DateCellBuilderParams) => {
-    const {date, scheduleListOnDate, user, tbmRouteGroup, mode, tbmBase, holidays, fetchData, setModalOpen, query, cellStyle} =
+    const { date, scheduleListOnDate, user, tbmRouteGroup, mode, tbmBase, holidays, fetchData, setModalOpen, query, cellStyle } =
       params
     const dateStr = formatDate(date, 'M/D(ddd)')
     const isHoliday = Days.day.isHoliday(date, holidays)
-    const thStyle = {...HEADER_STYLE, ...isHoliday?.style}
+    const thStyle = { ...HEADER_STYLE, ...isHoliday?.style }
 
     return {
       label: (

@@ -9,8 +9,10 @@ import { ImageCard } from '../components/ImageCard'
 import { ProcessLog } from '../components/ProcessLog'
 import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
 import { AnalyzeResponse, GenerateResponse } from '../types'
-import { Download, RefreshCw } from 'lucide-react'
+import { Download, RefreshCw, FileText } from 'lucide-react'
 import { saveAs } from 'file-saver'
+import { generatePptx } from '../utils/generatePptx'
+import { generatePptxClaude } from '../utils/generatePptxClaude'
 
 export default function ImageCaptionerPage() {
   const {
@@ -373,6 +375,52 @@ export default function ImageCaptionerPage() {
     }
   }, [state.images, addLog])
 
+  const handleGeneratePptx = useCallback(async () => {
+    const completedImages = state.images.filter(img => img.status === 'completed' && img.generatedImageUrl)
+    if (completedImages.length === 0) {
+      addLog('error', '生成済みの画像がありません。先に画像を生成してください。')
+      return
+    }
+
+    try {
+      setIsProcessing(true)
+      addLog('info', 'AIがスライド構成を生成中...')
+      await generatePptx(state.scenario, state.images)
+      addLog('success', 'スライド資料の生成が完了しました')
+    } catch (error) {
+      addLog('error', `スライド生成エラー: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    } finally {
+      setIsProcessing(false)
+    }
+  }, [state.scenario, state.images, setIsProcessing, addLog])
+
+  const handleGeneratePptxClaude = useCallback(async () => {
+    const completedImages = state.images.filter(img => img.status === 'completed' && img.generatedImageUrl)
+    if (completedImages.length === 0) {
+      addLog('error', '生成済みの画像がありません。先に画像を生成してください。')
+      return
+    }
+
+    try {
+      setIsProcessing(true)
+      addLog('info', 'Claude APIがスライド構成とデザインを生成中...')
+      await generatePptxClaude(state.scenario, state.images)
+      addLog('success', 'Claude APIによるスライド資料の生成が完了しました')
+    } catch (error) {
+      addLog('error', `Claude APIスライド生成エラー: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      // エラー時は既存のGemini方式にフォールバック
+      addLog('info', 'Gemini方式で再試行します...')
+      try {
+        await generatePptx(state.scenario, state.images)
+        addLog('success', 'Gemini方式でスライド資料の生成が完了しました')
+      } catch (fallbackError) {
+        addLog('error', `フォールバック生成エラー: ${fallbackError instanceof Error ? fallbackError.message : 'Unknown error'}`)
+      }
+    } finally {
+      setIsProcessing(false)
+    }
+  }, [state.scenario, state.images, setIsProcessing, addLog])
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <C_Stack className="max-w-7xl mx-auto gap-6">
@@ -529,13 +577,31 @@ export default function ImageCaptionerPage() {
               <R_Stack className="items-center justify-between mb-4">
                 <h2 className="text-xl font-semibold">画像一覧</h2>
                 {state.images.some(img => img.status === 'completed') && (
-                  <button
-                    onClick={handleDownloadAll}
-                    className="px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center gap-2"
-                  >
-                    <Download className="w-5 h-5" />
-                    一括ダウンロード
-                  </button>
+                  <R_Stack className="gap-3">
+                    <button
+                      onClick={handleGeneratePptxClaude}
+                      disabled={state.isProcessing}
+                      className="px-6 py-3 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                    >
+                      <FileText className="w-5 h-5" />
+                      Claude APIでスライド生成（高品質デザイン）
+                    </button>
+                    <button
+                      onClick={handleGeneratePptx}
+                      disabled={state.isProcessing}
+                      className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                    >
+                      <FileText className="w-5 h-5" />
+                      スライド資料を生成（標準）
+                    </button>
+                    <button
+                      onClick={handleDownloadAll}
+                      className="px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center gap-2"
+                    >
+                      <Download className="w-5 h-5" />
+                      一括ダウンロード
+                    </button>
+                  </R_Stack>
                 )}
               </R_Stack>
               <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">

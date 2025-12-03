@@ -1,10 +1,10 @@
 'use client'
 
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
-import {useEffect, useMemo, useCallback} from 'react'
+import { useEffect, useMemo, useCallback } from 'react'
 import useDateSwitcherFunc from '@cm/components/utils/dates/DateSwitcher/useDateSwitcherFunc'
-import {colType} from '@cm/types/col-types'
-import {FitMargin} from '@cm/components/styles/common-components/common-components'
+import { colType } from '@cm/types/col-types'
+import { FitMargin } from '@cm/components/styles/common-components/common-components'
 import useWindowSize from '@cm/hooks/useWindowSize'
 
 interface NewDateSwitcherProps {
@@ -16,11 +16,11 @@ interface NewDateSwitcherProps {
 }
 
 const NewDateSwitcher = (props: NewDateSwitcherProps) => {
-  const {query} = useGlobal()
-  const {width} = useWindowSize()
+  const { query, setglobalLoaderAtom } = useGlobal()
+  const { width } = useWindowSize()
 
   const {
-    FormHook: {BasicForm, ReactHookForm, latestFormData},
+    FormHook: { BasicForm, ReactHookForm, latestFormData },
     from,
     to,
   } = useDateSwitcherFunc(props)
@@ -51,9 +51,10 @@ const NewDateSwitcher = (props: NewDateSwitcherProps) => {
     }
   }, [from, to, ReactHookForm])
 
-  // queryの変更時のみ実行し、不要な再レンダリングを防ぐ
+  // queryの変更時にフォーム値を更新し、ローダーを終了
   useEffect(() => {
     updateFormValues()
+    setglobalLoaderAtom(false)
   }, [query])
 
   return (

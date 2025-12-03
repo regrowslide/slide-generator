@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY
+    const apiKey = process.env.GEMINI_API_KEY
 
     if (!apiKey) {
       return NextResponse.json(
@@ -100,7 +100,6 @@ ${context ? `【全体のコンテキスト】\n${context}\n` : ''}
 
     const data = await response.json()
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || ''
-    console.log({text}) //logs
 
     if (!text) {
       return NextResponse.json(

@@ -1,9 +1,9 @@
 'use client'
 import React from 'react'
-import {CsvTableVirtualized} from '@cm/components/styles/common-components/CsvTable/CsvTableVirtualized'
-import {TableRowBuilder} from './TableRowBuilder'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
-import {HaishaTableContentProps, TbmDriveScheduleWithDuplicated} from '../types/haisha-page-types'
+import { CsvTableVirtualized } from '@cm/components/styles/common-components/CsvTable/CsvTableVirtualized'
+import { TableRowBuilder } from './TableRowBuilder'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
+import { HaishaTableContentProps, TbmDriveScheduleWithDuplicated } from '../types/haisha-page-types'
 
 export const HaishaTableContent = React.memo((props: HaishaTableContentProps) => {
   const {
@@ -21,11 +21,13 @@ export const HaishaTableContent = React.memo((props: HaishaTableContentProps) =>
     userWorkStatusCount,
   } = props
 
+
+
   // スケジュールデータを整理
-  const {scheduleByDateAndUser, scheduleByDateAndRoute} = React.useMemo(() => {
+  const { scheduleByDateAndUser, scheduleByDateAndRoute } = React.useMemo(() => {
     return {
-      scheduleByDateAndUser: getScheduleByDateAndUser({TbmDriveSchedule}),
-      scheduleByDateAndRoute: getScheduleByDateAndRoute({TbmDriveSchedule}),
+      scheduleByDateAndUser: getScheduleByDateAndUser({ TbmDriveSchedule }),
+      scheduleByDateAndRoute: getScheduleByDateAndRoute({ TbmDriveSchedule }),
     }
   }, [TbmDriveSchedule, days, holidays])
 
@@ -45,18 +47,18 @@ export const HaishaTableContent = React.memo((props: HaishaTableContentProps) =>
 
   if (mode === 'DRIVER') {
     const records = TableRowBuilder.buildDriverRows(userList, tableRowBuilderProps)
-    return <div>{CsvTableVirtualized({records}).WithWrapper({})}</div>
+    return <div>{CsvTableVirtualized({ records }).WithWrapper({})}</div>
   }
 
   if (mode === 'ROUTE') {
     const records = TableRowBuilder.buildRouteRows(tbmRouteGroup, tableRowBuilderProps)
-    return <div>{CsvTableVirtualized({records}).WithWrapper({})}</div>
+    return <div>{CsvTableVirtualized({ records }).WithWrapper({})}</div>
   }
 
   return <></>
 })
 
-const getScheduleByDateAndUser = ({TbmDriveSchedule}: {TbmDriveSchedule: TbmDriveScheduleWithDuplicated[]}) => {
+const getScheduleByDateAndUser = ({ TbmDriveSchedule }: { TbmDriveSchedule: TbmDriveScheduleWithDuplicated[] }) => {
   const scheduleByDateAndUser = TbmDriveSchedule.reduce(
     (acc, schedule) => {
       const dateKey = formatDate(schedule.date)
@@ -73,10 +75,10 @@ const getScheduleByDateAndUser = ({TbmDriveSchedule}: {TbmDriveSchedule: TbmDriv
     {} as Record<string, Record<string, TbmDriveScheduleWithDuplicated[]>>
   )
 
-  return {scheduleByDateAndUser}
+  return { scheduleByDateAndUser }
 }
 
-const getScheduleByDateAndRoute = ({TbmDriveSchedule}: {TbmDriveSchedule: TbmDriveScheduleWithDuplicated[]}) => {
+const getScheduleByDateAndRoute = ({ TbmDriveSchedule }: { TbmDriveSchedule: TbmDriveScheduleWithDuplicated[] }) => {
   const scheduleByDateAndRoute = TbmDriveSchedule.reduce(
     (acc, schedule) => {
       const dateKey = formatDate(schedule.date)
@@ -93,6 +95,6 @@ const getScheduleByDateAndRoute = ({TbmDriveSchedule}: {TbmDriveSchedule: TbmDri
     {} as Record<string, Record<string, TbmDriveScheduleWithDuplicated[]>>
   )
 
-  return {scheduleByDateAndRoute}
+  return { scheduleByDateAndRoute }
 }
 export default HaishaTableContent
