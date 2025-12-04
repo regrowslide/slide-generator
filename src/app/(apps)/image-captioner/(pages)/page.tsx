@@ -11,8 +11,6 @@ import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common
 import { AnalyzeResponse, GenerateResponse } from '../types'
 import { Download, RefreshCw, FileText } from 'lucide-react'
 import { saveAs } from 'file-saver'
-import { generatePptx } from '../utils/generatePptx'
-import { generatePptxClaude } from '../utils/generatePptxClaude'
 
 export default function ImageCaptionerPage() {
   const {
@@ -385,7 +383,33 @@ export default function ImageCaptionerPage() {
     try {
       setIsProcessing(true)
       addLog('info', 'AIがスライド構成を生成中...')
-      await generatePptx(state.scenario, state.images)
+
+      const response = await fetch('/api/image-captioner/generate-pptx', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          scenario: state.scenario,
+          images: state.images
+            .filter(img => img.status === 'completed' && img.generatedImageUrl)
+            .map(img => ({
+              annotation: img.annotation,
+              generatedImageUrl: img.generatedImageUrl,
+            })),
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'PPTX生成に失敗しました')
+      }
+
+      // Blobとしてダウンロード
+      const blob = await response.blob()
+      const contentDisposition = response.headers.get('Content-Disposition')
+      const fileNameMatch = contentDisposition?.match(/filename="(.+)"/)
+      const fileName = fileNameMatch ? decodeURIComponent(fileNameMatch[1]) : 'presentation.pptx'
+
+      saveAs(blob, fileName)
       addLog('success', 'スライド資料の生成が完了しました')
     } catch (error) {
       addLog('error', `スライド生成エラー: ${error instanceof Error ? error.message : 'Unknown error'}`)
@@ -404,22 +428,48 @@ export default function ImageCaptionerPage() {
     try {
       setIsProcessing(true)
       addLog('info', 'Claude APIがスライド構成とデザインを生成中...')
-      await generatePptxClaude(state.scenario, state.images)
+
+      const response = await fetch('/api/image-captioner/generate-pptx-claude', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          scenario: state.scenario,
+          images: state.images
+            .filter(img => img.status === 'completed' && img.generatedImageUrl)
+            .map(img => ({
+              annotation: img.annotation,
+              generatedImageUrl: img.generatedImageUrl,
+              base64: img.originalBase64 || img.preview,
+            })),
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'PPTX生成に失敗しました')
+      }
+
+      // Blobとしてダウンロード
+      const blob = await response.blob()
+      const contentDisposition = response.headers.get('Content-Disposition')
+      const fileNameMatch = contentDisposition?.match(/filename="(.+)"/)
+      const fileName = fileNameMatch ? decodeURIComponent(fileNameMatch[1]) : 'presentation-claude.pptx'
+
+      saveAs(blob, fileName)
       addLog('success', 'Claude APIによるスライド資料の生成が完了しました')
     } catch (error) {
       addLog('error', `Claude APIスライド生成エラー: ${error instanceof Error ? error.message : 'Unknown error'}`)
-      // エラー時は既存のGemini方式にフォールバック
-      addLog('info', 'Gemini方式で再試行します...')
+      // エラー時は標準方式にフォールバック
+      addLog('info', '標準方式で再試行します...')
       try {
-        await generatePptx(state.scenario, state.images)
-        addLog('success', 'Gemini方式でスライド資料の生成が完了しました')
+        await handleGeneratePptx()
       } catch (fallbackError) {
         addLog('error', `フォールバック生成エラー: ${fallbackError instanceof Error ? fallbackError.message : 'Unknown error'}`)
       }
     } finally {
       setIsProcessing(false)
     }
-  }, [state.scenario, state.images, setIsProcessing, addLog])
+  }, [state.scenario, state.images, setIsProcessing, addLog, handleGeneratePptx])
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">

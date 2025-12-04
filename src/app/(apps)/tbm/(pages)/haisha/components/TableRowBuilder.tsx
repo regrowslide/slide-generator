@@ -21,13 +21,13 @@ const STICKY_COLUMN_STYLE = {
   left: 0,
   position: 'sticky' as const,
   zIndex: 31,
-  background: '#F3F3F3',
+  backgroundColor: '#F3F3F3',
   borderRight: '2px solid #c8c8c8',
   boxShadow: '2px 0 4px rgba(0,0,0,0.1)',
 }
 
 const HEADER_STYLE = {
-  background: '#d8d8d8',
+  backgroundColor: '#d8d8d8',
   fontWeight: 'bold' as const,
 }
 
@@ -164,7 +164,7 @@ export const TableRowBuilder = {
 
               const scheduleListOnDate = scheduleByDateAndRoute[formatDate(date)]?.[String(route.id)] ?? []
 
-              const cellStyle = must ? { background: '#fff1cd' } : undefined
+              const cellStyle = must ? { backgroundColor: '#fff1cd' } : undefined
 
               return {
                 ...TableRowBuilder.buildDateCell({

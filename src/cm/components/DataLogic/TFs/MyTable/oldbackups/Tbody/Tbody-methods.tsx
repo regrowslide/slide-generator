@@ -43,8 +43,8 @@ export const createTrClassName = ({myTable, record, formData}) =>
     //
     `relative `,
     formData?.id === record?.id ? 'bg-sub-light' : '',
-    myTable?.showHeader ? '' : roundedTrClass,
-    'odd:bg-gray-100 even:bg-gray-200'
+    myTable?.showHeader ? '' : roundedTrClass
+    // 'odd:bg-gray-100 even:bg-gray-200' はインラインスタイルのbackgroundと競合するため削除
   )
 
 export const getDndProps = ({dndId, rowColor, myTable}) => {
@@ -54,7 +54,7 @@ export const getDndProps = ({dndId, rowColor, myTable}) => {
   const dndStyle = {
     transform: CSS.Transform.toString(transform),
     transition,
-    background: isDragging ? '#fef788' : rowColor,
+    backgroundColor: isDragging ? '#fef788' : rowColor,
   }
 
   const allowDnd = myTable?.['drag']

@@ -52,7 +52,7 @@ export const DraggableTableRow = React.memo(
     const dndStyle = {
       transform: CSS.Transform.toString(transform),
       transition,
-      background: isDragging ? 'rgba(59, 130, 246, 0.1)' : rowColor, // 薄い青色に変更
+      backgroundColor: isDragging ? 'rgba(59, 130, 246, 0.1)' : rowColor, // 薄い青色に変更
       boxShadow: isDragging ? '0 8px 25px -8px rgba(0, 0, 0, 0.3)' : undefined, // ドラッグ中に影を追加
       zIndex: isDragging ? 999 : 'auto', // ドラッグ中は最前面に
       opacity: isDragging ? 0.95 : 1, // 少し透明にして動いている感を演出
@@ -76,13 +76,13 @@ export const DraggableTableRow = React.memo(
               key={`${recordId}-${rowIdx}`}
               className={trClassName}
               {...(rowIdx === 0 ? dndProps : undefined)} // DnDは最初の行のみに適用
-              style={rowIdx === 0 ? dndStyle : { background: rowColor }}
+              style={rowIdx === 0 ? dndStyle : { backgroundColor: rowColor }}
             >
               {/* 操作セル（最初の行のみ） */}
               {rowIdx === 0 && (
                 <th
                   style={{
-                    background: isDragging ? dndStyle.background : getColorStyles(rowColor).backgroundColor,
+                    backgroundColor: isDragging ? dndStyle.backgroundColor : getColorStyles(rowColor).backgroundColor,
                     color: isDragging ? '#1f2937' : undefined,
                     fontWeight: isDragging ? '500' : undefined,
                     boxShadow: isDragging ? dndStyle.boxShadow : undefined,
@@ -120,7 +120,7 @@ export const DraggableTableRow = React.memo(
                       color: isDragging ? '#1f2937' : undefined, // ダークグレーのテキスト色
                       fontWeight: isDragging ? '500' : undefined, // 少し太字に
                     }
-                    : { background: rowColor }),
+                    : { backgroundColor: rowColor }),
                 }
                 const value = getValue({ col, record, dataModelName, mutateRecords, tdStyle })
 

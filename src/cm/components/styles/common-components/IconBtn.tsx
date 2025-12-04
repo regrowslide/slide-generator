@@ -1,34 +1,35 @@
-import React, {useMemo} from 'react'
+import React, { useMemo } from 'react'
 
-import {getColorStyles} from '@cm/lib/methods/colors'
-import {colorVariants} from '@cm/lib/methods/colorVariants'
-import {CSSProperties} from 'react'
+import { getColorStyles } from '@cm/lib/methods/colors'
+import { colorVariants } from '@cm/lib/methods/colorVariants'
+import { CSSProperties } from 'react'
 
-import {twMerge} from 'tailwind-merge'
-import {tv} from 'tailwind-variants'
-import {htmlProps} from '@cm/types/utility-types'
-import {iconBtnProps} from '@cm/lib/methods/Coloring'
-import {cn} from '@cm/shadcn/lib/utils'
+import { twMerge } from 'tailwind-merge'
+import { tv } from 'tailwind-variants'
+import { htmlProps } from '@cm/types/utility-types'
+import { iconBtnProps } from '@cm/lib/methods/Coloring'
+import { cn } from '@cm/shadcn/lib/utils'
 
 export const IconBtnBaseClass = ` rounded-full px-2 py-0.5  text-[15px]  `
 
 export const IconBtn = React.memo((props: htmlProps & iconBtnProps) => {
-  const {className, style, color, active = true, vivid = true, rounded = false, children, size = 'md', ...rest} = props
+  const { className, style, color, active = true, vivid = true, rounded = false, children, size = 'md', ...rest } = props
 
   const colorUndetected = !iconBtnColorVariants[color ?? ''] && color
 
   const customeStyle = useMemo(() => {
     if (colorUndetected) {
       if (vivid && color) {
+        const colorStyles = getColorStyles(color + 'CC')
         return {
-          background: color + 'CC',
-          ...getColorStyles(color + 'CC'),
+          backgroundColor: color + 'CC',
+          color: colorStyles.color,
           border: '2px solid ' + color,
         }
       }
 
       return {
-        background: color + '20',
+        backgroundColor: color + '20',
         color: color,
         border: '2px solid ' + color,
       }
@@ -40,10 +41,10 @@ export const IconBtn = React.memo((props: htmlProps & iconBtnProps) => {
     base: cn(color ? `shadow-2xs border-[0.5px]  inline-block` : '', IconBtnBaseClass, className),
     variants: {
       color: iconBtnColorVariants,
-      active: {false: 'opacity-[35%]', true: 'opacity-100'},
-      rounded: {false: 'rounded'},
-      vivid: {true: 'text-inherit bg-inherit border-inherit'},
-      disabled: {true: 'disabled !cursor-not-allowed'},
+      active: { false: 'opacity-[35%]', true: 'opacity-100' },
+      rounded: { false: 'rounded' },
+      vivid: { true: 'text-inherit bg-inherit border-inherit' },
+      disabled: { true: 'disabled !cursor-not-allowed' },
       size: {
         sm: 'text-[12px]',
         md: 'text-[14px]',
@@ -58,10 +59,10 @@ export const IconBtn = React.memo((props: htmlProps & iconBtnProps) => {
       disabled: false,
       size: 'md',
     },
-  })({color: color as any, active, rounded, disabled: props.disabled, size})
+  })({ color: color as any, active, rounded, disabled: props.disabled, size })
 
   return (
-    <div className={classNameOutput} style={{...customeStyle, ...style}} disabled={props.disabled} {...rest}>
+    <div className={classNameOutput} style={{ ...customeStyle, ...style }} disabled={props.disabled} {...rest}>
       {children}
     </div>
   )
@@ -77,14 +78,14 @@ export const CircledIcon = React.memo(
       icon?
     }
   ) => {
-    const {icon, className, style, color = `gray`, active, inline, type = `button`, size = `md`, ...rest} = props
+    const { icon, className, style, color = `gray`, active, inline, type = `button`, size = `md`, ...rest } = props
 
     const sizeClass = size === `md` ? `h-5 w-5 p-[1px]` : `h-8 w-8 p-1`
     return (
       <button
         {...rest}
-        {...{color, active, inline, type}}
-        style={{...style}}
+        {...{ color, active, inline, type }}
+        style={{ ...style }}
         className={twMerge(sizeClass, `  rounded-full  shadow-xs`, className)}
       >
         {icon ?? props.children}
@@ -94,8 +95,8 @@ export const CircledIcon = React.memo(
 )
 
 export const IconBtnForSelect = React.memo(
-  (props: {children: React.ReactNode; color?: colorVariants; className?: string; style?: CSSProperties}) => {
-    const {children, color, className, style} = props
+  (props: { children: React.ReactNode; color?: colorVariants; className?: string; style?: CSSProperties }) => {
+    const { children, color, className, style } = props
 
     return (
       <IconBtn color={color} style={style} className={twMerge(`rounded-sm p-0.5! px-1! text-sm text-gray-800`, className)}>
@@ -105,7 +106,7 @@ export const IconBtnForSelect = React.memo(
   }
 )
 
-export const iconBtnColorVariants: {[key in colorVariants]: string} = {
+export const iconBtnColorVariants: { [key in colorVariants]: string } = {
   gray: 'bg-gray-200 text-gray-700 shadow-gray-400 border-gray-400',
   red: 'bg-red-100 text-red-700 shadow-red-400 border-red-400',
   blue: 'bg-sky-50 text-sky-700 shadow-sky-400 border-sky-400',

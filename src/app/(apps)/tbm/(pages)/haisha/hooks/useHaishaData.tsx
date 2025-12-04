@@ -1,9 +1,9 @@
 'use client'
-import {useState, useEffect, useCallback} from 'react'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
-import {showSpendTime} from '@cm/lib/methods/toast-helper'
+import { useState, useEffect, useCallback } from 'react'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
+import { showSpendTime } from '@cm/lib/methods/toast-helper'
 import useLocalLoading from '@cm/hooks/globalHooks/useLocalLoading'
-import {getListData} from '../components/getListData'
+import { getListData } from '../components/getListData'
 import {
   UseHaishaDataParams,
   UseHaishaDataReturn,
@@ -22,25 +22,27 @@ export function useHaishaData({
 }: UseHaishaDataParams): UseHaishaDataReturn {
   const [listDataState, setListDataState] = useState<HaishaListData | null>(null)
   const [maxRecord, setMaxRecord] = useState(0)
-  const {LocalLoader, toggleLocalLoading} = useLocalLoading()
-  const {query} = useGlobal()
+  const { LocalLoader, toggleLocalLoading } = useLocalLoading()
+  const { query } = useGlobal()
 
   const fetchData = useCallback(async () => {
+    console.log(query.from)  //logs
+
     toggleLocalLoading(async () => {
       await showSpendTime(async () => {
-        const takeSkip = {take: itemsPerPage, skip: (currentPage - 1) * itemsPerPage}
+        const takeSkip = { take: itemsPerPage, skip: (currentPage - 1) * itemsPerPage }
         const sortBy = (query.sortBy as HaishaSortBy) ?? 'departureTime'
         const tbmCustomerId = query.tbmCustomerId ? parseInt(query.tbmCustomerId) : undefined
-        const data = await getListData({tbmBaseId, whereQuery, mode, takeSkip, sortBy, tbmCustomerId})
+        const data = await getListData({ tbmBaseId, whereQuery, mode, takeSkip, sortBy, tbmCustomerId })
         setMaxRecord(data.maxCount)
         setListDataState(data)
       })
     })
-  }, [tbmBaseId, whereQuery, mode, currentPage, itemsPerPage, query.sortBy, query.tbmCustomerId])
+  }, [tbmBaseId, whereQuery, mode, currentPage, itemsPerPage, query])
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [query])
 
   // スケジュールデータを日付とユーザー/ルートで整理
   const scheduleByDateAndUser =
@@ -83,7 +85,7 @@ export function useHaishaData({
         newList.push(updatedSchedule)
       }
 
-      return {...prev, TbmDriveSchedule: newList}
+      return { ...prev, TbmDriveSchedule: newList }
     })
   }, [])
 
@@ -92,7 +94,7 @@ export function useHaishaData({
       if (!prev) return null
 
       const newList = prev.TbmDriveSchedule.filter(item => item.id !== scheduleId)
-      return {...prev, TbmDriveSchedule: newList}
+      return { ...prev, TbmDriveSchedule: newList }
     })
   }, [])
 

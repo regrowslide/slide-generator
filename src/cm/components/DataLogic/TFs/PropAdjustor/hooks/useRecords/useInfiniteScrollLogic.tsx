@@ -1,6 +1,6 @@
 import {useState, useCallback, useMemo} from 'react'
 import {getMyTableId} from '@cm/components/DataLogic/TFs/MyTable/helpers/getMyTableId'
-import {defaultCountPerPage, P_Query} from '@cm/class/PQuery'
+import { P_Query} from '@cm/class/PQuery'
 import {getInitModelRecordsProps, serverFetchProps} from '@cm/components/DataLogic/TFs/Server/fetchers/getInitModelRecordsProps'
 import {tableRecord} from './useRecords'
 

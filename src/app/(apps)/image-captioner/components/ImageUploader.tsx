@@ -3,7 +3,7 @@
 import React, {useCallback} from 'react'
 import {useDropzone} from 'react-dropzone'
 import {Upload, X} from 'lucide-react'
-import {C_Stack, R_Stack} from '@cm/components/styles/common-components/common-components'
+import {C_Stack} from '@cm/components/styles/common-components/common-components'
 
 interface ImageUploaderProps {
   onFilesSelected: (files: File[]) => void

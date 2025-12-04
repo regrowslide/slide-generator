@@ -72,31 +72,9 @@ export default function HaishaTable({ days, tbmBase, whereQuery }: HaishaTablePr
     where: { holidayType: `祝日` },
   })
 
-  // テーブルコンテンツのメモ化
-  const HaishaTableMemo = useMemo(() => {
-    if (listDataState) {
-      const { TbmDriveSchedule, userList, tbmRouteGroup, userWorkStatusCount } = listDataState
 
-      return (
-        <TableContent
-          {...({
-            mode,
-            tbmBase,
-            days,
-            holidays,
-            fetchData,
-            setModalOpen,
-            admin,
-            query,
-            TbmDriveSchedule,
-            tbmRouteGroup,
-            userList,
-            userWorkStatusCount,
-          } as any)}
-        />
-      )
-    }
-  }, [listDataState, mode, tbmBase, days, holidays, fetchData, setModalOpen, admin, query])
+  const { TbmDriveSchedule, userList, tbmRouteGroup, userWorkStatusCount } = listDataState ?? {}
+
 
   const ModalMemo = useMemo(() => <HK_HaishaTableEditorGMF.Modal />, [HK_HaishaTableEditorGMF.GMF_OPEN])
 
@@ -108,7 +86,22 @@ export default function HaishaTable({ days, tbmBase, whereQuery }: HaishaTablePr
       <LocalLoader />
       {ModalMemo}
       <HaishaTableSwitcher />
-      {HaishaTableMemo}
+      <TableContent
+        {...({
+          mode,
+          tbmBase,
+          days,
+          holidays,
+          fetchData,
+          setModalOpen,
+          admin,
+          query,
+          TbmDriveSchedule,
+          tbmRouteGroup,
+          userList,
+          userWorkStatusCount,
+        } as any)}
+      />
       <div className={` flex justify-around text-gray-500`}>{maxRecord}件のデータを表示</div>
 
       {/* 一括割り当てモーダル */}

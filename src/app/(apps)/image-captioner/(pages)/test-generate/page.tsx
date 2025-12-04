@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
+import { C_Stack } from '@cm/components/styles/common-components/common-components'
 
 export default function TestGeneratePage() {
  const [prompt, setPrompt] = useState('')
