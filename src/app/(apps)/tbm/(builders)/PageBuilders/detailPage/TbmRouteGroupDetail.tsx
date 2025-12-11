@@ -1,27 +1,27 @@
 'use client'
 
 import MyForm from '@cm/components/DataLogic/TFs/MyForm/MyForm'
-import {DetailPagePropType} from '@cm/types/types'
+import { DetailPagePropType } from '@cm/types/types'
 
-import {Days} from '@cm/class/Days/Days'
-import {toUtc} from '@cm/class/Days/date-utils/calculations'
+import { Days } from '@cm/class/Days/Days'
+import { toUtc } from '@cm/class/Days/date-utils/calculations'
 import useDoStandardPrisma from '@cm/hooks/useDoStandardPrisma'
-import {createUpdate} from '@cm/lib/methods/createUpdate'
-import {doStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
+import { createUpdate } from '@cm/lib/methods/createUpdate'
+import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
 
-import {doTransaction, transactionQuery} from '@cm/lib/server-actions/common-server-actions/doTransaction/doTransaction'
-import {toastByResult} from '@cm/lib/ui/notifications'
+import { doTransaction, transactionQuery } from '@cm/lib/server-actions/common-server-actions/doTransaction/doTransaction'
+import { toastByResult } from '@cm/lib/ui/notifications'
 import BasicTabs from '@cm/components/utils/tabs/BasicTabs'
-import {ColBuilder} from '@app/(apps)/tbm/(builders)/ColBuilders/ColBuilder'
+import { ColBuilder } from '@app/(apps)/tbm/(builders)/ColBuilders/ColBuilder'
 import ChildCreator from '@cm/components/DataLogic/RTs/ChildCreator/ChildCreator'
 import BulkCalendarSetter from '@app/(apps)/tbm/(pages)/eigyoshoSettei/components/BulkCalendarSetter'
-import {RouteGroupCl} from '@app/(apps)/tbm/(class)/RouteGroupCl'
-import {R_Stack} from '@cm/components/styles/common-components/common-components'
-import {useState} from 'react'
+import { RouteGroupCl } from '@app/(apps)/tbm/(class)/RouteGroupCl'
+import { R_Stack } from '@cm/components/styles/common-components/common-components'
+import { useState } from 'react'
 
 export default function TbmRouteGroupDetail(props: DetailPagePropType) {
-  const {useGlobalProps} = props
-  const {query, session} = useGlobalProps
+  const { useGlobalProps } = props
+  const { query, session } = useGlobalProps
   const [shareBaseIds, setShareBaseIds] = useState<number[]>(
     props.formData?.TbmRouteGroupShare?.map(share => share.tbmBaseId) || []
   )
@@ -29,7 +29,7 @@ export default function TbmRouteGroupDetail(props: DetailPagePropType) {
   const handleSaveShare = async () => {
     if (tbmRouteGroupId) {
       // 既存の共有設定を削除
-      await doStandardPrisma('tbmRouteGroupShare', 'deleteMany', {where: {tbmRouteGroupId}})
+      await doStandardPrisma('tbmRouteGroupShare', 'deleteMany', { where: { tbmRouteGroupId } })
 
       const transactionQueryList: (
         | transactionQuery<'tbmRouteGroupShare', 'create'>
@@ -54,31 +54,31 @@ export default function TbmRouteGroupDetail(props: DetailPagePropType) {
         model: 'tbmRouteGroup',
         method: 'update',
         queryObject: {
-          where: {id: tbmRouteGroupId},
-          data: {isShared: shareBaseIds.length > 0},
+          where: { id: tbmRouteGroupId },
+          data: { isShared: shareBaseIds.length > 0 },
         },
       })
 
-      const res = await doTransaction({transactionQueryList})
+      const res = await doTransaction({ transactionQueryList })
     }
   }
-  const {tbmBaseId: currentBaseId} = session.scopes.getTbmScopes()
+  const { tbmBaseId: currentBaseId } = session.scopes.getTbmScopes()
 
-  const {data: calendar = []} = useDoStandardPrisma(`tbmRouteGroupCalendar`, `findMany`, {
-    where: {tbmRouteGroupId: props.formData?.id},
-    orderBy: {date: 'asc'},
+  const { data: calendar = [] } = useDoStandardPrisma(`tbmRouteGroupCalendar`, `findMany`, {
+    where: { tbmRouteGroupId: props.formData?.id },
+    orderBy: { date: 'asc' },
   })
 
   // 営業所データを取得
-  const {data: allBases = []} = useDoStandardPrisma('tbmBase', 'findMany', {
-    select: {id: true, name: true, code: true},
-    orderBy: {name: 'asc'},
+  const { data: allBases = [] } = useDoStandardPrisma('tbmBase', 'findMany', {
+    select: { id: true, name: true, code: true },
+    orderBy: { name: 'asc' },
   })
 
   const theMonth = toUtc(query.from || query.month || new Date())
   const theYear = theMonth.getFullYear()
 
-  const {firstDateOfYear, lastDateOfYear, getAllMonthsInYear} = Days.year.getYearDatum(theYear)
+  const { firstDateOfYear, lastDateOfYear, getAllMonthsInYear } = Days.year.getYearDatum(theYear)
   const months = getAllMonthsInYear()
 
   const days = Days.day.getDaysBetweenDates(firstDateOfYear, lastDateOfYear)
@@ -181,12 +181,12 @@ export default function TbmRouteGroupDetail(props: DetailPagePropType) {
           <ChildCreator
             {...{
               ParentData: props.formData,
-              models: {parent: `tbmRouteGroup`, children: `tbmRouteGroupFee`},
+              models: { parent: `tbmRouteGroup`, children: `tbmRouteGroupFee` },
               additional: {
-                orderBy: [{startDate: `desc`}],
+                orderBy: [{ startDate: `desc` }],
               },
 
-              columns: ColBuilder.tbmRouteGroupFee({useGlobalProps}),
+              columns: ColBuilder.tbmRouteGroupFee({ useGlobalProps }),
               useGlobalProps,
             }}
           />
@@ -201,7 +201,7 @@ export default function TbmRouteGroupDetail(props: DetailPagePropType) {
                 months,
                 days: days,
                 defaultSelectedDays: defaultSelectedDays,
-                onConfirm: async ({selectedDays}) => {
+                onConfirm: async ({ selectedDays }) => {
                   if (!confirm('変更を反映しますか？')) return
 
                   const transactionQueryList: transactionQuery<'tbmRouteGroupCalendar', 'upsert'>[] = days.map(day => {
@@ -216,15 +216,48 @@ export default function TbmRouteGroupDetail(props: DetailPagePropType) {
                       model: 'tbmRouteGroupCalendar',
                       method: 'upsert',
                       queryObject: {
-                        where: {unique_tbmRouteGroupId_date},
-                        ...createUpdate({...unique_tbmRouteGroupId_date, holidayType: isSelected ? '稼働' : ''}),
+                        where: { unique_tbmRouteGroupId_date },
+                        ...createUpdate({ ...unique_tbmRouteGroupId_date, holidayType: isSelected ? '稼働' : '' }),
                       },
                     }
                   })
 
-                  const res = await doTransaction({transactionQueryList})
+                  const res = await doTransaction({ transactionQueryList })
                   toastByResult(res)
                 },
+              }}
+            />
+          </div>
+        ),
+      },
+      {
+        label: `関連便`,
+        component: (
+          <div className="p-4">
+            <div className="mb-4 p-3 bg-blue-50 rounded-md">
+              <span className="text-sm text-blue-800">
+                関連便を設定すると、配車ページでこの便を設定する際に関連便も同時に設定できます。
+              </span>
+            </div>
+            <ChildCreator
+              {...{
+                ParentData: props.formData,
+                models: { parent: `tbmRouteGroup`, children: `tbmRelatedRouteGroup` },
+
+
+                additional: {
+                  orderBy: [{ daysOffset: `asc` }],
+                  include: { childRouteGroup: true },
+
+                },
+                columns: ColBuilder.tbmRelatedRouteGroup({
+                  useGlobalProps,
+                  ColBuilderExtraProps: {
+                    tbmRouteGroupId: tbmRouteGroupId,
+                    tbmBaseId: currentBaseId,
+                  },
+                }),
+                useGlobalProps,
               }}
             />
           </div>
@@ -249,7 +282,7 @@ export default function TbmRouteGroupDetail(props: DetailPagePropType) {
       </div>
       <BasicTabs
         {...{
-          style: {width: '90vw', height: '90vh'},
+          style: { width: '90vw', height: '90vh' },
           id: `tbmVechicleDetailPage`,
           showAll: false,
           TabComponentArray,

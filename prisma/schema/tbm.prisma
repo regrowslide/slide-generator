@@ -33,6 +33,7 @@ model TbmRouteGroupCalendar {
   tbmRouteGroupId Int
 
   @@unique([tbmRouteGroupId, date], name: "unique_tbmRouteGroupId_date")
+  @@index([date])
 }
 
 model TbmKeihi {
@@ -213,6 +214,11 @@ model TbmRouteGroup {
 
   TbmRouteGroupFee   TbmRouteGroupFee[]
   TbmRouteGroupShare TbmRouteGroupShare[]
+
+  // 関連便（この便が親の場合）
+  RelatedRouteGroupsAsParent TbmRelatedRouteGroup[] @relation("ParentRouteGroup")
+  // 関連便（この便が子の場合）
+  RelatedRouteGroupsAsChild  TbmRelatedRouteGroup[] @relation("ChildRouteGroup")
 
   @@unique([tbmBaseId, code], name: "unique_tbmBaseId_code")
 }
@@ -425,6 +431,11 @@ model TbmDriveSchedule {
   // 1対多の関係に変更
   TbmEtcMeisai          TbmEtcMeisai[]
   TbmDriveScheduleImage TbmDriveScheduleImage[]
+
+  // パフォーマンス改善用インデックス
+  @@index([date])
+  @@index([tbmRouteGroupId, date])
+  @@index([tbmBaseId, date])
 }
 
 model TbmEtcMeisai {
@@ -577,4 +588,24 @@ model TbmRouteGroupShare {
   isActive Boolean @default(true)
 
   @@unique([tbmRouteGroupId, tbmBaseId], name: "unique_tbmRouteGroupId_tbmBaseId")
+}
+
+// 関連便機能のためのテーブル
+model TbmRelatedRouteGroup {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @default(now()) @updatedAt()
+  sortOrder Float     @default(0)
+
+  daysOffset Int // N日後の値
+
+  // 親便
+  TbmRouteGroup   TbmRouteGroup @relation("ParentRouteGroup", fields: [tbmRouteGroupId], references: [id], onDelete: Cascade)
+  tbmRouteGroupId Int
+
+  // 子便（関連便）
+  childRouteGroup   TbmRouteGroup @relation("ChildRouteGroup", fields: [childRouteGroupId], references: [id], onDelete: Cascade)
+  childRouteGroupId Int
+
+  @@unique([tbmRouteGroupId, childRouteGroupId], name: "unique_tbmRouteGroupId_childRouteGroupId")
 }

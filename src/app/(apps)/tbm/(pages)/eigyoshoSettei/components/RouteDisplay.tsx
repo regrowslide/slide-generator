@@ -111,6 +111,28 @@ export default function RouteDisplay({ tbmBase, whereQuery, toggleLoad, currentM
                 TbmRouteGroupShare: {
                   include: { TbmBase: true },
                 },
+                // 関連便情報を取得（親便・子便の判定用）
+                RelatedRouteGroupsAsParent: {
+                  select: {
+                    id: true,
+                    daysOffset: true,
+                    childRouteGroupId: true,
+                  },
+                },
+                RelatedRouteGroupsAsChild: {
+                  select: {
+                    id: true,
+                    daysOffset: true,
+                    tbmRouteGroupId: true,
+                    TbmRouteGroup: {
+                      select: {
+                        id: true,
+                        name: true,
+                        code: true,
+                      },
+                    },
+                  },
+                },
               },
               orderBy: getOrderBy(),
             },

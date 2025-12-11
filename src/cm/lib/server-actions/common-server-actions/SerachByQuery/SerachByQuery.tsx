@@ -43,7 +43,6 @@ export const searchByQuery = async (props: {
     skip: Math.max(0, Math.min(skip ?? 0, totalCount - 1)),
     take: take ?? undefined,
     orderBy: [...orderBy, {sortOrder: 'asc'}, {id: 'asc'}],
-
     ...selectOrInclude,
   }
 

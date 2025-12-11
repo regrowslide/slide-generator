@@ -14,12 +14,13 @@ import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import ShadPopover from '@cm/shadcn/ui/Organisms/ShadPopover'
 
 export default function EsGroupClient(props: {
+  showAll?: boolean
   groupNameAlign?: string
   EsGroupClientProp: EsGroupClientPropType
   createNextQuery
 }) {
   const {addQuery} = useGlobal()
-  const {createNextQuery, EsGroupClientProp, groupNameAlign} = props
+  const {createNextQuery, EsGroupClientProp, groupNameAlign, showAll} = props
   const {groupName, searchBtnDataSources} = EsGroupClientProp
 
   const {isRefreshTarget, isLastBtn} = EsGroupClientProp
@@ -86,44 +87,56 @@ export default function EsGroupClient(props: {
     return showAsModal
   })
 
-  return (
-    <div className={`      text-sm h-10 `}>
-      <div className={` ${stackClass}   `}>
-        <small className={`text-start leading-3`}>{groupName}</small>
-        {showAsModal ? (
-          <div className={` ${stackClass}   `}>
-            <R_Stack>
-              <BasicModal Trigger={<LabelDisplay />}>
-                <C_Stack>
-                  <Main />
-                </C_Stack>
-              </BasicModal>
-
-              {currentSelected.length > 0 && (
-                <IconBtn
-                  color="red"
-                  onClick={() => {
-                    const nextQuery = {
-                      [currentSelected[0].dataSource.id]: undefined,
-                    }
-                    addQuery(nextQuery)
-                  }}
-                >
-                  <Trash2 className={`text-gray-700  h-4 `} />
-                </IconBtn>
-              )}
-            </R_Stack>
-          </div>
-        ) : (
-          <>
-            <R_Stack>
-              <Main />
-            </R_Stack>
-          </>
-        )}
+  if (showAll) {
+    return (
+      <div>
+        <strong>{groupName}</strong>
+        <R_Stack>
+          <Main />
+        </R_Stack>
       </div>
-    </div>
-  )
+    )
+  } else {
+    return (
+      <div className={`      text-sm h-10 `}>
+        <div className={` ${stackClass}   `}>
+          <small className={`text-start leading-3`}>{groupName}</small>
+
+          {showAsModal ? (
+            <div className={` ${stackClass}   `}>
+              <R_Stack>
+                <BasicModal Trigger={<LabelDisplay />}>
+                  <C_Stack>
+                    <Main />
+                  </C_Stack>
+                </BasicModal>
+
+                {currentSelected.length > 0 && (
+                  <IconBtn
+                    color="red"
+                    onClick={() => {
+                      const nextQuery = {
+                        [currentSelected[0].dataSource.id]: undefined,
+                      }
+                      addQuery(nextQuery)
+                    }}
+                  >
+                    <Trash2 className={`text-gray-700  h-4 `} />
+                  </IconBtn>
+                )}
+              </R_Stack>
+            </div>
+          ) : (
+            <>
+              <R_Stack>
+                <Main />
+              </R_Stack>
+            </>
+          )}
+        </div>
+      </div>
+    )
+  }
 }
 
 export type EsGroupClientPropType = {

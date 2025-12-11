@@ -1,25 +1,24 @@
 'use client'
-import React, { useMemo } from 'react'
-import { C_Stack, Padding, R_Stack } from 'src/cm/components/styles/common-components/common-components'
+import React, {useMemo} from 'react'
+import {C_Stack, Padding, R_Stack} from 'src/cm/components/styles/common-components/common-components'
 
-import { Z_INDEX } from '@cm/lib/constants/constants'
+import {Z_INDEX} from '@cm/lib/constants/constants'
 
-import { TableSkelton } from '@cm/components/utils/loader/TableSkelton'
+import {TableSkelton} from '@cm/components/utils/loader/TableSkelton'
 import PlaceHolder from '@cm/components/utils/loader/PlaceHolder'
 
-import { usePropAdjustorLogic } from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/usePropAdjusctorLogic/usePropAdjustorLogic'
-import { PropAdjustorPropsType } from '@cm/components/DataLogic/TFs/PropAdjustor/types/propAdjustor-types'
+import {usePropAdjustorLogic} from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/usePropAdjusctorLogic/usePropAdjustorLogic'
+import {PropAdjustorPropsType} from '@cm/components/DataLogic/TFs/PropAdjustor/types/propAdjustor-types'
 import useWindowSize from '@cm/hooks/useWindowSize'
-import { SurroundingComponent } from '@cm/components/DataLogic/TFs/PropAdjustor/components/SurroundingComponent'
+import {SurroundingComponent} from '@cm/components/DataLogic/TFs/PropAdjustor/components/SurroundingComponent'
 import EasySearcher from '@cm/components/DataLogic/TFs/MyTable/components/EasySearcher/EasySearcher'
 import DetailedPageCC from '@cm/components/DataLogic/TFs/PropAdjustor/components/DetailedPageCC'
 
 const PropAdjustor = React.memo<PropAdjustorPropsType>(props => {
-  const { serverFetchProps } = props
-  const { ClientProps2, UseRecordsReturn, modelData, easySearchPrismaDataOnServer, useGlobalProps } = usePropAdjustorLogic(props)
+  const {serverFetchProps} = props
+  const {ClientProps2, UseRecordsReturn, modelData, easySearchPrismaDataOnServer, useGlobalProps} = usePropAdjustorLogic(props)
 
-
-  const { appbarHeight } = useWindowSize()
+  const {appbarHeight} = useWindowSize()
 
   const hasEasySearch = useMemo(
     () => Object.keys(easySearchPrismaDataOnServer?.availableEasySearchObj || {}).length > 0,

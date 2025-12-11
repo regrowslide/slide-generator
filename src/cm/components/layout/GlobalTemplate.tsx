@@ -20,7 +20,7 @@ export default function GlobalTemplate({children}) {
   return (
     <div>
       <ColOptionModal />
-      {showLoader && <Loader />}
+      {showLoader && <Loader></Loader>}
       <div id="poratal-root-top-fixed"></div>
       <div
         {...{

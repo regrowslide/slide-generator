@@ -50,7 +50,7 @@ export const getMeisaiData = async ({
   if (!matchesCustomer) return false
 
   // 請求月の判定（月末日跨ぎ運行対応）
-  const billingMonth = BillingHandler.getBillingMonth(schedule.date, schedule.TbmRouteGroup.departureTime)
+  const billingMonth = BillingHandler.getBillingMonth(schedule.date, schedule.TbmRouteGroup.departureTime, schedule.TbmRouteGroup.id)
 
   // 指定された月と請求月が一致するかチェック
   const targetMonth = toUtc(new Date(whereQuery.gte.getFullYear(), whereQuery.gte.getMonth() + 1, 1))

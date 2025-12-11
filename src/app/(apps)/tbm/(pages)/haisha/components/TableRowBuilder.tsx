@@ -116,8 +116,18 @@ export const TableRowBuilder = {
               cellValue: (
                 <div>
                   <R_Stack className={`  justify-between flex-nowrap`}>
-                    <R_Stack className={`gap-0.5`}>
+                    <R_Stack className={`gap-0.5 items-center`}>
                       <span>{i + 1}.</span>
+                      {(route?.RelatedRouteGroupsAsParent?.length ?? 0) > 0 && (
+                        <span className="px-1 py-0.5 text-[10px] font-semibold bg-blue-100 text-blue-700 rounded border border-blue-300">
+                          親
+                        </span>
+                      )}
+                      {(route?.RelatedRouteGroupsAsChild?.length ?? 0) > 0 && (
+                        <span className="px-1 py-0.5 text-[10px] font-semibold bg-green-100 text-green-700 rounded border border-green-300">
+                          子
+                        </span>
+                      )}
                       <strong>{route.name}</strong>
                     </R_Stack>
 

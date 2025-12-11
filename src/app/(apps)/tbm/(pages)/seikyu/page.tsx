@@ -22,6 +22,7 @@ export default async function Page(props) {
   const { tbmBaseId } = scopes.getTbmScopes()
   const { redirectPath, whereQuery } = await dateSwitcherTemplate({ query })
 
+
   if (redirectPath) return <Redirector {...{ redirectPath }} />
 
   // 顧客IDをクエリパラメータから取得（必須）
@@ -67,7 +68,7 @@ export default async function Page(props) {
         const matchesCustomer = schedule.TbmRouteGroup.Mid_TbmRouteGroup_TbmCustomer?.TbmCustomer?.id === customerId
         if (!matchesCustomer) return false
 
-        const billingMonth = BillingHandler.getBillingMonth(schedule.date, schedule.TbmRouteGroup.departureTime)
+        const billingMonth = BillingHandler.getBillingMonth(schedule.date, schedule.TbmRouteGroup.departureTime, schedule.TbmRouteGroup.id)
         return formatDate(billingMonth, 'YYYYMM') === formatDate(targetMonth, 'YYYYMM')
       })
 
@@ -122,6 +123,7 @@ export default async function Page(props) {
   if (!whereQuery?.gte || !whereQuery?.lte) {
     throw new Error('日付の設定が不正です')
   }
+
 
   try {
     const invoiceData = await getInvoiceData({

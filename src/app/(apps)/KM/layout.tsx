@@ -1,11 +1,12 @@
-import {Metadata} from 'next'
+import { Metadata } from 'next'
 import Image from 'next/image'
 
-import {Zen_Old_Mincho} from 'next/font/google'
+import { Zen_Old_Mincho } from 'next/font/google'
 
-import {isDev} from '@cm/lib/methods/common'
+import { isDev } from '@cm/lib/methods/common'
 import Admin from '@cm/components/layout/Admin/Admin'
-import {initServerComopnent} from 'src/non-common/serverSideFunction'
+import { initServerComopnent } from 'src/non-common/serverSideFunction'
+import { R_Stack } from '@cm/components/styles/common-components/common-components'
 
 const font = Zen_Old_Mincho({
   weight: ['400', '500', '600', '700', '900'],
@@ -13,21 +14,25 @@ const font = Zen_Old_Mincho({
   subsets: ['latin', 'latin-ext'],
 })
 
-const AppName = `改善マニア`
-const Logo = <Image className={`rounded-full`} src={'/image/KM/logo.png'} width={40} height={40} alt="" />
-export const metadata: Metadata = {title: AppName}
+const AppName = ``
+const Logo = <></>
+{/* <R_Stack className={`gap-0.5`}>
+  <Image className={``} src={'/image/KM/logoText.png'} width={200} height={200} alt="" />
+  <Image className={``} src={'/image/KM/logo.png'} width={100} height={100} alt="" />
+</R_Stack> */}
+export const metadata: Metadata = { title: AppName }
 
-export default async function AppLayout({children}) {
+export default async function AppLayout({ children }) {
   if (process.env.NEXT_PUBLIC_ROOTPATH !== 'KM' && !isDev) {
     return <div>このページへはアクセスできません。</div>
   }
 
-  const {session, scopes} = await initServerComopnent({query: {}})
+  const { session, scopes } = await initServerComopnent({ query: {} })
 
   return (
     <div className={font.className}>
       {/* <GreetingLayer> */}
-      <Admin {...{AppName: AppName, Logo, PagesMethod: 'KM_PAGES'}}>
+      <Admin {...{ AppName: AppName, Logo, PagesMethod: 'KM_PAGES' }}>
         <div className={` text-sub-main `}>
           <div>{children}</div>
         </div>

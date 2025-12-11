@@ -121,7 +121,7 @@ export const Circle = (
     inline?: boolean
   }
 ) => {
-  const {className, style: originalStyle, size = 24, inline = true, color = 'blue', children, ...rest} = props
+  const {className, style: originalStyle, size = 24, inline = true, color = 'gray', children, ...rest} = props
 
   let {width, height} = props
   if (size) {

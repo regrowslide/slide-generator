@@ -1,11 +1,11 @@
 'use client'
 
-import React, {forwardRef, useState, useImperativeHandle} from 'react'
-import {InvoiceData, CategorySummary, CategoryDetail, PriceVariation} from '@app/(apps)/tbm/(server-actions)/getInvoiceData'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
-import {Button} from '@cm/components/styles/common-components/Button'
-import {cn} from '@cm/shadcn/lib/utils'
-import {Trash2, RotateCcw} from 'lucide-react'
+import React, { forwardRef, useState, useImperativeHandle } from 'react'
+import { InvoiceData, CategorySummary, CategoryDetail, PriceVariation } from '@app/(apps)/tbm/(server-actions)/getInvoiceData'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
+import { Button } from '@cm/components/styles/common-components/Button'
+import { cn } from '@cm/shadcn/lib/utils'
+import { Trash2, RotateCcw } from 'lucide-react'
 
 const showUnitPrice = false
 
@@ -23,8 +23,8 @@ export interface InvoiceDocumentRef {
 }
 
 export const InvoiceDocument = forwardRef<InvoiceDocumentRef, InvoiceDocumentProps>(
-  ({invoiceData, onSave, onResetDetail}, ref) => {
-    const {companyInfo, customerInfo, invoiceDetails} = invoiceData
+  ({ invoiceData, onSave, onResetDetail }, ref) => {
+    const { companyInfo, customerInfo, invoiceDetails } = invoiceData
     const {
       yearMonth,
       totalAmount: initialTotalAmount,
@@ -36,6 +36,8 @@ export const InvoiceDocument = forwardRef<InvoiceDocumentRef, InvoiceDocumentPro
 
     const [summaryByCategory, setSummaryByCategory] = useState<CategorySummary[]>(initialSummaryByCategory)
     const [detailsByCategory, setDetailsByCategory] = useState<CategoryDetail[]>(initialDetailsByCategory)
+
+
 
     useImperativeHandle(ref, () => ({
       getEditedData: () => ({
@@ -49,10 +51,10 @@ export const InvoiceDocument = forwardRef<InvoiceDocumentRef, InvoiceDocumentPro
       const totalAmount = summary.reduce((sum, item) => sum + item.totalAmount, 0)
       const taxAmount = Math.floor(totalAmount * 0.1)
       const grandTotal = totalAmount + taxAmount
-      return {totalAmount, taxAmount, grandTotal}
+      return { totalAmount, taxAmount, grandTotal }
     }
 
-    const {totalAmount, taxAmount, grandTotal} = recalculateTotals(summaryByCategory)
+    const { totalAmount, taxAmount, grandTotal } = recalculateTotals(summaryByCategory)
 
     // 単価のバリエーションを表示する関数
     const renderPriceVariations = (
@@ -204,7 +206,7 @@ export const InvoiceDocument = forwardRef<InvoiceDocumentRef, InvoiceDocumentPro
           const resetDetail = await onResetDetail(detail)
           if (resetDetail) {
             const updated = [...detailsByCategory]
-            updated[index] = {...resetDetail, isManualEdit: false}
+            updated[index] = { ...resetDetail, isManualEdit: false }
             setDetailsByCategory(updated)
             updateSummaryFromDetails(updated)
           }
@@ -221,7 +223,7 @@ export const InvoiceDocument = forwardRef<InvoiceDocumentRef, InvoiceDocumentPro
 
         if (initialDetail) {
           const updated = [...detailsByCategory]
-          updated[index] = {...initialDetail, isManualEdit: false}
+          updated[index] = { ...initialDetail, isManualEdit: false }
           setDetailsByCategory(updated)
           updateSummaryFromDetails(updated)
         }
@@ -386,9 +388,8 @@ export const InvoiceDocument = forwardRef<InvoiceDocumentRef, InvoiceDocumentPro
           {Object.entries(detailsByCategoryGroup).map(([categoryCode, details], pageIndex) => (
             <div
               key={categoryCode}
-              className={`w-[297mm] min-h-[210mm] mx-auto p-8 border-y ${
-                pageIndex < Object.keys(detailsByCategoryGroup).length - 1 ? 'page-break-after-always' : ''
-              }`}
+              className={`w-[297mm] min-h-[210mm] mx-auto p-8 border-y ${pageIndex < Object.keys(detailsByCategoryGroup).length - 1 ? 'page-break-after-always' : ''
+                }`}
             >
               {/* ヘッダー */}
               <div className="flex justify-between items-start mb-8">

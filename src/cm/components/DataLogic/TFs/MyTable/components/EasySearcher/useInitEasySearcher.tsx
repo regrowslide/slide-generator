@@ -77,7 +77,9 @@ export default function useInitEasySearcher({
         }
       })
 
-      const isActiveExGroup = searchBtnDataSources.some(d => d.isActive || d.dataSource.defaultOpen !== false)
+      const isActiveExGroup = searchBtnDataSources.some(d => {
+        return d.isActive || d.dataSource.defaultOpen !== false
+      })
 
       const isRefreshTarget = searchBtnDataSources.some(d => d.dataSource.refresh)
 

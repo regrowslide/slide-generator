@@ -1,6 +1,8 @@
+import Loader from '@cm/components/utils/loader/Loader'
 import React from 'react'
 
 export const TableSkelton = ({colCount = 3}) => {
+  return <Loader />
   // スケルトンセルコンポーネント
 
   // ローディング中のスケルトン表示

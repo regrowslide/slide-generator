@@ -57,9 +57,10 @@
 
 ### 3.2. ページコンポーネント設計
 
-1. **データ取得**: `async function Page(props)` 内（サーバーコンポーネント）で、`props.searchParams` を基にデータ取得処理（Server Actions呼び出しなど）を実行する。
-2. **初期条件のリダイレクト**: 日付フィルタなど初期値が必要な場合、サーバーコンポーネントでURLクエリを検証し、不足していれば適切なクエリを付与したURLへリダイレクトする。
-3. **Propsでのデータ渡し**: 取得したデータをクライアントコンポーネントに`props`として渡す。
+1. **セッション取得**: `initServerComopnent` を使用してサーバーコンポーネント内でセッション情報とスコープを取得する。
+2. **データ取得**: `async function Page(props)` 内（サーバーコンポーネント）で、`props.searchParams` を基にデータ取得処理（Server Actions呼び出しなど）を実行する。
+3. **初期条件のリダイレクト**: 日付フィルタなど初期値が必要な場合、サーバーコンポーネントでURLクエリを検証し、不足していれば適切なクエリを付与したURLへリダイレクトする。
+4. **Propsでのデータ渡し**: 取得したデータをクライアントコンポーネントに`props`として渡す。
 
 ```jsx
 TypeScript
@@ -68,22 +69,28 @@ TypeScript
 import ReservationClient from './ReservationClient'
 import {dateSwitcherTemplate} from '@cm/lib/methods/redirect-method'
 import Redirector from '@cm/components/utils/Redirector'
+import {initServerComopnent} from 'src/non-common/serverSideFunction'
 import {getReservations} from './_actions/reservation-actions' // データ取得関数
 
-export default async function Page({searchParams}) {
-  // 1. 初期条件がない場合のリダイレクト処理
+export default async function Page(props) {
+  const query = await props.searchParams
+
+  // 1. セッションとスコープを取得
+  const {session, scopes} = await initServerComopnent({query})
+
+  // 2. 初期条件がない場合のリダイレクト処理
   const {redirectPath, whereQuery} = await dateSwitcherTemplate({
-    query: searchParams,
+    query,
     defaultWhere: {
       /* ... */
     },
   })
   if (redirectPath) return <Redirector redirectPath={redirectPath} />
 
-  // 2. サーバーコンポーネントでデータを取得
+  // 3. サーバーコンポーネントでデータを取得
   const reservations = await getReservations({where: whereQuery})
 
-  // 3. クライアントコンポーネントにPropsで渡す
+  // 4. クライアントコンポーネントにPropsで渡す
   return <ReservationClient reservations={reservations} />
 }
 ```

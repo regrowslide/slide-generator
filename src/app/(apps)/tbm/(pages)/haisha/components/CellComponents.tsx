@@ -146,7 +146,19 @@ export const ScheduleCard = React.memo(
           <div className={` absolute top-0 right-0 text-[10px] text-gray-500`}>{tbmDriveSchedule.id}</div>
           <section className={`row-stack flex-nowrap gap-0 leading-4 -ml-1.5`}>
             <MapPinIcon className={`h-3 text-blue-800 stroke-2 `} />
-            <MarkDownDisplay>{new RouteGroupCl(TbmRouteGroup).name}</MarkDownDisplay>
+            <div className="flex items-center gap-1">
+              {(TbmRouteGroup?.RelatedRouteGroupsAsParent?.length ?? 0) > 0 && (
+                <span className="px-1 py-0.5 text-[10px] font-semibold bg-blue-100 text-blue-700 rounded border border-blue-300">
+                  親
+                </span>
+              )}
+              {(TbmRouteGroup?.RelatedRouteGroupsAsChild?.length ?? 0) > 0 && (
+                <span className="px-1 py-0.5 text-[10px] font-semibold bg-green-100 text-green-700 rounded border border-green-300">
+                  子
+                </span>
+              )}
+              <MarkDownDisplay>{new RouteGroupCl(TbmRouteGroup).name}</MarkDownDisplay>
+            </div>
           </section>
 
           <section className={`row-stack flex-nowrap gap-0 leading-4 -ml-1.5`}>

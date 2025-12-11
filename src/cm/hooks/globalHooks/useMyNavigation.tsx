@@ -4,8 +4,10 @@ import {useParams, usePathname, useRouter, useSearchParams} from 'next/navigatio
 import {useCallback, useMemo} from 'react'
 
 import {HREF, makeGlobalQuery, makeQuery} from 'src/cm/lib/methods/urls'
+import {useJotaiByKey} from '@cm/hooks/useJotai'
 
 export default function useMyNavigation() {
+  const [globalLoader, setglobalLoader] = useJotaiByKey<boolean>(`globalLoader`, false)
   const router = useRouter()
 
   const searchParams = useSearchParams()
@@ -21,11 +23,16 @@ export default function useMyNavigation() {
 
   const addQuery = useCallback(
     (additionalQuery = {}, method = 'push', shallow = false) => {
+      setglobalLoader(true)
+
       const newQuery = {...query, ...additionalQuery}
       const path = HREF(pathname, newQuery, makeGlobalQuery(newQuery))
       shallow ? shallowPush(path) : router[method](path)
+      setTimeout(() => {
+        setglobalLoader(false)
+      }, 50)
     },
-    [query, pathname, router]
+    [query, pathname, router, setglobalLoader]
   )
   const shallowAddQuery = query => addQuery(query, `push`, true)
   const getHref = useCallback((path: string, newQuery: any = {}) => HREF(path, newQuery, query), [query])

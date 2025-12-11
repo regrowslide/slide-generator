@@ -8,6 +8,7 @@ import { KM_PAGES } from 'src/non-common/getPages/KM_PAGES'
 import { stock_PAGES } from 'src/non-common/getPages/stock_PAGES'
 
 import { training_PAGES } from 'src/non-common/getPages/training_PAGES'
+import { sanshoTourist_PAGES } from 'src/non-common/getPages/sanshoTourist_PAGES'
 
 const getEduCommonMenus = ({ isSchoolLeader, admin }) => {
   return {
@@ -84,6 +85,7 @@ export const PAGES: any = {
   KM_PAGES,
   stock_PAGES,
   training_PAGES,
+  sanshoTourist_PAGES,
   Colabo_PAGES: (props: PageGetterType) => {
     const { roles, session, rootPath, query, pathname, dynamicRoutingParams } = props
 

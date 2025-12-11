@@ -26,22 +26,30 @@ export function useHaishaData({
   const { query } = useGlobal()
 
   const fetchData = useCallback(async () => {
-    console.log(query.from)  //logs
+
 
     toggleLocalLoading(async () => {
       await showSpendTime(async () => {
         const takeSkip = { take: itemsPerPage, skip: (currentPage - 1) * itemsPerPage }
         const sortBy = (query.sortBy as HaishaSortBy) ?? 'departureTime'
         const tbmCustomerId = query.tbmCustomerId ? parseInt(query.tbmCustomerId) : undefined
+
+        console.time('HaishaPage')
+
         const data = await getListData({ tbmBaseId, whereQuery, mode, takeSkip, sortBy, tbmCustomerId })
+        console.timeEnd('HaishaPage')
         setMaxRecord(data.maxCount)
         setListDataState(data)
       })
     })
+
+
+
   }, [tbmBaseId, whereQuery, mode, currentPage, itemsPerPage, query])
 
   useEffect(() => {
     fetchData()
+
   }, [query])
 
   // スケジュールデータを日付とユーザー/ルートで整理

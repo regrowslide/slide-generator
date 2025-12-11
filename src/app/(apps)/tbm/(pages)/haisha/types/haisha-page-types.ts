@@ -36,22 +36,48 @@ export interface PaginationConfig {
 // 拡張されたPrismaモデル型
 // ============================================================================
 
+/** 関連便情報（親便用） */
+export interface RelatedRouteGroupInfo {
+  id: number
+  daysOffset: number
+  childRouteGroupId: number
+  childRouteGroup: {
+    id: number
+    name: string
+    code: string | null
+  }
+}
+
+/** 関連便情報（子便用） */
+export interface RelatedRouteGroupChildInfo {
+  id: number
+  daysOffset: number
+  tbmRouteGroupId: number
+  TbmRouteGroup: {
+    id: number
+    name: string
+    code: string | null
+  }
+}
+
+/** カレンダー情報付きのルートグループ */
+export type TbmRouteGroupWithCalendar = TbmRouteGroup & {
+  TbmRouteGroupCalendar: TbmRouteGroupCalendar[]
+  RelatedRouteGroupsAsParent?: RelatedRouteGroupInfo[]
+  RelatedRouteGroupsAsChild?: RelatedRouteGroupChildInfo[]
+}
+
 /** 重複フラグ付きの配車スケジュール */
 export type TbmDriveScheduleWithDuplicated = TbmDriveSchedule & {
-  TbmRouteGroup: TbmRouteGroup
+  TbmRouteGroup: TbmRouteGroupWithCalendar
   TbmVehicle: TbmVehicle & {
-    OdometerInput: OdometerInput[]
+    OdometerInput?: OdometerInput[] // 配車ページでは不要なのでオプショナルに
   }
   User: {
     id: number
     name: string
   }
   duplicated: boolean
-}
-
-/** カレンダー情報付きのルートグループ */
-export type TbmRouteGroupWithCalendar = TbmRouteGroup & {
-  TbmRouteGroupCalendar: TbmRouteGroupCalendar[]
 }
 
 /** 勤務状況付きのユーザー */

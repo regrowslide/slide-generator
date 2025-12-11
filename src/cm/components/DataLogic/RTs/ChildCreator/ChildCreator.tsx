@@ -1,20 +1,20 @@
 'use client'
-import { dataMinimumCommonType, form_table_modal_config, prismaDataType, additionalPropsType, MyTableType } from '@cm/types/types'
-import { anyObject } from '@cm/types/utility-types'
+import {dataMinimumCommonType, form_table_modal_config, prismaDataType, additionalPropsType, MyTableType} from '@cm/types/types'
+import {anyObject} from '@cm/types/utility-types'
 
-import { C_Stack, NoData } from 'src/cm/components/styles/common-components/common-components'
-import { PrismaModelNames } from '@cm/types/prisma-types'
-import React, { JSX, useMemo } from 'react'
+import {C_Stack, NoData} from 'src/cm/components/styles/common-components/common-components'
+import {PrismaModelNames} from '@cm/types/prisma-types'
+import React, {JSX, useMemo} from 'react'
 import TableForm from '@cm/components/DataLogic/TFs/PropAdjustor/components/TableForm'
-import { useParams } from 'next/navigation'
-import { checkShowHeader } from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/usePropAdjusctorLogic/useMyTable'
+import {useParams} from 'next/navigation'
+import {checkShowHeader} from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/usePropAdjusctorLogic/useMyTable'
 import useRecords from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/useRecords/useRecords'
 import useInitFormState from '@cm/hooks/useInitFormState'
-import { serverFetchProps } from '@cm/components/DataLogic/TFs/Server/fetchers/getInitModelRecordsProps'
+import {serverFetchProps} from '@cm/components/DataLogic/TFs/Server/fetchers/getInitModelRecordsProps'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
-import { getQueryArgs } from '@cm/components/DataLogic/TFs/Server/fetchers/getQueryArgs'
+import {getQueryArgs} from '@cm/components/DataLogic/TFs/Server/fetchers/getQueryArgs'
 import EasySearcher from '@cm/components/DataLogic/TFs/MyTable/components/EasySearcher/EasySearcher'
-import { convertColumns, getModelData } from '@cm/components/DataLogic/RTs/ChildCreator/helpers/childCreator-helpers'
+import {convertColumns, getModelData} from '@cm/components/DataLogic/RTs/ChildCreator/helpers/childCreator-helpers'
 
 export type ChildCreatorProps = dataMinimumCommonType &
   form_table_modal_config & {
@@ -31,17 +31,16 @@ export type ChildCreatorProps = dataMinimumCommonType &
 
 export const ChildCreator = React.memo((props: ChildCreatorProps) => {
   const params = useParams()
-  const { query, rootPath } = useGlobal()
-  const { NoDatawhenParentIsUndefined, ParentData, models, additional, EditForm, editType, useGlobalProps } = props
-  const { parentModelIdStr, childrenModelIdStr } = getModelData(models)
+  const {query, rootPath} = useGlobal()
+  const {NoDatawhenParentIsUndefined, ParentData, models, additional, EditForm, editType, useGlobalProps} = props
+  const {parentModelIdStr, childrenModelIdStr} = getModelData(models)
   const columns = convertColumns(props)
-
 
   const orderBy = useMemo(
     () => [
       //
-      ...(props.myTable?.drag ? [{ sortOrder: 'asc' }] : []),
-      ...(additional?.orderBy ?? [{ sortOrder: 'asc' }, { id: 'asc' }]),
+      ...(props.myTable?.drag ? [{sortOrder: 'asc'}] : []),
+      ...(additional?.orderBy ?? [{sortOrder: 'asc'}, {id: 'asc'}]),
     ],
     [props.myTable?.drag, additional?.orderBy]
   )
@@ -49,7 +48,7 @@ export const ChildCreator = React.memo((props: ChildCreatorProps) => {
   const tunedAdditional: additionalPropsType = useMemo(
     () => ({
       ...additional,
-      payload: { ...additional?.payload, [parentModelIdStr]: ParentData?.id },
+      payload: {...additional?.payload, [parentModelIdStr]: ParentData?.id},
       where: {
         [parentModelIdStr]: ParentData?.id,
         ...additional?.where,
@@ -62,11 +61,11 @@ export const ChildCreator = React.memo((props: ChildCreatorProps) => {
   const childTableProps = useMemo(
     () => ({
       myTable: {
-        showHeader: checkShowHeader({ myTable: props.myTable, columns }),
-        ...{ sort: false, drag: false },
+        showHeader: checkShowHeader({myTable: props.myTable, columns}),
+        ...{sort: false, drag: false},
         ...props.myTable,
       } as MyTableType,
-      myForm: { ...props.myForm },
+      myForm: {...props.myForm},
     }),
     [props.myTable, props.myForm, columns]
   )
@@ -75,14 +74,10 @@ export const ChildCreator = React.memo((props: ChildCreatorProps) => {
   const myForm = childTableProps.myForm
   const dataModelName = models.children
 
-
   const countPerPage = myTable?.pagination?.countPerPage ?? 100
 
-
-
-
   const prismaDataExtractionQuery = useMemo(() => {
-    const { prismaDataExtractionQuery } = getQueryArgs({
+    const {prismaDataExtractionQuery} = getQueryArgs({
       dataModelName,
       query,
       additional: tunedAdditional,
@@ -118,14 +113,14 @@ export const ChildCreator = React.memo((props: ChildCreatorProps) => {
     countPerPage,
   })
 
-  const { records, setrecords, mutateRecords, deleteRecord, totalCount, easySearchPrismaDataOnServer } = UseRecordsReturn
+  const {records, setrecords, mutateRecords, deleteRecord, totalCount, easySearchPrismaDataOnServer} = UseRecordsReturn
 
   const hasEasySearch = useMemo(
     () => Object.keys(easySearchPrismaDataOnServer?.availableEasySearchObj || {}).length > 0,
     [easySearchPrismaDataOnServer?.availableEasySearchObj]
   )
 
-  const { formData, setformData } = useInitFormState(null, [], false, dataModelName)
+  const {formData, setformData} = useInitFormState(null, [], false, dataModelName)
 
   const toggleLoadFunc = useMemo(
     () => props.additional?.toggleLoadFunc ?? (async cb => await cb()),
@@ -148,7 +143,7 @@ export const ChildCreator = React.memo((props: ChildCreatorProps) => {
     totalCount,
     myTable,
     myForm,
-    additional: { ...tunedAdditional, toggleLoadFunc },
+    additional: {...tunedAdditional, toggleLoadFunc},
     EditForm,
     editType,
     useGlobalProps,

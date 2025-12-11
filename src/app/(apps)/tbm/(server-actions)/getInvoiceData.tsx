@@ -1,18 +1,18 @@
 'use server'
 
 import prisma from 'src/lib/prisma'
-import {TBM_CODE} from '@app/(apps)/tbm/(class)/TBM_CODE'
+import { TBM_CODE } from '@app/(apps)/tbm/(class)/TBM_CODE'
 
-import {BillingHandler} from '@app/(apps)/tbm/(class)/TimeHandler'
-import {toUtc} from '@cm/class/Days/date-utils/calculations'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
-import {Days} from '@cm/class/Days/Days'
-import {getInvoiceManualEdit} from './invoiceManualEdit'
-import {DriveScheduleData, getDriveScheduleList} from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
+import { BillingHandler } from '@app/(apps)/tbm/(class)/TimeHandler'
+import { toUtc } from '@cm/class/Days/date-utils/calculations'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
+import { getInvoiceManualEdit } from './invoiceManualEdit'
+import { DriveScheduleData, getDriveScheduleList } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
+import { Days } from '@cm/class/Days/Days'
 
 // 単価のバリエーションを計算する関数
 function calculatePriceVariations(
-  feeInfos: Array<{schedule: DriveScheduleData; driverFee: number; futaiFee: number; tollFee: number}>,
+  feeInfos: Array<{ schedule: DriveScheduleData; driverFee: number; futaiFee: number; tollFee: number }>,
   feeType: 'driverFee' | 'futaiFee' | 'tollFee',
   monthEnd: Date
 ): PriceVariation[] {
@@ -125,13 +125,18 @@ export const getInvoiceData = async ({
   whereQuery,
   customerId,
 }: {
-  whereQuery: {gte: Date; lte: Date}
 
+  whereQuery: { gte: Date; lte: Date }
   customerId: number // 必須に変更
 }) => {
+
+
+
+
+
   // 顧客情報取得（必須）
   const customer = await prisma.tbmCustomer.findFirst({
-    where: {id: customerId},
+    where: { id: customerId },
   })
 
   if (!customer) {
@@ -139,6 +144,7 @@ export const getInvoiceData = async ({
   }
 
   // 運行スケジュールデータ取得（承認済みのみ）
+  // 月末日跨ぎ運行対応のため、前日も含めて取得（11/30の運行で出発時刻2400の場合は12月請求）
   const driveScheduleList = await getDriveScheduleList({
     whereQuery: {
       ...whereQuery,
@@ -156,14 +162,29 @@ export const getInvoiceData = async ({
     if (!matchesCustomer) return false
 
     // 請求月の判定（月末日跨ぎ運行対応）
-    const billingMonth = BillingHandler.getBillingMonth(schedule.date, schedule.TbmRouteGroup.departureTime)
+    const billingMonth = BillingHandler.getBillingMonth(
+      //
+      schedule.date, schedule.TbmRouteGroup.departureTime, schedule.TbmRouteGroup.id)
+
+
+
 
     // 指定された月と請求月が一致するかチェック
 
     const targetMonth = toUtc(new Date(whereQuery.gte.getFullYear(), whereQuery.gte.getMonth() + 1, 1))
 
+
+
     return formatDate(billingMonth, 'YYYYMM') === formatDate(targetMonth, 'YYYYMM')
   })
+
+  const test = filteredSchedules.filter(schedule => schedule.TbmRouteGroup.name === '草加10').map((item => ({
+    id: item.id,
+    routeGroupId: item.TbmRouteGroup.id,
+    date: item.date,
+
+  })))
+
 
   // 便区分ごとにグループ化
   const schedulesByCategory = filteredSchedules.reduce(
@@ -179,55 +200,63 @@ export const getInvoiceData = async ({
   )
 
   // 便区分ごとの集計
-  const summaryByCategory: CategorySummary[] = Object.entries(schedulesByCategory).map((props: [string, DriveScheduleData[]]) => {
-    const [categoryCode, schedules] = props
-    const category = TBM_CODE.ROUTE_KBN.byCode(categoryCode)?.label || '不明'
-    const totalTrips = schedules.length
+  // TBM_CODE.ROUTE_KBNの定義順序に従って並べ替え
+  const routeKbnOrder = TBM_CODE.ROUTE_KBN.array.map(item => item.code)
+  const summaryByCategory: CategorySummary[] = routeKbnOrder
+    .filter(code => schedulesByCategory[code]) // データが存在するもののみ
+    .map(categoryCode => {
+      const schedules = schedulesByCategory[categoryCode]
+      const category = TBM_CODE.ROUTE_KBN.byCode(categoryCode)?.label || '不明'
+      const totalTrips = schedules.length
 
-    // 各スケジュールの料金計算
-    const totalAmount = schedules.reduce((sum, schedule) => {
-      // 運行日に対して適切な料金設定を取得（startDate <= schedule.date のうち最新のもの）
-      const feeOnDate = schedule.TbmRouteGroup.TbmRouteGroupFee.sort(
-        (a, b) => b.startDate.getTime() - a.startDate.getTime()
-      ).find(fee => fee.startDate <= schedule.date)
+      // 各スケジュールの料金計算
+      const totalAmount = schedules.reduce((sum, schedule) => {
+        // 運行日に対して適切な料金設定を取得（startDate <= schedule.date のうち最新のもの）
+        const feeOnDate = schedule.TbmRouteGroup.TbmRouteGroupFee.sort(
+          (a, b) => b.startDate.getTime() - a.startDate.getTime()
+        ).find(fee => fee.startDate <= schedule.date)
 
-      // 基本料金（運賃 + 付帯料金）
-      const baseFee = (feeOnDate?.driverFee || 0) + (feeOnDate?.futaiFee || 0)
-      // 通行料
-      const tollFee = (schedule.M_postalHighwayFee || 0) + (schedule.O_generalHighwayFee || 0)
+        // 基本料金（運賃 + 付帯料金）
+        const baseFee = (feeOnDate?.driverFee || 0) + (feeOnDate?.futaiFee || 0)
+        // 通行料
+        const tollFee = (schedule.M_postalHighwayFee || 0) + (schedule.O_generalHighwayFee || 0)
 
-      return sum + baseFee + tollFee
-    }, 0)
+        return sum + baseFee + tollFee
+      }, 0)
 
-    return {
-      category,
-      categoryCode,
-      totalTrips,
-      totalAmount,
-    }
-  })
+      return {
+        category,
+        categoryCode,
+        totalTrips,
+        totalAmount,
+      }
+    })
 
   // 便区分ごとの詳細明細
-  const detailsByCategory: CategoryDetail[] = Object.entries(schedulesByCategory).flatMap(
-    (props: [string, DriveScheduleData[]]) => {
-      const [categoryCode, schedules] = props
+  // TBM_CODE.ROUTE_KBNの定義順序に従って並べ替え
+  const detailsByCategory: CategoryDetail[] = routeKbnOrder
+    .filter(code => schedulesByCategory[code]) // データが存在するもののみ
+    .flatMap(categoryCode => {
+      const schedules = schedulesByCategory[categoryCode]
       const category = TBM_CODE.ROUTE_KBN.byCode(categoryCode)?.label || '不明'
 
-      // 路線名ごとにグループ化
-      const schedulesByRoute = schedules.reduce(
+      // 路線名と便名の組み合わせでグループ化
+      const schedulesByRouteAndName = schedules.reduce(
         (acc, schedule) => {
           const routeName = schedule.TbmRouteGroup.routeName || schedule.TbmRouteGroup.name
-          if (!acc[routeName]) {
-            acc[routeName] = []
+          const routeNameForGroup = schedule.TbmRouteGroup.name || ''
+          const key = `${routeName}::${routeNameForGroup}`
+          if (!acc[key]) {
+            acc[key] = []
           }
-          acc[routeName].push(schedule)
+          acc[key].push(schedule)
           return acc
         },
         {} as Record<string, DriveScheduleData[]>
       )
 
-      return Object.entries(schedulesByRoute).map((props: [string, DriveScheduleData[]]) => {
-        const [routeName, routeSchedules] = props
+      return Object.entries(schedulesByRouteAndName).map((props: [string, DriveScheduleData[]]) => {
+        const [key, routeSchedules] = props
         const trips = routeSchedules.length
 
         // 運行日でソート
@@ -270,11 +299,14 @@ export const getInvoiceData = async ({
         const futaiFeeUnitPrice = futaiFeeVariations.length === 1 ? futaiFeeVariations[0].price : undefined
         const tollFeeUnitPrice = tollFeeVariations.length === 1 ? tollFeeVariations[0].price : undefined
 
+        const routeName = routeSchedules[0]?.TbmRouteGroup.routeName || routeSchedules[0]?.TbmRouteGroup.name || ''
+        const routeNameForGroup = routeSchedules[0]?.TbmRouteGroup.name || ''
+
         return {
           category,
           categoryCode,
           routeName,
-          name: routeSchedules[0]?.TbmRouteGroup.name || '',
+          name: routeNameForGroup,
           vehicleType: routeSchedules[0]?.TbmRouteGroup.vehicleType || '',
           routeDirection: '', // 方向は後で実装可能
           trips,
@@ -292,7 +324,7 @@ export const getInvoiceData = async ({
         }
       })
     }
-  )
+    )
 
   // 合計金額計算
   let totalAmount = summaryByCategory.reduce((sum, item) => sum + item.totalAmount, 0)

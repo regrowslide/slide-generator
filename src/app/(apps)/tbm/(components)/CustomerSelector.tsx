@@ -1,6 +1,8 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 interface Customer {
   id: number
@@ -13,14 +15,32 @@ interface CustomerSelectorProps {
   currentCustomerId?: number
 }
 
-export default function CustomerSelector({customers, currentCustomerId}: CustomerSelectorProps) {
-  const {addQuery} = useGlobal()
+export default function CustomerSelector({ customers, currentCustomerId }: CustomerSelectorProps) {
+  const { addQuery, query } = useGlobal()
+
+
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const prevCustomerIdRef = useRef<number | undefined>(currentCustomerId)
+
+  // クエリパラメータの変更を監視して、customerIdが変更されたときにリフレッシュ
+  useEffect(() => {
+    const currentCustomerIdFromQuery = query?.customerId
+      ? parseInt(query?.customerId)
+      : undefined
+
+    // customerIdが変更された場合のみリフレッシュ
+    if (prevCustomerIdRef.current !== currentCustomerIdFromQuery) {
+      prevCustomerIdRef.current = currentCustomerIdFromQuery
+      router.refresh()
+    }
+  }, [searchParams, router])
 
   const handleCustomerChange = (customerId: string) => {
     if (customerId) {
-      addQuery({customerId})
+      addQuery({ customerId })
     } else {
-      addQuery({customerId: undefined})
+      addQuery({ customerId: undefined })
     }
   }
 

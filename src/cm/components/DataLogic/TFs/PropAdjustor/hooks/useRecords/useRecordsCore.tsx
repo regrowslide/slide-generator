@@ -86,6 +86,7 @@ export const useRecordsCore = (props: UseRecordsCoreProps): UseRecordsCoreReturn
   const [totalCount, settotalCount] = useJotaiByKey<number>((jotaiKey + '-totalCount') as atomKey, 0)
 
   const [records, setrecords] = useJotaiByKey<tableRecord[] | null>(globalStateKey, null)
+
   const [easySearchPrismaDataOnServer, seteasySearchPrismaDataOnServer] =
     useState<easySearchDataSwrType>(INITIAL_EASY_SEARCH_DATA)
   const [prismaDataExtractionQuery, setprismaDataExtractionQuery] = useState({})

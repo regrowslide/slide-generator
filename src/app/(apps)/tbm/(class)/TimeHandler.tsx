@@ -1,3 +1,4 @@
+
 /**
  * 統合時間処理ユーティリティクラス
  * 24時間超え対応（25時、26時等）、基本的な時間計算、請求処理ロジック
@@ -58,7 +59,7 @@ export class TimeHandler {
     const parsed = this.parseTimeString(timeStr)
     if (!parsed) return ''
 
-    const {originalHour, originalMinute} = parsed
+    const { originalHour, originalMinute } = parsed
 
     switch (format) {
       case 'HH:MM':
@@ -103,25 +104,25 @@ export class TimeHandler {
    */
   static validateTimeString(timeStr: string): TimeValidationResult {
     if (!timeStr) {
-      return {isValid: false, error: '時刻が入力されていません'}
+      return { isValid: false, error: '時刻が入力されていません' }
     }
 
     if (!/^\d{4}$/.test(timeStr)) {
-      return {isValid: false, error: '4桁の数字で入力してください（例: 0800）'}
+      return { isValid: false, error: '4桁の数字で入力してください（例: 0800）' }
     }
 
     const hour = parseInt(timeStr.substring(0, 2))
     const minute = parseInt(timeStr.substring(2, 4))
 
     if (minute >= 60) {
-      return {isValid: false, error: '分は00-59の範囲で入力してください'}
+      return { isValid: false, error: '分は00-59の範囲で入力してください' }
     }
 
     if (hour > 48) {
-      return {isValid: false, error: '時刻は48時までの範囲で入力してください'}
+      return { isValid: false, error: '時刻は48時までの範囲で入力してください' }
     }
 
-    return {isValid: true}
+    return { isValid: true }
   }
 
   // ======== 旧Timeクラスから統合した機能 ========
@@ -225,9 +226,17 @@ export class BillingHandler {
    * @param departureTime - 出発時刻（4桁文字列）
    * @returns 請求対象月の年月
    */
-  static getBillingMonth(operationDate: Date, departureTime: string | null | undefined): Date {
+  static getBillingMonth(
+    //
+    operationDate: Date,
+    departureTime: string | null | undefined,
+    routeGroupId: number
+  ): Date {
     let result: Date
     const parsed = TimeHandler.parseTimeString(departureTime)
+
+
+
 
     if (!parsed) {
       // 出発時刻が不明な場合は運行日の月を使用
@@ -244,7 +253,9 @@ export class BillingHandler {
     }
 
     // 24:00未満の場合は運行日の月
-    result = new Date(operationDate.getFullYear(), operationDate.getMonth(), 1)
+    result = operationDate
+
+
 
     return result
   }

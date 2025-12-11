@@ -38,11 +38,11 @@ export const getDriveScheduleList = async (props: {
   const firstDayOfMonth = whereQuery.gte
   const displayExpiryDateFilter = firstDayOfMonth
     ? {
-        OR: [
-          {displayExpiryDate: null},
-          {displayExpiryDate: {gte: firstDayOfMonth}},
-        ],
-      }
+      OR: [
+        { displayExpiryDate: null },
+        { displayExpiryDate: { gte: firstDayOfMonth } },
+      ],
+    }
     : {}
 
   const whereArgs = {
@@ -96,13 +96,27 @@ export const fetchUnkoMeisaiData = async ({
 
   const tbmDriveSchedule = await getDriveScheduleList({ allowNonApprovedSchedule, whereQuery, tbmBaseId, userId })
 
-  const monthlyTbmDriveList = tbmDriveSchedule.map(schedule => {
-    const unkoMeisaiKeyValue = TbmReportCl.reportCols.createUnkoMeisaiRow(schedule)
-    return {
-      schedule,
-      keyValue: unkoMeisaiKeyValue,
-    }
-  }) as { schedule: DriveScheduleData; keyValue: unkoMeisaiKeyValue }[]
+  const monthlyTbmDriveList = tbmDriveSchedule
+    .map(schedule => {
+      const unkoMeisaiKeyValue = TbmReportCl.reportCols.createUnkoMeisaiRow(schedule)
+      return {
+        schedule,
+        keyValue: unkoMeisaiKeyValue,
+      }
+    })
+    .sort((a, b) => {
+      // 運行明細ページでは、表示用の日付でソート
+      // 出発時刻が2400以降の場合は翌日に表示されるため、表示用の日付でソート
+      const displayDateA = a.keyValue.date.cellValue as Date
+      const displayDateB = b.keyValue.date.cellValue as Date
+      const dateCompare = displayDateA.getTime() - displayDateB.getTime()
+      if (dateCompare !== 0) return dateCompare
+
+      // 同じ日付の場合は出発時刻でソート
+      const departureTimeA = a.schedule.TbmRouteGroup.departureTime || ''
+      const departureTimeB = b.schedule.TbmRouteGroup.departureTime || ''
+      return departureTimeA.localeCompare(departureTimeB)
+    }) as { schedule: DriveScheduleData; keyValue: unkoMeisaiKeyValue }[]
 
   const userList: userType[] = monthlyTbmDriveList
     .reduce((acc, row) => {

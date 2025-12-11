@@ -11,7 +11,7 @@ export default function Loader(props: any) {
   return (
     <>
       <div
-        className={`fixed inset-0 h-full w-full bg-white/50`}
+        className={`fixed inset-0 h-full w-full backdrop-blur-md bg-white/10`}
         style={{
           zIndex: Z_INDEX.loader,
         }}

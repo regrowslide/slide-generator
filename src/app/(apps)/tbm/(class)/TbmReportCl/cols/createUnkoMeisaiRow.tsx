@@ -1,4 +1,5 @@
-import {DriveScheduleData, tbmTableKeyValue} from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
+import { DriveScheduleData, tbmTableKeyValue } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
+import { TimeHandler } from '@app/(apps)/tbm/(class)/TimeHandler'
 
 export type unkoMeisaiKey =
   | `date`
@@ -58,11 +59,24 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData) => {
 
   const Customer = schedule.TbmRouteGroup?.Mid_TbmRouteGroup_TbmCustomer?.TbmCustomer
 
+  // 運行明細ページでは、出発時刻が2400以降の場合は翌日に表示
+  const displayDate = (() => {
+    const parsed = TimeHandler.parseTimeString(schedule.TbmRouteGroup.departureTime)
+    if (parsed && parsed.originalHour >= 24) {
+      // 24:00以降（翌日扱い）の場合、翌日の日付を返す
+      const nextDay = new Date(schedule.date)
+      nextDay.setDate(nextDay.getDate() + 1)
+      return nextDay
+    }
+    // 24:00未満の場合は運行日のまま
+    return schedule.date
+  })()
+
   const keyValue: unkoMeisaiKeyValue = {
     date: {
       type: 'date',
       label: 'A運行日',
-      cellValue: schedule.date,
+      cellValue: displayDate,
     },
     // routeCode: {
     //   label: 'B便CD',
@@ -71,12 +85,12 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData) => {
     routeName: {
       label: '路線名',
       cellValue: schedule.TbmRouteGroup.routeName,
-      style: {minWidth: 160},
+      style: { minWidth: 160 },
     },
     name: {
       label: 'C便名',
       cellValue: schedule.TbmRouteGroup.name,
-      style: {minWidth: 160},
+      style: { minWidth: 160 },
     },
     vehicleType: {
       label: 'D車種',
@@ -118,7 +132,7 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData) => {
         </div>
       ),
       cellValue: L_postalFee,
-      style: {backgroundColor: '#fcdede'},
+      style: { backgroundColor: '#fcdede' },
     },
     M_postalHighwayFee: {
       label: (
@@ -127,7 +141,7 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData) => {
         </div>
       ),
       cellValue: M_postalHighwayFee,
-      style: {backgroundColor: '#fcdede'},
+      style: { backgroundColor: '#fcdede' },
     },
     N_generalFee: {
       label: (
@@ -136,7 +150,7 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData) => {
         </div>
       ),
       cellValue: N_generalFee,
-      style: {backgroundColor: '#deebfc'},
+      style: { backgroundColor: '#deebfc' },
     },
     O_generalHighwayFee: {
       label: (
@@ -145,7 +159,7 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData) => {
         </div>
       ),
       cellValue: O_generalHighwayFee,
-      style: {backgroundColor: '#deebfc'},
+      style: { backgroundColor: '#deebfc' },
     },
     P_KosokuShiyodai: {
       label: 'P高速使用代',
@@ -174,7 +188,7 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData) => {
         </div>
       ),
       cellValue: S_jomuinFutan,
-      style: {backgroundColor: '#defceb'},
+      style: { backgroundColor: '#defceb' },
     },
     T_thirteenPercentOfPostalHighway: {
       label: (
@@ -187,7 +201,7 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData) => {
     U_general: {
       label: 'U高速代-通行料',
       cellValue: U_general,
-      style: {backgroundColor: '#9ec1ff'},
+      style: { backgroundColor: '#9ec1ff' },
     },
     V_highwayExcess: {
       label: 'V高速超過額',
@@ -204,7 +218,7 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData) => {
   }
 
   Object.keys(keyValue).forEach(key => {
-    keyValue[key].style = {minWidth: 90, fontSize: 12, ...keyValue[key].style}
+    keyValue[key].style = { minWidth: 90, fontSize: 12, ...keyValue[key].style }
   })
   return keyValue
 }

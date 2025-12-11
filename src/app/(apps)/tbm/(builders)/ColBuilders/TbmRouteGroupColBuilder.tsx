@@ -109,6 +109,26 @@ export const TbmRouteGroupColBuilder = (props: columnGetterType) => {
         td: { style: { ...regularStyle, minWidth: 200 } },
         form: { ...defaultRegister },
         search: {},
+        format: (val, routeGroup) => {
+          const isParent = routeGroup?.RelatedRouteGroupsAsParent?.length > 0
+          const isChild = routeGroup?.RelatedRouteGroupsAsChild?.length > 0
+
+          return (
+            <div className="flex items-center gap-1">
+              {isParent && (
+                <span className="px-1.5 py-0.5 text-xs font-semibold bg-blue-100 text-blue-700 rounded border border-blue-300">
+                  親
+                </span>
+              )}
+              {isChild && (
+                <span className="px-1.5 py-0.5 text-xs font-semibold bg-green-100 text-green-700 rounded border border-green-300">
+                  子
+                </span>
+              )}
+              <span>{val}</span>
+            </div>
+          )
+        },
       },
       {
         id: 'routeName',

@@ -11,16 +11,17 @@ import GlobalModal from '@cm/components/utils/modal/GlobalModal'
 
 import useInitEasySearcher from '@cm/components/DataLogic/TFs/MyTable/components/EasySearcher/useInitEasySearcher'
 
-import EsGroupClient from '@cm/components/DataLogic/TFs/MyTable/components/EasySearcher/EsGroupClient'
+import EsGroupClient, {EsGroupClientPropType} from '@cm/components/DataLogic/TFs/MyTable/components/EasySearcher/EsGroupClient'
 import {CircledIcon, IconBtn} from '@cm/components/styles/common-components/IconBtn'
 import {SquareArrowRight} from 'lucide-react'
 import {Wrapper} from '@cm/components/styles/common-components/paper'
 import PlaceHolder from '@cm/components/utils/loader/PlaceHolder'
-import {easySearchDataSwrType} from '@cm/class/builders/QueryBuilderVariables'
+import {easySearchDataSwrType, EasySearchObject} from '@cm/class/builders/QueryBuilderVariables'
 import {Filter} from 'lucide-react'
 import {UseRecordsReturn} from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/useRecords/useRecords'
 import useWindowSize from '@cm/hooks/useWindowSize'
 import {resetPaginationParams} from '@cm/components/DataLogic/TFs/MyTable/components/SearchHandler/SearchHandler'
+import {Card} from '@cm/shadcn/ui/card'
 
 export default function EasySearcher(props: {
   easySearchPrismaDataOnServer: easySearchDataSwrType
@@ -96,7 +97,48 @@ export default function EasySearcher(props: {
   )
 
   const MainComponentMemo = useMemo(() => {
-    return <Main {...{dataModelName, nonActiveExGroup, RowGroups, activeExGroup, createNextQuery, hideEasySearch}} />
+    return (
+      <div>
+        <R_Stack className={` items-center  flex-nowrap gap-2`}>
+          {/* モーダル */}
+          {nonActiveExGroup.length > 0 && (
+            <div>
+              <>
+                <GlobalModal
+                  id={`${dataModelName}-Es-Modal`}
+                  Trigger={
+                    <span className={`t-link  text-xs `}>
+                      <CircledIcon>
+                        <SquareArrowRight />
+                      </CircledIcon>
+                    </span>
+                  }
+                >
+                  <C_Stack className={` gap-8   w-[90vw] `}>
+                    {renderRowGroups({
+                      RowGroups,
+                      createNextQuery,
+                      activeExGroup,
+                      showAll: true,
+                    })}
+                  </C_Stack>
+                </GlobalModal>
+              </>
+            </div>
+          )}
+
+          {/* RowGroups */}
+          <C_Stack className={` w-full `}>
+            {renderRowGroups({
+              activeExGroup,
+              RowGroups,
+              createNextQuery,
+              showAll: false,
+            })}
+          </C_Stack>
+        </R_Stack>
+      </div>
+    )
   }, [dataModelName, nonActiveExGroup, RowGroups, activeExGroup, createNextQuery, hideEasySearch])
 
   if (activeExGroup.length === 0) return <PlaceHolder />
@@ -126,92 +168,67 @@ export default function EasySearcher(props: {
   )
 }
 
-const Main = ({
-  dataModelName,
-  nonActiveExGroup,
-  RowGroups,
+const renderRowGroups = ({
   activeExGroup,
-  hideNonActives = true,
+  RowGroups,
   createNextQuery,
-  hideEasySearch,
+  showAll = true,
+}: {
+  activeExGroup: EsGroupClientPropType[]
+  RowGroups: EsGroupClientPropType[][]
+  createNextQuery: (props: {dataSource: EasySearchObject}) => void
+  showAll?: boolean
 }) => {
-  const ShownRowGroups = RowGroups.filter((EsGroupClientPropList, i) => {
+  if (showAll) {
     return (
-      EsGroupClientPropList.filter((EsGroupClientProp, j) => {
-        const isActive = activeExGroup.some(g => {
-          return g.groupName === EsGroupClientProp.groupName
-        })
-        const show = hideNonActives === false || isActive
-        return show
-      }).length > 0
-    )
-  })
-
-  return (
-    <div>
-      <R_Stack className={` items-center  flex-nowrap gap-2`}>
-        <ShowAllFilterBtn {...{dataModelName, RowGroups, activeExGroup, createNextQuery, nonActiveExGroup, hideEasySearch}} />
-        <C_Stack className={` w-full `}>
-          {ShownRowGroups.map((EsGroupClientPropList, i) => {
+      <div className={`grid grid-cols-3 gap-4`}>
+        {RowGroups.map((EsGroupClientPropList, i) => {
+          return EsGroupClientPropList.map((EsGroupClientProp, j) => {
             return (
-              <R_Stack key={i} className={`   w-fit  items-stretch justify-start gap-0 gap-y-1`}>
-                {EsGroupClientPropList.map((EsGroupClientProp, j) => {
-                  const {isRefreshTarget, isLastBtn} = EsGroupClientProp
+              <Card key={j}>
+                <EsGroupClient {...{showAll, EsGroupClientProp, createNextQuery}} />
+              </Card>
+            )
+          })
+        })}
+      </div>
+    )
+  } else {
+    return (
+      <>
+        {RowGroups.map((EsGroupClientPropList, i) => {
+          return (
+            <R_Stack key={i} className={`   w-fit  items-stretch justify-start gap-0 gap-y-1`}>
+              {EsGroupClientPropList.filter(item => {
+                const isOpenGroup = activeExGroup.some(g => {
+                  return g.groupName === item.groupName
+                })
 
-                  return (
-                    <R_Stack key={j}>
-                      {/* <R_Stack className={`${border}  relative pr-6 `}> */}
-                      <Wrapper className={`p-0.5!`}>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-4 px-0.5">
-                            <div className={` `}>
-                              <EsGroupClient {...{EsGroupClientProp, createNextQuery}} />
-                            </div>
+                const isActiveGroup = item.searchBtnDataSources.some(d => {
+                  return d.isActive
+                })
+
+                return isActiveGroup || isOpenGroup
+              }).map((EsGroupClientProp, j) => {
+                return (
+                  <R_Stack key={j}>
+                    {/* <R_Stack className={`${border}  relative pr-6 `}> */}
+                    <Wrapper className={`p-0.5!`}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4 px-0.5">
+                          <div className={` `}>
+                            <EsGroupClient {...{EsGroupClientProp, createNextQuery}} />
                           </div>
                         </div>
-                      </Wrapper>
-                    </R_Stack>
-                  )
-                })}
-              </R_Stack>
-            )
-          })}
-        </C_Stack>
-      </R_Stack>
-    </div>
-  )
-}
-
-const ShowAllFilterBtn = ({dataModelName, RowGroups, activeExGroup, createNextQuery, nonActiveExGroup, hideEasySearch}) => {
-  if (nonActiveExGroup.length === 0) {
-    return null
-  }
-  return (
-    <div>
-      <>
-        <GlobalModal
-          id={`${dataModelName}-Es-Modal`}
-          Trigger={
-            <span className={`t-link  text-xs `}>
-              <CircledIcon>
-                <SquareArrowRight />
-              </CircledIcon>
-            </span>
-          }
-        >
-          <Main
-            {...{
-              dataModelName,
-              nonActiveExGroup,
-              RowGroups,
-              activeExGroup,
-              createNextQuery,
-              hideNonActives: false,
-              hideEasySearch,
-            }}
-          />
-        </GlobalModal>
+                      </div>
+                    </Wrapper>
+                  </R_Stack>
+                )
+              })}
+            </R_Stack>
+          )
+        })}
       </>
-    </div>
-  )
+    )
+  }
 }

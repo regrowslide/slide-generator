@@ -1,12 +1,12 @@
-import {forSelectConfig} from '@cm/types/select-types'
-import {TbmRouteGroup} from '@prisma/client'
+import { forSelectConfig } from '@cm/types/select-types'
+import { TbmRouteGroup } from '@prisma/client'
 
 export class RouteGroupCl {
   tbmRouteGroup: TbmRouteGroup & {
     TbmRouteGroupShare?: Array<{
       id: number
       tbmBaseId: number
-      TbmBase?: {id: number; name: string; code?: string | null}
+      TbmBase?: { id: number; name: string; code?: string | null }
     }>
   }
 
@@ -15,7 +15,7 @@ export class RouteGroupCl {
       TbmRouteGroupShare?: Array<{
         id: number
         tbmBaseId: number
-        TbmBase?: {id: number; name: string; code?: string | null}
+        TbmBase?: { id: number; name: string; code?: string | null }
       }>
     }
   ) {
@@ -36,7 +36,7 @@ export class RouteGroupCl {
   }
 
   get shortName() {
-    const {name} = this.tbmRouteGroup
+    const { name } = this.tbmRouteGroup
     const shareIndicator = this.isShared ? ' 🔗' : ''
     return name + shareIndicator
   }
@@ -60,8 +60,9 @@ export class RouteGroupCl {
   isSharedTo(baseId: number) {
     return this.tbmRouteGroup.TbmRouteGroupShare?.some(share => share.tbmBaseId === baseId) || false
   }
-  static getRouteGroupForSelectConfig = ({tbmBaseId}: {tbmBaseId?: number}) => {
+  static getRouteGroupForSelectConfig = ({ tbmBaseId }: { tbmBaseId?: number }) => {
     const result: forSelectConfig = {
+      modelName: 'tbmRouteGroup',
       select: {
         id: 'number',
         name: 'string',
@@ -73,18 +74,18 @@ export class RouteGroupCl {
       },
       where: {
         OR: [
-          {tbmBaseId}, // 所有している便
-          {TbmRouteGroupShare: {some: {tbmBaseId}}}, // 共有されている便
+          { tbmBaseId }, // 所有している便
+          { TbmRouteGroupShare: { some: { tbmBaseId } } }, // 共有されている便
         ],
       },
-      orderBy: [{id: 'asc'}],
+      orderBy: [{ id: 'asc' }],
       nameChanger(op) {
         if (op) {
           const routeGroup = op as unknown as TbmRouteGroup & {
             TbmRouteGroupShare?: Array<{
               id: number
               tbmBaseId: number
-              TbmBase?: {id: number; name: string; code?: string | null}
+              TbmBase?: { id: number; name: string; code?: string | null }
             }>
           }
           return {
