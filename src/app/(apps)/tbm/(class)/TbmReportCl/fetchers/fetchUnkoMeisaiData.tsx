@@ -20,6 +20,8 @@ import prisma from 'src/lib/prisma'
 import { TbmVehicle, User } from '@prisma/client'
 import { TbmReportCl } from '@app/(apps)/tbm/(class)/TbmReportCl'
 import { unkoMeisaiKeyValue } from '@app/(apps)/tbm/(class)/TbmReportCl/cols/createUnkoMeisaiRow'
+import { Days } from '@cm/class/Days/Days'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
 
 export type DriveScheduleData = Awaited<ReturnType<typeof getDriveScheduleList>>[number]
 export const getDriveScheduleList = async (props: {
@@ -94,7 +96,19 @@ export const fetchUnkoMeisaiData = async ({
     },
   })
 
-  const tbmDriveSchedule = await getDriveScheduleList({ allowNonApprovedSchedule, whereQuery, tbmBaseId, userId })
+  // 月末日跨ぎ運行対応のため、前日も含めて取得（例：11/30の運行で出発時刻2400の場合は12月に表示）
+  const tbmDriveSchedule = await getDriveScheduleList({
+    allowNonApprovedSchedule,
+    whereQuery: {
+      ...whereQuery,
+      gte: whereQuery.gte ? Days.day.subtract(whereQuery.gte, 1) : undefined,
+    },
+    tbmBaseId,
+    userId,
+  })
+
+  // 対象月の年月を取得（whereQuery.gteは月初日）
+  const targetYearMonth = whereQuery.gte ? formatDate(whereQuery.gte, 'YYYYMM') : null
 
   const monthlyTbmDriveList = tbmDriveSchedule
     .map(schedule => {
@@ -103,6 +117,13 @@ export const fetchUnkoMeisaiData = async ({
         schedule,
         keyValue: unkoMeisaiKeyValue,
       }
+    })
+    // 表示用日付で対象月のデータのみをフィルタリング
+    .filter(item => {
+      if (!targetYearMonth) return true
+      const displayDate = item.keyValue.date.cellValue as Date
+      const displayYearMonth = formatDate(displayDate, 'YYYYMM')
+      return displayYearMonth === targetYearMonth
     })
     .sort((a, b) => {
       // 運行明細ページでは、表示用の日付でソート
