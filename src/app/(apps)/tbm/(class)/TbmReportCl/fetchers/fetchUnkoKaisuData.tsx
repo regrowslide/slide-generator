@@ -3,7 +3,7 @@
 import { MEIAI_SUM_ORIGIN } from '@app/(apps)/tbm/(lib)/calculation'
 import { fetchUnkoMeisaiData, tbmTableKeyValue } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
 import { unkoMeisaiKey } from '@app/(apps)/tbm/(class)/TbmReportCl/cols/createUnkoMeisaiRow'
-import { TbmRouteGroup } from '@prisma/client'
+import { TbmRouteGroup } from '@prisma/generated/prisma/client'
 import prisma from 'src/lib/prisma'
 
 export type UnkoKaisuRecord = {
@@ -30,8 +30,9 @@ export type UnkoKaisuRecord = {
  }
 }
 
-export const fetchUnkoKaisuData = async ({ whereQuery, tbmBaseId }) => {
+export const fetchUnkoKaisuData = async ({ firstDayOfMonth, whereQuery, tbmBaseId }) => {
  const { monthlyTbmDriveList } = await fetchUnkoMeisaiData({
+  firstDayOfMonth,
   whereQuery,
   tbmBaseId,
   userId: undefined,

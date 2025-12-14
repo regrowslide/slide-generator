@@ -1,5 +1,5 @@
 import { forSelectConfig } from '@cm/types/select-types'
-import { TbmRouteGroup } from '@prisma/client'
+import { TbmRouteGroup } from '@prisma/generated/prisma/client'
 
 export class RouteGroupCl {
   tbmRouteGroup: TbmRouteGroup & {

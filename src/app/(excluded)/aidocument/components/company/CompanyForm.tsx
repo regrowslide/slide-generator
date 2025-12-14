@@ -1,10 +1,10 @@
 'use client'
 
-import {useState} from 'react'
-import {Plus, Trash2} from 'lucide-react'
-import {AidocumentCompany} from '@prisma/client'
-import {ConstructionLicense, SocialInsurance} from '../../types'
-import {Button} from '@cm/components/styles/common-components/Button'
+import { useState } from 'react'
+import { Plus, Trash2 } from 'lucide-react'
+import { AidocumentCompany } from '@prisma/generated/prisma/client'
+import { ConstructionLicense, SocialInsurance } from '../../types'
+import { Button } from '@cm/components/styles/common-components/Button'
 
 interface CompanyFormProps {
   initialData: AidocumentCompany
@@ -18,7 +18,7 @@ interface CompanyFormProps {
   }) => void
 }
 
-export default function CompanyForm({initialData, onSave}: CompanyFormProps) {
+export default function CompanyForm({ initialData, onSave }: CompanyFormProps) {
   const defaultSocialInsurance: SocialInsurance = {
     health: 'joined',
     pension: 'joined',
@@ -38,7 +38,7 @@ export default function CompanyForm({initialData, onSave}: CompanyFormProps) {
     if (!value || Array.isArray(value) || typeof value !== 'object') {
       return defaultSocialInsurance
     }
-    const {health, pension, employment, officeName, officeCode} = value as Partial<SocialInsurance>
+    const { health, pension, employment, officeName, officeCode } = value as Partial<SocialInsurance>
     return {
       health: health || 'joined',
       pension: pension || 'joined',
@@ -58,7 +58,7 @@ export default function CompanyForm({initialData, onSave}: CompanyFormProps) {
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const {name, value} = e.target
+    const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
       [name]: value,
@@ -78,7 +78,7 @@ export default function CompanyForm({initialData, onSave}: CompanyFormProps) {
   const addLicense = () => {
     setFormData(prev => ({
       ...prev,
-      constructionLicense: [...prev.constructionLicense, {type: '', number: '', date: ''}],
+      constructionLicense: [...prev.constructionLicense, { type: '', number: '', date: '' }],
     }))
   }
 
@@ -92,8 +92,8 @@ export default function CompanyForm({initialData, onSave}: CompanyFormProps) {
   const updateLicense = (index: number, field: keyof ConstructionLicense, value: string) => {
     setFormData(prev => {
       const newLicenses = [...(prev.constructionLicense || [])]
-      newLicenses[index] = {...newLicenses[index], [field]: value}
-      return {...prev, constructionLicense: newLicenses}
+      newLicenses[index] = { ...newLicenses[index], [field]: value }
+      return { ...prev, constructionLicense: newLicenses }
     })
   }
 

@@ -1,7 +1,7 @@
 'use server'
 
 import prisma from 'src/lib/prisma'
-import {Prisma} from '@prisma/client'
+import {Prisma} from '@prisma/generated/prisma/client'
 
 // Create: 書類項目を作成
 export const createDocumentItem = async (data: {
@@ -145,4 +145,3 @@ export const deleteDocumentItems = async (ids: number[]) => {
     }
   }
 }
-

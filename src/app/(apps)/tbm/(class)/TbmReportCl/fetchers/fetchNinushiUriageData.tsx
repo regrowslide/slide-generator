@@ -1,11 +1,11 @@
 'use server'
 
-import {MEIAI_SUM_ORIGIN} from '@app/(apps)/tbm/(lib)/calculation'
-import {fetchUnkoMeisaiData} from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
+import { MEIAI_SUM_ORIGIN } from '@app/(apps)/tbm/(lib)/calculation'
+import { fetchUnkoMeisaiData } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
 
-import {tbmTableKeyValue} from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
-import {TbmCustomer} from '@prisma/client'
-import {unkoMeisaiKey} from '@app/(apps)/tbm/(class)/TbmReportCl/cols/createUnkoMeisaiRow'
+import { tbmTableKeyValue } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
+import { TbmCustomer } from '@prisma/generated/prisma/client'
+import { unkoMeisaiKey } from '@app/(apps)/tbm/(class)/TbmReportCl/cols/createUnkoMeisaiRow'
 
 export type nioshuUriageRecordKey = `kana` | `code` | `customerName` | `postalFee` | `generalFee` | `driverFee`
 
@@ -16,8 +16,9 @@ export type NioshuUriageRecord = {
   }
 }
 
-export const fetchNinushiUriageData = async ({whereQuery, tbmBaseId}) => {
-  const {monthlyTbmDriveList} = await fetchUnkoMeisaiData({
+export const fetchNinushiUriageData = async ({ firstDayOfMonth, whereQuery, tbmBaseId }) => {
+  const { monthlyTbmDriveList } = await fetchUnkoMeisaiData({
+    firstDayOfMonth,
     whereQuery,
     tbmBaseId,
     userId: undefined,
@@ -27,7 +28,7 @@ export const fetchNinushiUriageData = async ({whereQuery, tbmBaseId}) => {
   const customerMap = new Map<number, typeof monthlyTbmDriveList>()
 
   monthlyTbmDriveList.forEach(row => {
-    const {schedule} = row
+    const { schedule } = row
     const customerId = schedule.TbmRouteGroup?.Mid_TbmRouteGroup_TbmCustomer?.tbmCustomerId
 
     if (customerId) {
@@ -56,32 +57,32 @@ export const fetchNinushiUriageData = async ({whereQuery, tbmBaseId}) => {
         code: {
           label: 'コード',
           cellValue: customer?.code ?? '',
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         customerName: {
           label: 'お得意先',
           cellValue: customer?.name ?? '',
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         kana: {
           label: 'かな',
           cellValue: customer?.kana ?? '',
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         postalFee: {
           label: '通行料1',
           cellValue: postalFee,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         generalFee: {
           label: '通行料2',
           cellValue: generalFee,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         driverFee: {
           label: '運賃',
           cellValue: driverFee,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
       },
     }

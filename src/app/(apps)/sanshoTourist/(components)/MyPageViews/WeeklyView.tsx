@@ -1,9 +1,9 @@
 'use client'
 
-import React, {useMemo} from 'react'
-import {MapPin, Bus, User, FileText} from 'lucide-react'
-import {StVehicle} from '@prisma/client'
-import {StScheduleWithRelations} from '../../(server-actions)/schedule-actions'
+import React, { useMemo } from 'react'
+import { MapPin, Bus, User, FileText } from 'lucide-react'
+import { StVehicle } from '@prisma/generated/prisma/client'
+import { StScheduleWithRelations } from '../../(server-actions)/schedule-actions'
 
 type Props = {
   schedules: StScheduleWithRelations[]
@@ -19,7 +19,7 @@ const formatDate = (date: Date) => {
   return date.toISOString().split('T')[0]
 }
 
-export const WeeklyView = ({schedules, vehicles}: Props) => {
+export const WeeklyView = ({ schedules, vehicles }: Props) => {
   const vehicleMap = useMemo(() => new Map(vehicles.map(v => [v.id, v])), [vehicles])
 
   // 日付ごとにグループ化

@@ -1,4 +1,4 @@
-import {TbmBase, TbmDriveSchedule, User} from '@prisma/client'
+import { TbmBase, TbmDriveSchedule, User } from '@prisma/generated/prisma/client'
 
 export class ScheduleCell {
   ScheduleCell

@@ -2,20 +2,20 @@
 
 import TenkoPaperHeader from '@app/(apps)/tbm/(pages)/tenko/TenkoPaperHeader'
 import TenkoPaperBody from '@app/(apps)/tbm/(pages)/tenko/TenkoPaperBody'
-import {TimeHandler} from '@app/(apps)/tbm/(class)/TimeHandler'
-import {toUtc} from '@cm/class/Days/date-utils/calculations'
+import { TimeHandler } from '@app/(apps)/tbm/(class)/TimeHandler'
+import { toUtc } from '@cm/class/Days/date-utils/calculations'
 
-import {Button} from '@cm/components/styles/common-components/Button'
-import {C_Stack} from '@cm/components/styles/common-components/common-components'
+import { Button } from '@cm/components/styles/common-components/Button'
+import { C_Stack } from '@cm/components/styles/common-components/common-components'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import useDoStandardPrisma from '@cm/hooks/useDoStandardPrisma'
-import {TbmDriveSchedule, TbmRouteGroup, TbmVehicle, User} from '@prisma/client'
-import React, {useRef} from 'react'
-import {useReactToPrint} from 'react-to-print'
-import {cn} from '@cm/shadcn/lib/utils'
+import { TbmDriveSchedule, TbmRouteGroup, TbmVehicle, User } from '@prisma/generated/prisma/client'
+import React, { useRef } from 'react'
+import { useReactToPrint } from 'react-to-print'
+import { cn } from '@cm/shadcn/lib/utils'
 
 export default function TenkoPage(props) {
-  const {query} = useGlobal()
+  const { query } = useGlobal()
 
   const printRef = useRef<any>(null)
 
@@ -28,9 +28,9 @@ export default function TenkoPage(props) {
   const date = toUtc(query.date || query.month)
   const tbmBaseId = Number(query.tbmBaseId)
 
-  const {data = []} = useDoStandardPrisma(`tbmDriveSchedule`, `findMany`, {
-    where: {date: date, tbmBaseId},
-    include: {User: {}, TbmVehicle: {}, TbmRouteGroup: {}},
+  const { data = [] } = useDoStandardPrisma(`tbmDriveSchedule`, `findMany`, {
+    where: { date: date, tbmBaseId },
+    include: { User: {}, TbmVehicle: {}, TbmRouteGroup: {} },
   })
 
   const drives: (TbmDriveSchedule & {
@@ -80,10 +80,10 @@ export default function TenkoPage(props) {
               {/* ヘッダー */}
               <>
                 <div>
-                  <TenkoPaperHeader {...{date, tableStyle}} />
+                  <TenkoPaperHeader {...{ date, tableStyle }} />
                 </div>
                 <div className={'[&_*]:border-gray-700 '}>
-                  <TenkoPaperBody {...{OrderByPickUpTime, tableStyle}} />
+                  <TenkoPaperBody {...{ OrderByPickUpTime, tableStyle }} />
                 </div>
               </>
             </C_Stack>

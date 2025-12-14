@@ -1,4 +1,4 @@
-// import {Prisma, TbmBase_MonthConfig} from '@prisma/client'
+// import {Prisma, TbmBase_MonthConfig} from '@prisma/generated/prisma/client'
 // type data = Prisma.TbmRefuelHistoryGroupByOutputType
 // export default class FuelHistoryCl {
 //   data: data

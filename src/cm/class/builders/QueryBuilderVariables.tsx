@@ -1,36 +1,37 @@
-import {getRelationalModels, getSchema} from 'src/cm/lib/methods/prisma-schema'
+import { getRelationalModels, getSchema } from 'src/cm/lib/methods/prisma-schema'
 
-import {PrismaModelNames} from '@cm/types/prisma-types'
-import {anyObject} from '@cm/types/utility-types'
-import {CSSProperties} from 'react'
-import {Prisma, PrismaClient} from '@prisma/client'
-import {dataCountObject} from '@cm/components/DataLogic/TFs/Server/fetchers/EasySearchDataSwrFetcher'
-import {AccordiongPropType} from '@cm/components/utils/Accordions/Accordion'
+import { PrismaModelNames } from '@cm/types/prisma-types'
+import { anyObject } from '@cm/types/utility-types'
+import { CSSProperties } from 'react'
+import { Prisma, PrismaClient } from '@prisma/generated/prisma/client'
 
-export const SORT_ARGS = {orderBy: [{sortOrder: 'asc'}, {id: 'asc'}]}
+import { dataCountObject } from '@cm/components/DataLogic/TFs/Server/fetchers/EasySearchDataSwrFetcher'
+import { AccordiongPropType } from '@cm/components/utils/Accordions/Accordion'
 
-export type getIncludeType = {[key in PrismaModelNames]?: Prisma.Args<PrismaClient, 'findMany'>}
+export const SORT_ARGS = { orderBy: [{ sortOrder: 'asc' }, { id: 'asc' }] }
+
+export type getIncludeType = { [key in PrismaModelNames]?: Prisma.Args<PrismaClient, 'findMany'> }
 export type includeProps = {
   session?: anyObject
   query?: anyObject
   QueryBuilderExtraProps?: anyObject
 }
 
-export const roopMakeRelationalInclude = ({parentName, parentObj}) => {
+export const roopMakeRelationalInclude = ({ parentName, parentObj }) => {
   const schemaAsObj = getSchema()
 
-  const {singleAttributeObj, hasManyAttributeObj, hasOneAttributeObj} = getRelationalModels({
+  const { singleAttributeObj, hasManyAttributeObj, hasOneAttributeObj } = getRelationalModels({
     schemaAsObj,
     parentName,
   })
 
-  const relationalObj = {...hasManyAttributeObj, ...hasOneAttributeObj}
+  const relationalObj = { ...hasManyAttributeObj, ...hasOneAttributeObj }
   const hasInclude = parentObj.include
   if (hasInclude) {
     Object.keys(parentObj.include).forEach(key => {
       if (relationalObj[key]?.relationalType === 'hasMany') {
         if (parentObj.include[key].orderBy === undefined) {
-          parentObj.include[key] = {...parentObj.include[key], ...SORT_ARGS}
+          parentObj.include[key] = { ...parentObj.include[key], ...SORT_ARGS }
 
           roopMakeRelationalInclude({
             parentName: key,
@@ -48,7 +49,7 @@ export type EasySearchObjectExclusiveGroup<
   CONDITION extends object = {
     [key: string]: any
   },
-> = {[key in T]?: EasySearchObjectAtom<CONDITION>}
+> = { [key in T]?: EasySearchObjectAtom<CONDITION> }
 
 export type EasySearchObjectAtom<
   CONDITION extends object = {
@@ -62,16 +63,16 @@ export type EasySearchObjectAtom<
   notify?: boolean | CSSProperties
   refresh?: boolean
   sql?: string
-  keyValueList?: {key: string; value: boolean | string}[]
+  keyValueList?: { key: string; value: boolean | string }[]
 }
 
-export const getEasySearchPrismaDataOnServer = ({query, dataModelName, easySearchObject, additionalWhere, searchQueryAnd}) => {
+export const getEasySearchPrismaDataOnServer = ({ query, dataModelName, easySearchObject, additionalWhere, searchQueryAnd }) => {
   // アクティブなeasy search objectに限定する
   const availableEasySearchObj = (() => {
-    const activeEasySearchObject = {...easySearchObject}
+    const activeEasySearchObject = { ...easySearchObject }
 
     Object.keys(easySearchObject ?? {}).filter(key => {
-      const {exclusiveTo} = easySearchObject[key]
+      const { exclusiveTo } = easySearchObject[key]
 
       if (exclusiveTo === false) {
         delete activeEasySearchObject[key]
@@ -88,7 +89,7 @@ export const getEasySearchPrismaDataOnServer = ({query, dataModelName, easySearc
       let selfKeyValueQuery = {}
 
       thisEasySearchObj.keyValueList?.forEach(obj => {
-        selfKeyValueQuery = {...selfKeyValueQuery, [obj.key]: obj.value}
+        selfKeyValueQuery = { ...selfKeyValueQuery, [obj.key]: obj.value }
       })
 
       const tmpQuery = (() => {
@@ -98,7 +99,7 @@ export const getEasySearchPrismaDataOnServer = ({query, dataModelName, easySearc
         const keyValuesFromOtherExclusiveGroup = (() => {
           const keyValuesFromOtherExclusiveGroup = filterKeyArr
             .filter((obj: EasySearchObject) => {
-              const {keyValueList} = obj
+              const { keyValueList } = obj
               const queryKey = keyValueList[0]?.key
               const isActive = query?.[queryKey]
               const isFromOtherGroup = obj.exclusiveGroup.groupIndex !== thisEasySearchObj.exclusiveGroup.groupIndex
@@ -121,9 +122,9 @@ export const getEasySearchPrismaDataOnServer = ({query, dataModelName, easySearc
 
         /**keyValuesを元にtmpQueryを作成 */
         totalKeyValueList.forEach((obj: anyObject) => {
-          const {key, value} = obj
+          const { key, value } = obj
 
-          tmpQuery = {...tmpQuery, [key]: value}
+          tmpQuery = { ...tmpQuery, [key]: value }
         })
 
         return tmpQuery
@@ -135,16 +136,16 @@ export const getEasySearchPrismaDataOnServer = ({query, dataModelName, easySearc
         additionalWhere,
       })
 
-      return {key, dataModelName, where: {AND: [...whereAnd, ...searchQueryAnd]}, select: {id: true}}
+      return { key, dataModelName, where: { AND: [...whereAnd, ...searchQueryAnd] }, select: { id: true } }
     })
 
     return queryArrays
   })()
 
-  return {queryArrays, availableEasySearchObj}
+  return { queryArrays, availableEasySearchObj }
 }
 
-export const getEasySearchWhereAnd = ({easySearchObject, query, additionalWhere}) => {
+export const getEasySearchWhereAnd = ({ easySearchObject, query, additionalWhere }) => {
   const result: any[] = []
 
   Object.keys(easySearchObject ?? {}).map(key => {
@@ -160,7 +161,7 @@ export const getEasySearchWhereAnd = ({easySearchObject, query, additionalWhere}
   Object.keys(additionalWhere ?? {}).map(key => {
     const condition = additionalWhere?.[key]
     if (condition === undefined) return
-    result.push({[key]: condition})
+    result.push({ [key]: condition })
   })
 
   return result
@@ -171,7 +172,7 @@ export const Ex_exclusive0 = {
     label: '全て',
     notify: false,
     description: '',
-    keyValueList: [{key: 'reset', value: true}],
+    keyValueList: [{ key: 'reset', value: true }],
     exclusiveTo: true,
     CONDITION: {},
   },
@@ -195,20 +196,20 @@ export type easySearchSingleObject = {
   label: string
   notify: boolean
   description: string
-  keyValueList: {key: string; value: boolean}[]
+  keyValueList: { key: string; value: boolean }[]
   exclusiveTo: boolean
   CONDITION: anyObject
 }
 
 export type EasySearchObject = EasySearchObjectAtom & {
   id: string
-  exclusiveGroup: {groupIndex: number; name: string}
+  exclusiveGroup: { groupIndex: number; name: string }
   keyValueList: anyObject[]
 }
 
-export type exclusiveGroupObj = {[key in string]: EasySearchObjectAtom}
+export type exclusiveGroupObj = { [key in string]: EasySearchObjectAtom }
 
-export type makeEasySearchGroupsPropOptions = {accordion?: AccordiongPropType}
+export type makeEasySearchGroupsPropOptions = { accordion?: AccordiongPropType }
 export type makeEasySearchGroupsProp = {
   exclusiveGroup: exclusiveGroupObj
   groupIndex?: number
@@ -235,12 +236,12 @@ export const makeEasySearchGroups = (array: makeEasySearchGroupsProp[]) => {
 
   const dataArr = array
     .map((d, i) => {
-      const origin = {...d}
+      const origin = { ...d }
 
-      const {name, additionalProps, groupIndex = i, rowGroupIdx, options} = origin
+      const { name, additionalProps, groupIndex = i, rowGroupIdx, options } = origin
 
       const easySearchGroup = origin.exclusiveGroup
-      const additionalPropsToAdd = {exclusiveGroup: {groupIndex, name, rowGroupIdx}, ...additionalProps}
+      const additionalPropsToAdd = { exclusiveGroup: { groupIndex, name, rowGroupIdx }, ...additionalProps }
 
       const data = addExvlusiveGroup(easySearchGroup, additionalPropsToAdd)
       return data
@@ -256,21 +257,21 @@ export const makeEasySearchGroups = (array: makeEasySearchGroupsProp[]) => {
 
 const addExvlusiveGroup = (easySearchGroup, additionalPropsToAdd?: anyObject) => {
   const toArr = Object.keys(easySearchGroup).map(key => {
-    const objectContent = {...easySearchGroup[key]}
+    const objectContent = { ...easySearchGroup[key] }
 
-    const defaultKeyValueList = [{key: key, value: true}]
-    const {notify = false, exclusiveTo = true, label} = objectContent
+    const defaultKeyValueList = [{ key: key, value: true }]
+    const { notify = false, exclusiveTo = true, label } = objectContent
 
     const keyValueList = objectContent?.keyValueList ?? defaultKeyValueList
 
     // default値をここで設定する
-    const value = {...easySearchGroup[key], id: key, notify, exclusiveTo, keyValueList}
+    const value = { ...easySearchGroup[key], id: key, notify, exclusiveTo, keyValueList }
 
     return value
   })
 
   return toArr.map((obj: EasySearchObjectAtom) => {
-    const result = {...obj, ...additionalPropsToAdd}
+    const result = { ...obj, ...additionalPropsToAdd }
 
     return result
   }) as EasySearchObject[]
@@ -278,7 +279,7 @@ const addExvlusiveGroup = (easySearchGroup, additionalPropsToAdd?: anyObject) =>
 
 export const toRowGroup = (rowGroupIdx = 2, dataArr, exclusiveGroups: makeEasySearchGroupsProp[]) => {
   exclusiveGroups.forEach(group => {
-    const {exclusiveGroup, name, additionalProps} = group
+    const { exclusiveGroup, name, additionalProps } = group
 
     dataArr.push({
       exclusiveGroup,
@@ -297,7 +298,7 @@ export const makeExGroup = (esObj: anyObject) => {
     }
     const item = esObj[str]
 
-    item.keyValueList = item.keyValueList ?? [{key: str, value: true}]
+    item.keyValueList = item.keyValueList ?? [{ key: str, value: true }]
 
     const [key, value] = str.split(`__`)
     if (result[key] === undefined) {

@@ -1,7 +1,7 @@
 'use server'
 
 import prisma from 'src/lib/prisma'
-import {Prisma} from '@prisma/client'
+import {Prisma} from '@prisma/generated/prisma/client'
 
 // Create: 書類を作成
 export const createDocument = async (data: {

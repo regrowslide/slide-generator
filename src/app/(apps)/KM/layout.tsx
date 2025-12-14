@@ -1,12 +1,10 @@
 import { Metadata } from 'next'
-import Image from 'next/image'
 
 import { Zen_Old_Mincho } from 'next/font/google'
 
 import { isDev } from '@cm/lib/methods/common'
 import Admin from '@cm/components/layout/Admin/Admin'
 import { initServerComopnent } from 'src/non-common/serverSideFunction'
-import { R_Stack } from '@cm/components/styles/common-components/common-components'
 
 const font = Zen_Old_Mincho({
   weight: ['400', '500', '600', '700', '900'],

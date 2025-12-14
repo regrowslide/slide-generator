@@ -1,9 +1,9 @@
 'use client'
 
-import React, {useState, useEffect} from 'react'
-import {Order} from '@prisma/client'
-import {OrderWithProduct} from '@app/(excluded)/portal/(pages)/orders/OrderClient'
-import {ProductWithRecipe} from '@app/(excluded)/portal/(pages)/products/ProductClient'
+import React, { useState, useEffect } from 'react'
+import { Order } from '@prisma/generated/prisma/client'
+import { OrderWithProduct } from '@app/(excluded)/portal/(pages)/orders/OrderClient'
+import { ProductWithRecipe } from '@app/(excluded)/portal/(pages)/products/ProductClient'
 
 type OrderFormProps = {
   order?: OrderWithProduct
@@ -12,7 +12,7 @@ type OrderFormProps = {
   onCancel: () => void
 }
 
-const OrderForm = ({order, products, onSave, onCancel}: OrderFormProps) => {
+const OrderForm = ({ order, products, onSave, onCancel }: OrderFormProps) => {
   const [formData, setFormData] = useState({
     orderAt: order?.orderAt ? new Date(order.orderAt).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10),
     productId: order?.productId || 0,
@@ -45,7 +45,7 @@ const OrderForm = ({order, products, onSave, onCancel}: OrderFormProps) => {
   }, [formData.productId, formData.quantity, products])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const {name, value} = e.target
+    const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
       [name]: name === 'productId' || name === 'quantity' ? Number(value) : value,

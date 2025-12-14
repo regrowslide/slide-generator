@@ -1,7 +1,7 @@
 import Base from '@app/(apps)/tbm/(pages)/tbmOperationGroupCreate/FormList/Base'
-import {InputType} from '@app/(apps)/tbm/(pages)/tbmOperationGroupCreate/TbmOperationInput'
+import { InputType } from '@app/(apps)/tbm/(pages)/tbmOperationGroupCreate/TbmOperationInput'
 import GoBack from '@app/(apps)/tbm/(pages)/tbmOperationGroupCreate/FormList/GoBack'
-// import {TbmOperation, TbmOperationGroup} from '@prisma/client'
+// import {TbmOperation, TbmOperationGroup} from '@prisma/generated/prisma/client'
 import Fuel from '@app/(apps)/tbm/(pages)/tbmOperationGroupCreate/FormList/Fuel'
 
 export type UserInputType = {
@@ -21,7 +21,7 @@ export type FormProps = {
 export type FormType = {
   key: InputType
   label: string
-  main?: (props: {userInput: UserInputType}) => React.ReactNode
+  main?: (props: { userInput: UserInputType }) => React.ReactNode
   color: string
   onClick?: any
   disabled?: boolean
@@ -34,20 +34,20 @@ export const getFormList = (userInput: UserInputType) => {
       key: 'base',
       color: `blue`,
       label: `営業所・車両選択`,
-      main: ({userInput}) => <Base {...{userInput, type: 'base', labelAffix: ''}}></Base>,
+      main: ({ userInput }) => <Base {...{ userInput, type: 'base', labelAffix: '' }}></Base>,
     },
     {
       key: 'go',
       color: `green`,
       label: '「行き」編集',
-      main: ({userInput}) => <GoBack {...{userInput, type: 'go', labelAffix: '行き'}}></GoBack>,
+      main: ({ userInput }) => <GoBack {...{ userInput, type: 'go', labelAffix: '行き' }}></GoBack>,
       disabled: !userInput.base?.id,
     },
     {
       key: 'back',
       color: `green`,
       label: '「帰り」編集',
-      main: ({userInput}) => <GoBack {...{userInput, type: 'back', labelAffix: '帰り'}}></GoBack>,
+      main: ({ userInput }) => <GoBack {...{ userInput, type: 'back', labelAffix: '帰り' }}></GoBack>,
       disabled: !userInput.base?.id,
     },
     {
@@ -55,7 +55,7 @@ export const getFormList = (userInput: UserInputType) => {
       color: `orange`,
       label: '「給油」入力',
       disabled: !userInput.base?.id,
-      main: () => <Fuel {...{userInput, type: `refuel`, labelAffix: '給油'}}></Fuel>,
+      main: () => <Fuel {...{ userInput, type: `refuel`, labelAffix: '給油' }}></Fuel>,
     },
     {
       key: 'complete',

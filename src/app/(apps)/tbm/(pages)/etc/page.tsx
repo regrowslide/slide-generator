@@ -48,29 +48,36 @@ export default function EtcCsvImportPage() {
   const MonthSelector = useBasicFormProps({
     columns: new Fields([
       {
-        id: `month`,
-        label: `月`,
+        id: `monthFrom`,
+        label: `開始月`,
         type: `month`,
         form: {
-          defaultValue: query.month ? new Date(query.month) : firstDayOfMonth,
+          defaultValue: query.monthFrom ? new Date(query.monthFrom) : firstDayOfMonth,
+        },
+      },
+      {
+        id: `monthTo`,
+        label: `終了月`,
+        type: `month`,
+        form: {
+          defaultValue: query.monthTo ? new Date(query.monthTo) : firstDayOfMonth,
         },
       },
     ]).transposeColumns(),
-
   })
 
 
   const selectedTbmVehicleId = query.tbmVehicleId ? parseInt(query.tbmVehicleId) : 0
 
-  const selectedMonth = query.month ? new Date(query.month) : firstDayOfMonth
-
-
+  const selectedMonthFrom = query.monthFrom ? new Date(query.monthFrom) : firstDayOfMonth
+  const selectedMonthTo = query.monthTo ? new Date(query.monthTo) : firstDayOfMonth
 
   // ETCデータ管理
   const { etcRawData, isLoading: dataLoading, importCsvData, mutateEtcRawData, deleteMonthData
   } = useEtcData({
     selectedTbmVehicleId,
-    selectedMonth,
+    selectedMonthFrom,
+    selectedMonthTo,
   })
 
 
@@ -146,7 +153,7 @@ export default function EtcCsvImportPage() {
                   isLoading,
                   importCsvData,
                   selectedTbmVehicleId,
-                  selectedMonth,
+
                 }} />
               },
               {
@@ -157,7 +164,8 @@ export default function EtcCsvImportPage() {
                     alignMode="row"
                     onSubmit={(data) => {
                       addQuery({
-                        month: formatDate(data.month, 'YYYY-MM-DD'),
+                        monthFrom: formatDate(data.monthFrom, 'YYYY-MM-DD'),
+                        monthTo: formatDate(data.monthTo, 'YYYY-MM-DD'),
                       })
                     }}
                   >
@@ -177,11 +185,11 @@ export default function EtcCsvImportPage() {
                           </Button>
 
                           <Button
-                            onClick={() => deleteMonthData(selectedTbmVehicleId, selectedMonth)}
+                            onClick={() => deleteMonthData(selectedTbmVehicleId, selectedMonthFrom, selectedMonthTo)}
                             disabled={isLoading}
                             className="mt-2 bg-red-500 hover:bg-red-600"
                           >
-                            選択中の月のデータを一括削除
+                            選択中の期間のデータを一括削除
                           </Button>
                         </R_Stack>
                       </div>
@@ -214,7 +222,7 @@ export default function EtcCsvImportPage() {
           onClose={() => EtcScheduleLinkModalReturn.handleClose()}
           onUpdate={() => {
             // データを再読み込み
-            if (selectedTbmVehicleId && selectedMonth) {
+            if (selectedTbmVehicleId && selectedMonthFrom && selectedMonthTo) {
               mutateEtcRawData()
             }
           }}

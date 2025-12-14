@@ -16,7 +16,7 @@ import { ColBuilder } from '@app/(apps)/tbm/(builders)/ColBuilders/ColBuilder'
 import ChildCreator from '@cm/components/DataLogic/RTs/ChildCreator/ChildCreator'
 import BulkCalendarSetter from '@app/(apps)/tbm/(pages)/eigyoshoSettei/components/BulkCalendarSetter'
 import { RouteGroupCl } from '@app/(apps)/tbm/(class)/RouteGroupCl'
-import { R_Stack } from '@cm/components/styles/common-components/common-components'
+import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
 import { useState } from 'react'
 
 export default function TbmRouteGroupDetail(props: DetailPagePropType) {
@@ -234,32 +234,62 @@ export default function TbmRouteGroupDetail(props: DetailPagePropType) {
         label: `関連便`,
         component: (
           <div className="p-4">
-            <div className="mb-4 p-3 bg-blue-50 rounded-md">
-              <span className="text-sm text-blue-800">
-                関連便を設定すると、配車ページでこの便を設定する際に関連便も同時に設定できます。
-              </span>
-            </div>
-            <ChildCreator
-              {...{
-                ParentData: props.formData,
-                models: { parent: `tbmRouteGroup`, children: `tbmRelatedRouteGroup` },
+            <C_Stack>
+              <div className="mb-4 p-3 bg-blue-50 rounded-md">
+                <span className="text-sm text-blue-800">
+                  関連便を設定すると、配車ページでこの便を設定する際に関連便も同時に設定できます。
+                </span>
+              </div>
+              <ChildCreator
+                {...{
+                  ParentData: props.formData,
+                  models: { parent: `tbmRouteGroup`, children: `tbmRelatedRouteGroup` },
+                  myTable: { style: { width: 400, } },
+                  additional: {
+                    orderBy: [{ daysOffset: `asc` }],
+                    include: { childRouteGroup: true },
 
-
-                additional: {
-                  orderBy: [{ daysOffset: `asc` }],
-                  include: { childRouteGroup: true },
-
-                },
-                columns: ColBuilder.tbmRelatedRouteGroup({
-                  useGlobalProps,
-                  ColBuilderExtraProps: {
-                    tbmRouteGroupId: tbmRouteGroupId,
-                    tbmBaseId: currentBaseId,
                   },
-                }),
-                useGlobalProps,
-              }}
-            />
+                  columns: ColBuilder.tbmRelatedRouteGroup({
+                    useGlobalProps,
+                    ColBuilderExtraProps: {
+                      tbmRouteGroupId: tbmRouteGroupId,
+                      tbmBaseId: currentBaseId,
+                    },
+                  }),
+                  useGlobalProps,
+                }}
+              />
+            </C_Stack>
+          </div>
+        ),
+      },
+      {
+        label: `月別通行料合計`,
+        component: (
+          <div className="p-4">
+            <C_Stack className={` items-center`}>
+              <div className="mb-4 p-3 bg-blue-50 rounded-md">
+                <span className="text-sm text-blue-800">
+                  月ごとの通行料合計額を設定します。設定した合計額は実働回数で割って1便あたりの通行料が自動計算されます。
+                </span>
+              </div>
+              <ChildCreator
+                {...{
+                  ParentData: props.formData,
+                  models: { parent: `tbmRouteGroup`, children: `tbmMonthlyConfigForRouteGroup` },
+                  myTable: { style: { width: 600, } },
+                  additional: { orderBy: [{ yearMonth: `desc` }], },
+                  columns: ColBuilder.tbmMonthlyTollConfig({
+                    useGlobalProps,
+                    ColBuilderExtraProps: {
+                      tbmRouteGroupId: tbmRouteGroupId,
+                    },
+                  }),
+                  useGlobalProps,
+                }}
+              />
+            </C_Stack>
           </div>
         ),
       },

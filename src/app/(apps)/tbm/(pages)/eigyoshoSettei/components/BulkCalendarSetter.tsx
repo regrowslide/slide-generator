@@ -1,18 +1,18 @@
 'use client'
-import {Days} from '@cm/class/Days/Days'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
-import {Button} from '@cm/components/styles/common-components/Button'
-import {Head2} from '@cm/components/styles/common-components/heading'
+import { Days } from '@cm/class/Days/Days'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
+import { Button } from '@cm/components/styles/common-components/Button'
+import { Head2 } from '@cm/components/styles/common-components/heading'
 import useDoStandardPrisma from '@cm/hooks/useDoStandardPrisma'
-import React, {useState} from 'react'
-import {Card} from '@cm/shadcn/ui/card'
-import {Calendar} from '@prisma/client'
+import React, { useState } from 'react'
+import { Card } from '@cm/shadcn/ui/card'
+import { Calendar } from '@prisma/generated/prisma/client'
 
-export default function BulkCalendarSetter({days, defaultSelectedDays, onConfirm, months}) {
+export default function BulkCalendarSetter({ days, defaultSelectedDays, onConfirm, months }) {
   const weekDays = [`月`, `火`, `水`, `木`, `金`, `土`, `日`, `祝`]
   const [selectedDays, setselectedDays] = useState<Date[]>(defaultSelectedDays)
-  const {data: holidays = []} = useDoStandardPrisma(`calendar`, `findMany`, {
-    where: {holidayType: `祝日`},
+  const { data: holidays = [] } = useDoStandardPrisma(`calendar`, `findMany`, {
+    where: { holidayType: `祝日` },
   })
 
   const setSelectedDays = async (selectedWeekDay: string, mode: 'on' | 'off') => {
@@ -178,7 +178,7 @@ export default function BulkCalendarSetter({days, defaultSelectedDays, onConfirm
               size="lg"
               color="red"
               className="px-8 py-3 font-semibold"
-              onClick={async () => await onConfirm({selectedDays})}
+              onClick={async () => await onConfirm({ selectedDays })}
             >
               変更を反映
             </Button>

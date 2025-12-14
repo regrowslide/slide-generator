@@ -1,17 +1,17 @@
 'use client'
 
-import React, {useState, useEffect} from 'react'
-import {Button} from '@cm/components/styles/common-components/Button'
-import {C_Stack} from '@cm/components/styles/common-components/common-components'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
-import {doStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
-import {updateAlgorithm} from '@app/(excluded)/stock/api/jquants-server-actions/jquants-getter'
-import {StockCl} from 'src/non-common/EsCollection/(stock)/StockCl'
-import {getStockConfig} from 'src/non-common/EsCollection/(stock)/getStockConfig'
+import React, { useState, useEffect } from 'react'
+import { Button } from '@cm/components/styles/common-components/Button'
+import { C_Stack } from '@cm/components/styles/common-components/common-components'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
+import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
+import { updateAlgorithm } from '@app/(excluded)/stock/api/jquants-server-actions/jquants-getter'
+import { StockCl } from 'src/non-common/EsCollection/(stock)/StockCl'
+import { getStockConfig } from 'src/non-common/EsCollection/(stock)/getStockConfig'
 
-import {QueryBuilder} from '@app/(excluded)/stock/(builders)/QueryBuilder'
-import {Stock} from '@prisma/client'
-import {StockCard} from '@app/(excluded)/stock/(pages)/signal-screening/StockCard'
+import { QueryBuilder } from '@app/(excluded)/stock/(builders)/QueryBuilder'
+import { Stock } from '@prisma/generated/prisma/client'
+import { StockCard } from '@app/(excluded)/stock/(pages)/signal-screening/StockCard'
 
 export default function SignalScreeningPage() {
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('cards')
@@ -49,12 +49,12 @@ export default function SignalScreeningPage() {
     try {
       const result = await doStandardPrisma('stock', 'findMany', {
         where: {
-          CompanyName: {not: null},
-          last_Close: {not: null},
+          CompanyName: { not: null },
+          last_Close: { not: null },
         },
         include: QueryBuilder.getInclude({}).stock.include,
 
-        orderBy: {last_riseRate: 'desc'},
+        orderBy: { last_riseRate: 'desc' },
         take: 500,
       })
 
@@ -72,7 +72,7 @@ export default function SignalScreeningPage() {
   const updateSignals = async () => {
     setLoading(true)
     try {
-      await updateAlgorithm({date: new Date()})
+      await updateAlgorithm({ date: new Date() })
       await fetchStocks()
     } catch (error) {
       console.error('シグナル更新エラー:', error)
@@ -186,17 +186,15 @@ export default function SignalScreeningPage() {
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={() => setViewMode('cards')}
-                      className={`px-3 py-1 rounded text-sm ${
-                        viewMode === 'cards' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
-                      }`}
+                      className={`px-3 py-1 rounded text-sm ${viewMode === 'cards' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+                        }`}
                     >
                       カード表示
                     </button>
                     <button
                       onClick={() => setViewMode('table')}
-                      className={`px-3 py-1 rounded text-sm ${
-                        viewMode === 'table' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
-                      }`}
+                      className={`px-3 py-1 rounded text-sm ${viewMode === 'table' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+                        }`}
                     >
                       テーブル表示
                     </button>
@@ -237,17 +235,15 @@ export default function SignalScreeningPage() {
                           </td>
                           <td className="text-right p-3 font-mono">{stock.last_Close?.toLocaleString()}円</td>
                           <td
-                            className={`text-right p-3 font-mono font-semibold ${
-                              (stock.last_riseRate || 0) >= 0 ? 'text-red-600' : 'text-blue-600'
-                            }`}
+                            className={`text-right p-3 font-mono font-semibold ${(stock.last_riseRate || 0) >= 0 ? 'text-red-600' : 'text-blue-600'
+                              }`}
                           >
                             {stock.last_riseRate && stock.last_riseRate > 0 ? '+' : ''}
                             {stock.last_riseRate?.toFixed(2)}%
                           </td>
                           <td
-                            className={`text-right p-3 font-mono font-semibold ${
-                              (stock.profit || 0) >= 0 ? 'text-red-600' : 'text-blue-600'
-                            }`}
+                            className={`text-right p-3 font-mono font-semibold ${(stock.profit || 0) >= 0 ? 'text-red-600' : 'text-blue-600'
+                              }`}
                           >
                             {stock.profit ? (
                               <>

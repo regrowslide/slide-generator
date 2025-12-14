@@ -10,7 +10,7 @@ import { atomKey } from '@cm/hooks/useJotai'
 import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
 import { doTransaction, transactionQuery } from '@cm/lib/server-actions/common-server-actions/doTransaction/doTransaction'
 import { toastByResult } from '@cm/lib/ui/notifications'
-import { Prisma, TbmDriveSchedule, TbmRelatedRouteGroup, TbmRouteGroup, User } from '@prisma/client'
+import { Prisma, TbmDriveSchedule, TbmRelatedRouteGroup, TbmRouteGroup, User } from '@prisma/generated/prisma/client'
 import { addDays } from '@cm/class/Days/date-utils/calculations'
 
 import React from 'react'
@@ -37,13 +37,14 @@ const fetchRelatedRouteGroups = async (tbmRouteGroupId: number): Promise<TbmRela
 const useHaishaTableEditorGMF = (props: {
   afterUpdate?: (props: { res: requestResultType; tbmDriveSchedule: TbmDriveSchedule }) => void
   afterDelete?: (props: { res: requestResultType; tbmDriveSchedule: TbmDriveSchedule }) => void
+  preserveApprovalStatus?: boolean // 承認状態を維持するオプション
 }) => {
-  const { afterUpdate = item => null, afterDelete = item => null } = props
+  const { afterUpdate = item => null, afterDelete = item => null, preserveApprovalStatus = false } = props
 
   const atomKey = `haishaTableEditorGMF` as atomKey
 
   return useGlobalModalForm<{
-    user: User
+    user: User | null
     date: Date
     tbmDriveSchedule?: any
     tbmBase?: any
@@ -132,10 +133,20 @@ const useHaishaTableEditorGMF = (props: {
               }
 
               // 通常の処理（関連便なし、または関連便作成を選ばなかった場合）
+              // 承認状態を維持するオプションが有効な場合、既存の承認状態を保持
+              const updateData = preserveApprovalStatus && tbmDriveSchedule
+                ? {
+                  ...data,
+                  approved: tbmDriveSchedule.approved,
+                  confirmed: tbmDriveSchedule.confirmed,
+                  finished: tbmDriveSchedule.finished,
+                }
+                : data
+
               const queryObject: Prisma.TbmDriveScheduleUpsertArgs = {
                 where: { id: tbmDriveSchedule?.id ?? 0 },
                 create: data,
-                update: data,
+                update: updateData,
                 include: {
                   TbmVehicle: {
                     include: { OdometerInput: {} },

@@ -1,7 +1,7 @@
 'use server'
 
 import prisma from 'src/lib/prisma'
-import {Prisma} from '@prisma/client'
+import {Prisma} from '@prisma/generated/prisma/client'
 import {getServerSession} from 'next-auth'
 import {authOptions} from '@app/api/auth/[...nextauth]/constants/authOptions'
 

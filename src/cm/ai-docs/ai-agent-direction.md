@@ -160,7 +160,7 @@ export default async function Page(props) {
 ```jsx
 // userCl.ts
 
-import { User, Post } from '@prisma/client';
+import { User, Post } from '@prisma/generated/prisma/client';
 
 // 関連データを含む型を定義
 export type UserClData = User & {

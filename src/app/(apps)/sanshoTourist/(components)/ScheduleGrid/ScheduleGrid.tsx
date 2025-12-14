@@ -1,17 +1,17 @@
 'use client'
 
 import React from 'react'
-import {StVehicle, StHoliday} from '@prisma/client'
-import {ScheduleGridHeader} from './ScheduleGridHeader'
-import {ScheduleGridBody} from './ScheduleGridBody'
-import {StScheduleWithRelations} from '../../(server-actions)/schedule-actions'
+import { StVehicle, StHoliday } from '@prisma/generated/prisma/client'
+import { ScheduleGridHeader } from './ScheduleGridHeader'
+import { ScheduleGridBody } from './ScheduleGridBody'
+import { StScheduleWithRelations } from '../../(server-actions)/schedule-actions'
 
 type Props = {
   vehicles: StVehicle[]
   schedules: StScheduleWithRelations[]
   holidays: StHoliday[]
-  users: {id: number; name: string}[]
-  rollCallers: {date: Date; userId: number}[]
+  users: { id: number; name: string }[]
+  rollCallers: { date: Date; userId: number }[]
   startDate: Date
   numDays: number
   onEditSchedule: (schedule: StScheduleWithRelations) => void

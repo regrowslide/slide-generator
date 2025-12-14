@@ -18,7 +18,14 @@ export const TbmRelatedRouteGroupColBuilder = (props: columnGetterType) => {
         ...defaultRegister,
       },
       format: (val, row) => {
-        return row?.childRouteGroup?.name ?? ''
+        return <div>
+          {[
+            row?.childRouteGroup?.routeName,
+            row?.childRouteGroup?.name,
+          ].join(' / ')}
+
+        </div>
+
       },
     },
     {

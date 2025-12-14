@@ -1,25 +1,25 @@
 'use client'
 
-import React, {useState} from 'react'
-import {Production, Product} from '@prisma/client'
-import {PlusCircle, Edit2, Trash2} from 'lucide-react'
+import React, { useState } from 'react'
+import { Production, Product } from '@prisma/generated/prisma/client'
+import { PlusCircle, Edit2, Trash2 } from 'lucide-react'
 import useModal from '@cm/components/utils/modal/useModal'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
-import {createProduction, updateProduction, deleteProduction, getAllProductions} from './_actions/production-actions'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
+import { createProduction, updateProduction, deleteProduction, getAllProductions } from './_actions/production-actions'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
 
-type ProductionWithProduct = Production & {Product: Product}
+type ProductionWithProduct = Production & { Product: Product }
 
 type ProductionClientProps = {
   initialProductions: ProductionWithProduct[]
   products: Product[]
 }
 
-const ProductionClient = ({initialProductions, products}: ProductionClientProps) => {
-  const {toggleLoad} = useGlobal()
+const ProductionClient = ({ initialProductions, products }: ProductionClientProps) => {
+  const { toggleLoad } = useGlobal()
   const [productions, setProductions] = useState<ProductionWithProduct[]>(initialProductions)
 
-  const EditModalReturn = useModal<{production?: ProductionWithProduct}>()
+  const EditModalReturn = useModal<{ production?: ProductionWithProduct }>()
 
   const [formData, setFormData] = useState({
     productionAt: new Date().toISOString().slice(0, 10),
@@ -30,7 +30,7 @@ const ProductionClient = ({initialProductions, products}: ProductionClientProps)
   })
 
   const loadProductions = async () => {
-    const {data} = await getAllProductions()
+    const { data } = await getAllProductions()
     if (data) {
       setProductions(data)
     }
@@ -54,7 +54,7 @@ const ProductionClient = ({initialProductions, products}: ProductionClientProps)
         note: '',
       })
     }
-    EditModalReturn.handleOpen({production})
+    EditModalReturn.handleOpen({ production })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -96,7 +96,7 @@ const ProductionClient = ({initialProductions, products}: ProductionClientProps)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const {name, value} = e.target
+    const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
       [name]: name === 'productId' || name === 'quantity' ? Number(value) : value,
@@ -146,9 +146,8 @@ const ProductionClient = ({initialProductions, products}: ProductionClientProps)
                     <td className="px-4 py-3 text-right">{production.quantity.toLocaleString()}</td>
                     <td className="px-4 py-3">
                       <span
-                        className={`inline-block px-2 py-1 rounded text-xs font-semibold ${
-                          production.type === '国産' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
-                        }`}
+                        className={`inline-block px-2 py-1 rounded text-xs font-semibold ${production.type === '国産' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
+                          }`}
                       >
                         {production.type}
                       </span>

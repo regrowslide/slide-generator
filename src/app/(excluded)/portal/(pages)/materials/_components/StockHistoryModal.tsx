@@ -1,16 +1,16 @@
 'use client'
 
-import React, {useState, useEffect} from 'react'
-import {RawMaterial, StockAdjustment} from '@prisma/client'
+import React, { useState, useEffect } from 'react'
+import { RawMaterial, StockAdjustment } from '@prisma/generated/prisma/client'
 import {
   getStockAdjustmentsByMaterial,
   createStockAdjustment,
   calculateCurrentStock,
   deleteStockAdjustment,
 } from '../_actions/material-actions'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
-import {X, Trash2} from 'lucide-react'
+import { X, Trash2 } from 'lucide-react'
 
 type StockHistoryModalProps = {
   material: RawMaterial
@@ -18,10 +18,10 @@ type StockHistoryModalProps = {
   onUpdate: () => void
 }
 
-const StockHistoryModal = ({material, onClose, onUpdate}: StockHistoryModalProps) => {
-  const {toggleLoad} = useGlobal()
+const StockHistoryModal = ({ material, onClose, onUpdate }: StockHistoryModalProps) => {
+  const { toggleLoad } = useGlobal()
   const [adjustments, setAdjustments] = useState<StockAdjustment[]>([])
-  const [stockInfo, setStockInfo] = useState({currentStock: 0, adjustmentTotal: 0, productionTotal: 0})
+  const [stockInfo, setStockInfo] = useState({ currentStock: 0, adjustmentTotal: 0, productionTotal: 0 })
   const [formData, setFormData] = useState({
     adjustmentAt: new Date().toISOString().slice(0, 10),
     reason: '入荷',
@@ -91,7 +91,7 @@ const StockHistoryModal = ({material, onClose, onUpdate}: StockHistoryModalProps
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const {name, value} = e.target
+    const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
       [name]: name === 'quantity' ? Number(value) : value,

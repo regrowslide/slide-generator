@@ -1,12 +1,12 @@
-import {getIncludeType, includeProps, roopMakeRelationalInclude} from '@cm/class/builders/QueryBuilderVariables'
-import {Prisma} from '@prisma/client'
+import { getIncludeType, includeProps, roopMakeRelationalInclude } from '@cm/class/builders/QueryBuilderVariables'
+import { Prisma } from '@prisma/generated/prisma/client'
 
 export class QueryBuilder {
   static getInclude = (includeProps: includeProps) => {
     const tbmRouteGroup: Prisma.TbmRouteGroupFindManyArgs = {
       include: {
         Mid_TbmRouteGroup_TbmCustomer: {
-          include: {TbmCustomer: {}},
+          include: { TbmCustomer: {} },
         },
 
         TbmBase: {},
@@ -26,7 +26,7 @@ export class QueryBuilder {
     const include: getIncludeType = {
       tbmRouteGroup,
       tbmBase,
-      user: {include: {TbmBase: {}, TbmVehicle: {}}} as Prisma.UserFindManyArgs,
+      user: { include: { TbmBase: {}, TbmVehicle: {} } } as Prisma.UserFindManyArgs,
       tbmVehicle: {
         include: {
           TbmBase: {},
@@ -34,8 +34,8 @@ export class QueryBuilder {
           TbmFuelCard: {},
         },
       } as Prisma.TbmVehicleFindManyArgs,
-      tbmRefuelHistory: {include: {TbmVehicle: {}, User: {}}} as Prisma.TbmRefuelHistoryFindManyArgs,
-      tbmCarWashHistory: {include: {TbmVehicle: {}, User: {}}} as Prisma.TbmCarWashHistoryFindManyArgs,
+      tbmRefuelHistory: { include: { TbmVehicle: {}, User: {} } } as Prisma.TbmRefuelHistoryFindManyArgs,
+      tbmCarWashHistory: { include: { TbmVehicle: {}, User: {} } } as Prisma.TbmCarWashHistoryFindManyArgs,
       tbmDriveSchedule: {
         include: {
           TbmVehicle: {},

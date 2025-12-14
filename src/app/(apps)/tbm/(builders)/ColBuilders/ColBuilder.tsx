@@ -9,7 +9,7 @@ import { TbmOperationGroupColBuilder } from '@app/(apps)/tbm/(builders)/ColBuild
 import { TbmRefuelHistoryColBuilder } from '@app/(apps)/tbm/(builders)/ColBuilders/TbmRefuelHistoryColBuilder'
 import { TbmDriveScheduleBuilder } from '@app/(apps)/tbm/(builders)/ColBuilders/TbmDriveScheduleBuilder'
 import { tbmOperationBuilder } from '@app/(apps)/tbm/(builders)/ColBuilders/tbmOperationBuilder'
-import { tbmMonthlyConfigForRouteGroupBuilder } from '@app/(apps)/tbm/(builders)/ColBuilders/tbmMonthlyConfigForRouteGroupBuilder'
+import { tbmMonthlyConfigForRouteGroupBuilder, tbmMonthlyTollConfigBuilder } from '@app/(apps)/tbm/(builders)/ColBuilders/tbmMonthlyConfigForRouteGroupBuilder'
 import { columnGetterType } from '@cm/types/types'
 import { Fields } from '@cm/class/Fields/Fields'
 import { defaultRegister } from '@cm/class/builders/ColBuilderVariables'
@@ -35,6 +35,7 @@ export class ColBuilder {
   static tbmDriveSchedule = TbmDriveScheduleBuilder
   static tbmOperation = tbmOperationBuilder
   static tbmMonthlyConfigForRouteGroup = tbmMonthlyConfigForRouteGroupBuilder
+  static tbmMonthlyTollConfig = tbmMonthlyTollConfigBuilder
   static tbmProduct = tbmProductColBuilder
   static odometerInput = odometerInputColBuilder
   static tbmCustomer = tbmCustomerColBuilder

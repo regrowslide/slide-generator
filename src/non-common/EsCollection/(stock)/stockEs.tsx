@@ -1,5 +1,5 @@
-import {Days} from '@cm/class/Days/Days'
-import {getMidnight} from '@cm/class/Days/date-utils/calculations'
+import { Days } from '@cm/class/Days/Days'
+import { getMidnight } from '@cm/class/Days/date-utils/calculations'
 import {
   EasySearchObject,
   EasySearchObjectExclusiveGroup,
@@ -10,10 +10,10 @@ import {
   toRowGroup,
 } from '@cm/class/builders/QueryBuilderVariables'
 
-import {Prisma} from '@prisma/client'
+import { Prisma } from '@prisma/generated/prisma/client'
 
-import {getStockConfig} from './getStockConfig'
-import {StockCl} from 'src/non-common/EsCollection/(stock)/StockCl'
+import { getStockConfig } from './getStockConfig'
+import { StockCl } from 'src/non-common/EsCollection/(stock)/StockCl'
 
 export const stockEs = async () => {
   const config = await getStockConfig()
@@ -24,8 +24,8 @@ export const stockEs = async () => {
     type exclusiveKeyStrings = 'today'
     type CONDITION_TYPE = Prisma.StockWhereInput
     type exclusiveGroups = EasySearchObjectExclusiveGroup<exclusiveKeyStrings, CONDITION_TYPE>
-    const {session, query, dataModelName, easySearchExtraProps} = props
-    const {whereQuery} = easySearchExtraProps ?? {}
+    const { session, query, dataModelName, easySearchExtraProps } = props
+    const { whereQuery } = easySearchExtraProps ?? {}
 
     type keys = {
       [key in string]: EasySearchObject
@@ -35,28 +35,28 @@ export const stockEs = async () => {
       ex_miniKabu: {
         label: `小型`,
         CONDITION: {
-          last_Close: {lt: 1000},
+          last_Close: { lt: 1000 },
         },
       },
       ex_not_miniKabu: {
         label: `その他`,
         CONDITION: {
-          NOT: {last_Close: {lt: 1000}},
+          NOT: { last_Close: { lt: 1000 } },
         },
       },
     }
     const ex_fav = {
-      ex_fav: {label: `fav`, CONDITION: {favorite: {gt: 0}}},
-      ex_not_fav: {label: `その他`, CONDITION: {favorite: {lte: 0}}},
+      ex_fav: { label: `fav`, CONDITION: { favorite: { gt: 0 } } },
+      ex_not_fav: { label: `その他`, CONDITION: { favorite: { lte: 0 } } },
     }
 
     const dataArr: makeEasySearchGroupsProp[] = []
     toRowGroup(1, dataArr, [
       //
 
-      {exclusiveGroup: Ex_exclusive0, name: `リセット`, additionalProps: {refresh: true}},
-      {exclusiveGroup: ex_miniKabu, name: ``},
-      {exclusiveGroup: ex_fav, name: ``},
+      { exclusiveGroup: Ex_exclusive0, name: `リセット`, additionalProps: { refresh: true } },
+      { exclusiveGroup: ex_miniKabu, name: `` },
+      { exclusiveGroup: ex_fav, name: `` },
 
       ...Object.values(barometerCols).map(d => {
         const key = `last_${d.id}`
@@ -66,7 +66,7 @@ export const stockEs = async () => {
             [key]: {
               label: d.label,
               description: d.description,
-              CONDITION: {[key]: true},
+              CONDITION: { [key]: true },
             },
           },
         }
@@ -80,7 +80,7 @@ export const stockEs = async () => {
     type exclusiveKeyStrings = 'today'
     type CONDITION_TYPE = Prisma.StockHistoryWhereInput
     type exclusiveGroups = EasySearchObjectExclusiveGroup<exclusiveKeyStrings, CONDITION_TYPE>
-    const {session, query, dataModelName, easySearchExtraProps} = props
+    const { session, query, dataModelName, easySearchExtraProps } = props
     // const {whereQuery} = easySearchExtraProps ?? {}
 
     type keys = {
@@ -88,14 +88,14 @@ export const stockEs = async () => {
     }
 
     const ex_today = {
-      today: {label: `今日`, CONDITION: {Date: {gte: Days.day.subtract(getMidnight(), 1)}}},
+      today: { label: `今日`, CONDITION: { Date: { gte: Days.day.subtract(getMidnight(), 1) } } },
     }
 
     const dataArr: makeEasySearchGroupsProp[] = []
     toRowGroup(1, dataArr, [
       //
-      {exclusiveGroup: Ex_exclusive0, name: `リセット`, additionalProps: {refresh: true}},
-      {exclusiveGroup: ex_today, name: ``},
+      { exclusiveGroup: Ex_exclusive0, name: `リセット`, additionalProps: { refresh: true } },
+      { exclusiveGroup: ex_today, name: `` },
 
       ...Object.values(barometerCols).map(d => {
         const key = d.id
@@ -105,7 +105,7 @@ export const stockEs = async () => {
             [key]: {
               label: d.label,
               description: d.description,
-              CONDITION: {[key]: true},
+              CONDITION: { [key]: true },
             },
           },
         }

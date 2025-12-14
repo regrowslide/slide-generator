@@ -5,15 +5,17 @@ import { C_Stack } from '@cm/components/styles/common-components/common-componen
 
 interface EtcImportFormProps {
   isLoading: boolean
-  importCsvData: (data: { tbmVehicleId: number; month: Date; csvData: string }) => Promise<void>
+  importCsvData: (data: {
+    tbmVehicleId: number; csvData: string
+  }) => Promise<void>
   // onFormChange: (tbmVehicleId: number, month: Date) => void
   selectedTbmVehicleId: number
-  selectedMonth: Date
+
 }
 
 
 export const EtcImportForm = (props: EtcImportFormProps) => {
-  const { isLoading, importCsvData, selectedTbmVehicleId, selectedMonth } = props
+  const { isLoading, importCsvData, selectedTbmVehicleId, } = props
 
   const [csvContent, setCsvContent] = useState<string>('')
 
@@ -27,10 +29,9 @@ export const EtcImportForm = (props: EtcImportFormProps) => {
   }
 
   const handleSubmit = () => {
-    if (selectedTbmVehicleId && selectedMonth && csvContent) {
+    if (selectedTbmVehicleId && csvContent) {
       importCsvData({
         tbmVehicleId: selectedTbmVehicleId,
-        month: selectedMonth,
         csvData: csvContent,
       })
 

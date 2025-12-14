@@ -1,9 +1,9 @@
-import {Days} from '@cm/class/Days/Days'
-import {doStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
-import {createUpdate} from '@cm/lib/methods/createUpdate'
-import {doTransaction, transactionQuery} from '@cm/lib/server-actions/common-server-actions/doTransaction/doTransaction'
-import {TbmMonthlyConfigForRouteGroup} from '@prisma/client'
-import {toast} from 'react-toastify'
+import { Days } from '@cm/class/Days/Days'
+import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
+import { createUpdate } from '@cm/lib/methods/createUpdate'
+import { doTransaction, transactionQuery } from '@cm/lib/server-actions/common-server-actions/doTransaction/doTransaction'
+import { TbmMonthlyConfigForRouteGroup } from '@prisma/generated/prisma/client'
+import { toast } from 'react-toastify'
 export const autoCreateMonthConfig = async ({
   toggleLoad,
   currentMonth,
@@ -14,17 +14,17 @@ export const autoCreateMonthConfig = async ({
   tbmBaseId: any
 }) => {
   toggleLoad(async () => {
-    const {lastDayOfMonth} = Days.month.getMonthDatum(currentMonth)
+    const { lastDayOfMonth } = Days.month.getMonthDatum(currentMonth)
     const prevMonth = Days.month.subtract(currentMonth, 1)
-    const {result: tbmRouteGroupList} = await doStandardPrisma(`tbmRouteGroup`, `findMany`, {
-      where: {tbmBaseId},
+    const { result: tbmRouteGroupList } = await doStandardPrisma(`tbmRouteGroup`, `findMany`, {
+      where: { tbmBaseId },
       include: {
         TbmMonthlyConfigForRouteGroup: {
           where: {
-            yearMonth: {lte: lastDayOfMonth},
+            yearMonth: { lte: lastDayOfMonth },
           },
           take: 2,
-          orderBy: {yearMonth: `desc`},
+          orderBy: { yearMonth: `desc` },
         },
       },
     })
@@ -81,7 +81,7 @@ export const autoCreateMonthConfig = async ({
             tbmRouteGroupId: route.routeId,
           },
         },
-        ...createUpdate({...previousMonthConfig, yearMonth: currentMonth, id: undefined}),
+        ...createUpdate({ ...previousMonthConfig, yearMonth: currentMonth, id: undefined }),
       }
 
       return {
@@ -92,7 +92,7 @@ export const autoCreateMonthConfig = async ({
     })
 
     if (transactionQueryList.length > 0) {
-      await doTransaction({transactionQueryList})
+      await doTransaction({ transactionQueryList })
       toast.success('引き継ぎが完了しました。')
     }
   })

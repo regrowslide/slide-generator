@@ -1,12 +1,12 @@
 'use client'
-import React, {useState, useEffect} from 'react'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
-import {Days} from '@cm/class/Days/Days'
-import {cn} from '@cm/shadcn/lib/utils'
-import {TbmRouteGroupWithCalendar} from '../../types/haisha-page-types'
-import {doStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
-import {TbmVehicle, User} from '@prisma/client'
-import {Trash2Icon} from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
+import { Days } from '@cm/class/Days/Days'
+import { cn } from '@cm/shadcn/lib/utils'
+import { TbmRouteGroupWithCalendar } from '../../types/haisha-page-types'
+import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
+import { TbmVehicle, User } from '@prisma/generated/prisma/client'
+import { Trash2Icon } from 'lucide-react'
 
 // 既存のスケジュール情報の型定義
 interface ExistingSchedule {
@@ -43,7 +43,7 @@ export const MonthCalendarSelector: React.FC<MonthCalendarSelectorProps> = ({
 
   // 月のカレンダー日付を生成
   useEffect(() => {
-    const {days, getWeeks} = Days.month.getMonthDatum(month)
+    const { days, getWeeks } = Days.month.getMonthDatum(month)
 
     const weeks = getWeeks('月')
 
@@ -61,7 +61,7 @@ export const MonthCalendarSelector: React.FC<MonthCalendarSelectorProps> = ({
         const startDate = new Date(month.getFullYear(), month.getMonth(), 1)
         const endDate = new Date(month.getFullYear(), month.getMonth() + 1, 0)
 
-        const {result} = await doStandardPrisma('tbmDriveSchedule', 'findMany', {
+        const { result } = await doStandardPrisma('tbmDriveSchedule', 'findMany', {
           where: {
             tbmRouteGroupId: tbmRouteGroup.id,
             date: {
@@ -184,7 +184,7 @@ export const MonthCalendarSelector: React.FC<MonthCalendarSelectorProps> = ({
   const weekdays = ['月', '火', '水', '木', '金', '土', '日']
 
   // 既存スケジュール情報の表示用コンポーネント
-  const ScheduleInfo = ({schedule}: {schedule: ExistingSchedule}) => {
+  const ScheduleInfo = ({ schedule }: { schedule: ExistingSchedule }) => {
     // 削除ボタンのクリックハンドラ
     const handleDeleteClick = async (e: React.MouseEvent) => {
       e.stopPropagation() // カレンダー日付のクリックイベントを発火させない

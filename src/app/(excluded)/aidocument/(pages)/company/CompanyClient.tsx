@@ -1,9 +1,9 @@
 'use client'
 
-import {useState} from 'react'
-import {Loader2, AlertCircle, Save} from 'lucide-react'
-import {AidocumentCompany} from '@prisma/client'
-import {updateSelfCompany} from '../../actions/company-actions'
+import { useState } from 'react'
+import { Loader2, AlertCircle, Save } from 'lucide-react'
+import { AidocumentCompany } from '@prisma/generated/prisma/client'
+import { updateSelfCompany } from '../../actions/company-actions'
 import CompanyForm from '../../components/company/CompanyForm'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 
@@ -11,8 +11,8 @@ interface CompanyClientProps {
   initialCompany: AidocumentCompany
 }
 
-export default function CompanyClient({initialCompany}: CompanyClientProps) {
-  const {session} = useGlobal()
+export default function CompanyClient({ initialCompany }: CompanyClientProps) {
+  const { session } = useGlobal()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
@@ -22,7 +22,7 @@ export default function CompanyClient({initialCompany}: CompanyClientProps) {
     representativeName?: string
     address?: string
     phone?: string
-    constructionLicense?: Array<{type: string; number: string; date: string}>
+    constructionLicense?: Array<{ type: string; number: string; date: string }>
     socialInsurance?: {
       health: string
       pension: string

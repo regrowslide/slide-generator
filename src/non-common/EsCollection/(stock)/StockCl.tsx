@@ -1,7 +1,7 @@
-import {NumHandler} from '@cm/class/NumHandler'
-import {Stock, StockHistory} from '@prisma/client'
+import { NumHandler } from '@cm/class/NumHandler'
+import { Stock, StockHistory } from '@prisma/generated/prisma/client'
 
-import {getStockConfig} from 'src/non-common/EsCollection/(stock)/getStockConfig'
+import { getStockConfig } from 'src/non-common/EsCollection/(stock)/getStockConfig'
 
 type stockData = Stock & {
   StockHistory: StockHistory[]
@@ -613,7 +613,7 @@ export class StockCl {
   }
 
   get prices() {
-    const {averageBuyPrice, heldCount} = this.data
+    const { averageBuyPrice, heldCount } = this.data
     const latestClose = this.latest?.Close ?? 0
 
     const buyPriceSum = (averageBuyPrice ?? 0) * (heldCount ?? 0)

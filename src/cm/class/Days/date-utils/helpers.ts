@@ -4,7 +4,7 @@ import {toUtc, toJst, addDays} from './calculations'
 
 import {isServer} from 'src/cm/lib/methods/common'
 import {getColorStyles} from '@cm/lib/methods/colors'
-import {Calendar} from '@prisma/client'
+import {Calendar} from '@prisma/generated/prisma/client'
 import {colTypeStr} from '@cm/types/types'
 import {DateInput} from '@cm/class/Days/date-utils/date-utils-type'
 

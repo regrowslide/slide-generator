@@ -2,7 +2,7 @@
 
 import prisma from 'src/lib/prisma'
 import {toUtc} from '@cm/class/Days/date-utils/calculations'
-import {StSchedule} from '@prisma/client'
+import {StSchedule} from '@prisma/generated/prisma/client'
 
 // Types
 export type StScheduleInput = {

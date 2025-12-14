@@ -1,53 +1,53 @@
 'use client'
-import {getMidnight, toUtc} from '@cm/class/Days/date-utils/calculations'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
-import {Days} from '@cm/class/Days/Days'
+import { getMidnight, toUtc } from '@cm/class/Days/date-utils/calculations'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
+import { Days } from '@cm/class/Days/Days'
 
-import {Button} from '@cm/components/styles/common-components/Button'
+import { Button } from '@cm/components/styles/common-components/Button'
 
-import {Absolute, C_Stack, FitMargin, Padding, R_Stack} from '@cm/components/styles/common-components/common-components'
-import {IconBtn} from '@cm/components/styles/common-components/IconBtn'
+import { Absolute, C_Stack, FitMargin, Padding, R_Stack } from '@cm/components/styles/common-components/common-components'
+import { IconBtn } from '@cm/components/styles/common-components/IconBtn'
 
-import {TableBordered, TableWrapper} from '@cm/components/styles/common-components/Table'
+import { TableBordered, TableWrapper } from '@cm/components/styles/common-components/Table'
 import NewDateSwitcher from '@cm/components/utils/dates/DateSwitcher/NewDateSwitcher'
 import PlaceHolder from '@cm/components/utils/loader/PlaceHolder'
-import {HOLIDAY_TYPE_LIST} from '@cm/constants/holidayTypes'
+import { HOLIDAY_TYPE_LIST } from '@cm/constants/holidayTypes'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import useDoStandardPrisma from '@cm/hooks/useDoStandardPrisma'
-import {doStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
+import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
 
-import {doTransaction, transactionQuery} from '@cm/lib/server-actions/common-server-actions/doTransaction/doTransaction'
+import { doTransaction, transactionQuery } from '@cm/lib/server-actions/common-server-actions/doTransaction/doTransaction'
 
-import {Calendar, Prisma} from '@prisma/client'
+import { Calendar, Prisma } from '@prisma/generated/prisma/client'
 import React from 'react'
 
 export default function CalendarCC() {
-  const {query} = useGlobal()
+  const { query } = useGlobal()
 
   const month = toUtc(query.month ?? getMidnight())
 
   return (
     <Padding>
       <FitMargin className={`pt-4`}>
-        <NewDateSwitcher {...{monthOnly: true}} />
+        <NewDateSwitcher {...{ monthOnly: true }} />
       </FitMargin>
       <R_Stack>
-        <MonthlyCalendar {...{dayInMonth: month}} />
+        <MonthlyCalendar {...{ dayInMonth: month }} />
       </R_Stack>
     </Padding>
   )
 }
 
-const MonthlyCalendar = ({dayInMonth}) => {
-  const {toggleLoad} = useGlobal()
+const MonthlyCalendar = ({ dayInMonth }) => {
+  const { toggleLoad } = useGlobal()
   const monthStr = formatDate(dayInMonth, 'YYYY/MM')
   const month = Days.month.getMonthDatum(dayInMonth)
 
-  const weeks = month.getWeeks(`月`, {showPrevAndNextMonth: true})
+  const weeks = month.getWeeks(`月`, { showPrevAndNextMonth: true })
 
-  const {data: calendarRecordList, mutate} = useDoStandardPrisma(`calendar`, `findMany`, {
+  const { data: calendarRecordList, mutate } = useDoStandardPrisma(`calendar`, `findMany`, {
     where: {
-      date: {gte: month.firstDayOfMonth, lte: month.lastDayOfMonth},
+      date: { gte: month.firstDayOfMonth, lte: month.lastDayOfMonth },
     },
   })
 
@@ -75,15 +75,15 @@ const MonthlyCalendar = ({dayInMonth}) => {
                     model: `calendar`,
                     method: `upsert`,
                     queryObject: {
-                      where: {id: calendarRecord?.id ?? 0},
-                      create: {date: date},
-                      update: {date: date},
+                      where: { id: calendarRecord?.id ?? 0 },
+                      create: { date: date },
+                      update: { date: date },
                     } as Prisma.CalendarUpsertArgs,
                   }
                 })
-                await doTransaction({transactionQueryList})
+                await doTransaction({ transactionQueryList })
               },
-              {refresh: false, mutate: true}
+              { refresh: false, mutate: true }
             )
           }}
         >
@@ -123,12 +123,12 @@ const MonthlyCalendar = ({dayInMonth}) => {
 
                     if (onThisMonth) {
                       const isToday = Days.validate.isSameDate(date, new Date())
-                      const tdStyle = isToday ? {background: `yellow`} : Days.day.isHoliday(date)?.style
+                      const tdStyle = isToday ? { background: `yellow` } : Days.day.isHoliday(date)?.style
                       return (
                         <td key={dayIdx} style={tdStyle}>
                           <div className={`h-[100px] w-[80px] text-sm `}>
                             <div className={`text-right font-bold`}>{dayStr}</div>
-                            <HolidayConfigCheckbox {...{mutate, calendarRecord}} />
+                            <HolidayConfigCheckbox {...{ mutate, calendarRecord }} />
                           </div>
                         </td>
                       )
@@ -150,13 +150,13 @@ const MonthlyCalendar = ({dayInMonth}) => {
   )
 }
 
-const HolidayConfigCheckbox = (props: {calendarRecord?: Calendar; mutate: any}) => {
-  const {calendarRecord, mutate} = props ?? {}
+const HolidayConfigCheckbox = (props: { calendarRecord?: Calendar; mutate: any }) => {
+  const { calendarRecord, mutate } = props ?? {}
 
   return (
     <C_Stack className={` items-center gap-0.5`}>
       {HOLIDAY_TYPE_LIST.map((h, index) => {
-        const {value, color} = h
+        const { value, color } = h
 
         const active = calendarRecord?.[`holidayType`] === value
 
@@ -166,8 +166,8 @@ const HolidayConfigCheckbox = (props: {calendarRecord?: Calendar; mutate: any}) 
               {...{
                 onClick: async () => {
                   await doStandardPrisma(`calendar`, `update`, {
-                    where: {id: calendarRecord?.id ?? 0},
-                    data: {holidayType: value},
+                    where: { id: calendarRecord?.id ?? 0 },
+                    data: { holidayType: value },
                   })
                   mutate()
                 },

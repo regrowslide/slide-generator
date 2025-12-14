@@ -1,19 +1,19 @@
 'use client'
 
-import React, {useState, useMemo} from 'react'
-import {CompanyHoliday} from '@prisma/client'
-import {PlusCircle, Trash2, Calendar} from 'lucide-react'
+import React, { useState, useMemo } from 'react'
+import { CompanyHoliday } from '@prisma/generated/prisma/client'
+import { PlusCircle, Trash2, Calendar } from 'lucide-react'
 import useModal from '@cm/components/utils/modal/useModal'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
-import {createHoliday, updateHoliday, deleteHoliday, getAllHolidays} from './_actions/calendar-actions'
+import { createHoliday, updateHoliday, deleteHoliday, getAllHolidays } from './_actions/calendar-actions'
 import NewDateSwitcher from '@cm/components/utils/dates/DateSwitcher/NewDateSwitcher'
-import {R_Stack} from '@cm/components/styles/common-components/common-components'
+import { R_Stack } from '@cm/components/styles/common-components/common-components'
 
 type CalendarClientProps = {
   initialHolidays: CompanyHoliday[]
 }
-const CalendarClient = ({initialHolidays}: CalendarClientProps) => {
-  const {toggleLoad, query} = useGlobal()
+const CalendarClient = ({ initialHolidays }: CalendarClientProps) => {
+  const { toggleLoad, query } = useGlobal()
   const [holidays, setHolidays] = useState<CompanyHoliday[]>(initialHolidays)
   const [formData, setFormData] = useState({
     holidayAt: new Date().toISOString().slice(0, 10),
@@ -21,7 +21,7 @@ const CalendarClient = ({initialHolidays}: CalendarClientProps) => {
     note: '',
   })
 
-  const AddModalReturn = useModal<{existingHoliday?: CompanyHoliday}>()
+  const AddModalReturn = useModal<{ existingHoliday?: CompanyHoliday }>()
 
   // クエリから月を取得（デフォルトは現在月）
   const currentMonth = useMemo(() => {
@@ -67,15 +67,15 @@ const CalendarClient = ({initialHolidays}: CalendarClientProps) => {
   }
 
   const loadHolidays = async () => {
-    const {data} = await getAllHolidays()
+    const { data } = await getAllHolidays()
     if (data) {
       setHolidays(data)
     }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const {name, value} = e.target
-    setFormData(prev => ({...prev, [name]: value}))
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -130,7 +130,7 @@ const CalendarClient = ({initialHolidays}: CalendarClientProps) => {
         holidayType: existingHoliday.holidayType,
         note: existingHoliday.note || '',
       })
-      AddModalReturn.handleOpen({existingHoliday})
+      AddModalReturn.handleOpen({ existingHoliday })
     } else {
       // 新規追加モードで開く
       setFormData(prev => ({
@@ -185,24 +185,22 @@ const CalendarClient = ({initialHolidays}: CalendarClientProps) => {
             return (
               <div
                 key={index}
-                className={`bg-white p-2 min-h-[120px] min-w-[120px] cursor-pointer hover:bg-gray-50 transition-colors ${
-                  today ? 'ring-2 ring-blue-500' : ''
-                }`}
+                className={`bg-white p-2 min-h-[120px] min-w-[120px] cursor-pointer hover:bg-gray-50 transition-colors ${today ? 'ring-2 ring-blue-500' : ''
+                  }`}
                 onClick={() => handleDateClick(date)}
               >
                 <div className={`text-sm font-medium ${today ? 'text-blue-600' : 'text-gray-900'}`}>{date.getDate()}</div>
                 {holiday && (
                   <div className="mt-1">
                     <div
-                      className={`text-xs px-1 py-0.5 rounded ${
-                        holiday.holidayType === '祝日'
+                      className={`text-xs px-1 py-0.5 rounded ${holiday.holidayType === '祝日'
                           ? 'bg-red-100 text-red-800'
                           : holiday.holidayType === '夏季休暇'
                             ? 'bg-blue-100 text-blue-800'
                             : holiday.holidayType === '年末年始'
                               ? 'bg-purple-100 text-purple-800'
                               : 'bg-gray-100 text-gray-800'
-                      }`}
+                        }`}
                     >
                       <span className="truncate">{holiday.holidayType}</span>
                     </div>

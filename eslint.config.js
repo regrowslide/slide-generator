@@ -10,7 +10,14 @@ const simpleImportSort = require('eslint-plugin-simple-import-sort')
 
 module.exports = [
   {
-    ignores: ['.next/**/*', 'public/**/*.js', 'scripts/**/*.js', 'node_modules/**/*'],
+    ignores: [
+      '.next/**/*',
+      'public/**/*.js',
+      'scripts/**/*.js',
+      'node_modules/**/*',
+      'prisma.config.ts',
+      'prisma/schema/generated/**/*',
+    ],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,

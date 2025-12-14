@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react'
 import { Bus, Building, UserCheck, Flag, Edit2, Trash2, Save, User, Package } from 'lucide-react'
-import { StVehicle, StCustomer, StContact, StHoliday } from '@prisma/client'
+import { StVehicle, StCustomer, StContact, StHoliday } from '@prisma/generated/prisma/client'
 import useSWR from 'swr'
 
 import useModal from '@cm/components/utils/modal/useModal'

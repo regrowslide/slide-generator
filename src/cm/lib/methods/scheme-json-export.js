@@ -1067,7 +1067,7 @@ model SbmProductIngredient {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "postgres://mutsuo:timeSpacer817@localhost:5432/tbm"
 }
 
 generator client {
@@ -1689,9 +1689,11 @@ model TbmMonthlyConfigForRouteGroup {
 
   yearMonth DateTime
 
-  generalFee         Int? //通行量（一般）[]
   tsukoryoSeikyuGaku Int? //通行料請求額
-  seikyuKaisu        Int? //請求回数
+  monthlyTollTotal   Int? //月間通行料合計額
+
+  seikyuKaisu Int? //請求回数
+  generalFee  Int? //通行量（一般）[]
 
   numberOfTrips   Int?
   TbmRouteGroup   TbmRouteGroup @relation(fields: [tbmRouteGroupId], references: [id], onDelete: Cascade)
@@ -19205,20 +19207,6 @@ export const prismaDMMF = {
           "isUpdatedAt": false
         },
         {
-          "name": "generalFee",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "Int",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
           "name": "tsukoryoSeikyuGaku",
           "kind": "scalar",
           "isList": false,
@@ -19233,7 +19221,35 @@ export const prismaDMMF = {
           "isUpdatedAt": false
         },
         {
+          "name": "monthlyTollTotal",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
           "name": "seikyuKaisu",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "generalFee",
           "kind": "scalar",
           "isList": false,
           "isRequired": false,

@@ -1,4 +1,4 @@
-import {PrismaClient} from '@prisma/client'
+import { PrismaClient } from '@prisma/generated/prisma/client'
 
 // prismaMethodType を関数型のメソッド名のみを含むように修正
 export type prismaMethodType =
@@ -17,7 +17,7 @@ export type prismaMethodType =
   | 'transaction'
   | 'count'
 
-export type PrismaClientOrigin = keyof import('.prisma/client').PrismaClient
+export type PrismaClientOrigin = keyof import('@prisma/generated/prisma/client').PrismaClient
 
 export type excluded = Exclude<
   PrismaClientOrigin,
@@ -35,4 +35,4 @@ export type excluded = Exclude<
   string
 
 export type PrismaModelNames = excluded
-export type extendedPrismaClient = PrismaClient & {[key in PrismaModelNames]: any}
+export type extendedPrismaClient = PrismaClient & { [key in PrismaModelNames]: any }

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+require('dotenv/config')
 const fs = require('fs')
 const path = require('path')
 const {getDMMF} = require('@prisma/internals')
@@ -15,6 +16,16 @@ async function generateSchemaExports() {
     const schema = fs.readFileSync(schemaPath, 'utf8')
     combinedSchema += schema + '\n'
   }
+
+  // Prisma 7対応: datasource dbブロックにURLを動的に追加
+  // prisma.config.tsではなく@prisma/internalsを直接使うため、URLが必要
+  combinedSchema = combinedSchema.replace(/datasource\s+db\s*\{([^}]*)\}/, (match, content) => {
+    // 既にurlがある場合はそのまま
+    if (content.includes('url')) return match
+    // urlを追加
+    const url = process.env.DATABASE_URL || 'postgresql://dummy:dummy@localhost:5432/dummy'
+    return `datasource db {${content}  url = "${url}"\n}`
+  })
 
   // DMMFを取得
   const dmmf = await getDMMF({

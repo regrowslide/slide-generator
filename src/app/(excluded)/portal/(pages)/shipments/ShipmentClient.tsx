@@ -1,25 +1,25 @@
 'use client'
 
-import React, {useState} from 'react'
-import {Shipment, Product} from '@prisma/client'
-import {PlusCircle, Edit2, Trash2} from 'lucide-react'
+import React, { useState } from 'react'
+import { Shipment, Product } from '@prisma/generated/prisma/client'
+import { PlusCircle, Edit2, Trash2 } from 'lucide-react'
 import useModal from '@cm/components/utils/modal/useModal'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
-import {createShipment, updateShipment, deleteShipment, getAllShipments} from './_actions/shipment-actions'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
+import { createShipment, updateShipment, deleteShipment, getAllShipments } from './_actions/shipment-actions'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
 
-type ShipmentWithProduct = Shipment & {Product: Product}
+type ShipmentWithProduct = Shipment & { Product: Product }
 
 type ShipmentClientProps = {
   initialShipments: ShipmentWithProduct[]
   products: Product[]
 }
 
-const ShipmentClient = ({initialShipments, products}: ShipmentClientProps) => {
-  const {toggleLoad} = useGlobal()
+const ShipmentClient = ({ initialShipments, products }: ShipmentClientProps) => {
+  const { toggleLoad } = useGlobal()
   const [shipments, setShipments] = useState<ShipmentWithProduct[]>(initialShipments)
 
-  const EditModalReturn = useModal<{shipment?: ShipmentWithProduct}>()
+  const EditModalReturn = useModal<{ shipment?: ShipmentWithProduct }>()
 
   const [formData, setFormData] = useState({
     shipmentId: '',
@@ -30,7 +30,7 @@ const ShipmentClient = ({initialShipments, products}: ShipmentClientProps) => {
   })
 
   const loadShipments = async () => {
-    const {data} = await getAllShipments()
+    const { data } = await getAllShipments()
     if (data) {
       setShipments(data)
     }
@@ -54,7 +54,7 @@ const ShipmentClient = ({initialShipments, products}: ShipmentClientProps) => {
         note: '',
       })
     }
-    EditModalReturn.handleOpen({shipment})
+    EditModalReturn.handleOpen({ shipment })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -96,7 +96,7 @@ const ShipmentClient = ({initialShipments, products}: ShipmentClientProps) => {
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const {name, value} = e.target
+    const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
       [name]: name === 'productId' || name === 'quantity' ? Number(value) : value,

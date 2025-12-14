@@ -7,7 +7,7 @@ import {
   User,
   UserWorkStatus,
   TbmRouteGroupCalendar,
-} from '@prisma/client'
+} from '@prisma/generated/prisma/client'
 import {CSSProperties} from 'react'
 
 // ============================================================================

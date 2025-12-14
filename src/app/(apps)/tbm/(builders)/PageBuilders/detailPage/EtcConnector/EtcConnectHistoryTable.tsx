@@ -1,12 +1,12 @@
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
-import {NumHandler} from '@cm/class/NumHandler'
-import {C_Stack} from '@cm/components/styles/common-components/common-components'
-import {CsvTable} from '@cm/components/styles/common-components/CsvTable/CsvTable'
-import {IconBtn} from '@cm/components/styles/common-components/IconBtn'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
+import { NumHandler } from '@cm/class/NumHandler'
+import { C_Stack } from '@cm/components/styles/common-components/common-components'
+import { CsvTable } from '@cm/components/styles/common-components/CsvTable/CsvTable'
+import { IconBtn } from '@cm/components/styles/common-components/IconBtn'
 import useModal from '@cm/components/utils/modal/useModal'
 import useDoStandardPrisma from '@cm/hooks/useDoStandardPrisma'
-import {cn} from '@cm/shadcn/lib/utils'
-import {TbmDriveSchedule, TbmRouteGroup, TbmVehicle, User} from '@prisma/client'
+import { cn } from '@cm/shadcn/lib/utils'
+import { TbmDriveSchedule, TbmRouteGroup, TbmVehicle, User } from '@prisma/generated/prisma/client'
 import React from 'react'
 
 type TbmDriveScheduleData = TbmDriveSchedule & {
@@ -22,10 +22,10 @@ export default function EtcConnectHistoryTable({
   selectedDriveSchedule?: TbmDriveSchedule
 }) {
   const HimiodukeMD = useModal()
-  const {data: tbmVehicle = {}} = useDoStandardPrisma(`tbmVehicle`, `findUnique`, {
-    where: {id: tbmVehicleId},
+  const { data: tbmVehicle = {} } = useDoStandardPrisma(`tbmVehicle`, `findUnique`, {
+    where: { id: tbmVehicleId },
     include: {
-      TbmEtcMeisai: {orderBy: [{month: `desc`}, {groupIndex: `asc`}]},
+      TbmEtcMeisai: { orderBy: [{ month: `desc` }, { groupIndex: `asc` }] },
       TbmDriveSchedule: {
         include: {
           TbmRouteGroup: {},
@@ -41,7 +41,7 @@ export default function EtcConnectHistoryTable({
   tbmVehicle?.TbmEtcMeisai?.forEach(item => {
     const month = item.month
     if (!groupByMonth[month]) {
-      groupByMonth[month] = {month, data: []}
+      groupByMonth[month] = { month, data: [] }
     }
     groupByMonth[month].data.push(item)
   })
@@ -49,7 +49,7 @@ export default function EtcConnectHistoryTable({
   const groupedList = Object.values(groupByMonth)
   const TB = CsvTable({
     records: groupedList.map((monthData: any) => {
-      const {month, data} = monthData ?? {}
+      const { month, data } = monthData ?? {}
       const sum = data.reduce((acc, item) => acc + item.sum, 0)
       return {
         csvTableRow: [
@@ -67,11 +67,11 @@ export default function EtcConnectHistoryTable({
 
           {
             label: '明細',
-            style: {minWidth: 600},
+            style: { minWidth: 600 },
             cellValue: CsvTable({
-              virtualized: {enabled: false},
+              virtualized: { enabled: false },
               records: data.map(item => {
-                const {TbmDriveSchedule, info: meisaiList} = item
+                const { TbmDriveSchedule, info: meisaiList } = item
 
                 const firstMeisai = JSON.parse(meisaiList[0])
                 const lastMeisai = JSON.parse(meisaiList[meisaiList.length - 1])
@@ -87,13 +87,13 @@ export default function EtcConnectHistoryTable({
 
                 return {
                   csvTableRow: [
-                    {label: '連番', cellValue: item.groupIndex},
-                    {label: '出発', cellValue: firstMeisai.fromDatetime},
-                    {label: '到着', cellValue: lastMeisai.toDatetime},
-                    {label: '出発IC', cellValue: firstMeisai.fromIc},
-                    {label: '到着IC', cellValue: lastMeisai.toIc},
-                    {label: '請求額', cellValue: item.sum},
-                    {label: '明細件数', cellValue: meisaiList.length},
+                    { label: '連番', cellValue: item.groupIndex },
+                    { label: '出発', cellValue: firstMeisai.fromDatetime },
+                    { label: '到着', cellValue: lastMeisai.toDatetime },
+                    { label: '出発IC', cellValue: firstMeisai.fromIc },
+                    { label: '到着IC', cellValue: lastMeisai.toIc },
+                    { label: '請求額', cellValue: item.sum },
+                    { label: '明細件数', cellValue: meisaiList.length },
                     {
                       label: '紐付先の運行',
                       cellValue: (
@@ -133,18 +133,18 @@ export default function EtcConnectHistoryTable({
     <C_Stack>
       <HimiodukeMD.Modal>
         {HimiodukeMD.open && HimiodukeMD?.open?.TbmDriveSchedule ? (
-          <HimodukeKaijo {...{TbmDriveSchedule: HimiodukeMD?.open?.TbmDriveSchedule}} />
+          <HimodukeKaijo {...{ TbmDriveSchedule: HimiodukeMD?.open?.TbmDriveSchedule }} />
         ) : (
-          <DriveScheduleSelector {...{TbmDriveSchedule: HimiodukeMD?.open?.TbmDriveSchedule}} />
+          <DriveScheduleSelector {...{ TbmDriveSchedule: HimiodukeMD?.open?.TbmDriveSchedule }} />
         )}
       </HimiodukeMD.Modal>
-      {TB.WithWrapper({className: `w-[1000px]`})}
+      {TB.WithWrapper({ className: `w-[1000px]` })}
     </C_Stack>
   )
 }
 
-const HimodukeKaijo = ({TbmDriveSchedule}: {TbmDriveSchedule: TbmDriveScheduleData}) => {
-  const {User, TbmVehicle} = TbmDriveSchedule
+const HimodukeKaijo = ({ TbmDriveSchedule }: { TbmDriveSchedule: TbmDriveScheduleData }) => {
+  const { User, TbmVehicle } = TbmDriveSchedule
   return (
     <div>
       <div>下記の運行データとの紐付けを解除しますか？</div>
@@ -159,9 +159,9 @@ const HimodukeKaijo = ({TbmDriveSchedule}: {TbmDriveSchedule: TbmDriveScheduleDa
   )
 }
 
-const DriveScheduleSelector = ({TbmDriveSchedule}: {TbmDriveSchedule: TbmDriveScheduleData}) => {
-  const {data: tbmDriveScheduleList = []} = useDoStandardPrisma(`tbmDriveSchedule`, `findMany`, {
-    where: {TbmEtcMeisai: {none: {}}},
+const DriveScheduleSelector = ({ TbmDriveSchedule }: { TbmDriveSchedule: TbmDriveScheduleData }) => {
+  const { data: tbmDriveScheduleList = [] } = useDoStandardPrisma(`tbmDriveSchedule`, `findMany`, {
+    where: { TbmEtcMeisai: { none: {} } },
     include: {
       User: {},
       TbmVehicle: {},
@@ -176,20 +176,20 @@ const DriveScheduleSelector = ({TbmDriveSchedule}: {TbmDriveSchedule: TbmDriveSc
       <small>ETC明細紐付け未設定の運行データのみが表示されます。</small>
       {CsvTable({
         records: tbmDriveScheduleList.map(schedule => {
-          const {TbmRouteGroup, User, TbmVehicle} = schedule ?? {}
+          const { TbmRouteGroup, User, TbmVehicle } = schedule ?? {}
           return {
             csvTableRow: [
               //
-              {label: '日付', cellValue: formatDate(schedule.date, 'YYYY/MM/DD(ddd)')},
-              {label: '便名', cellValue: TbmRouteGroup?.name},
-              {label: '路線名', cellValue: TbmRouteGroup?.routeName},
-              {label: '運行者', cellValue: User?.name},
-              {label: '車両', cellValue: TbmVehicle?.vehicleNumber},
-              {label: '設定する', cellValue: '設定する'},
+              { label: '日付', cellValue: formatDate(schedule.date, 'YYYY/MM/DD(ddd)') },
+              { label: '便名', cellValue: TbmRouteGroup?.name },
+              { label: '路線名', cellValue: TbmRouteGroup?.routeName },
+              { label: '運行者', cellValue: User?.name },
+              { label: '車両', cellValue: TbmVehicle?.vehicleNumber },
+              { label: '設定する', cellValue: '設定する' },
             ],
           }
         }),
-      }).WithWrapper({className: `w-[90vw] `})}
+      }).WithWrapper({ className: `w-[90vw] ` })}
       <div></div>
     </div>
   )

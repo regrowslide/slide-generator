@@ -1,30 +1,30 @@
-import {Button} from '@cm/components/styles/common-components/Button'
-import {CsvTable} from '@cm/components/styles/common-components/CsvTable/CsvTable'
+import { Button } from '@cm/components/styles/common-components/Button'
+import { CsvTable } from '@cm/components/styles/common-components/CsvTable/CsvTable'
 import PlaceHolder from '@cm/components/utils/loader/PlaceHolder'
-import {useGlobalModalForm} from '@cm/components/utils/modal/useGlobalModalForm'
-import {atomKey} from '@cm/hooks/useJotai'
-import {doStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
-import {RoleMaster, User} from '@prisma/client'
+import { useGlobalModalForm } from '@cm/components/utils/modal/useGlobalModalForm'
+import { atomKey } from '@cm/hooks/useJotai'
+import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
+import { RoleMaster, User } from '@prisma/generated/prisma/client'
 import React from 'react'
 import useSWR from 'swr'
 
 export default function useRoleGMF() {
   type useRoleGMFType = {
-    user: User & {UserRole: {RoleMaster: RoleMaster}[]}
+    user: User & { UserRole: { RoleMaster: RoleMaster }[] }
   }
   return useGlobalModalForm<useRoleGMFType | null>('useRoleGMF' as atomKey, null, {
-    mainJsx: ({GMF_OPEN}) => {
-      const {data, mutate} = useSWR(String(GMF_OPEN?.user?.id), async () => {
-        const {result: roleMaster} = await doStandardPrisma(`roleMaster`, `findMany`, {})
-        const {result: user} = await doStandardPrisma(`user`, `findUnique`, {
-          where: {id: GMF_OPEN?.user?.id ?? 0},
-          include: {UserRole: {include: {RoleMaster: true}}},
+    mainJsx: ({ GMF_OPEN }) => {
+      const { data, mutate } = useSWR(String(GMF_OPEN?.user?.id), async () => {
+        const { result: roleMaster } = await doStandardPrisma(`roleMaster`, `findMany`, {})
+        const { result: user } = await doStandardPrisma(`user`, `findUnique`, {
+          where: { id: GMF_OPEN?.user?.id ?? 0 },
+          include: { UserRole: { include: { RoleMaster: true } } },
         })
-        return {roleMaster, user}
+        return { roleMaster, user }
       })
 
       if (data) {
-        const {roleMaster, user} = data
+        const { roleMaster, user } = data
         return (
           <>
             {CsvTable({
@@ -33,7 +33,7 @@ export default function useRoleGMF() {
                 return {
                   csvTableRow: [
                     //
-                    {label: '権限名', cellValue: data.name},
+                    { label: '権限名', cellValue: data.name },
                     {
                       label: '付与',
                       cellValue: (
@@ -49,7 +49,7 @@ export default function useRoleGMF() {
                                 })
                               } else {
                                 await doStandardPrisma(`userRole`, `delete`, {
-                                  where: {id: applied?.id ?? 0, userId: user?.id ?? 0},
+                                  where: { id: applied?.id ?? 0, userId: user?.id ?? 0 },
                                 })
                               }
 

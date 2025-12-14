@@ -1,8 +1,8 @@
 import StockChart from '@app/(excluded)/stock/(components)/StockChart'
-import {Stock} from '@prisma/client'
-import {StockCl} from 'src/non-common/EsCollection/(stock)/StockCl'
+import { Stock } from '@prisma/generated/prisma/client'
+import { StockCl } from 'src/non-common/EsCollection/(stock)/StockCl'
 
-export function StockCard({stock, config, signalOptions}: {stock: Stock; config: any; signalOptions: any[]}) {
+export function StockCard({ stock, config, signalOptions }: { stock: Stock; config: any; signalOptions: any[] }) {
   if (!config) return null
 
   const stockInstance = new StockCl(stock as any, config)

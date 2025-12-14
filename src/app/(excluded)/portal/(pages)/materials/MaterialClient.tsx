@@ -1,8 +1,8 @@
 'use client'
 
-import React, {useState} from 'react'
-import {RawMaterial} from '@prisma/client'
-import {PlusCircle, Edit2, Trash2, History} from 'lucide-react'
+import React, { useState } from 'react'
+import { RawMaterial } from '@prisma/generated/prisma/client'
+import { PlusCircle, Edit2, Trash2, History } from 'lucide-react'
 import useModal from '@cm/components/utils/modal/useModal'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import {
@@ -23,12 +23,12 @@ export type RawMaterialWithStock = RawMaterial & {
   isAlert?: boolean
 }
 
-const MaterialClient = ({initialMaterials}: MaterialClientProps) => {
-  const {toggleLoad} = useGlobal()
+const MaterialClient = ({ initialMaterials }: MaterialClientProps) => {
+  const { toggleLoad } = useGlobal()
   const [materials, setMaterials] = useState<RawMaterialWithStock[]>(initialMaterials)
 
-  const EditModalReturn = useModal<{material?: RawMaterial}>()
-  const HistoryModalReturn = useModal<{material: RawMaterial}>()
+  const EditModalReturn = useModal<{ material?: RawMaterial }>()
+  const HistoryModalReturn = useModal<{ material: RawMaterial }>()
 
   const [formData, setFormData] = useState({
     name: '',
@@ -39,11 +39,11 @@ const MaterialClient = ({initialMaterials}: MaterialClientProps) => {
   })
 
   const loadMaterials = async () => {
-    const {data} = await getAllRawMaterials()
+    const { data } = await getAllRawMaterials()
     if (data) {
       const materialsWithStock = await Promise.all(
         data.map(async material => {
-          const {currentStock} = await calculateCurrentStock(material.id)
+          const { currentStock } = await calculateCurrentStock(material.id)
           return {
             ...material,
             currentStock,
@@ -73,7 +73,7 @@ const MaterialClient = ({initialMaterials}: MaterialClientProps) => {
         safetyStock: 0,
       })
     }
-    EditModalReturn.handleOpen({material})
+    EditModalReturn.handleOpen({ material })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -107,7 +107,7 @@ const MaterialClient = ({initialMaterials}: MaterialClientProps) => {
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const {name, value} = e.target
+    const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
       [name]: name === 'cost' || name === 'safetyStock' ? Number(value) : value,
@@ -164,7 +164,7 @@ const MaterialClient = ({initialMaterials}: MaterialClientProps) => {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => HistoryModalReturn.handleOpen({material})}
+                          onClick={() => HistoryModalReturn.handleOpen({ material })}
                           className="text-gray-500 hover:text-blue-600 transition-colors"
                           title="在庫履歴"
                         >

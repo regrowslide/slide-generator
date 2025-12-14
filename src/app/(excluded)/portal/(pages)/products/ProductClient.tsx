@@ -1,14 +1,14 @@
 'use client'
 
-import React, {useState} from 'react'
-import {Product, RawMaterial, ProductRecipe} from '@prisma/client'
-import {PlusCircle, Edit2, Trash2, Plus, X} from 'lucide-react'
+import React, { useState } from 'react'
+import { Product, RawMaterial, ProductRecipe } from '@prisma/generated/prisma/client'
+import { PlusCircle, Edit2, Trash2, Plus, X } from 'lucide-react'
 import useModal from '@cm/components/utils/modal/useModal'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
-import {createProduct, updateProduct, deleteProduct, getAllProducts, addRecipe, deleteRecipe} from './_actions/product-actions'
+import { createProduct, updateProduct, deleteProduct, getAllProducts, addRecipe, deleteRecipe } from './_actions/product-actions'
 
 export type ProductWithRecipe = Product & {
-  ProductRecipe: (ProductRecipe & {RawMaterial: RawMaterial})[]
+  ProductRecipe: (ProductRecipe & { RawMaterial: RawMaterial })[]
 }
 
 type ProductClientProps = {
@@ -16,12 +16,12 @@ type ProductClientProps = {
   rawMaterials: RawMaterial[]
 }
 
-const ProductClient = ({initialProducts, rawMaterials}: ProductClientProps) => {
-  const {toggleLoad} = useGlobal()
+const ProductClient = ({ initialProducts, rawMaterials }: ProductClientProps) => {
+  const { toggleLoad } = useGlobal()
   const [products, setProducts] = useState<ProductWithRecipe[]>(initialProducts)
 
-  const EditModalReturn = useModal<{product?: ProductWithRecipe}>()
-  const RecipeModalReturn = useModal<{product: ProductWithRecipe}>()
+  const EditModalReturn = useModal<{ product?: ProductWithRecipe }>()
+  const RecipeModalReturn = useModal<{ product: ProductWithRecipe }>()
 
   const [formData, setFormData] = useState({
     name: '',
@@ -37,7 +37,7 @@ const ProductClient = ({initialProducts, rawMaterials}: ProductClientProps) => {
   })
 
   const loadProducts = async () => {
-    const {data} = await getAllProducts()
+    const { data } = await getAllProducts()
     if (data) {
       setProducts(data)
     }
@@ -61,7 +61,7 @@ const ProductClient = ({initialProducts, rawMaterials}: ProductClientProps) => {
         allowanceStock: 0,
       })
     }
-    EditModalReturn.handleOpen({product})
+    EditModalReturn.handleOpen({ product })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -105,7 +105,7 @@ const ProductClient = ({initialProducts, rawMaterials}: ProductClientProps) => {
 
       if (result.success) {
         await loadProducts()
-        setRecipeForm({rawMaterialId: 0, amount: 0})
+        setRecipeForm({ rawMaterialId: 0, amount: 0 })
       } else {
         alert(result.error || 'レシピの追加に失敗しました')
       }
@@ -126,7 +126,7 @@ const ProductClient = ({initialProducts, rawMaterials}: ProductClientProps) => {
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target
+    const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
       [name]: name === 'cost' || name === 'productionCapacity' || name === 'allowanceStock' ? Number(value) : value,
@@ -134,7 +134,7 @@ const ProductClient = ({initialProducts, rawMaterials}: ProductClientProps) => {
   }
 
   const handleRecipeChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-    const {name, value} = e.target
+    const { name, value } = e.target
     setRecipeForm(prev => ({
       ...prev,
       [name]: Number(value),
@@ -185,7 +185,7 @@ const ProductClient = ({initialProducts, rawMaterials}: ProductClientProps) => {
                     <td className="px-4 py-3 text-right">{product.allowanceStock} 枚</td>
                     <td className="px-4 py-3">
                       <button
-                        onClick={() => RecipeModalReturn.handleOpen({product})}
+                        onClick={() => RecipeModalReturn.handleOpen({ product })}
                         className="text-blue-600 hover:underline text-xs"
                       >
                         {product.ProductRecipe.length}件

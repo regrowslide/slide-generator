@@ -1,16 +1,16 @@
 'use server'
 
-import {MEIAI_SUM_ORIGIN} from '@app/(apps)/tbm/(lib)/calculation'
-import {fetchEigyoshoUriageData} from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchEigyoshoUriageData'
-import {tbmTableKeyValue} from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
-import {getTbmBase_MonthConfig} from '@app/(apps)/tbm/(server-actions)/getBasics'
-import {carHistoryKey, fetchRuisekiKyoriKichoData} from '@app/(apps)/tbm/(server-actions)/fetchRuisekiKyoriKichoData'
-import {TBM_CODE} from '@app/(apps)/tbm/(class)/TBM_CODE'
-import {unkoMeisaiKey} from '@app/(apps)/tbm/(class)/TbmReportCl/cols/createUnkoMeisaiRow'
-import {getMidnight} from '@cm/class/Days/date-utils/calculations'
-import {doStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
+import { MEIAI_SUM_ORIGIN } from '@app/(apps)/tbm/(lib)/calculation'
+import { fetchEigyoshoUriageData } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchEigyoshoUriageData'
+import { tbmTableKeyValue } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
+import { getTbmBase_MonthConfig } from '@app/(apps)/tbm/(server-actions)/getBasics'
+import { carHistoryKey, fetchRuisekiKyoriKichoData } from '@app/(apps)/tbm/(server-actions)/fetchRuisekiKyoriKichoData'
+import { TBM_CODE } from '@app/(apps)/tbm/(class)/TBM_CODE'
+import { unkoMeisaiKey } from '@app/(apps)/tbm/(class)/TbmReportCl/cols/createUnkoMeisaiRow'
+import { getMidnight } from '@cm/class/Days/date-utils/calculations'
+import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
 import prisma from 'src/lib/prisma'
-import {User} from '@prisma/client'
+import { User } from '@prisma/generated/prisma/client'
 
 export type KyuyoSanteiRecordKey =
   | 'B_Shukkin'
@@ -49,15 +49,15 @@ export type KyuyoSanteiRecord = {
   }
 }
 
-export const fetchKyuyoSanteiData = async ({whereQuery, tbmBaseId}) => {
-  const {userList, monthlyTbmDriveList} = await fetchEigyoshoUriageData({
+export const fetchKyuyoSanteiData = async ({ whereQuery, tbmBaseId }) => {
+  const { userList, monthlyTbmDriveList } = await fetchEigyoshoUriageData({
     whereQuery,
     tbmBaseId,
   })
 
   const yearMonth = whereQuery.gte ?? getMidnight()
 
-  const {TbmBase_MonthConfig} = await getTbmBase_MonthConfig({yearMonth, tbmBaseId})
+  const { TbmBase_MonthConfig } = await getTbmBase_MonthConfig({ yearMonth, tbmBaseId })
 
   const userListWithCarHistory = await fetchRuisekiKyoriKichoData({
     tbmBaseId,
@@ -68,16 +68,16 @@ export const fetchKyuyoSanteiData = async ({whereQuery, tbmBaseId}) => {
   const carWashHistory = await prisma.tbmCarWashHistory.groupBy({
     by: [`userId`],
     where: {
-      TbmVehicle: {tbmBaseId},
-      userId: {in: userList.map(user => user.id)},
-      date: {gte: whereQuery?.gte, lte: whereQuery?.lte},
+      TbmVehicle: { tbmBaseId },
+      userId: { in: userList.map(user => user.id) },
+      date: { gte: whereQuery?.gte, lte: whereQuery?.lte },
     },
-    _sum: {price: true},
+    _sum: { price: true },
   })
 
-  const {result: kyuyoTableRecord} = await doStandardPrisma(`kyuyoTableRecord`, `findMany`, {
+  const { result: kyuyoTableRecord } = await doStandardPrisma(`kyuyoTableRecord`, `findMany`, {
     where: {
-      User: {tbmBaseId},
+      User: { tbmBaseId },
       yearMonth,
     },
   })
@@ -85,8 +85,8 @@ export const fetchKyuyoSanteiData = async ({whereQuery, tbmBaseId}) => {
   // UserWorkStatusから出勤日数・有給休暇を集計
   const userWorkStatusList = await prisma.userWorkStatus.findMany({
     where: {
-      User: {tbmBaseId},
-      date: {gte: whereQuery?.gte, lte: whereQuery?.lte},
+      User: { tbmBaseId },
+      date: { gte: whereQuery?.gte, lte: whereQuery?.lte },
     },
   })
 
@@ -98,7 +98,7 @@ export const fetchKyuyoSanteiData = async ({whereQuery, tbmBaseId}) => {
 
     // 該当ユーザーのすべての運行実績をフィルタ（すべての車両を含む）
     const userSchedule = monthlyTbmDriveList.filter(row => {
-      const {schedule} = row
+      const { schedule } = row
       return schedule.User?.id === user.id
     })
 
@@ -196,142 +196,142 @@ export const fetchKyuyoSanteiData = async ({whereQuery, tbmBaseId}) => {
         B_Shukkin: {
           label: '出勤日数',
           cellValue: B_shukkin,
-          style: {fontSize: 12, minWidth: width40},
+          style: { fontSize: 12, minWidth: width40 },
         },
         C_Yukyu: {
           label: '有給休暇',
           cellValue: C_yukyu,
-          style: {fontSize: 12, minWidth: width40},
+          style: { fontSize: 12, minWidth: width40 },
         },
         D_Name: {
           label: '乗務員名',
           cellValue: user.name,
-          style: {fontSize: 12, minWidth: width80},
+          style: { fontSize: 12, minWidth: width80 },
         },
         E_Code: {
           label: 'コード',
           cellValue: user.code ?? '',
-          style: {fontSize: 12, minWidth: width40},
+          style: { fontSize: 12, minWidth: width40 },
         },
         F_CarNumber: {
           label: '車番/車種',
           cellValue: myVehicleList.map(obj => `${obj.car.vehicleNumber} / ${obj.car.type}`).join('\n'),
-          style: {fontSize: 12, minWidth: with160},
+          style: { fontSize: 12, minWidth: with160 },
         },
         H_TougetsuUnchinZandaka: {
           label: '当月運賃高（円）',
           cellValue: H_tougetsuUnchinZandaka,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         I_KyuyuRyo: {
           label: '当月給油量（L）',
           cellValue: I_kyuyuRyo,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         J_ssTanka: {
           label: '当月ss単価',
           cellValue: J_ssTanka,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         K_TougutsuNenryoDai: {
           label: '当月燃料代（円）',
           cellValue: K_tougutsuNenryoDai,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         L_Senshakiryo: {
           label: '洗車機料',
           cellValue: L_senshakiryo,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         M_Half: {
           label: '（売上-燃料他）*0.5',
           cellValue: M_half,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         N_Kosukudai: {
           label: '高速代（円）',
           cellValue: N_kosukudai,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         O_YukyuHoten: {
           label: '有給補填',
           cellValue: O_yukyuHoten,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         P_Other1: {
           label: 'その他①',
           cellValue: P_other1,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         Q_Other2: {
           label: 'その他②',
           cellValue: Q_other2,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         R_Total: {
           label: '総支給額　（円）',
           cellValue: R_total,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         S_Shokuhi: {
           label: '食費　（円）',
           cellValue: S_shokuhi,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         T_MaebaraiKin: {
           label: '前払金　（円）',
           cellValue: T_maebaraiKin,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         U_Kosukudai: {
           label: '高速超過負担　　　　（円）',
           cellValue: U_kosukudai,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         V_Syukaku: {
           label: '宿泊費　（円）',
           cellValue: V_syukaku,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         W_Misyu: {
           label: '明細給与　(円）',
           cellValue: W_misyu,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         X_UriageSonshitsu: {
           label: '売上損失利益',
           cellValue: X_uriageSonshitsu,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         Y_Car: {
           label: '車両・整備代',
           cellValue: Y_car,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         Z_hoken: {
           label: '保険代',
           cellValue: Z_hoken,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         AA_Yushi: {
           label: '油脂・タイヤ・備品代',
           cellValue: AA_yushi,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         AB_EigyoSonshitsu: {
           label: '営業損失利益',
           cellValue: AB_eigyoSonshitsu,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         AC_EigyoSonshitsuRitsu: {
           label: '営業損失利益率',
           cellValue: AC_eigyoSonshitsuRitsu,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         AD_Rate: {
           label: '備　考',
           cellValue: AD_rate,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
       },
     }

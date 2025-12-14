@@ -8,6 +8,8 @@ import { formatDate } from '@cm/class/Days/date-utils/formatters'
 import { NumHandler } from '@cm/class/NumHandler'
 import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
 import { TbmReportCl } from '@app/(apps)/tbm/(class)/TbmReportCl'
+import { TimeHandler } from '@app/(apps)/tbm/(class)/TimeHandler'
+import { addDays } from '@cm/class/Days/date-utils/calculations'
 
 interface EtcScheduleLinkModalProps {
   etcMeisaiId: number
@@ -35,11 +37,25 @@ export const EtcScheduleLinkModal: React.FC<EtcScheduleLinkModalProps> = ({
         label: '運行明細',
         forSelect: {
           optionsOrOptionFetcher: availableSchedules.map(schedule => {
-
-            const { routeName, name, serviceNumber, departureTime, finalArrivalTime, pickupTime, vehicleType, productName, seikyuKbn, } = schedule.TbmRouteGroup
+            const { routeName, name, departureTime } = schedule.TbmRouteGroup
             const { User } = schedule
 
-            const displayName = [formatDate(schedule.date, 'YYYY/MM/DD(ddd)'), routeName, name, User?.name].filter(Boolean).join(' ')
+            // 出発時刻が2400以上の場合は翌日扱いなので、表示用の日付を計算
+            const parsed = TimeHandler.parseTimeString(departureTime)
+            const isNextDaySchedule = parsed && parsed.originalHour >= 24
+            const displayDate = isNextDaySchedule
+              ? addDays(schedule.date, 1)
+              : schedule.date
+
+            const nextDayMark = isNextDaySchedule ? '【翌日扱い】' : ''
+            const displayName = [
+              formatDate(displayDate, 'YYYY/MM/DD(ddd)'),
+              nextDayMark,
+              routeName,
+              name,
+              User?.name,
+            ].filter(Boolean).join(' ')
+
             return {
               name: displayName,
               label: displayName,
@@ -72,7 +88,7 @@ export const EtcScheduleLinkModal: React.FC<EtcScheduleLinkModalProps> = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // ETCデータを取得
+        // ETCデータを取得（グループ内のEtcCsvRawも取得して日付範囲を確認）
         const etcResponse = await doStandardPrisma('tbmEtcMeisai', 'findUnique', {
           where: { id: etcMeisaiId },
           include: {
@@ -83,31 +99,69 @@ export const EtcScheduleLinkModal: React.FC<EtcScheduleLinkModalProps> = ({
                 User: true,
               },
             },
+            EtcCsvRaw: {
+              orderBy: { fromDate: 'asc' },
+            },
           },
         })
 
         if (etcResponse.result) {
           setEtcMeisai(etcResponse.result)
 
-          // 同じ月の運行明細を取得（同じ車両のもの）
-          const monthStart = new Date(etcResponse.result.month)
-          const monthEnd = new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 0)
+          // グループ内のETC利用データから日付範囲を取得
+          const etcCsvRawList = etcResponse.result.EtcCsvRaw || []
+          let minDate: Date | null = null
+          let maxDate: Date | null = null
 
+          etcCsvRawList.forEach((raw: any) => {
+            const fromDate = new Date(raw.fromDate)
+            if (!minDate || fromDate < minDate) minDate = fromDate
+            if (!maxDate || fromDate > maxDate) maxDate = fromDate
+          })
+
+          // フォールバック: EtcCsvRawがない場合は渡されたscheduleDateを使用
+          if (!minDate) minDate = new Date(scheduleDate)
+          if (!maxDate) maxDate = new Date(scheduleDate)
+
+          // 翌日扱いの便も検索対象に含めるため、前日も検索対象にする
+          const searchStartDate = addDays(minDate, -1)
+          const searchEndDate = maxDate
+
+          // 検索範囲の運行明細を取得
           const schedulesResponse = await doStandardPrisma('tbmDriveSchedule', 'findMany', {
             where: {
               tbmVehicleId: etcResponse.result.tbmVehicleId,
-              date: scheduleDate,
+              date: {
+                gte: searchStartDate,
+                lte: searchEndDate,
+              },
               approved: TbmReportCl.allowNonApprovedSchedule ? undefined : true,
             },
             include: {
               TbmRouteGroup: true,
               User: true,
             },
-            orderBy: { date: 'asc' },
+            orderBy: [{ date: 'asc' }, { TbmRouteGroup: { departureTime: 'asc' } }],
           })
 
           if (schedulesResponse.result) {
-            setAvailableSchedules(schedulesResponse.result)
+            // グループ内の日付範囲にマッチするスケジュールをフィルタリング
+            // 月跨ぎの場合: 前月最終日と翌月初日の運行明細を対象とする
+            const filteredSchedules = schedulesResponse.result.filter((schedule: any) => {
+              const scheduleDateTime = new Date(schedule.date)
+              const parsed = TimeHandler.parseTimeString(schedule.TbmRouteGroup?.departureTime)
+              const isNextDaySchedule = parsed && parsed.originalHour >= 24
+
+              // 表示用の日付を計算
+              const displayDate = isNextDaySchedule
+                ? addDays(scheduleDateTime, 1)
+                : scheduleDateTime
+
+              // グループ内の日付範囲（minDate〜maxDate）にマッチするものを返す
+              return displayDate >= minDate! && displayDate <= maxDate!
+            })
+
+            setAvailableSchedules(filteredSchedules)
           }
         }
       } catch (error) {
@@ -116,7 +170,7 @@ export const EtcScheduleLinkModal: React.FC<EtcScheduleLinkModalProps> = ({
     }
 
     fetchData()
-  }, [etcMeisaiId])
+  }, [etcMeisaiId, scheduleDate])
 
   const handleSubmit = async (data: any) => {
     setIsLoading(true)
@@ -208,6 +262,23 @@ export const EtcScheduleLinkModal: React.FC<EtcScheduleLinkModalProps> = ({
         <div className="text-sm text-gray-600">
           <strong>対象月:</strong> {formatDate(etcMeisai.month, 'YYYY年MM月')}
         </div>
+        {etcMeisai.EtcCsvRaw?.length > 0 && (() => {
+          const dates = etcMeisai.EtcCsvRaw.map((raw: any) => new Date(raw.fromDate))
+          const minDate = new Date(Math.min(...dates.map((d: Date) => d.getTime())))
+          const maxDate = new Date(Math.max(...dates.map((d: Date) => d.getTime())))
+          const isSameDate = minDate.toDateString() === maxDate.toDateString()
+          return (
+            <div className="text-sm text-gray-600">
+              <strong>利用日:</strong>{' '}
+              {isSameDate
+                ? formatDate(minDate, 'MM/DD(ddd)')
+                : `${formatDate(minDate, 'MM/DD(ddd)')} 〜 ${formatDate(maxDate, 'MM/DD(ddd)')}`}
+              {!isSameDate && minDate.getMonth() !== maxDate.getMonth() && (
+                <span className="ml-2 text-orange-600">【月跨ぎ】</span>
+              )}
+            </div>
+          )
+        })()}
         <div className="text-sm text-gray-600">
           <strong>合計金額:</strong> {NumHandler.WithUnit(etcMeisai.sum, '円')}
         </div>

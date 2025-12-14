@@ -1,11 +1,11 @@
 'use client'
 
-import React, {useState} from 'react'
-import {Settings, Calendar, Save} from 'lucide-react'
-import {StPublishSetting} from '@prisma/client'
+import React, { useState } from 'react'
+import { Settings, Calendar, Save } from 'lucide-react'
+import { StPublishSetting } from '@prisma/generated/prisma/client'
 
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
-import {updateStPublishSetting} from '../../(server-actions)/settings-actions'
+import { updateStPublishSetting } from '../../(server-actions)/settings-actions'
 
 type Props = {
   publishSetting: StPublishSetting | null
@@ -16,8 +16,8 @@ const formatDateForInput = (date: Date | null | undefined) => {
   return new Date(date).toISOString().split('T')[0]
 }
 
-export const SettingsCC = ({publishSetting}: Props) => {
-  const {toggleLoad} = useGlobal()
+export const SettingsCC = ({ publishSetting }: Props) => {
+  const { toggleLoad } = useGlobal()
   const [publishEndDate, setPublishEndDate] = useState(formatDateForInput(publishSetting?.publishEndDate))
   const [isSaving, setIsSaving] = useState(false)
 

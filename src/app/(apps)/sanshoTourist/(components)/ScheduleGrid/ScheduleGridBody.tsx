@@ -1,10 +1,10 @@
 'use client'
 
-import React, {useMemo} from 'react'
-import {Check} from 'lucide-react'
-import {StVehicle} from '@prisma/client'
-import {ScheduleBar} from './ScheduleBar'
-import {StScheduleWithRelations} from '../../(server-actions)/schedule-actions'
+import React, { useMemo } from 'react'
+import { Check } from 'lucide-react'
+import { StVehicle } from '@prisma/generated/prisma/client'
+import { ScheduleBar } from './ScheduleBar'
+import { StScheduleWithRelations } from '../../(server-actions)/schedule-actions'
 
 type Props = {
   vehicles: StVehicle[]
@@ -87,7 +87,7 @@ export const ScheduleGridBody = ({
     return map
   }, [schedules, vehicles, startDate, numDays])
 
-  const days = Array.from({length: numDays}).map((_, i) => getLocalDateString(addDays(startDate, i)))
+  const days = Array.from({ length: numDays }).map((_, i) => getLocalDateString(addDays(startDate, i)))
 
   // グリッドカラムのスタイルを動的に生成
   const gridStyle = {

@@ -1,6 +1,6 @@
 'use server'
 
-import {NumHandler} from '@cm/class/NumHandler'
+import { NumHandler } from '@cm/class/NumHandler'
 
 export type sharyoBetsuUriageRecordKey =
   | `CD`
@@ -14,15 +14,15 @@ export type sharyoBetsuUriageRecordKey =
   | `futaiFee`
   | `fuelCostPerVehicle`
 
-import {MEIAI_SUM_ORIGIN} from '@app/(apps)/tbm/(lib)/calculation'
-import {getTbmBase_MonthConfig} from '@app/(apps)/tbm/(server-actions)/getBasics'
-import {getNenpiDataByCar} from '@app/(apps)/tbm/(server-actions)/getNenpiDataByCar'
-import {getMidnight} from '@cm/class/Days/date-utils/calculations'
+import { MEIAI_SUM_ORIGIN } from '@app/(apps)/tbm/(lib)/calculation'
+import { getTbmBase_MonthConfig } from '@app/(apps)/tbm/(server-actions)/getBasics'
+import { getNenpiDataByCar } from '@app/(apps)/tbm/(server-actions)/getNenpiDataByCar'
+import { getMidnight } from '@cm/class/Days/date-utils/calculations'
 import prisma from 'src/lib/prisma'
-import {TbmVehicle} from '@prisma/client'
+import { TbmVehicle } from '@prisma/generated/prisma/client'
 
-import {fetchUnkoMeisaiData, tbmTableKeyValue} from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
-import {unkoMeisaiKey} from '@app/(apps)/tbm/(class)/TbmReportCl/cols/createUnkoMeisaiRow'
+import { fetchUnkoMeisaiData, tbmTableKeyValue } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
+import { unkoMeisaiKey } from '@app/(apps)/tbm/(class)/TbmReportCl/cols/createUnkoMeisaiRow'
 
 export type SharyoBetsuUriageRecord = {
   vehicle: TbmVehicle
@@ -31,8 +31,9 @@ export type SharyoBetsuUriageRecord = {
   }
 }
 
-export const fetchSharyoBetsuUriageData = async ({whereQuery, tbmBaseId}) => {
-  const {monthlyTbmDriveList} = await fetchUnkoMeisaiData({
+export const fetchSharyoBetsuUriageData = async ({ firstDayOfMonth, whereQuery, tbmBaseId }) => {
+  const { monthlyTbmDriveList } = await fetchUnkoMeisaiData({
+    firstDayOfMonth,
     whereQuery,
     tbmBaseId,
     userId: undefined,
@@ -40,21 +41,21 @@ export const fetchSharyoBetsuUriageData = async ({whereQuery, tbmBaseId}) => {
 
   const yearMonth = whereQuery.gte ?? getMidnight()
 
-  const {TbmBase_MonthConfig} = await getTbmBase_MonthConfig({yearMonth, tbmBaseId})
+  const { TbmBase_MonthConfig } = await getTbmBase_MonthConfig({ yearMonth, tbmBaseId })
 
-  const {nenpiKanriDataListByCar} = await getNenpiDataByCar({tbmBaseId, whereQuery, TbmBase_MonthConfig})
+  const { nenpiKanriDataListByCar } = await getNenpiDataByCar({ tbmBaseId, whereQuery, TbmBase_MonthConfig })
 
   // 車両リストを取得
   const vehicleList = await prisma.tbmVehicle.findMany({
-    where: {tbmBaseId},
-    orderBy: {code: 'asc'},
+    where: { tbmBaseId },
+    orderBy: { code: 'asc' },
   })
 
   // 車両ごとにグループ化
   const vehicleMap = new Map<number, typeof monthlyTbmDriveList>()
 
   monthlyTbmDriveList.forEach(row => {
-    const {schedule} = row
+    const { schedule } = row
     const vehicleId = schedule.TbmVehicle?.id
 
     if (vehicleId) {
@@ -93,52 +94,52 @@ export const fetchSharyoBetsuUriageData = async ({whereQuery, tbmBaseId}) => {
         CD: {
           label: 'コード',
           cellValue: index + 1,
-          style: {fontSize: 12, minWidth: width40},
+          style: { fontSize: 12, minWidth: width40 },
         },
         vehicleNumber: {
           label: '車両番号',
           cellValue: vehicle.vehicleNumber ?? '',
-          style: {fontSize: 12, minWidth: width120},
+          style: { fontSize: 12, minWidth: width120 },
         },
         monthlyMileage: {
           label: '月間走行距離',
           cellValue: NumHandler.WithUnit(monthlyMileage, 'km', 1),
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         postalFee: {
           label: '郵便',
           cellValue: postalFee,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         generalFee: {
           label: '一般',
           cellValue: generalFee,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         etcUsageFee: {
           label: 'ETC利用料金',
           cellValue: etcUsageFee,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         tollFee: {
           label: '通行料',
           cellValue: tollFee,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         freightRevenue: {
           label: '運賃高',
           cellValue: freightRevenue,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         futaiFee: {
           label: '付帯料金高',
           cellValue: futaiFee,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
         fuelCostPerVehicle: {
           label: '車両別給油料金',
           cellValue: fuelCostPerVehicle,
-          style: {fontSize: 12, minWidth: widthBase},
+          style: { fontSize: 12, minWidth: widthBase },
         },
       },
     }

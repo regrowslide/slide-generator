@@ -6,7 +6,7 @@ import {
   AidocumentDocument,
   AidocumentDocumentItem,
   AidocumentSubcontractor,
-} from '@prisma/client'
+} from '@prisma/generated/prisma/client'
 
 // 企業の型（関連データ含む）
 export type CompanyWithSites = AidocumentCompany & {

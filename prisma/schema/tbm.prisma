@@ -246,9 +246,11 @@ model TbmMonthlyConfigForRouteGroup {
 
   yearMonth DateTime
 
-  generalFee         Int? //通行量（一般）[]
   tsukoryoSeikyuGaku Int? //通行料請求額
-  seikyuKaisu        Int? //請求回数
+  monthlyTollTotal   Int? //月間通行料合計額
+
+  seikyuKaisu Int? //請求回数
+  generalFee  Int? //通行量（一般）[]
 
   numberOfTrips   Int?
   TbmRouteGroup   TbmRouteGroup @relation(fields: [tbmRouteGroupId], references: [id], onDelete: Cascade)

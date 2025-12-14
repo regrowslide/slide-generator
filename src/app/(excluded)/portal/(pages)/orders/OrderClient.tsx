@@ -1,25 +1,25 @@
 'use client'
 
-import React, {useState} from 'react'
-import {Order, Product} from '@prisma/client'
-import {PlusCircle, Edit2, Trash2} from 'lucide-react'
+import React, { useState } from 'react'
+import { Order, Product } from '@prisma/generated/prisma/client'
+import { PlusCircle, Edit2, Trash2 } from 'lucide-react'
 import useModal from '@cm/components/utils/modal/useModal'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
-import {createOrder, updateOrder, deleteOrder, getAllOrders} from './_actions/order-actions'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
+import { createOrder, updateOrder, deleteOrder, getAllOrders } from './_actions/order-actions'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
 
-export type OrderWithProduct = Order & {Product: Product}
+export type OrderWithProduct = Order & { Product: Product }
 
 type OrderClientProps = {
   initialOrders: OrderWithProduct[]
   products: Product[]
 }
 
-const OrderClient = ({initialOrders, products}: OrderClientProps) => {
-  const {toggleLoad} = useGlobal()
+const OrderClient = ({ initialOrders, products }: OrderClientProps) => {
+  const { toggleLoad } = useGlobal()
   const [orders, setOrders] = useState<OrderWithProduct[]>(initialOrders)
 
-  const EditModalReturn = useModal<{order?: OrderWithProduct}>()
+  const EditModalReturn = useModal<{ order?: OrderWithProduct }>()
 
   const [formData, setFormData] = useState({
     orderAt: new Date().toISOString().slice(0, 10),
@@ -30,7 +30,7 @@ const OrderClient = ({initialOrders, products}: OrderClientProps) => {
   })
 
   const loadOrders = async () => {
-    const {data} = await getAllOrders()
+    const { data } = await getAllOrders()
     if (data) {
       setOrders(data)
     }
@@ -54,7 +54,7 @@ const OrderClient = ({initialOrders, products}: OrderClientProps) => {
         note: '',
       })
     }
-    EditModalReturn.handleOpen({order})
+    EditModalReturn.handleOpen({ order })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -96,7 +96,7 @@ const OrderClient = ({initialOrders, products}: OrderClientProps) => {
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const {name, value} = e.target
+    const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
       [name]: name === 'productId' || name === 'quantity' || name === 'amount' ? Number(value) : value,

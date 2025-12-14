@@ -6,7 +6,7 @@ import {
   TbmRouteGroupFee,
   Mid_TbmRouteGroup_TbmCustomer,
   TbmCustomer,
-} from '@prisma/client'
+} from '@prisma/generated/prisma/client'
 import { TimeHandler } from './TimeHandler'
 export type TbmRouteData = TbmRouteGroup & {
   TbmMonthlyConfigForRouteGroup: TbmMonthlyConfigForRouteGroup[]

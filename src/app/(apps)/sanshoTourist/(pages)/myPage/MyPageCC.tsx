@@ -1,13 +1,13 @@
 'use client'
 
-import React, {useState} from 'react'
-import {List, CalendarDays} from 'lucide-react'
-import {StVehicle} from '@prisma/client'
+import React, { useState } from 'react'
+import { List, CalendarDays } from 'lucide-react'
+import { StVehicle } from '@prisma/generated/prisma/client'
 import useSWR from 'swr'
 
-import {WeeklyView} from '../../(components)/MyPageViews/WeeklyView'
-import {MonthlyView} from '../../(components)/MyPageViews/MonthlyView'
-import {getStSchedulesByDriver} from '../../(server-actions)/schedule-actions'
+import { WeeklyView } from '../../(components)/MyPageViews/WeeklyView'
+import { MonthlyView } from '../../(components)/MyPageViews/MonthlyView'
+import { getStSchedulesByDriver } from '../../(server-actions)/schedule-actions'
 
 type Props = {
   userId: number
@@ -30,7 +30,7 @@ const getEndOfMonth = (date: Date) => {
   return new Date(date.getFullYear(), date.getMonth() + 1, 0)
 }
 
-export const MyPageCC = ({userId, userName, vehicles}: Props) => {
+export const MyPageCC = ({ userId, userName, vehicles }: Props) => {
   const [viewMode, setViewMode] = useState<'weekly' | 'monthly'>('weekly')
   const [currentDate, setCurrentDate] = useState(() => {
     const today = new Date()
@@ -39,7 +39,7 @@ export const MyPageCC = ({userId, userName, vehicles}: Props) => {
   })
 
   // スケジュールデータ取得
-  const {data: schedulesData} = useSWR(
+  const { data: schedulesData } = useSWR(
     ['mySchedules', userId, currentDate.toISOString(), viewMode],
     async () => {
       let dateFrom: Date
@@ -75,18 +75,16 @@ export const MyPageCC = ({userId, userName, vehicles}: Props) => {
         <div className="flex space-x-1 p-1 bg-gray-200 rounded-lg">
           <button
             onClick={() => setViewMode('weekly')}
-            className={`px-4 py-1.5 rounded-md text-sm font-medium flex items-center ${
-              viewMode === 'weekly' ? 'bg-white shadow' : 'text-gray-600 hover:bg-gray-100'
-            }`}
+            className={`px-4 py-1.5 rounded-md text-sm font-medium flex items-center ${viewMode === 'weekly' ? 'bg-white shadow' : 'text-gray-600 hover:bg-gray-100'
+              }`}
           >
             <List className="w-4 h-4 mr-1" />
             週間ビュー
           </button>
           <button
             onClick={() => setViewMode('monthly')}
-            className={`px-4 py-1.5 rounded-md text-sm font-medium flex items-center ${
-              viewMode === 'monthly' ? 'bg-white shadow' : 'text-gray-600 hover:bg-gray-100'
-            }`}
+            className={`px-4 py-1.5 rounded-md text-sm font-medium flex items-center ${viewMode === 'monthly' ? 'bg-white shadow' : 'text-gray-600 hover:bg-gray-100'
+              }`}
           >
             <CalendarDays className="w-4 h-4 mr-1" />
             月間ビュー

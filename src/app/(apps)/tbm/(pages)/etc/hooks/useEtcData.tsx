@@ -8,20 +8,28 @@ import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import { formatDate } from '@cm/class/Days/date-utils/formatters'
 import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
 
-export const useEtcData = ({ selectedTbmVehicleId, selectedMonth }: { selectedTbmVehicleId: number; selectedMonth: Date }) => {
+export const useEtcData = ({
+  selectedTbmVehicleId,
+  selectedMonthFrom,
+  selectedMonthTo,
+}: {
+  selectedTbmVehicleId: number
+  selectedMonthFrom: Date
+  selectedMonthTo: Date
+}) => {
   const { addQuery } = useGlobal()
   const [isLoading, setIsLoading] = useState(false)
 
+  // 開始月の初日と終了月の末日を取得
+  const { firstDayOfMonth: startDate } = selectedMonthFrom ? Days.month.getMonthDatum(selectedMonthFrom) : {}
+  const { lastDayOfMonth: endDate } = selectedMonthTo ? Days.month.getMonthDatum(selectedMonthTo) : {}
 
-
-
-  const { firstDayOfMonth, lastDayOfMonth } = selectedMonth ? Days.month.getMonthDatum(selectedMonth) : {}
   const { data: etcRawData = [], mutate } = useDoStandardPrisma('etcCsvRaw', 'findMany', {
     where: {
       tbmVehicleId: selectedTbmVehicleId,
       fromDate: {
-        gte: firstDayOfMonth,
-        lte: lastDayOfMonth,
+        gte: startDate,
+        lte: endDate,
       },
     },
     orderBy: [{ fromDate: 'asc' }, { fromTime: 'asc' }],
@@ -43,7 +51,9 @@ export const useEtcData = ({ selectedTbmVehicleId, selectedMonth }: { selectedTb
   let monthOnCsv: Date | null = null
 
   // CSVデータをインポートする関数
-  const importCsvData = async (data: { tbmVehicleId: number; month: Date; csvData: string }) => {
+  const importCsvData = async (data: {
+    tbmVehicleId: number; csvData: string
+  }) => {
     const { tbmVehicleId, csvData } = data
 
     setIsLoading(true)
@@ -184,15 +194,20 @@ export const useEtcData = ({ selectedTbmVehicleId, selectedMonth }: { selectedTb
     }
   }
 
-  // 選択中の月のデータを削除する関数
-  const deleteMonthData = async (tbmVehicleId: number, month: Date) => {
-    if (!confirm(`選択中の月（${formatDate(month, 'YYYY年MM月')}）のデータを削除しますか？\nこの操作は取り消せません。`)) {
+  // 選択中の期間のデータを削除する関数
+  const deleteMonthData = async (tbmVehicleId: number, monthFrom: Date, monthTo: Date) => {
+    const periodText = formatDate(monthFrom, 'YYYY年MM月') === formatDate(monthTo, 'YYYY年MM月')
+      ? formatDate(monthFrom, 'YYYY年MM月')
+      : `${formatDate(monthFrom, 'YYYY年MM月')} 〜 ${formatDate(monthTo, 'YYYY年MM月')}`
+
+    if (!confirm(`選択中の期間（${periodText}）のデータを削除しますか？\nこの操作は取り消せません。`)) {
       return
     }
 
     setIsLoading(true)
     try {
-      const { firstDayOfMonth, lastDayOfMonth } = Days.month.getMonthDatum(month)
+      const { firstDayOfMonth } = Days.month.getMonthDatum(monthFrom)
+      const { lastDayOfMonth } = Days.month.getMonthDatum(monthTo)
 
       // まず、削除対象のレコードを取得して、関連するTbmEtcMeisaiのIDを収集
       const { result: recordsToDelete } = await doStandardPrisma('etcCsvRaw', 'findMany', {

@@ -1,14 +1,14 @@
 'use client'
 
-import React, {useMemo} from 'react'
-import {StHoliday} from '@prisma/client'
+import React, { useMemo } from 'react'
+import { StHoliday } from '@prisma/generated/prisma/client'
 
 type Props = {
   startDate: Date
   numDays: number
   holidays: StHoliday[]
-  users: {id: number; name: string}[]
-  rollCallers: {date: Date; userId: number}[]
+  users: { id: number; name: string }[]
+  rollCallers: { date: Date; userId: number }[]
   onUpdateRollCaller: (date: Date, userId: number) => void
 }
 
@@ -42,12 +42,12 @@ const getDayOfWeek = (date: Date) => {
   return ['日', '月', '火', '水', '木', '金', '土'][day]
 }
 
-export const ScheduleGridHeader = ({startDate, numDays, holidays, users, rollCallers, onUpdateRollCaller}: Props) => {
+export const ScheduleGridHeader = ({ startDate, numDays, holidays, users, rollCallers, onUpdateRollCaller }: Props) => {
   // DBのUTC日付をJST文字列に変換してマップ化
   const holidayMap = useMemo(() => new Map(holidays.map(h => [toJstDateString(h.date), h.name])), [holidays])
   const rollCallerMap = useMemo(() => new Map(rollCallers.map(rc => [toJstDateString(rc.date), rc.userId])), [rollCallers])
 
-  const days = Array.from({length: numDays}).map((_, i) => {
+  const days = Array.from({ length: numDays }).map((_, i) => {
     const date = addDays(startDate, i)
     const dateStr = getLocalDateString(date)
     const dayOfWeek = date.getDay()

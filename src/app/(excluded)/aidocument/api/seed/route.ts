@@ -1,6 +1,6 @@
 import {NextRequest, NextResponse} from 'next/server'
 import prisma from 'src/lib/prisma'
-import {Prisma, AidocumentSite, AidocumentStaff, AidocumentVehicle} from '@prisma/client'
+import {Prisma, AidocumentSite, AidocumentStaff, AidocumentVehicle} from '@prisma/generated/prisma/client'
 
 export async function POST(request: NextRequest) {
   try {

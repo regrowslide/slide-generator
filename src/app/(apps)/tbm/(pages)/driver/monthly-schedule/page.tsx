@@ -75,6 +75,7 @@ export default function MonthlySchedulePage() {
 
           // 月間運行データを取得
           const data = await fetchUnkoMeisaiData({
+            firstDayOfMonth: startDate,
             allowNonApprovedSchedule: true,
             whereQuery,
             tbmBaseId,

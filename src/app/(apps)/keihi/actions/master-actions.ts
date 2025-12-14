@@ -1,6 +1,6 @@
 'use server'
 
-import {KeihiOptionMaster} from '@prisma/client'
+import {KeihiOptionMaster} from '@prisma/generated/prisma/client'
 
 import prisma from 'src/lib/prisma'
 

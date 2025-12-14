@@ -1,22 +1,24 @@
 'use client'
-import {getKyuyoTableList, KyuyoRecord} from '@app/(apps)/tbm/(server-actions)/getKyuyoTableList'
-import {NumHandler} from '@cm/class/NumHandler'
+import { getKyuyoTableList, KyuyoRecord } from '@app/(apps)/tbm/(server-actions)/getKyuyoTableList'
+import { NumHandler } from '@cm/class/NumHandler'
 
-import {FitMargin} from '@cm/components/styles/common-components/common-components'
-import {CsvTable} from '@cm/components/styles/common-components/CsvTable/CsvTable'
+import { FitMargin } from '@cm/components/styles/common-components/common-components'
+import { CsvTable } from '@cm/components/styles/common-components/CsvTable/CsvTable'
 import NewDateSwitcher from '@cm/components/utils/dates/DateSwitcher/NewDateSwitcher'
 
-import {createUpdate} from '@cm/lib/methods/createUpdate'
-import {doStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
+import { createUpdate } from '@cm/lib/methods/createUpdate'
+import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
 
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 
 const InlineInputKey = [`P_Other1`, `Q_Other2`, `S_Shokuhi`, `T_MaebaraiKin`, `AD_Rate`]
 export default function KyuyoCC(props) {
-  const {yearMonth, whereQuery, tbmBaseId, TbmBase_MonthConfig} = props
+  const { yearMonth, whereQuery, tbmBaseId, TbmBase_MonthConfig } = props
   const [kyuyoTableList, setkyuyoTableList] = useState<KyuyoRecord[]>([])
   const initFetch = async () => {
-    const {kyuyoTableList: data} = await getKyuyoTableList({whereQuery, tbmBaseId})
+    const { kyuyoTableList: data } = await getKyuyoTableList({
+      firstDayOfMonth: whereQuery.gte, whereQuery, tbmBaseId
+    })
 
     setkyuyoTableList(data)
   }
@@ -27,10 +29,10 @@ export default function KyuyoCC(props) {
 
   return (
     <FitMargin className={`pt-4`}>
-      <NewDateSwitcher {...{monthOnly: true}} />
+      <NewDateSwitcher {...{ monthOnly: true }} />
       {CsvTable({
         records: kyuyoTableList.map(item => {
-          const {keyValue, user} = item
+          const { keyValue, user } = item
 
           return {
             csvTableRow: Object.keys(keyValue).map(key => {
@@ -71,7 +73,7 @@ export default function KyuyoCC(props) {
   )
 }
 
-const Input = ({yearMonth, user, dataKey, value, initFetch}) => {
+const Input = ({ yearMonth, user, dataKey, value, initFetch }) => {
   const onInput = async e => {
     const value = e.target.value
 
@@ -80,8 +82,8 @@ const Input = ({yearMonth, user, dataKey, value, initFetch}) => {
       userId: user.id,
     }
     await doStandardPrisma(`kyuyoTableRecord`, `upsert`, {
-      where: {unique_userId_yearMonth},
-      ...createUpdate({...unique_userId_yearMonth, [dataKey]: Number(value)}),
+      where: { unique_userId_yearMonth },
+      ...createUpdate({ ...unique_userId_yearMonth, [dataKey]: Number(value) }),
     })
 
     initFetch()
