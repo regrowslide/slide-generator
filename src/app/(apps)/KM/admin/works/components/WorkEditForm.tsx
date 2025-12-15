@@ -97,7 +97,7 @@ export const WorkEditForm = ({ work, clients, onClose, isNew = false }: WorkEdit
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="flex flex-col h-full">
+      <form onSubmit={handleSubmit} className="flex flex-col h-full w-[1000px] text-sm">
         {/* ヘッダー */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
           <h2 className="text-lg font-bold text-gray-900">
@@ -112,13 +112,7 @@ export const WorkEditForm = ({ work, clients, onClose, isNew = false }: WorkEdit
               <Eye className="h-4 w-4" />
               プレビュー
             </button>
-            <button
-              type="button"
-              onClick={onClose}
-              className="p-2 text-gray-500 hover:text-gray-700"
-            >
-              <X className="h-5 w-5" />
-            </button>
+
           </div>
         </div>
 

@@ -69,6 +69,11 @@ export const ModelName = {
   CounselingClient: 'CounselingClient',
   CounselingReservation: 'CounselingReservation',
   CounselingSlot: 'CounselingSlot',
+  HakobunClient: 'HakobunClient',
+  HakobunCategory: 'HakobunCategory',
+  HakobunCorrection: 'HakobunCorrection',
+  HakobunRule: 'HakobunRule',
+  HakobunVoice: 'HakobunVoice',
   KeihiExpense: 'KeihiExpense',
   KeihiAttachment: 'KeihiAttachment',
   KeihiAccountMaster: 'KeihiAccountMaster',
@@ -460,6 +465,78 @@ export const CounselingSlotScalarFieldEnum = {
 } as const
 
 export type CounselingSlotScalarFieldEnum = (typeof CounselingSlotScalarFieldEnum)[keyof typeof CounselingSlotScalarFieldEnum]
+
+
+export const HakobunClientScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  clientId: 'clientId',
+  name: 'name'
+} as const
+
+export type HakobunClientScalarFieldEnum = (typeof HakobunClientScalarFieldEnum)[keyof typeof HakobunClientScalarFieldEnum]
+
+
+export const HakobunCategoryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  categoryCode: 'categoryCode',
+  generalCategory: 'generalCategory',
+  specificCategory: 'specificCategory',
+  description: 'description',
+  hakobunClientId: 'hakobunClientId'
+} as const
+
+export type HakobunCategoryScalarFieldEnum = (typeof HakobunCategoryScalarFieldEnum)[keyof typeof HakobunCategoryScalarFieldEnum]
+
+
+export const HakobunCorrectionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  rawSegment: 'rawSegment',
+  correctCategoryCode: 'correctCategoryCode',
+  sentiment: 'sentiment',
+  reviewerComment: 'reviewerComment',
+  archived: 'archived',
+  hakobunClientId: 'hakobunClientId'
+} as const
+
+export type HakobunCorrectionScalarFieldEnum = (typeof HakobunCorrectionScalarFieldEnum)[keyof typeof HakobunCorrectionScalarFieldEnum]
+
+
+export const HakobunRuleScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  targetCategory: 'targetCategory',
+  ruleDescription: 'ruleDescription',
+  priority: 'priority',
+  hakobunClientId: 'hakobunClientId'
+} as const
+
+export type HakobunRuleScalarFieldEnum = (typeof HakobunRuleScalarFieldEnum)[keyof typeof HakobunRuleScalarFieldEnum]
+
+
+export const HakobunVoiceScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  voiceId: 'voiceId',
+  rawText: 'rawText',
+  processedAt: 'processedAt',
+  resultJson: 'resultJson',
+  hakobunClientId: 'hakobunClientId'
+} as const
+
+export type HakobunVoiceScalarFieldEnum = (typeof HakobunVoiceScalarFieldEnum)[keyof typeof HakobunVoiceScalarFieldEnum]
 
 
 export const KeihiExpenseScalarFieldEnum = {

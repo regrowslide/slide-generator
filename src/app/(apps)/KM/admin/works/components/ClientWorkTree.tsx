@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   ChevronDown,
   ChevronRight,
@@ -23,6 +24,7 @@ interface ClientWorkTreeProps {
   works: any[]
   selectedWorkId: number | null
   onSelectWork: (id: number | null) => void
+  onWorksUpdate?: (works: any[]) => void
 }
 
 export const ClientWorkTree = ({
@@ -30,7 +32,9 @@ export const ClientWorkTree = ({
   works,
   selectedWorkId,
   onSelectWork,
+  onWorksUpdate,
 }: ClientWorkTreeProps) => {
+  const router = useRouter()
   const [expandedClients, setExpandedClients] = useState<Set<number>>(new Set())
   const [editingWork, setEditingWork] = useState<any | null>(null)
   const [showPreview, setShowPreview] = useState(false)
@@ -114,11 +118,28 @@ export const ClientWorkTree = ({
     }
 
     // サーバーに送信
-    await updateWorkSortOrder(newSortOrders, draggedWorkId, targetClientId)
+    const result = await updateWorkSortOrder(newSortOrders, draggedWorkId, targetClientId)
     setDraggedWorkId(null)
 
-    // ページをリロードして反映
-    window.location.reload()
+    if (result.success) {
+      // stateを更新して反映
+      const updatedWorks = works.map(work => {
+        const updated = newSortOrders.find(so => so.id === work.id)
+        if (updated) {
+          const updatedWork = { ...work, sortOrder: updated.sortOrder }
+          // クライアントIDも更新
+          if (work.id === draggedWorkId && draggedWork.kaizenClientId !== targetClientId) {
+            updatedWork.kaizenClientId = targetClientId
+          }
+          return updatedWork
+        }
+        return work
+      })
+
+      // sortOrderでソート
+      updatedWorks.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
+      onWorksUpdate?.(updatedWorks)
+    }
   }
 
   const toggleClient = (clientId: number) => {
@@ -277,7 +298,10 @@ export const ClientWorkTree = ({
             <WorkEditForm
               work={editingWork}
               clients={clients}
-              onClose={() => setEditingWork(null)}
+              onClose={() => {
+                setEditingWork(null)
+                router.refresh()
+              }}
             />
           </div>
         </div>
@@ -290,7 +314,10 @@ export const ClientWorkTree = ({
             <WorkEditForm
               work={{ kaizenClientId: creatingForClient }}
               clients={clients}
-              onClose={() => setCreatingForClient(null)}
+              onClose={() => {
+                setCreatingForClient(null)
+                router.refresh()
+              }}
               isNew
             />
           </div>
@@ -309,7 +336,7 @@ export const ClientWorkTree = ({
             <ClientEditForm
               client={editingClient}
               onClose={() => setEditingClient(null)}
-              onSuccess={() => window.location.reload()}
+              onSuccess={() => router.refresh()}
             />
           </div>
         </div>
@@ -360,7 +387,7 @@ const WorkTreeItem = ({
       className={`flex items-center gap-2 px-3 py-2 rounded cursor-pointer transition-colors ${isSelected ? 'bg-blue-100 border-l-4 border-blue-600' : isDraggedOver ? 'bg-blue-50 border-l-4 border-blue-400' : 'hover:bg-gray-100'
         } ${isDragging ? 'opacity-50' : ''}`}
     >
-      <GripVertical className="h-5 w-5 text-gray-500 flex-shrink-0 cursor-move hover:text-gray-700" />
+      <GripVertical className="h-5 w-5 text-gray-500 flex-shrink-0 cursor-move hover:text-gray-700 transition-colors" />
       <FileText className="h-4 w-4 text-gray-400 flex-shrink-0" />
       <div className="flex-1 min-w-0">
         <div className="text-sm font-medium text-gray-900 truncate">{work.title || '無題'}</div>

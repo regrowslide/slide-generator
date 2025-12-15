@@ -20,7 +20,7 @@ export default async function WorksAdminPage() {
   })
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className=" bg-gray-100">
       <WorksAdminCC clients={clients} works={works} />
     </div>
   )

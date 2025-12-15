@@ -191,7 +191,11 @@ function buildSystemPrompt(
 ): string {
   const categoryList =
     categories.length > 0
-      ? categories.map(c => `${c.categoryCode}: ${c.generalCategory} > ${c.specificCategory}${c.description ? ` (${c.description})` : ''}`).join('\n')
+      ? categories
+          .map(
+            c => `${c.categoryCode}: ${c.generalCategory} > ${c.specificCategory}${c.description ? ` (${c.description})` : ''}`
+          )
+          .join('\n')
       : '（カテゴリマスターが未登録です。適切なカテゴリを生成してください）'
 
   const ruleList =
@@ -201,7 +205,10 @@ function buildSystemPrompt(
 
   const correctionList =
     corrections.length > 0
-      ? corrections.slice(0, 20).map(c => `入力「${c.rawSegment}」→ ${c.correctCategoryCode} (${c.sentiment})`).join('\n')
+      ? corrections
+          .slice(0, 20)
+          .map(c => `入力「${c.rawSegment}」→ ${c.correctCategoryCode} (${c.sentiment})`)
+          .join('\n')
       : '（修正事例がまだありません）'
 
   return `あなたは顧客の声分析の専門家です。お客様からのフィードバックテキストを分析し、構造化されたJSONデータを生成してください。

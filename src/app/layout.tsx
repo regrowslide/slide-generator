@@ -30,7 +30,7 @@ export default async function AppRootLayout(props) {
         <Suspense>
           <AppRootProvider {...{ session }}>
             <GlobalToast></GlobalToast>
-            <div className={`w-screen overflow-hidden`}>{props.children}</div>
+            <div className={`max-w-screen overflow-hidden`}>{props.children}</div>
           </AppRootProvider>
         </Suspense>
       </body>

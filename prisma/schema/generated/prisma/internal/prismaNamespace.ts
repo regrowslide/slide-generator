@@ -402,6 +402,11 @@ export const ModelName = {
   CounselingClient: 'CounselingClient',
   CounselingReservation: 'CounselingReservation',
   CounselingSlot: 'CounselingSlot',
+  HakobunClient: 'HakobunClient',
+  HakobunCategory: 'HakobunCategory',
+  HakobunCorrection: 'HakobunCorrection',
+  HakobunRule: 'HakobunRule',
+  HakobunVoice: 'HakobunVoice',
   KeihiExpense: 'KeihiExpense',
   KeihiAttachment: 'KeihiAttachment',
   KeihiAccountMaster: 'KeihiAccountMaster',
@@ -493,7 +498,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "keihiExpense" | "keihiAttachment" | "keihiAccountMaster" | "keihiOptionMaster" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "stVehicle" | "stCustomer" | "stContact" | "stHoliday" | "stSchedule" | "stScheduleDriver" | "stRollCaller" | "stPublishSetting" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "stockConfig" | "stock" | "stockHistory" | "tbmBase" | "tbmRouteGroupCalendar" | "tbmKeihi" | "tbmDriveScheduleImage" | "tbmBase_MonthConfig" | "tbmVehicle" | "tbmFuelCard" | "tbmVehicleMaintenanceRecord" | "tbmRouteGroup" | "tbmRouteGroupFee" | "tbmMonthlyConfigForRouteGroup" | "mid_TbmRouteGroup_TbmCustomer" | "tbmBillingAddress" | "tbmInvoiceDetail" | "tbmCustomer" | "tbmInvoiceManualEdit" | "tbmRefuelHistory" | "tbmCarWashHistory" | "tbmDriveSchedule" | "tbmEtcMeisai" | "etcCsvRaw" | "odometerInput" | "userWorkStatus" | "kyuyoTableRecord" | "tbmRouteGroupShare" | "tbmRelatedRouteGroup" | "teamSynapseAnalysis" | "exerciseMaster" | "workoutLog"
+    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "hakobunClient" | "hakobunCategory" | "hakobunCorrection" | "hakobunRule" | "hakobunVoice" | "keihiExpense" | "keihiAttachment" | "keihiAccountMaster" | "keihiOptionMaster" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "stVehicle" | "stCustomer" | "stContact" | "stHoliday" | "stSchedule" | "stScheduleDriver" | "stRollCaller" | "stPublishSetting" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "stockConfig" | "stock" | "stockHistory" | "tbmBase" | "tbmRouteGroupCalendar" | "tbmKeihi" | "tbmDriveScheduleImage" | "tbmBase_MonthConfig" | "tbmVehicle" | "tbmFuelCard" | "tbmVehicleMaintenanceRecord" | "tbmRouteGroup" | "tbmRouteGroupFee" | "tbmMonthlyConfigForRouteGroup" | "mid_TbmRouteGroup_TbmCustomer" | "tbmBillingAddress" | "tbmInvoiceDetail" | "tbmCustomer" | "tbmInvoiceManualEdit" | "tbmRefuelHistory" | "tbmCarWashHistory" | "tbmDriveSchedule" | "tbmEtcMeisai" | "etcCsvRaw" | "odometerInput" | "userWorkStatus" | "kyuyoTableRecord" | "tbmRouteGroupShare" | "tbmRelatedRouteGroup" | "teamSynapseAnalysis" | "exerciseMaster" | "workoutLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1826,6 +1831,376 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CounselingSlotCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CounselingSlotCountAggregateOutputType> | number
+        }
+      }
+    }
+    HakobunClient: {
+      payload: Prisma.$HakobunClientPayload<ExtArgs>
+      fields: Prisma.HakobunClientFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HakobunClientFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunClientPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HakobunClientFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunClientPayload>
+        }
+        findFirst: {
+          args: Prisma.HakobunClientFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunClientPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HakobunClientFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunClientPayload>
+        }
+        findMany: {
+          args: Prisma.HakobunClientFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunClientPayload>[]
+        }
+        create: {
+          args: Prisma.HakobunClientCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunClientPayload>
+        }
+        createMany: {
+          args: Prisma.HakobunClientCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HakobunClientCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunClientPayload>[]
+        }
+        delete: {
+          args: Prisma.HakobunClientDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunClientPayload>
+        }
+        update: {
+          args: Prisma.HakobunClientUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunClientPayload>
+        }
+        deleteMany: {
+          args: Prisma.HakobunClientDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HakobunClientUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HakobunClientUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunClientPayload>[]
+        }
+        upsert: {
+          args: Prisma.HakobunClientUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunClientPayload>
+        }
+        aggregate: {
+          args: Prisma.HakobunClientAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHakobunClient>
+        }
+        groupBy: {
+          args: Prisma.HakobunClientGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HakobunClientGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HakobunClientCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HakobunClientCountAggregateOutputType> | number
+        }
+      }
+    }
+    HakobunCategory: {
+      payload: Prisma.$HakobunCategoryPayload<ExtArgs>
+      fields: Prisma.HakobunCategoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HakobunCategoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCategoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HakobunCategoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCategoryPayload>
+        }
+        findFirst: {
+          args: Prisma.HakobunCategoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCategoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HakobunCategoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCategoryPayload>
+        }
+        findMany: {
+          args: Prisma.HakobunCategoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCategoryPayload>[]
+        }
+        create: {
+          args: Prisma.HakobunCategoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCategoryPayload>
+        }
+        createMany: {
+          args: Prisma.HakobunCategoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HakobunCategoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCategoryPayload>[]
+        }
+        delete: {
+          args: Prisma.HakobunCategoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCategoryPayload>
+        }
+        update: {
+          args: Prisma.HakobunCategoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCategoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.HakobunCategoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HakobunCategoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HakobunCategoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCategoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.HakobunCategoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCategoryPayload>
+        }
+        aggregate: {
+          args: Prisma.HakobunCategoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHakobunCategory>
+        }
+        groupBy: {
+          args: Prisma.HakobunCategoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HakobunCategoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HakobunCategoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HakobunCategoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    HakobunCorrection: {
+      payload: Prisma.$HakobunCorrectionPayload<ExtArgs>
+      fields: Prisma.HakobunCorrectionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HakobunCorrectionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCorrectionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HakobunCorrectionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCorrectionPayload>
+        }
+        findFirst: {
+          args: Prisma.HakobunCorrectionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCorrectionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HakobunCorrectionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCorrectionPayload>
+        }
+        findMany: {
+          args: Prisma.HakobunCorrectionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCorrectionPayload>[]
+        }
+        create: {
+          args: Prisma.HakobunCorrectionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCorrectionPayload>
+        }
+        createMany: {
+          args: Prisma.HakobunCorrectionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HakobunCorrectionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCorrectionPayload>[]
+        }
+        delete: {
+          args: Prisma.HakobunCorrectionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCorrectionPayload>
+        }
+        update: {
+          args: Prisma.HakobunCorrectionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCorrectionPayload>
+        }
+        deleteMany: {
+          args: Prisma.HakobunCorrectionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HakobunCorrectionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HakobunCorrectionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCorrectionPayload>[]
+        }
+        upsert: {
+          args: Prisma.HakobunCorrectionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunCorrectionPayload>
+        }
+        aggregate: {
+          args: Prisma.HakobunCorrectionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHakobunCorrection>
+        }
+        groupBy: {
+          args: Prisma.HakobunCorrectionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HakobunCorrectionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HakobunCorrectionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HakobunCorrectionCountAggregateOutputType> | number
+        }
+      }
+    }
+    HakobunRule: {
+      payload: Prisma.$HakobunRulePayload<ExtArgs>
+      fields: Prisma.HakobunRuleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HakobunRuleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunRulePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HakobunRuleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunRulePayload>
+        }
+        findFirst: {
+          args: Prisma.HakobunRuleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunRulePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HakobunRuleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunRulePayload>
+        }
+        findMany: {
+          args: Prisma.HakobunRuleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunRulePayload>[]
+        }
+        create: {
+          args: Prisma.HakobunRuleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunRulePayload>
+        }
+        createMany: {
+          args: Prisma.HakobunRuleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HakobunRuleCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunRulePayload>[]
+        }
+        delete: {
+          args: Prisma.HakobunRuleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunRulePayload>
+        }
+        update: {
+          args: Prisma.HakobunRuleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunRulePayload>
+        }
+        deleteMany: {
+          args: Prisma.HakobunRuleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HakobunRuleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HakobunRuleUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunRulePayload>[]
+        }
+        upsert: {
+          args: Prisma.HakobunRuleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunRulePayload>
+        }
+        aggregate: {
+          args: Prisma.HakobunRuleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHakobunRule>
+        }
+        groupBy: {
+          args: Prisma.HakobunRuleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HakobunRuleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HakobunRuleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HakobunRuleCountAggregateOutputType> | number
+        }
+      }
+    }
+    HakobunVoice: {
+      payload: Prisma.$HakobunVoicePayload<ExtArgs>
+      fields: Prisma.HakobunVoiceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HakobunVoiceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunVoicePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HakobunVoiceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunVoicePayload>
+        }
+        findFirst: {
+          args: Prisma.HakobunVoiceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunVoicePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HakobunVoiceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunVoicePayload>
+        }
+        findMany: {
+          args: Prisma.HakobunVoiceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunVoicePayload>[]
+        }
+        create: {
+          args: Prisma.HakobunVoiceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunVoicePayload>
+        }
+        createMany: {
+          args: Prisma.HakobunVoiceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HakobunVoiceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunVoicePayload>[]
+        }
+        delete: {
+          args: Prisma.HakobunVoiceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunVoicePayload>
+        }
+        update: {
+          args: Prisma.HakobunVoiceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunVoicePayload>
+        }
+        deleteMany: {
+          args: Prisma.HakobunVoiceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HakobunVoiceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HakobunVoiceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunVoicePayload>[]
+        }
+        upsert: {
+          args: Prisma.HakobunVoiceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunVoicePayload>
+        }
+        aggregate: {
+          args: Prisma.HakobunVoiceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHakobunVoice>
+        }
+        groupBy: {
+          args: Prisma.HakobunVoiceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HakobunVoiceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HakobunVoiceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HakobunVoiceCountAggregateOutputType> | number
         }
       }
     }
@@ -7791,6 +8166,78 @@ export const CounselingSlotScalarFieldEnum = {
 export type CounselingSlotScalarFieldEnum = (typeof CounselingSlotScalarFieldEnum)[keyof typeof CounselingSlotScalarFieldEnum]
 
 
+export const HakobunClientScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  clientId: 'clientId',
+  name: 'name'
+} as const
+
+export type HakobunClientScalarFieldEnum = (typeof HakobunClientScalarFieldEnum)[keyof typeof HakobunClientScalarFieldEnum]
+
+
+export const HakobunCategoryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  categoryCode: 'categoryCode',
+  generalCategory: 'generalCategory',
+  specificCategory: 'specificCategory',
+  description: 'description',
+  hakobunClientId: 'hakobunClientId'
+} as const
+
+export type HakobunCategoryScalarFieldEnum = (typeof HakobunCategoryScalarFieldEnum)[keyof typeof HakobunCategoryScalarFieldEnum]
+
+
+export const HakobunCorrectionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  rawSegment: 'rawSegment',
+  correctCategoryCode: 'correctCategoryCode',
+  sentiment: 'sentiment',
+  reviewerComment: 'reviewerComment',
+  archived: 'archived',
+  hakobunClientId: 'hakobunClientId'
+} as const
+
+export type HakobunCorrectionScalarFieldEnum = (typeof HakobunCorrectionScalarFieldEnum)[keyof typeof HakobunCorrectionScalarFieldEnum]
+
+
+export const HakobunRuleScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  targetCategory: 'targetCategory',
+  ruleDescription: 'ruleDescription',
+  priority: 'priority',
+  hakobunClientId: 'hakobunClientId'
+} as const
+
+export type HakobunRuleScalarFieldEnum = (typeof HakobunRuleScalarFieldEnum)[keyof typeof HakobunRuleScalarFieldEnum]
+
+
+export const HakobunVoiceScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  voiceId: 'voiceId',
+  rawText: 'rawText',
+  processedAt: 'processedAt',
+  resultJson: 'resultJson',
+  hakobunClientId: 'hakobunClientId'
+} as const
+
+export type HakobunVoiceScalarFieldEnum = (typeof HakobunVoiceScalarFieldEnum)[keyof typeof HakobunVoiceScalarFieldEnum]
+
+
 export const KeihiExpenseScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -9358,6 +9805,11 @@ export type GlobalOmitConfig = {
   counselingClient?: Prisma.CounselingClientOmit
   counselingReservation?: Prisma.CounselingReservationOmit
   counselingSlot?: Prisma.CounselingSlotOmit
+  hakobunClient?: Prisma.HakobunClientOmit
+  hakobunCategory?: Prisma.HakobunCategoryOmit
+  hakobunCorrection?: Prisma.HakobunCorrectionOmit
+  hakobunRule?: Prisma.HakobunRuleOmit
+  hakobunVoice?: Prisma.HakobunVoiceOmit
   keihiExpense?: Prisma.KeihiExpenseOmit
   keihiAttachment?: Prisma.KeihiAttachmentOmit
   keihiAccountMaster?: Prisma.KeihiAccountMasterOmit

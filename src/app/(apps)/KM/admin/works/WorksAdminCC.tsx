@@ -5,6 +5,7 @@ import { FolderTree, Table, PlusCircle, Settings } from 'lucide-react'
 import { ClientWorkTree } from './components/ClientWorkTree'
 import { BulkEditPanel } from './components/BulkEditPanel'
 import { WorkEditForm } from './components/WorkEditForm'
+import { useJotaiByKey } from '@cm/hooks/useJotai'
 
 type TabId = 'tree' | 'table' | 'create'
 
@@ -25,14 +26,20 @@ interface WorksAdminCCProps {
   works: any[]
 }
 
-export const WorksAdminCC = ({ clients, works }: WorksAdminCCProps) => {
-  const [activeTab, setActiveTab] = useState<TabId>('tree')
+export const WorksAdminCC = ({ clients, works: initialWorks }: WorksAdminCCProps) => {
+  const [activeTab, setActiveTab] = useJotaiByKey<TabId>('worksAdminCC.activeTab', 'tree')
   const [selectedWorkId, setSelectedWorkId] = useState<number | null>(null)
+  const [works, setWorks] = useState(initialWorks)
 
   const selectedWork = works.find(w => w.id === selectedWorkId) || null
 
+  // worksの並び順を更新する関数
+  const handleWorksUpdate = (updatedWorks: any[]) => {
+    setWorks(updatedWorks)
+  }
+
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col  ">
       {/* ヘッダー */}
       <header className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white shadow-lg">
         <div className="px-4 py-4 sm:px-6 lg:px-8">
@@ -48,15 +55,15 @@ export const WorksAdminCC = ({ clients, works }: WorksAdminCCProps) => {
         </div>
 
         {/* タブナビゲーション */}
-        <div className="px-4 sm:px-6 lg:px-8">
+        <div className="px-4 sm:px-6 lg:px-8 ">
           <nav className="flex gap-1">
             {tabs.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 px-4 py-3 text-sm font-medium rounded-t-lg transition-colors ${activeTab === tab.id
-                    ? 'bg-white text-blue-900'
-                    : 'text-blue-200 hover:text-white hover:bg-blue-700/50'
+                  ? 'bg-white text-blue-900'
+                  : 'text-blue-200 hover:text-white hover:bg-blue-700/50'
                   }`}
               >
                 {tab.icon}
@@ -68,18 +75,19 @@ export const WorksAdminCC = ({ clients, works }: WorksAdminCCProps) => {
       </header>
 
       {/* メインコンテンツ */}
-      <main className="flex-1 overflow-hidden bg-white">
+      <main className="flex-1 overflow-hidden  bg-white p-2">
         {activeTab === 'tree' && (
           <ClientWorkTree
             clients={clients}
             works={works}
             selectedWorkId={selectedWorkId}
             onSelectWork={setSelectedWorkId}
+            onWorksUpdate={handleWorksUpdate}
           />
         )}
 
         {activeTab === 'table' && (
-          <BulkEditPanel clients={clients} works={works} />
+          <BulkEditPanel clients={clients} works={works} onWorksUpdate={handleWorksUpdate} />
         )}
 
         {activeTab === 'create' && (

@@ -1,15 +1,15 @@
-import {PageBuilder} from '../(builders)/PageBuilder'
+import { PageBuilder } from '../(builders)/PageBuilder'
 import Admin from '@cm/components/layout/Admin/Admin'
 
 export default async function AppLayout(props) {
-  const {children} = props
+  const { children } = props
 
   return (
     <Admin
       {...{
-        AppName: 'テストアプリ',
+        AppName: '顧客の声分析',
         PagesMethod: 'Advantage_PAGES',
-        PageBuilderGetter: {class: PageBuilder, getter: 'getGlobalIdSelector'},
+        PageBuilderGetter: { class: PageBuilder, getter: 'getGlobalIdSelector' },
       }}
     >
       <div>
