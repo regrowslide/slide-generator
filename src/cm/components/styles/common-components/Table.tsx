@@ -1,25 +1,29 @@
 import {NumHandler} from '@cm/class/NumHandler'
 import {htmlProps} from '@cm/types/utility-types'
 import {cn} from '@shadcn/lib/utils'
+import React from 'react'
 
-export const TableWrapper = (props: any & {className?: string; children: React.ReactNode}) => {
-  const {className, children, useOriginalWrapperClass, ...rest} = props
+export const TableWrapper = React.forwardRef<HTMLDivElement, any & {className?: string; children: React.ReactNode}>(
+  (props, ref) => {
+    const {className, children, useOriginalWrapperClass, ...rest} = props
 
-  return (
-    <div
-      {...{
-        className: cn(
-          //
-          className,
-          useOriginalWrapperClass ? '' : `table-wrapper overflow-auto border-collapse w-fit  h-fit `
-        ),
-        ...rest,
-      }}
-    >
-      {children}
-    </div>
-  )
-}
+    return (
+      <div
+        {...{
+          ref,
+          className: cn(
+            //
+            className,
+            useOriginalWrapperClass ? '' : `table-wrapper overflow-auto border-collapse w-fit  h-fit `
+          ),
+          ...rest,
+        }}
+      >
+        {children}
+      </div>
+    )
+  }
+)
 
 export const TableBordered = (props: htmlProps & {size?: `sm` | `base` | `lg` | `xl`}) => {
   const {className, style, children, size = `base`, ...rest} = props

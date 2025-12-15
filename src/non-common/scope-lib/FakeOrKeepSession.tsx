@@ -1,14 +1,15 @@
-import {StrHandler} from '@cm/class/StrHandler'
-import {fetchAlt} from '@cm/lib/http/fetch-client'
+import { StrHandler } from '@cm/class/StrHandler'
+import { fetchAlt } from '@cm/lib/http/fetch-client'
 
-import {basePath} from '@cm/lib/methods/common'
-import {getSchema} from '@cm/lib/methods/prisma-schema'
-import {getScopes} from 'src/non-common/scope-lib/getScopes'
-import {SessionFaker} from 'src/non-common/SessionFaker'
+import { basePath } from '@cm/lib/methods/common'
+import { getSchema } from '@cm/lib/methods/prisma-schema'
+import { getScopes } from 'src/non-common/scope-lib/getScopes'
+import { SessionFaker } from 'src/non-common/SessionFaker'
 
-export const FakeOrKeepSession = async ({query, realSession}) => {
-  const tempScopes = getScopes(realSession, {query})
+export const FakeOrKeepSession = async ({ query, realSession }) => {
+  const tempScopes = getScopes(realSession, { query })
   const globalUserId = tempScopes.getGlobalUserId()
+
   // const globalKeys = Object.keys(query ?? {}).filter(key => key.includes('g_'))
 
   // const models = globalKeys.map(key => key.replace(/g_|Id/g, ''))
@@ -18,24 +19,26 @@ export const FakeOrKeepSession = async ({query, realSession}) => {
   let fakeUser: any = null
 
   for (let i = 0; i < models.length; i++) {
-    const {name: modelName, id_pw} = models[i]
+    const { name: modelName, id_pw } = models[i]
 
     const isValidModel = schema[StrHandler.capitalizeFirstLetter(modelName)]
 
     if (!isValidModel) continue
 
+
     const payload = {
       model: modelName,
       method: `findUnique`,
       queryObject: {
-        where: {id: Number(globalUserId ?? 0)},
+        where: { id: Number(globalUserId ?? 0) },
       },
       fetchKey: 'middleware fetching',
     }
 
     if (fakeUser === null && !!globalUserId) {
       const res = await fetchAlt(`${basePath}/api/prisma/universal`, payload)
-      const {result: data} = res ?? {}
+      const { result: data } = res ?? {}
+
       fakeUser = data
       // return data
       continue
@@ -68,7 +71,7 @@ export const FakeOrKeepSession = async ({query, realSession}) => {
   // )
   // fakeUser = getFakeUsers.find(u => u)
 
-  const result = {...(fakeUser ?? realSession), role: realSession?.role}
+  const result = { ...(fakeUser ?? realSession), role: realSession?.role }
 
   // return {...result, ...(tempScopes?.admin ? {role: '管理者'} : {})}
   return result

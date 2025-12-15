@@ -27,6 +27,9 @@ type Props = {
   allUsers: { id: number; name: string }[]
   initialMonth: Date
   numDays: number
+  canEdit: boolean
+  isSystemAdmin: boolean
+  publishEndDate: Date | null
 }
 
 // 日付操作ユーティリティ
@@ -60,7 +63,7 @@ const parseLocalDate = (dateStr: string): Date => {
   return new Date(year, month - 1, day, 0, 0, 0)
 }
 
-export const ScheduleCC = ({ vehicles, customers, drivers, holidays, allUsers, initialMonth, numDays }: Props) => {
+export const ScheduleCC = ({ vehicles, customers, drivers, holidays, allUsers, initialMonth, numDays, canEdit, isSystemAdmin, publishEndDate }: Props) => {
   const { toggleLoad, addQuery } = useGlobal()
 
   // 表示期間 (URLから初期値を取得)
@@ -81,7 +84,7 @@ export const ScheduleCC = ({ vehicles, customers, drivers, holidays, allUsers, i
   // スケジュールデータ取得
   const endDate = addDays(startDate, numDays - 1)
   const { data: scheduleData, mutate: mutateSchedules } = useSWR(
-    ['stSchedules', startDate.toISOString(), endDate.toISOString()],
+    ['stSchedules', startDate.toISOString(), endDate.toISOString(), isSystemAdmin],
     async () => {
       const schedules = await getStSchedules({
         where: {
@@ -89,6 +92,8 @@ export const ScheduleCC = ({ vehicles, customers, drivers, holidays, allUsers, i
           dateTo: endDate,
           deleted: false,
         },
+        isSystemAdmin,
+        publishEndDate,
       })
       return schedules
     }
@@ -122,13 +127,15 @@ export const ScheduleCC = ({ vehicles, customers, drivers, holidays, allUsers, i
     [drivers]
   )
 
-  // スケジュール編集
+  // スケジュール編集（編集権限がある場合のみ）
   const handleEditSchedule = (schedule: StScheduleWithRelations) => {
+    if (!canEdit) return
     ScheduleModalReturn.handleOpen({ schedule })
   }
 
-  // 新規スケジュール
+  // 新規スケジュール（編集権限がある場合のみ）
   const handleNewSchedule = (date: Date, vehicleId: number) => {
+    if (!canEdit) return
     ScheduleModalReturn.handleOpen({
       schedule: {
         date,
@@ -139,6 +146,7 @@ export const ScheduleCC = ({ vehicles, customers, drivers, holidays, allUsers, i
 
   // スケジュール保存
   const handleSaveSchedule = async (data: ScheduleFormData) => {
+
     await toggleLoad(async () => {
       await upsertStSchedule({
         id: data.id,
@@ -160,16 +168,18 @@ export const ScheduleCC = ({ vehicles, customers, drivers, holidays, allUsers, i
     ScheduleModalReturn.handleClose()
   }
 
-  // 点呼者更新
+  // 点呼者更新（編集権限がある場合のみ）
   const handleUpdateRollCaller = async (date: Date, userId: number) => {
+    if (!canEdit) return
     await toggleLoad(async () => {
       await upsertStRollCaller({ date, userId })
       await mutateRollCallers()
     })
   }
 
-  // コピー機能
+  // コピー機能（編集権限がある場合のみ）
   const handleCopyStart = (schedule: StScheduleWithRelations) => {
+    if (!canEdit) return
     setCopySource(schedule)
     setSelectedTargets(new Set())
   }
@@ -266,13 +276,19 @@ export const ScheduleCC = ({ vehicles, customers, drivers, holidays, allUsers, i
         </div>
         <div className="text-lg font-bold text-gray-800">{formatYearMonthDisplay(startDate)}</div>
         <div className="flex space-x-2">
-          <button
-            onClick={() => ScheduleModalReturn.handleOpen({ schedule: undefined })}
-            className="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 flex items-center"
-            disabled={!!copySource}
-          >
-            <Plus className="w-5 h-5 mr-1" /> 新規作成
-          </button>
+          {canEdit ? (
+            <button
+              onClick={() => ScheduleModalReturn.handleOpen({ schedule: undefined })}
+              className="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 flex items-center"
+              disabled={!!copySource}
+            >
+              <Plus className="w-5 h-5 mr-1" /> 新規作成
+            </button>
+          ) : (
+            <span className="px-4 py-2 rounded-lg bg-gray-200 text-gray-500 text-sm">
+              閲覧モード
+            </span>
+          )}
         </div>
       </div>
 
@@ -293,6 +309,7 @@ export const ScheduleCC = ({ vehicles, customers, drivers, holidays, allUsers, i
         selectedTargets={selectedTargets}
         onCopyTargetClick={handleCopyTargetClick}
         onCopyStart={handleCopyStart}
+        canEdit={canEdit}
       />
 
       {/* コピーモードコントローラー */}

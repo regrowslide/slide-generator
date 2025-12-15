@@ -1,6 +1,6 @@
 'use client'
 
-import {useEffect, useCallback} from 'react'
+import {useEffect, useLayoutEffect, useCallback, useRef} from 'react'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import {isServer} from '@cm/lib/methods/common'
 
@@ -9,26 +9,43 @@ interface UseElementScrollPositionProps {
   scrollKey?: string // オプションで特定のキーを指定可能
 }
 
-interface ScrollPosition {
-  value: number
-  timestamp: number
+interface ScrollPositionData {
+  top: number
+  left: number
 }
+
+// SSR対応: useLayoutEffectをクライアントのみで使用
+const useIsomorphicLayoutEffect = isServer ? useEffect : useLayoutEffect
 
 export const useElementScrollPosition = ({elementRef, scrollKey}: UseElementScrollPositionProps) => {
   const {pathname, searchParams} = useGlobal()
   const storageKey = `elementScroll_${scrollKey || ''}${pathname}${searchParams}`
 
-  const getScrollPosition = useCallback(() => {
+  // 最新のスクロール位置をrefで保持（再レンダリング間で維持）
+  const scrollPositionRef = useRef<ScrollPositionData>({top: 0, left: 0})
+
+  const getScrollPosition = useCallback((): ScrollPositionData | null => {
     if (isServer) return null
-    return sessionStorage.getItem(storageKey)
+    try {
+      const saved = sessionStorage.getItem(storageKey)
+      if (saved) {
+        return JSON.parse(saved)
+      }
+    } catch {
+      // 旧形式（数値のみ）の場合
+      const saved = sessionStorage.getItem(storageKey)
+      if (saved) {
+        return {top: parseInt(saved), left: 0}
+      }
+    }
+    return null
   }, [storageKey])
 
-  // セッションストレージのエラーハンドリングを追加
   const setScrollPosition = useCallback(
-    (scrollPosition: string) => {
+    (position: ScrollPositionData) => {
       if (isServer) return
       try {
-        sessionStorage.setItem(storageKey, scrollPosition)
+        sessionStorage.setItem(storageKey, JSON.stringify(position))
       } catch (error) {
         console.warn('Failed to save scroll position:', error)
       }
@@ -39,53 +56,56 @@ export const useElementScrollPosition = ({elementRef, scrollKey}: UseElementScro
   const saveScrollPosition = useCallback(() => {
     if (isServer || !elementRef.current) return
 
-    const start = performance.now()
-    const current = String(elementRef.current.scrollTop)
+    const top = elementRef.current.scrollTop
+    const left = elementRef.current.scrollLeft
 
-    if (current !== '0') {
-      setScrollPosition(current)
-    }
+    // refとsessionStorageの両方に保存
+    scrollPositionRef.current = {top, left}
 
-    const end = performance.now()
-    if (end - start > 16.67) {
-      console.warn('Element scroll position save took too long:', end - start)
+    if (top !== 0 || left !== 0) {
+      setScrollPosition({top, left})
     }
   }, [elementRef, setScrollPosition])
 
   const restoreScrollPosition = useCallback(() => {
     if (isServer || !elementRef.current) return
 
-    const tryRestore = (attempts = 0) => {
-      const current = String(elementRef.current?.scrollTop)
-      const savedPosition = getScrollPosition()
+    // まずrefから復元（最新の値）
+    const refPosition = scrollPositionRef.current
+    // sessionStorageからも取得（ページリロード対応）
+    const savedPosition = getScrollPosition()
 
-      if (current !== savedPosition && savedPosition) {
-        if (elementRef.current) {
-          elementRef.current.scrollTop = parseInt(savedPosition)
-        }
+    // refに値があればそれを優先、なければsessionStorageから
+    const position = refPosition.top !== 0 || refPosition.left !== 0 ? refPosition : savedPosition
 
-        if (attempts < 2) {
-          setTimeout(() => tryRestore(attempts + 1), 100)
-        }
-      }
+    if (position && (position.top !== 0 || position.left !== 0)) {
+      elementRef.current.scrollTop = position.top
+      elementRef.current.scrollLeft = position.left
     }
-
-    tryRestore()
   }, [elementRef, getScrollPosition])
 
+  // 再レンダリング毎にスクロール位置を即座に復元（ペイント前）
+  useIsomorphicLayoutEffect(() => {
+    restoreScrollPosition()
+  })
+
+  // スクロールイベントリスナーの設定
   useEffect(() => {
     if (isServer || !elementRef.current) return
 
     const element = elementRef.current
     const handleScroll = () => requestAnimationFrame(saveScrollPosition)
 
-    saveScrollPosition()
-    restoreScrollPosition()
+    // 初回マウント時にsessionStorageから復元
+    const savedPosition = getScrollPosition()
+    if (savedPosition) {
+      scrollPositionRef.current = savedPosition
+    }
 
     element.addEventListener('scroll', handleScroll, {passive: true})
 
     return () => {
       element.removeEventListener('scroll', handleScroll)
     }
-  }, [pathname, searchParams, saveScrollPosition, restoreScrollPosition, elementRef])
+  }, [elementRef, saveScrollPosition, getScrollPosition])
 }

@@ -28,6 +28,8 @@ model User {
   sortOrder     Float     @default(0)
   active        Boolean   @default(true)
   hiredAt       DateTime?
+  retiredAt     DateTime?
+  transferredAt DateTime?
   yukyuCategory String?   @default("A")
 
   name     String

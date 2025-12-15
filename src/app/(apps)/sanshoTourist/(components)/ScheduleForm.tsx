@@ -4,6 +4,7 @@ import React, { useState, useMemo, useEffect } from 'react'
 import { Calendar, Bus, Building, User, Clock, MapPin, Info, Users, Save } from 'lucide-react'
 import { StVehicle, StCustomer, StContact } from '@prisma/generated/prisma/client'
 import { StScheduleWithRelations } from '../(server-actions)/schedule-actions'
+import { getMidnight } from '@cm/class/Days/date-utils/calculations'
 
 // 日付ユーティリティ
 // DBからのUTC日付をJST表示用に変換
@@ -150,7 +151,7 @@ const FormCard = ({ title, icon, children }: { title: string; icon: React.ReactN
 export const ScheduleForm = ({ initialData, vehicles, customers, drivers, onSave, onClose }: Props) => {
   const [formData, setFormData] = useState<ScheduleFormData>({
     id: initialData?.id,
-    date: initialData?.date ? new Date(initialData.date) : new Date(),
+    date: initialData?.date ? new Date(initialData.date) : getMidnight(),
     stVehicleId: initialData?.stVehicleId,
     stCustomerId: initialData?.stCustomerId,
     stContactId: initialData?.stContactId,

@@ -3,10 +3,10 @@ import {formatDate} from '@cm/class/Days/date-utils/formatters'
 
 import {hashPassword} from 'src/cm/lib/crypt'
 
-import {getRelationalModels, getSchema} from '@cm/lib/methods/prisma-schema'
+import {hasField} from '@cm/lib/methods/prisma-schema'
 
 export async function initQueryObject({model, method, queryObject, prismaModel}) {
-  const {create, update, data} = queryObject
+  const {create, update, data} = queryObject ?? {}
 
   const {where} = queryObject ?? {id: 0}
 
@@ -74,15 +74,10 @@ export async function initQueryObject({model, method, queryObject, prismaModel})
     if (['create', 'upsert', `update`].includes(method)) {
       targetKeys.forEach(key => {
         if (queryObject[key]) {
-          ///更新日を追加
-          const addUpdatedAt = (queryObject, key, model) => {
-            const updatedAtFileldExists = getRelationalModels({schemaAsObj: getSchema(), parentName: model})?.singleAttributeObj
-              ?.updatedAt
-            if (updatedAtFileldExists) {
-              queryObject[key][`updatedAt`] = formatDate(new Date(), `iso`)
-            }
+          // 更新日を追加
+          if (hasField(model, 'updatedAt')) {
+            queryObject[key][`updatedAt`] = formatDate(new Date(), `iso`)
           }
-          addUpdatedAt(queryObject, key, model)
         }
       })
     }

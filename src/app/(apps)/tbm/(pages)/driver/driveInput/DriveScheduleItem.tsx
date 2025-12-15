@@ -17,19 +17,21 @@ import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/d
 import React from 'react'
 
 export const DriveScheduleItem = (props: {
+  gyomushuryo: boolean,
   HK_HaishaTableEditorGMF: any
   drive: driveInputPageType['driveScheduleList'][number]
   finished: boolean
   TextBtnClass: string
   useGlobalProps: any
 }) => {
-  const { drive, finished, TextBtnClass, HK_HaishaTableEditorGMF, useGlobalProps } = props
+  const { drive, finished, TextBtnClass, HK_HaishaTableEditorGMF, useGlobalProps, gyomushuryo } = props
   const { toggleLoad, session, query } = useGlobalProps
 
   return (
     <R_Stack className="gap-4 relative">
       <div className={` absolute top-0 right-0 text-[10px] text-gray-500`}>{drive.id}</div>
-      <section>
+
+      <section className={gyomushuryo ? 'disabled ' : ''}>
         <C_Stack>
           <span
             {...{
@@ -49,7 +51,7 @@ export const DriveScheduleItem = (props: {
         </C_Stack>
       </section>
 
-      <section>
+      <section className={gyomushuryo ? 'disabled ' : ''}>
         <C_Stack className={`gap-0`}>
           <strong>
             <MarkDownDisplay>{new RouteGroupCl(drive.TbmRouteGroup).name}</MarkDownDisplay>
@@ -82,7 +84,8 @@ export const DriveScheduleItem = (props: {
         </C_Stack>
       </section>
 
-      <section>
+
+      <section className={``}>
         <BasicModal Trigger={<div className={`t-link`}>画像({drive.TbmDriveScheduleImage.length})</div>}>
           <ChildCreator
             {...{

@@ -74,9 +74,9 @@
     "src/app/(apps)/migrations/**/*",
     "src/app/(apps)/page/**/*",
     "src/app/(apps)/portal/**/*",
-    "src/app/(apps)/sanshoTourist/**/*",
     "src/app/(apps)/sbm/**/*",
     "src/app/(apps)/stock/**/*",
+    "src/app/(apps)/tbm/**/*",
     "src/app/(apps)/teamSynapse/**/*",
     "src/app/(apps)/tmp/**/*",
     "src/app/(apps)/training/**/*"

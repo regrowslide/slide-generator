@@ -1,9 +1,9 @@
-import { getPaginationPropsType } from '@cm/components/DataLogic/TFs/MyTable/hooks/useMyTableParams'
+import {getPaginationPropsType} from '@cm/components/DataLogic/TFs/MyTable/hooks/useMyTableParams'
 
-import { R_Stack } from 'src/cm/components/styles/common-components/common-components'
+import {R_Stack} from 'src/cm/components/styles/common-components/common-components'
 
 import React from 'react'
-import { useGlobalPropType } from 'src/cm/hooks/globalHooks/useGlobalOrigin'
+import {useGlobalPropType} from 'src/cm/hooks/globalHooks/useGlobalOrigin'
 
 const cevronClass = `h-5 w-5 t-link onHover !t-link`
 const partClasses = {
@@ -12,8 +12,8 @@ const partClasses = {
   selectClass: ' onHover   w-[40px]   bg-gray-100  border rounded-sm  ',
 }
 
-import { ChevronsLeft, ChevronsRight } from 'lucide-react'
-import { cn } from '@shadcn/lib/utils'
+import {ChevronsLeft, ChevronsRight} from 'lucide-react'
+import {cn} from '@shadcn/lib/utils'
 
 export type PaginationPropType = {
   useGlobalProps: useGlobalPropType
@@ -25,10 +25,9 @@ export type PaginationPropType = {
 }
 
 const MyPagination = React.memo((props: PaginationPropType) => {
-  const { useGlobalProps, getPaginationProps, totalCount } = props
+  const {useGlobalProps, getPaginationProps, totalCount} = props
 
-
-  const { page, take, pageCount, from, to, changePage } = getPaginationProps({ totalCount })
+  const {page, take, pageCount, from, to, changePage} = getPaginationProps({totalCount})
 
   const range = (start, end) => {
     const firstPage = end - start + 1

@@ -1067,7 +1067,7 @@ model SbmProductIngredient {
 
 datasource db {
   provider = "postgresql"
-  url = "postgres://mutsuo:timeSpacer817@localhost:5432/tbm"
+  url = "postgres://mutsuo:timeSpacer817@localhost:5432/sanshoTourist"
 }
 
 generator client {
@@ -1096,6 +1096,8 @@ model User {
   sortOrder     Float     @default(0)
   active        Boolean   @default(true)
   hiredAt       DateTime?
+  retiredAt     DateTime?
+  transferredAt DateTime?
   yukyuCategory String?   @default("A")
 
   name     String
@@ -1529,10 +1531,12 @@ model TbmVehicle {
   updatedAt DateTime? @default(now()) @updatedAt()
   sortOrder Float     @default(0)
 
-  code String? @unique
+  activeStatus String? @default("01")
+  code         String? @unique
 
   name          String?
   frameNo       String? @unique
+  chassisNumber String? @unique
   vehicleNumber String  @unique
   type          String?
   shape         String?
@@ -13052,6 +13056,34 @@ export const prismaDMMF = {
           "isUpdatedAt": false
         },
         {
+          "name": "retiredAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "DateTime",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "transferredAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "DateTime",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
           "name": "yukyuCategory",
           "kind": "scalar",
           "isList": false,
@@ -17589,6 +17621,21 @@ export const prismaDMMF = {
           "isUpdatedAt": false
         },
         {
+          "name": "activeStatus",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "String",
+          "nativeType": null,
+          "default": "01",
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
           "name": "code",
           "kind": "scalar",
           "isList": false,
@@ -17618,6 +17665,20 @@ export const prismaDMMF = {
         },
         {
           "name": "frameNo",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": true,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "chassisNumber",
           "kind": "scalar",
           "isList": false,
           "isRequired": false,
@@ -24333,6 +24394,16 @@ export const prismaDMMF = {
       "fields": [
         {
           "name": "frameNo"
+        }
+      ]
+    },
+    {
+      "model": "TbmVehicle",
+      "type": "unique",
+      "isDefinedOnField": true,
+      "fields": [
+        {
+          "name": "chassisNumber"
         }
       ]
     },

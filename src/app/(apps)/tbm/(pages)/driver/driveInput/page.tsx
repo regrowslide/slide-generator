@@ -27,6 +27,14 @@ export default async function Page(props) {
     return <div>ユーザーが見つかりません</div>
   }
 
+
+  const foo = await prisma.tbmDriveSchedule.findUnique({
+    where: { id: 1530 },
+    include: {
+      User: {},
+    }
+  })
+
   const driveScheduleList: any = await getDriveInputPageData({
     user,
     whereQuery,

@@ -86,10 +86,12 @@ model TbmVehicle {
   updatedAt DateTime? @default(now()) @updatedAt()
   sortOrder Float     @default(0)
 
-  code String? @unique
+  activeStatus String? @default("01")
+  code         String? @unique
 
   name          String?
   frameNo       String? @unique
+  chassisNumber String? @unique
   vehicleNumber String  @unique
   type          String?
   shape         String?

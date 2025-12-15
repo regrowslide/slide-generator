@@ -45,9 +45,11 @@ export type TbmVehicleMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   sortOrder: number | null
+  activeStatus: string | null
   code: string | null
   name: string | null
   frameNo: string | null
+  chassisNumber: string | null
   vehicleNumber: string | null
   type: string | null
   shape: string | null
@@ -78,9 +80,11 @@ export type TbmVehicleMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   sortOrder: number | null
+  activeStatus: string | null
   code: string | null
   name: string | null
   frameNo: string | null
+  chassisNumber: string | null
   vehicleNumber: string | null
   type: string | null
   shape: string | null
@@ -111,9 +115,11 @@ export type TbmVehicleCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   sortOrder: number
+  activeStatus: number
   code: number
   name: number
   frameNo: number
+  chassisNumber: number
   vehicleNumber: number
   type: number
   shape: number
@@ -160,9 +166,11 @@ export type TbmVehicleMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   sortOrder?: true
+  activeStatus?: true
   code?: true
   name?: true
   frameNo?: true
+  chassisNumber?: true
   vehicleNumber?: true
   type?: true
   shape?: true
@@ -193,9 +201,11 @@ export type TbmVehicleMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   sortOrder?: true
+  activeStatus?: true
   code?: true
   name?: true
   frameNo?: true
+  chassisNumber?: true
   vehicleNumber?: true
   type?: true
   shape?: true
@@ -226,9 +236,11 @@ export type TbmVehicleCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   sortOrder?: true
+  activeStatus?: true
   code?: true
   name?: true
   frameNo?: true
+  chassisNumber?: true
   vehicleNumber?: true
   type?: true
   shape?: true
@@ -346,9 +358,11 @@ export type TbmVehicleGroupByOutputType = {
   createdAt: Date
   updatedAt: Date | null
   sortOrder: number
+  activeStatus: string | null
   code: string | null
   name: string | null
   frameNo: string | null
+  chassisNumber: string | null
   vehicleNumber: string
   type: string | null
   shape: string | null
@@ -402,9 +416,11 @@ export type TbmVehicleWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"TbmVehicle"> | Date | string
   updatedAt?: Prisma.DateTimeNullableFilter<"TbmVehicle"> | Date | string | null
   sortOrder?: Prisma.FloatFilter<"TbmVehicle"> | number
+  activeStatus?: Prisma.StringNullableFilter<"TbmVehicle"> | string | null
   code?: Prisma.StringNullableFilter<"TbmVehicle"> | string | null
   name?: Prisma.StringNullableFilter<"TbmVehicle"> | string | null
   frameNo?: Prisma.StringNullableFilter<"TbmVehicle"> | string | null
+  chassisNumber?: Prisma.StringNullableFilter<"TbmVehicle"> | string | null
   vehicleNumber?: Prisma.StringFilter<"TbmVehicle"> | string
   type?: Prisma.StringNullableFilter<"TbmVehicle"> | string | null
   shape?: Prisma.StringNullableFilter<"TbmVehicle"> | string | null
@@ -445,9 +461,11 @@ export type TbmVehicleOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
+  activeStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   code?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   frameNo?: Prisma.SortOrderInput | Prisma.SortOrder
+  chassisNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   vehicleNumber?: Prisma.SortOrder
   type?: Prisma.SortOrderInput | Prisma.SortOrder
   shape?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -487,6 +505,7 @@ export type TbmVehicleWhereUniqueInput = Prisma.AtLeast<{
   id?: number
   code?: string
   frameNo?: string
+  chassisNumber?: string
   vehicleNumber?: string
   unique_tbmBaseId_vehicleNumber?: Prisma.TbmVehicleUnique_tbmBaseId_vehicleNumberCompoundUniqueInput
   AND?: Prisma.TbmVehicleWhereInput | Prisma.TbmVehicleWhereInput[]
@@ -495,6 +514,7 @@ export type TbmVehicleWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"TbmVehicle"> | Date | string
   updatedAt?: Prisma.DateTimeNullableFilter<"TbmVehicle"> | Date | string | null
   sortOrder?: Prisma.FloatFilter<"TbmVehicle"> | number
+  activeStatus?: Prisma.StringNullableFilter<"TbmVehicle"> | string | null
   name?: Prisma.StringNullableFilter<"TbmVehicle"> | string | null
   type?: Prisma.StringNullableFilter<"TbmVehicle"> | string | null
   shape?: Prisma.StringNullableFilter<"TbmVehicle"> | string | null
@@ -528,16 +548,18 @@ export type TbmVehicleWhereUniqueInput = Prisma.AtLeast<{
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiListRelationFilter
   EtcCsvRaw?: Prisma.EtcCsvRawListRelationFilter
   User?: Prisma.UserListRelationFilter
-}, "id" | "code" | "frameNo" | "vehicleNumber" | "unique_tbmBaseId_vehicleNumber">
+}, "id" | "code" | "frameNo" | "chassisNumber" | "vehicleNumber" | "unique_tbmBaseId_vehicleNumber">
 
 export type TbmVehicleOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
+  activeStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   code?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   frameNo?: Prisma.SortOrderInput | Prisma.SortOrder
+  chassisNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   vehicleNumber?: Prisma.SortOrder
   type?: Prisma.SortOrderInput | Prisma.SortOrder
   shape?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -576,9 +598,11 @@ export type TbmVehicleScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TbmVehicle"> | Date | string
   updatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"TbmVehicle"> | Date | string | null
   sortOrder?: Prisma.FloatWithAggregatesFilter<"TbmVehicle"> | number
+  activeStatus?: Prisma.StringNullableWithAggregatesFilter<"TbmVehicle"> | string | null
   code?: Prisma.StringNullableWithAggregatesFilter<"TbmVehicle"> | string | null
   name?: Prisma.StringNullableWithAggregatesFilter<"TbmVehicle"> | string | null
   frameNo?: Prisma.StringNullableWithAggregatesFilter<"TbmVehicle"> | string | null
+  chassisNumber?: Prisma.StringNullableWithAggregatesFilter<"TbmVehicle"> | string | null
   vehicleNumber?: Prisma.StringWithAggregatesFilter<"TbmVehicle"> | string
   type?: Prisma.StringNullableWithAggregatesFilter<"TbmVehicle"> | string | null
   shape?: Prisma.StringNullableWithAggregatesFilter<"TbmVehicle"> | string | null
@@ -608,9 +632,11 @@ export type TbmVehicleCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -650,9 +676,11 @@ export type TbmVehicleUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -691,9 +719,11 @@ export type TbmVehicleUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -733,9 +763,11 @@ export type TbmVehicleUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -775,9 +807,11 @@ export type TbmVehicleCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -807,9 +841,11 @@ export type TbmVehicleUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -839,9 +875,11 @@ export type TbmVehicleUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -892,9 +930,11 @@ export type TbmVehicleCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
+  activeStatus?: Prisma.SortOrder
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
   frameNo?: Prisma.SortOrder
+  chassisNumber?: Prisma.SortOrder
   vehicleNumber?: Prisma.SortOrder
   type?: Prisma.SortOrder
   shape?: Prisma.SortOrder
@@ -932,9 +972,11 @@ export type TbmVehicleMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
+  activeStatus?: Prisma.SortOrder
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
   frameNo?: Prisma.SortOrder
+  chassisNumber?: Prisma.SortOrder
   vehicleNumber?: Prisma.SortOrder
   type?: Prisma.SortOrder
   shape?: Prisma.SortOrder
@@ -965,9 +1007,11 @@ export type TbmVehicleMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
+  activeStatus?: Prisma.SortOrder
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
   frameNo?: Prisma.SortOrder
+  chassisNumber?: Prisma.SortOrder
   vehicleNumber?: Prisma.SortOrder
   type?: Prisma.SortOrder
   shape?: Prisma.SortOrder
@@ -1187,9 +1231,11 @@ export type TbmVehicleCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -1228,9 +1274,11 @@ export type TbmVehicleUncheckedCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -1284,9 +1332,11 @@ export type TbmVehicleUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1325,9 +1375,11 @@ export type TbmVehicleUncheckedUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1365,9 +1417,11 @@ export type TbmVehicleCreateWithoutTbmBaseInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -1406,9 +1460,11 @@ export type TbmVehicleUncheckedCreateWithoutTbmBaseInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -1476,9 +1532,11 @@ export type TbmVehicleScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"TbmVehicle"> | Date | string
   updatedAt?: Prisma.DateTimeNullableFilter<"TbmVehicle"> | Date | string | null
   sortOrder?: Prisma.FloatFilter<"TbmVehicle"> | number
+  activeStatus?: Prisma.StringNullableFilter<"TbmVehicle"> | string | null
   code?: Prisma.StringNullableFilter<"TbmVehicle"> | string | null
   name?: Prisma.StringNullableFilter<"TbmVehicle"> | string | null
   frameNo?: Prisma.StringNullableFilter<"TbmVehicle"> | string | null
+  chassisNumber?: Prisma.StringNullableFilter<"TbmVehicle"> | string | null
   vehicleNumber?: Prisma.StringFilter<"TbmVehicle"> | string
   type?: Prisma.StringNullableFilter<"TbmVehicle"> | string | null
   shape?: Prisma.StringNullableFilter<"TbmVehicle"> | string | null
@@ -1508,9 +1566,11 @@ export type TbmVehicleCreateWithoutTbmFuelCardInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -1549,9 +1609,11 @@ export type TbmVehicleUncheckedCreateWithoutTbmFuelCardInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -1605,9 +1667,11 @@ export type TbmVehicleUpdateWithoutTbmFuelCardInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1646,9 +1710,11 @@ export type TbmVehicleUncheckedUpdateWithoutTbmFuelCardInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1686,9 +1752,11 @@ export type TbmVehicleCreateWithoutTbmVehicleMaintenanceRecordInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -1727,9 +1795,11 @@ export type TbmVehicleUncheckedCreateWithoutTbmVehicleMaintenanceRecordInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -1783,9 +1853,11 @@ export type TbmVehicleUpdateWithoutTbmVehicleMaintenanceRecordInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1824,9 +1896,11 @@ export type TbmVehicleUncheckedUpdateWithoutTbmVehicleMaintenanceRecordInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1864,9 +1938,11 @@ export type TbmVehicleCreateWithoutTbmRefuelHistoryInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -1905,9 +1981,11 @@ export type TbmVehicleUncheckedCreateWithoutTbmRefuelHistoryInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -1961,9 +2039,11 @@ export type TbmVehicleUpdateWithoutTbmRefuelHistoryInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2002,9 +2082,11 @@ export type TbmVehicleUncheckedUpdateWithoutTbmRefuelHistoryInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2042,9 +2124,11 @@ export type TbmVehicleCreateWithoutTbmCarWashHistoryInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -2083,9 +2167,11 @@ export type TbmVehicleUncheckedCreateWithoutTbmCarWashHistoryInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -2139,9 +2225,11 @@ export type TbmVehicleUpdateWithoutTbmCarWashHistoryInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2180,9 +2268,11 @@ export type TbmVehicleUncheckedUpdateWithoutTbmCarWashHistoryInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2220,9 +2310,11 @@ export type TbmVehicleCreateWithoutTbmDriveScheduleInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -2261,9 +2353,11 @@ export type TbmVehicleUncheckedCreateWithoutTbmDriveScheduleInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -2317,9 +2411,11 @@ export type TbmVehicleUpdateWithoutTbmDriveScheduleInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2358,9 +2454,11 @@ export type TbmVehicleUncheckedUpdateWithoutTbmDriveScheduleInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2398,9 +2496,11 @@ export type TbmVehicleCreateWithoutTbmEtcMeisaiInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -2439,9 +2539,11 @@ export type TbmVehicleUncheckedCreateWithoutTbmEtcMeisaiInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -2495,9 +2597,11 @@ export type TbmVehicleUpdateWithoutTbmEtcMeisaiInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2536,9 +2640,11 @@ export type TbmVehicleUncheckedUpdateWithoutTbmEtcMeisaiInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2576,9 +2682,11 @@ export type TbmVehicleCreateWithoutEtcCsvRawInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -2617,9 +2725,11 @@ export type TbmVehicleUncheckedCreateWithoutEtcCsvRawInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -2673,9 +2783,11 @@ export type TbmVehicleUpdateWithoutEtcCsvRawInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2714,9 +2826,11 @@ export type TbmVehicleUncheckedUpdateWithoutEtcCsvRawInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2754,9 +2868,11 @@ export type TbmVehicleCreateWithoutOdometerInputInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -2795,9 +2911,11 @@ export type TbmVehicleUncheckedCreateWithoutOdometerInputInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -2851,9 +2969,11 @@ export type TbmVehicleUpdateWithoutOdometerInputInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2892,9 +3012,11 @@ export type TbmVehicleUncheckedUpdateWithoutOdometerInputInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2933,9 +3055,11 @@ export type TbmVehicleCreateManyTbmBaseInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
+  activeStatus?: string | null
   code?: string | null
   name?: string | null
   frameNo?: string | null
+  chassisNumber?: string | null
   vehicleNumber: string
   type?: string | null
   shape?: string | null
@@ -2964,9 +3088,11 @@ export type TbmVehicleUpdateWithoutTbmBaseInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3005,9 +3131,11 @@ export type TbmVehicleUncheckedUpdateWithoutTbmBaseInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3046,9 +3174,11 @@ export type TbmVehicleUncheckedUpdateManyWithoutTbmBaseInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  activeStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   frameNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chassisNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vehicleNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shape?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3181,9 +3311,11 @@ export type TbmVehicleSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   createdAt?: boolean
   updatedAt?: boolean
   sortOrder?: boolean
+  activeStatus?: boolean
   code?: boolean
   name?: boolean
   frameNo?: boolean
+  chassisNumber?: boolean
   vehicleNumber?: boolean
   type?: boolean
   shape?: boolean
@@ -3225,9 +3357,11 @@ export type TbmVehicleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   createdAt?: boolean
   updatedAt?: boolean
   sortOrder?: boolean
+  activeStatus?: boolean
   code?: boolean
   name?: boolean
   frameNo?: boolean
+  chassisNumber?: boolean
   vehicleNumber?: boolean
   type?: boolean
   shape?: boolean
@@ -3259,9 +3393,11 @@ export type TbmVehicleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   createdAt?: boolean
   updatedAt?: boolean
   sortOrder?: boolean
+  activeStatus?: boolean
   code?: boolean
   name?: boolean
   frameNo?: boolean
+  chassisNumber?: boolean
   vehicleNumber?: boolean
   type?: boolean
   shape?: boolean
@@ -3293,9 +3429,11 @@ export type TbmVehicleSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   sortOrder?: boolean
+  activeStatus?: boolean
   code?: boolean
   name?: boolean
   frameNo?: boolean
+  chassisNumber?: boolean
   vehicleNumber?: boolean
   type?: boolean
   shape?: boolean
@@ -3321,7 +3459,7 @@ export type TbmVehicleSelectScalar = {
   tbmBaseId?: boolean
 }
 
-export type TbmVehicleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "code" | "name" | "frameNo" | "vehicleNumber" | "type" | "shape" | "airSuspension" | "oilTireParts" | "maintenance" | "insurance" | "shodoTorokubi" | "sakenManryobi" | "hokenManryobi" | "sankagetsuTenkenbi" | "sokoKyori" | "jibaisekiHokenCompany" | "jibaisekiManryobi" | "jidoshaHokenCompany" | "jidoshaManryobi" | "kamotsuHokenCompany" | "kamotsuManryobi" | "sharyoHokenCompany" | "sharyoManryobi" | "etcCardNumber" | "etcCardExpiration" | "tbmBaseId", ExtArgs["result"]["tbmVehicle"]>
+export type TbmVehicleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "activeStatus" | "code" | "name" | "frameNo" | "chassisNumber" | "vehicleNumber" | "type" | "shape" | "airSuspension" | "oilTireParts" | "maintenance" | "insurance" | "shodoTorokubi" | "sakenManryobi" | "hokenManryobi" | "sankagetsuTenkenbi" | "sokoKyori" | "jibaisekiHokenCompany" | "jibaisekiManryobi" | "jidoshaHokenCompany" | "jidoshaManryobi" | "kamotsuHokenCompany" | "kamotsuManryobi" | "sharyoHokenCompany" | "sharyoManryobi" | "etcCardNumber" | "etcCardExpiration" | "tbmBaseId", ExtArgs["result"]["tbmVehicle"]>
 export type TbmVehicleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   TbmFuelCard?: boolean | Prisma.TbmVehicle$TbmFuelCardArgs<ExtArgs>
   TbmRefuelHistory?: boolean | Prisma.TbmVehicle$TbmRefuelHistoryArgs<ExtArgs>
@@ -3361,9 +3499,11 @@ export type $TbmVehiclePayload<ExtArgs extends runtime.Types.Extensions.Internal
     createdAt: Date
     updatedAt: Date | null
     sortOrder: number
+    activeStatus: string | null
     code: string | null
     name: string | null
     frameNo: string | null
+    chassisNumber: string | null
     vehicleNumber: string
     type: string | null
     shape: string | null
@@ -3824,9 +3964,11 @@ export interface TbmVehicleFieldRefs {
   readonly createdAt: Prisma.FieldRef<"TbmVehicle", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"TbmVehicle", 'DateTime'>
   readonly sortOrder: Prisma.FieldRef<"TbmVehicle", 'Float'>
+  readonly activeStatus: Prisma.FieldRef<"TbmVehicle", 'String'>
   readonly code: Prisma.FieldRef<"TbmVehicle", 'String'>
   readonly name: Prisma.FieldRef<"TbmVehicle", 'String'>
   readonly frameNo: Prisma.FieldRef<"TbmVehicle", 'String'>
+  readonly chassisNumber: Prisma.FieldRef<"TbmVehicle", 'String'>
   readonly vehicleNumber: Prisma.FieldRef<"TbmVehicle", 'String'>
   readonly type: Prisma.FieldRef<"TbmVehicle", 'String'>
   readonly shape: Prisma.FieldRef<"TbmVehicle", 'String'>

@@ -1,8 +1,9 @@
 import { PrismaModelNames } from '@cm/types/prisma-types'
+import { globalIds } from 'src/non-common/searchParamStr'
 
 type targetModelType = {
   [key: string]: {
-    modelNames: { name: PrismaModelNames; id_pw?: { id?: string; pw?: string } }[]
+    modelNames: { name: PrismaModelNames; id_pw?: { id?: string; pw?: string }; globalId?: string }[]
   }
 }
 export class SessionFaker {
@@ -10,9 +11,7 @@ export class SessionFaker {
     default: {
       modelNames: [
         //
-        { name: 'user', id_pw: { id: 'code', pw: 'password' } },
-        { name: 'user' },
-
+        { name: 'user', id_pw: { id: 'email', pw: 'password' }, globalId: globalIds.globalUserId },
       ],
     },
   }
@@ -24,5 +23,3 @@ export class SessionFaker {
     return targetModels?.modelNames
   }
 }
-
-// nnu2361

@@ -1,16 +1,16 @@
 import GlobalModal from '@cm/components/utils/modal/GlobalModal'
 
-import { PrismaModelNames } from '@cm/types/prisma-types'
-import { DetailPagePropType } from '@cm/types/types'
-import { useEffect, useState } from 'react'
-import { RoleMaster, User, UserRole } from '@prisma/generated/prisma/client'
+import {PrismaModelNames} from '@cm/types/prisma-types'
+import {DetailPagePropType} from '@cm/types/types'
+import {useEffect, useState} from 'react'
+import {RoleMaster, User, UserRole} from '@prisma/generated/prisma/client'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
-import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
-import { surroundings } from '@cm/components/DataLogic/types/customParams-types'
-import { anyObject } from '@cm/types/utility-types'
+import {doStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
+import {surroundings} from '@cm/components/DataLogic/types/customParams-types'
+import {anyObject} from '@cm/types/utility-types'
 import IconLetter from '@cm/components/styles/common-components/IconLetter'
-import { Settings, Search } from 'lucide-react'
-import { Center, C_Stack } from '@cm/components/styles/common-components/common-components'
+import {Settings, Search} from 'lucide-react'
+import {Center, C_Stack} from '@cm/components/styles/common-components/common-components'
 
 export type PageBuidlerClassType = {
   [key in PrismaModelNames]: surroundings
@@ -45,32 +45,32 @@ export const roleMaster: DataModelBuilder = {
           ),
         }}
       >
-        <RoleAllocationTable {...{ PageBuilderExtraProps: props.PageBuilderExtraProps }} />
+        <RoleAllocationTable {...{PageBuilderExtraProps: props.PageBuilderExtraProps}} />
       </GlobalModal>
     )
   },
 }
 
-const RoleAllocationTable = ({ PageBuilderExtraProps }) => {
-  const { rootPath } = useGlobal()
-  type user = User & { UserRole: UserRole[] }
+const RoleAllocationTable = ({PageBuilderExtraProps}) => {
+  const {rootPath} = useGlobal()
+  type user = User & {UserRole: UserRole[]}
   const [users, setusers] = useState<user[]>([])
   const [roles, setroles] = useState<RoleMaster[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedRoleFilter, setSelectedRoleFilter] = useState<string>('all')
 
   const fetchUsers = async () => {
-    const apps = { has: rootPath }
-    const { result: users = [] } = await doStandardPrisma(`user`, `findMany`, {
-      where: { ...PageBuilderExtraProps?.where, apps },
-      include: { UserRole: { include: { RoleMaster: {} } } },
-      orderBy: [{ code: `asc` }, { sortOrder: `asc` }, { name: `asc` }],
+    const apps = {has: rootPath}
+    const {result: users = []} = await doStandardPrisma(`user`, `findMany`, {
+      where: {...PageBuilderExtraProps?.where, apps},
+      include: {UserRole: {include: {RoleMaster: {}}}},
+      orderBy: [{code: `asc`}, {sortOrder: `asc`}, {name: `asc`}],
     })
     setusers(users)
   }
 
   const fetchRoles = async () => {
-    const { result: roles = [] } = await doStandardPrisma(`roleMaster`, `findMany`, {})
+    const {result: roles = []} = await doStandardPrisma(`roleMaster`, `findMany`, {})
     setroles(roles)
   }
 
@@ -178,8 +178,9 @@ const RoleAllocationTable = ({ PageBuilderExtraProps }) => {
                     return (
                       <th
                         key={r.id}
-                        className={`px-4 py-4 text-center text-white font-semibold ${index === roles.length - 1 ? 'rounded-tr-lg' : ''
-                          }`}
+                        className={`px-4 py-4 text-center text-white font-semibold ${
+                          index === roles.length - 1 ? 'rounded-tr-lg' : ''
+                        }`}
                       >
                         <div className="flex flex-col items-center space-y-1">
                           <Settings className="h-4 w-4" />
@@ -231,15 +232,15 @@ const RoleAllocationTable = ({ PageBuilderExtraProps }) => {
                                       if (!confirm(`${u.name}に${r.name}を割り当てますか？`)) return
 
                                       await doStandardPrisma(`userRole`, `upsert`, {
-                                        where: { userId_roleMasterId_unique },
-                                        create: { userId: u.id, roleMasterId: r.id },
-                                        update: { userId: u.id, roleMasterId: r.id },
+                                        where: {userId_roleMasterId_unique},
+                                        create: {userId: u.id, roleMasterId: r.id},
+                                        update: {userId: u.id, roleMasterId: r.id},
                                       })
                                       await fetchUsers()
                                     } else {
                                       if (!confirm(`${u.name}から${r.name}を割り当て解除しますか？`)) return
                                       await doStandardPrisma(`userRole`, `delete`, {
-                                        where: { userId_roleMasterId_unique },
+                                        where: {userId_roleMasterId_unique},
                                       })
                                       await fetchUsers()
                                     }

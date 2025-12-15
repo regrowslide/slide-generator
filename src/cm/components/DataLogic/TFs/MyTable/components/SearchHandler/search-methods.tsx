@@ -6,7 +6,7 @@ import {Fields} from 'src/cm/class/Fields/Fields'
 import {P_Query} from 'src/cm/class/PQuery'
 import {mapAdjustOptionValue} from '@cm/components/DataLogic/TFs/MyForm/components/HookFormControl/Control/MySelect/lib/MySelectMethods-server'
 
-import {getDMMFModel, getSchema} from 'src/cm/lib/methods/prisma-schema'
+import {getDMMFModel} from 'src/cm/lib/methods/prisma-schema'
 
 import {colType} from '@cm/types/col-types'
 import {StrHandler} from '@cm/class/StrHandler'
@@ -182,7 +182,7 @@ const getSearchTypeKeyValArrFromQueryStr = ({dataModelName, query}) => {
   const queryStr = String(query['search']) //car[contains:bpNumber=232,frame=10]
   const [dataModelNameToSearch, ...searchTypes] = queryStr.split('[')
 
-  const schema = getSchema()
+  const model = getDMMFModel(dataModelName)
   if (dataModelName?.toLowerCase() === dataModelNameToSearch.toLowerCase()) {
     searchTypes.forEach(type => {
       //contains:bpNumber=232,frame=10]
@@ -198,29 +198,12 @@ const getSearchTypeKeyValArrFromQueryStr = ({dataModelName, query}) => {
         if (val.match(/(\d{4})-(\d{2})-(\d{2})/)) {
           val = toUtc(val)
         } else {
-          const ModelOnSchema = schema[StrHandler.capitalizeFirstLetter(dataModelName)]
-          const colsOnSchema = ModelOnSchema.map(field => {
-            const regex = /\S+/g
+          // DMMFから直接フィールド情報を取得
+          const field = model?.fields?.find(f => f.name === key)
+          const type = field?.type?.toLowerCase() ?? ''
+          const convertedType = DH__switchColType({type})
 
-            const match = field.match(regex) ?? []
-
-            const fieldName = String(match[0]).replace(/\s/g, '')
-            let type = String(match[1]).replace(/\s/g, '')
-            type = type.replace('?', '').replace('[]', '').toLowerCase()
-            const convertedType = DH__switchColType({type})
-
-            return {
-              fieldName,
-              type,
-              convertedType,
-            }
-          })
-
-          const dataType = colsOnSchema.find(col => {
-            return col.fieldName === key
-          })?.convertedType
-
-          val = DH__convertDataType(val, dataType, 'server')
+          val = DH__convertDataType(val, convertedType, 'server')
         }
 
         if (searchType) {

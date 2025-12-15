@@ -146,6 +146,7 @@ export const getInvoiceData = async ({
   // 運行スケジュールデータ取得（承認済みのみ）
   // 月末日跨ぎ運行対応のため、前日も含めて取得（11/30の運行で出発時刻2400の場合は12月請求）
   const driveScheduleList = await getDriveScheduleList({
+    firstDayOfMonth: whereQuery.gte,
     whereQuery: {
       ...whereQuery,
       gte: Days.day.subtract(whereQuery.gte, 1),

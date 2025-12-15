@@ -13,6 +13,8 @@ type Props = {
   userId: number
   userName: string
   vehicles: StVehicle[]
+  isSystemAdmin: boolean
+  publishEndDate: Date | null
 }
 
 // 日付操作ユーティリティ
@@ -30,7 +32,7 @@ const getEndOfMonth = (date: Date) => {
   return new Date(date.getFullYear(), date.getMonth() + 1, 0)
 }
 
-export const MyPageCC = ({ userId, userName, vehicles }: Props) => {
+export const MyPageCC = ({ userId, userName, vehicles, isSystemAdmin, publishEndDate }: Props) => {
   const [viewMode, setViewMode] = useState<'weekly' | 'monthly'>('weekly')
   const [currentDate, setCurrentDate] = useState(() => {
     const today = new Date()
@@ -40,7 +42,7 @@ export const MyPageCC = ({ userId, userName, vehicles }: Props) => {
 
   // スケジュールデータ取得
   const { data: schedulesData } = useSWR(
-    ['mySchedules', userId, currentDate.toISOString(), viewMode],
+    ['mySchedules', userId, currentDate.toISOString(), viewMode, isSystemAdmin],
     async () => {
       let dateFrom: Date
       let dateTo: Date
@@ -59,6 +61,8 @@ export const MyPageCC = ({ userId, userName, vehicles }: Props) => {
         userId,
         dateFrom,
         dateTo,
+        isSystemAdmin,
+        publishEndDate,
       })
       return schedules
     }
@@ -67,7 +71,7 @@ export const MyPageCC = ({ userId, userName, vehicles }: Props) => {
   const schedules = schedulesData || []
 
   return (
-    <div>
+    <div className={`mx-auto w-fit`}>
       <h2 className="text-2xl font-bold mb-4">マイページ ({userName}さん)</h2>
 
       {/* ビュー切り替え */}

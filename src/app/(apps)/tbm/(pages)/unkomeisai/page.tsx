@@ -45,7 +45,7 @@ export default async function Page(props) {
       orderBy: { code: 'asc' },
     }),
     prisma.tbmCustomer.findMany({
-      where: { tbmBaseId },
+      where: {},
       orderBy: { code: 'asc' },
     }),
     prisma.tbmVehicle.findMany({

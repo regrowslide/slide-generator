@@ -3,7 +3,6 @@ import { RouteGroupCl } from '@app/(apps)/tbm/(class)/RouteGroupCl'
 import { VehicleCl } from '@app/(apps)/tbm/(class)/VehicleCl'
 import { defaultRegister } from '@cm/class/builders/ColBuilderVariables'
 import { Fields } from '@cm/class/Fields/Fields'
-import { isDev } from '@cm/lib/methods/common'
 import { columnGetterType } from '@cm/types/types'
 
 export const TbmDriveScheduleBuilder = (props: columnGetterType) => {
@@ -48,6 +47,7 @@ export const TbmDriveScheduleBuilder = (props: columnGetterType) => {
           },
           orderBy: [{ id: 'asc' }],
           nameChanger(op) {
+
             return { ...op, name: op ? [`[${op.id}]`, op.name].join(` `) : '' }
           },
         },
@@ -64,7 +64,6 @@ export const TbmDriveScheduleBuilder = (props: columnGetterType) => {
 
       },
       forSelect: {
-        inline: isDev ? true : false,
         config: VehicleCl.getVehicleForSelectConfig({}),
       },
     },

@@ -10,8 +10,6 @@ import {CalendarDays} from 'lucide-react'
 import ShadModal from '@cm/shadcn/ui/Organisms/ShadModal'
 
 const MyDatepicker = React.forwardRef((props: anyObject, ref) => {
-  const [isOpen, setIsOpen] = useState(false)
-
   const {
     ControlOptions,
     useResetValue,
@@ -23,6 +21,10 @@ const MyDatepicker = React.forwardRef((props: anyObject, ref) => {
     field,
     ControlStyle,
   } = props.controlContextValue as ControlContextType
+
+  // autoOpen設定を確認（インライン編集モード時）
+  const {autoOpen, ...inputProps} = col.inputProps ?? {}
+  const [isOpen, setIsOpen] = useState(autoOpen)
 
   const [selectedDate, setSelectedDate] = useState<any>(null)
 
@@ -75,7 +77,18 @@ const MyDatepicker = React.forwardRef((props: anyObject, ref) => {
 
           Trigger: (
             <R_Stack className={`  justify-between gap-1`}>
-              <DateInputter {...{col, currentValue, formProps, selectedDate, toggleCalendar, timeFormat, ControlStyle}} />
+              <DateInputter
+                {...{
+                  col,
+                  inputProps,
+                  currentValue,
+                  formProps,
+                  selectedDate,
+                  toggleCalendar,
+                  timeFormat,
+                  ControlStyle,
+                }}
+              />
               {col.type === `datetime` && <TimeInputter {...{col, selectedDate, setDate, formProps}} />}
             </R_Stack>
           ),
@@ -101,7 +114,7 @@ const MyDatepicker = React.forwardRef((props: anyObject, ref) => {
 
 export default MyDatepicker
 
-const DateInputter = ({col, currentValue, formProps, selectedDate, toggleCalendar, timeFormat, ControlStyle}) => {
+const DateInputter = ({col, inputProps, formProps, selectedDate, toggleCalendar, timeFormat, ControlStyle}) => {
   return (
     <div
       className={`relative cursor-pointer`}
@@ -119,7 +132,7 @@ const DateInputter = ({col, currentValue, formProps, selectedDate, toggleCalenda
           ) : (
             <input
               {...{
-                ...col.inputProps,
+                ...inputProps,
                 ...formProps,
                 onChange: () => undefined,
                 value: selectedDate ?? '',

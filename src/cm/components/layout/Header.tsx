@@ -11,6 +11,7 @@ import { adminContext } from '@cm/components/layout/Admin/type'
 import AppLogo from '@cm/components/layout/Navigation/AppLogo'
 import Breadcrumbs from '@cm/components/layout/breadcrumbs/Breadcrumbs'
 import NavBar from '@cm/components/layout/Navigation/NavBar'
+import { cn } from '@cm/shadcn/lib/utils'
 
 // 型定義を改善
 export interface HeaderProps {
@@ -58,7 +59,10 @@ const Header = React.memo<HeaderProps>(({ adminContext }) => {
   }, [adminContext?.additionalHeaders])
 
   return (
-    <div style={headerStyles.container} className="bg-blue-50 shadow shadow-primary-main">
+    <div
+      style={headerStyles.container}
+      className={cn('shadow ', process.env.NEXT_PUBLIC_IS_STAGING ? 'bg-red-100' : 'shadow-primary-main bg-primary-light')}
+    >
       <div>
         <R_Stack style={{ minHeight: appbarHeight }} className="justify-between px-2 py-0 md:px-6">
           <R_Stack>

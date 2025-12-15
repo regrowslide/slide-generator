@@ -22,6 +22,7 @@ type Props = {
   selectedTargets: Set<string>
   onCopyTargetClick: (vehicleId: number, dateStr: string) => void
   onCopyStart: (schedule: StScheduleWithRelations) => void
+  canEdit: boolean
 }
 
 export const ScheduleGrid = ({
@@ -40,6 +41,7 @@ export const ScheduleGrid = ({
   selectedTargets,
   onCopyTargetClick,
   onCopyStart,
+  canEdit,
 }: Props) => {
   return (
     <div className="overflow-x-auto border border-gray-300 rounded-lg shadow-md bg-gray-50 relative">
@@ -50,6 +52,7 @@ export const ScheduleGrid = ({
         users={users}
         rollCallers={rollCallers}
         onUpdateRollCaller={onUpdateRollCaller}
+        canEdit={canEdit}
       />
       <ScheduleGridBody
         vehicles={vehicles}
@@ -63,6 +66,7 @@ export const ScheduleGrid = ({
         selectedTargets={selectedTargets}
         onCopyTargetClick={onCopyTargetClick}
         onCopyStart={onCopyStart}
+        canEdit={canEdit}
       />
     </div>
   )

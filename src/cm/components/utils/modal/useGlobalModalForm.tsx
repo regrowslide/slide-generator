@@ -1,6 +1,6 @@
 import BasicModal from '@cm/components/utils/modal/BasicModal'
-import { atomKey, useJotaiByKey } from '@cm/hooks/useJotai'
-import React, { JSX } from 'react'
+import {atomKey, useJotaiByKey} from '@cm/hooks/useJotai'
+import React, {JSX} from 'react'
 export const useGlobalModalForm = <S,>(
   atomKey: atomKey,
   defaultValue: any,
@@ -32,7 +32,7 @@ export const useGlobalModalForm = <S,>(
               setopen: setGMF_OPEN,
             }}
           >
-            <div className={` p-4 `}>{props?.mainJsx?.({ GMF_OPEN, setGMF_OPEN, close }) ?? <></>}</div>
+            <div className={` p-4 `}>{props?.mainJsx?.({GMF_OPEN, setGMF_OPEN, close}) ?? <></>}</div>
           </BasicModal>
         )}
       </>
@@ -41,5 +41,5 @@ export const useGlobalModalForm = <S,>(
     return <></>
   }
 
-  return { GMF_OPEN, setGMF_OPEN, Modal }
+  return {GMF_OPEN, setGMF_OPEN, Modal}
 }

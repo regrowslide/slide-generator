@@ -25,6 +25,16 @@ export const getScopes = (session: anyObject, options: getScopeOptionsProps) => 
     login,
     admin,
     getGlobalUserId,
+    getSanshoTouristScopes: () => {
+      const userId = !admin ? session?.id : Number(query?.[globalIds.globalUserId] ?? session?.id ?? 0)
+
+
+      const isSystemAdmin = !!arr__findCommonValues([`管理者`], roleNames)
+      const isEditor = !!arr__findCommonValues([`編集者`], roleNames)
+      const isViewer = !!arr__findCommonValues([`閲覧者`], roleNames)
+      console.log({ userId, roleNames })  //logs
+      return { userId, isSystemAdmin, isEditor, isViewer }
+    },
     getGroupieScopes: () => {
       const schoolId = !admin ? session?.schoolId : Number(query?.[globalIds.globalSchoolId] ?? 0)
 
@@ -41,6 +51,7 @@ export const getScopes = (session: anyObject, options: getScopeOptionsProps) => 
       return result
     },
 
+
     getTbmScopes: () => {
       // const eigyoshoKirikae = !!arr__findCommonValues([`営業所切替`], roleNames)
       const isSystemAdmin = !!arr__findCommonValues([`管理者`], roleNames) || admin
@@ -51,7 +62,8 @@ export const getScopes = (session: anyObject, options: getScopeOptionsProps) => 
 
       const userId = !fakable ? session?.id : Number(query?.[globalIds.globalUserId] ?? session?.id ?? 0)
       const tbmBaseId = !fakable ? session?.tbmBaseId : Number(query?.[globalIds.globalTbmBaseId] ?? session?.tbmBaseId ?? 0)
-      const tbmDriveInputUserId = !fakable ? session?.id : Number(query?.[globalIds.tbmDriveInputUserId] ?? session?.id ?? 0)
+
+      const tbmDriveInputUserId = !fakable ? session?.id : Number(query?.[globalIds.tbmDriveInputUserId] ?? Number(query?.[globalIds.globalUserId] ?? session?.id ?? 0))
 
 
       return { tbmDriveInputUserId, userId, tbmBaseId, isSystemAdmin, isShocho, isJimuin, }
@@ -76,3 +88,4 @@ const addAdminToRoles: (targetObject: any, session: anyObject) => anyObject = (t
 
   return targetObject
 }
+// 管理者・編集者・閲覧者

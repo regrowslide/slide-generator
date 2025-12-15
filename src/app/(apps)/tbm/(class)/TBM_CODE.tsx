@@ -1,6 +1,10 @@
 import { Code } from '@cm/class/Code'
 
 export class TBM_CODE {
+  static ACTIVE_KBN = new Code({
+    ACTIVE: { code: '01', label: `有効`, color: `green` },
+    INACTIVE: { code: '02', label: `無効`, color: `red` },
+  })
   static VEHICLE_MAINTANANCE_RECORD_TYPE = new Code({
     SANTEN: { code: '01', label: `3ヶ月点検` },
     SHAKEN: { code: '02', label: `車検`, color: `red` },

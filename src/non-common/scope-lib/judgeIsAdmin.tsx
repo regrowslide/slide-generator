@@ -1,4 +1,4 @@
-import {SessionFaker} from 'src/non-common/SessionFaker'
+import { SessionFaker } from 'src/non-common/SessionFaker'
 
 type roleArray = string[] | string
 type session = any
@@ -23,16 +23,18 @@ export const judgeIsAdmin = (session: session, query) => {
   const getGlobalUserId = () => {
     const targetModels = SessionFaker.getTargetModels()
 
-    const models = targetModels?.map(item => `g_${item.name}Id`)
-    const model = models.find(model => query?.[model]) ?? ''
+    const key = targetModels.find(item => item.globalId)?.globalId ?? ''
 
     let result: number
     if (!admin) {
       result = 0
     } else {
-      result = Number(query?.[model] ?? 0)
+      result = Number(query?.[key] ?? 0)
     }
-    return Number(result)
+
+    result = Number(result)
+
+    return result
   }
 
   return {

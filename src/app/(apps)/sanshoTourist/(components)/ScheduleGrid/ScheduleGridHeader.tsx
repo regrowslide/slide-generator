@@ -10,6 +10,7 @@ type Props = {
   users: { id: number; name: string }[]
   rollCallers: { date: Date; userId: number }[]
   onUpdateRollCaller: (date: Date, userId: number) => void
+  canEdit: boolean
 }
 
 // 日付操作ユーティリティ
@@ -42,7 +43,7 @@ const getDayOfWeek = (date: Date) => {
   return ['日', '月', '火', '水', '木', '金', '土'][day]
 }
 
-export const ScheduleGridHeader = ({ startDate, numDays, holidays, users, rollCallers, onUpdateRollCaller }: Props) => {
+export const ScheduleGridHeader = ({ startDate, numDays, holidays, users, rollCallers, onUpdateRollCaller, canEdit }: Props) => {
   // DBのUTC日付をJST文字列に変換してマップ化
   const holidayMap = useMemo(() => new Map(holidays.map(h => [toJstDateString(h.date), h.name])), [holidays])
   const rollCallerMap = useMemo(() => new Map(rollCallers.map(rc => [toJstDateString(rc.date), rc.userId])), [rollCallers])
@@ -74,7 +75,7 @@ export const ScheduleGridHeader = ({ startDate, numDays, holidays, users, rollCa
   // グリッドカラムのスタイルを動的に生成
   const gridStyle = {
     display: 'grid',
-    gridTemplateColumns: `150px repeat(${numDays}, minmax(100px, 1fr))`,
+    gridTemplateColumns: `180px repeat(${numDays}, minmax(140px, 1fr))`,
   }
 
   return (
@@ -102,7 +103,8 @@ export const ScheduleGridHeader = ({ startDate, numDays, holidays, users, rollCa
             <select
               value={d.rollCallerId}
               onChange={e => onUpdateRollCaller(d.date, parseInt(e.target.value))}
-              className="w-full text-xs p-1 border rounded border-gray-300 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              disabled={!canEdit}
+              className={`w-full text-xs p-1 border rounded border-gray-300 focus:outline-none focus:ring-1 focus:ring-indigo-500 ${!canEdit ? 'bg-gray-100 cursor-not-allowed' : ''}`}
             >
               <option value={0}>未定</option>
               {users.map(u => (

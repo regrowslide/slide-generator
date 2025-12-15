@@ -45,6 +45,7 @@ type Props = {
   vehicles: StVehicle[]
   customers: CustomerWithContacts[]
   holidays: StHoliday[]
+  canEdit: boolean
 }
 
 type VehicleFormData = {
@@ -166,10 +167,12 @@ const VehicleMaster = ({
   vehicles,
   onEdit,
   onDelete,
+  canEdit,
 }: {
   vehicles: StVehicle[]
   onEdit: (vehicle: StVehicle) => void
   onDelete: (id: number) => void
+  canEdit: boolean
 }) => {
   return (
     <div>
@@ -182,13 +185,13 @@ const VehicleMaster = ({
               <th className="p-3 text-left text-sm font-semibold text-gray-600">車種</th>
               <th className="p-3 text-left text-sm font-semibold text-gray-600">座席数</th>
               <th className="p-3 text-left text-sm font-semibold text-gray-600">車両携帯</th>
-              <th className="p-3 text-center text-sm font-semibold text-gray-600">操作</th>
+              {canEdit && <th className="p-3 text-center text-sm font-semibold text-gray-600">操作</th>}
             </tr>
           </thead>
           <tbody>
             {vehicles.length === 0 ? (
               <tr>
-                <td colSpan={5}>
+                <td colSpan={canEdit ? 5 : 4}>
                   <EmptyState message="車両データがありません。" />
                 </td>
               </tr>
@@ -201,14 +204,16 @@ const VehicleMaster = ({
                     正 {v.seats} / 補 {v.subSeats}
                   </td>
                   <td className="p-3 text-sm text-gray-700">{v.phone || '-'}</td>
-                  <td className="p-3 text-center">
-                    <button onClick={() => onEdit(v)} className="p-1 text-blue-600 hover:text-blue-800">
-                      <Edit2 className="w-4 h-4" />
-                    </button>
-                    <button onClick={() => onDelete(v.id)} className="p-1 text-red-600 hover:text-red-800">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </td>
+                  {canEdit && (
+                    <td className="p-3 text-center">
+                      <button onClick={() => onEdit(v)} className="p-1 text-blue-600 hover:text-blue-800">
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => onDelete(v.id)} className="p-1 text-red-600 hover:text-red-800">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))
             )}
@@ -296,12 +301,14 @@ const CustomerMaster = ({
   onDeleteCustomer,
   onEditContact,
   onDeleteContact,
+  canEdit,
 }: {
   customers: CustomerWithContacts[]
   onEditCustomer: (customer: StCustomer) => void
   onDeleteCustomer: (id: number) => void
   onEditContact: (contact: StContact) => void
   onDeleteContact: (id: number) => void
+  canEdit: boolean
 }) => {
   return (
     <div>
@@ -317,14 +324,16 @@ const CustomerMaster = ({
                   <Building className="w-5 h-5 mr-2 text-gray-600" />
                   {c.name}
                 </span>
-                <div>
-                  <button onClick={() => onEditCustomer(c)} className="p-1 text-blue-600 hover:text-blue-800">
-                    <Edit2 className="w-4 h-4" />
-                  </button>
-                  <button onClick={() => onDeleteCustomer(c.id)} className="p-1 text-red-600 hover:text-red-800">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
+                {canEdit && (
+                  <div>
+                    <button onClick={() => onEditCustomer(c)} className="p-1 text-blue-600 hover:text-blue-800">
+                      <Edit2 className="w-4 h-4" />
+                    </button>
+                    <button onClick={() => onDeleteCustomer(c.id)} className="p-1 text-red-600 hover:text-red-800">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
               </div>
               <div className="p-3">
                 {c.StContact.length === 0 ? (
@@ -339,14 +348,16 @@ const CustomerMaster = ({
                             {con.name}
                           </td>
                           <td className="p-2 text-sm text-gray-600">{con.phone || '-'}</td>
-                          <td className="p-2 text-right">
-                            <button onClick={() => onEditContact(con)} className="p-1 text-blue-600 hover:text-blue-800">
-                              <Edit2 className="w-4 h-4" />
-                            </button>
-                            <button onClick={() => onDeleteContact(con.id)} className="p-1 text-red-600 hover:text-red-800">
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </td>
+                          {canEdit && (
+                            <td className="p-2 text-right">
+                              <button onClick={() => onEditContact(con)} className="p-1 text-blue-600 hover:text-blue-800">
+                                <Edit2 className="w-4 h-4" />
+                              </button>
+                              <button onClick={() => onDeleteContact(con.id)} className="p-1 text-red-600 hover:text-red-800">
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </td>
+                          )}
                         </tr>
                       ))}
                     </tbody>
@@ -466,10 +477,12 @@ const HolidayMaster = ({
   holidays,
   onEdit,
   onDelete,
+  canEdit,
 }: {
   holidays: StHoliday[]
   onEdit: (holiday: StHoliday) => void
   onDelete: (id: number) => void
+  canEdit: boolean
 }) => {
   const sortedHolidays = useMemo(() => {
     return [...holidays].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
@@ -484,13 +497,13 @@ const HolidayMaster = ({
             <tr>
               <th className="p-3 text-left text-sm font-semibold text-gray-600">日付 (YYYY-MM-DD)</th>
               <th className="p-3 text-left text-sm font-semibold text-gray-600">祝日名</th>
-              <th className="p-3 text-center text-sm font-semibold text-gray-600">操作</th>
+              {canEdit && <th className="p-3 text-center text-sm font-semibold text-gray-600">操作</th>}
             </tr>
           </thead>
           <tbody>
             {sortedHolidays.length === 0 ? (
               <tr>
-                <td colSpan={3}>
+                <td colSpan={canEdit ? 3 : 2}>
                   <EmptyState message="祝日データがありません。" />
                 </td>
               </tr>
@@ -499,14 +512,16 @@ const HolidayMaster = ({
                 <tr key={h.id} className="border-b hover:bg-gray-50">
                   <td className="p-3 text-sm text-gray-800">{formatDateJst(h.date)}</td>
                   <td className="p-3 text-sm text-gray-700">{h.name}</td>
-                  <td className="p-3 text-center">
-                    <button onClick={() => onEdit(h)} className="p-1 text-blue-600 hover:text-blue-800">
-                      <Edit2 className="w-4 h-4" />
-                    </button>
-                    <button onClick={() => onDelete(h.id)} className="p-1 text-red-600 hover:text-red-800">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </td>
+                  {canEdit && (
+                    <td className="p-3 text-center">
+                      <button onClick={() => onEdit(h)} className="p-1 text-blue-600 hover:text-blue-800">
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => onDelete(h.id)} className="p-1 text-red-600 hover:text-red-800">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))
             )}
@@ -586,7 +601,7 @@ const HolidayForm = ({
 
 // ========== メインコンポーネント ==========
 
-export const MasterCC = ({ vehicles: initialVehicles, customers: initialCustomers, holidays: initialHolidays }: Props) => {
+export const MasterCC = ({ vehicles: initialVehicles, customers: initialCustomers, holidays: initialHolidays, canEdit }: Props) => {
   const { toggleLoad } = useGlobal()
 
   // データ取得 (SWR)
@@ -744,37 +759,43 @@ export const MasterCC = ({ vehicles: initialVehicles, customers: initialCustomer
 
   return (
     <div className="space-y-8">
-      {/* 追加ボタン群 */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <button
-          onClick={() => openModal('vehicle')}
-          className="p-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 flex items-center justify-center"
-        >
-          <Bus className="w-5 h-5 mr-2 text-indigo-600" /> 車両を追加
-        </button>
-        <button
-          onClick={() => openModal('customer')}
-          className="p-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 flex items-center justify-center"
-        >
-          <Building className="w-5 h-5 mr-2 text-indigo-600" /> 会社を追加
-        </button>
-        <button
-          onClick={() => openModal('contact')}
-          className="p-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 flex items-center justify-center"
-        >
-          <UserCheck className="w-5 h-5 mr-2 text-indigo-600" /> 担当者を追加
-        </button>
-        <button
-          onClick={() => openModal('holiday')}
-          className="p-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 flex items-center justify-center"
-        >
-          <Flag className="w-5 h-5 mr-2 text-indigo-600" /> 祝日を追加
-        </button>
-      </div>
+      {/* 追加ボタン群（編集権限がある場合のみ表示） */}
+      {canEdit ? (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <button
+            onClick={() => openModal('vehicle')}
+            className="p-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 flex items-center justify-center"
+          >
+            <Bus className="w-5 h-5 mr-2 text-indigo-600" /> 車両を追加
+          </button>
+          <button
+            onClick={() => openModal('customer')}
+            className="p-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 flex items-center justify-center"
+          >
+            <Building className="w-5 h-5 mr-2 text-indigo-600" /> 会社を追加
+          </button>
+          <button
+            onClick={() => openModal('contact')}
+            className="p-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 flex items-center justify-center"
+          >
+            <UserCheck className="w-5 h-5 mr-2 text-indigo-600" /> 担当者を追加
+          </button>
+          <button
+            onClick={() => openModal('holiday')}
+            className="p-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 flex items-center justify-center"
+          >
+            <Flag className="w-5 h-5 mr-2 text-indigo-600" /> 祝日を追加
+          </button>
+        </div>
+      ) : (
+        <div className="p-4 bg-gray-100 rounded-lg text-center text-gray-600">
+          閲覧モード - マスタデータの編集には編集権限が必要です
+        </div>
+      )}
 
       <AutoGridContainer className={`gap-20`}>
         {/* 車両マスタ */}
-        <VehicleMaster vehicles={vehicles} onEdit={v => openModal('vehicle', v)} onDelete={handleDeleteVehicle} />
+        <VehicleMaster vehicles={vehicles} onEdit={v => openModal('vehicle', v)} onDelete={handleDeleteVehicle} canEdit={canEdit} />
 
         {/* 会社・担当者マスタ */}
         <CustomerMaster
@@ -783,10 +804,11 @@ export const MasterCC = ({ vehicles: initialVehicles, customers: initialCustomer
           onDeleteCustomer={handleDeleteCustomer}
           onEditContact={c => openModal('contact', c)}
           onDeleteContact={handleDeleteContact}
+          canEdit={canEdit}
         />
 
         {/* 祝日マスタ */}
-        <HolidayMaster holidays={holidays} onEdit={h => openModal('holiday', h)} onDelete={handleDeleteHoliday} />
+        <HolidayMaster holidays={holidays} onEdit={h => openModal('holiday', h)} onDelete={handleDeleteHoliday} canEdit={canEdit} />
 
         {/* モーダル */}
         <ModalReturn.Modal>

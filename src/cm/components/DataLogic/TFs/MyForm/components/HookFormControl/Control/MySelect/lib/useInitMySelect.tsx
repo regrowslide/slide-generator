@@ -23,7 +23,9 @@ export default function useInitMySelect(props: ControlProps) {
   const {controlContextValue} = props
   const {col, currentValue, Cached_Option_Props} = controlContextValue
 
-  const [isOptionsVisible, setIsOptionsVisible] = useState(false)
+  // autoOpen設定を確認（インライン編集モード時）
+  const autoOpen = col?.inputProps?.autoOpen ?? false
+  const [isOptionsVisible, setIsOptionsVisible] = useState(autoOpen)
 
   const [filteredOptions, setFilteredOptions] = useState<optionType[]>([])
 

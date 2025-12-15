@@ -15,7 +15,7 @@ import React, {useEffect} from 'react'
 import {toastByResult} from '@cm/lib/ui/notifications'
 import {generalDoStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
 
-export default function CreateForm(props: {SearchFormHook: SearchFormHookType; contexts: contextsType}) {
+export default function OptionCreateForm(props: {SearchFormHook: SearchFormHookType; contexts: contextsType}) {
   const {SearchFormHook, contexts} = props
   const col = contexts.controlContextValue.col
   const {controlContextValue} = contexts

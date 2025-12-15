@@ -1,3 +1,4 @@
+import { TBM_CODE } from '@app/(apps)/tbm/(class)/TBM_CODE'
 import { forSelectConfig } from '@cm/types/select-types'
 import { TbmVehicle } from '@prisma/generated/prisma/client'
 
@@ -24,21 +25,26 @@ export class VehicleCl {
 
   static getVehicleForSelectConfig = ({ tbmBaseId, withFrame = true }: { tbmBaseId?: number; withFrame?: boolean }) => {
     const result: forSelectConfig = {
-      where: ({ latestFormData }) => {
-        return { tbmBaseId: latestFormData?.tbmBaseId ?? tbmBaseId }
-      },
-
-      orderBy: [{ id: `asc` }],
       select: {
         id: `number`,
         code: `string`,
         frameNo: 'string',
         vehicleNumber: `string`,
+        chassisNumber: `string`,
         type: `string`,
         shape: `string`,
         name: false,
       },
+      where: ({ latestFormData }) => {
+        return {
+          tbmBaseId: latestFormData?.tbmBaseId ?? tbmBaseId,
+          activeStatus: TBM_CODE.ACTIVE_KBN.raw.ACTIVE.code,
+        }
+      },
+      orderBy: [{ id: `asc` }],
       nameChanger(op) {
+
+
         if (op) {
           const vehicle = op as unknown as TbmVehicle
 

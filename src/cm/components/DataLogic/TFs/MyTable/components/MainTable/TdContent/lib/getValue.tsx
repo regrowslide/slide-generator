@@ -10,7 +10,7 @@ import JsonFormatter from 'react-json-formatter'
 import {formatDate, TimeFormatType} from '@cm/class/Days/date-utils/formatters'
 import {Days} from '@cm/class/Days/Days'
 
-export const getValue = ({col, record, dataModelName, mutateRecords, tdStyle}) => {
+export const getValue = ({col, record, dataModelName, tdStyle, UseRecordsReturn}: any) => {
   /**基本的な変換 */
   const convertValueBasic = () => {
     const timeFormat = Days.time.getTimeFormat(col?.type ?? '').timeFormatForDaysJs as TimeFormatType
@@ -49,8 +49,9 @@ export const getValue = ({col, record, dataModelName, mutateRecords, tdStyle}) =
       return <JsonFormatter json={value} />
     }
 
+    // format関数が関数を返した場合（showSummaryInTdのeditable対応）
     if (typeof value === `function`) {
-      return value({record, dataModelName, mutateRecords, tdStyle})
+      return value({record, col, dataModelName, UseRecordsReturn})
     }
 
     return <div className={cl(CssString.border.dottedBottom)}>{value}</div>

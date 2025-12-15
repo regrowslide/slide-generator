@@ -11,7 +11,6 @@ import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/d
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { colType } from '@cm/types/col-types'
-import { isDev } from '@cm/lib/methods/common'
 
 const timeVlidator = (value: string) => {
   if (value) {
@@ -99,7 +98,6 @@ export const TbmRouteGroupColBuilder = (props: columnGetterType) => {
         td: { style: { ...regularStyle, minWidth: 180, fontSize: 12 } },
         form: { ...defaultRegister, defaultValue: `01` },
         forSelect: {
-          inline: isDev,
           codeMaster: TBM_CODE.ROUTE_KBN
         },
       },

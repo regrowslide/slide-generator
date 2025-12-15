@@ -75,6 +75,9 @@ export const getDriveScheduleList = async (props: {
         where: { id: userId },
         include: { TbmVehicle: {} },
       },
+      TbmDriveScheduleImage: {
+        orderBy: { createdAt: 'asc' },
+      },
     },
   })
 

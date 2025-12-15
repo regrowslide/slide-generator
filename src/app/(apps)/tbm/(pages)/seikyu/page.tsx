@@ -54,6 +54,7 @@ export default async function Page(props) {
 
     try {
       const driveScheduleList = await getDriveScheduleList({
+        firstDayOfMonth: whereQuery.gte,
         whereQuery: {
           ...whereQuery,
           gte: Days.day.subtract(whereQuery.gte, 1),

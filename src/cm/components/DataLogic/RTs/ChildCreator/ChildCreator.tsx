@@ -70,11 +70,11 @@ export const ChildCreator = React.memo((props: ChildCreatorProps) => {
     [props.myTable, props.myForm, columns]
   )
 
-  const myTable = childTableProps.myTable
+  const myTable = {...childTableProps.myTable, pagination: {...childTableProps.myTable?.pagination, countPerPage: 200}}
   const myForm = childTableProps.myForm
   const dataModelName = models.children
 
-  const countPerPage = myTable?.pagination?.countPerPage ?? 100
+  const countPerPage = myTable?.pagination?.countPerPage
 
   const prismaDataExtractionQuery = useMemo(() => {
     const {prismaDataExtractionQuery} = getQueryArgs({

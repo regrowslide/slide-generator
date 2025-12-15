@@ -14,8 +14,10 @@ export interface MyTableProps {
   }
 }
 
+export type UseMyTableLogicReturn = ReturnType<typeof useMyTableLogic>
+
 const MyTable = React.memo<MyTableProps>(props => {
-  // 🔧 ロジックを分離したカスタムフックを使用
+  // 🔧 ロジックを分離したカスタムフックを使用（1回だけ呼ぶ）
   const useMyTableLogicReturn = useMyTableLogic(props)
   const {Components} = useMyTableLogicReturn
 
@@ -30,7 +32,8 @@ const MyTable = React.memo<MyTableProps>(props => {
       <div className={` relative `}>
         {TABLE_CONTROL_POSITION === 'top' && <Components.MyTableControlsCallback />}
         <div style={{maxHeight: useMyTableLogicReturn.mainTableProps.tableStyle.maxHeight}}>
-          <MainTable {...props} />
+          {/* useMyTableLogicReturnをMainTableに渡して二重呼び出しを防ぐ */}
+          <MainTable {...props} useMyTableLogicReturn={useMyTableLogicReturn} />
           <div className={` sticky w-full mx-auto bottom-0     z-10 `}>
             {TABLE_CONTROL_POSITION === 'bottom' && <Components.MyTableControlsCallback />}
           </div>

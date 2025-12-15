@@ -20,12 +20,21 @@ import {TableInfo, TableInfoWrapper} from '@cm/class/builders/ColBuilderVariable
 import {DH__convertDataType} from '@cm/class/DataHandler/type-converter'
 import {defaultFormat} from '@cm/class/Fields/lib/defaultFormat'
 import {NumHandler} from '../NumHandler'
+import InlineEditableValue from '@cm/components/DataLogic/TFs/MyTable/components/MainTable/TdContent/InlineEditableValue'
+import {UseRecordsReturn} from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/useRecords/useRecords'
 
 export const defaultSelect = {id: true, name: true}
 export const masterDataSelect = {...defaultSelect, color: true}
 
 type freeColType = Exclude<colTypeOptional, 'id' | 'label'>
 export type setterType = (props: {col: colType}) => freeColType
+
+// 編集可能かどうかを判定するヘルパー関数
+const isColEditable = (col: colType): boolean => {
+  // form設定があり、disabledでなく、format（カスタム表示）がない場合は編集可能
+  return Boolean(col.form) && col.form?.disabled !== true && !col.format
+}
+
 export class Fields {
   plain: colType[]
   private cache = new Map()
@@ -51,6 +60,7 @@ export class Fields {
       hideUndefinedValue?: boolean
       showShadow?: boolean
       convertColId?: {[key: string]: string}
+      editable?: boolean // インライン編集を有効にする
     } & colTypeOptional
   ) => {
     const columns = this.plain
@@ -59,80 +69,96 @@ export class Fields {
       return this.cache.get(cacheKey)
     }
 
-    const {hideUndefinedValue, wrapperWidthPx, labelWidthPx, showShadow} = {...defaultSummaryInTdArgs, ...props}
+    const {hideUndefinedValue, wrapperWidthPx, labelWidthPx, showShadow, editable} = {...defaultSummaryInTdArgs, ...props}
     const id = `readOnly_${columns.map(d => d.id).join('_')}`
 
-    const SummaryRow = React.memo(({value, row}: {value: any; row: any}) => {
-      const existingValues: any[] = []
-      const undefinedLabels: any[] = []
+    // SummaryRowコンポーネント（editable対応）
+    const SummaryRow = React.memo(
+      ({
+        value,
+        row,
+        dataModelName,
+        UseRecordsReturn,
+      }: {
+        value: any
+        row: any
+        dataModelName?: string
+        UseRecordsReturn?: UseRecordsReturn
+      }) => {
+        const existingValues: {label: string; value: React.ReactNode; col?: colType}[] = []
+        const undefinedLabels: {label: string; value: React.ReactNode}[] = []
 
-      columns
-        .filter(col => col.td?.hidden !== true)
-        .forEach(col => {
-          const pseudoId = props.convertColId?.[col.id] ?? col.id
-          let colValue = ''
+        columns
+          .filter(col => col.td?.hidden !== true)
+          .forEach(col => {
+            const pseudoId = props.convertColId?.[col.id] ?? col.id
+            let colValue: React.ReactNode = ''
 
-          if (col.format) {
-            colValue = col.format(value, row, col)
-          } else if (col.type === 'price') {
-            colValue = NumHandler.toPrice(row[col.id])
-          } else if (col.type === 'password') {
-            colValue = '********'
-          } else if (col.forSelect) {
-            const value = DH__convertDataType(NestHandler.GetNestedValue(pseudoId, row), col.type, 'client')
+            if (col.format) {
+              colValue = col.format(value, row, col)
+            } else if (col.type === 'price') {
+              colValue = NumHandler.toPrice(row[col.id])
+            } else if (col.type === 'password') {
+              colValue = '********'
+            } else if (col.forSelect) {
+              const val = DH__convertDataType(NestHandler.GetNestedValue(pseudoId, row), col.type, 'client')
+              colValue = defaultFormat(val, row, col) as string
+            } else {
+              colValue = DH__convertDataType(NestHandler.GetNestedValue(pseudoId, row), col.type, 'client')
+            }
 
-            colValue = defaultFormat(value, row, col) as string
-          } else {
-            colValue = DH__convertDataType(NestHandler.GetNestedValue(pseudoId, row), col.type, 'client')
-          }
+            const item = {label: col.label, value: colValue, col}
 
-          const item = {label: col.label, value: colValue}
+            if (hideUndefinedValue && !colValue) {
+              undefinedLabels.push(item)
+            } else {
+              existingValues.push(item)
+            }
+          })
 
-          if (hideUndefinedValue && !colValue) {
-            undefinedLabels.push(item)
-          } else {
-            existingValues.push(item)
-          }
-        })
+        return (
+          <TableInfoWrapper {...{showShadow, label: props.wrapperLabel ?? ''}}>
+            {existingValues.map((d, i) => {
+              const canEdit = editable && d.col && isColEditable(d.col) && dataModelName && UseRecordsReturn
 
-      return (
-        <TableInfoWrapper {...{showShadow, label: props.wrapperLabel ?? ''}}>
-          {existingValues.map((d, i) => (
-            <div key={i}>
-              <div
-                style={{
-                  border: '1px dashed transparent',
-                  borderBottomColor: '#e0e0e0',
-                }}
-              >
-                <TableInfo
-                  {...{
-                    ...d,
-                    wrapperWidthPx,
-                    labelWidthPx,
-                  }}
-                />
+              return (
+                <div key={i}>
+                  <div
+                    style={{
+                      border: '1px dashed transparent',
+                      borderBottomColor: '#e0e0e0',
+                    }}
+                  >
+                    <TableInfo label={d.label} wrapperWidthPx={wrapperWidthPx} labelWidthPx={labelWidthPx}>
+                      {canEdit ? (
+                        <InlineEditableValue
+                          col={{...d.col!, td: {...d.col!.td, editable: {}}}}
+                          record={row}
+                          displayValue={d.value}
+                          dataModelName={dataModelName}
+                          UseRecordsReturn={UseRecordsReturn}
+                        />
+                      ) : (
+                        d.value
+                      )}
+                    </TableInfo>
+                  </div>
+                </div>
+              )
+            })}
+            {hideUndefinedValue && undefinedLabels.length > 0 && (
+              <div className="mt-1">
+                <small>
+                  <TableInfo label="データ無" wrapperWidthPx={wrapperWidthPx} labelWidthPx={labelWidthPx}>
+                    <div className="text-xs opacity-50">{undefinedLabels.map(d => d.label).join(', ')}</div>
+                  </TableInfo>
+                </small>
               </div>
-            </div>
-          ))}
-          {hideUndefinedValue && undefinedLabels.length > 0 && (
-            <div className="mt-1">
-              <small>
-                <TableInfo
-                  {...{
-                    label: 'データ無',
-                    value: <div className="text-xs opacity-50">{undefinedLabels.map(d => d.label).join(', ')}</div>,
-
-                    wrapperWidthPx,
-                    labelWidthPx,
-                  }}
-                />
-              </small>
-            </div>
-          )}
-        </TableInfoWrapper>
-      )
-    })
+            )}
+          </TableInfoWrapper>
+        )
+      }
+    )
 
     const result = new Fields([
       {
@@ -140,7 +166,14 @@ export class Fields {
         label: '',
         form: {hidden: true},
         td: {withLabel: false},
-        format: (value, row) => <SummaryRow value={value} row={row} />,
+        // editable時は関数を返して実行時コンテキストを受け取る
+        format: editable
+          ? (value, row) => {
+              return ({dataModelName, UseRecordsReturn}: {dataModelName: string; UseRecordsReturn: UseRecordsReturn}) => (
+                <SummaryRow value={value} row={row} dataModelName={dataModelName} UseRecordsReturn={UseRecordsReturn} />
+              )
+            }
+          : (value, row) => <SummaryRow value={value} row={row} />,
       },
       ...new Fields(columns).customAttributes(({col}) => ({...col, td: {hidden: true}})).plain,
     ])

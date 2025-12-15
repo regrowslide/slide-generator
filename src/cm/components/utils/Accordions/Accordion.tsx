@@ -6,6 +6,7 @@ import {cl} from 'src/cm/lib/methods/common'
 import {useState} from 'react'
 
 import {styling} from 'src/cm/components/styles/common-components/type'
+import {Card} from '@cm/shadcn/ui/card'
 
 export type AccordiongPropType = {
   styling?: styling
@@ -29,7 +30,7 @@ const MyAccordion = (props: AccordiongPropType) => {
 
   const [open, setopen] = useState(defaultOpen)
 
-  const wrapperClass = cl(`bg-gray-200 p-2 mb-1 rounded  border  relative  flex-nowrap justify-between`)
+  const wrapperClass = cl(`p-2 mb-1 relative  flex-nowrap justify-between`)
 
   const labelClass = cl(` flex-nowrap text-sub-main  `, closable ? '  onHover' : ' ', ` w-full px-1 `)
 
@@ -75,7 +76,7 @@ const MyAccordion = (props: AccordiongPropType) => {
   }
 
   return (
-    <div
+    <Card
       style={{...styling?.styles?.wrapper, position: `relative`}}
       className={cl(styling?.classes?.wrapper, wrapperClass)}
       {...rest}
@@ -88,7 +89,7 @@ const MyAccordion = (props: AccordiongPropType) => {
           </div>
         </div>
       )}
-    </div>
+    </Card>
   )
 }
 

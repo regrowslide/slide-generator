@@ -50,8 +50,10 @@ export default function DriveInputCC({ driveScheduleList }: { driveScheduleList:
     <div>
 
       <HK_HaishaTableEditorGMF.Modal />
+
+
       <C_Stack className={` gap-8`}>
-        <C_Stack className={gyomushuryo ? 'disabled ' : ''}>
+        <C_Stack >
           <div>
             <h2 className={` flex items-center gap-2`}>{userNameDisplay}さんの運行予定</h2>
             <div
@@ -66,15 +68,18 @@ export default function DriveInputCC({ driveScheduleList }: { driveScheduleList:
                 const { finished } = drive
                 return (
                   <div key={drive.id} className="p-2 py-4 [&:not(:last-child)]:border-b">
-                    <DriveScheduleItem
-                      {...{
-                        drive,
-                        finished: !!finished,
-                        TextBtnClass,
-                        HK_HaishaTableEditorGMF,
-                        useGlobalProps,
-                      }}
-                    />
+                    <div >
+                      <DriveScheduleItem
+                        {...{
+                          gyomushuryo,
+                          drive,
+                          finished: !!finished,
+                          TextBtnClass,
+                          HK_HaishaTableEditorGMF,
+                          useGlobalProps,
+                        }}
+                      />
+                    </div>
                   </div>
                 )
               })}
@@ -119,7 +124,7 @@ export default function DriveInputCC({ driveScheduleList }: { driveScheduleList:
                         <small>({TbmVehicle?.vehicleNumber})</small>
                       </C_Stack>
 
-                      <R_Stack className={`gap-3`}>
+                      <R_Stack className={`gap-3 ${gyomushuryo ? 'disabled ' : ''}`} >
                         <C_Stack className={` w-[180px] gap-0`}>
                           {/* <small className={`flex gap-1`}>
                             <span>最終:</span>

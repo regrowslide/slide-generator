@@ -18,6 +18,7 @@ type Props = {
   selectedTargets: Set<string>
   onCopyTargetClick: (vehicleId: number, dateStr: string) => void
   onCopyStart: (schedule: StScheduleWithRelations) => void
+  canEdit: boolean
 }
 
 // 日付操作ユーティリティ
@@ -63,6 +64,7 @@ export const ScheduleGridBody = ({
   selectedTargets,
   onCopyTargetClick,
   onCopyStart,
+  canEdit,
 }: Props) => {
   const isCopyMode = !!copySource
 
@@ -92,16 +94,16 @@ export const ScheduleGridBody = ({
   // グリッドカラムのスタイルを動的に生成
   const gridStyle = {
     display: 'grid',
-    gridTemplateColumns: `150px repeat(${numDays}, minmax(100px, 1fr))`,
+    gridTemplateColumns: `180px repeat(${numDays}, minmax(140px, 1fr))`,
   }
 
   return (
-    <div style={gridStyle} className={`relative ${isCopyMode ? 'bg-gray-800' : ''}`}>
+    <div style={gridStyle} className={`relative `}>
       {vehicles.map(v => (
         <React.Fragment key={v.id}>
           {/* 車両情報 (縦軸) */}
           <div
-            className={`sticky left-0 p-2 border-r border-b border-gray-300 bg-white shadow-sm min-h-[70px] z-10 ${isCopyMode ? 'opacity-50' : ''}`}
+            className={`sticky left-0 p-2 border-r border-b border-gray-300 bg-white shadow-sm min-h-[90px] z-10 `}
           >
             <div className="text-sm font-semibold text-gray-800">{v.plateNumber}</div>
             <div className="text-xs text-gray-600">
@@ -121,14 +123,14 @@ export const ScheduleGridBody = ({
               if (isSelectedTarget) {
                 cellClass = 'bg-yellow-100 ring-2 ring-inset ring-yellow-400 z-20 cursor-pointer opacity-100'
               } else {
-                cellClass = 'bg-white opacity-25 cursor-pointer hover:opacity-40'
+                cellClass = 'bg-white  cursor-pointer hover:opacity-40'
               }
             }
 
             return (
               <div
                 key={cellKey}
-                className={`p-1 border-r border-b border-gray-300 min-h-[70px] transition-all relative ${cellClass}`}
+                className={`p-1 border-r border-b  border-gray-300 min-h-[90px] transition-all relative ${cellClass}`}
                 onClick={e => {
                   if (isCopyMode) {
                     onCopyTargetClick(v.id, dateStr)
@@ -144,14 +146,17 @@ export const ScheduleGridBody = ({
                 {/* スケジュールバーを表示 */}
                 <div className={`space-y-0.5 ${isCopyMode ? 'pointer-events-none' : ''}`}>
                   {daySchedules.map(s => (
-                    <ScheduleBar
-                      key={s.id}
-                      schedule={s}
-                      onClick={() => !isCopyMode && onEditSchedule(s)}
-                      onCopyStart={() => !isCopyMode && onCopyStart(s)}
-                      getDriverNames={getDriverNames}
-                      isCopyMode={isCopyMode}
-                    />
+                    <div key={s.id}>
+
+                      <ScheduleBar
+                        schedule={s}
+                        onClick={() => !isCopyMode && onEditSchedule(s)}
+                        onCopyStart={() => !isCopyMode && canEdit && onCopyStart(s)}
+                        getDriverNames={getDriverNames}
+                        isCopyMode={isCopyMode}
+                        canEdit={canEdit}
+                      />
+                    </div>
                   ))}
                 </div>
 

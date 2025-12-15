@@ -10,8 +10,14 @@ const getInitialData = async () => {
   orderBy: { sortOrder: 'asc' },
  })
 
+ // 公開範囲設定
+ const publishSetting = await prisma.stPublishSetting.findFirst({
+  orderBy: { id: 'desc' },
+ })
+
  return {
   vehicles,
+  publishSetting,
  }
 }
 
@@ -19,8 +25,9 @@ export default async function MyPagePage(props) {
  const query = await props.searchParams
 
  // セッションとスコープを取得
- const { session } = await initServerComopnent({ query })
- const userId = session?.id
+ const { session, scopes: { getSanshoTouristScopes } } = await initServerComopnent({ query })
+
+ const { userId, isSystemAdmin } = getSanshoTouristScopes()
 
  if (!userId) {
   return (
@@ -49,11 +56,17 @@ export default async function MyPagePage(props) {
   )
  }
 
- const { vehicles } = await getInitialData()
+ const { vehicles, publishSetting } = await getInitialData()
 
  return (
   <div>
-   <MyPageCC userId={userId} userName={user.name || '不明'} vehicles={vehicles} />
+   <MyPageCC
+    userId={userId}
+    userName={user.name || '不明'}
+    vehicles={vehicles}
+    isSystemAdmin={isSystemAdmin}
+    publishEndDate={publishSetting?.publishEndDate ?? null}
+   />
   </div>
  )
 }

@@ -41,7 +41,7 @@ export const knockEmailApi = async (props: {
   to = isDev ? [...systemEmailTo] : [...to]
   cc = isDev ? [] : [...(cc ?? [])]
 
-  if (isDev) {
+  if (isDev || process.env.NEXT_PUBLIC_IS_STAGING) {
     const result = {
       to: originalTo.join(`,`),
       cc: originCC?.join(`,`) ?? undefined,
@@ -68,6 +68,10 @@ export const knockEmailApi = async (props: {
     originCC?.forEach(email => {
       console.info({cc: email.trim()})
     })
+
+    if (process.env.NEXT_PUBLIC_IS_STAGING) {
+      console.log(`------------EMAIL IS NOT SENT BECAUSE OF STAGING ENV------------`)
+    }
 
     return {success: true, message: '開発環境メール', result}
   }

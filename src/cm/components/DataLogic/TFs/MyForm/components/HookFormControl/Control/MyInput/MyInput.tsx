@@ -33,10 +33,11 @@ const MyInput = React.forwardRef((props: {controlContextValue: ControlContextTyp
     return null
   }
 
+  const {autoOpen, ...inputProps} = col.inputProps ?? {}
   return (
     <>
       <input
-        {...col?.inputProps}
+        {...inputProps}
         disabled={!!col?.form?.disabled}
         list={datalistId}
         step={step}

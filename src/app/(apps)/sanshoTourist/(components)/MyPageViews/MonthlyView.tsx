@@ -1,9 +1,10 @@
 'use client'
 
-import React, {useMemo} from 'react'
-import {ChevronLeft, ChevronRight} from 'lucide-react'
-import {StScheduleWithRelations} from '../../(server-actions)/schedule-actions'
+import React, { useMemo } from 'react'
+import { ChevronLeft, ChevronRight, MapPin, Bus, User, Users, UserCheck, Building, Clock, FileText } from 'lucide-react'
+import { StScheduleWithRelations } from '../../(server-actions)/schedule-actions'
 import useModal from '@cm/components/utils/modal/useModal'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
 
 type Props = {
   schedules: StScheduleWithRelations[]
@@ -11,12 +12,10 @@ type Props = {
   setCurrentDate: (date: Date) => void
 }
 
-const formatDate = (date: Date) => {
-  return date.toISOString().split('T')[0]
-}
 
-export const MonthlyView = ({schedules, currentDate, setCurrentDate}: Props) => {
-  const ScheduleDetailModal = useModal<{schedules: StScheduleWithRelations[]; dateStr: string} | null>()
+
+export const MonthlyView = ({ schedules, currentDate, setCurrentDate }: Props) => {
+  const ScheduleDetailModal = useModal<{ schedules: StScheduleWithRelations[]; dateStr: string } | null>()
 
   const month = currentDate.getMonth()
   const year = currentDate.getFullYear()
@@ -47,12 +46,12 @@ export const MonthlyView = ({schedules, currentDate, setCurrentDate}: Props) => 
   const todayStr = formatDate(new Date())
 
   // カレンダーのセル配列を作成
-  const days: {key: string; isBlank?: boolean; dateStr?: string; day?: number; isToday?: boolean; schedules?: StScheduleWithRelations[]}[] =
+  const days: { key: string; isBlank?: boolean; dateStr?: string; day?: number; isToday?: boolean; schedules?: StScheduleWithRelations[] }[] =
     []
 
   // 前月の空白セル
   for (let i = 0; i < firstDayOfMonth; i++) {
-    days.push({key: `prev-${i}`, isBlank: true})
+    days.push({ key: `prev-${i}`, isBlank: true })
   }
 
   // 当月のセル
@@ -98,35 +97,44 @@ export const MonthlyView = ({schedules, currentDate, setCurrentDate}: Props) => 
       <div className="grid grid-cols-7">
         {days.map(d => {
           if (d.isBlank) {
-            return <div key={d.key} className="h-24 border-b border-r bg-gray-50"></div>
+            return <div key={d.key} className="h-full border-b border-r bg-gray-50"></div>
           }
           return (
             <div
               key={d.key}
-              className={`h-28 border-b border-r p-1.5 overflow-y-auto relative cursor-pointer hover:bg-gray-50 ${
-                d.schedules && d.schedules.length > 0 ? 'cursor-pointer' : ''
-              }`}
+              className={`h-28 border-b border-r p-1.5 overflow-y-auto relative cursor-pointer hover:bg-gray-50 ${d.schedules && d.schedules.length > 0 ? 'cursor-pointer' : ''
+                }`}
               onClick={() => {
                 if (d.schedules && d.schedules.length > 0) {
-                  ScheduleDetailModal.handleOpen({schedules: d.schedules, dateStr: d.dateStr!})
+                  ScheduleDetailModal.handleOpen({ schedules: d.schedules, dateStr: d.dateStr! })
                 }
               }}
             >
               <span
-                className={`text-sm font-medium ${
-                  d.isToday ? 'bg-indigo-600 text-white rounded-full w-6 h-6 flex items-center justify-center' : 'text-gray-800'
-                }`}
+                className={`text-sm font-medium ${d.isToday ? 'bg-indigo-600 text-white rounded-full w-6 h-6 flex items-center justify-center' : 'text-gray-800'
+                  }`}
               >
                 {d.day}
               </span>
               <div className="mt-1 space-y-0.5">
-                {d.schedules?.slice(0, 3).map(s => (
-                  <div key={s.id} className="p-0.5 bg-blue-500 text-white rounded text-[10px] truncate" title={s.organizationName || ''}>
-                    {s.departureTime} {s.organizationName || '(未設定)'}
-                  </div>
-                ))}
-                {d.schedules && d.schedules.length > 3 && (
-                  <div className="text-[10px] text-gray-500">他 {d.schedules.length - 3}件</div>
+                {d.schedules?.slice(0, 2).map(s => {
+                  const title = `${s.departureTime}→${s.returnTime} ${s.organizationName || '(未設定)'}\n行き先: ${s.destination || '-'}\n車両: ${s.StVehicle?.plateNumber || '不明'}${s.hasGuide ? '\nガイド有' : ''}`
+                  return (
+                    <div
+                      key={s.id}
+                      className={`p-0.5 rounded text-[9px] truncate ${s.hasGuide ? 'bg-green-500' : 'bg-blue-500'} text-white`}
+                      title={title}
+                    >
+                      <div className="flex items-center gap-0.5">
+                        <span className="truncate">{s.departureTime}</span>
+                        {s.hasGuide && <UserCheck className="w-2.5 h-2.5 flex-shrink-0" />}
+                      </div>
+                      <div className="truncate text-[8px] opacity-90">{s.organizationName || '(未設定)'}</div>
+                    </div>
+                  )
+                })}
+                {d.schedules && d.schedules.length > 2 && (
+                  <div className="text-[9px] text-gray-500 font-medium">他 {d.schedules.length - 2}件</div>
                 )}
               </div>
             </div>
@@ -136,18 +144,130 @@ export const MonthlyView = ({schedules, currentDate, setCurrentDate}: Props) => 
 
       {/* スケジュール詳細モーダル */}
       <ScheduleDetailModal.Modal>
-        <div className="p-4">
+        <div className="p-4 max-w-2xl">
           <h2 className="text-xl font-bold mb-4">スケジュール詳細 ({ScheduleDetailModal.open?.dateStr})</h2>
-          <div className="space-y-3">
+          <div className="space-y-4 max-h-[70vh] overflow-y-auto">
             {ScheduleDetailModal.open?.schedules?.map(s => (
-              <div key={s.id} className="p-3 border rounded-lg">
-                <p className="font-semibold">
-                  {s.departureTime} 〜 {s.returnTime}
-                </p>
-                <p className="text-lg font-bold">{s.organizationName || '(団体名未設定)'}</p>
-                <p className="text-sm text-gray-600">行き先: {s.destination || '-'}</p>
-                <p className="text-sm text-gray-600">車両: {s.StVehicle?.plateNumber || '不明'}</p>
-                {s.remarks && <p className="text-sm text-gray-500 mt-1">備考: {s.remarks}</p>}
+              <div key={s.id} className="p-4 border rounded-lg shadow-sm bg-white border-l-4 border-blue-500">
+                {/* ヘッダー: 時間、団体名、PDF */}
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Clock className="w-4 h-4 text-gray-400" />
+                      <span className="text-sm font-semibold text-gray-700">
+                        {s.departureTime} → {s.returnTime}
+                      </span>
+                      {s.hasGuide && (
+                        <span className="inline-flex items-center px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                          <UserCheck className="w-3 h-3 mr-1" />
+                          ガイド有
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-lg font-bold text-gray-800">{s.organizationName || '(団体名未設定)'}</p>
+                  </div>
+                  {s.pdfFileName && (
+                    <a
+                      href={s.pdfFileUrl || '#'}
+                      onClick={e => {
+                        if (!s.pdfFileUrl) {
+                          e.preventDefault()
+                          alert(`「${s.pdfFileName}」を開きます (機能未実装)`)
+                        }
+                      }}
+                      className="flex items-center px-3 py-1.5 bg-red-100 text-red-700 rounded-full text-sm font-medium hover:bg-red-200 flex-shrink-0 ml-2"
+                    >
+                      <FileText className="w-4 h-4 mr-1" />
+                      運行指示書
+                    </a>
+                  )}
+                </div>
+
+                {/* 詳細情報: グリッドレイアウト */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                  {/* 左カラム */}
+                  <div className="space-y-2">
+                    <div className="flex items-start text-sm text-gray-700">
+                      <MapPin className="w-4 h-4 mr-1.5 text-gray-400 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <strong className="text-gray-600">行き先:</strong>
+                        <span className="ml-1">{s.destination || '-'}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-start text-sm text-gray-700">
+                      <Bus className="w-4 h-4 mr-1.5 text-gray-400 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <strong className="text-gray-600">車両:</strong>
+                        <span className="ml-1">
+                          {s.StVehicle?.plateNumber || '不明'}
+                          {s.StVehicle && (
+                            <span className="text-xs text-gray-500 ml-1">
+                              ({s.StVehicle.type} / 正{s.StVehicle.seats}座席 / 補{s.StVehicle.subSeats}座席)
+                            </span>
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                    {s.StScheduleDriver && s.StScheduleDriver.length > 0 && (
+                      <div className="flex items-start text-sm text-gray-700">
+                        <Users className="w-4 h-4 mr-1.5 text-gray-400 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <strong className="text-gray-600">乗務員:</strong>
+                          <span className="ml-1 text-xs">
+                            {s.StScheduleDriver.map((sd, idx) => (
+                              <span key={sd.userId}>
+                                {idx > 0 && ', '}ID: {sd.userId}
+                              </span>
+                            ))}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 右カラム */}
+                  <div className="space-y-2">
+                    {s.StCustomer && (
+                      <div className="flex items-start text-sm text-gray-700">
+                        <Building className="w-4 h-4 mr-1.5 text-gray-400 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <strong className="text-gray-600">顧客:</strong>
+                          <span className="ml-1">{s.StCustomer.name || '-'}</span>
+                        </div>
+                      </div>
+                    )}
+                    {s.StContact && (
+                      <div className="flex items-start text-sm text-gray-700">
+                        <User className="w-4 h-4 mr-1.5 text-gray-400 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <strong className="text-gray-600">担当者:</strong>
+                          <span className="ml-1">
+                            {s.StContact.name || s.organizationContact || '-'}
+                            {s.StContact.phone && (
+                              <span className="text-xs text-gray-500 ml-1">({s.StContact.phone})</span>
+                            )}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                    {s.organizationContact && !s.StContact && (
+                      <div className="flex items-start text-sm text-gray-700">
+                        <User className="w-4 h-4 mr-1.5 text-gray-400 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <strong className="text-gray-600">担当者:</strong>
+                          <span className="ml-1">{s.organizationContact}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* 備考 */}
+                {s.remarks && (
+                  <div className="mt-3 p-2 bg-gray-50 rounded text-sm text-gray-700 border border-gray-200">
+                    <strong>備考:</strong> {s.remarks}
+                  </div>
+                )}
               </div>
             ))}
           </div>

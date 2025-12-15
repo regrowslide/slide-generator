@@ -1,10 +1,9 @@
 'use client'
 import React, {useMemo} from 'react'
-import {C_Stack, Padding, R_Stack} from 'src/cm/components/styles/common-components/common-components'
+import {C_Stack, R_Stack} from 'src/cm/components/styles/common-components/common-components'
 
 import {Z_INDEX} from '@cm/lib/constants/constants'
 
-import {TableSkelton} from '@cm/components/utils/loader/TableSkelton'
 import PlaceHolder from '@cm/components/utils/loader/PlaceHolder'
 
 import {usePropAdjustorLogic} from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/usePropAdjusctorLogic/usePropAdjustorLogic'
@@ -66,14 +65,6 @@ const PropAdjustor = React.memo<PropAdjustorPropsType>(props => {
     }),
     []
   )
-
-  if (UseRecordsReturn.records === null) {
-    return (
-      <Padding>
-        <TableSkelton />
-      </Padding>
-    )
-  }
 
   if (serverFetchProps.DetailePageId) {
     return modelData === null ? <PlaceHolder /> : <DetailedPageCC ClientProps2={ClientProps2} modelData={modelData} />

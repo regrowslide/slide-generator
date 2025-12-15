@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/generated/prisma/client'
+import {Prisma} from '@prisma/generated/prisma/client'
 
 export type codeItemCore = {
   code?: string
@@ -9,15 +9,15 @@ export type codeItemCore = {
 
 export type postHandlerProps = {
   buildConfirmMsg?: () => string
-  main: (props: { tx: Prisma.TransactionClient; sateiID: string; session; processCode: string }) => Promise<void>
+  main: (props: {tx: Prisma.TransactionClient; sateiID: string; session; processCode: string}) => Promise<void>
   buildCompleteMessage?: () => string
 }
 
-export type codeItem = { dataKey: string; code: string } & codeItemCore
-export type codeObjectArgs = { [key: string]: codeItemCore }
+export type codeItem = {dataKey: string; code: string} & codeItemCore
+export type codeObjectArgs = {[key: string]: codeItemCore}
 
 export class Code<T extends codeObjectArgs = codeObjectArgs> {
-  raw: { [K in keyof T]: codeItem & T[K] }
+  raw: {[K in keyof T]: codeItem & T[K]}
 
   constructor(master: T) {
     this.raw = Object.keys(master).reduce((acc, dataKey) => {

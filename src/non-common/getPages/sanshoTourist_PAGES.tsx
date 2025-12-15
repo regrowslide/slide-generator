@@ -79,6 +79,10 @@ export const sanshoTourist_PAGES = (props: PageGetterType) => {
           tabId: 'user',
           label: <IconLetter {...{ Icon: User }}>ユーザー管理</IconLetter>,
         },
+        {
+          tabId: `roleMaster`,
+          label: <IconLetter {...{ Icon: Settings }}>権限管理</IconLetter>,
+        },
       ],
     },
   ].map(item => ({

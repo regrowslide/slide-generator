@@ -2,9 +2,12 @@
 
 import { MonthlyTbmDriveData } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
 import UnkomeisaiDetailModal from '@app/(apps)/tbm/(pages)/unkomeisai/[id]/UnkomeisaiDetailModal'
+import DriveScheduleImageModal from '@app/(apps)/tbm/(pages)/unkomeisai/DriveScheduleImageModal'
 import useHaishaTableEditorGMF from '@app/(apps)/tbm/(globalHooks)/useHaishaTableEditorGMF'
 
 import { formatDate } from '@cm/class/Days/date-utils/formatters'
+import { ImageIcon } from 'lucide-react'
+import { TbmDriveScheduleImage } from '@prisma/generated/prisma/client'
 import { CsvTable } from '@cm/components/styles/common-components/CsvTable/CsvTable'
 import PlaceHolder from '@cm/components/utils/loader/PlaceHolder'
 import useModal from '@cm/components/utils/modal/useModal'
@@ -105,6 +108,8 @@ export default function UnkoMeisaiCC({
         }
       })
 
+
+
     // 取引先選択肢（コード順）
     const customerOptions = tbmCustomerList
       .filter(customer => customerCountMap.has(customer.id))
@@ -177,6 +182,11 @@ export default function UnkoMeisaiCC({
   })
 
   const UnkoMeisaiModalReturn = useModal<{ id: number }>()
+  const ImageModalReturn = useModal<{
+    images: TbmDriveScheduleImage[]
+    date: Date | null
+    routeGroupName: string | null
+  }>()
 
   // 便変更用のGlobalModalForm（配車管理と同じUI）
   // 運行明細では承認状態を維持する
@@ -265,6 +275,17 @@ export default function UnkoMeisaiCC({
       {/* 便変更モーダル */}
       <HK_HaishaTableEditorGMF.Modal />
 
+      {/* 画像一覧モーダル */}
+      <ImageModalReturn.Modal>
+        {ImageModalReturn.open && (
+          <DriveScheduleImageModal
+            images={ImageModalReturn.open.images}
+            date={ImageModalReturn.open.date}
+            routeGroupName={ImageModalReturn.open.routeGroupName}
+          />
+        )}
+      </ImageModalReturn.Modal>
+
       {/* フィルターセクション */}
       <C_Stack className="mb-4 p-4 bg-gray-50 rounded-lg">
         <R_Stack className="items-end gap-4">
@@ -305,21 +326,38 @@ export default function UnkoMeisaiCC({
               },
             ]
 
+            // 画像データを取得
+            const images = (schedule as any).TbmDriveScheduleImage || []
+            const imageCount = images.length
+
             return {
               csvTableRow: [
-                // 編集ボタン列を追加
-                // {
-                //   label: '操作',
-                //   cellValue: (
-                //     <button
-                //       className="text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
-                //       onClick={() => openScheduleEditModal(schedule)}
-                //     >
-                //       編集
-                //     </button>
-                //   ),
-                //   style: { minWidth: 60, textAlign: 'center' },
-                // },
+                // 画像列
+                {
+                  label: <div className="text-xs">画像</div>,
+                  cellValue: (
+                    <button
+                      className={`flex items-center gap-1 text-xs ${imageCount > 0
+                          ? 'text-blue-600 hover:text-blue-800 cursor-pointer'
+                          : 'text-gray-400 cursor-not-allowed'
+                        }`}
+                      onClick={() => {
+                        if (imageCount > 0) {
+                          ImageModalReturn.handleOpen({
+                            images,
+                            date: schedule.date,
+                            routeGroupName: schedule.TbmRouteGroup?.name || null,
+                          })
+                        }
+                      }}
+                      disabled={imageCount === 0}
+                    >
+                      <ImageIcon className="w-4 h-4" />
+                      <span>{imageCount}</span>
+                    </button>
+                  ),
+                  style: { minWidth: 50, textAlign: 'center' },
+                },
                 ...convertedCols.map((props: any, colIdx) => {
                   const [dataKey, item] = props
 

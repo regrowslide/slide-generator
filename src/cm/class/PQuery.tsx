@@ -1,5 +1,5 @@
 import {SearchQuery} from '@cm/components/DataLogic/TFs/MyTable/components/SearchHandler/search-methods'
-import {getDMMFModel, getRelationalModels} from 'src/cm/lib/methods/prisma-schema'
+import {getDMMFModel, getRelationFields} from 'src/cm/lib/methods/prisma-schema'
 import {additionalPropsType, MyTableType} from '@cm/types/types'
 import {anyObject} from '@cm/types/utility-types'
 import {DH__switchColType} from '@cm/class/DataHandler/type-converter'
@@ -51,7 +51,6 @@ interface SearchTypeConfig {
 interface RelationalIncludeProps {
   parentName: string
   parentObj: any
-  schemaAsObj: any
   SORT: any
 }
 
@@ -274,31 +273,25 @@ export class P_Query {
   /**
    * リレーショナルインクルード作成（最適化）
    */
-  static roopMakeRelationalInclude = ({parentName, parentObj, schemaAsObj, SORT}: RelationalIncludeProps): any => {
+  static roopMakeRelationalInclude = ({parentName, parentObj, SORT}: RelationalIncludeProps): any => {
     if (!parentObj?.include) {
       return parentObj
     }
 
     try {
-      const {hasManyAttributeObj, hasOneAttributeObj} = getRelationalModels({
-        schemaAsObj,
-        parentName,
-      })
-
-      const relationalObj = {...hasManyAttributeObj, ...hasOneAttributeObj}
+      const {hasManyFields, hasOneFields} = getRelationFields(parentName)
 
       Object.keys(parentObj.include).forEach(key => {
-        const relation = relationalObj[key]
         const includeItem = parentObj.include[key]
 
-        if (relation?.relationalType === 'hasMany' && includeItem?.orderBy === undefined) {
+        // hasManyFieldsに存在するかで判定
+        if (hasManyFields[key] && includeItem?.orderBy === undefined) {
           parentObj.include[key] = {...includeItem, ...SORT}
 
           // 再帰処理（深度制限付き）
           P_Query.roopMakeRelationalInclude({
             parentName: key,
             parentObj: parentObj.include[key],
-            schemaAsObj,
             SORT,
           })
         }

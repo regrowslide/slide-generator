@@ -49,8 +49,9 @@ export type KyuyoSanteiRecord = {
   }
 }
 
-export const fetchKyuyoSanteiData = async ({ whereQuery, tbmBaseId }) => {
+export const fetchKyuyoSanteiData = async ({ firstDayOfMonth, whereQuery, tbmBaseId }) => {
   const { userList, monthlyTbmDriveList } = await fetchEigyoshoUriageData({
+    firstDayOfMonth,
     whereQuery,
     tbmBaseId,
   })

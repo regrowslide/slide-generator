@@ -6,13 +6,20 @@ import { columnGetterType } from '@cm/types/types'
 import { TbmFuelCard, TbmVehicleMaintenanceRecord } from '@prisma/generated/prisma/client'
 import ShadPopover from '@cm/shadcn/ui/Organisms/ShadPopover'
 import { VehicleCl } from '@app/(apps)/tbm/(class)/VehicleCl'
+import { TBM_CODE } from '@app/(apps)/tbm/(class)/TBM_CODE'
 
 export const TbmVehicleColBuilder = (props: columnGetterType) => {
   return new Fields([
     ...new Fields([
       ...new Fields([
         // {id: 'code', label: 'コード', form: {...defaultRegister}},
+        {
+          id: 'activeStatus', label: '有効', form: {}, forSelect: {
+            codeMaster: TBM_CODE.ACTIVE_KBN,
+          },
+        },
         { id: 'frameNo', label: 'フレームNo', form: { ...defaultRegister }, search: {} },
+        { id: 'chassisNumber', label: '車体番号', form: {}, search: {} },
         { id: 'tbmBaseId', label: '営業所', forSelect: {}, form: { ...defaultRegister } },
         { id: 'vehicleNumber', label: '車両番号', form: { ...defaultRegister }, search: {} },
         { id: 'shodoTorokubi', label: '初度登録日', form: {}, type: `date` },

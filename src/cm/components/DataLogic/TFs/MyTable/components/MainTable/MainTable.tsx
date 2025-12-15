@@ -3,18 +3,21 @@ import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable'
 import {DndContext, closestCenter} from '@dnd-kit/core'
 
 import {TableWrapper} from '@cm/components/styles/common-components/Table'
-import {useMyTableLogic} from '../../hooks/useMyTableLogic'
 import {TableSkelton} from '@cm/components/utils/loader/TableSkelton'
 import PlaceHolder from '@cm/components/utils/loader/PlaceHolder'
-import {MyTableProps} from '@cm/components/DataLogic/TFs/MyTable/MyTable'
+import {MyTableProps, UseMyTableLogicReturn} from '@cm/components/DataLogic/TFs/MyTable/MyTable'
 import {cn} from '@cm/shadcn/lib/utils'
 
-export const MainTable = React.memo<MyTableProps>(props => {
-  // 🔧 ロジックを分離したカスタムフックを使用
-  const useMyTableLogicReturn = useMyTableLogic(props)
+// MainTable用のprops型（useMyTableLogicReturnを含む）
+export interface MainTableProps extends MyTableProps {
+  useMyTableLogicReturn: UseMyTableLogicReturn
+}
+
+export const MainTable = React.memo<MainTableProps>(props => {
+  // 🔧 useMyTableLogicはMyTableから渡される（二重呼び出しを防ぐ）
+  const {useMyTableLogicReturn} = props
   const {
     tableData,
-
     mainTableProps: {
       myTable,
       columns,
@@ -25,7 +28,7 @@ export const MainTable = React.memo<MyTableProps>(props => {
       handleDragEndMemo,
       items,
       showHeader,
-      ClientProps2,
+
       rows,
     },
 
@@ -34,6 +37,59 @@ export const MainTable = React.memo<MyTableProps>(props => {
 
   const {records, emptyDataStyle} = tableData
 
+  const combinedTableStyle = {
+    ...tableStyle,
+    ...{borderCollapse: 'separate' as const, borderSpacing: showHeader ? '0px' : '0px 6px'},
+  }
+
+  // TableWrapperCardのclassNameを直接計算（コンポーネント内定義を避ける）
+  const wrapperCardClassName =
+    myTable?.useWrapperCard === false ? '' : cn('relative h-fit', myTable?.showHeader ? 'p-0!' : 'p-2!')
+
+  return (
+    <>
+      {typeof myTable?.header === 'function' && myTable?.header()}
+      <section className=" bg-inherit">
+        {/* TableWrapperCardをインラインdivに変更して再マウントを防ぐ */}
+        <div className={wrapperCardClassName}>
+          {/* TableWrapperは常にレンダリングされ、スクロール位置を維持 */}
+          <TableWrapper ref={elementRef} style={tableStyle}>
+            {RenderTableContent({
+              records,
+              emptyDataStyle,
+              sensors,
+              handleDragEndMemo,
+              items,
+              combinedTableStyle,
+              tableStyleRef,
+              myTable,
+              columns,
+              Components,
+              rows,
+            })}
+          </TableWrapper>
+        </div>
+      </section>
+    </>
+  )
+})
+
+MainTable.displayName = 'MainTable'
+
+const RenderTableContent = ({
+  records,
+  emptyDataStyle,
+  sensors,
+  handleDragEndMemo,
+  items,
+  combinedTableStyle,
+  tableStyleRef,
+  myTable,
+  columns,
+  Components,
+  rows,
+}) => {
+  // ローディング中
   if (records === null) {
     return (
       <div className="max-w-[90%] w-[300px] h-fit overflow-hidden">
@@ -42,6 +98,7 @@ export const MainTable = React.memo<MyTableProps>(props => {
     )
   }
 
+  // データなし
   if (records.length === 0) {
     return (
       <div style={emptyDataStyle}>
@@ -50,78 +107,43 @@ export const MainTable = React.memo<MyTableProps>(props => {
     )
   }
 
-  const TableWrapperCard = ({children}: {children: React.ReactNode}) => {
-    if (myTable?.useWrapperCard === false) {
-      return <div>{children}</div>
-    } else {
-      return (
-        <div
-          className={cn(
-            //
-            ` relative h-fit`,
-            myTable?.showHeader ? 'p-0!' : 'p-2!'
-          )}
-        >
-          {children}
-        </div>
-      )
-    }
-  }
-
-  const combinedTableStyle = {
-    ...tableStyle,
-    ...{borderCollapse: 'separate' as const, borderSpacing: showHeader ? '0px' : '0px 6px'},
-  }
-
+  // テーブル表示
   return (
-    <>
-      {typeof myTable?.header === 'function' && myTable?.header()}
-      <section className=" bg-inherit">
-        <TableWrapperCard>
-          <TableWrapper ref={elementRef} style={tableStyle}>
-            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndMemo}>
-              <SortableContext items={items} strategy={verticalListSortingStrategy}>
-                <div>
-                  <table style={combinedTableStyle} ref={tableStyleRef} className={myTable?.className}>
-                    {/* ヘッダーは元のコンポーネントを使用 */}
-                    {myTable?.showHeader && (
-                      <thead>
-                        <tr>
-                          <th className="text-center bg-gray-100 font-bold border border-gray-300 "></th>
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndMemo}>
+      <SortableContext items={items} strategy={verticalListSortingStrategy}>
+        <div>
+          <table style={combinedTableStyle} ref={tableStyleRef} className={myTable?.className}>
+            {/* ヘッダーは元のコンポーネントを使用 */}
+            {myTable?.showHeader && (
+              <thead>
+                <tr>
+                  <th className="text-center bg-gray-100 font-bold border border-gray-300 "></th>
 
-                          {columns[0]
-                            ?.filter(col => col?.td?.hidden !== true)
-                            .map((col, idx) => (
-                              <th
-                                key={col.id || idx}
-                                className="text-center bg-gray-100 font-bold border border-gray-300 "
-                                style={col.th?.style}
-                              >
-                                {col.label}
-                              </th>
-                            ))}
+                  {columns[0]
+                    ?.filter(col => col?.td?.hidden !== true)
+                    .map((col, idx) => (
+                      <th
+                        key={col.id || idx}
+                        className="text-center bg-gray-100 font-bold border border-gray-300 "
+                        style={col.th?.style}
+                      >
+                        {col.label}
+                      </th>
+                    ))}
 
-                          {myTable?.delete !== false && (
-                            <th className="text-center bg-gray-100 font-bold border border-gray-300 "></th>
-                          )}
-                        </tr>
-                      </thead>
-                    )}
+                  {myTable?.delete !== false && <th className="text-center bg-gray-100 font-bold border border-gray-300 "></th>}
+                </tr>
+              </thead>
+            )}
 
-                    <tbody>
-                      {ClientProps2.records?.map((record, recIdx: number) => (
-                        <Components.DraggableTableRowCallBack key={record.id} {...{record, recIdx, rows, Components}} />
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </SortableContext>
-            </DndContext>
-          </TableWrapper>
-        </TableWrapperCard>
-      </section>
-    </>
+            <tbody>
+              {records?.map((record, recIdx: number) => (
+                <Components.DraggableTableRowCallBack key={record.id} {...{record, recIdx, rows, Components}} />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </SortableContext>
+    </DndContext>
   )
-})
-
-MainTable.displayName = 'MainTable'
+}

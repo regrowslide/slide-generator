@@ -1,20 +1,20 @@
-import React, { CSSProperties, useMemo } from 'react'
-import { useSortable } from '@dnd-kit/sortable'
+import React, {CSSProperties, useMemo} from 'react'
+import {useSortable} from '@dnd-kit/sortable'
 
-import { ClientPropsType2 } from '@cm/components/DataLogic/TFs/PropAdjustor/types/propAdjustor-types'
-import { cn } from '@shadcn/lib/utils'
-import { MyTableType } from '@cm/types/types'
-import { colType } from '@cm/types/col-types'
-import { createRowColor, createTrClassName } from '@cm/components/DataLogic/TFs/MyTable/oldbackups/Tbody/Tbody-methods'
+import {ClientPropsType2} from '@cm/components/DataLogic/TFs/PropAdjustor/types/propAdjustor-types'
+import {cn} from '@shadcn/lib/utils'
+import {MyTableType} from '@cm/types/types'
+import {colType} from '@cm/types/col-types'
+import {createRowColor, createTrClassName} from '@cm/components/DataLogic/TFs/MyTable/oldbackups/Tbody/Tbody-methods'
 
-import { CSS } from '@dnd-kit/utilities'
+import {CSS} from '@dnd-kit/utilities'
 
-import { getColorStyles } from '@cm/lib/methods/colors'
-import { R_Stack } from '@cm/components/styles/common-components/common-components'
-import useWindowSize from '@cm/hooks/useWindowSize'
+import {getColorStyles} from '@cm/lib/methods/colors'
+import {R_Stack} from '@cm/components/styles/common-components/common-components'
 import AutoGridContainer from '@cm/components/utils/AutoGridContainer'
-import { getValue } from '@cm/components/DataLogic/TFs/MyTable/components/MainTable/TdContent/lib/getValue'
+import {getValue} from '@cm/components/DataLogic/TFs/MyTable/components/MainTable/TdContent/lib/getValue'
 import TdContent from '@cm/components/DataLogic/TFs/MyTable/components/MainTable/TdContent/TdContent'
+import {UseRecordsReturn} from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/useRecords/useRecords'
 
 // ドラッグ可能な行コンポーネント
 export const DraggableTableRow = React.memo(
@@ -35,17 +35,17 @@ export const DraggableTableRow = React.memo(
     getPaginationProps: any
 
     useGlobalProps: any
-    Components: { EditButton; DeleteButton; DragButton; RowActionButtonList }
+    Components: {EditButton; DeleteButton; DragButton; RowActionButtonList}
   }) => {
-    const { dataModelName, mutateRecords, formData, editType } = ClientProps2
-    const { SP } = useWindowSize()
-    const { from } = getPaginationProps({ totalCount: ClientProps2.totalCount })
+    const {dataModelName, UseRecordsReturn, formData, editType} = ClientProps2
+
+    const {from} = getPaginationProps({totalCount: ClientProps2.totalCount})
 
     const rowColor = useMemo(() => {
-      return createRowColor({ myTable, recIdx, record, rows })
+      return createRowColor({myTable, recIdx, record, rows})
     }, [myTable, recIdx, record, rows])
 
-    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({
       id: myTable?.['drag'] === false ? '' : record.id,
     })
 
@@ -59,12 +59,12 @@ export const DraggableTableRow = React.memo(
     }
 
     const allowDnd = myTable?.['drag']
-    const dndProps = allowDnd ? { ref: setNodeRef, ...attributes, ...listeners, style: dndStyle } : undefined
+    const dndProps = allowDnd ? {ref: setNodeRef, ...attributes, ...listeners, style: dndStyle} : undefined
 
     const recordIndex = record?.recordIndex || from + recIdx
     const recordId = record.id
 
-    const trClassName = cn(createTrClassName({ myTable, record, formData }))
+    const trClassName = cn(createTrClassName({myTable, record, formData}))
 
     return (
       <>
@@ -76,7 +76,7 @@ export const DraggableTableRow = React.memo(
               key={`${recordId}-${rowIdx}`}
               className={trClassName}
               {...(rowIdx === 0 ? dndProps : undefined)} // DnDは最初の行のみに適用
-              style={rowIdx === 0 ? dndStyle : { backgroundColor: rowColor }}
+              style={rowIdx === 0 ? dndStyle : {backgroundColor: rowColor}}
             >
               {/* 操作セル（最初の行のみ） */}
               {rowIdx === 0 && (
@@ -93,18 +93,18 @@ export const DraggableTableRow = React.memo(
                   <R_Stack className={`gap-0 flex-nowrap  justify-center mx-auto f-fit`}>
                     <span>{myTable?.showRecordIndex !== false && <span className="text-gray-400">{recordIndex}.</span>}</span>
 
-                    <AutoGridContainer className={`mx-auto gap-1 `} maxCols={{ sm: 1, md: 3 }}>
+                    <AutoGridContainer className={`mx-auto gap-1 `} maxCols={{sm: 1, md: 3}}>
                       {/* その他アクション */}
-                      <Components.RowActionButtonList {...{ record }} />
+                      <Components.RowActionButtonList {...{record}} />
 
                       {/* DnD */}
-                      <Components.DragButton {...{ dndProps, isDragging }} />
+                      <Components.DragButton {...{dndProps, isDragging}} />
 
                       {/* 編集ボタン */}
-                      <Components.EditButton {...{ record }} />
+                      <Components.EditButton {...{record}} />
 
                       {/* 削除ボタン */}
-                      <Components.DeleteButton {...{ record }} />
+                      <Components.DeleteButton {...{record}} />
                     </AutoGridContainer>
                   </R_Stack>
                 </th>
@@ -117,13 +117,13 @@ export const DraggableTableRow = React.memo(
                   ...col?.td?.style,
                   ...(rowIdx === 0
                     ? {
-                      color: isDragging ? '#1f2937' : undefined, // ダークグレーのテキスト色
-                      fontWeight: isDragging ? '500' : undefined, // 少し太字に
-                    }
-                    : { backgroundColor: rowColor }),
+                        color: isDragging ? '#1f2937' : undefined, // ダークグレーのテキスト色
+                        fontWeight: isDragging ? '500' : undefined, // 少し太字に
+                      }
+                    : {backgroundColor: rowColor}),
                 }
-                const value = getValue({ col, record, dataModelName, mutateRecords, tdStyle })
-
+                const UseRecordsReturnValue = ClientProps2?.UseRecordsReturn
+                const value = getValue({col, record, dataModelName, tdStyle, UseRecordsReturn: UseRecordsReturnValue})
                 return (
                   <td
                     key={`${col.id}-${record.id}`}
@@ -133,7 +133,6 @@ export const DraggableTableRow = React.memo(
                     className={`align-top tableCell`}
                     style={tdStyle}
                   >
-                    {/* <div className={`flex  ${_getR_StackClass(col)}`}> */}
                     <TdContent
                       {...{
                         showHeader: ClientProps2.myTable?.showHeader,
@@ -142,7 +141,7 @@ export const DraggableTableRow = React.memo(
                         record,
                         value,
                         tdStyle,
-                        mutateRecords,
+                        UseRecordsReturn: UseRecordsReturnValue as UseRecordsReturn,
                       }}
                     />
                     {/* </div> */}

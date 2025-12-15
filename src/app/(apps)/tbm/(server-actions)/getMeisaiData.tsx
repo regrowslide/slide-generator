@@ -34,6 +34,7 @@ export const getMeisaiData = async ({
 }): Promise<MeisaiData> => {
  // 運行スケジュールデータ取得（承認済みのみ）
  const driveScheduleList = await getDriveScheduleList({
+  firstDayOfMonth: whereQuery.gte,
   whereQuery: {
    ...whereQuery,
    gte: Days.day.subtract(whereQuery.gte, 1),

@@ -64,6 +64,8 @@ export type UserMinAggregateOutputType = {
   sortOrder: number | null
   active: boolean | null
   hiredAt: Date | null
+  retiredAt: Date | null
+  transferredAt: Date | null
   yukyuCategory: string | null
   name: string | null
   kana: string | null
@@ -101,6 +103,8 @@ export type UserMaxAggregateOutputType = {
   sortOrder: number | null
   active: boolean | null
   hiredAt: Date | null
+  retiredAt: Date | null
+  transferredAt: Date | null
   yukyuCategory: string | null
   name: string | null
   kana: string | null
@@ -138,6 +142,8 @@ export type UserCountAggregateOutputType = {
   sortOrder: number
   active: number
   hiredAt: number
+  retiredAt: number
+  transferredAt: number
   yukyuCategory: number
   name: number
   kana: number
@@ -208,6 +214,8 @@ export type UserMinAggregateInputType = {
   sortOrder?: true
   active?: true
   hiredAt?: true
+  retiredAt?: true
+  transferredAt?: true
   yukyuCategory?: true
   name?: true
   kana?: true
@@ -245,6 +253,8 @@ export type UserMaxAggregateInputType = {
   sortOrder?: true
   active?: true
   hiredAt?: true
+  retiredAt?: true
+  transferredAt?: true
   yukyuCategory?: true
   name?: true
   kana?: true
@@ -282,6 +292,8 @@ export type UserCountAggregateInputType = {
   sortOrder?: true
   active?: true
   hiredAt?: true
+  retiredAt?: true
+  transferredAt?: true
   yukyuCategory?: true
   name?: true
   kana?: true
@@ -407,6 +419,8 @@ export type UserGroupByOutputType = {
   sortOrder: number
   active: boolean
   hiredAt: Date | null
+  retiredAt: Date | null
+  transferredAt: Date | null
   yukyuCategory: string | null
   name: string
   kana: string | null
@@ -468,6 +482,8 @@ export type UserWhereInput = {
   sortOrder?: Prisma.FloatFilter<"User"> | number
   active?: Prisma.BoolFilter<"User"> | boolean
   hiredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  retiredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  transferredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   yukyuCategory?: Prisma.StringNullableFilter<"User"> | string | null
   name?: Prisma.StringFilter<"User"> | string
   kana?: Prisma.StringNullableFilter<"User"> | string | null
@@ -524,6 +540,8 @@ export type UserOrderByWithRelationInput = {
   sortOrder?: Prisma.SortOrder
   active?: Prisma.SortOrder
   hiredAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  retiredAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  transferredAt?: Prisma.SortOrderInput | Prisma.SortOrder
   yukyuCategory?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   kana?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -585,6 +603,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   sortOrder?: Prisma.FloatFilter<"User"> | number
   active?: Prisma.BoolFilter<"User"> | boolean
   hiredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  retiredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  transferredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   yukyuCategory?: Prisma.StringNullableFilter<"User"> | string | null
   name?: Prisma.StringFilter<"User"> | string
   kana?: Prisma.StringNullableFilter<"User"> | string | null
@@ -639,6 +659,8 @@ export type UserOrderByWithAggregationInput = {
   sortOrder?: Prisma.SortOrder
   active?: Prisma.SortOrder
   hiredAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  retiredAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  transferredAt?: Prisma.SortOrderInput | Prisma.SortOrder
   yukyuCategory?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   kana?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -685,6 +707,8 @@ export type UserScalarWhereWithAggregatesInput = {
   sortOrder?: Prisma.FloatWithAggregatesFilter<"User"> | number
   active?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   hiredAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  retiredAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  transferredAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   yukyuCategory?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   name?: Prisma.StringWithAggregatesFilter<"User"> | string
   kana?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -722,6 +746,8 @@ export type UserCreateInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -773,6 +799,8 @@ export type UserUncheckedCreateInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -823,6 +851,8 @@ export type UserUpdateInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -874,6 +904,8 @@ export type UserUncheckedUpdateInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -925,6 +957,8 @@ export type UserCreateManyInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -962,6 +996,8 @@ export type UserUpdateManyMutationInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -995,6 +1031,8 @@ export type UserUncheckedUpdateManyInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1048,6 +1086,8 @@ export type UserCountOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
   active?: Prisma.SortOrder
   hiredAt?: Prisma.SortOrder
+  retiredAt?: Prisma.SortOrder
+  transferredAt?: Prisma.SortOrder
   yukyuCategory?: Prisma.SortOrder
   name?: Prisma.SortOrder
   kana?: Prisma.SortOrder
@@ -1101,6 +1141,8 @@ export type UserMaxOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
   active?: Prisma.SortOrder
   hiredAt?: Prisma.SortOrder
+  retiredAt?: Prisma.SortOrder
+  transferredAt?: Prisma.SortOrder
   yukyuCategory?: Prisma.SortOrder
   name?: Prisma.SortOrder
   kana?: Prisma.SortOrder
@@ -1138,6 +1180,8 @@ export type UserMinOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
   active?: Prisma.SortOrder
   hiredAt?: Prisma.SortOrder
+  retiredAt?: Prisma.SortOrder
+  transferredAt?: Prisma.SortOrder
   yukyuCategory?: Prisma.SortOrder
   name?: Prisma.SortOrder
   kana?: Prisma.SortOrder
@@ -1605,6 +1649,8 @@ export type UserCreateWithoutAidocumentCompanyInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -1655,6 +1701,8 @@ export type UserUncheckedCreateWithoutAidocumentCompanyInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -1734,6 +1782,8 @@ export type UserScalarWhereInput = {
   sortOrder?: Prisma.FloatFilter<"User"> | number
   active?: Prisma.BoolFilter<"User"> | boolean
   hiredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  retiredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  transferredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   yukyuCategory?: Prisma.StringNullableFilter<"User"> | string | null
   name?: Prisma.StringFilter<"User"> | string
   kana?: Prisma.StringNullableFilter<"User"> | string | null
@@ -1771,6 +1821,8 @@ export type UserCreateWithoutCounselingStoreInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -1821,6 +1873,8 @@ export type UserUncheckedCreateWithoutCounselingStoreInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -1896,6 +1950,8 @@ export type UserCreateWithoutCounselingSlotInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -1946,6 +2002,8 @@ export type UserUncheckedCreateWithoutCounselingSlotInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -2011,6 +2069,8 @@ export type UserUpdateWithoutCounselingSlotInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2061,6 +2121,8 @@ export type UserUncheckedUpdateWithoutCounselingSlotInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2110,6 +2172,8 @@ export type UserCreateWithoutSbmReservationInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -2160,6 +2224,8 @@ export type UserUncheckedCreateWithoutSbmReservationInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -2225,6 +2291,8 @@ export type UserUpdateWithoutSbmReservationInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2275,6 +2343,8 @@ export type UserUncheckedUpdateWithoutSbmReservationInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2324,6 +2394,8 @@ export type UserCreateWithoutSbmReservationChangeHistoryInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -2374,6 +2446,8 @@ export type UserUncheckedCreateWithoutSbmReservationChangeHistoryInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -2439,6 +2513,8 @@ export type UserUpdateWithoutSbmReservationChangeHistoryInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2489,6 +2565,8 @@ export type UserUncheckedUpdateWithoutSbmReservationChangeHistoryInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2538,6 +2616,8 @@ export type UserCreateWithoutSbmDeliveryAssignmentInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -2588,6 +2668,8 @@ export type UserUncheckedCreateWithoutSbmDeliveryAssignmentInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -2653,6 +2735,8 @@ export type UserUpdateWithoutSbmDeliveryAssignmentInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2703,6 +2787,8 @@ export type UserUncheckedUpdateWithoutSbmDeliveryAssignmentInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2752,6 +2838,8 @@ export type UserCreateWithoutDepartmentInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -2802,6 +2890,8 @@ export type UserUncheckedCreateWithoutDepartmentInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -2877,6 +2967,8 @@ export type UserCreateWithoutUserRoleInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -2927,6 +3019,8 @@ export type UserUncheckedCreateWithoutUserRoleInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -2992,6 +3086,8 @@ export type UserUpdateWithoutUserRoleInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3042,6 +3138,8 @@ export type UserUncheckedUpdateWithoutUserRoleInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3091,6 +3189,8 @@ export type UserCreateWithoutTbmBaseInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -3141,6 +3241,8 @@ export type UserUncheckedCreateWithoutTbmBaseInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -3216,6 +3318,8 @@ export type UserCreateWithoutTbmVehicleInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -3266,6 +3370,8 @@ export type UserUncheckedCreateWithoutTbmVehicleInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -3341,6 +3447,8 @@ export type UserCreateWithoutTbmRefuelHistoryInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -3391,6 +3499,8 @@ export type UserUncheckedCreateWithoutTbmRefuelHistoryInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -3456,6 +3566,8 @@ export type UserUpdateWithoutTbmRefuelHistoryInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3506,6 +3618,8 @@ export type UserUncheckedUpdateWithoutTbmRefuelHistoryInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3555,6 +3669,8 @@ export type UserCreateWithoutTbmCarWashHistoryInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -3605,6 +3721,8 @@ export type UserUncheckedCreateWithoutTbmCarWashHistoryInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -3670,6 +3788,8 @@ export type UserUpdateWithoutTbmCarWashHistoryInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3720,6 +3840,8 @@ export type UserUncheckedUpdateWithoutTbmCarWashHistoryInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3769,6 +3891,8 @@ export type UserCreateWithoutTbmDriveScheduleInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -3819,6 +3943,8 @@ export type UserUncheckedCreateWithoutTbmDriveScheduleInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -3884,6 +4010,8 @@ export type UserUpdateWithoutTbmDriveScheduleInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3934,6 +4062,8 @@ export type UserUncheckedUpdateWithoutTbmDriveScheduleInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3983,6 +4113,8 @@ export type UserCreateWithoutOdometerInputInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -4033,6 +4165,8 @@ export type UserUncheckedCreateWithoutOdometerInputInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -4098,6 +4232,8 @@ export type UserUpdateWithoutOdometerInputInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4148,6 +4284,8 @@ export type UserUncheckedUpdateWithoutOdometerInputInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4197,6 +4335,8 @@ export type UserCreateWithoutUserWorkStatusInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -4247,6 +4387,8 @@ export type UserUncheckedCreateWithoutUserWorkStatusInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -4312,6 +4454,8 @@ export type UserUpdateWithoutUserWorkStatusInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4362,6 +4506,8 @@ export type UserUncheckedUpdateWithoutUserWorkStatusInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4411,6 +4557,8 @@ export type UserCreateWithoutKyuyoTableRecordInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -4461,6 +4609,8 @@ export type UserUncheckedCreateWithoutKyuyoTableRecordInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -4526,6 +4676,8 @@ export type UserUpdateWithoutKyuyoTableRecordInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4576,6 +4728,8 @@ export type UserUncheckedUpdateWithoutKyuyoTableRecordInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4625,6 +4779,8 @@ export type UserCreateWithoutExerciseMasterInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -4675,6 +4831,8 @@ export type UserUncheckedCreateWithoutExerciseMasterInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -4740,6 +4898,8 @@ export type UserUpdateWithoutExerciseMasterInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4790,6 +4950,8 @@ export type UserUncheckedUpdateWithoutExerciseMasterInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4839,6 +5001,8 @@ export type UserCreateWithoutWorkoutLogInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -4889,6 +5053,8 @@ export type UserUncheckedCreateWithoutWorkoutLogInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -4954,6 +5120,8 @@ export type UserUpdateWithoutWorkoutLogInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5004,6 +5172,8 @@ export type UserUncheckedUpdateWithoutWorkoutLogInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5054,6 +5224,8 @@ export type UserCreateManyAidocumentCompanyInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -5090,6 +5262,8 @@ export type UserUpdateWithoutAidocumentCompanyInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5140,6 +5314,8 @@ export type UserUncheckedUpdateWithoutAidocumentCompanyInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5190,6 +5366,8 @@ export type UserUncheckedUpdateManyWithoutAidocumentCompanyInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5227,6 +5405,8 @@ export type UserCreateManyCounselingStoreInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -5263,6 +5443,8 @@ export type UserUpdateWithoutCounselingStoreInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5313,6 +5495,8 @@ export type UserUncheckedUpdateWithoutCounselingStoreInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5363,6 +5547,8 @@ export type UserUncheckedUpdateManyWithoutCounselingStoreInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5400,6 +5586,8 @@ export type UserCreateManyDepartmentInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -5436,6 +5624,8 @@ export type UserUpdateWithoutDepartmentInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5486,6 +5676,8 @@ export type UserUncheckedUpdateWithoutDepartmentInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5536,6 +5728,8 @@ export type UserUncheckedUpdateManyWithoutDepartmentInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5573,6 +5767,8 @@ export type UserCreateManyTbmBaseInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -5609,6 +5805,8 @@ export type UserUpdateWithoutTbmBaseInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5659,6 +5857,8 @@ export type UserUncheckedUpdateWithoutTbmBaseInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5709,6 +5909,8 @@ export type UserUncheckedUpdateManyWithoutTbmBaseInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5746,6 +5948,8 @@ export type UserCreateManyTbmVehicleInput = {
   sortOrder?: number
   active?: boolean
   hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
   yukyuCategory?: string | null
   name: string
   kana?: string | null
@@ -5782,6 +5986,8 @@ export type UserUpdateWithoutTbmVehicleInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5832,6 +6038,8 @@ export type UserUncheckedUpdateWithoutTbmVehicleInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5882,6 +6090,8 @@ export type UserUncheckedUpdateManyWithoutTbmVehicleInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6058,6 +6268,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   sortOrder?: boolean
   active?: boolean
   hiredAt?: boolean
+  retiredAt?: boolean
+  transferredAt?: boolean
   yukyuCategory?: boolean
   name?: boolean
   kana?: boolean
@@ -6115,6 +6327,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   sortOrder?: boolean
   active?: boolean
   hiredAt?: boolean
+  retiredAt?: boolean
+  transferredAt?: boolean
   yukyuCategory?: boolean
   name?: boolean
   kana?: boolean
@@ -6158,6 +6372,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   sortOrder?: boolean
   active?: boolean
   hiredAt?: boolean
+  retiredAt?: boolean
+  transferredAt?: boolean
   yukyuCategory?: boolean
   name?: boolean
   kana?: boolean
@@ -6201,6 +6417,8 @@ export type UserSelectScalar = {
   sortOrder?: boolean
   active?: boolean
   hiredAt?: boolean
+  retiredAt?: boolean
+  transferredAt?: boolean
   yukyuCategory?: boolean
   name?: boolean
   kana?: boolean
@@ -6231,7 +6449,7 @@ export type UserSelectScalar = {
   aidocumentCompanyId?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "createdAt" | "updatedAt" | "sortOrder" | "active" | "hiredAt" | "yukyuCategory" | "name" | "kana" | "email" | "password" | "type" | "role" | "tempResetCode" | "tempResetCodeExpired" | "storeId" | "schoolId" | "rentaStoreId" | "type2" | "shopId" | "membershipName" | "damageNameMasterId" | "color" | "app" | "apps" | "employeeCode" | "phone" | "avatar" | "bcc" | "tbmBaseId" | "departmentId" | "tbmVehicleId" | "counselingStoreId" | "aidocumentCompanyId", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "createdAt" | "updatedAt" | "sortOrder" | "active" | "hiredAt" | "retiredAt" | "transferredAt" | "yukyuCategory" | "name" | "kana" | "email" | "password" | "type" | "role" | "tempResetCode" | "tempResetCodeExpired" | "storeId" | "schoolId" | "rentaStoreId" | "type2" | "shopId" | "membershipName" | "damageNameMasterId" | "color" | "app" | "apps" | "employeeCode" | "phone" | "avatar" | "bcc" | "tbmBaseId" | "departmentId" | "tbmVehicleId" | "counselingStoreId" | "aidocumentCompanyId", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   UserRole?: boolean | Prisma.User$UserRoleArgs<ExtArgs>
   TbmBase?: boolean | Prisma.User$TbmBaseArgs<ExtArgs>
@@ -6298,6 +6516,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     sortOrder: number
     active: boolean
     hiredAt: Date | null
+    retiredAt: Date | null
+    transferredAt: Date | null
     yukyuCategory: string | null
     name: string
     kana: string | null
@@ -6774,6 +6994,8 @@ export interface UserFieldRefs {
   readonly sortOrder: Prisma.FieldRef<"User", 'Float'>
   readonly active: Prisma.FieldRef<"User", 'Boolean'>
   readonly hiredAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly retiredAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly transferredAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly yukyuCategory: Prisma.FieldRef<"User", 'String'>
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly kana: Prisma.FieldRef<"User", 'String'>

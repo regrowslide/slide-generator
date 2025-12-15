@@ -6,19 +6,17 @@ import { StPublishSetting } from '@prisma/generated/prisma/client'
 
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import { updateStPublishSetting } from '../../(server-actions)/settings-actions'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
 
 type Props = {
   publishSetting: StPublishSetting | null
 }
 
-const formatDateForInput = (date: Date | null | undefined) => {
-  if (!date) return ''
-  return new Date(date).toISOString().split('T')[0]
-}
+
 
 export const SettingsCC = ({ publishSetting }: Props) => {
   const { toggleLoad } = useGlobal()
-  const [publishEndDate, setPublishEndDate] = useState(formatDateForInput(publishSetting?.publishEndDate))
+  const [publishEndDate, setPublishEndDate] = useState(formatDate(publishSetting?.publishEndDate))
   const [isSaving, setIsSaving] = useState(false)
 
   const handleSave = async () => {

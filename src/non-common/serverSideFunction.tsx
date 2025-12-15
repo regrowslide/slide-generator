@@ -80,6 +80,10 @@ export const initServerComopnent = async ({ query }) => {
 
   const session = await FakeOrKeepSession({ query, realSession: realSession })
 
+
+
+
+
   const { roles } = await fetchUserRole({ session })
 
   const scopes = getScopes(session, { query, roles })

@@ -127,6 +127,7 @@ export type UcarModelStructure = {
 }
 
 /**
+ * @deprecated getDMMFModel() または modelExists() を使用してください
  * スキーマをオブジェクト形式で取得する
  * DMMFデータを使用した新しい実装
  */
@@ -165,6 +166,7 @@ export const getSchema = () => {
 }
 
 /**
+ * @deprecated getRelationFields() を使用してください
  * リレーショナルモデルを取得する
  * DMMFデータを使用した改善版
  */
@@ -236,16 +238,6 @@ export const getDMMFModel = (modelName: string) => {
   return prismaDMMF.models.find(m => m.name === StrHandler.capitalizeFirstLetter(modelName)) as PrismaDMMFModel | undefined
 }
 
-/**
- * すべてのモデル名を取得
- */
-export const getAllModelNames = (): string[] => {
-  if (prismaDMMF && prismaDMMF.models) {
-    return prismaDMMF.models.map(m => m.name)
-  }
-  return Object.keys(getSchema())
-}
-
 export const getModelFieldsInfomation = (modelName: string) => {
   const modelStructure = getDMMFModel(modelName)
 
@@ -271,4 +263,38 @@ export const getModelFieldsInfomation = (modelName: string) => {
   })
 
   return {primitiveFieldObj, objectFieldObj}
+}
+
+/**
+ * モデルの存在確認
+ */
+export const modelExists = (modelName: string): boolean => getDMMFModel(modelName) !== undefined
+
+/**
+ * フィールドの存在確認
+ */
+export const hasField = (modelName: string, fieldName: string): boolean =>
+  getDMMFModel(modelName)?.fields?.some(f => f.name === fieldName) ?? false
+
+/**
+ * リレーション情報を取得（hasManyとhasOneを区別）
+ */
+export const getRelationFields = (modelName: string) => {
+  const model = getDMMFModel(modelName)
+  if (!model) return {hasManyFields: {}, hasOneFields: {}}
+
+  const hasManyFields: Record<string, PrismaDMMFObjectField> = {}
+  const hasOneFields: Record<string, PrismaDMMFObjectField> = {}
+
+  model.fields.forEach(field => {
+    if (field.kind === 'object') {
+      if (field.isList) {
+        hasManyFields[field.name] = field as PrismaDMMFObjectField
+      } else {
+        hasOneFields[field.name] = field as PrismaDMMFObjectField
+      }
+    }
+  })
+
+  return {hasManyFields, hasOneFields}
 }

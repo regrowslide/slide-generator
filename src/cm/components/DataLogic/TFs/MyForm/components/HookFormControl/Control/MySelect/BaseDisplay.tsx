@@ -44,7 +44,7 @@ const BaseDisplay = React.memo((props: {contexts: contextsType}) => {
         <ChevronDown className={`w-6 h-6`} />
       </div>
 
-      <R_Stack style={{...controlContextValue.ControlStyle}} className={cn(formProps.className)}>
+      <R_Stack style={{...controlContextValue.ControlStyle}} className={cn(formProps.className, 'py-0')}>
         <IconBtnForSelect
           color={COLOR}
           className={twMerge(

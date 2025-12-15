@@ -1,7 +1,6 @@
 'use server'
 
 import prisma from 'src/lib/prisma'
-import {toUtc} from '@cm/class/Days/date-utils/calculations'
 import {StSchedule} from '@prisma/generated/prisma/client'
 
 // Types
@@ -31,7 +30,9 @@ export type StScheduleWithRelations = Awaited<ReturnType<typeof getStSchedules>>
 
 export const createStSchedule = async (data: Omit<StScheduleInput, 'id'>) => {
   const {date, driverIds, ...rest} = data
-  const utcDate = toUtc(date)
+  // クライアントから送られるDateは既にUTC形式（日本時間00:00:00 = UTC前日15:00:00）
+  // なのでそのまま使用する
+  const utcDate = new Date(date)
 
   const result = await prisma.stSchedule.create({
     data: {
@@ -90,13 +91,28 @@ export const getStSchedules = async (params?: {
     deleted?: boolean
   }
   orderBy?: {[key: string]: 'asc' | 'desc'}
+  isSystemAdmin?: boolean
+  publishEndDate?: Date | null
 }) => {
-  const {where, orderBy} = params ?? {}
+  const {where, orderBy, isSystemAdmin, publishEndDate} = params ?? {}
+
+  // 公開範囲の終了日を考慮したdateTo
+  let effectiveDateTo = where?.dateTo ? new Date(where.dateTo) : undefined
+
+  // 管理者でない場合、公開範囲で制限
+  if (!isSystemAdmin && publishEndDate) {
+    const publishEnd = new Date(publishEndDate)
+
+    if (!effectiveDateTo || publishEnd < effectiveDateTo) {
+      effectiveDateTo = publishEnd
+    }
+  }
 
   return await prisma.stSchedule.findMany({
     where: {
-      ...(where?.dateFrom && {date: {gte: toUtc(where.dateFrom)}}),
-      ...(where?.dateTo && {date: {lte: toUtc(where.dateTo)}}),
+      // クライアントから送られるDateは既にUTC形式なのでそのまま使用
+      ...(where?.dateFrom && {date: {gte: new Date(where.dateFrom)}}),
+      ...(effectiveDateTo && {date: {lte: effectiveDateTo}}),
       ...(where?.stVehicleId && {stVehicleId: where.stVehicleId}),
       deleted: where?.deleted ?? false,
     },
@@ -113,16 +129,34 @@ export const getStSchedules = async (params?: {
 }
 
 // 乗務員のスケジュール取得
-export const getStSchedulesByDriver = async (params: {userId: number; dateFrom?: Date; dateTo?: Date}) => {
-  const {userId, dateFrom, dateTo} = params
+export const getStSchedulesByDriver = async (params: {
+  userId: number
+  dateFrom?: Date
+  dateTo?: Date
+  isSystemAdmin?: boolean
+  publishEndDate?: Date | null
+}) => {
+  const {userId, dateFrom, dateTo, isSystemAdmin, publishEndDate} = params
+
+  // 公開範囲の終了日を考慮したdateTo
+  let effectiveDateTo = dateTo ? new Date(dateTo) : undefined
+
+  // 管理者でない場合、公開範囲で制限
+  if (!isSystemAdmin && publishEndDate) {
+    const publishEnd = new Date(publishEndDate)
+    if (!effectiveDateTo || publishEnd < effectiveDateTo) {
+      effectiveDateTo = publishEnd
+    }
+  }
 
   return await prisma.stSchedule.findMany({
     where: {
       StScheduleDriver: {
         some: {userId},
       },
-      ...(dateFrom && {date: {gte: toUtc(dateFrom)}}),
-      ...(dateTo && {date: {lte: toUtc(dateTo)}}),
+      // クライアントから送られるDateは既にUTC形式なのでそのまま使用
+      ...(dateFrom && {date: {gte: new Date(dateFrom)}}),
+      ...(effectiveDateTo && {date: {lte: effectiveDateTo}}),
       deleted: false,
     },
     include: {
@@ -158,8 +192,9 @@ export const updateStSchedule = async (id: number, data: Partial<StScheduleInput
   const {date, driverIds, ...rest} = data
 
   const updateData: any = {...rest}
+  // クライアントから送られるDateは既にUTC形式（日本時間00:00:00 = UTC前日15:00:00）
   if (date) {
-    updateData.date = toUtc(date)
+    updateData.date = new Date(date)
   }
 
   const result = await prisma.stSchedule.update({

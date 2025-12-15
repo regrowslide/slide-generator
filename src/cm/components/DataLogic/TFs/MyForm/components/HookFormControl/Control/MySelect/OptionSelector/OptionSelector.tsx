@@ -8,7 +8,7 @@ import {contextsType} from '@cm/components/DataLogic/TFs/MyForm/components/HookF
 import {SelectOption} from '@cm/components/DataLogic/TFs/MyForm/components/HookFormControl/Control/MySelect/OptionSelector/SelectOption'
 import {useSearchForm} from '@cm/components/DataLogic/TFs/MyForm/components/HookFormControl/Control/MySelect/Search/OptionSearcher/useSearchForm'
 // import Accordion from 'src/cm/components/utils/Accordions/Accordion'
-import CreateForm from '@cm/components/DataLogic/TFs/MyForm/components/HookFormControl/Control/MySelect/Create/CreateForm'
+import OptionCreateForm from '@cm/components/DataLogic/TFs/MyForm/components/HookFormControl/Control/MySelect/Create/CreateForm'
 import OptionSearcher from '@cm/components/DataLogic/TFs/MyForm/components/HookFormControl/Control/MySelect/Search/OptionSearcher/OptionSearcher'
 import {useEffect, useState, useRef} from 'react'
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@cm/shadcn/ui/accordion'
@@ -47,7 +47,9 @@ const OptionSelector = (props: {contexts: contextsType}) => {
   const [openAccodionIndex, setOpenAccodionIndex] = useState<string>(`1`)
   useEffect(() => {
     if (nohit && allowCreateOptions) {
-      setOpenAccodionIndex(`2`)
+      if (confirm(`選択肢が見つかりませんでした。新規に選択肢を作成しますか?`)) {
+        setOpenAccodionIndex(`2`)
+      }
     }
   }, [nohit])
 
@@ -130,7 +132,7 @@ const OptionSelector = (props: {contexts: contextsType}) => {
             <AccordionContent>
               <div className={`max-h-[35vh] overflow-y-scroll `}>
                 <div className={`p-4`}>
-                  <CreateForm {...{SearchFormHook, contexts}} />
+                  <OptionCreateForm {...{SearchFormHook, contexts}} />
                 </div>
               </div>
             </AccordionContent>

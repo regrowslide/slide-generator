@@ -52,8 +52,6 @@ export default function useCustomSession(props?: { session?: Session | null }) {
 
   const sessionLoading = fakeSessionLoading || status === 'loading' || roleIsLoading
 
-
-
   const accessScopes = useCallback(() => getScopes(userData, { query, roles }), [userData, query, roles])
 
   const User = new UserCl({
@@ -61,6 +59,8 @@ export default function useCustomSession(props?: { session?: Session | null }) {
     roles,
     scopes: getScopes(userData, { query, roles }),
   })
+
+
 
   return {
     sessionLoading,

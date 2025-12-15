@@ -29,6 +29,11 @@ export const ComplexSearchForm = ({contexts, SearchFormHook}) => {
               width: 170,
             },
           },
+          onSubmit: async e => {
+            e.preventDefault()
+            e.stopPropagation()
+            handleSeachOption()
+          },
         }}
         alignMode="row"
       ></SearchFormHook.Form>
