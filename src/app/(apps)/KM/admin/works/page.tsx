@@ -5,18 +5,18 @@ import { WorksAdminCC } from './WorksAdminCC'
 export default async function WorksAdminPage() {
   const { session, scopes } = await initServerComopnent({ query: {} })
 
-  // クライアント一覧を取得
+  // クライアント一覧を取得（sortOrderでソート）
   const clients = await prisma.kaizenClient.findMany({
-    orderBy: [{ public: 'desc' }, { name: 'asc' }],
+    orderBy: [{ sortOrder: 'asc' }, { public: 'desc' }, { name: 'asc' }],
   })
 
-  // 実績一覧を取得（クライアント情報と画像を含む）
+  // 実績一覧を取得（クライアント情報と画像を含む、sortOrderでソート）
   const works = await prisma.kaizenWork.findMany({
     include: {
       KaizenClient: true,
       KaizenWorkImage: true,
     },
-    orderBy: [{ date: 'desc' }],
+    orderBy: [{ sortOrder: 'asc' }, { date: 'desc' }],
   })
 
   return (

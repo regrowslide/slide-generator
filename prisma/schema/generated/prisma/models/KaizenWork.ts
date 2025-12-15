@@ -52,10 +52,13 @@ export type KaizenWorkMinAggregateOutputType = {
   title: string | null
   subtitle: string | null
   status: string | null
+  beforeChallenge: string | null
   description: string | null
+  quantitativeResult: string | null
   points: string | null
   clientName: string | null
   organization: string | null
+  companyScale: string | null
   dealPoint: number | null
   toolPoint: number | null
   impression: string | null
@@ -63,6 +66,7 @@ export type KaizenWorkMinAggregateOutputType = {
   jobCategory: string | null
   systemCategory: string | null
   collaborationTool: string | null
+  projectDuration: string | null
   showName: boolean | null
   kaizenClientId: number | null
   allowShowClient: boolean | null
@@ -80,10 +84,13 @@ export type KaizenWorkMaxAggregateOutputType = {
   title: string | null
   subtitle: string | null
   status: string | null
+  beforeChallenge: string | null
   description: string | null
+  quantitativeResult: string | null
   points: string | null
   clientName: string | null
   organization: string | null
+  companyScale: string | null
   dealPoint: number | null
   toolPoint: number | null
   impression: string | null
@@ -91,6 +98,7 @@ export type KaizenWorkMaxAggregateOutputType = {
   jobCategory: string | null
   systemCategory: string | null
   collaborationTool: string | null
+  projectDuration: string | null
   showName: boolean | null
   kaizenClientId: number | null
   allowShowClient: boolean | null
@@ -108,10 +116,13 @@ export type KaizenWorkCountAggregateOutputType = {
   title: number
   subtitle: number
   status: number
+  beforeChallenge: number
   description: number
+  quantitativeResult: number
   points: number
   clientName: number
   organization: number
+  companyScale: number
   dealPoint: number
   toolPoint: number
   impression: number
@@ -119,6 +130,7 @@ export type KaizenWorkCountAggregateOutputType = {
   jobCategory: number
   systemCategory: number
   collaborationTool: number
+  projectDuration: number
   showName: number
   kaizenClientId: number
   allowShowClient: number
@@ -154,10 +166,13 @@ export type KaizenWorkMinAggregateInputType = {
   title?: true
   subtitle?: true
   status?: true
+  beforeChallenge?: true
   description?: true
+  quantitativeResult?: true
   points?: true
   clientName?: true
   organization?: true
+  companyScale?: true
   dealPoint?: true
   toolPoint?: true
   impression?: true
@@ -165,6 +180,7 @@ export type KaizenWorkMinAggregateInputType = {
   jobCategory?: true
   systemCategory?: true
   collaborationTool?: true
+  projectDuration?: true
   showName?: true
   kaizenClientId?: true
   allowShowClient?: true
@@ -182,10 +198,13 @@ export type KaizenWorkMaxAggregateInputType = {
   title?: true
   subtitle?: true
   status?: true
+  beforeChallenge?: true
   description?: true
+  quantitativeResult?: true
   points?: true
   clientName?: true
   organization?: true
+  companyScale?: true
   dealPoint?: true
   toolPoint?: true
   impression?: true
@@ -193,6 +212,7 @@ export type KaizenWorkMaxAggregateInputType = {
   jobCategory?: true
   systemCategory?: true
   collaborationTool?: true
+  projectDuration?: true
   showName?: true
   kaizenClientId?: true
   allowShowClient?: true
@@ -210,10 +230,13 @@ export type KaizenWorkCountAggregateInputType = {
   title?: true
   subtitle?: true
   status?: true
+  beforeChallenge?: true
   description?: true
+  quantitativeResult?: true
   points?: true
   clientName?: true
   organization?: true
+  companyScale?: true
   dealPoint?: true
   toolPoint?: true
   impression?: true
@@ -221,6 +244,7 @@ export type KaizenWorkCountAggregateInputType = {
   jobCategory?: true
   systemCategory?: true
   collaborationTool?: true
+  projectDuration?: true
   showName?: true
   kaizenClientId?: true
   allowShowClient?: true
@@ -325,10 +349,13 @@ export type KaizenWorkGroupByOutputType = {
   title: string | null
   subtitle: string | null
   status: string | null
+  beforeChallenge: string | null
   description: string | null
+  quantitativeResult: string | null
   points: string | null
   clientName: string | null
   organization: string | null
+  companyScale: string | null
   dealPoint: number | null
   toolPoint: number | null
   impression: string | null
@@ -336,6 +363,7 @@ export type KaizenWorkGroupByOutputType = {
   jobCategory: string | null
   systemCategory: string | null
   collaborationTool: string | null
+  projectDuration: string | null
   showName: boolean | null
   kaizenClientId: number | null
   allowShowClient: boolean | null
@@ -376,10 +404,13 @@ export type KaizenWorkWhereInput = {
   title?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   subtitle?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   status?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
+  beforeChallenge?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   description?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
+  quantitativeResult?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   points?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   clientName?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   organization?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
+  companyScale?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   dealPoint?: Prisma.FloatNullableFilter<"KaizenWork"> | number | null
   toolPoint?: Prisma.FloatNullableFilter<"KaizenWork"> | number | null
   impression?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
@@ -387,6 +418,7 @@ export type KaizenWorkWhereInput = {
   jobCategory?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   systemCategory?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   collaborationTool?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
+  projectDuration?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   showName?: Prisma.BoolNullableFilter<"KaizenWork"> | boolean | null
   kaizenClientId?: Prisma.IntNullableFilter<"KaizenWork"> | number | null
   allowShowClient?: Prisma.BoolNullableFilter<"KaizenWork"> | boolean | null
@@ -406,10 +438,13 @@ export type KaizenWorkOrderByWithRelationInput = {
   title?: Prisma.SortOrderInput | Prisma.SortOrder
   subtitle?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrderInput | Prisma.SortOrder
+  beforeChallenge?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  quantitativeResult?: Prisma.SortOrderInput | Prisma.SortOrder
   points?: Prisma.SortOrderInput | Prisma.SortOrder
   clientName?: Prisma.SortOrderInput | Prisma.SortOrder
   organization?: Prisma.SortOrderInput | Prisma.SortOrder
+  companyScale?: Prisma.SortOrderInput | Prisma.SortOrder
   dealPoint?: Prisma.SortOrderInput | Prisma.SortOrder
   toolPoint?: Prisma.SortOrderInput | Prisma.SortOrder
   impression?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -417,6 +452,7 @@ export type KaizenWorkOrderByWithRelationInput = {
   jobCategory?: Prisma.SortOrderInput | Prisma.SortOrder
   systemCategory?: Prisma.SortOrderInput | Prisma.SortOrder
   collaborationTool?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectDuration?: Prisma.SortOrderInput | Prisma.SortOrder
   showName?: Prisma.SortOrderInput | Prisma.SortOrder
   kaizenClientId?: Prisma.SortOrderInput | Prisma.SortOrder
   allowShowClient?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -440,10 +476,13 @@ export type KaizenWorkWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   subtitle?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   status?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
+  beforeChallenge?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   description?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
+  quantitativeResult?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   points?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   clientName?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   organization?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
+  companyScale?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   dealPoint?: Prisma.FloatNullableFilter<"KaizenWork"> | number | null
   toolPoint?: Prisma.FloatNullableFilter<"KaizenWork"> | number | null
   impression?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
@@ -451,6 +490,7 @@ export type KaizenWorkWhereUniqueInput = Prisma.AtLeast<{
   jobCategory?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   systemCategory?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   collaborationTool?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
+  projectDuration?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   showName?: Prisma.BoolNullableFilter<"KaizenWork"> | boolean | null
   kaizenClientId?: Prisma.IntNullableFilter<"KaizenWork"> | number | null
   allowShowClient?: Prisma.BoolNullableFilter<"KaizenWork"> | boolean | null
@@ -470,10 +510,13 @@ export type KaizenWorkOrderByWithAggregationInput = {
   title?: Prisma.SortOrderInput | Prisma.SortOrder
   subtitle?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrderInput | Prisma.SortOrder
+  beforeChallenge?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  quantitativeResult?: Prisma.SortOrderInput | Prisma.SortOrder
   points?: Prisma.SortOrderInput | Prisma.SortOrder
   clientName?: Prisma.SortOrderInput | Prisma.SortOrder
   organization?: Prisma.SortOrderInput | Prisma.SortOrder
+  companyScale?: Prisma.SortOrderInput | Prisma.SortOrder
   dealPoint?: Prisma.SortOrderInput | Prisma.SortOrder
   toolPoint?: Prisma.SortOrderInput | Prisma.SortOrder
   impression?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -481,6 +524,7 @@ export type KaizenWorkOrderByWithAggregationInput = {
   jobCategory?: Prisma.SortOrderInput | Prisma.SortOrder
   systemCategory?: Prisma.SortOrderInput | Prisma.SortOrder
   collaborationTool?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectDuration?: Prisma.SortOrderInput | Prisma.SortOrder
   showName?: Prisma.SortOrderInput | Prisma.SortOrder
   kaizenClientId?: Prisma.SortOrderInput | Prisma.SortOrder
   allowShowClient?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -506,10 +550,13 @@ export type KaizenWorkScalarWhereWithAggregatesInput = {
   title?: Prisma.StringNullableWithAggregatesFilter<"KaizenWork"> | string | null
   subtitle?: Prisma.StringNullableWithAggregatesFilter<"KaizenWork"> | string | null
   status?: Prisma.StringNullableWithAggregatesFilter<"KaizenWork"> | string | null
+  beforeChallenge?: Prisma.StringNullableWithAggregatesFilter<"KaizenWork"> | string | null
   description?: Prisma.StringNullableWithAggregatesFilter<"KaizenWork"> | string | null
+  quantitativeResult?: Prisma.StringNullableWithAggregatesFilter<"KaizenWork"> | string | null
   points?: Prisma.StringNullableWithAggregatesFilter<"KaizenWork"> | string | null
   clientName?: Prisma.StringNullableWithAggregatesFilter<"KaizenWork"> | string | null
   organization?: Prisma.StringNullableWithAggregatesFilter<"KaizenWork"> | string | null
+  companyScale?: Prisma.StringNullableWithAggregatesFilter<"KaizenWork"> | string | null
   dealPoint?: Prisma.FloatNullableWithAggregatesFilter<"KaizenWork"> | number | null
   toolPoint?: Prisma.FloatNullableWithAggregatesFilter<"KaizenWork"> | number | null
   impression?: Prisma.StringNullableWithAggregatesFilter<"KaizenWork"> | string | null
@@ -517,6 +564,7 @@ export type KaizenWorkScalarWhereWithAggregatesInput = {
   jobCategory?: Prisma.StringNullableWithAggregatesFilter<"KaizenWork"> | string | null
   systemCategory?: Prisma.StringNullableWithAggregatesFilter<"KaizenWork"> | string | null
   collaborationTool?: Prisma.StringNullableWithAggregatesFilter<"KaizenWork"> | string | null
+  projectDuration?: Prisma.StringNullableWithAggregatesFilter<"KaizenWork"> | string | null
   showName?: Prisma.BoolNullableWithAggregatesFilter<"KaizenWork"> | boolean | null
   kaizenClientId?: Prisma.IntNullableWithAggregatesFilter<"KaizenWork"> | number | null
   allowShowClient?: Prisma.BoolNullableWithAggregatesFilter<"KaizenWork"> | boolean | null
@@ -533,10 +581,13 @@ export type KaizenWorkCreateInput = {
   title?: string | null
   subtitle?: string | null
   status?: string | null
+  beforeChallenge?: string | null
   description?: string | null
+  quantitativeResult?: string | null
   points?: string | null
   clientName?: string | null
   organization?: string | null
+  companyScale?: string | null
   dealPoint?: number | null
   toolPoint?: number | null
   impression?: string | null
@@ -544,6 +595,7 @@ export type KaizenWorkCreateInput = {
   jobCategory?: string | null
   systemCategory?: string | null
   collaborationTool?: string | null
+  projectDuration?: string | null
   showName?: boolean | null
   allowShowClient?: boolean | null
   isPublic?: boolean | null
@@ -562,10 +614,13 @@ export type KaizenWorkUncheckedCreateInput = {
   title?: string | null
   subtitle?: string | null
   status?: string | null
+  beforeChallenge?: string | null
   description?: string | null
+  quantitativeResult?: string | null
   points?: string | null
   clientName?: string | null
   organization?: string | null
+  companyScale?: string | null
   dealPoint?: number | null
   toolPoint?: number | null
   impression?: string | null
@@ -573,6 +628,7 @@ export type KaizenWorkUncheckedCreateInput = {
   jobCategory?: string | null
   systemCategory?: string | null
   collaborationTool?: string | null
+  projectDuration?: string | null
   showName?: boolean | null
   kaizenClientId?: number | null
   allowShowClient?: boolean | null
@@ -590,10 +646,13 @@ export type KaizenWorkUpdateInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subtitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beforeChallenge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantitativeResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyScale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealPoint?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   toolPoint?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   impression?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -601,6 +660,7 @@ export type KaizenWorkUpdateInput = {
   jobCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   systemCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   collaborationTool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectDuration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   showName?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   allowShowClient?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPublic?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -619,10 +679,13 @@ export type KaizenWorkUncheckedUpdateInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subtitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beforeChallenge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantitativeResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyScale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealPoint?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   toolPoint?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   impression?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -630,6 +693,7 @@ export type KaizenWorkUncheckedUpdateInput = {
   jobCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   systemCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   collaborationTool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectDuration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   showName?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   kaizenClientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   allowShowClient?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -648,10 +712,13 @@ export type KaizenWorkCreateManyInput = {
   title?: string | null
   subtitle?: string | null
   status?: string | null
+  beforeChallenge?: string | null
   description?: string | null
+  quantitativeResult?: string | null
   points?: string | null
   clientName?: string | null
   organization?: string | null
+  companyScale?: string | null
   dealPoint?: number | null
   toolPoint?: number | null
   impression?: string | null
@@ -659,6 +726,7 @@ export type KaizenWorkCreateManyInput = {
   jobCategory?: string | null
   systemCategory?: string | null
   collaborationTool?: string | null
+  projectDuration?: string | null
   showName?: boolean | null
   kaizenClientId?: number | null
   allowShowClient?: boolean | null
@@ -675,10 +743,13 @@ export type KaizenWorkUpdateManyMutationInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subtitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beforeChallenge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantitativeResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyScale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealPoint?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   toolPoint?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   impression?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -686,6 +757,7 @@ export type KaizenWorkUpdateManyMutationInput = {
   jobCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   systemCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   collaborationTool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectDuration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   showName?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   allowShowClient?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPublic?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -702,10 +774,13 @@ export type KaizenWorkUncheckedUpdateManyInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subtitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beforeChallenge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantitativeResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyScale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealPoint?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   toolPoint?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   impression?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -713,6 +788,7 @@ export type KaizenWorkUncheckedUpdateManyInput = {
   jobCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   systemCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   collaborationTool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectDuration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   showName?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   kaizenClientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   allowShowClient?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -745,10 +821,13 @@ export type KaizenWorkCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   subtitle?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  beforeChallenge?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  quantitativeResult?: Prisma.SortOrder
   points?: Prisma.SortOrder
   clientName?: Prisma.SortOrder
   organization?: Prisma.SortOrder
+  companyScale?: Prisma.SortOrder
   dealPoint?: Prisma.SortOrder
   toolPoint?: Prisma.SortOrder
   impression?: Prisma.SortOrder
@@ -756,6 +835,7 @@ export type KaizenWorkCountOrderByAggregateInput = {
   jobCategory?: Prisma.SortOrder
   systemCategory?: Prisma.SortOrder
   collaborationTool?: Prisma.SortOrder
+  projectDuration?: Prisma.SortOrder
   showName?: Prisma.SortOrder
   kaizenClientId?: Prisma.SortOrder
   allowShowClient?: Prisma.SortOrder
@@ -781,10 +861,13 @@ export type KaizenWorkMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   subtitle?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  beforeChallenge?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  quantitativeResult?: Prisma.SortOrder
   points?: Prisma.SortOrder
   clientName?: Prisma.SortOrder
   organization?: Prisma.SortOrder
+  companyScale?: Prisma.SortOrder
   dealPoint?: Prisma.SortOrder
   toolPoint?: Prisma.SortOrder
   impression?: Prisma.SortOrder
@@ -792,6 +875,7 @@ export type KaizenWorkMaxOrderByAggregateInput = {
   jobCategory?: Prisma.SortOrder
   systemCategory?: Prisma.SortOrder
   collaborationTool?: Prisma.SortOrder
+  projectDuration?: Prisma.SortOrder
   showName?: Prisma.SortOrder
   kaizenClientId?: Prisma.SortOrder
   allowShowClient?: Prisma.SortOrder
@@ -809,10 +893,13 @@ export type KaizenWorkMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   subtitle?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  beforeChallenge?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  quantitativeResult?: Prisma.SortOrder
   points?: Prisma.SortOrder
   clientName?: Prisma.SortOrder
   organization?: Prisma.SortOrder
+  companyScale?: Prisma.SortOrder
   dealPoint?: Prisma.SortOrder
   toolPoint?: Prisma.SortOrder
   impression?: Prisma.SortOrder
@@ -820,6 +907,7 @@ export type KaizenWorkMinOrderByAggregateInput = {
   jobCategory?: Prisma.SortOrder
   systemCategory?: Prisma.SortOrder
   collaborationTool?: Prisma.SortOrder
+  projectDuration?: Prisma.SortOrder
   showName?: Prisma.SortOrder
   kaizenClientId?: Prisma.SortOrder
   allowShowClient?: Prisma.SortOrder
@@ -915,10 +1003,13 @@ export type KaizenWorkCreateWithoutKaizenClientInput = {
   title?: string | null
   subtitle?: string | null
   status?: string | null
+  beforeChallenge?: string | null
   description?: string | null
+  quantitativeResult?: string | null
   points?: string | null
   clientName?: string | null
   organization?: string | null
+  companyScale?: string | null
   dealPoint?: number | null
   toolPoint?: number | null
   impression?: string | null
@@ -926,6 +1017,7 @@ export type KaizenWorkCreateWithoutKaizenClientInput = {
   jobCategory?: string | null
   systemCategory?: string | null
   collaborationTool?: string | null
+  projectDuration?: string | null
   showName?: boolean | null
   allowShowClient?: boolean | null
   isPublic?: boolean | null
@@ -943,10 +1035,13 @@ export type KaizenWorkUncheckedCreateWithoutKaizenClientInput = {
   title?: string | null
   subtitle?: string | null
   status?: string | null
+  beforeChallenge?: string | null
   description?: string | null
+  quantitativeResult?: string | null
   points?: string | null
   clientName?: string | null
   organization?: string | null
+  companyScale?: string | null
   dealPoint?: number | null
   toolPoint?: number | null
   impression?: string | null
@@ -954,6 +1049,7 @@ export type KaizenWorkUncheckedCreateWithoutKaizenClientInput = {
   jobCategory?: string | null
   systemCategory?: string | null
   collaborationTool?: string | null
+  projectDuration?: string | null
   showName?: boolean | null
   allowShowClient?: boolean | null
   isPublic?: boolean | null
@@ -1000,10 +1096,13 @@ export type KaizenWorkScalarWhereInput = {
   title?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   subtitle?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   status?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
+  beforeChallenge?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   description?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
+  quantitativeResult?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   points?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   clientName?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   organization?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
+  companyScale?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   dealPoint?: Prisma.FloatNullableFilter<"KaizenWork"> | number | null
   toolPoint?: Prisma.FloatNullableFilter<"KaizenWork"> | number | null
   impression?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
@@ -1011,6 +1110,7 @@ export type KaizenWorkScalarWhereInput = {
   jobCategory?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   systemCategory?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   collaborationTool?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
+  projectDuration?: Prisma.StringNullableFilter<"KaizenWork"> | string | null
   showName?: Prisma.BoolNullableFilter<"KaizenWork"> | boolean | null
   kaizenClientId?: Prisma.IntNullableFilter<"KaizenWork"> | number | null
   allowShowClient?: Prisma.BoolNullableFilter<"KaizenWork"> | boolean | null
@@ -1027,10 +1127,13 @@ export type KaizenWorkCreateWithoutKaizenWorkImageInput = {
   title?: string | null
   subtitle?: string | null
   status?: string | null
+  beforeChallenge?: string | null
   description?: string | null
+  quantitativeResult?: string | null
   points?: string | null
   clientName?: string | null
   organization?: string | null
+  companyScale?: string | null
   dealPoint?: number | null
   toolPoint?: number | null
   impression?: string | null
@@ -1038,6 +1141,7 @@ export type KaizenWorkCreateWithoutKaizenWorkImageInput = {
   jobCategory?: string | null
   systemCategory?: string | null
   collaborationTool?: string | null
+  projectDuration?: string | null
   showName?: boolean | null
   allowShowClient?: boolean | null
   isPublic?: boolean | null
@@ -1055,10 +1159,13 @@ export type KaizenWorkUncheckedCreateWithoutKaizenWorkImageInput = {
   title?: string | null
   subtitle?: string | null
   status?: string | null
+  beforeChallenge?: string | null
   description?: string | null
+  quantitativeResult?: string | null
   points?: string | null
   clientName?: string | null
   organization?: string | null
+  companyScale?: string | null
   dealPoint?: number | null
   toolPoint?: number | null
   impression?: string | null
@@ -1066,6 +1173,7 @@ export type KaizenWorkUncheckedCreateWithoutKaizenWorkImageInput = {
   jobCategory?: string | null
   systemCategory?: string | null
   collaborationTool?: string | null
+  projectDuration?: string | null
   showName?: boolean | null
   kaizenClientId?: number | null
   allowShowClient?: boolean | null
@@ -1098,10 +1206,13 @@ export type KaizenWorkUpdateWithoutKaizenWorkImageInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subtitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beforeChallenge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantitativeResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyScale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealPoint?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   toolPoint?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   impression?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1109,6 +1220,7 @@ export type KaizenWorkUpdateWithoutKaizenWorkImageInput = {
   jobCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   systemCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   collaborationTool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectDuration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   showName?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   allowShowClient?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPublic?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -1126,10 +1238,13 @@ export type KaizenWorkUncheckedUpdateWithoutKaizenWorkImageInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subtitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beforeChallenge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantitativeResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyScale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealPoint?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   toolPoint?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   impression?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1137,6 +1252,7 @@ export type KaizenWorkUncheckedUpdateWithoutKaizenWorkImageInput = {
   jobCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   systemCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   collaborationTool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectDuration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   showName?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   kaizenClientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   allowShowClient?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -1154,10 +1270,13 @@ export type KaizenWorkCreateManyKaizenClientInput = {
   title?: string | null
   subtitle?: string | null
   status?: string | null
+  beforeChallenge?: string | null
   description?: string | null
+  quantitativeResult?: string | null
   points?: string | null
   clientName?: string | null
   organization?: string | null
+  companyScale?: string | null
   dealPoint?: number | null
   toolPoint?: number | null
   impression?: string | null
@@ -1165,6 +1284,7 @@ export type KaizenWorkCreateManyKaizenClientInput = {
   jobCategory?: string | null
   systemCategory?: string | null
   collaborationTool?: string | null
+  projectDuration?: string | null
   showName?: boolean | null
   allowShowClient?: boolean | null
   isPublic?: boolean | null
@@ -1180,10 +1300,13 @@ export type KaizenWorkUpdateWithoutKaizenClientInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subtitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beforeChallenge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantitativeResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyScale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealPoint?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   toolPoint?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   impression?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1191,6 +1314,7 @@ export type KaizenWorkUpdateWithoutKaizenClientInput = {
   jobCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   systemCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   collaborationTool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectDuration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   showName?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   allowShowClient?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPublic?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -1208,10 +1332,13 @@ export type KaizenWorkUncheckedUpdateWithoutKaizenClientInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subtitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beforeChallenge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantitativeResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyScale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealPoint?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   toolPoint?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   impression?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1219,6 +1346,7 @@ export type KaizenWorkUncheckedUpdateWithoutKaizenClientInput = {
   jobCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   systemCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   collaborationTool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectDuration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   showName?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   allowShowClient?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPublic?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -1236,10 +1364,13 @@ export type KaizenWorkUncheckedUpdateManyWithoutKaizenClientInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subtitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beforeChallenge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantitativeResult?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   points?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organization?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  companyScale?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealPoint?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   toolPoint?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   impression?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1247,6 +1378,7 @@ export type KaizenWorkUncheckedUpdateManyWithoutKaizenClientInput = {
   jobCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   systemCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   collaborationTool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectDuration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   showName?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   allowShowClient?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   isPublic?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -1294,10 +1426,13 @@ export type KaizenWorkSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   title?: boolean
   subtitle?: boolean
   status?: boolean
+  beforeChallenge?: boolean
   description?: boolean
+  quantitativeResult?: boolean
   points?: boolean
   clientName?: boolean
   organization?: boolean
+  companyScale?: boolean
   dealPoint?: boolean
   toolPoint?: boolean
   impression?: boolean
@@ -1305,6 +1440,7 @@ export type KaizenWorkSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   jobCategory?: boolean
   systemCategory?: boolean
   collaborationTool?: boolean
+  projectDuration?: boolean
   showName?: boolean
   kaizenClientId?: boolean
   allowShowClient?: boolean
@@ -1325,10 +1461,13 @@ export type KaizenWorkSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   title?: boolean
   subtitle?: boolean
   status?: boolean
+  beforeChallenge?: boolean
   description?: boolean
+  quantitativeResult?: boolean
   points?: boolean
   clientName?: boolean
   organization?: boolean
+  companyScale?: boolean
   dealPoint?: boolean
   toolPoint?: boolean
   impression?: boolean
@@ -1336,6 +1475,7 @@ export type KaizenWorkSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   jobCategory?: boolean
   systemCategory?: boolean
   collaborationTool?: boolean
+  projectDuration?: boolean
   showName?: boolean
   kaizenClientId?: boolean
   allowShowClient?: boolean
@@ -1354,10 +1494,13 @@ export type KaizenWorkSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   title?: boolean
   subtitle?: boolean
   status?: boolean
+  beforeChallenge?: boolean
   description?: boolean
+  quantitativeResult?: boolean
   points?: boolean
   clientName?: boolean
   organization?: boolean
+  companyScale?: boolean
   dealPoint?: boolean
   toolPoint?: boolean
   impression?: boolean
@@ -1365,6 +1508,7 @@ export type KaizenWorkSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   jobCategory?: boolean
   systemCategory?: boolean
   collaborationTool?: boolean
+  projectDuration?: boolean
   showName?: boolean
   kaizenClientId?: boolean
   allowShowClient?: boolean
@@ -1383,10 +1527,13 @@ export type KaizenWorkSelectScalar = {
   title?: boolean
   subtitle?: boolean
   status?: boolean
+  beforeChallenge?: boolean
   description?: boolean
+  quantitativeResult?: boolean
   points?: boolean
   clientName?: boolean
   organization?: boolean
+  companyScale?: boolean
   dealPoint?: boolean
   toolPoint?: boolean
   impression?: boolean
@@ -1394,6 +1541,7 @@ export type KaizenWorkSelectScalar = {
   jobCategory?: boolean
   systemCategory?: boolean
   collaborationTool?: boolean
+  projectDuration?: boolean
   showName?: boolean
   kaizenClientId?: boolean
   allowShowClient?: boolean
@@ -1401,7 +1549,7 @@ export type KaizenWorkSelectScalar = {
   correctionRequest?: boolean
 }
 
-export type KaizenWorkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "uuid" | "date" | "title" | "subtitle" | "status" | "description" | "points" | "clientName" | "organization" | "dealPoint" | "toolPoint" | "impression" | "reply" | "jobCategory" | "systemCategory" | "collaborationTool" | "showName" | "kaizenClientId" | "allowShowClient" | "isPublic" | "correctionRequest", ExtArgs["result"]["kaizenWork"]>
+export type KaizenWorkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "uuid" | "date" | "title" | "subtitle" | "status" | "beforeChallenge" | "description" | "quantitativeResult" | "points" | "clientName" | "organization" | "companyScale" | "dealPoint" | "toolPoint" | "impression" | "reply" | "jobCategory" | "systemCategory" | "collaborationTool" | "projectDuration" | "showName" | "kaizenClientId" | "allowShowClient" | "isPublic" | "correctionRequest", ExtArgs["result"]["kaizenWork"]>
 export type KaizenWorkInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   KaizenWorkImage?: boolean | Prisma.KaizenWork$KaizenWorkImageArgs<ExtArgs>
   KaizenClient?: boolean | Prisma.KaizenWork$KaizenClientArgs<ExtArgs>
@@ -1430,10 +1578,13 @@ export type $KaizenWorkPayload<ExtArgs extends runtime.Types.Extensions.Internal
     title: string | null
     subtitle: string | null
     status: string | null
+    beforeChallenge: string | null
     description: string | null
+    quantitativeResult: string | null
     points: string | null
     clientName: string | null
     organization: string | null
+    companyScale: string | null
     dealPoint: number | null
     toolPoint: number | null
     impression: string | null
@@ -1441,6 +1592,7 @@ export type $KaizenWorkPayload<ExtArgs extends runtime.Types.Extensions.Internal
     jobCategory: string | null
     systemCategory: string | null
     collaborationTool: string | null
+    projectDuration: string | null
     showName: boolean | null
     kaizenClientId: number | null
     allowShowClient: boolean | null
@@ -1880,10 +2032,13 @@ export interface KaizenWorkFieldRefs {
   readonly title: Prisma.FieldRef<"KaizenWork", 'String'>
   readonly subtitle: Prisma.FieldRef<"KaizenWork", 'String'>
   readonly status: Prisma.FieldRef<"KaizenWork", 'String'>
+  readonly beforeChallenge: Prisma.FieldRef<"KaizenWork", 'String'>
   readonly description: Prisma.FieldRef<"KaizenWork", 'String'>
+  readonly quantitativeResult: Prisma.FieldRef<"KaizenWork", 'String'>
   readonly points: Prisma.FieldRef<"KaizenWork", 'String'>
   readonly clientName: Prisma.FieldRef<"KaizenWork", 'String'>
   readonly organization: Prisma.FieldRef<"KaizenWork", 'String'>
+  readonly companyScale: Prisma.FieldRef<"KaizenWork", 'String'>
   readonly dealPoint: Prisma.FieldRef<"KaizenWork", 'Float'>
   readonly toolPoint: Prisma.FieldRef<"KaizenWork", 'Float'>
   readonly impression: Prisma.FieldRef<"KaizenWork", 'String'>
@@ -1891,6 +2046,7 @@ export interface KaizenWorkFieldRefs {
   readonly jobCategory: Prisma.FieldRef<"KaizenWork", 'String'>
   readonly systemCategory: Prisma.FieldRef<"KaizenWork", 'String'>
   readonly collaborationTool: Prisma.FieldRef<"KaizenWork", 'String'>
+  readonly projectDuration: Prisma.FieldRef<"KaizenWork", 'String'>
   readonly showName: Prisma.FieldRef<"KaizenWork", 'Boolean'>
   readonly kaizenClientId: Prisma.FieldRef<"KaizenWork", 'Int'>
   readonly allowShowClient: Prisma.FieldRef<"KaizenWork", 'Boolean'>

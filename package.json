@@ -13,7 +13,8 @@
     "local-start": "next start",
     "lint": "eslint './**/*.{ts,tsx}'",
     "fix": "eslint --fix './src/**/*.{js,ts,tsx}' && prettier --write './src/**/*.{js,ts,tsx}'",
-    "format": "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json,css}'"
+    "format": "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json,css}'",
+    "seedKM": "npx tsx src/app/(apps)/KM/seedKM.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.0",

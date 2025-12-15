@@ -1,0 +1,83 @@
+// Hakobun Analysis - 顧客の声構造化システム
+
+// クライアント（組織）
+model HakobunClient {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @default(now()) @updatedAt()
+  sortOrder Float     @default(0)
+
+  clientId String @unique // "cafe_sample_01"
+  name     String
+
+  HakobunCategory   HakobunCategory[]
+  HakobunCorrection HakobunCorrection[]
+  HakobunRule       HakobunRule[]
+  HakobunVoice      HakobunVoice[]
+}
+
+// A. カテゴリマスター
+model HakobunCategory {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @default(now()) @updatedAt()
+  sortOrder Float     @default(0)
+
+  categoryCode     String // "cat_01"
+  generalCategory  String // "店内"
+  specificCategory String // "オシャレ・雰囲気が良い"
+  description      String?
+
+  HakobunClient   HakobunClient @relation(fields: [hakobunClientId], references: [id], onDelete: Cascade)
+  hakobunClientId Int
+
+  @@unique([hakobunClientId, categoryCode])
+}
+
+// B. 修正データペアテーブル
+model HakobunCorrection {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @default(now()) @updatedAt()
+  sortOrder Float     @default(0)
+
+  rawSegment          String // 入力文節
+  correctCategoryCode String // 正解カテゴリコード
+  sentiment           String // "好意的" | "不満" | "中立"
+  reviewerComment     String?
+  archived            Boolean @default(false)
+
+  HakobunClient   HakobunClient @relation(fields: [hakobunClientId], references: [id], onDelete: Cascade)
+  hakobunClientId Int
+}
+
+// C. ルール一覧テーブル
+model HakobunRule {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @default(now()) @updatedAt()
+  sortOrder Float     @default(0)
+
+  targetCategory  String // "備品・設備"
+  ruleDescription String
+  priority        String @default("Medium") // "High" | "Medium" | "Low"
+
+  HakobunClient   HakobunClient @relation(fields: [hakobunClientId], references: [id], onDelete: Cascade)
+  hakobunClientId Int
+}
+
+// 顧客の声（分析結果保存用）
+model HakobunVoice {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @default(now()) @updatedAt()
+  sortOrder Float     @default(0)
+
+  voiceId     String    @unique // トランザクションID
+  rawText     String
+  processedAt DateTime?
+  resultJson  Json? // 分析結果JSON
+
+  HakobunClient   HakobunClient @relation(fields: [hakobunClientId], references: [id], onDelete: Cascade)
+  hakobunClientId Int
+}

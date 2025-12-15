@@ -5,6 +5,8 @@ import { Zen_Old_Mincho } from 'next/font/google'
 import { isDev } from '@cm/lib/methods/common'
 import Admin from '@cm/components/layout/Admin/Admin'
 import { initServerComopnent } from 'src/non-common/serverSideFunction'
+import { R_Stack } from '@cm/components/styles/common-components/common-components'
+import Image from 'next/image'
 
 const font = Zen_Old_Mincho({
   weight: ['400', '500', '600', '700', '900'],
@@ -13,11 +15,11 @@ const font = Zen_Old_Mincho({
 })
 
 const AppName = ``
-const Logo = <></>
-{/* <R_Stack className={`gap-0.5`}>
-  <Image className={``} src={'/image/KM/logoText.png'} width={200} height={200} alt="" />
+const Logo = <R_Stack className={`gap-0.5`}>
+  {/* <Image className={``} src={'/image/KM/logoText.png'} width={200} height={200} alt="" /> */}
   <Image className={``} src={'/image/KM/logo.png'} width={100} height={100} alt="" />
-</R_Stack> */}
+</R_Stack>
+
 export const metadata: Metadata = { title: AppName }
 
 export default async function AppLayout({ children }) {

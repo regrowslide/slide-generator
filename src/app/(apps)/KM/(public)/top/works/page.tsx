@@ -1,7 +1,7 @@
-import {Works} from '@app/(apps)/KM/components/Works'
+import { Works } from '@app/(apps)/KM/components/Works'
 
 import prisma from 'src/lib/prisma'
-import {MyContainer} from '@cm/components/styles/common-components/common-components'
+import { MyContainer } from '@cm/components/styles/common-components/common-components'
 
 const WorkPage = async () => {
   const works = await prisma.kaizenWork.findMany({
@@ -9,14 +9,15 @@ const WorkPage = async () => {
       KaizenWorkImage: {},
       KaizenClient: {},
     },
-    orderBy: {
-      date: 'desc',
-    },
+    orderBy: [
+      { sortOrder: 'asc' },
+      { date: 'desc' },
+    ],
   })
 
   return (
     <MyContainer>
-      <Works {...{works}} />
+      <Works {...{ works }} />
     </MyContainer>
   )
 }

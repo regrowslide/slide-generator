@@ -1,9 +1,9 @@
-import {EnhancedIntroduction} from '@app/(apps)/KM/components/enhanced/EnhancedIntroduction'
-import {EnhancedEasyProfile} from '@app/(apps)/KM/components/enhanced/EnhancedEasyProfile'
+import { EnhancedIntroduction } from '@app/(apps)/KM/components/enhanced/EnhancedIntroduction'
+import { EnhancedEasyProfile } from '@app/(apps)/KM/components/enhanced/EnhancedEasyProfile'
 
 import prisma from 'src/lib/prisma'
-import {initServerComopnent} from 'src/non-common/serverSideFunction'
-import {Metadata} from 'next'
+import { initServerComopnent } from 'src/non-common/serverSideFunction'
+import { Metadata } from 'next'
 
 // SEO用のメタデータ生成
 export async function generateMetadata(): Promise<Metadata> {
@@ -75,22 +75,22 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const KM_ENHANCED_PAGE = async () => {
-  const {session, scopes} = await initServerComopnent({query: {}})
-  const kaizenClient = await prisma.kaizenClient.findMany({where: {public: true}, orderBy: [{id: 'asc'}]})
+  const { session, scopes } = await initServerComopnent({ query: {} })
+  const kaizenClient = await prisma.kaizenClient.findMany({ where: { public: true }, orderBy: [{ id: 'asc' }] })
   const works = await prisma.kaizenWork.findMany({
     include: {
       KaizenClient: {},
       KaizenWorkImage: true,
     },
-    orderBy: [{date: 'desc'}],
+    orderBy: [{ sortOrder: 'asc' }, { date: 'desc' }],
   })
 
   // ヘッダーメニュー項目
   const menuItems = [
-    {label: '改善マニアとは？', id: 'introduction'},
-    {label: 'お仕事', id: 'mainActivity'},
-    {label: '実績', id: 'works'},
-    {label: 'お問い合わせ', id: 'contact'},
+    { label: '改善マニアとは？', id: 'introduction' },
+    { label: 'お仕事', id: 'mainActivity' },
+    { label: '実績', id: 'works' },
+    { label: 'お問い合わせ', id: 'contact' },
   ]
 
   // 構造化データ（JSON-LD）
@@ -142,7 +142,7 @@ const KM_ENHANCED_PAGE = async () => {
   return (
     <>
       {/* 構造化データ */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(structuredData)}} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
 
       <div className="min-h-screen">
         {/* <EnhancedHeader menuItems={menuItems} /> */}
@@ -153,7 +153,7 @@ const KM_ENHANCED_PAGE = async () => {
               <EnhancedIntroduction />
             </div>
             <div className=" mt-4 max-w-screen-2xl mx-auto rounded-2xl bg-gray-50 p-1 lg:p-4">
-              <EnhancedEasyProfile {...{kaizenClient, works}} />
+              <EnhancedEasyProfile {...{ kaizenClient, works }} />
             </div>
           </main>
 

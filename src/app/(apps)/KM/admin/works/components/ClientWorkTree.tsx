@@ -11,9 +11,12 @@ import {
   Edit,
   Star,
   Plus,
+  GripVertical,
 } from 'lucide-react'
 import { WorkEditForm } from './WorkEditForm'
 import { WorkPreview } from './WorkPreview'
+import { ClientEditForm } from './ClientEditForm'
+import { updateWorkSortOrder } from '../actions'
 
 interface ClientWorkTreeProps {
   clients: any[]
@@ -32,15 +35,91 @@ export const ClientWorkTree = ({
   const [editingWork, setEditingWork] = useState<any | null>(null)
   const [showPreview, setShowPreview] = useState(false)
   const [creatingForClient, setCreatingForClient] = useState<number | null>(null)
+  const [editingClient, setEditingClient] = useState<any | null>(null)
+  const [draggedWorkId, setDraggedWorkId] = useState<number | null>(null)
 
-  // クライアントごとに実績をグループ化
+  // クライアントごとに実績をグループ化（sortOrderでソート）
   const worksByClient = clients.map(client => ({
     client,
-    works: works.filter(w => w.kaizenClientId === client.id),
+    works: works
+      .filter(w => w.kaizenClientId === client.id)
+      .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0)),
   }))
 
-  // クライアントに紐づかない実績
-  const unassignedWorks = works.filter(w => !w.kaizenClientId)
+  // クライアントに紐づかない実績（sortOrderでソート）
+  const unassignedWorks = works
+    .filter(w => !w.kaizenClientId)
+    .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
+
+  // ドラッグ開始
+  const handleDragStart = (workId: number) => {
+    setDraggedWorkId(workId)
+  }
+
+  // ドロップ処理
+  const handleDrop = async (targetWorkId: number, targetClientId: number | null) => {
+    if (!draggedWorkId || draggedWorkId === targetWorkId) {
+      setDraggedWorkId(null)
+      return
+    }
+
+    const draggedWork = works.find(w => w.id === draggedWorkId)
+    if (!draggedWork) {
+      setDraggedWorkId(null)
+      return
+    }
+
+    // 移動先のクライアントの実績を取得（sortOrderでソート）
+    const targetClientWorks = works
+      .filter(w => w.kaizenClientId === targetClientId)
+      .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
+
+    const targetIndex = targetClientWorks.findIndex(w => w.id === targetWorkId)
+    if (targetIndex === -1) {
+      setDraggedWorkId(null)
+      return
+    }
+
+    // 新しいsortOrderを計算
+    const newSortOrders: { id: number; sortOrder: number }[] = []
+
+    if (draggedWork.kaizenClientId === targetClientId) {
+      // 同じクライアント内での移動
+      const draggedIndex = targetClientWorks.findIndex(w => w.id === draggedWorkId)
+      const worksToUpdate = [...targetClientWorks]
+      const [removed] = worksToUpdate.splice(draggedIndex, 1)
+      worksToUpdate.splice(targetIndex, 0, removed)
+
+      worksToUpdate.forEach((work, index) => {
+        newSortOrders.push({ id: work.id, sortOrder: index * 10 })
+      })
+    } else {
+      // 別のクライアントへの移動
+      // 移動先のクライアントの実績を再ソート
+      const worksToUpdate = [...targetClientWorks]
+      worksToUpdate.splice(targetIndex, 0, draggedWork)
+
+      worksToUpdate.forEach((work, index) => {
+        newSortOrders.push({ id: work.id, sortOrder: index * 10 })
+      })
+
+      // 移動元のクライアントの実績を再ソート
+      const sourceWorks = works
+        .filter(w => w.kaizenClientId === draggedWork.kaizenClientId && w.id !== draggedWorkId)
+        .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
+
+      sourceWorks.forEach((work, index) => {
+        newSortOrders.push({ id: work.id, sortOrder: index * 10 })
+      })
+    }
+
+    // サーバーに送信
+    await updateWorkSortOrder(newSortOrders, draggedWorkId, targetClientId)
+    setDraggedWorkId(null)
+
+    // ページをリロードして反映
+    window.location.reload()
+  }
 
   const toggleClient = (clientId: number) => {
     const newExpanded = new Set(expandedClients)
@@ -59,42 +138,63 @@ export const ClientWorkTree = ({
       {/* 左側: ツリービュー */}
       <div className="w-1/3 min-w-[300px] border-r border-gray-200 overflow-y-auto bg-gray-50">
         <div className="p-4">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">クライアント × 実績</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">クライアント × 実績</h2>
+            <button
+              onClick={() => setEditingClient(null)}
+              className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <Plus className="h-4 w-4" />
+              <span className="hidden sm:inline">クライアント追加</span>
+            </button>
+          </div>
 
           {/* クライアント一覧 */}
           <div className="space-y-1">
             {worksByClient.map(({ client, works: clientWorks }) => (
               <div key={client.id} className="rounded-lg overflow-hidden">
                 {/* クライアントヘッダー */}
-                <button
-                  onClick={() => toggleClient(client.id)}
-                  className="w-full flex items-center gap-2 px-3 py-2 bg-white hover:bg-gray-100 transition-colors text-left"
-                >
-                  {expandedClients.has(client.id) ? (
-                    <ChevronDown className="h-4 w-4 text-gray-500" />
-                  ) : (
-                    <ChevronRight className="h-4 w-4 text-gray-500" />
-                  )}
-                  <Building2 className="h-4 w-4 text-blue-600" />
-                  <span className="flex-1 font-medium text-gray-900 truncate">
-                    {client.name || '名称未設定'}
-                  </span>
-                  <span className={`text-xs px-2 py-0.5 rounded-full ${client.public ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
-                    }`}>
-                    {clientWorks.length}件
-                  </span>
-                </button>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => toggleClient(client.id)}
+                    className="flex-1 flex items-center gap-2 px-3 py-2 bg-white hover:bg-gray-100 transition-colors text-left"
+                  >
+                    {expandedClients.has(client.id) ? (
+                      <ChevronDown className="h-4 w-4 text-gray-500" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 text-gray-500" />
+                    )}
+                    <Building2 className="h-4 w-4 text-blue-600" />
+                    <span className="flex-1 font-medium text-gray-900 truncate">
+                      {client.name || '名称未設定'}
+                    </span>
+                    <span className={`text-xs px-2 py-0.5 rounded-full ${client.public ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
+                      }`}>
+                      {clientWorks.length}件
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => setEditingClient(client)}
+                    className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                    title="クライアント編集"
+                  >
+                    <Edit className="h-4 w-4" />
+                  </button>
+                </div>
 
                 {/* 実績一覧 */}
                 {expandedClients.has(client.id) && (
                   <div className="pl-6 pb-2 space-y-1">
-                    {clientWorks.map(work => (
+                    {clientWorks.map((work, index) => (
                       <WorkTreeItem
                         key={work.id}
                         work={work}
                         isSelected={selectedWorkId === work.id}
+                        isDragging={draggedWorkId === work.id}
                         onSelect={() => onSelectWork(work.id)}
                         onEdit={() => setEditingWork(work)}
+                        onDragStart={() => handleDragStart(work.id)}
+                        onDrop={() => handleDrop(work.id, client.id)}
                       />
                     ))}
                     {/* 新規作成ボタン */}
@@ -122,8 +222,11 @@ export const ClientWorkTree = ({
                       key={work.id}
                       work={work}
                       isSelected={selectedWorkId === work.id}
+                      isDragging={draggedWorkId === work.id}
                       onSelect={() => onSelectWork(work.id)}
                       onEdit={() => setEditingWork(work)}
+                      onDragStart={() => handleDragStart(work.id)}
+                      onDrop={() => handleDrop(work.id, null)}
                     />
                   ))}
                 </div>
@@ -198,6 +301,19 @@ export const ClientWorkTree = ({
       {showPreview && selectedWork && (
         <WorkPreview work={selectedWork} onClose={() => setShowPreview(false)} />
       )}
+
+      {/* クライアント編集モーダル */}
+      {editingClient !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-2xl">
+            <ClientEditForm
+              client={editingClient}
+              onClose={() => setEditingClient(null)}
+              onSuccess={() => window.location.reload()}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -206,20 +322,45 @@ export const ClientWorkTree = ({
 const WorkTreeItem = ({
   work,
   isSelected,
+  isDragging,
   onSelect,
   onEdit,
+  onDragStart,
+  onDrop,
 }: {
   work: any
   isSelected: boolean
+  isDragging: boolean
   onSelect: () => void
   onEdit: () => void
+  onDragStart: () => void
+  onDrop: () => void
 }) => {
+  const [isDraggedOver, setIsDraggedOver] = useState(false)
+
   return (
     <div
+      draggable
+      onDragStart={e => {
+        e.dataTransfer.effectAllowed = 'move'
+        onDragStart()
+      }}
+      onDragOver={e => {
+        e.preventDefault()
+        e.dataTransfer.dropEffect = 'move'
+        setIsDraggedOver(true)
+      }}
+      onDragLeave={() => setIsDraggedOver(false)}
+      onDrop={e => {
+        e.preventDefault()
+        setIsDraggedOver(false)
+        onDrop()
+      }}
       onClick={onSelect}
-      className={`flex items-center gap-2 px-3 py-2 rounded cursor-pointer transition-colors ${isSelected ? 'bg-blue-100 border-l-4 border-blue-600' : 'hover:bg-gray-100'
-        }`}
+      className={`flex items-center gap-2 px-3 py-2 rounded cursor-pointer transition-colors ${isSelected ? 'bg-blue-100 border-l-4 border-blue-600' : isDraggedOver ? 'bg-blue-50 border-l-4 border-blue-400' : 'hover:bg-gray-100'
+        } ${isDragging ? 'opacity-50' : ''}`}
     >
+      <GripVertical className="h-5 w-5 text-gray-500 flex-shrink-0 cursor-move hover:text-gray-700" />
       <FileText className="h-4 w-4 text-gray-400 flex-shrink-0" />
       <div className="flex-1 min-w-0">
         <div className="text-sm font-medium text-gray-900 truncate">{work.title || '無題'}</div>

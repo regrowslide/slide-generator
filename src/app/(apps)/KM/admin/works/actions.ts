@@ -163,3 +163,38 @@ export async function deleteKaizenClient(id: number) {
     return {success: false, error: String(error)}
   }
 }
+
+// 実績の並び替え
+export async function updateWorkSortOrder(
+  sortOrders: {id: number; sortOrder: number}[],
+  movedWorkId: number,
+  targetClientId: number | null
+) {
+  try {
+    // 並び替え対象の実績のsortOrderを更新
+    await Promise.all(
+      sortOrders.map(({id, sortOrder}) =>
+        prisma.kaizenWork.update({
+          where: {id},
+          data: {sortOrder},
+        })
+      )
+    )
+
+    // 移動した実績のkaizenClientIdも更新
+    if (targetClientId !== null) {
+      await prisma.kaizenWork.update({
+        where: {id: movedWorkId},
+        data: {kaizenClientId: targetClientId},
+      })
+    }
+
+    revalidatePath('/KM/admin/works')
+    revalidatePath('/KM')
+    revalidatePath('/KM/top/works')
+    return {success: true}
+  } catch (error) {
+    console.error('Error updating work sort order:', error)
+    return {success: false, error: String(error)}
+  }
+}

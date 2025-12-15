@@ -32,7 +32,7 @@ export const getScopes = (session: anyObject, options: getScopeOptionsProps) => 
       const isSystemAdmin = !!arr__findCommonValues([`管理者`], roleNames)
       const isEditor = !!arr__findCommonValues([`編集者`], roleNames)
       const isViewer = !!arr__findCommonValues([`閲覧者`], roleNames)
-      console.log({ userId, roleNames })  //logs
+
       return { userId, isSystemAdmin, isEditor, isViewer }
     },
     getGroupieScopes: () => {

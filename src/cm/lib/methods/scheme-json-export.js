@@ -42,28 +42,47 @@ model KaizenWork {
 
   uuid String? @unique @default(uuid())
 
-  date              DateTime?
-  title             String?
-  subtitle          String?
-  status            String?
-  description       String?
-  points            String?
-  clientName        String?
-  organization      String?
-  dealPoint         Float?
-  toolPoint         Float?
-  impression        String?
-  reply             String?
+  // === 基本情報 ===
+  date     DateTime?
+  title    String?
+  subtitle String?
+  status   String?
+
+  // === 課題と成果 ===
+  beforeChallenge    String? // 導入前の課題
+  description        String? // 提供ソリューション詳細
+  quantitativeResult String? // 定量成果（最重要）
+
+  // === 技術・工夫 ===
+  points String? // 技術的工夫・ポイント
+
+  // === 顧客情報 ===
+  clientName   String?
+  organization String?
+  companyScale String? // 企業規模（1-10名/11-50名/51-100名/100名以上）
+
+  // === 評価 ===
+  dealPoint  Float?
+  toolPoint  Float?
+  impression String? // お客様の声
+  reply      String? // 改善マニアからの返信
+
+  // === カテゴリ・タグ ===
   jobCategory       String? //製造、飲食
   systemCategory    String? //GAS / アプリ
   collaborationTool String? //Freee / Insta
 
+  // === プロジェクト情報 ===
+  projectDuration String? // プロジェクト期間
+
+  // === リレーション ===
   KaizenWorkImage KaizenWorkImage[]
   showName        Boolean?          @default(false)
 
   KaizenClient   KaizenClient? @relation(fields: [kaizenClientId], references: [id], onDelete: Cascade)
   kaizenClientId Int?
 
+  // === 公開設定 ===
   allowShowClient Boolean? @default(false)
   isPublic        Boolean? @default(false)
 
@@ -1067,7 +1086,7 @@ model SbmProductIngredient {
 
 datasource db {
   provider = "postgresql"
-  url = "postgres://mutsuo:timeSpacer817@localhost:5432/sanshoTourist"
+  url = "postgres://mutsuo:timeSpacer817@localhost:5432/KM"
 }
 
 generator client {
@@ -2722,7 +2741,35 @@ export const prismaDMMF = {
           "isUpdatedAt": false
         },
         {
+          "name": "beforeChallenge",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
           "name": "description",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "quantitativeResult",
           "kind": "scalar",
           "isList": false,
           "isRequired": false,
@@ -2765,6 +2812,20 @@ export const prismaDMMF = {
         },
         {
           "name": "organization",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "companyScale",
           "kind": "scalar",
           "isList": false,
           "isRequired": false,
@@ -2863,6 +2924,20 @@ export const prismaDMMF = {
         },
         {
           "name": "collaborationTool",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "projectDuration",
           "kind": "scalar",
           "isList": false,
           "isRequired": false,

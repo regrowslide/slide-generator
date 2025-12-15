@@ -1,17 +1,20 @@
 'use client'
 
-import {Kaizen, KM} from '@app/(apps)/KM/class/Kaizen'
+import { Kaizen, KM } from '@app/(apps)/KM/class/Kaizen'
 import BackGroundImage from '@cm/components/utils/BackGroundImage'
 import useWindowSize from '@cm/hooks/useWindowSize'
-import {C_Stack, R_Stack} from '@cm/components/styles/common-components/common-components'
-import {useEffect, useState} from 'react'
-import {motion} from 'framer-motion'
-import {ArrowDown} from 'lucide-react'
-import {cn} from '@cm/shadcn/lib/utils'
+import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
+import { ArrowDown } from 'lucide-react'
+import { cn } from '@cm/shadcn/lib/utils'
+import { isDev } from '@cm/lib/methods/common'
+import { Button } from '@cm/components/styles/common-components/Button'
+import { seedKM } from '@app/(apps)/KM/seedKM'
 
 export const EnhancedIntroduction = () => {
-  const {width} = useWindowSize()
-  const {fontBig, fontSm} = Kaizen.const.getFonts({width})
+  const { width } = useWindowSize()
+  const { fontBig, fontSm } = Kaizen.const.getFonts({ width })
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
@@ -23,10 +26,11 @@ export const EnhancedIntroduction = () => {
   const Message = () => {
     return (
       <div className="relative z-10 py-4 pt-4">
+        {/* {isDev && <Button onClick={async () => await seedKM()}>seedKM</Button>} 開発環境のみシーディング */}
         <motion.div
-          initial={{opacity: 0, y: 50}}
-          animate={{opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 50}}
-          transition={{duration: 1, delay: 0.3}}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 50 }}
+          transition={{ duration: 1, delay: 0.3 }}
           className="mx-auto max-w-3xl"
         >
           <div
@@ -36,7 +40,7 @@ export const EnhancedIntroduction = () => {
           >
             <C_Stack className="items-center gap-4 sm:gap-">
               {/* サブタイトル */}
-              <motion.div initial={{opacity: 0}} animate={{opacity: isVisible ? 1 : 0}} transition={{duration: 0.8, delay: 0.7}}>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: isVisible ? 1 : 0 }} transition={{ duration: 0.8, delay: 0.7 }}>
                 <C_Stack className={`text-center ${fontSm}`}>
                   <h2 className="text-gray-700">業務改善・自動化に特化したツール開発で</h2>
                   <p className="text-gray-700">中小企業、事業主様の業務改善を担います。</p>
@@ -45,9 +49,9 @@ export const EnhancedIntroduction = () => {
 
               {/* メインキャッチコピー */}
               <motion.div
-                initial={{opacity: 0, scale: 0.9}}
-                animate={{opacity: isVisible ? 1 : 0, scale: isVisible ? 1 : 0.9}}
-                transition={{duration: 0.8, delay: 0.9}}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: isVisible ? 1 : 0, scale: isVisible ? 1 : 0.9 }}
+                transition={{ duration: 0.8, delay: 0.9 }}
                 className="relative"
               >
                 <C_Stack className={`${fontBig} p-0 lg:p-4 text-center`}>
@@ -71,7 +75,7 @@ export const EnhancedIntroduction = () => {
               </motion.div>
 
               {/* 信念 */}
-              <motion.div initial={{opacity: 0}} animate={{opacity: isVisible ? 1 : 0}} transition={{duration: 0.8, delay: 1.1}}>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: isVisible ? 1 : 0 }} transition={{ duration: 0.8, delay: 1.1 }}>
                 <C_Stack className={`text-center ${fontSm} `}>
                   <p className="text-gray-700">をモットーとし、</p>
                   <div className="flex flex-wrap justify-center gap-2">
@@ -86,9 +90,9 @@ export const EnhancedIntroduction = () => {
 
               {/* 実績と特徴 */}
               <motion.div
-                initial={{opacity: 0}}
-                animate={{opacity: isVisible ? 1 : 0}}
-                transition={{duration: 0.8, delay: 1.3}}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: isVisible ? 1 : 0 }}
+                transition={{ duration: 0.8, delay: 1.3 }}
                 className="w-full"
               >
                 <C_Stack className={`text-center ${fontSm}`}>
@@ -120,9 +124,9 @@ export const EnhancedIntroduction = () => {
 
               {/* CTA */}
               <motion.div
-                initial={{opacity: 0, y: 20}}
-                animate={{opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20}}
-                transition={{duration: 0.8, delay: 1.5}}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
+                transition={{ duration: 0.8, delay: 1.5 }}
                 className="mt-3"
               >
                 <div className="rounded-xl bg-gradient-to-r from-blue-800 to-blue-950 p-4 text-white shadow-xl">
@@ -138,18 +142,18 @@ export const EnhancedIntroduction = () => {
 
         {/* スクロールダウン矢印 */}
         <motion.div
-          initial={{opacity: 0}}
-          animate={{opacity: isVisible ? 1 : 0}}
-          transition={{duration: 0.8, delay: 2}}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isVisible ? 1 : 0 }}
+          transition={{ duration: 0.8, delay: 2 }}
           className="mt-8 flex justify-center"
         >
           <motion.div
-            animate={{y: [0, 10, 0]}}
-            transition={{duration: 1.5, repeat: Infinity}}
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
             className="cursor-pointer text-white"
             onClick={() => {
               const element = document.getElementById('mainActivity')
-              element?.scrollIntoView({behavior: 'smooth'})
+              element?.scrollIntoView({ behavior: 'smooth' })
             }}
           >
             <ArrowDown className="h-8 w-8 drop-shadow-lg" />
@@ -161,7 +165,7 @@ export const EnhancedIntroduction = () => {
 
   return (
     <header id="introduction" className="relative min-h-screen" role="banner">
-      <BackGroundImage {...{url: bgUrl, alt: '改善マニア システム開発・業務改善のプロフェッショナル'}} />
+      <BackGroundImage {...{ url: bgUrl, alt: '改善マニア システム開発・業務改善のプロフェッショナル' }} />
       <Message />
     </header>
   )
