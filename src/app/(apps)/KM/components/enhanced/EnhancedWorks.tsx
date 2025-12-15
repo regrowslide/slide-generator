@@ -1,19 +1,19 @@
 'use client'
 
-import {C_Stack, MyContainer, Padding} from '@cm/components/styles/common-components/common-components'
-import {WorkCard} from '@app/(apps)/KM/(public)/top/WorkCard'
-import {Fields} from '@cm/class/Fields/Fields'
+import { C_Stack, MyContainer, Padding } from '@cm/components/styles/common-components/common-components'
+import { WorkCard } from '@app/(apps)/KM/(public)/top/WorkCard'
+import { Fields } from '@cm/class/Fields/Fields'
 import useBasicFormProps from '@cm/hooks/useBasicForm/useBasicFormProps'
-import {useState} from 'react'
+import { useState } from 'react'
 import BasicModal from '@cm/components/utils/modal/BasicModal'
-import {Search, Filter} from 'lucide-react'
+import { Search, Filter } from 'lucide-react'
 
-import {motion} from 'framer-motion'
-import {useInView} from 'react-intersection-observer'
-import {Button} from '@cm/components/styles/common-components/Button'
+import { motion } from 'framer-motion'
+import { useInView } from 'react-intersection-observer'
+import { Button } from '@cm/components/styles/common-components/Button'
 
-export const EnhancedWorks = ({works}: {works: any[]}) => {
-  const {ref, inView} = useInView({
+export const EnhancedWorks = ({ works }: { works: any[] }) => {
+  const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.05,
   })
@@ -21,7 +21,7 @@ export const EnhancedWorks = ({works}: {works: any[]}) => {
   const publicWorks = works.filter(row => row.isPublic)
   const [workState, setWorkState] = useState<any>(publicWorks)
 
-  const getUniqueValues = ({works, key}: {works: any[]; key: string}) => {
+  const getUniqueValues = ({ works, key }: { works: any[]; key: string }) => {
     const options = works
       .reduce((acc, work) => {
         const dataKey = work[key]
@@ -35,34 +35,34 @@ export const EnhancedWorks = ({works}: {works: any[]}) => {
 
   const Searcher = () => {
     const columns = Fields.transposeColumns([
-      {id: 'title', label: 'キーワード検索', type: 'text', form: {}},
+      { id: 'title', label: 'キーワード検索', type: 'text', form: {} },
       {
         id: 'jobCategory',
         label: '業界・業種',
         forSelect: {
-          optionsOrOptionFetcher: getUniqueValues({works: publicWorks, key: 'jobCategory'}),
+          optionsOrOptionFetcher: getUniqueValues({ works: publicWorks, key: 'jobCategory' }),
         },
       },
       {
         id: 'systemCategory',
         label: 'ツール種類',
         forSelect: {
-          optionsOrOptionFetcher: getUniqueValues({works: publicWorks, key: 'systemCategory'}),
+          optionsOrOptionFetcher: getUniqueValues({ works: publicWorks, key: 'systemCategory' }),
         },
       },
       {
         id: 'collaborationTool',
         label: '連携サービス',
         forSelect: {
-          optionsOrOptionFetcher: getUniqueValues({works: publicWorks, key: 'collaborationTool'}),
+          optionsOrOptionFetcher: getUniqueValues({ works: publicWorks, key: 'collaborationTool' }),
         },
       },
     ])
 
-    const {BasicForm, latestFormData} = useBasicFormProps({
+    const { BasicForm, latestFormData } = useBasicFormProps({
       columns,
       onFormItemBlur: props => {
-        const {newlatestFormData} = props
+        const { newlatestFormData } = props
 
         const newWorkState = publicWorks.filter(work => {
           const isHit = Object.keys(newlatestFormData).reduce((acc, key) => {
@@ -96,7 +96,7 @@ export const EnhancedWorks = ({works}: {works: any[]}) => {
             <Search className="h-6 w-6 text-blue-600" />
             <h3 className="text-2xl font-bold text-gray-900">実績検索</h3>
           </div>
-          <BasicForm {...{latestFormData, alignMode: 'row'}}></BasicForm>
+          <BasicForm {...{ latestFormData, alignMode: 'row' }}></BasicForm>
         </div>
       </BasicModal>
     )
@@ -118,7 +118,7 @@ export const EnhancedWorks = ({works}: {works: any[]}) => {
           {/* 実績カードグリッド */}
           <C_Stack className="gap-16  mx-auto">
             {workState.filter(work => work.description).length > 0 ? (
-              <div className="items-start justify-center gap-6 sm:gap-8 lg:gap-12 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-y-20">
+              <div className="items-start justify-center gap-6 sm:gap-8 lg:gap-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-y-8">
                 {workState
                   .filter(work => work.description)
                   .map((work, index) => (
@@ -130,13 +130,13 @@ export const EnhancedWorks = ({works}: {works: any[]}) => {
                       className="w-full "
                     >
                       <div className="h-full transform transition-all duration-300 ">
-                        <WorkCard {...{work, works}} />
+                        <WorkCard {...{ work, works }} />
                       </div>
                     </div>
                   ))}
               </div>
             ) : (
-              <motion.div initial={{opacity: 0}} animate={{opacity: 1}} className="rounded-2xl bg-gray-50 p-12 text-center">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="rounded-2xl bg-gray-50 p-12 text-center">
                 <Search className="mx-auto mb-4 h-12 w-12 text-gray-400" />
                 <p className="text-lg text-gray-600">該当する実績が見つかりませんでした</p>
                 <p className="mt-2 text-sm text-gray-500">別の条件で検索してみてください</p>
