@@ -81,3 +81,7 @@ model HakobunVoice {
   HakobunClient   HakobunClient @relation(fields: [hakobunClientId], references: [id], onDelete: Cascade)
   hakobunClientId Int
 }
+
+
+
+

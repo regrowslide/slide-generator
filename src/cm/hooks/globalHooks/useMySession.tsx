@@ -22,18 +22,10 @@ export default function useCustomSession(props?: { session?: Session | null }) {
   // fakeSessionの取得
   const { globalUserId } = judgeIsAdmin(realSession, query)
 
-  // const {
-  //   data,
-  //   isLoading: fakeSessionLoading,
-  //   isValidating,
-  // } = useSWR(JSON.stringify({globalUserId, realSession, query}), async () => {
-  //   const fakeSession = await FakeOrKeepSession({query, realSession})
-  //   return fakeSession ?? null
-  // })
-
   useEffect(() => {
-    const fakeSession = FakeOrKeepSession({ query, realSession }).then(res => res)
-    setfakeSession(fakeSession ?? null)
+    FakeOrKeepSession({ query, realSession }).then(res => {
+      setfakeSession(res ?? null)
+    })
   }, [globalUserId, realSession, query])
 
   const fakeSessionLoading = fakeSession === undefined
@@ -59,8 +51,6 @@ export default function useCustomSession(props?: { session?: Session | null }) {
     roles,
     scopes: getScopes(userData, { query, roles }),
   })
-
-
 
   return {
     sessionLoading,
