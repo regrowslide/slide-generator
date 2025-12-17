@@ -14,6 +14,7 @@ import { IconBtn } from '@cm/components/styles/common-components/IconBtn'
 import { RouteGroupCl } from '@app/(apps)/tbm/(class)/RouteGroupCl'
 import { MarkDownDisplay } from '@cm/components/utils/texts/MarkdownDisplay'
 import { cn } from '@cm/shadcn/lib/utils'
+import { colorClassMaster } from '@cm/lib/methods/colorVariants'
 import {
   WorkStatusSelectorProps,
   AddScheduleButtonProps,
@@ -133,13 +134,35 @@ export const ScheduleCard = React.memo(
   ({ tbmDriveSchedule, user, date, setModalOpen, fetchData, query, tbmBase }: ScheduleCardProps) => {
     const { TbmRouteGroup, TbmVehicle, User, remark } = tbmDriveSchedule
 
-    // const foo = new vhi
+    // カードの背景色を決定（重複の場合は重複色を優先）
+    const getCardBgColor = () => {
+      // 重複の場合は重複色を優先
+      if (tbmDriveSchedule.duplicated) {
+        return 'bg-red-300'
+      }
+
+      // 便マスタにcolorが設定されている場合
+      if (TbmRouteGroup?.color) {
+        const color = TbmRouteGroup.color
+        // colorClassMaster.baseに存在するカラー名の場合はそれを使用
+        if (colorClassMaster.base[color as keyof typeof colorClassMaster.base]) {
+          // baseのクラスから背景色部分だけを抽出（bg-xxx-xxxの部分）
+          const baseClass = colorClassMaster.base[color as keyof typeof colorClassMaster.base]
+          const bgMatch = baseClass.match(/bg-[^\s]+/)
+          return bgMatch ? bgMatch[0] : ''
+        }
+        // Tailwindクラス名が直接指定されている場合
+        return color
+      }
+
+      return 'bg-white'
+    }
 
     return (
       <div
         className={cn(
           `border border-gray-300 rounded-sm p-1  hover:shadow-sm transition-shadow`,
-          tbmDriveSchedule.duplicated ? 'bg-red-300' : 'white'
+          getCardBgColor()
         )}
       >
         <C_Stack className="gap-1 relative">

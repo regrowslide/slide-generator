@@ -193,6 +193,32 @@ export default function TbmRouteGroupDetail(props: DetailPagePropType) {
         ),
       },
       {
+        label: `標準給料`,
+        component: (
+          <div className="p-4">
+            <C_Stack className={` items-center`}>
+              <div className="mb-4 p-3 bg-blue-50 rounded-md">
+                <span className="text-sm text-blue-800">
+                  便ごとの標準給料を設定します。適用開始日以降の運行に対して設定した標準給料が適用されます。
+                </span>
+              </div>
+              <ChildCreator
+                {...({
+                  ParentData: props.formData,
+                  models: { parent: `tbmRouteGroup`, children: `tbmRouteGroupStandardSalary` },
+                  myTable: { style: { width: 400 } },
+                  additional: {
+                    orderBy: [{ startDate: `desc` }],
+                  },
+                  columns: ColBuilder.tbmRouteGroupStandardSalary({ useGlobalProps }),
+                  useGlobalProps,
+                } as any)}
+              />
+            </C_Stack>
+          </div>
+        ),
+      },
+      {
         label: `委託パターン`,
         component: (
           <div>
@@ -293,6 +319,9 @@ export default function TbmRouteGroupDetail(props: DetailPagePropType) {
           </div>
         ),
       },
+
+
+
     ]
   }
 

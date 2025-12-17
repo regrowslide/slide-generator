@@ -187,4 +187,20 @@ export class ColBuilder {
       },
     ]).transposeColumns()
   }
+  static tbmRouteGroupStandardSalary = (props: columnGetterType) => {
+    return new Fields([
+      {
+        id: 'startDate',
+        label: '適用開始日',
+        form: { ...defaultRegister },
+        type: `date`,
+      },
+      {
+        id: 'salary',
+        label: '標準給料',
+        form: { ...defaultRegister },
+        type: `price`,
+      },
+    ]).transposeColumns()
+  }
 }

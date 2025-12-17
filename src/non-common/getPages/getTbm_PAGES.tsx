@@ -93,8 +93,10 @@ export const tbm_PAGES = (props: PageGetterType) => {
           tabId: 'unkokaisu',
           label: <IconLetter {...{ Icon: ListIcon }}>運行回数</IconLetter>
         },
-
-
+        {
+          tabId: 'unkobinKyuyo',
+          label: <IconLetter {...{ Icon: JapaneseYenIcon }}>運行便給与レポート</IconLetter>
+        },
         {
           tabId: 'kyuyoSantei',
           label: <IconLetter {...{ Icon: JapaneseYenIcon }}>給与算定</IconLetter>,

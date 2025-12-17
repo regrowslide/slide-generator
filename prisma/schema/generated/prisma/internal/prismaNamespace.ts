@@ -464,6 +464,7 @@ export const ModelName = {
   TbmVehicleMaintenanceRecord: 'TbmVehicleMaintenanceRecord',
   TbmRouteGroup: 'TbmRouteGroup',
   TbmRouteGroupFee: 'TbmRouteGroupFee',
+  TbmRouteGroupStandardSalary: 'TbmRouteGroupStandardSalary',
   TbmMonthlyConfigForRouteGroup: 'TbmMonthlyConfigForRouteGroup',
   Mid_TbmRouteGroup_TbmCustomer: 'Mid_TbmRouteGroup_TbmCustomer',
   TbmBillingAddress: 'TbmBillingAddress',
@@ -498,7 +499,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "hakobunClient" | "hakobunCategory" | "hakobunCorrection" | "hakobunRule" | "hakobunVoice" | "keihiExpense" | "keihiAttachment" | "keihiAccountMaster" | "keihiOptionMaster" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "stVehicle" | "stCustomer" | "stContact" | "stHoliday" | "stSchedule" | "stScheduleDriver" | "stRollCaller" | "stPublishSetting" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "stockConfig" | "stock" | "stockHistory" | "tbmBase" | "tbmRouteGroupCalendar" | "tbmKeihi" | "tbmDriveScheduleImage" | "tbmBase_MonthConfig" | "tbmVehicle" | "tbmFuelCard" | "tbmVehicleMaintenanceRecord" | "tbmRouteGroup" | "tbmRouteGroupFee" | "tbmMonthlyConfigForRouteGroup" | "mid_TbmRouteGroup_TbmCustomer" | "tbmBillingAddress" | "tbmInvoiceDetail" | "tbmCustomer" | "tbmInvoiceManualEdit" | "tbmRefuelHistory" | "tbmCarWashHistory" | "tbmDriveSchedule" | "tbmEtcMeisai" | "etcCsvRaw" | "odometerInput" | "userWorkStatus" | "kyuyoTableRecord" | "tbmRouteGroupShare" | "tbmRelatedRouteGroup" | "teamSynapseAnalysis" | "exerciseMaster" | "workoutLog"
+    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "hakobunClient" | "hakobunCategory" | "hakobunCorrection" | "hakobunRule" | "hakobunVoice" | "keihiExpense" | "keihiAttachment" | "keihiAccountMaster" | "keihiOptionMaster" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "stVehicle" | "stCustomer" | "stContact" | "stHoliday" | "stSchedule" | "stScheduleDriver" | "stRollCaller" | "stPublishSetting" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "stockConfig" | "stock" | "stockHistory" | "tbmBase" | "tbmRouteGroupCalendar" | "tbmKeihi" | "tbmDriveScheduleImage" | "tbmBase_MonthConfig" | "tbmVehicle" | "tbmFuelCard" | "tbmVehicleMaintenanceRecord" | "tbmRouteGroup" | "tbmRouteGroupFee" | "tbmRouteGroupStandardSalary" | "tbmMonthlyConfigForRouteGroup" | "mid_TbmRouteGroup_TbmCustomer" | "tbmBillingAddress" | "tbmInvoiceDetail" | "tbmCustomer" | "tbmInvoiceManualEdit" | "tbmRefuelHistory" | "tbmCarWashHistory" | "tbmDriveSchedule" | "tbmEtcMeisai" | "etcCsvRaw" | "odometerInput" | "userWorkStatus" | "kyuyoTableRecord" | "tbmRouteGroupShare" | "tbmRelatedRouteGroup" | "teamSynapseAnalysis" | "exerciseMaster" | "workoutLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -6422,6 +6423,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TbmRouteGroupStandardSalary: {
+      payload: Prisma.$TbmRouteGroupStandardSalaryPayload<ExtArgs>
+      fields: Prisma.TbmRouteGroupStandardSalaryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TbmRouteGroupStandardSalaryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TbmRouteGroupStandardSalaryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TbmRouteGroupStandardSalaryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TbmRouteGroupStandardSalaryPayload>
+        }
+        findFirst: {
+          args: Prisma.TbmRouteGroupStandardSalaryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TbmRouteGroupStandardSalaryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TbmRouteGroupStandardSalaryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TbmRouteGroupStandardSalaryPayload>
+        }
+        findMany: {
+          args: Prisma.TbmRouteGroupStandardSalaryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TbmRouteGroupStandardSalaryPayload>[]
+        }
+        create: {
+          args: Prisma.TbmRouteGroupStandardSalaryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TbmRouteGroupStandardSalaryPayload>
+        }
+        createMany: {
+          args: Prisma.TbmRouteGroupStandardSalaryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TbmRouteGroupStandardSalaryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TbmRouteGroupStandardSalaryPayload>[]
+        }
+        delete: {
+          args: Prisma.TbmRouteGroupStandardSalaryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TbmRouteGroupStandardSalaryPayload>
+        }
+        update: {
+          args: Prisma.TbmRouteGroupStandardSalaryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TbmRouteGroupStandardSalaryPayload>
+        }
+        deleteMany: {
+          args: Prisma.TbmRouteGroupStandardSalaryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TbmRouteGroupStandardSalaryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TbmRouteGroupStandardSalaryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TbmRouteGroupStandardSalaryPayload>[]
+        }
+        upsert: {
+          args: Prisma.TbmRouteGroupStandardSalaryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TbmRouteGroupStandardSalaryPayload>
+        }
+        aggregate: {
+          args: Prisma.TbmRouteGroupStandardSalaryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTbmRouteGroupStandardSalary>
+        }
+        groupBy: {
+          args: Prisma.TbmRouteGroupStandardSalaryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TbmRouteGroupStandardSalaryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TbmRouteGroupStandardSalaryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TbmRouteGroupStandardSalaryCountAggregateOutputType> | number
+        }
+      }
+    }
     TbmMonthlyConfigForRouteGroup: {
       payload: Prisma.$TbmMonthlyConfigForRouteGroupPayload<ExtArgs>
       fields: Prisma.TbmMonthlyConfigForRouteGroupFieldRefs
@@ -9227,6 +9302,7 @@ export const TbmRouteGroupScalarFieldEnum = {
   seikyuKbn: 'seikyuKbn',
   isShared: 'isShared',
   displayExpiryDate: 'displayExpiryDate',
+  color: 'color',
   tbmBaseId: 'tbmBaseId'
 } as const
 
@@ -9245,6 +9321,19 @@ export const TbmRouteGroupFeeScalarFieldEnum = {
 } as const
 
 export type TbmRouteGroupFeeScalarFieldEnum = (typeof TbmRouteGroupFeeScalarFieldEnum)[keyof typeof TbmRouteGroupFeeScalarFieldEnum]
+
+
+export const TbmRouteGroupStandardSalaryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  startDate: 'startDate',
+  salary: 'salary',
+  tbmRouteGroupId: 'tbmRouteGroupId'
+} as const
+
+export type TbmRouteGroupStandardSalaryScalarFieldEnum = (typeof TbmRouteGroupStandardSalaryScalarFieldEnum)[keyof typeof TbmRouteGroupStandardSalaryScalarFieldEnum]
 
 
 export const TbmMonthlyConfigForRouteGroupScalarFieldEnum = {
@@ -9867,6 +9956,7 @@ export type GlobalOmitConfig = {
   tbmVehicleMaintenanceRecord?: Prisma.TbmVehicleMaintenanceRecordOmit
   tbmRouteGroup?: Prisma.TbmRouteGroupOmit
   tbmRouteGroupFee?: Prisma.TbmRouteGroupFeeOmit
+  tbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryOmit
   tbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupOmit
   mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerOmit
   tbmBillingAddress?: Prisma.TbmBillingAddressOmit

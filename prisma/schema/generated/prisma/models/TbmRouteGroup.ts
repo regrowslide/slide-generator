@@ -56,6 +56,7 @@ export type TbmRouteGroupMinAggregateOutputType = {
   seikyuKbn: string | null
   isShared: boolean | null
   displayExpiryDate: Date | null
+  color: string | null
   tbmBaseId: number | null
 }
 
@@ -77,6 +78,7 @@ export type TbmRouteGroupMaxAggregateOutputType = {
   seikyuKbn: string | null
   isShared: boolean | null
   displayExpiryDate: Date | null
+  color: string | null
   tbmBaseId: number | null
 }
 
@@ -98,6 +100,7 @@ export type TbmRouteGroupCountAggregateOutputType = {
   seikyuKbn: number
   isShared: number
   displayExpiryDate: number
+  color: number
   tbmBaseId: number
   _all: number
 }
@@ -133,6 +136,7 @@ export type TbmRouteGroupMinAggregateInputType = {
   seikyuKbn?: true
   isShared?: true
   displayExpiryDate?: true
+  color?: true
   tbmBaseId?: true
 }
 
@@ -154,6 +158,7 @@ export type TbmRouteGroupMaxAggregateInputType = {
   seikyuKbn?: true
   isShared?: true
   displayExpiryDate?: true
+  color?: true
   tbmBaseId?: true
 }
 
@@ -175,6 +180,7 @@ export type TbmRouteGroupCountAggregateInputType = {
   seikyuKbn?: true
   isShared?: true
   displayExpiryDate?: true
+  color?: true
   tbmBaseId?: true
   _all?: true
 }
@@ -283,6 +289,7 @@ export type TbmRouteGroupGroupByOutputType = {
   seikyuKbn: string | null
   isShared: boolean
   displayExpiryDate: Date | null
+  color: string | null
   tbmBaseId: number
   _count: TbmRouteGroupCountAggregateOutputType | null
   _avg: TbmRouteGroupAvgAggregateOutputType | null
@@ -327,6 +334,7 @@ export type TbmRouteGroupWhereInput = {
   seikyuKbn?: Prisma.StringNullableFilter<"TbmRouteGroup"> | string | null
   isShared?: Prisma.BoolFilter<"TbmRouteGroup"> | boolean
   displayExpiryDate?: Prisma.DateTimeNullableFilter<"TbmRouteGroup"> | Date | string | null
+  color?: Prisma.StringNullableFilter<"TbmRouteGroup"> | string | null
   tbmBaseId?: Prisma.IntFilter<"TbmRouteGroup"> | number
   TbmBase?: Prisma.XOR<Prisma.TbmBaseScalarRelationFilter, Prisma.TbmBaseWhereInput>
   TbmDriveSchedule?: Prisma.TbmDriveScheduleListRelationFilter
@@ -334,6 +342,7 @@ export type TbmRouteGroupWhereInput = {
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.XOR<Prisma.Mid_TbmRouteGroup_TbmCustomerNullableScalarRelationFilter, Prisma.Mid_TbmRouteGroup_TbmCustomerWhereInput> | null
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarListRelationFilter
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeListRelationFilter
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryListRelationFilter
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareListRelationFilter
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupListRelationFilter
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupListRelationFilter
@@ -357,6 +366,7 @@ export type TbmRouteGroupOrderByWithRelationInput = {
   seikyuKbn?: Prisma.SortOrderInput | Prisma.SortOrder
   isShared?: Prisma.SortOrder
   displayExpiryDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  color?: Prisma.SortOrderInput | Prisma.SortOrder
   tbmBaseId?: Prisma.SortOrder
   TbmBase?: Prisma.TbmBaseOrderByWithRelationInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleOrderByRelationAggregateInput
@@ -364,6 +374,7 @@ export type TbmRouteGroupOrderByWithRelationInput = {
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerOrderByWithRelationInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarOrderByRelationAggregateInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeOrderByRelationAggregateInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryOrderByRelationAggregateInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareOrderByRelationAggregateInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupOrderByRelationAggregateInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupOrderByRelationAggregateInput
@@ -391,6 +402,7 @@ export type TbmRouteGroupWhereUniqueInput = Prisma.AtLeast<{
   seikyuKbn?: Prisma.StringNullableFilter<"TbmRouteGroup"> | string | null
   isShared?: Prisma.BoolFilter<"TbmRouteGroup"> | boolean
   displayExpiryDate?: Prisma.DateTimeNullableFilter<"TbmRouteGroup"> | Date | string | null
+  color?: Prisma.StringNullableFilter<"TbmRouteGroup"> | string | null
   tbmBaseId?: Prisma.IntFilter<"TbmRouteGroup"> | number
   TbmBase?: Prisma.XOR<Prisma.TbmBaseScalarRelationFilter, Prisma.TbmBaseWhereInput>
   TbmDriveSchedule?: Prisma.TbmDriveScheduleListRelationFilter
@@ -398,6 +410,7 @@ export type TbmRouteGroupWhereUniqueInput = Prisma.AtLeast<{
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.XOR<Prisma.Mid_TbmRouteGroup_TbmCustomerNullableScalarRelationFilter, Prisma.Mid_TbmRouteGroup_TbmCustomerWhereInput> | null
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarListRelationFilter
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeListRelationFilter
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryListRelationFilter
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareListRelationFilter
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupListRelationFilter
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupListRelationFilter
@@ -421,6 +434,7 @@ export type TbmRouteGroupOrderByWithAggregationInput = {
   seikyuKbn?: Prisma.SortOrderInput | Prisma.SortOrder
   isShared?: Prisma.SortOrder
   displayExpiryDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  color?: Prisma.SortOrderInput | Prisma.SortOrder
   tbmBaseId?: Prisma.SortOrder
   _count?: Prisma.TbmRouteGroupCountOrderByAggregateInput
   _avg?: Prisma.TbmRouteGroupAvgOrderByAggregateInput
@@ -450,6 +464,7 @@ export type TbmRouteGroupScalarWhereWithAggregatesInput = {
   seikyuKbn?: Prisma.StringNullableWithAggregatesFilter<"TbmRouteGroup"> | string | null
   isShared?: Prisma.BoolWithAggregatesFilter<"TbmRouteGroup"> | boolean
   displayExpiryDate?: Prisma.DateTimeNullableWithAggregatesFilter<"TbmRouteGroup"> | Date | string | null
+  color?: Prisma.StringNullableWithAggregatesFilter<"TbmRouteGroup"> | string | null
   tbmBaseId?: Prisma.IntWithAggregatesFilter<"TbmRouteGroup"> | number
 }
 
@@ -470,12 +485,14 @@ export type TbmRouteGroupCreateInput = {
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   TbmBase: Prisma.TbmBaseCreateNestedOneWithoutTbmRouteGroupInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutTbmRouteGroupInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupCreateNestedManyWithoutTbmRouteGroupInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerCreateNestedOneWithoutTbmRouteGroupInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupCreateNestedManyWithoutChildRouteGroupInput
@@ -499,12 +516,14 @@ export type TbmRouteGroupUncheckedCreateInput = {
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   tbmBaseId: number
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUncheckedCreateNestedOneWithoutTbmRouteGroupInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUncheckedCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUncheckedCreateNestedManyWithoutChildRouteGroupInput
@@ -527,12 +546,14 @@ export type TbmRouteGroupUpdateInput = {
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   TbmBase?: Prisma.TbmBaseUpdateOneRequiredWithoutTbmRouteGroupNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutTbmRouteGroupNestedInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUpdateManyWithoutTbmRouteGroupNestedInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUpdateOneWithoutTbmRouteGroupNestedInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUpdateManyWithoutChildRouteGroupNestedInput
@@ -556,12 +577,14 @@ export type TbmRouteGroupUncheckedUpdateInput = {
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tbmBaseId?: Prisma.IntFieldUpdateOperationsInput | number
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUncheckedUpdateOneWithoutTbmRouteGroupNestedInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUncheckedUpdateManyWithoutChildRouteGroupNestedInput
@@ -585,6 +608,7 @@ export type TbmRouteGroupCreateManyInput = {
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   tbmBaseId: number
 }
 
@@ -605,6 +629,7 @@ export type TbmRouteGroupUpdateManyMutationInput = {
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type TbmRouteGroupUncheckedUpdateManyInput = {
@@ -625,6 +650,7 @@ export type TbmRouteGroupUncheckedUpdateManyInput = {
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tbmBaseId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -666,6 +692,7 @@ export type TbmRouteGroupCountOrderByAggregateInput = {
   seikyuKbn?: Prisma.SortOrder
   isShared?: Prisma.SortOrder
   displayExpiryDate?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   tbmBaseId?: Prisma.SortOrder
 }
 
@@ -693,6 +720,7 @@ export type TbmRouteGroupMaxOrderByAggregateInput = {
   seikyuKbn?: Prisma.SortOrder
   isShared?: Prisma.SortOrder
   displayExpiryDate?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   tbmBaseId?: Prisma.SortOrder
 }
 
@@ -714,6 +742,7 @@ export type TbmRouteGroupMinOrderByAggregateInput = {
   seikyuKbn?: Prisma.SortOrder
   isShared?: Prisma.SortOrder
   displayExpiryDate?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   tbmBaseId?: Prisma.SortOrder
 }
 
@@ -791,6 +820,20 @@ export type TbmRouteGroupUpdateOneRequiredWithoutTbmRouteGroupFeeNestedInput = {
   upsert?: Prisma.TbmRouteGroupUpsertWithoutTbmRouteGroupFeeInput
   connect?: Prisma.TbmRouteGroupWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.TbmRouteGroupUpdateToOneWithWhereWithoutTbmRouteGroupFeeInput, Prisma.TbmRouteGroupUpdateWithoutTbmRouteGroupFeeInput>, Prisma.TbmRouteGroupUncheckedUpdateWithoutTbmRouteGroupFeeInput>
+}
+
+export type TbmRouteGroupCreateNestedOneWithoutTbmRouteGroupStandardSalaryInput = {
+  create?: Prisma.XOR<Prisma.TbmRouteGroupCreateWithoutTbmRouteGroupStandardSalaryInput, Prisma.TbmRouteGroupUncheckedCreateWithoutTbmRouteGroupStandardSalaryInput>
+  connectOrCreate?: Prisma.TbmRouteGroupCreateOrConnectWithoutTbmRouteGroupStandardSalaryInput
+  connect?: Prisma.TbmRouteGroupWhereUniqueInput
+}
+
+export type TbmRouteGroupUpdateOneRequiredWithoutTbmRouteGroupStandardSalaryNestedInput = {
+  create?: Prisma.XOR<Prisma.TbmRouteGroupCreateWithoutTbmRouteGroupStandardSalaryInput, Prisma.TbmRouteGroupUncheckedCreateWithoutTbmRouteGroupStandardSalaryInput>
+  connectOrCreate?: Prisma.TbmRouteGroupCreateOrConnectWithoutTbmRouteGroupStandardSalaryInput
+  upsert?: Prisma.TbmRouteGroupUpsertWithoutTbmRouteGroupStandardSalaryInput
+  connect?: Prisma.TbmRouteGroupWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TbmRouteGroupUpdateToOneWithWhereWithoutTbmRouteGroupStandardSalaryInput, Prisma.TbmRouteGroupUpdateWithoutTbmRouteGroupStandardSalaryInput>, Prisma.TbmRouteGroupUncheckedUpdateWithoutTbmRouteGroupStandardSalaryInput>
 }
 
 export type TbmRouteGroupCreateNestedOneWithoutTbmMonthlyConfigForRouteGroupInput = {
@@ -894,11 +937,13 @@ export type TbmRouteGroupCreateWithoutTbmBaseInput = {
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutTbmRouteGroupInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupCreateNestedManyWithoutTbmRouteGroupInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerCreateNestedOneWithoutTbmRouteGroupInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupCreateNestedManyWithoutChildRouteGroupInput
@@ -922,11 +967,13 @@ export type TbmRouteGroupUncheckedCreateWithoutTbmBaseInput = {
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUncheckedCreateNestedOneWithoutTbmRouteGroupInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUncheckedCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUncheckedCreateNestedManyWithoutChildRouteGroupInput
@@ -979,6 +1026,7 @@ export type TbmRouteGroupScalarWhereInput = {
   seikyuKbn?: Prisma.StringNullableFilter<"TbmRouteGroup"> | string | null
   isShared?: Prisma.BoolFilter<"TbmRouteGroup"> | boolean
   displayExpiryDate?: Prisma.DateTimeNullableFilter<"TbmRouteGroup"> | Date | string | null
+  color?: Prisma.StringNullableFilter<"TbmRouteGroup"> | string | null
   tbmBaseId?: Prisma.IntFilter<"TbmRouteGroup"> | number
 }
 
@@ -999,11 +1047,13 @@ export type TbmRouteGroupCreateWithoutTbmRouteGroupCalendarInput = {
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   TbmBase: Prisma.TbmBaseCreateNestedOneWithoutTbmRouteGroupInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutTbmRouteGroupInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupCreateNestedManyWithoutTbmRouteGroupInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerCreateNestedOneWithoutTbmRouteGroupInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupCreateNestedManyWithoutChildRouteGroupInput
@@ -1027,11 +1077,13 @@ export type TbmRouteGroupUncheckedCreateWithoutTbmRouteGroupCalendarInput = {
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   tbmBaseId: number
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUncheckedCreateNestedOneWithoutTbmRouteGroupInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUncheckedCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUncheckedCreateNestedManyWithoutChildRouteGroupInput
@@ -1070,11 +1122,13 @@ export type TbmRouteGroupUpdateWithoutTbmRouteGroupCalendarInput = {
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   TbmBase?: Prisma.TbmBaseUpdateOneRequiredWithoutTbmRouteGroupNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutTbmRouteGroupNestedInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUpdateManyWithoutTbmRouteGroupNestedInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUpdateOneWithoutTbmRouteGroupNestedInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUpdateManyWithoutChildRouteGroupNestedInput
@@ -1098,11 +1152,13 @@ export type TbmRouteGroupUncheckedUpdateWithoutTbmRouteGroupCalendarInput = {
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tbmBaseId?: Prisma.IntFieldUpdateOperationsInput | number
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUncheckedUpdateOneWithoutTbmRouteGroupNestedInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUncheckedUpdateManyWithoutChildRouteGroupNestedInput
@@ -1125,11 +1181,13 @@ export type TbmRouteGroupCreateWithoutTbmRouteGroupFeeInput = {
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   TbmBase: Prisma.TbmBaseCreateNestedOneWithoutTbmRouteGroupInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutTbmRouteGroupInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupCreateNestedManyWithoutTbmRouteGroupInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerCreateNestedOneWithoutTbmRouteGroupInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupCreateNestedManyWithoutChildRouteGroupInput
@@ -1153,11 +1211,13 @@ export type TbmRouteGroupUncheckedCreateWithoutTbmRouteGroupFeeInput = {
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   tbmBaseId: number
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUncheckedCreateNestedOneWithoutTbmRouteGroupInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUncheckedCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUncheckedCreateNestedManyWithoutChildRouteGroupInput
@@ -1196,11 +1256,13 @@ export type TbmRouteGroupUpdateWithoutTbmRouteGroupFeeInput = {
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   TbmBase?: Prisma.TbmBaseUpdateOneRequiredWithoutTbmRouteGroupNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutTbmRouteGroupNestedInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUpdateManyWithoutTbmRouteGroupNestedInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUpdateOneWithoutTbmRouteGroupNestedInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUpdateManyWithoutChildRouteGroupNestedInput
@@ -1224,11 +1286,147 @@ export type TbmRouteGroupUncheckedUpdateWithoutTbmRouteGroupFeeInput = {
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tbmBaseId?: Prisma.IntFieldUpdateOperationsInput | number
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUncheckedUpdateOneWithoutTbmRouteGroupNestedInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
+  RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
+  RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUncheckedUpdateManyWithoutChildRouteGroupNestedInput
+}
+
+export type TbmRouteGroupCreateWithoutTbmRouteGroupStandardSalaryInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  code?: string | null
+  name: string
+  routeName?: string | null
+  serviceNumber?: string | null
+  departureTime?: string | null
+  finalArrivalTime?: string | null
+  allowDuplicate?: boolean
+  pickupTime?: string | null
+  vehicleType?: string | null
+  productName?: string | null
+  seikyuKbn?: string | null
+  isShared?: boolean
+  displayExpiryDate?: Date | string | null
+  color?: string | null
+  TbmBase: Prisma.TbmBaseCreateNestedOneWithoutTbmRouteGroupInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutTbmRouteGroupInput
+  TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupCreateNestedManyWithoutTbmRouteGroupInput
+  Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerCreateNestedOneWithoutTbmRouteGroupInput
+  TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupShare?: Prisma.TbmRouteGroupShareCreateNestedManyWithoutTbmRouteGroupInput
+  RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupCreateNestedManyWithoutTbmRouteGroupInput
+  RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupCreateNestedManyWithoutChildRouteGroupInput
+}
+
+export type TbmRouteGroupUncheckedCreateWithoutTbmRouteGroupStandardSalaryInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  code?: string | null
+  name: string
+  routeName?: string | null
+  serviceNumber?: string | null
+  departureTime?: string | null
+  finalArrivalTime?: string | null
+  allowDuplicate?: boolean
+  pickupTime?: string | null
+  vehicleType?: string | null
+  productName?: string | null
+  seikyuKbn?: string | null
+  isShared?: boolean
+  displayExpiryDate?: Date | string | null
+  color?: string | null
+  tbmBaseId: number
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutTbmRouteGroupInput
+  TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUncheckedCreateNestedManyWithoutTbmRouteGroupInput
+  Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUncheckedCreateNestedOneWithoutTbmRouteGroupInput
+  TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUncheckedCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUncheckedCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUncheckedCreateNestedManyWithoutTbmRouteGroupInput
+  RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUncheckedCreateNestedManyWithoutTbmRouteGroupInput
+  RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUncheckedCreateNestedManyWithoutChildRouteGroupInput
+}
+
+export type TbmRouteGroupCreateOrConnectWithoutTbmRouteGroupStandardSalaryInput = {
+  where: Prisma.TbmRouteGroupWhereUniqueInput
+  create: Prisma.XOR<Prisma.TbmRouteGroupCreateWithoutTbmRouteGroupStandardSalaryInput, Prisma.TbmRouteGroupUncheckedCreateWithoutTbmRouteGroupStandardSalaryInput>
+}
+
+export type TbmRouteGroupUpsertWithoutTbmRouteGroupStandardSalaryInput = {
+  update: Prisma.XOR<Prisma.TbmRouteGroupUpdateWithoutTbmRouteGroupStandardSalaryInput, Prisma.TbmRouteGroupUncheckedUpdateWithoutTbmRouteGroupStandardSalaryInput>
+  create: Prisma.XOR<Prisma.TbmRouteGroupCreateWithoutTbmRouteGroupStandardSalaryInput, Prisma.TbmRouteGroupUncheckedCreateWithoutTbmRouteGroupStandardSalaryInput>
+  where?: Prisma.TbmRouteGroupWhereInput
+}
+
+export type TbmRouteGroupUpdateToOneWithWhereWithoutTbmRouteGroupStandardSalaryInput = {
+  where?: Prisma.TbmRouteGroupWhereInput
+  data: Prisma.XOR<Prisma.TbmRouteGroupUpdateWithoutTbmRouteGroupStandardSalaryInput, Prisma.TbmRouteGroupUncheckedUpdateWithoutTbmRouteGroupStandardSalaryInput>
+}
+
+export type TbmRouteGroupUpdateWithoutTbmRouteGroupStandardSalaryInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  routeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departureTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalArrivalTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  allowDuplicate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pickupTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  TbmBase?: Prisma.TbmBaseUpdateOneRequiredWithoutTbmRouteGroupNestedInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUpdateManyWithoutTbmRouteGroupNestedInput
+  Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUpdateOneWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUpdateManyWithoutTbmRouteGroupNestedInput
+  RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUpdateManyWithoutTbmRouteGroupNestedInput
+  RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUpdateManyWithoutChildRouteGroupNestedInput
+}
+
+export type TbmRouteGroupUncheckedUpdateWithoutTbmRouteGroupStandardSalaryInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  routeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departureTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalArrivalTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  allowDuplicate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pickupTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tbmBaseId?: Prisma.IntFieldUpdateOperationsInput | number
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
+  Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUncheckedUpdateOneWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUncheckedUpdateManyWithoutChildRouteGroupNestedInput
@@ -1251,11 +1449,13 @@ export type TbmRouteGroupCreateWithoutTbmMonthlyConfigForRouteGroupInput = {
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   TbmBase: Prisma.TbmBaseCreateNestedOneWithoutTbmRouteGroupInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutTbmRouteGroupInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerCreateNestedOneWithoutTbmRouteGroupInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupCreateNestedManyWithoutChildRouteGroupInput
@@ -1279,11 +1479,13 @@ export type TbmRouteGroupUncheckedCreateWithoutTbmMonthlyConfigForRouteGroupInpu
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   tbmBaseId: number
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUncheckedCreateNestedOneWithoutTbmRouteGroupInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUncheckedCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUncheckedCreateNestedManyWithoutChildRouteGroupInput
@@ -1322,11 +1524,13 @@ export type TbmRouteGroupUpdateWithoutTbmMonthlyConfigForRouteGroupInput = {
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   TbmBase?: Prisma.TbmBaseUpdateOneRequiredWithoutTbmRouteGroupNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutTbmRouteGroupNestedInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUpdateOneWithoutTbmRouteGroupNestedInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUpdateManyWithoutChildRouteGroupNestedInput
@@ -1350,11 +1554,13 @@ export type TbmRouteGroupUncheckedUpdateWithoutTbmMonthlyConfigForRouteGroupInpu
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tbmBaseId?: Prisma.IntFieldUpdateOperationsInput | number
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUncheckedUpdateOneWithoutTbmRouteGroupNestedInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUncheckedUpdateManyWithoutChildRouteGroupNestedInput
@@ -1377,11 +1583,13 @@ export type TbmRouteGroupCreateWithoutMid_TbmRouteGroup_TbmCustomerInput = {
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   TbmBase: Prisma.TbmBaseCreateNestedOneWithoutTbmRouteGroupInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutTbmRouteGroupInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupCreateNestedManyWithoutChildRouteGroupInput
@@ -1405,11 +1613,13 @@ export type TbmRouteGroupUncheckedCreateWithoutMid_TbmRouteGroup_TbmCustomerInpu
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   tbmBaseId: number
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUncheckedCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUncheckedCreateNestedManyWithoutChildRouteGroupInput
@@ -1448,11 +1658,13 @@ export type TbmRouteGroupUpdateWithoutMid_TbmRouteGroup_TbmCustomerInput = {
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   TbmBase?: Prisma.TbmBaseUpdateOneRequiredWithoutTbmRouteGroupNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutTbmRouteGroupNestedInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUpdateManyWithoutChildRouteGroupNestedInput
@@ -1476,11 +1688,13 @@ export type TbmRouteGroupUncheckedUpdateWithoutMid_TbmRouteGroup_TbmCustomerInpu
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tbmBaseId?: Prisma.IntFieldUpdateOperationsInput | number
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUncheckedUpdateManyWithoutChildRouteGroupNestedInput
@@ -1503,11 +1717,13 @@ export type TbmRouteGroupCreateWithoutTbmDriveScheduleInput = {
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   TbmBase: Prisma.TbmBaseCreateNestedOneWithoutTbmRouteGroupInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupCreateNestedManyWithoutTbmRouteGroupInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerCreateNestedOneWithoutTbmRouteGroupInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupCreateNestedManyWithoutChildRouteGroupInput
@@ -1531,11 +1747,13 @@ export type TbmRouteGroupUncheckedCreateWithoutTbmDriveScheduleInput = {
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   tbmBaseId: number
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUncheckedCreateNestedOneWithoutTbmRouteGroupInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUncheckedCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUncheckedCreateNestedManyWithoutChildRouteGroupInput
@@ -1574,11 +1792,13 @@ export type TbmRouteGroupUpdateWithoutTbmDriveScheduleInput = {
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   TbmBase?: Prisma.TbmBaseUpdateOneRequiredWithoutTbmRouteGroupNestedInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUpdateManyWithoutTbmRouteGroupNestedInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUpdateOneWithoutTbmRouteGroupNestedInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUpdateManyWithoutChildRouteGroupNestedInput
@@ -1602,11 +1822,13 @@ export type TbmRouteGroupUncheckedUpdateWithoutTbmDriveScheduleInput = {
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tbmBaseId?: Prisma.IntFieldUpdateOperationsInput | number
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUncheckedUpdateOneWithoutTbmRouteGroupNestedInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUncheckedUpdateManyWithoutChildRouteGroupNestedInput
@@ -1629,12 +1851,14 @@ export type TbmRouteGroupCreateWithoutTbmRouteGroupShareInput = {
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   TbmBase: Prisma.TbmBaseCreateNestedOneWithoutTbmRouteGroupInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutTbmRouteGroupInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupCreateNestedManyWithoutTbmRouteGroupInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerCreateNestedOneWithoutTbmRouteGroupInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupCreateNestedManyWithoutChildRouteGroupInput
 }
@@ -1657,12 +1881,14 @@ export type TbmRouteGroupUncheckedCreateWithoutTbmRouteGroupShareInput = {
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   tbmBaseId: number
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUncheckedCreateNestedOneWithoutTbmRouteGroupInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUncheckedCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUncheckedCreateNestedManyWithoutChildRouteGroupInput
 }
@@ -1700,12 +1926,14 @@ export type TbmRouteGroupUpdateWithoutTbmRouteGroupShareInput = {
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   TbmBase?: Prisma.TbmBaseUpdateOneRequiredWithoutTbmRouteGroupNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutTbmRouteGroupNestedInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUpdateManyWithoutTbmRouteGroupNestedInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUpdateOneWithoutTbmRouteGroupNestedInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUpdateManyWithoutChildRouteGroupNestedInput
 }
@@ -1728,12 +1956,14 @@ export type TbmRouteGroupUncheckedUpdateWithoutTbmRouteGroupShareInput = {
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tbmBaseId?: Prisma.IntFieldUpdateOperationsInput | number
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUncheckedUpdateOneWithoutTbmRouteGroupNestedInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUncheckedUpdateManyWithoutChildRouteGroupNestedInput
 }
@@ -1755,12 +1985,14 @@ export type TbmRouteGroupCreateWithoutRelatedRouteGroupsAsParentInput = {
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   TbmBase: Prisma.TbmBaseCreateNestedOneWithoutTbmRouteGroupInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutTbmRouteGroupInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupCreateNestedManyWithoutTbmRouteGroupInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerCreateNestedOneWithoutTbmRouteGroupInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupCreateNestedManyWithoutChildRouteGroupInput
 }
@@ -1783,12 +2015,14 @@ export type TbmRouteGroupUncheckedCreateWithoutRelatedRouteGroupsAsParentInput =
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   tbmBaseId: number
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUncheckedCreateNestedOneWithoutTbmRouteGroupInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUncheckedCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUncheckedCreateNestedManyWithoutChildRouteGroupInput
 }
@@ -1815,12 +2049,14 @@ export type TbmRouteGroupCreateWithoutRelatedRouteGroupsAsChildInput = {
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   TbmBase: Prisma.TbmBaseCreateNestedOneWithoutTbmRouteGroupInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutTbmRouteGroupInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupCreateNestedManyWithoutTbmRouteGroupInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerCreateNestedOneWithoutTbmRouteGroupInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupCreateNestedManyWithoutTbmRouteGroupInput
 }
@@ -1843,12 +2079,14 @@ export type TbmRouteGroupUncheckedCreateWithoutRelatedRouteGroupsAsChildInput = 
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
   tbmBaseId: number
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUncheckedCreateNestedOneWithoutTbmRouteGroupInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUncheckedCreateNestedManyWithoutTbmRouteGroupInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUncheckedCreateNestedManyWithoutTbmRouteGroupInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUncheckedCreateNestedManyWithoutTbmRouteGroupInput
 }
@@ -1886,12 +2124,14 @@ export type TbmRouteGroupUpdateWithoutRelatedRouteGroupsAsParentInput = {
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   TbmBase?: Prisma.TbmBaseUpdateOneRequiredWithoutTbmRouteGroupNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutTbmRouteGroupNestedInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUpdateManyWithoutTbmRouteGroupNestedInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUpdateOneWithoutTbmRouteGroupNestedInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUpdateManyWithoutChildRouteGroupNestedInput
 }
@@ -1914,12 +2154,14 @@ export type TbmRouteGroupUncheckedUpdateWithoutRelatedRouteGroupsAsParentInput =
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tbmBaseId?: Prisma.IntFieldUpdateOperationsInput | number
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUncheckedUpdateOneWithoutTbmRouteGroupNestedInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUncheckedUpdateManyWithoutChildRouteGroupNestedInput
 }
@@ -1952,12 +2194,14 @@ export type TbmRouteGroupUpdateWithoutRelatedRouteGroupsAsChildInput = {
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   TbmBase?: Prisma.TbmBaseUpdateOneRequiredWithoutTbmRouteGroupNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutTbmRouteGroupNestedInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUpdateManyWithoutTbmRouteGroupNestedInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUpdateOneWithoutTbmRouteGroupNestedInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUpdateManyWithoutTbmRouteGroupNestedInput
 }
@@ -1980,12 +2224,14 @@ export type TbmRouteGroupUncheckedUpdateWithoutRelatedRouteGroupsAsChildInput = 
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tbmBaseId?: Prisma.IntFieldUpdateOperationsInput | number
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUncheckedUpdateOneWithoutTbmRouteGroupNestedInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
 }
@@ -2008,6 +2254,7 @@ export type TbmRouteGroupCreateManyTbmBaseInput = {
   seikyuKbn?: string | null
   isShared?: boolean
   displayExpiryDate?: Date | string | null
+  color?: string | null
 }
 
 export type TbmRouteGroupUpdateWithoutTbmBaseInput = {
@@ -2027,11 +2274,13 @@ export type TbmRouteGroupUpdateWithoutTbmBaseInput = {
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutTbmRouteGroupNestedInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUpdateManyWithoutTbmRouteGroupNestedInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUpdateOneWithoutTbmRouteGroupNestedInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUpdateManyWithoutChildRouteGroupNestedInput
@@ -2055,11 +2304,13 @@ export type TbmRouteGroupUncheckedUpdateWithoutTbmBaseInput = {
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmMonthlyConfigForRouteGroup?: Prisma.TbmMonthlyConfigForRouteGroupUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   Mid_TbmRouteGroup_TbmCustomer?: Prisma.Mid_TbmRouteGroup_TbmCustomerUncheckedUpdateOneWithoutTbmRouteGroupNestedInput
   TbmRouteGroupCalendar?: Prisma.TbmRouteGroupCalendarUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupFee?: Prisma.TbmRouteGroupFeeUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
+  TbmRouteGroupStandardSalary?: Prisma.TbmRouteGroupStandardSalaryUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   TbmRouteGroupShare?: Prisma.TbmRouteGroupShareUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsParent?: Prisma.TbmRelatedRouteGroupUncheckedUpdateManyWithoutTbmRouteGroupNestedInput
   RelatedRouteGroupsAsChild?: Prisma.TbmRelatedRouteGroupUncheckedUpdateManyWithoutChildRouteGroupNestedInput
@@ -2083,6 +2334,7 @@ export type TbmRouteGroupUncheckedUpdateManyWithoutTbmBaseInput = {
   seikyuKbn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isShared?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayExpiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -2095,6 +2347,7 @@ export type TbmRouteGroupCountOutputType = {
   TbmMonthlyConfigForRouteGroup: number
   TbmRouteGroupCalendar: number
   TbmRouteGroupFee: number
+  TbmRouteGroupStandardSalary: number
   TbmRouteGroupShare: number
   RelatedRouteGroupsAsParent: number
   RelatedRouteGroupsAsChild: number
@@ -2105,6 +2358,7 @@ export type TbmRouteGroupCountOutputTypeSelect<ExtArgs extends runtime.Types.Ext
   TbmMonthlyConfigForRouteGroup?: boolean | TbmRouteGroupCountOutputTypeCountTbmMonthlyConfigForRouteGroupArgs
   TbmRouteGroupCalendar?: boolean | TbmRouteGroupCountOutputTypeCountTbmRouteGroupCalendarArgs
   TbmRouteGroupFee?: boolean | TbmRouteGroupCountOutputTypeCountTbmRouteGroupFeeArgs
+  TbmRouteGroupStandardSalary?: boolean | TbmRouteGroupCountOutputTypeCountTbmRouteGroupStandardSalaryArgs
   TbmRouteGroupShare?: boolean | TbmRouteGroupCountOutputTypeCountTbmRouteGroupShareArgs
   RelatedRouteGroupsAsParent?: boolean | TbmRouteGroupCountOutputTypeCountRelatedRouteGroupsAsParentArgs
   RelatedRouteGroupsAsChild?: boolean | TbmRouteGroupCountOutputTypeCountRelatedRouteGroupsAsChildArgs
@@ -2151,6 +2405,13 @@ export type TbmRouteGroupCountOutputTypeCountTbmRouteGroupFeeArgs<ExtArgs extend
 /**
  * TbmRouteGroupCountOutputType without action
  */
+export type TbmRouteGroupCountOutputTypeCountTbmRouteGroupStandardSalaryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TbmRouteGroupStandardSalaryWhereInput
+}
+
+/**
+ * TbmRouteGroupCountOutputType without action
+ */
 export type TbmRouteGroupCountOutputTypeCountTbmRouteGroupShareArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TbmRouteGroupShareWhereInput
 }
@@ -2188,6 +2449,7 @@ export type TbmRouteGroupSelect<ExtArgs extends runtime.Types.Extensions.Interna
   seikyuKbn?: boolean
   isShared?: boolean
   displayExpiryDate?: boolean
+  color?: boolean
   tbmBaseId?: boolean
   TbmBase?: boolean | Prisma.TbmBaseDefaultArgs<ExtArgs>
   TbmDriveSchedule?: boolean | Prisma.TbmRouteGroup$TbmDriveScheduleArgs<ExtArgs>
@@ -2195,6 +2457,7 @@ export type TbmRouteGroupSelect<ExtArgs extends runtime.Types.Extensions.Interna
   Mid_TbmRouteGroup_TbmCustomer?: boolean | Prisma.TbmRouteGroup$Mid_TbmRouteGroup_TbmCustomerArgs<ExtArgs>
   TbmRouteGroupCalendar?: boolean | Prisma.TbmRouteGroup$TbmRouteGroupCalendarArgs<ExtArgs>
   TbmRouteGroupFee?: boolean | Prisma.TbmRouteGroup$TbmRouteGroupFeeArgs<ExtArgs>
+  TbmRouteGroupStandardSalary?: boolean | Prisma.TbmRouteGroup$TbmRouteGroupStandardSalaryArgs<ExtArgs>
   TbmRouteGroupShare?: boolean | Prisma.TbmRouteGroup$TbmRouteGroupShareArgs<ExtArgs>
   RelatedRouteGroupsAsParent?: boolean | Prisma.TbmRouteGroup$RelatedRouteGroupsAsParentArgs<ExtArgs>
   RelatedRouteGroupsAsChild?: boolean | Prisma.TbmRouteGroup$RelatedRouteGroupsAsChildArgs<ExtArgs>
@@ -2219,6 +2482,7 @@ export type TbmRouteGroupSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   seikyuKbn?: boolean
   isShared?: boolean
   displayExpiryDate?: boolean
+  color?: boolean
   tbmBaseId?: boolean
   TbmBase?: boolean | Prisma.TbmBaseDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tbmRouteGroup"]>
@@ -2241,6 +2505,7 @@ export type TbmRouteGroupSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   seikyuKbn?: boolean
   isShared?: boolean
   displayExpiryDate?: boolean
+  color?: boolean
   tbmBaseId?: boolean
   TbmBase?: boolean | Prisma.TbmBaseDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tbmRouteGroup"]>
@@ -2263,10 +2528,11 @@ export type TbmRouteGroupSelectScalar = {
   seikyuKbn?: boolean
   isShared?: boolean
   displayExpiryDate?: boolean
+  color?: boolean
   tbmBaseId?: boolean
 }
 
-export type TbmRouteGroupOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "code" | "name" | "routeName" | "serviceNumber" | "departureTime" | "finalArrivalTime" | "allowDuplicate" | "pickupTime" | "vehicleType" | "productName" | "seikyuKbn" | "isShared" | "displayExpiryDate" | "tbmBaseId", ExtArgs["result"]["tbmRouteGroup"]>
+export type TbmRouteGroupOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "code" | "name" | "routeName" | "serviceNumber" | "departureTime" | "finalArrivalTime" | "allowDuplicate" | "pickupTime" | "vehicleType" | "productName" | "seikyuKbn" | "isShared" | "displayExpiryDate" | "color" | "tbmBaseId", ExtArgs["result"]["tbmRouteGroup"]>
 export type TbmRouteGroupInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   TbmBase?: boolean | Prisma.TbmBaseDefaultArgs<ExtArgs>
   TbmDriveSchedule?: boolean | Prisma.TbmRouteGroup$TbmDriveScheduleArgs<ExtArgs>
@@ -2274,6 +2540,7 @@ export type TbmRouteGroupInclude<ExtArgs extends runtime.Types.Extensions.Intern
   Mid_TbmRouteGroup_TbmCustomer?: boolean | Prisma.TbmRouteGroup$Mid_TbmRouteGroup_TbmCustomerArgs<ExtArgs>
   TbmRouteGroupCalendar?: boolean | Prisma.TbmRouteGroup$TbmRouteGroupCalendarArgs<ExtArgs>
   TbmRouteGroupFee?: boolean | Prisma.TbmRouteGroup$TbmRouteGroupFeeArgs<ExtArgs>
+  TbmRouteGroupStandardSalary?: boolean | Prisma.TbmRouteGroup$TbmRouteGroupStandardSalaryArgs<ExtArgs>
   TbmRouteGroupShare?: boolean | Prisma.TbmRouteGroup$TbmRouteGroupShareArgs<ExtArgs>
   RelatedRouteGroupsAsParent?: boolean | Prisma.TbmRouteGroup$RelatedRouteGroupsAsParentArgs<ExtArgs>
   RelatedRouteGroupsAsChild?: boolean | Prisma.TbmRouteGroup$RelatedRouteGroupsAsChildArgs<ExtArgs>
@@ -2295,6 +2562,7 @@ export type $TbmRouteGroupPayload<ExtArgs extends runtime.Types.Extensions.Inter
     Mid_TbmRouteGroup_TbmCustomer: Prisma.$Mid_TbmRouteGroup_TbmCustomerPayload<ExtArgs> | null
     TbmRouteGroupCalendar: Prisma.$TbmRouteGroupCalendarPayload<ExtArgs>[]
     TbmRouteGroupFee: Prisma.$TbmRouteGroupFeePayload<ExtArgs>[]
+    TbmRouteGroupStandardSalary: Prisma.$TbmRouteGroupStandardSalaryPayload<ExtArgs>[]
     TbmRouteGroupShare: Prisma.$TbmRouteGroupSharePayload<ExtArgs>[]
     RelatedRouteGroupsAsParent: Prisma.$TbmRelatedRouteGroupPayload<ExtArgs>[]
     RelatedRouteGroupsAsChild: Prisma.$TbmRelatedRouteGroupPayload<ExtArgs>[]
@@ -2317,6 +2585,7 @@ export type $TbmRouteGroupPayload<ExtArgs extends runtime.Types.Extensions.Inter
     seikyuKbn: string | null
     isShared: boolean
     displayExpiryDate: Date | null
+    color: string | null
     tbmBaseId: number
   }, ExtArgs["result"]["tbmRouteGroup"]>
   composites: {}
@@ -2718,6 +2987,7 @@ export interface Prisma__TbmRouteGroupClient<T, Null = never, ExtArgs extends ru
   Mid_TbmRouteGroup_TbmCustomer<T extends Prisma.TbmRouteGroup$Mid_TbmRouteGroup_TbmCustomerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TbmRouteGroup$Mid_TbmRouteGroup_TbmCustomerArgs<ExtArgs>>): Prisma.Prisma__Mid_TbmRouteGroup_TbmCustomerClient<runtime.Types.Result.GetResult<Prisma.$Mid_TbmRouteGroup_TbmCustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   TbmRouteGroupCalendar<T extends Prisma.TbmRouteGroup$TbmRouteGroupCalendarArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TbmRouteGroup$TbmRouteGroupCalendarArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TbmRouteGroupCalendarPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   TbmRouteGroupFee<T extends Prisma.TbmRouteGroup$TbmRouteGroupFeeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TbmRouteGroup$TbmRouteGroupFeeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TbmRouteGroupFeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  TbmRouteGroupStandardSalary<T extends Prisma.TbmRouteGroup$TbmRouteGroupStandardSalaryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TbmRouteGroup$TbmRouteGroupStandardSalaryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TbmRouteGroupStandardSalaryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   TbmRouteGroupShare<T extends Prisma.TbmRouteGroup$TbmRouteGroupShareArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TbmRouteGroup$TbmRouteGroupShareArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TbmRouteGroupSharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   RelatedRouteGroupsAsParent<T extends Prisma.TbmRouteGroup$RelatedRouteGroupsAsParentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TbmRouteGroup$RelatedRouteGroupsAsParentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TbmRelatedRouteGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   RelatedRouteGroupsAsChild<T extends Prisma.TbmRouteGroup$RelatedRouteGroupsAsChildArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TbmRouteGroup$RelatedRouteGroupsAsChildArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TbmRelatedRouteGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2767,6 +3037,7 @@ export interface TbmRouteGroupFieldRefs {
   readonly seikyuKbn: Prisma.FieldRef<"TbmRouteGroup", 'String'>
   readonly isShared: Prisma.FieldRef<"TbmRouteGroup", 'Boolean'>
   readonly displayExpiryDate: Prisma.FieldRef<"TbmRouteGroup", 'DateTime'>
+  readonly color: Prisma.FieldRef<"TbmRouteGroup", 'String'>
   readonly tbmBaseId: Prisma.FieldRef<"TbmRouteGroup", 'Int'>
 }
     
@@ -3276,6 +3547,30 @@ export type TbmRouteGroup$TbmRouteGroupFeeArgs<ExtArgs extends runtime.Types.Ext
   take?: number
   skip?: number
   distinct?: Prisma.TbmRouteGroupFeeScalarFieldEnum | Prisma.TbmRouteGroupFeeScalarFieldEnum[]
+}
+
+/**
+ * TbmRouteGroup.TbmRouteGroupStandardSalary
+ */
+export type TbmRouteGroup$TbmRouteGroupStandardSalaryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TbmRouteGroupStandardSalary
+   */
+  select?: Prisma.TbmRouteGroupStandardSalarySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TbmRouteGroupStandardSalary
+   */
+  omit?: Prisma.TbmRouteGroupStandardSalaryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TbmRouteGroupStandardSalaryInclude<ExtArgs> | null
+  where?: Prisma.TbmRouteGroupStandardSalaryWhereInput
+  orderBy?: Prisma.TbmRouteGroupStandardSalaryOrderByWithRelationInput | Prisma.TbmRouteGroupStandardSalaryOrderByWithRelationInput[]
+  cursor?: Prisma.TbmRouteGroupStandardSalaryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TbmRouteGroupStandardSalaryScalarFieldEnum | Prisma.TbmRouteGroupStandardSalaryScalarFieldEnum[]
 }
 
 /**

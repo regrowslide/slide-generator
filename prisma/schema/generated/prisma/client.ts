@@ -440,6 +440,11 @@ export type TbmRouteGroup = Prisma.TbmRouteGroupModel
  */
 export type TbmRouteGroupFee = Prisma.TbmRouteGroupFeeModel
 /**
+ * Model TbmRouteGroupStandardSalary
+ * 
+ */
+export type TbmRouteGroupStandardSalary = Prisma.TbmRouteGroupStandardSalaryModel
+/**
  * Model TbmMonthlyConfigForRouteGroup
  * 
  */

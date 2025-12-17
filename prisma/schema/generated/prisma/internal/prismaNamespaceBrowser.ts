@@ -131,6 +131,7 @@ export const ModelName = {
   TbmVehicleMaintenanceRecord: 'TbmVehicleMaintenanceRecord',
   TbmRouteGroup: 'TbmRouteGroup',
   TbmRouteGroupFee: 'TbmRouteGroupFee',
+  TbmRouteGroupStandardSalary: 'TbmRouteGroupStandardSalary',
   TbmMonthlyConfigForRouteGroup: 'TbmMonthlyConfigForRouteGroup',
   Mid_TbmRouteGroup_TbmCustomer: 'Mid_TbmRouteGroup_TbmCustomer',
   TbmBillingAddress: 'TbmBillingAddress',
@@ -1528,6 +1529,7 @@ export const TbmRouteGroupScalarFieldEnum = {
   seikyuKbn: 'seikyuKbn',
   isShared: 'isShared',
   displayExpiryDate: 'displayExpiryDate',
+  color: 'color',
   tbmBaseId: 'tbmBaseId'
 } as const
 
@@ -1546,6 +1548,19 @@ export const TbmRouteGroupFeeScalarFieldEnum = {
 } as const
 
 export type TbmRouteGroupFeeScalarFieldEnum = (typeof TbmRouteGroupFeeScalarFieldEnum)[keyof typeof TbmRouteGroupFeeScalarFieldEnum]
+
+
+export const TbmRouteGroupStandardSalaryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  startDate: 'startDate',
+  salary: 'salary',
+  tbmRouteGroupId: 'tbmRouteGroupId'
+} as const
+
+export type TbmRouteGroupStandardSalaryScalarFieldEnum = (typeof TbmRouteGroupStandardSalaryScalarFieldEnum)[keyof typeof TbmRouteGroupStandardSalaryScalarFieldEnum]
 
 
 export const TbmMonthlyConfigForRouteGroupScalarFieldEnum = {

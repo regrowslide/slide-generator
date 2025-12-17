@@ -203,6 +203,8 @@ model TbmRouteGroup {
 
   displayExpiryDate DateTime? // 表示期限（レポートページでこの日付を超過した便は非表示）
 
+  color String? // 便のカラー（配車ページのカードに反映）
+
   TbmBase   TbmBase @relation(fields: [tbmBaseId], references: [id], onDelete: Cascade)
   tbmBaseId Int
 
@@ -214,8 +216,9 @@ model TbmRouteGroup {
   Mid_TbmRouteGroup_TbmCustomer Mid_TbmRouteGroup_TbmCustomer?
   TbmRouteGroupCalendar         TbmRouteGroupCalendar[]
 
-  TbmRouteGroupFee   TbmRouteGroupFee[]
-  TbmRouteGroupShare TbmRouteGroupShare[]
+  TbmRouteGroupFee            TbmRouteGroupFee[]
+  TbmRouteGroupStandardSalary TbmRouteGroupStandardSalary[]
+  TbmRouteGroupShare          TbmRouteGroupShare[]
 
   // 関連便（この便が親の場合）
   RelatedRouteGroupsAsParent TbmRelatedRouteGroup[] @relation("ParentRouteGroup")
@@ -238,6 +241,22 @@ model TbmRouteGroupFee {
 
   TbmRouteGroup   TbmRouteGroup @relation(fields: [tbmRouteGroupId], references: [id], onDelete: Cascade)
   tbmRouteGroupId Int
+}
+
+// 便ごとの標準給料履歴管理テーブル
+model TbmRouteGroupStandardSalary {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @default(now()) @updatedAt()
+  sortOrder Float     @default(0)
+
+  startDate DateTime // 適用開始日
+  salary    Int? // 標準給料（円）
+
+  TbmRouteGroup   TbmRouteGroup @relation(fields: [tbmRouteGroupId], references: [id], onDelete: Cascade)
+  tbmRouteGroupId Int
+
+  @@index([tbmRouteGroupId, startDate])
 }
 
 model TbmMonthlyConfigForRouteGroup {

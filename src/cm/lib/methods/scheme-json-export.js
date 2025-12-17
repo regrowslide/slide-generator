@@ -475,6 +475,8 @@ model HakobunVoice {
 
 
 
+
+
 // 経費記録アプリ用スキーマ
 model KeihiExpense {
   id        String   @id @default(cuid())
@@ -1172,7 +1174,7 @@ model SbmProductIngredient {
 
 datasource db {
   provider = "postgresql"
-  url = "postgres://mutsuo:timeSpacer817@localhost:5432/sanshoTourist"
+  url = "postgres://mutsuo:timeSpacer817@localhost:5432/tbm"
 }
 
 generator client {
@@ -1753,6 +1755,8 @@ model TbmRouteGroup {
 
   displayExpiryDate DateTime? // 表示期限（レポートページでこの日付を超過した便は非表示）
 
+  color String? // 便のカラー（配車ページのカードに反映）
+
   TbmBase   TbmBase @relation(fields: [tbmBaseId], references: [id], onDelete: Cascade)
   tbmBaseId Int
 
@@ -1764,8 +1768,9 @@ model TbmRouteGroup {
   Mid_TbmRouteGroup_TbmCustomer Mid_TbmRouteGroup_TbmCustomer?
   TbmRouteGroupCalendar         TbmRouteGroupCalendar[]
 
-  TbmRouteGroupFee   TbmRouteGroupFee[]
-  TbmRouteGroupShare TbmRouteGroupShare[]
+  TbmRouteGroupFee            TbmRouteGroupFee[]
+  TbmRouteGroupStandardSalary TbmRouteGroupStandardSalary[]
+  TbmRouteGroupShare          TbmRouteGroupShare[]
 
   // 関連便（この便が親の場合）
   RelatedRouteGroupsAsParent TbmRelatedRouteGroup[] @relation("ParentRouteGroup")
@@ -1788,6 +1793,22 @@ model TbmRouteGroupFee {
 
   TbmRouteGroup   TbmRouteGroup @relation(fields: [tbmRouteGroupId], references: [id], onDelete: Cascade)
   tbmRouteGroupId Int
+}
+
+// 便ごとの標準給料履歴管理テーブル
+model TbmRouteGroupStandardSalary {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @default(now()) @updatedAt()
+  sortOrder Float     @default(0)
+
+  startDate DateTime // 適用開始日
+  salary    Int? // 標準給料（円）
+
+  TbmRouteGroup   TbmRouteGroup @relation(fields: [tbmRouteGroupId], references: [id], onDelete: Cascade)
+  tbmRouteGroupId Int
+
+  @@index([tbmRouteGroupId, startDate])
 }
 
 model TbmMonthlyConfigForRouteGroup {
@@ -19871,6 +19892,20 @@ export const prismaDMMF = {
           "isUpdatedAt": false
         },
         {
+          "name": "color",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
           "name": "TbmBase",
           "kind": "object",
           "isList": false,
@@ -19986,6 +20021,23 @@ export const prismaDMMF = {
           "type": "TbmRouteGroupFee",
           "nativeType": null,
           "relationName": "TbmRouteGroupToTbmRouteGroupFee",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "TbmRouteGroupStandardSalary",
+          "kind": "object",
+          "isList": true,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "TbmRouteGroupStandardSalary",
+          "nativeType": null,
+          "relationName": "TbmRouteGroupToTbmRouteGroupStandardSalary",
           "relationFromFields": [],
           "relationToFields": [],
           "isGenerated": false,
@@ -20189,6 +20241,150 @@ export const prismaDMMF = {
           "type": "TbmRouteGroup",
           "nativeType": null,
           "relationName": "TbmRouteGroupToTbmRouteGroupFee",
+          "relationFromFields": [
+            "tbmRouteGroupId"
+          ],
+          "relationToFields": [
+            "id"
+          ],
+          "relationOnDelete": "Cascade",
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "tbmRouteGroupId",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": true,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        }
+      ],
+      "primaryKey": null,
+      "uniqueFields": [],
+      "uniqueIndexes": [],
+      "isGenerated": false
+    },
+    {
+      "name": "TbmRouteGroupStandardSalary",
+      "dbName": null,
+      "schema": null,
+      "fields": [
+        {
+          "name": "id",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": true,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Int",
+          "nativeType": null,
+          "default": {
+            "name": "autoincrement",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "createdAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "DateTime",
+          "nativeType": null,
+          "default": {
+            "name": "now",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "updatedAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "DateTime",
+          "nativeType": null,
+          "default": {
+            "name": "now",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": true
+        },
+        {
+          "name": "sortOrder",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Float",
+          "nativeType": null,
+          "default": 0,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "startDate",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "DateTime",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "salary",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "TbmRouteGroup",
+          "kind": "object",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "TbmRouteGroup",
+          "nativeType": null,
+          "relationName": "TbmRouteGroupToTbmRouteGroupStandardSalary",
           "relationFromFields": [
             "tbmRouteGroupId"
           ],
@@ -25615,6 +25811,29 @@ export const prismaDMMF = {
       "fields": [
         {
           "name": "id"
+        }
+      ]
+    },
+    {
+      "model": "TbmRouteGroupStandardSalary",
+      "type": "id",
+      "isDefinedOnField": true,
+      "fields": [
+        {
+          "name": "id"
+        }
+      ]
+    },
+    {
+      "model": "TbmRouteGroupStandardSalary",
+      "type": "normal",
+      "isDefinedOnField": false,
+      "fields": [
+        {
+          "name": "tbmRouteGroupId"
+        },
+        {
+          "name": "startDate"
         }
       ]
     },
