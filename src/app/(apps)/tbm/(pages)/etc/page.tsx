@@ -27,9 +27,9 @@ import BasicTabs from '@cm/components/utils/tabs/BasicTabs'
 
 
 export default function EtcCsvImportPage() {
-
-
-  const { query, addQuery } = useGlobal()
+  const useGlobalProps = useGlobal()
+  const { query, addQuery, accessScopes } = useGlobalProps
+  const { canEdit } = accessScopes().getTbmScopes()
   const { firstDayOfMonth } = Days.month.getMonthDatum(new Date())
   const VehicleSelector = useBasicFormProps({
     columns: new Fields([
@@ -178,16 +178,16 @@ export default function EtcCsvImportPage() {
                         <R_Stack className=" justify-between">
                           <Button
                             onClick={() => updateGrouping(selectedRecords, getNextGroupIndex())}
-                            disabled={isLoading || selectedRecords.length === 0}
-                            className="mt-2"
+                            disabled={isLoading || selectedRecords.length === 0 || !canEdit}
+                            className={`mt-2 ${!canEdit ? 'pointer-events-none opacity-50' : ''}`}
                           >
                             選択したレコードをグループ化
                           </Button>
 
                           <Button
                             onClick={() => deleteMonthData(selectedTbmVehicleId, selectedMonthFrom, selectedMonthTo)}
-                            disabled={isLoading}
-                            className="mt-2 bg-red-500 hover:bg-red-600"
+                            disabled={isLoading || !canEdit}
+                            className={`mt-2 bg-red-500 hover:bg-red-600 ${!canEdit ? 'pointer-events-none opacity-50' : ''}`}
                           >
                             選択中の期間のデータを一括削除
                           </Button>
@@ -199,6 +199,7 @@ export default function EtcCsvImportPage() {
                         toggleRowSelection={toggleRowSelection}
                         ungroupRecords={ungroupRecords}
                         handleLinkSchedule={handleLinkSchedule}
+                        canEdit={canEdit}
                       />
                     </>
                   ) : (

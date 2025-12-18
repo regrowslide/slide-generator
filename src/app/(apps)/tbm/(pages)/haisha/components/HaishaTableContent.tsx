@@ -19,6 +19,7 @@ export const HaishaTableContent = React.memo((props: HaishaTableContentProps) =>
     admin,
     query,
     userWorkStatusCount,
+    canEdit = true,
   } = props
 
 
@@ -43,6 +44,7 @@ export const HaishaTableContent = React.memo((props: HaishaTableContentProps) =>
     userWorkStatusCount,
     scheduleByDateAndUser: scheduleByDateAndUser.scheduleByDateAndUser,
     scheduleByDateAndRoute: scheduleByDateAndRoute.scheduleByDateAndRoute,
+    canEdit,
   }
 
   if (mode === 'DRIVER') {

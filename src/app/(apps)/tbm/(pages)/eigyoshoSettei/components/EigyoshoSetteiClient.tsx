@@ -1,12 +1,12 @@
 'use client'
-import {ColBuilder} from '@app/(apps)/tbm/(builders)/ColBuilders/ColBuilder'
+import { ColBuilder } from '@app/(apps)/tbm/(builders)/ColBuilders/ColBuilder'
 import TbmUserDetail from '@app/(apps)/tbm/(builders)/PageBuilders/detailPage/TbmUserDetail'
 import TbmVehicleDetail from '@app/(apps)/tbm/(builders)/PageBuilders/detailPage/TbmVehicleDetail'
 import RouteDisplay from '@app/(apps)/tbm/(pages)/eigyoshoSettei/components/RouteDisplay'
 
 import ChildCreator from '@cm/components/DataLogic/RTs/ChildCreator/ChildCreator'
 
-import {C_Stack} from '@cm/components/styles/common-components/common-components'
+import { C_Stack } from '@cm/components/styles/common-components/common-components'
 import NewDateSwitcher from '@cm/components/utils/dates/DateSwitcher/NewDateSwitcher'
 import PlaceHolder from '@cm/components/utils/loader/PlaceHolder'
 
@@ -14,23 +14,24 @@ import BasicTabs from '@cm/components/utils/tabs/BasicTabs'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import useWindowSize from '@cm/hooks/useWindowSize'
 
-export default function EigyoshoSetteiClient({days, currentMonth, tbmBase, whereQuery, theMonth}) {
+export default function EigyoshoSetteiClient({ days, currentMonth, tbmBase, whereQuery, theMonth }) {
   const useGlobalProps = useGlobal()
 
-  const {pathname, query, toggleLoad} = useGlobalProps
-  const {width, PC} = useWindowSize()
+  const { pathname, query, toggleLoad, accessScopes } = useGlobalProps
+  const { canEdit } = accessScopes().getTbmScopes()
+  const { width, PC } = useWindowSize()
   // const minWidth = 1000
   // const maxWidth = width * 0.95
   const ColBuiderProps = {
     useGlobalProps,
-    ColBuilderExtraProps: {tbmBaseId: tbmBase?.id},
+    ColBuilderExtraProps: { tbmBaseId: tbmBase?.id },
   }
   const childCreatorProps = {
     ParentData: tbmBase,
     useGlobalProps,
     additional: {
-      include: {TbmBase: {}},
-      orderBy: [{code: 'asc'}],
+      include: { TbmBase: {} },
+      orderBy: [{ code: 'asc' }],
     },
   }
 
@@ -38,7 +39,7 @@ export default function EigyoshoSetteiClient({days, currentMonth, tbmBase, where
 
   return (
     <div className={`pt-2`}>
-      <NewDateSwitcher {...{monthOnly: true}} />
+      <NewDateSwitcher {...{ monthOnly: true }} />
       <BasicTabs
         {...{
           id: 'driveSchedule',
@@ -48,7 +49,7 @@ export default function EigyoshoSetteiClient({days, currentMonth, tbmBase, where
               label: <div>便設定【月別】</div>,
               component: (
                 <C_Stack>
-                  <RouteDisplay {...{tbmBase, whereQuery, toggleLoad, currentMonth}} />
+                  <RouteDisplay {...{ tbmBase, whereQuery, toggleLoad, currentMonth }} />
                 </C_Stack>
               ),
             },
@@ -61,12 +62,13 @@ export default function EigyoshoSetteiClient({days, currentMonth, tbmBase, where
                     ParentData: tbmBase,
                     useGlobalProps,
                     additional: {
-                      include: {TbmBase: {}, TbmVehicleMaintenanceRecord: {}},
-                      orderBy: [{vehicleNumber: `asc`}],
+                      include: { TbmBase: {}, TbmVehicleMaintenanceRecord: {} },
+                      orderBy: [{ vehicleNumber: `asc` }],
                     },
                     EditForm: TbmVehicleDetail,
-                    models: {parent: `tbmBase`, children: `tbmVehicle`},
+                    models: { parent: `tbmBase`, children: `tbmVehicle` },
                     columns: ColBuilder.tbmVehicle(ColBuiderProps),
+                    myTable: { disabled: !canEdit },
                   }}
                 />
               ),
@@ -80,13 +82,14 @@ export default function EigyoshoSetteiClient({days, currentMonth, tbmBase, where
                     ParentData: tbmBase,
                     useGlobalProps,
                     additional: {
-                      include: {TbmBase: {}},
-                      orderBy: [{code: `asc`}],
-                      payload: {apps: [`tbm`]},
+                      include: { TbmBase: {} },
+                      orderBy: [{ code: `asc` }],
+                      payload: { apps: [`tbm`] },
                     },
                     EditForm: TbmUserDetail,
-                    models: {parent: `tbmBase`, children: `user`},
-                    columns: ColBuilder.user({useGlobalProps}),
+                    models: { parent: `tbmBase`, children: `user` },
+                    columns: ColBuilder.user({ useGlobalProps }),
+                    myTable: { disabled: !canEdit },
                   }}
                 />
               ),
@@ -110,12 +113,13 @@ export default function EigyoshoSetteiClient({days, currentMonth, tbmBase, where
                 <ChildCreator
                   {...{
                     ...childCreatorProps,
-                    models: {parent: `tbmBase`, children: `tbmKeihi`},
+                    models: { parent: `tbmBase`, children: `tbmKeihi` },
                     columns: ColBuilder.tbmKeihi(ColBuiderProps),
                     additional: {
-                      include: {TbmBase: {}},
-                      orderBy: [{date: 'desc'}],
+                      include: { TbmBase: {} },
+                      orderBy: [{ date: 'desc' }],
                     },
+                    myTable: { disabled: !canEdit },
                   }}
                 />
               ),
@@ -126,8 +130,9 @@ export default function EigyoshoSetteiClient({days, currentMonth, tbmBase, where
                 <ChildCreator
                   {...{
                     ...childCreatorProps,
-                    models: {parent: `tbmBase`, children: `tbmBase_MonthConfig`},
+                    models: { parent: `tbmBase`, children: `tbmBase_MonthConfig` },
                     columns: ColBuilder.tbmBase_MonthConfig(ColBuiderProps),
+                    myTable: { disabled: !canEdit },
                   }}
                 />
               ),

@@ -1,5 +1,5 @@
 'use client'
-import { tbmMonthlyConfigForRouteGroupBuilder } from '@app/(apps)/tbm/(builders)/ColBuilders/tbmMonthlyConfigForRouteGroupBuilder'
+
 import { TBM_CODE } from '@app/(apps)/tbm/(class)/TBM_CODE'
 import { TimeHandler } from '@app/(apps)/tbm/(class)/TimeHandler'
 
@@ -42,6 +42,13 @@ export const TbmRouteGroupColBuilder = (props: columnGetterType) => {
         td: { style: { ...regularStyle, minWidth: 75 } },
         search: {},
       },
+      // {
+      //   id: 'color',
+      //   label: '色',
+      //   type: 'color',
+      //   form: { defaultValue: null },
+
+      // },
       {
         id: 'displayExpiryDate',
         label: '表示期限',
@@ -66,12 +73,12 @@ export const TbmRouteGroupColBuilder = (props: columnGetterType) => {
           defaultValue: tbmBaseId,
           disabled: tbmBaseId,
         },
-        td: { style: { ...regularStyle, minWidth: 120 } },
+        td: { style: { ...regularStyle, minWidth: 100, textAlign: 'center' } },
       },
       {
         id: `_shareBaseIds`,
         label: `共有先営業所`,
-        td: { style: { ...regularStyle, minWidth: 160 } },
+        td: { style: { ...regularStyle, minWidth: 120, textAlign: 'center' } },
         form: { hidden: true },
 
         format: (val, routeGroup) => {
@@ -214,57 +221,57 @@ export const TbmRouteGroupColBuilder = (props: columnGetterType) => {
     colsource = [
       ...colsource,
 
-      ...tbmMonthlyConfigForRouteGroupBuilder({ useGlobalProps })
-        .flat()
-        .map(col => {
-          const dataKey = col.id
-          return {
-            id: dataKey,
-            label: col.label,
-            format: (val, row) => {
-              if (col.format) {
-                return col.format(val, row, col)
-              }
+      // ...tbmMonthlyConfigForRouteGroupBuilder({ useGlobalProps })
+      //   .flat()
+      //   .map(col => {
+      //     const dataKey = col.id
+      //     return {
+      //       id: dataKey,
+      //       label: col.label,
+      //       format: (val, row) => {
+      //         if (col.format) {
+      //           return col.format(val, row, col)
+      //         }
 
-              const MonthConfig = row?.TbmMonthlyConfigForRouteGroup.sort((a, b) => -(a.id - b.id))?.[0]
+      //         const MonthConfig = row?.TbmMonthlyConfigForRouteGroup.sort((a, b) => -(a.id - b.id))?.[0]
 
-              const defaultValue = MonthConfig?.[dataKey] ?? ''
-              const [value, setvalue] = useState<any>(null)
+      //         const defaultValue = MonthConfig?.[dataKey] ?? ''
+      //         const [value, setvalue] = useState<any>(null)
 
-              useEffect(() => {
-                setvalue(defaultValue)
-              }, [defaultValue])
+      //         useEffect(() => {
+      //           setvalue(defaultValue)
+      //         }, [defaultValue])
 
-              const unique_yearMonth_tbmRouteGroupId = { yearMonth, tbmRouteGroupId: row.id }
-              const style = col.td?.style
+      //         const unique_yearMonth_tbmRouteGroupId = { yearMonth, tbmRouteGroupId: row.id }
+      //         const style = col.td?.style
 
-              return (
-                <input
-                  style={style}
-                  type={col.type}
-                  className={`control-border  pl-1 ${value ? '' : ' opacity-30'}`}
-                  onChange={e => setvalue(e.target.value)}
-                  onBlur={async e => {
-                    const value = col.type === `number` ? Number(e.target.value) : e.target.value
+      //         return (
+      //           <input
+      //             style={style}
+      //             type={col.type}
+      //             className={`control-border  pl-1 ${value ? '' : ' opacity-30'}`}
+      //             onChange={e => setvalue(e.target.value)}
+      //             onBlur={async e => {
+      //               const value = col.type === `number` ? Number(e.target.value) : e.target.value
 
-                    const res = await doStandardPrisma(`tbmMonthlyConfigForRouteGroup`, `upsert`, {
-                      where: { unique_yearMonth_tbmRouteGroupId },
-                      ...createUpdate({
-                        ...unique_yearMonth_tbmRouteGroupId,
-                        [dataKey]: value ?? '',
-                      }),
-                    })
+      //               const res = await doStandardPrisma(`tbmMonthlyConfigForRouteGroup`, `upsert`, {
+      //                 where: { unique_yearMonth_tbmRouteGroupId },
+      //                 ...createUpdate({
+      //                   ...unique_yearMonth_tbmRouteGroupId,
+      //                   [dataKey]: value ?? '',
+      //                 }),
+      //               })
 
-                    if (res.success === false) {
-                      toast.error(res.message)
-                    }
-                  }}
-                  value={value ?? ''}
-                />
-              )
-            },
-          }
-        }),
+      //               if (res.success === false) {
+      //                 toast.error(res.message)
+      //               }
+      //             }}
+      //             value={value ?? ''}
+      //           />
+      //         )
+      //       },
+      //     }
+      //   }),
     ]
   }
 

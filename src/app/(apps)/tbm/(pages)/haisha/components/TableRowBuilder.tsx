@@ -45,6 +45,7 @@ export const TableRowBuilder = {
       query,
       userWorkStatusCount,
       scheduleByDateAndUser = {},
+      canEdit = true,
     } = props
 
     return userList
@@ -81,6 +82,7 @@ export const TableRowBuilder = {
               fetchData,
               setModalOpen,
               query,
+              canEdit,
             })
           }),
         ],
@@ -89,7 +91,7 @@ export const TableRowBuilder = {
 
   // ルートモード用の行生成
   buildRouteRows: (tbmRouteGroup: TbmRouteGroupWithCalendar[], props: TableRowBuilderProps) => {
-    const { mode, tbmBase, days, holidays, fetchData, setModalOpen, query, scheduleByDateAndRoute = {} } = props
+    const { mode, tbmBase, days, holidays, fetchData, setModalOpen, query, scheduleByDateAndRoute = {}, canEdit = true } = props
 
     return tbmRouteGroup
       .sort((a, b) => a.code?.localeCompare(b.code ?? '') ?? 0)
@@ -132,8 +134,9 @@ export const TableRowBuilder = {
                     </R_Stack>
 
                     <CalendarIcon
-                      className="text-xs text-blue-600 hover:underline h-5 onHover"
+                      className={`text-xs text-blue-600 hover:underline h-5 onHover ${!canEdit ? 'pointer-events-none opacity-50' : ''}`}
                       onClick={() => {
+                        if (!canEdit) return
                         setModalOpen({
                           tbmBase,
                           tbmRouteGroup: route,
@@ -188,6 +191,7 @@ export const TableRowBuilder = {
                   setModalOpen,
                   query,
                   cellStyle: {},
+                  canEdit,
                   // user: rout,
                 }),
               }
@@ -199,7 +203,7 @@ export const TableRowBuilder = {
 
   // 日付セルの共通ビルダー
   buildDateCell: (params: DateCellBuilderParams) => {
-    const { date, scheduleListOnDate, user, tbmRouteGroup, mode, tbmBase, holidays, fetchData, setModalOpen, query, cellStyle } =
+    const { date, scheduleListOnDate, user, tbmRouteGroup, mode, tbmBase, holidays, fetchData, setModalOpen, query, cellStyle, canEdit = true } =
       params
     const dateStr = formatDate(date, 'M/D(ddd)')
     const isHoliday = Days.day.isHoliday(date, holidays)
@@ -233,6 +237,7 @@ export const TableRowBuilder = {
             tbmRouteGroup,
             date,
             tbmBase,
+            canEdit,
           }}
         />
       ),

@@ -93,10 +93,7 @@ export const tbm_PAGES = (props: PageGetterType) => {
           tabId: 'unkokaisu',
           label: <IconLetter {...{ Icon: ListIcon }}>運行回数</IconLetter>
         },
-        {
-          tabId: 'unkobinKyuyo',
-          label: <IconLetter {...{ Icon: JapaneseYenIcon }}>運行便給与レポート</IconLetter>
-        },
+
         {
           tabId: 'kyuyoSantei',
           label: <IconLetter {...{ Icon: JapaneseYenIcon }}>給与算定</IconLetter>,
@@ -110,6 +107,11 @@ export const tbm_PAGES = (props: PageGetterType) => {
           tabId: 'simpleDriveHistory',
           label: <IconLetter {...{ Icon: FileText }}>簡易走行記録（PDF）</IconLetter>
         },
+
+        // {
+        //   tabId: 'unkobinKyuyo',
+        //   label: <IconLetter {...{ Icon: JapaneseYenIcon }}>簡易給与レポート</IconLetter>
+        // },
         { tabId: `testProgress`, label: 'テストレポート' },
       ],
     },

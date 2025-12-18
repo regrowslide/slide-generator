@@ -93,6 +93,7 @@ export const getListData = async (props: GetListDataParams): Promise<HaishaListD
             select: {
               id: true,
               code: true,
+              color: true,
               name: true,
               routeName: true,
               seikyuKbn: true,

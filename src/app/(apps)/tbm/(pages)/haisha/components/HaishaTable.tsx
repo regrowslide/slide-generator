@@ -17,8 +17,10 @@ import useModal from '@cm/components/utils/modal/useModal'
 export type haishaTableMode = HaishaTableMode
 
 export default function HaishaTable({ days, tbmBase, whereQuery }: HaishaTableProps) {
-  const { query, session } = useGlobal()
+  const useGlobalProps = useGlobal()
+  const { query, session, accessScopes } = useGlobalProps
   const { admin } = session.scopes
+  const { canEdit } = accessScopes().getTbmScopes()
   const tbmBaseId = tbmBase?.id ?? 0
   const mode: haishaTableMode = query.mode
 
@@ -100,6 +102,7 @@ export default function HaishaTable({ days, tbmBase, whereQuery }: HaishaTablePr
           tbmRouteGroup,
           userList,
           userWorkStatusCount,
+          canEdit,
         } as any)}
       />
       <div className={` flex justify-around text-gray-500`}>{maxRecord}件のデータを表示</div>

@@ -58,6 +58,9 @@ export const getScopes = (session: anyObject, options: getScopeOptionsProps) => 
       const isShocho = !!arr__findCommonValues([`所長`], roleNames)
       const isJimuin = !!arr__findCommonValues([`事務`], roleNames)
 
+      // 編集権限: 管理者・所長は可、事務員は不可
+      const canEdit = isSystemAdmin || isShocho
+
       const fakable = admin || isShocho
 
       const userId = !fakable ? session?.id : Number(query?.[globalIds.globalUserId] ?? session?.id ?? 0)
@@ -66,7 +69,7 @@ export const getScopes = (session: anyObject, options: getScopeOptionsProps) => 
       const tbmDriveInputUserId = !fakable ? session?.id : Number(query?.[globalIds.tbmDriveInputUserId] ?? Number(query?.[globalIds.globalUserId] ?? session?.id ?? 0))
 
 
-      return { tbmDriveInputUserId, userId, tbmBaseId, isSystemAdmin, isShocho, isJimuin, }
+      return { tbmDriveInputUserId, userId, tbmBaseId, isSystemAdmin, isShocho, isJimuin, canEdit }
     },
 
 

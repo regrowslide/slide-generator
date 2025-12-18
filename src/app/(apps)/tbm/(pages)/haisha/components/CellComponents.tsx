@@ -25,15 +25,22 @@ import {
 import { shorten } from '@cm/lib/methods/common'
 import { TimeHandler } from '@app/(apps)/tbm/(class)/TimeHandler'
 import { globalIds } from 'src/non-common/searchParamStr'
+import { getColorStyles } from '@cm/lib/methods/colors'
 
 const WorkStatusList = TBM_CODE.WORK_STATUS_KBN.array
 
 // 作業ステータス選択コンポーネント
-export const WorkStatusSelector = React.memo(({ userWorkStatus, user, date, fetchData }: WorkStatusSelectorProps) => (
+export const WorkStatusSelector = React.memo(({ userWorkStatus, user, date, fetchData, canEdit = true }: WorkStatusSelectorProps) => (
   <select
     value={userWorkStatus?.workStatus ?? ''}
-    className={`w-[100px] rounded-sm border  p-0.5 ${userWorkStatus?.workStatus ? '' : 'bg-gray-200 opacity-80'}`}
+    disabled={!canEdit}
+    className={cn(
+      `w-[100px] rounded-sm border p-0.5`,
+      userWorkStatus?.workStatus ? '' : 'bg-gray-200 opacity-80',
+      !canEdit && 'pointer-events-none opacity-50'
+    )}
     onChange={async e => {
+      if (!canEdit) return
       const unique_userId_date = {
         userId: user?.id ?? 0,
         date: date,
@@ -55,22 +62,26 @@ export const WorkStatusSelector = React.memo(({ userWorkStatus, user, date, fetc
 ))
 
 // 配車追加ボタンコンポーネント
-export const AddScheduleButton = React.memo(({ date, tbmBase, user, tbmRouteGroup, setModalOpen }: AddScheduleButtonProps) => (
+export const AddScheduleButton = React.memo(({ date, tbmBase, user, tbmRouteGroup, setModalOpen, canEdit = true }: AddScheduleButtonProps) => (
   <PlusCircleIcon
-    className="onHover text-gray-500 h-4 w-4 hover:text-gray-700"
-    onClick={() =>
+    className={cn(
+      'onHover text-gray-500 h-4 w-4 hover:text-gray-700',
+      !canEdit && 'pointer-events-none opacity-50'
+    )}
+    onClick={() => {
+      if (!canEdit) return
       setModalOpen({
         date,
         tbmBase,
         user,
         tbmRouteGroup,
       })
-    }
+    }}
   />
 ))
 
 // ステータスボタンコンポーネント
-export const StatusButtons = React.memo(({ tbmDriveSchedule, fetchData }: StatusButtonsProps) => (
+export const StatusButtons = React.memo(({ tbmDriveSchedule, fetchData, canEdit = true }: StatusButtonsProps) => (
   <R_Stack className="justify-end gap-1">
     {Object.entries(TBM_STATUS).map(([key, value], i) => {
       const { label, color } = value as { label: string; color: string }
@@ -81,9 +92,13 @@ export const StatusButtons = React.memo(({ tbmDriveSchedule, fetchData }: Status
           key={i}
           active={active}
           rounded={false}
-          className={`text-[12px] !px-1.5   cursor-pointer`}
+          className={cn(
+            `text-[12px] !px-1.5 cursor-pointer`,
+            !canEdit && 'pointer-events-none opacity-50'
+          )}
           color={color}
           onClick={async () => {
+            if (!canEdit) return
             if (key === 'approved') {
               const isApproved = tbmDriveSchedule.approved
               const confirmed = tbmDriveSchedule.confirmed
@@ -131,39 +146,21 @@ export const StatusButtons = React.memo(({ tbmDriveSchedule, fetchData }: Status
 
 // スケジュール詳細カードコンポーネント
 export const ScheduleCard = React.memo(
-  ({ tbmDriveSchedule, user, date, setModalOpen, fetchData, query, tbmBase }: ScheduleCardProps) => {
+  ({ tbmDriveSchedule, user, date, setModalOpen, fetchData, query, tbmBase, canEdit = true }: ScheduleCardProps) => {
     const { TbmRouteGroup, TbmVehicle, User, remark } = tbmDriveSchedule
 
     // カードの背景色を決定（重複の場合は重複色を優先）
-    const getCardBgColor = () => {
-      // 重複の場合は重複色を優先
-      if (tbmDriveSchedule.duplicated) {
-        return 'bg-red-300'
-      }
 
-      // 便マスタにcolorが設定されている場合
-      if (TbmRouteGroup?.color) {
-        const color = TbmRouteGroup.color
-        // colorClassMaster.baseに存在するカラー名の場合はそれを使用
-        if (colorClassMaster.base[color as keyof typeof colorClassMaster.base]) {
-          // baseのクラスから背景色部分だけを抽出（bg-xxx-xxxの部分）
-          const baseClass = colorClassMaster.base[color as keyof typeof colorClassMaster.base]
-          const bgMatch = baseClass.match(/bg-[^\s]+/)
-          return bgMatch ? bgMatch[0] : ''
-        }
-        // Tailwindクラス名が直接指定されている場合
-        return color
-      }
+    const bgColor = tbmDriveSchedule.duplicated ? '#FF0000' : TbmRouteGroup?.color ?? ''
 
-      return 'bg-white'
-    }
 
     return (
       <div
         className={cn(
           `border border-gray-300 rounded-sm p-1  hover:shadow-sm transition-shadow`,
-          getCardBgColor()
+
         )}
+        style={{ ...getColorStyles(bgColor) }}
       >
         <C_Stack className="gap-1 relative">
           <div className={` absolute top-0 right-0 text-[10px] text-gray-500`}>{tbmDriveSchedule.id}</div>
@@ -218,14 +215,18 @@ export const ScheduleCard = React.memo(
           <section className={`row-stack flex-nowrap gap-0 leading-4 -ml-1.5`}>
             <Notebook className={`h-3 text-blue-800 stroke-2 `} />
 
-            <div className={remark ? '' : 'text-gray-500 opacity-60'}>{shorten(remark || '特記なし', 15)}</div>
+            <div className={remark ? '' : ' opacity-60'}>{shorten(remark || '特記なし', 15)}</div>
           </section>
 
           <R_Stack className="justify-between">
             <R_Stack>
               <SquarePen
-                className="text-blue-main onHover h-3.5 w-3.5"
+                className={cn(
+                  'text-blue-main onHover h-3.5 w-3.5',
+                  !canEdit && 'pointer-events-none opacity-50'
+                )}
                 onClick={() => {
+                  if (!canEdit) return
                   setModalOpen({
                     tbmDriveSchedule,
                     user: user as UserWithWorkStatus,
@@ -241,7 +242,7 @@ export const ScheduleCard = React.memo(
               </Link>
             </R_Stack>
 
-            <StatusButtons tbmDriveSchedule={tbmDriveSchedule} fetchData={fetchData} />
+            <StatusButtons tbmDriveSchedule={tbmDriveSchedule} fetchData={fetchData} canEdit={canEdit} />
           </R_Stack>
         </C_Stack>
       </div>

@@ -1,15 +1,15 @@
 'use client'
-import React, {useMemo} from 'react'
-import {Days} from '@cm/class/Days/Days'
-import {C_Stack, R_Stack} from '@cm/components/styles/common-components/common-components'
+import React, { useMemo } from 'react'
+import { Days } from '@cm/class/Days/Days'
+import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
-import {WorkStatusSelector, AddScheduleButton, ScheduleCard} from './CellComponents'
-import {HaishaCardProps} from '../types/haisha-page-types'
+import { WorkStatusSelector, AddScheduleButton, ScheduleCard } from './CellComponents'
+import { HaishaCardProps } from '../types/haisha-page-types'
 
 export const HaishaCard = React.memo((props: HaishaCardProps) => {
-  const {query, toggleLoad} = useGlobal()
+  const { query, toggleLoad } = useGlobal()
   const mode = query.mode
-  const {fetchData, scheduleListOnDate, setModalOpen, user, tbmRouteGroup, date, tbmBase} = props
+  const { fetchData, scheduleListOnDate, setModalOpen, user, tbmRouteGroup, date, tbmBase, canEdit = true } = props
 
   const ConfigArea = useMemo(() => {
     const userWorkStatus = user?.UserWorkStatus?.find(item => Days.validate.isSameDate(item.date, date))
@@ -19,7 +19,7 @@ export const HaishaCard = React.memo((props: HaishaCardProps) => {
         <R_Stack className="w-full items-center justify-between gap-1">
           <R_Stack className="gap-1">
             {mode === 'DRIVER' && user && (
-              <WorkStatusSelector userWorkStatus={userWorkStatus} user={user} date={date} fetchData={fetchData} />
+              <WorkStatusSelector userWorkStatus={userWorkStatus} user={user} date={date} fetchData={fetchData} canEdit={canEdit} />
             )}
           </R_Stack>
 
@@ -30,12 +30,13 @@ export const HaishaCard = React.memo((props: HaishaCardProps) => {
               user={user}
               tbmRouteGroup={tbmRouteGroup}
               setModalOpen={setModalOpen}
+              canEdit={canEdit}
             />
           </div>
         </R_Stack>
       </section>
     )
-  }, [user, date, tbmBase, tbmRouteGroup, setModalOpen, fetchData, mode])
+  }, [user, date, tbmBase, tbmRouteGroup, setModalOpen, fetchData, mode, canEdit])
 
   const ScheduleArea = useMemo(() => {
     if (!scheduleListOnDate?.length) return null
@@ -57,6 +58,7 @@ export const HaishaCard = React.memo((props: HaishaCardProps) => {
                     fetchData={fetchData}
                     query={query}
                     tbmBase={tbmBase}
+                    canEdit={canEdit}
                   />
                 </div>
               </div>
@@ -65,10 +67,10 @@ export const HaishaCard = React.memo((props: HaishaCardProps) => {
         </C_Stack>
       </section>
     )
-  }, [scheduleListOnDate, user, date, tbmBase, setModalOpen, fetchData, query])
+  }, [scheduleListOnDate, user, date, tbmBase, setModalOpen, fetchData, query, canEdit])
 
   return (
-    <C_Stack className={` justify-start text-xs leading-3  gap-0 `} {...{style: {width: 200}}}>
+    <C_Stack className={` justify-start text-xs leading-3  gap-0 `} {...{ style: { width: 200 } }}>
       <div className={`mb-auto`}>{ConfigArea}</div>
       <div className={``}>{ScheduleArea}</div>
     </C_Stack>

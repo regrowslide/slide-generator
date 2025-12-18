@@ -477,6 +477,9 @@ model HakobunVoice {
 
 
 
+
+
+
 // 経費記録アプリ用スキーマ
 model KeihiExpense {
   id        String   @id @default(cuid())

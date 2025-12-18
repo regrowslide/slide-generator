@@ -17,9 +17,9 @@ import { autoCreateMonthConfig } from '@app/(apps)/tbm/(pages)/eigyoshoSettei/co
 export default function RouteDisplay({ tbmBase, whereQuery, toggleLoad, currentMonth }) {
   const useGlobalProps = useGlobal()
 
-  const { query, session, addQuery } = useGlobalProps
+  const { query, session, addQuery, accessScopes } = useGlobalProps
 
-  const { tbmBaseId } = session.scopes.getTbmScopes()
+  const { tbmBaseId, canEdit } = accessScopes().getTbmScopes()
 
   const { firstDayOfMonth: yearMonth } = Days.month.getMonthDatum(query.from ? toUtc(query.from) : getMidnight())
 
@@ -138,6 +138,7 @@ export default function RouteDisplay({ tbmBase, whereQuery, toggleLoad, currentM
             },
             myForm: { create: TbmRouteGroupUpsertController },
             myTable: {
+              disabled: !canEdit,
               customActions: () => {
                 return (
                   <R_Stack className={`mx-8`}>
@@ -146,7 +147,10 @@ export default function RouteDisplay({ tbmBase, whereQuery, toggleLoad, currentM
                       {...{
                         size: 'sm',
                         color: 'blue',
+                        disabled: !canEdit,
+                        className: !canEdit ? 'pointer-events-none opacity-50' : '',
                         onClick: async () => {
+                          if (!canEdit) return
                           await autoCreateMonthConfig({ toggleLoad, currentMonth, tbmBaseId: tbmBase?.id })
                         },
                       }}
