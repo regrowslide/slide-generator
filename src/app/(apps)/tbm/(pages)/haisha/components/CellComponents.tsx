@@ -14,7 +14,6 @@ import { IconBtn } from '@cm/components/styles/common-components/IconBtn'
 import { RouteGroupCl } from '@app/(apps)/tbm/(class)/RouteGroupCl'
 import { MarkDownDisplay } from '@cm/components/utils/texts/MarkdownDisplay'
 import { cn } from '@cm/shadcn/lib/utils'
-import { colorClassMaster } from '@cm/lib/methods/colorVariants'
 import {
   WorkStatusSelectorProps,
   AddScheduleButtonProps,

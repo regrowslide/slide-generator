@@ -46,7 +46,7 @@ export const ScheduleBar = ({ schedule, onClick, onCopyStart, getDriverNames, is
           {schedule.returnTime && <span className="opacity-70">→{schedule.returnTime}</span>}
           <span className="opacity-100 truncate flex-1">{schedule.organizationName || '(未設定)'}</span>
           {schedule.pdfFileName && (
-            <FileText className="w-2.5 h-2.5 flex-shrink-0 opacity-80" title="運行指示書有" />
+            <FileText className="w-2.5 h-2.5 flex-shrink-0 opacity-80" />
           )}
         </div>
 

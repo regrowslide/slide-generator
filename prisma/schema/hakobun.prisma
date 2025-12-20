@@ -27,6 +27,7 @@ model HakobunCategory {
   generalCategory  String // "店内"
   specificCategory String // "オシャレ・雰囲気が良い"
   description      String?
+  enabled          Boolean @default(true) // 有効/無効フラグ
 
   HakobunClient   HakobunClient @relation(fields: [hakobunClientId], references: [id], onDelete: Cascade)
   hakobunClientId Int
@@ -41,11 +42,24 @@ model HakobunCorrection {
   updatedAt DateTime? @default(now()) @updatedAt()
   sortOrder Float     @default(0)
 
-  rawSegment          String // 入力文節
-  correctCategoryCode String // 正解カテゴリコード
-  sentiment           String // "好意的" | "不満" | "中立"
-  reviewerComment     String?
-  archived            Boolean @default(false)
+  rawSegment String // 入力文節
+
+  // 修正前の情報（日本語名称で記録）
+  originalGeneralCategory String? // 修正前の一般カテゴリ（例：店内）
+  originalCategory        String? // 修正前のカテゴリ（例：オシャレ・雰囲気が良い）
+  originalSentiment       String? // 修正前の感情（例：好意的）
+
+  // 修正後の情報（日本語名称で記録）
+  correctGeneralCategory String? // 修正後の一般カテゴリ（例：備品・設備）
+  correctCategory        String // 修正後のカテゴリ（例：BGMが大きすぎる）
+  correctSentiment       String // 修正後の感情（例：不満）
+
+  // 後方互換性のため残す（今後は使用しない）
+  correctCategoryCode String? // 正解カテゴリコード（非推奨）
+  sentiment           String? // 感情（非推奨、correctSentimentを使用）
+
+  reviewerComment String?
+  archived        Boolean @default(false)
 
   HakobunClient   HakobunClient @relation(fields: [hakobunClientId], references: [id], onDelete: Cascade)
   hakobunClientId Int
@@ -81,10 +95,3 @@ model HakobunVoice {
   HakobunClient   HakobunClient @relation(fields: [hakobunClientId], references: [id], onDelete: Cascade)
   hakobunClientId Int
 }
-
-
-
-
-
-
-

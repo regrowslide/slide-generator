@@ -87,14 +87,6 @@ export const ModelName = {
   StockAdjustment: 'StockAdjustment',
   CompanyHoliday: 'CompanyHoliday',
   DailyStaffAssignment: 'DailyStaffAssignment',
-  StVehicle: 'StVehicle',
-  StCustomer: 'StCustomer',
-  StContact: 'StContact',
-  StHoliday: 'StHoliday',
-  StSchedule: 'StSchedule',
-  StScheduleDriver: 'StScheduleDriver',
-  StRollCaller: 'StRollCaller',
-  StPublishSetting: 'StPublishSetting',
   SbmCustomer: 'SbmCustomer',
   SbmCustomerPhone: 'SbmCustomerPhone',
   SbmProduct: 'SbmProduct',
@@ -489,6 +481,7 @@ export const HakobunCategoryScalarFieldEnum = {
   generalCategory: 'generalCategory',
   specificCategory: 'specificCategory',
   description: 'description',
+  enabled: 'enabled',
   hakobunClientId: 'hakobunClientId'
 } as const
 
@@ -501,6 +494,12 @@ export const HakobunCorrectionScalarFieldEnum = {
   updatedAt: 'updatedAt',
   sortOrder: 'sortOrder',
   rawSegment: 'rawSegment',
+  originalGeneralCategory: 'originalGeneralCategory',
+  originalCategory: 'originalCategory',
+  originalSentiment: 'originalSentiment',
+  correctGeneralCategory: 'correctGeneralCategory',
+  correctCategory: 'correctCategory',
+  correctSentiment: 'correctSentiment',
   correctCategoryCode: 'correctCategoryCode',
   sentiment: 'sentiment',
   reviewerComment: 'reviewerComment',
@@ -739,121 +738,6 @@ export const DailyStaffAssignmentScalarFieldEnum = {
 } as const
 
 export type DailyStaffAssignmentScalarFieldEnum = (typeof DailyStaffAssignmentScalarFieldEnum)[keyof typeof DailyStaffAssignmentScalarFieldEnum]
-
-
-export const StVehicleScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  plateNumber: 'plateNumber',
-  type: 'type',
-  seats: 'seats',
-  subSeats: 'subSeats',
-  phone: 'phone',
-  active: 'active'
-} as const
-
-export type StVehicleScalarFieldEnum = (typeof StVehicleScalarFieldEnum)[keyof typeof StVehicleScalarFieldEnum]
-
-
-export const StCustomerScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  name: 'name',
-  active: 'active'
-} as const
-
-export type StCustomerScalarFieldEnum = (typeof StCustomerScalarFieldEnum)[keyof typeof StCustomerScalarFieldEnum]
-
-
-export const StContactScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  name: 'name',
-  phone: 'phone',
-  active: 'active',
-  stCustomerId: 'stCustomerId'
-} as const
-
-export type StContactScalarFieldEnum = (typeof StContactScalarFieldEnum)[keyof typeof StContactScalarFieldEnum]
-
-
-export const StHolidayScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  date: 'date',
-  name: 'name'
-} as const
-
-export type StHolidayScalarFieldEnum = (typeof StHolidayScalarFieldEnum)[keyof typeof StHolidayScalarFieldEnum]
-
-
-export const StScheduleScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  date: 'date',
-  stCustomerId: 'stCustomerId',
-  stContactId: 'stContactId',
-  stVehicleId: 'stVehicleId',
-  organizationName: 'organizationName',
-  organizationContact: 'organizationContact',
-  destination: 'destination',
-  hasGuide: 'hasGuide',
-  departureTime: 'departureTime',
-  returnTime: 'returnTime',
-  remarks: 'remarks',
-  pdfFileName: 'pdfFileName',
-  pdfFileUrl: 'pdfFileUrl',
-  batchId: 'batchId',
-  deleted: 'deleted',
-  deletedAt: 'deletedAt'
-} as const
-
-export type StScheduleScalarFieldEnum = (typeof StScheduleScalarFieldEnum)[keyof typeof StScheduleScalarFieldEnum]
-
-
-export const StScheduleDriverScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  stScheduleId: 'stScheduleId',
-  userId: 'userId'
-} as const
-
-export type StScheduleDriverScalarFieldEnum = (typeof StScheduleDriverScalarFieldEnum)[keyof typeof StScheduleDriverScalarFieldEnum]
-
-
-export const StRollCallerScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  date: 'date',
-  userId: 'userId'
-} as const
-
-export type StRollCallerScalarFieldEnum = (typeof StRollCallerScalarFieldEnum)[keyof typeof StRollCallerScalarFieldEnum]
-
-
-export const StPublishSettingScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  publishEndDate: 'publishEndDate'
-} as const
-
-export type StPublishSettingScalarFieldEnum = (typeof StPublishSettingScalarFieldEnum)[keyof typeof StPublishSettingScalarFieldEnum]
 
 
 export const SbmCustomerScalarFieldEnum = {

@@ -1,9 +1,7 @@
 'use client'
 import { Kaizen } from '@app/(apps)/KM/class/Kaizen'
-import { PartnerBasicInfo } from '@app/(apps)/KM/components/Partner'
 import SlateEditor from '@cm/components/SlateEditor/SlateEditor'
 
-import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
 
 import BasicCarousel from '@cm/components/utils/Carousel/BasicCarousel'
 import ContentPlayer from '@cm/components/utils/ContentPlayer'

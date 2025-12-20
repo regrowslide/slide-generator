@@ -1,4 +1,5 @@
-import { TbmRouteGroupStandardSalary } from '@prisma/client'
+import { TbmRouteGroupStandardSalary } from "@prisma/generated/prisma/client"
+
 
 /**
  * 指定日の時点で有効な標準給料を取得する

@@ -47,6 +47,7 @@ export type HakobunCategoryMinAggregateOutputType = {
   generalCategory: string | null
   specificCategory: string | null
   description: string | null
+  enabled: boolean | null
   hakobunClientId: number | null
 }
 
@@ -59,6 +60,7 @@ export type HakobunCategoryMaxAggregateOutputType = {
   generalCategory: string | null
   specificCategory: string | null
   description: string | null
+  enabled: boolean | null
   hakobunClientId: number | null
 }
 
@@ -71,6 +73,7 @@ export type HakobunCategoryCountAggregateOutputType = {
   generalCategory: number
   specificCategory: number
   description: number
+  enabled: number
   hakobunClientId: number
   _all: number
 }
@@ -97,6 +100,7 @@ export type HakobunCategoryMinAggregateInputType = {
   generalCategory?: true
   specificCategory?: true
   description?: true
+  enabled?: true
   hakobunClientId?: true
 }
 
@@ -109,6 +113,7 @@ export type HakobunCategoryMaxAggregateInputType = {
   generalCategory?: true
   specificCategory?: true
   description?: true
+  enabled?: true
   hakobunClientId?: true
 }
 
@@ -121,6 +126,7 @@ export type HakobunCategoryCountAggregateInputType = {
   generalCategory?: true
   specificCategory?: true
   description?: true
+  enabled?: true
   hakobunClientId?: true
   _all?: true
 }
@@ -220,6 +226,7 @@ export type HakobunCategoryGroupByOutputType = {
   generalCategory: string
   specificCategory: string
   description: string | null
+  enabled: boolean
   hakobunClientId: number
   _count: HakobunCategoryCountAggregateOutputType | null
   _avg: HakobunCategoryAvgAggregateOutputType | null
@@ -255,6 +262,7 @@ export type HakobunCategoryWhereInput = {
   generalCategory?: Prisma.StringFilter<"HakobunCategory"> | string
   specificCategory?: Prisma.StringFilter<"HakobunCategory"> | string
   description?: Prisma.StringNullableFilter<"HakobunCategory"> | string | null
+  enabled?: Prisma.BoolFilter<"HakobunCategory"> | boolean
   hakobunClientId?: Prisma.IntFilter<"HakobunCategory"> | number
   HakobunClient?: Prisma.XOR<Prisma.HakobunClientScalarRelationFilter, Prisma.HakobunClientWhereInput>
 }
@@ -268,6 +276,7 @@ export type HakobunCategoryOrderByWithRelationInput = {
   generalCategory?: Prisma.SortOrder
   specificCategory?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  enabled?: Prisma.SortOrder
   hakobunClientId?: Prisma.SortOrder
   HakobunClient?: Prisma.HakobunClientOrderByWithRelationInput
 }
@@ -285,6 +294,7 @@ export type HakobunCategoryWhereUniqueInput = Prisma.AtLeast<{
   generalCategory?: Prisma.StringFilter<"HakobunCategory"> | string
   specificCategory?: Prisma.StringFilter<"HakobunCategory"> | string
   description?: Prisma.StringNullableFilter<"HakobunCategory"> | string | null
+  enabled?: Prisma.BoolFilter<"HakobunCategory"> | boolean
   hakobunClientId?: Prisma.IntFilter<"HakobunCategory"> | number
   HakobunClient?: Prisma.XOR<Prisma.HakobunClientScalarRelationFilter, Prisma.HakobunClientWhereInput>
 }, "id" | "hakobunClientId_categoryCode">
@@ -298,6 +308,7 @@ export type HakobunCategoryOrderByWithAggregationInput = {
   generalCategory?: Prisma.SortOrder
   specificCategory?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  enabled?: Prisma.SortOrder
   hakobunClientId?: Prisma.SortOrder
   _count?: Prisma.HakobunCategoryCountOrderByAggregateInput
   _avg?: Prisma.HakobunCategoryAvgOrderByAggregateInput
@@ -318,6 +329,7 @@ export type HakobunCategoryScalarWhereWithAggregatesInput = {
   generalCategory?: Prisma.StringWithAggregatesFilter<"HakobunCategory"> | string
   specificCategory?: Prisma.StringWithAggregatesFilter<"HakobunCategory"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"HakobunCategory"> | string | null
+  enabled?: Prisma.BoolWithAggregatesFilter<"HakobunCategory"> | boolean
   hakobunClientId?: Prisma.IntWithAggregatesFilter<"HakobunCategory"> | number
 }
 
@@ -329,6 +341,7 @@ export type HakobunCategoryCreateInput = {
   generalCategory: string
   specificCategory: string
   description?: string | null
+  enabled?: boolean
   HakobunClient: Prisma.HakobunClientCreateNestedOneWithoutHakobunCategoryInput
 }
 
@@ -341,6 +354,7 @@ export type HakobunCategoryUncheckedCreateInput = {
   generalCategory: string
   specificCategory: string
   description?: string | null
+  enabled?: boolean
   hakobunClientId: number
 }
 
@@ -352,6 +366,7 @@ export type HakobunCategoryUpdateInput = {
   generalCategory?: Prisma.StringFieldUpdateOperationsInput | string
   specificCategory?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   HakobunClient?: Prisma.HakobunClientUpdateOneRequiredWithoutHakobunCategoryNestedInput
 }
 
@@ -364,6 +379,7 @@ export type HakobunCategoryUncheckedUpdateInput = {
   generalCategory?: Prisma.StringFieldUpdateOperationsInput | string
   specificCategory?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hakobunClientId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -376,6 +392,7 @@ export type HakobunCategoryCreateManyInput = {
   generalCategory: string
   specificCategory: string
   description?: string | null
+  enabled?: boolean
   hakobunClientId: number
 }
 
@@ -387,6 +404,7 @@ export type HakobunCategoryUpdateManyMutationInput = {
   generalCategory?: Prisma.StringFieldUpdateOperationsInput | string
   specificCategory?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type HakobunCategoryUncheckedUpdateManyInput = {
@@ -398,6 +416,7 @@ export type HakobunCategoryUncheckedUpdateManyInput = {
   generalCategory?: Prisma.StringFieldUpdateOperationsInput | string
   specificCategory?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hakobunClientId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -425,6 +444,7 @@ export type HakobunCategoryCountOrderByAggregateInput = {
   generalCategory?: Prisma.SortOrder
   specificCategory?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  enabled?: Prisma.SortOrder
   hakobunClientId?: Prisma.SortOrder
 }
 
@@ -443,6 +463,7 @@ export type HakobunCategoryMaxOrderByAggregateInput = {
   generalCategory?: Prisma.SortOrder
   specificCategory?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  enabled?: Prisma.SortOrder
   hakobunClientId?: Prisma.SortOrder
 }
 
@@ -455,6 +476,7 @@ export type HakobunCategoryMinOrderByAggregateInput = {
   generalCategory?: Prisma.SortOrder
   specificCategory?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  enabled?: Prisma.SortOrder
   hakobunClientId?: Prisma.SortOrder
 }
 
@@ -514,6 +536,7 @@ export type HakobunCategoryCreateWithoutHakobunClientInput = {
   generalCategory: string
   specificCategory: string
   description?: string | null
+  enabled?: boolean
 }
 
 export type HakobunCategoryUncheckedCreateWithoutHakobunClientInput = {
@@ -525,6 +548,7 @@ export type HakobunCategoryUncheckedCreateWithoutHakobunClientInput = {
   generalCategory: string
   specificCategory: string
   description?: string | null
+  enabled?: boolean
 }
 
 export type HakobunCategoryCreateOrConnectWithoutHakobunClientInput = {
@@ -565,6 +589,7 @@ export type HakobunCategoryScalarWhereInput = {
   generalCategory?: Prisma.StringFilter<"HakobunCategory"> | string
   specificCategory?: Prisma.StringFilter<"HakobunCategory"> | string
   description?: Prisma.StringNullableFilter<"HakobunCategory"> | string | null
+  enabled?: Prisma.BoolFilter<"HakobunCategory"> | boolean
   hakobunClientId?: Prisma.IntFilter<"HakobunCategory"> | number
 }
 
@@ -577,6 +602,7 @@ export type HakobunCategoryCreateManyHakobunClientInput = {
   generalCategory: string
   specificCategory: string
   description?: string | null
+  enabled?: boolean
 }
 
 export type HakobunCategoryUpdateWithoutHakobunClientInput = {
@@ -587,6 +613,7 @@ export type HakobunCategoryUpdateWithoutHakobunClientInput = {
   generalCategory?: Prisma.StringFieldUpdateOperationsInput | string
   specificCategory?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type HakobunCategoryUncheckedUpdateWithoutHakobunClientInput = {
@@ -598,6 +625,7 @@ export type HakobunCategoryUncheckedUpdateWithoutHakobunClientInput = {
   generalCategory?: Prisma.StringFieldUpdateOperationsInput | string
   specificCategory?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type HakobunCategoryUncheckedUpdateManyWithoutHakobunClientInput = {
@@ -609,6 +637,7 @@ export type HakobunCategoryUncheckedUpdateManyWithoutHakobunClientInput = {
   generalCategory?: Prisma.StringFieldUpdateOperationsInput | string
   specificCategory?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -622,6 +651,7 @@ export type HakobunCategorySelect<ExtArgs extends runtime.Types.Extensions.Inter
   generalCategory?: boolean
   specificCategory?: boolean
   description?: boolean
+  enabled?: boolean
   hakobunClientId?: boolean
   HakobunClient?: boolean | Prisma.HakobunClientDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["hakobunCategory"]>
@@ -635,6 +665,7 @@ export type HakobunCategorySelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   generalCategory?: boolean
   specificCategory?: boolean
   description?: boolean
+  enabled?: boolean
   hakobunClientId?: boolean
   HakobunClient?: boolean | Prisma.HakobunClientDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["hakobunCategory"]>
@@ -648,6 +679,7 @@ export type HakobunCategorySelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   generalCategory?: boolean
   specificCategory?: boolean
   description?: boolean
+  enabled?: boolean
   hakobunClientId?: boolean
   HakobunClient?: boolean | Prisma.HakobunClientDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["hakobunCategory"]>
@@ -661,10 +693,11 @@ export type HakobunCategorySelectScalar = {
   generalCategory?: boolean
   specificCategory?: boolean
   description?: boolean
+  enabled?: boolean
   hakobunClientId?: boolean
 }
 
-export type HakobunCategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "categoryCode" | "generalCategory" | "specificCategory" | "description" | "hakobunClientId", ExtArgs["result"]["hakobunCategory"]>
+export type HakobunCategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "categoryCode" | "generalCategory" | "specificCategory" | "description" | "enabled" | "hakobunClientId", ExtArgs["result"]["hakobunCategory"]>
 export type HakobunCategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   HakobunClient?: boolean | Prisma.HakobunClientDefaultArgs<ExtArgs>
 }
@@ -689,6 +722,7 @@ export type $HakobunCategoryPayload<ExtArgs extends runtime.Types.Extensions.Int
     generalCategory: string
     specificCategory: string
     description: string | null
+    enabled: boolean
     hakobunClientId: number
   }, ExtArgs["result"]["hakobunCategory"]>
   composites: {}
@@ -1122,6 +1156,7 @@ export interface HakobunCategoryFieldRefs {
   readonly generalCategory: Prisma.FieldRef<"HakobunCategory", 'String'>
   readonly specificCategory: Prisma.FieldRef<"HakobunCategory", 'String'>
   readonly description: Prisma.FieldRef<"HakobunCategory", 'String'>
+  readonly enabled: Prisma.FieldRef<"HakobunCategory", 'Boolean'>
   readonly hakobunClientId: Prisma.FieldRef<"HakobunCategory", 'Int'>
 }
     

@@ -138,7 +138,11 @@ export default function RouteDisplay({ tbmBase, whereQuery, toggleLoad, currentM
             },
             myForm: { create: TbmRouteGroupUpsertController },
             myTable: {
-              disabled: !canEdit,
+
+              create: canEdit ? true : false,
+              update: canEdit ? true : false,
+              delete: canEdit ? true : false,
+
               customActions: () => {
                 return (
                   <R_Stack className={`mx-8`}>

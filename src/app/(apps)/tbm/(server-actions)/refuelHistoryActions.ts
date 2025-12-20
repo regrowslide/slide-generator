@@ -29,8 +29,9 @@ export async function updateRefuelHistory(data: RefuelHistoryUpdateData) {
       data: processedData,
     })
 
-    // 燃費管理ページを再検証
+    // 燃費管理ページと累積距離基準ページを再検証
     revalidatePath('/tbm/nempiKanri')
+    revalidatePath('/tbm/ruiseki')
 
     return {success: true, data: result}
   } catch (error: any) {

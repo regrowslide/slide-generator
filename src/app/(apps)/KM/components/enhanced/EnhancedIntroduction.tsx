@@ -8,9 +8,6 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowDown } from 'lucide-react'
 import { cn } from '@cm/shadcn/lib/utils'
-import { isDev } from '@cm/lib/methods/common'
-import { Button } from '@cm/components/styles/common-components/Button'
-import { seedKM } from '@app/(apps)/KM/seedKM'
 
 export const EnhancedIntroduction = () => {
   const { width } = useWindowSize()

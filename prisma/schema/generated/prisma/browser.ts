@@ -198,46 +198,6 @@ export type CompanyHoliday = Prisma.CompanyHolidayModel
  */
 export type DailyStaffAssignment = Prisma.DailyStaffAssignmentModel
 /**
- * Model StVehicle
- * 
- */
-export type StVehicle = Prisma.StVehicleModel
-/**
- * Model StCustomer
- * 
- */
-export type StCustomer = Prisma.StCustomerModel
-/**
- * Model StContact
- * 
- */
-export type StContact = Prisma.StContactModel
-/**
- * Model StHoliday
- * 
- */
-export type StHoliday = Prisma.StHolidayModel
-/**
- * Model StSchedule
- * 
- */
-export type StSchedule = Prisma.StScheduleModel
-/**
- * Model StScheduleDriver
- * 
- */
-export type StScheduleDriver = Prisma.StScheduleDriverModel
-/**
- * Model StRollCaller
- * 
- */
-export type StRollCaller = Prisma.StRollCallerModel
-/**
- * Model StPublishSetting
- * 
- */
-export type StPublishSetting = Prisma.StPublishSettingModel
-/**
  * Model SbmCustomer
  * 
  */

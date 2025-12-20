@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { X, Save, Loader2, Eye } from 'lucide-react'
+import { Save, Loader2, Eye } from 'lucide-react'
 import { upsertKaizenWork, deleteKaizenWork } from '../actions'
 import { WorkPreview } from './WorkPreview'
 

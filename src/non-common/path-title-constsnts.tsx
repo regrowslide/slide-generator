@@ -8,7 +8,7 @@ import { KM_PAGES } from 'src/non-common/getPages/KM_PAGES'
 import { stock_PAGES } from 'src/non-common/getPages/stock_PAGES'
 
 import { training_PAGES } from 'src/non-common/getPages/training_PAGES'
-import { sanshoTourist_PAGES } from 'src/non-common/getPages/sanshoTourist_PAGES'
+
 
 const getEduCommonMenus = ({ isSchoolLeader, admin }) => {
   return {
@@ -39,38 +39,49 @@ const getEduCommonMenus = ({ isSchoolLeader, admin }) => {
 }
 
 export const PAGES: any = {
-  teamSynapse_PAGES: (props: PageGetterType) => {
-    const { roles, session, rootPath, query, pathname, dynamicRoutingParams } = props
 
-    const scopes = getScopes(session, { query, roles })
+  hakobun_PAGES: (props: PageGetterType) => {
+    const { roles, query, session, rootPath, pathname } = props
 
-    const { admin } = scopes
+    const { login, admin } = getScopes(session, { query, roles })
 
-    const normalPaths: pathItemType[] = [
-      //
+    const loginPaths = [
+
       {
-        //
+        tabId: 'batch',
+        label: '一括分析',
         ROOT: [rootPath],
+        exclusiveTo: !!login,
+      },
+
+      {
         tabId: '',
-        label: 'TOP',
-        exclusiveTo: 'always',
+        label: 'マスタ管理',
+        ROOT: [rootPath],
+        children: [
+          { tabId: 'master/categories', label: 'カテゴリ管理', ROOT: [rootPath] },
+          { tabId: 'master/rules', label: 'ルール管理', ROOT: [rootPath] },
+          { tabId: 'master/clients', label: 'クライアント管理', ROOT: [rootPath] },
+          {
+            tabId: 'master/rules/auto-create',
+            label: '自動生成ルール',
+            ROOT: [rootPath],
+            exclusiveTo: !!login,
+          },
+        ],
+        exclusiveTo: !!login,
       },
     ]
 
-    const adminPaths: pathItemType[] = []
-    const pathSource = [
-      //
-      ...normalPaths,
-      ...adminPaths,
-    ] as pathItemType[]
+    const adminPaths = []
+
+    const pathSource: pathItemType[] = [...loginPaths, ...adminPaths]
 
     const { cleansedPathSource, navItems, breads, allPathsPattenrs } = CleansePathSource({
       rootPath,
       pathSource,
       pathname,
-      query,
       session,
-      dynamicRoutingParams,
     })
 
     return {
@@ -80,12 +91,10 @@ export const PAGES: any = {
       breads,
     }
   },
-
   tbm_PAGES,
   KM_PAGES,
-  stock_PAGES,
   training_PAGES,
-  sanshoTourist_PAGES,
+
   Colabo_PAGES: (props: PageGetterType) => {
     const { roles, session, rootPath, query, pathname, dynamicRoutingParams } = props
 
@@ -465,6 +474,7 @@ export const PAGES: any = {
       breads,
     }
   },
+
 }
 
 export const CleansePathSource = (props: anyObject) => {

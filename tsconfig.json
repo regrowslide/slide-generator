@@ -68,8 +68,6 @@
     "src/app/(apps)/compas/**/*",
     "src/app/(apps)/counseling/**/*",
     "src/app/(apps)/generated/**/*",
-    "src/app/(apps)/hakobun/**/*",
-    "src/app/(apps)/hakobun-analysis/**/*",
     "src/app/(apps)/image-captioner/**/*",
     "src/app/(apps)/keihi/**/*",
     "src/app/(apps)/kickswrap/**/*",
@@ -79,6 +77,7 @@
     "src/app/(apps)/sanshoTourist/**/*",
     "src/app/(apps)/sbm/**/*",
     "src/app/(apps)/stock/**/*",
+    "src/app/(apps)/tbm/**/*",
     "src/app/(apps)/teamSynapse/**/*",
     "src/app/(apps)/tmp/**/*",
     "src/app/(apps)/training/**/*"

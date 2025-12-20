@@ -107,8 +107,15 @@ export default function RuleAutoCreateModal({ clientId, onRuleSaved }: RuleAutoC
           corrections: selected.map(c => ({
             id: c.id,
             rawSegment: c.rawSegment,
-            correctCategoryCode: c.correctCategoryCode,
-            sentiment: c.sentiment,
+            // 修正前の情報（日本語名称）
+            originalGeneralCategory: c.originalGeneralCategory,
+            originalCategory: c.originalCategory,
+            originalSentiment: c.originalSentiment,
+            // 修正後の情報（日本語名称）
+            correctGeneralCategory: c.correctGeneralCategory,
+            correctCategory: c.correctCategory,
+            correctSentiment: c.correctSentiment,
+            // コメント
             reviewerComment: c.reviewerComment,
           })),
         }),
@@ -151,7 +158,7 @@ export default function RuleAutoCreateModal({ clientId, onRuleSaved }: RuleAutoC
       const data = await res.json()
       if (data.success) {
         setDrafts(prev => prev.filter(d => d !== draft))
-        alert('ルールを保存しました')
+
         onRuleSaved?.()
       } else {
         alert(`ルールの保存に失敗しました: ${data.error}`)
@@ -182,7 +189,7 @@ export default function RuleAutoCreateModal({ clientId, onRuleSaved }: RuleAutoC
   }
 
   return (
-    <C_Stack className="gap-6 max-h-[80vh] overflow-y-auto">
+    <C_Stack className="gap-6  overflow-y-auto">
       {/* ヘッダー */}
       <R_Stack className="items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
@@ -291,9 +298,9 @@ export default function RuleAutoCreateModal({ clientId, onRuleSaved }: RuleAutoC
             <p className="text-gray-500 text-sm">修正事例が見つかりません</p>
           </div>
         ) : (
-          <div className="overflow-x-auto max-h-[300px] overflow-y-auto border border-gray-200 rounded-lg">
+          <div className="overflow-x-auto max-h-[400px] overflow-y-auto border border-gray-200 rounded-lg">
             <table className="w-full border-collapse text-sm">
-              <thead className="sticky top-0 bg-gray-100">
+              <thead className="sticky top-0 bg-gray-100 z-10">
                 <tr className="border-b border-gray-200">
                   <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 w-10">
                     <input
@@ -303,51 +310,115 @@ export default function RuleAutoCreateModal({ clientId, onRuleSaved }: RuleAutoC
                       className="w-4 h-4"
                     />
                   </th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-700">元のテキスト</th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-700">正解カテゴリ</th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-700">感情</th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-700">作成日</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 min-w-[200px]">元のテキスト</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 min-w-[180px]">一般カテゴリ</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 min-w-[180px]">カテゴリ</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 min-w-[120px]">感情</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 min-w-[150px]">コメント</th>
+                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 w-24">作成日</th>
                 </tr>
               </thead>
               <tbody>
-                {corrections.map(correction => (
-                  <tr
-                    key={correction.id}
-                    className={`border-b border-gray-100 hover:bg-gray-50 cursor-pointer ${selectedCorrections.has(correction.id) ? 'bg-purple-50' : ''
-                      }`}
-                    onClick={() => handleToggleSelection(correction.id)}
-                  >
-                    <td className="px-3 py-2" onClick={e => e.stopPropagation()}>
-                      <input
-                        type="checkbox"
-                        checked={selectedCorrections.has(correction.id)}
-                        onChange={() => handleToggleSelection(correction.id)}
-                        className="w-4 h-4"
-                      />
-                    </td>
-                    <td className="px-3 py-2 text-gray-700 max-w-xs truncate">{correction.rawSegment}</td>
-                    <td className="px-3 py-2">
-                      <span className="text-xs font-mono bg-gray-200 px-1.5 py-0.5 rounded">
-                        {correction.correctCategoryCode}
-                      </span>
-                    </td>
-                    <td className="px-3 py-2">
-                      <span
-                        className={`text-xs px-1.5 py-0.5 rounded ${correction.sentiment === '好意的'
-                          ? 'bg-green-100 text-green-700'
-                          : correction.sentiment === '不満'
-                            ? 'bg-red-100 text-red-700'
-                            : 'bg-blue-100 text-blue-700'
-                          }`}
-                      >
-                        {correction.sentiment}
-                      </span>
-                    </td>
-                    <td className="px-3 py-2 text-xs text-gray-500">
-                      {new Date(correction.createdAt).toLocaleDateString('ja-JP')}
-                    </td>
-                  </tr>
-                ))}
+                {corrections.map(correction => {
+                  // 新しいフィールドから直接日本語名称を取得
+                  const originalGeneralCategory = correction.originalGeneralCategory
+                  const correctGeneralCategory = correction.correctGeneralCategory
+                  const originalCategory = correction.originalCategory
+                  const correctCategory = correction.correctCategory
+                  const originalSentiment = correction.originalSentiment
+                  const correctSentiment = correction.correctSentiment
+
+                  // 一般カテゴリの変更有無
+                  const hasGeneralCategoryChange = originalGeneralCategory && originalGeneralCategory !== correctGeneralCategory
+                  // カテゴリの変更有無
+                  const hasCategoryChange = originalCategory && originalCategory !== correctCategory
+                  // 感情の変更有無
+                  const hasSentimentChange = originalSentiment && originalSentiment !== correctSentiment
+
+                  return (
+                    <tr
+                      key={correction.id}
+                      className={`border-b border-gray-100 hover:bg-gray-50 cursor-pointer ${selectedCorrections.has(correction.id) ? 'bg-purple-50' : ''
+                        }`}
+                      onClick={() => handleToggleSelection(correction.id)}
+                    >
+                      <td className="px-3 py-2" onClick={e => e.stopPropagation()}>
+                        <input
+                          type="checkbox"
+                          checked={selectedCorrections.has(correction.id)}
+                          onChange={() => handleToggleSelection(correction.id)}
+                          className="w-4 h-4"
+                        />
+                      </td>
+                      <td className="px-3 py-2 text-gray-700 max-w-xs">
+                        <div className="truncate" title={correction.rawSegment}>
+                          {correction.rawSegment}
+                        </div>
+                      </td>
+                      {/* 一般カテゴリ */}
+                      <td className="px-3 py-2">
+                        {hasGeneralCategoryChange ? (
+                          <div className="flex items-center gap-1 text-xs flex-wrap">
+                            <span className="text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded">{originalGeneralCategory}</span>
+                            <span className="text-gray-400">➡︎</span>
+                            <span className="text-green-600 bg-green-50 px-1.5 py-0.5 rounded">{correctGeneralCategory}</span>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-gray-500 italic">修正なし</span>
+                        )}
+                      </td>
+                      {/* カテゴリ */}
+                      <td className="px-3 py-2">
+                        {hasCategoryChange ? (
+                          <div className="flex items-center gap-1 text-xs flex-wrap">
+                            <span className="text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded">{originalCategory}</span>
+                            <span className="text-gray-400">➡︎</span>
+                            <span className="text-green-600 bg-green-50 px-1.5 py-0.5 rounded">{correctCategory}</span>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-gray-500 italic">修正なし</span>
+                        )}
+                      </td>
+                      {/* 感情 */}
+                      <td className="px-3 py-2">
+                        {hasSentimentChange ? (
+                          <div className="flex items-center gap-1 text-xs flex-wrap">
+                            <span className={`px-1.5 py-0.5 rounded ${originalSentiment === '好意的'
+                              ? 'bg-green-100 text-green-700'
+                              : originalSentiment === '不満'
+                                ? 'bg-red-100 text-red-700'
+                                : 'bg-blue-100 text-blue-700'
+                              }`}>{originalSentiment}</span>
+                            <span className="text-gray-400">➡︎</span>
+                            <span className={`px-1.5 py-0.5 rounded ${correctSentiment === '好意的'
+                              ? 'bg-green-100 text-green-700'
+                              : correctSentiment === '不満'
+                                ? 'bg-red-100 text-red-700'
+                                : 'bg-blue-100 text-blue-700'
+                              }`}>{correctSentiment}</span>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-gray-500 italic">修正なし</span>
+                        )}
+                      </td>
+                      {/* コメント */}
+                      <td className="px-3 py-2">
+                        {correction.reviewerComment ? (
+                          <div className="max-w-xs">
+                            <div className="text-xs text-gray-700 bg-yellow-50 border border-yellow-200 rounded px-2 py-1 break-words" title={correction.reviewerComment}>
+                              {correction.reviewerComment}
+                            </div>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-gray-400 italic">-</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-2 text-xs text-gray-500 whitespace-nowrap">
+                        {new Date(correction.createdAt).toLocaleDateString('ja-JP')}
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>

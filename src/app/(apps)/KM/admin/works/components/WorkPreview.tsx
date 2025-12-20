@@ -4,7 +4,6 @@ import {
   Star,
   Building2,
   Clock,
-  ArrowRight,
   TrendingUp,
   AlertCircle,
   CheckCircle2,

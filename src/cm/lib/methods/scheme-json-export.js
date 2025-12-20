@@ -418,6 +418,7 @@ model HakobunCategory {
   generalCategory  String // "店内"
   specificCategory String // "オシャレ・雰囲気が良い"
   description      String?
+  enabled          Boolean @default(true) // 有効/無効フラグ
 
   HakobunClient   HakobunClient @relation(fields: [hakobunClientId], references: [id], onDelete: Cascade)
   hakobunClientId Int
@@ -432,11 +433,24 @@ model HakobunCorrection {
   updatedAt DateTime? @default(now()) @updatedAt()
   sortOrder Float     @default(0)
 
-  rawSegment          String // 入力文節
-  correctCategoryCode String // 正解カテゴリコード
-  sentiment           String // "好意的" | "不満" | "中立"
-  reviewerComment     String?
-  archived            Boolean @default(false)
+  rawSegment String // 入力文節
+
+  // 修正前の情報（日本語名称で記録）
+  originalGeneralCategory String? // 修正前の一般カテゴリ（例：店内）
+  originalCategory        String? // 修正前のカテゴリ（例：オシャレ・雰囲気が良い）
+  originalSentiment       String? // 修正前の感情（例：好意的）
+
+  // 修正後の情報（日本語名称で記録）
+  correctGeneralCategory String? // 修正後の一般カテゴリ（例：備品・設備）
+  correctCategory        String // 修正後のカテゴリ（例：BGMが大きすぎる）
+  correctSentiment       String // 修正後の感情（例：不満）
+
+  // 後方互換性のため残す（今後は使用しない）
+  correctCategoryCode String? // 正解カテゴリコード（非推奨）
+  sentiment           String? // 感情（非推奨、correctSentimentを使用）
+
+  reviewerComment String?
+  archived        Boolean @default(false)
 
   HakobunClient   HakobunClient @relation(fields: [hakobunClientId], references: [id], onDelete: Cascade)
   hakobunClientId Int
@@ -472,13 +486,6 @@ model HakobunVoice {
   HakobunClient   HakobunClient @relation(fields: [hakobunClientId], references: [id], onDelete: Cascade)
   hakobunClientId Int
 }
-
-
-
-
-
-
-
 
 // 経費記録アプリ用スキーマ
 model KeihiExpense {
@@ -721,157 +728,6 @@ model DailyStaffAssignment {
 
  @@unique([assignmentAt, productId], name: "assignment_product_unique")
 }
-
-// 観光バス予約管理システム (SanshoTourist)
-
-// 車両マスタ
-model StVehicle {
- id        Int       @id @default(autoincrement())
- createdAt DateTime  @default(now())
- updatedAt DateTime? @default(now()) @updatedAt()
- sortOrder Float     @default(0)
-
- plateNumber String  @unique // プレートNo. (例: 湘南230あ3409)
- type        String? // 車種 (例: 大型, 中型, マイクロ)
- seats       Int     @default(0) // 正席数
- subSeats    Int     @default(0) // 補助席数
- phone       String? // 車両携帯番号
-
- active Boolean @default(true) // 有効フラグ
-
- StSchedule StSchedule[]
-}
-
-// 会社マスタ
-model StCustomer {
- id        Int       @id @default(autoincrement())
- createdAt DateTime  @default(now())
- updatedAt DateTime? @default(now()) @updatedAt()
- sortOrder Float     @default(0)
-
- name String // 会社名
-
- active Boolean @default(true) // 有効フラグ
-
- StContact  StContact[]
- StSchedule StSchedule[]
-}
-
-// 担当者マスタ
-model StContact {
- id        Int       @id @default(autoincrement())
- createdAt DateTime  @default(now())
- updatedAt DateTime? @default(now()) @updatedAt()
- sortOrder Float     @default(0)
-
- name  String // 担当者名
- phone String? // 電話番号
-
- active Boolean @default(true) // 有効フラグ
-
- StCustomer   StCustomer @relation(fields: [stCustomerId], references: [id], onDelete: Cascade)
- stCustomerId Int
-
- StSchedule StSchedule[]
-}
-
-// 祝日マスタ
-model StHoliday {
- id        Int       @id @default(autoincrement())
- createdAt DateTime  @default(now())
- updatedAt DateTime? @default(now()) @updatedAt()
- sortOrder Float     @default(0)
-
- date DateTime // 日付 (UTC 00:00:00)
- name String // 祝日名
-
- @@unique([date], name: "unique_stHoliday_date")
-}
-
-// スケジュール
-model StSchedule {
- id        Int       @id @default(autoincrement())
- createdAt DateTime  @default(now())
- updatedAt DateTime? @default(now()) @updatedAt()
- sortOrder Float     @default(0)
-
- date DateTime // 運行日 (UTC 00:00:00)
-
- // 顧客情報 (マスタ参照)
- StCustomer   StCustomer? @relation(fields: [stCustomerId], references: [id], onDelete: SetNull)
- stCustomerId Int?
-
- StContact   StContact? @relation(fields: [stContactId], references: [id], onDelete: SetNull)
- stContactId Int?
-
- // 車両情報 (マスタ参照)
- StVehicle   StVehicle? @relation(fields: [stVehicleId], references: [id], onDelete: SetNull)
- stVehicleId Int?
-
- // 手入力項目
- organizationName    String? // 団体名
- organizationContact String? // 担当者名 (手入力)
- destination         String? // 行き先
- hasGuide            Boolean @default(false) // ガイドの有無
- departureTime       String? // 出庫時間 (HH:mm)
- returnTime          String? // 帰庫時間 (HH:mm)
- remarks             String? // 備考
-
- // 添付ファイル
- pdfFileName String? // 運行指示書ファイル名
- pdfFileUrl  String? // 運行指示書ファイルURL
-
- // 一括登録用
- batchId String? // 一括登録ID (同じバッチで作成されたものを識別)
-
- // 論理削除
- deleted   Boolean   @default(false)
- deletedAt DateTime?
-
- // 乗務員 (中間テーブル)
- StScheduleDriver StScheduleDriver[]
-}
-
-// スケジュール-乗務員 中間テーブル
-model StScheduleDriver {
- id        Int       @id @default(autoincrement())
- createdAt DateTime  @default(now())
- updatedAt DateTime? @default(now()) @updatedAt()
- sortOrder Float     @default(0)
-
- StSchedule   StSchedule @relation(fields: [stScheduleId], references: [id], onDelete: Cascade)
- stScheduleId Int
-
- userId Int // User.id への参照 (外部キー制約なし、アプリレベルで管理)
-
- @@unique([stScheduleId, userId], name: "unique_stScheduleDriver")
-}
-
-// 点呼者
-model StRollCaller {
- id        Int       @id @default(autoincrement())
- createdAt DateTime  @default(now())
- updatedAt DateTime? @default(now()) @updatedAt()
- sortOrder Float     @default(0)
-
- date   DateTime // 日付 (UTC 00:00:00)
- userId Int // User.id への参照 (外部キー制約なし)
-
- @@unique([date], name: "unique_stRollCaller_date")
-}
-
-// 公開範囲設定
-model StPublishSetting {
- id        Int       @id @default(autoincrement())
- createdAt DateTime  @default(now())
- updatedAt DateTime? @default(now()) @updatedAt()
- sortOrder Float     @default(0)
-
- publishEndDate DateTime? // この日付より先のスケジュールは管理者以外非表示
-}
-
-// 乗務員はUserテーブルを利用 (apps配列に'sanshoTourist'を持つユーザーが乗務員)
-// StDriverテーブルは使用しない
 
 // SBM - 仕出し弁当管理システム Prisma Schema
 
@@ -1177,7 +1033,7 @@ model SbmProductIngredient {
 
 datasource db {
   provider = "postgresql"
-  url = "postgres://mutsuo:timeSpacer817@localhost:5432/tbm"
+  url = "postgres://mutsuo:timeSpacer817@localhost:5432/hakobun"
 }
 
 generator client {
@@ -6471,6 +6327,21 @@ export const prismaDMMF = {
           "isUpdatedAt": false
         },
         {
+          "name": "enabled",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Boolean",
+          "nativeType": null,
+          "default": true,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
           "name": "HakobunClient",
           "kind": "object",
           "isList": false,
@@ -6614,7 +6485,63 @@ export const prismaDMMF = {
           "isUpdatedAt": false
         },
         {
-          "name": "correctCategoryCode",
+          "name": "originalGeneralCategory",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "originalCategory",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "originalSentiment",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "correctGeneralCategory",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "correctCategory",
           "kind": "scalar",
           "isList": false,
           "isRequired": true,
@@ -6628,10 +6555,38 @@ export const prismaDMMF = {
           "isUpdatedAt": false
         },
         {
-          "name": "sentiment",
+          "name": "correctSentiment",
           "kind": "scalar",
           "isList": false,
           "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "correctCategoryCode",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "sentiment",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
           "isUnique": false,
           "isId": false,
           "isReadOnly": false,
@@ -9384,1373 +9339,6 @@ export const prismaDMMF = {
           ]
         }
       ],
-      "isGenerated": false
-    },
-    {
-      "name": "StVehicle",
-      "dbName": null,
-      "schema": null,
-      "fields": [
-        {
-          "name": "id",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": true,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Int",
-          "nativeType": null,
-          "default": {
-            "name": "autoincrement",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "createdAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "DateTime",
-          "nativeType": null,
-          "default": {
-            "name": "now",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "updatedAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "DateTime",
-          "nativeType": null,
-          "default": {
-            "name": "now",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": true
-        },
-        {
-          "name": "sortOrder",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Float",
-          "nativeType": null,
-          "default": 0,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "plateNumber",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": true,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "type",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "seats",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Int",
-          "nativeType": null,
-          "default": 0,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "subSeats",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Int",
-          "nativeType": null,
-          "default": 0,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "phone",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "active",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Boolean",
-          "nativeType": null,
-          "default": true,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "StSchedule",
-          "kind": "object",
-          "isList": true,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "StSchedule",
-          "nativeType": null,
-          "relationName": "StScheduleToStVehicle",
-          "relationFromFields": [],
-          "relationToFields": [],
-          "isGenerated": false,
-          "isUpdatedAt": false
-        }
-      ],
-      "primaryKey": null,
-      "uniqueFields": [],
-      "uniqueIndexes": [],
-      "isGenerated": false
-    },
-    {
-      "name": "StCustomer",
-      "dbName": null,
-      "schema": null,
-      "fields": [
-        {
-          "name": "id",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": true,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Int",
-          "nativeType": null,
-          "default": {
-            "name": "autoincrement",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "createdAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "DateTime",
-          "nativeType": null,
-          "default": {
-            "name": "now",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "updatedAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "DateTime",
-          "nativeType": null,
-          "default": {
-            "name": "now",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": true
-        },
-        {
-          "name": "sortOrder",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Float",
-          "nativeType": null,
-          "default": 0,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "name",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "active",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Boolean",
-          "nativeType": null,
-          "default": true,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "StContact",
-          "kind": "object",
-          "isList": true,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "StContact",
-          "nativeType": null,
-          "relationName": "StContactToStCustomer",
-          "relationFromFields": [],
-          "relationToFields": [],
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "StSchedule",
-          "kind": "object",
-          "isList": true,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "StSchedule",
-          "nativeType": null,
-          "relationName": "StCustomerToStSchedule",
-          "relationFromFields": [],
-          "relationToFields": [],
-          "isGenerated": false,
-          "isUpdatedAt": false
-        }
-      ],
-      "primaryKey": null,
-      "uniqueFields": [],
-      "uniqueIndexes": [],
-      "isGenerated": false
-    },
-    {
-      "name": "StContact",
-      "dbName": null,
-      "schema": null,
-      "fields": [
-        {
-          "name": "id",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": true,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Int",
-          "nativeType": null,
-          "default": {
-            "name": "autoincrement",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "createdAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "DateTime",
-          "nativeType": null,
-          "default": {
-            "name": "now",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "updatedAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "DateTime",
-          "nativeType": null,
-          "default": {
-            "name": "now",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": true
-        },
-        {
-          "name": "sortOrder",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Float",
-          "nativeType": null,
-          "default": 0,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "name",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "phone",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "active",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Boolean",
-          "nativeType": null,
-          "default": true,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "StCustomer",
-          "kind": "object",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "StCustomer",
-          "nativeType": null,
-          "relationName": "StContactToStCustomer",
-          "relationFromFields": [
-            "stCustomerId"
-          ],
-          "relationToFields": [
-            "id"
-          ],
-          "relationOnDelete": "Cascade",
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "stCustomerId",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": true,
-          "hasDefaultValue": false,
-          "type": "Int",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "StSchedule",
-          "kind": "object",
-          "isList": true,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "StSchedule",
-          "nativeType": null,
-          "relationName": "StContactToStSchedule",
-          "relationFromFields": [],
-          "relationToFields": [],
-          "isGenerated": false,
-          "isUpdatedAt": false
-        }
-      ],
-      "primaryKey": null,
-      "uniqueFields": [],
-      "uniqueIndexes": [],
-      "isGenerated": false
-    },
-    {
-      "name": "StHoliday",
-      "dbName": null,
-      "schema": null,
-      "fields": [
-        {
-          "name": "id",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": true,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Int",
-          "nativeType": null,
-          "default": {
-            "name": "autoincrement",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "createdAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "DateTime",
-          "nativeType": null,
-          "default": {
-            "name": "now",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "updatedAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "DateTime",
-          "nativeType": null,
-          "default": {
-            "name": "now",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": true
-        },
-        {
-          "name": "sortOrder",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Float",
-          "nativeType": null,
-          "default": 0,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "date",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": true,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "DateTime",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "name",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        }
-      ],
-      "primaryKey": null,
-      "uniqueFields": [
-        [
-          "date"
-        ]
-      ],
-      "uniqueIndexes": [
-        {
-          "name": "unique_stHoliday_date",
-          "fields": [
-            "date"
-          ]
-        }
-      ],
-      "isGenerated": false
-    },
-    {
-      "name": "StSchedule",
-      "dbName": null,
-      "schema": null,
-      "fields": [
-        {
-          "name": "id",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": true,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Int",
-          "nativeType": null,
-          "default": {
-            "name": "autoincrement",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "createdAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "DateTime",
-          "nativeType": null,
-          "default": {
-            "name": "now",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "updatedAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "DateTime",
-          "nativeType": null,
-          "default": {
-            "name": "now",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": true
-        },
-        {
-          "name": "sortOrder",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Float",
-          "nativeType": null,
-          "default": 0,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "date",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "DateTime",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "StCustomer",
-          "kind": "object",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "StCustomer",
-          "nativeType": null,
-          "relationName": "StCustomerToStSchedule",
-          "relationFromFields": [
-            "stCustomerId"
-          ],
-          "relationToFields": [
-            "id"
-          ],
-          "relationOnDelete": "SetNull",
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "stCustomerId",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": true,
-          "hasDefaultValue": false,
-          "type": "Int",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "StContact",
-          "kind": "object",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "StContact",
-          "nativeType": null,
-          "relationName": "StContactToStSchedule",
-          "relationFromFields": [
-            "stContactId"
-          ],
-          "relationToFields": [
-            "id"
-          ],
-          "relationOnDelete": "SetNull",
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "stContactId",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": true,
-          "hasDefaultValue": false,
-          "type": "Int",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "StVehicle",
-          "kind": "object",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "StVehicle",
-          "nativeType": null,
-          "relationName": "StScheduleToStVehicle",
-          "relationFromFields": [
-            "stVehicleId"
-          ],
-          "relationToFields": [
-            "id"
-          ],
-          "relationOnDelete": "SetNull",
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "stVehicleId",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": true,
-          "hasDefaultValue": false,
-          "type": "Int",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "organizationName",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "organizationContact",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "destination",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "hasGuide",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Boolean",
-          "nativeType": null,
-          "default": false,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "departureTime",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "returnTime",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "remarks",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "pdfFileName",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "pdfFileUrl",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "batchId",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "deleted",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Boolean",
-          "nativeType": null,
-          "default": false,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "deletedAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "DateTime",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "StScheduleDriver",
-          "kind": "object",
-          "isList": true,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "StScheduleDriver",
-          "nativeType": null,
-          "relationName": "StScheduleToStScheduleDriver",
-          "relationFromFields": [],
-          "relationToFields": [],
-          "isGenerated": false,
-          "isUpdatedAt": false
-        }
-      ],
-      "primaryKey": null,
-      "uniqueFields": [],
-      "uniqueIndexes": [],
-      "isGenerated": false
-    },
-    {
-      "name": "StScheduleDriver",
-      "dbName": null,
-      "schema": null,
-      "fields": [
-        {
-          "name": "id",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": true,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Int",
-          "nativeType": null,
-          "default": {
-            "name": "autoincrement",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "createdAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "DateTime",
-          "nativeType": null,
-          "default": {
-            "name": "now",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "updatedAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "DateTime",
-          "nativeType": null,
-          "default": {
-            "name": "now",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": true
-        },
-        {
-          "name": "sortOrder",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Float",
-          "nativeType": null,
-          "default": 0,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "StSchedule",
-          "kind": "object",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "StSchedule",
-          "nativeType": null,
-          "relationName": "StScheduleToStScheduleDriver",
-          "relationFromFields": [
-            "stScheduleId"
-          ],
-          "relationToFields": [
-            "id"
-          ],
-          "relationOnDelete": "Cascade",
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "stScheduleId",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": true,
-          "hasDefaultValue": false,
-          "type": "Int",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "userId",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "Int",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        }
-      ],
-      "primaryKey": null,
-      "uniqueFields": [
-        [
-          "stScheduleId",
-          "userId"
-        ]
-      ],
-      "uniqueIndexes": [
-        {
-          "name": "unique_stScheduleDriver",
-          "fields": [
-            "stScheduleId",
-            "userId"
-          ]
-        }
-      ],
-      "isGenerated": false
-    },
-    {
-      "name": "StRollCaller",
-      "dbName": null,
-      "schema": null,
-      "fields": [
-        {
-          "name": "id",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": true,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Int",
-          "nativeType": null,
-          "default": {
-            "name": "autoincrement",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "createdAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "DateTime",
-          "nativeType": null,
-          "default": {
-            "name": "now",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "updatedAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "DateTime",
-          "nativeType": null,
-          "default": {
-            "name": "now",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": true
-        },
-        {
-          "name": "sortOrder",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Float",
-          "nativeType": null,
-          "default": 0,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "date",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": true,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "DateTime",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "userId",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "Int",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        }
-      ],
-      "primaryKey": null,
-      "uniqueFields": [
-        [
-          "date"
-        ]
-      ],
-      "uniqueIndexes": [
-        {
-          "name": "unique_stRollCaller_date",
-          "fields": [
-            "date"
-          ]
-        }
-      ],
-      "isGenerated": false
-    },
-    {
-      "name": "StPublishSetting",
-      "dbName": null,
-      "schema": null,
-      "fields": [
-        {
-          "name": "id",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": true,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Int",
-          "nativeType": null,
-          "default": {
-            "name": "autoincrement",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "createdAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "DateTime",
-          "nativeType": null,
-          "default": {
-            "name": "now",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "updatedAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "DateTime",
-          "nativeType": null,
-          "default": {
-            "name": "now",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": true
-        },
-        {
-          "name": "sortOrder",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Float",
-          "nativeType": null,
-          "default": 0,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "publishEndDate",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "DateTime",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        }
-      ],
-      "primaryKey": null,
-      "uniqueFields": [],
-      "uniqueIndexes": [],
       "isGenerated": false
     },
     {
@@ -25011,132 +23599,6 @@ export const prismaDMMF = {
         },
         {
           "name": "productId"
-        }
-      ]
-    },
-    {
-      "model": "StVehicle",
-      "type": "id",
-      "isDefinedOnField": true,
-      "fields": [
-        {
-          "name": "id"
-        }
-      ]
-    },
-    {
-      "model": "StVehicle",
-      "type": "unique",
-      "isDefinedOnField": true,
-      "fields": [
-        {
-          "name": "plateNumber"
-        }
-      ]
-    },
-    {
-      "model": "StCustomer",
-      "type": "id",
-      "isDefinedOnField": true,
-      "fields": [
-        {
-          "name": "id"
-        }
-      ]
-    },
-    {
-      "model": "StContact",
-      "type": "id",
-      "isDefinedOnField": true,
-      "fields": [
-        {
-          "name": "id"
-        }
-      ]
-    },
-    {
-      "model": "StHoliday",
-      "type": "id",
-      "isDefinedOnField": true,
-      "fields": [
-        {
-          "name": "id"
-        }
-      ]
-    },
-    {
-      "model": "StHoliday",
-      "type": "unique",
-      "isDefinedOnField": false,
-      "name": "unique_stHoliday_date",
-      "fields": [
-        {
-          "name": "date"
-        }
-      ]
-    },
-    {
-      "model": "StSchedule",
-      "type": "id",
-      "isDefinedOnField": true,
-      "fields": [
-        {
-          "name": "id"
-        }
-      ]
-    },
-    {
-      "model": "StScheduleDriver",
-      "type": "id",
-      "isDefinedOnField": true,
-      "fields": [
-        {
-          "name": "id"
-        }
-      ]
-    },
-    {
-      "model": "StScheduleDriver",
-      "type": "unique",
-      "isDefinedOnField": false,
-      "name": "unique_stScheduleDriver",
-      "fields": [
-        {
-          "name": "stScheduleId"
-        },
-        {
-          "name": "userId"
-        }
-      ]
-    },
-    {
-      "model": "StRollCaller",
-      "type": "id",
-      "isDefinedOnField": true,
-      "fields": [
-        {
-          "name": "id"
-        }
-      ]
-    },
-    {
-      "model": "StRollCaller",
-      "type": "unique",
-      "isDefinedOnField": false,
-      "name": "unique_stRollCaller_date",
-      "fields": [
-        {
-          "name": "date"
-        }
-      ]
-    },
-    {
-      "model": "StPublishSetting",
-      "type": "id",
-      "isDefinedOnField": true,
-      "fields": [
-        {
-          "name": "id"
         }
       ]
     },

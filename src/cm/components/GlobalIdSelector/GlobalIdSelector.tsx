@@ -1,9 +1,9 @@
 'use client'
 import React from 'react'
 
-import {colType} from '@cm/types/col-types'
-import {anyObject} from '@cm/types/utility-types'
-import {useGlobalPropType} from 'src/cm/hooks/globalHooks/useGlobal'
+import { colType } from '@cm/types/col-types'
+import { anyObject } from '@cm/types/utility-types'
+import { useGlobalPropType } from 'src/cm/hooks/globalHooks/useGlobal'
 import useBasicFormProps from 'src/cm/hooks/useBasicForm/useBasicFormProps'
 
 export type GlobalIdSelectorProps = {
@@ -13,8 +13,8 @@ export type GlobalIdSelectorProps = {
 }
 
 const GlobalIdSelector = React.memo((props: GlobalIdSelectorProps) => {
-  const {useGlobalProps, columns} = props
-  const {query, addQuery, pathname} = useGlobalProps
+  const { useGlobalProps, columns } = props
+  const { query, addQuery, pathname } = useGlobalProps
 
   const defaultValues = Object.fromEntries(
     columns.flat().map(col => {
@@ -23,18 +23,21 @@ const GlobalIdSelector = React.memo((props: GlobalIdSelectorProps) => {
     })
   )
 
-  const {BasicForm, latestFormData} = useBasicFormProps({
+
+
+  const { BasicForm, latestFormData } = useBasicFormProps({
     columns,
     formData: defaultValues,
-    autoApplyProps: {form: {}},
-    onFormItemBlur: ({newlatestFormData}) => {
+    autoApplyProps: { form: {} },
+    onFormItemBlur: ({ newlatestFormData }) => {
+
       addQuery(newlatestFormData)
     },
   })
 
   const ControlOptions = {
-    ControlStyle: {width: 140, fontSize: 13, background: 'white'},
-    LabelStyle: {fontSize: 13},
+    ControlStyle: { width: 140, fontSize: 13, background: 'white' },
+    LabelStyle: { fontSize: 13 },
   }
 
   if (['/QRBP/engineer'].some(path => pathname.includes(path))) {

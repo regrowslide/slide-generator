@@ -40,8 +40,8 @@ type VehicleCardProps = {
     amount: number
   }>
   whereQuery: {
-    gte: Date
-    lte: Date
+    gte?: Date
+    lte?: Date
   }
 }
 

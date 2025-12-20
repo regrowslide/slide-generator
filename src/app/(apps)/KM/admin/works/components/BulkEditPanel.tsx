@@ -12,7 +12,6 @@ import {
   Building2,
   Loader2,
   AlertTriangle,
-  Edit,
   GripVertical,
 } from 'lucide-react'
 import { bulkUpdateKaizenWorks, bulkDeleteKaizenWorks, updateWorkSortOrder } from '../actions'

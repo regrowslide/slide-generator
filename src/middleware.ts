@@ -28,7 +28,7 @@ export const rootPaths: rootPath[] = [
   {
     paths: [
       {
-        matcher: getFreePathsMathcer(`KM`, []),
+        matcher: getFreePathsMathcer(`KM`, ['/christmas']),
         ...pathValidation,
       },
     ],

@@ -68,7 +68,11 @@ export default function EigyoshoSetteiClient({ days, currentMonth, tbmBase, wher
                     EditForm: TbmVehicleDetail,
                     models: { parent: `tbmBase`, children: `tbmVehicle` },
                     columns: ColBuilder.tbmVehicle(ColBuiderProps),
-                    myTable: { disabled: !canEdit },
+                    myTable: {
+                      create: canEdit ? true : false,
+                      update: canEdit ? true : false,
+                      delete: canEdit ? true : false,
+                    },
                   }}
                 />
               ),
@@ -89,7 +93,11 @@ export default function EigyoshoSetteiClient({ days, currentMonth, tbmBase, wher
                     EditForm: TbmUserDetail,
                     models: { parent: `tbmBase`, children: `user` },
                     columns: ColBuilder.user({ useGlobalProps }),
-                    myTable: { disabled: !canEdit },
+                    myTable: {
+                      create: canEdit ? true : false,
+                      update: canEdit ? true : false,
+                      delete: canEdit ? true : false,
+                    },
                   }}
                 />
               ),
@@ -119,7 +127,11 @@ export default function EigyoshoSetteiClient({ days, currentMonth, tbmBase, wher
                       include: { TbmBase: {} },
                       orderBy: [{ date: 'desc' }],
                     },
-                    myTable: { disabled: !canEdit },
+                    myTable: {
+                      create: canEdit ? true : false,
+                      update: canEdit ? true : false,
+                      delete: canEdit ? true : false,
+                    },
                   }}
                 />
               ),
@@ -132,7 +144,11 @@ export default function EigyoshoSetteiClient({ days, currentMonth, tbmBase, wher
                     ...childCreatorProps,
                     models: { parent: `tbmBase`, children: `tbmBase_MonthConfig` },
                     columns: ColBuilder.tbmBase_MonthConfig(ColBuiderProps),
-                    myTable: { disabled: !canEdit },
+                    myTable: {
+                      create: canEdit ? true : false,
+                      update: canEdit ? true : false,
+                      delete: canEdit ? true : false,
+                    },
                   }}
                 />
               ),

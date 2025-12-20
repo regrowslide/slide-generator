@@ -28,7 +28,7 @@ const asyncFunction = async appName => {
 
   let targetAppNames = [appName]
   if (appName === `KM`) {
-    targetAppNames = [`KM`, `kickswrap`, 'stock', 'keihi', 'aidocument', `edu`]
+    targetAppNames = [`KM`, `kickswrap`, 'stock', 'keihi']
   }
 
   console.log({targetAppNames})
@@ -97,17 +97,7 @@ const ProPlanVercelJson = {
   cleanUrls: true,
   regions: ['sin1'],
   trailingSlash: false,
-  crons: [
-    {
-      path: '/sohken/api/cron/refreshGoogleCalendar',
-      schedule: '0 */3 * * *',
-    },
-
-    {
-      path: '/stock/api/cron/4_dailyBatchAll',
-      schedule: '0 22 * * *',
-    },
-  ],
+  crons: [],
   build: {
     env: {
       NEXT_TELEMETRY_DISABLED: '1',
