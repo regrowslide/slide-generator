@@ -8,11 +8,11 @@ import { initServerComopnent } from 'src/non-common/serverSideFunction'
 import { R_Stack } from '@cm/components/styles/common-components/common-components'
 import Image from 'next/image'
 
-const font = Zen_Old_Mincho({
-  weight: ['400', '500', '600', '700', '900'],
-  style: 'normal',
-  subsets: ['latin', 'latin-ext'],
-})
+// const font = Zen_Old_Mincho({
+//   weight: ['400', '500', '600', '700', '900'],
+//   style: 'normal',
+//   subsets: ['latin', 'latin-ext'],
+// })
 
 const AppName = ``
 const Logo = <R_Stack className={`gap-0.5`}>
@@ -30,7 +30,7 @@ export default async function AppLayout({ children }) {
   const { session, scopes } = await initServerComopnent({ query: {} })
 
   return (
-    <div className={font.className}>
+    <div >
       {/* <GreetingLayer> */}
       <Admin {...{ AppName: AppName, Logo, PagesMethod: 'KM_PAGES' }}>
         <div className={` text-sub-main `}>

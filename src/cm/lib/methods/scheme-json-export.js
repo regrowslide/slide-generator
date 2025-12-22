@@ -1033,7 +1033,7 @@ model SbmProductIngredient {
 
 datasource db {
   provider = "postgresql"
-  url = "postgres://mutsuo:timeSpacer817@localhost:5432/hakobun"
+  url = "postgres://mutsuo:timeSpacer817@localhost:5432/KM"
 }
 
 generator client {

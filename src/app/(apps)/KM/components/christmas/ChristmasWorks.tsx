@@ -6,7 +6,7 @@ import { Fields } from '@cm/class/Fields/Fields'
 import useBasicFormProps from '@cm/hooks/useBasicForm/useBasicFormProps'
 import { useState } from 'react'
 import BasicModal from '@cm/components/utils/modal/BasicModal'
-import { Search, Filter, Gift, TreePine, Star } from 'lucide-react'
+import { Search, Gift, TreePine, Star } from 'lucide-react'
 
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'

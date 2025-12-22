@@ -47,6 +47,7 @@ export const HaishaTableContent = React.memo((props: HaishaTableContentProps) =>
     canEdit,
   }
 
+
   if (mode === 'DRIVER') {
     const records = TableRowBuilder.buildDriverRows(userList, tableRowBuilderProps)
     return <div>{CsvTableVirtualized({ records }).WithWrapper({})}</div>
@@ -54,6 +55,7 @@ export const HaishaTableContent = React.memo((props: HaishaTableContentProps) =>
 
   if (mode === 'ROUTE') {
     const records = TableRowBuilder.buildRouteRows(tbmRouteGroup, tableRowBuilderProps)
+
     return <div>{CsvTableVirtualized({ records }).WithWrapper({})}</div>
   }
 

@@ -7,8 +7,7 @@ import { VoiceAnalyzer } from '../components/VoiceAnalyzer'
 import { AnalysisResultView } from '../components/AnalysisResult'
 import { FeedbackEditor } from '../components/FeedbackEditor'
 import { ProcessLog } from '../components/ProcessLog'
-import { BarChart3, MessageSquareText, RefreshCw, Database, BookOpen, Layers } from 'lucide-react'
-import Link from 'next/link'
+import { BarChart3, RefreshCw, Database, BookOpen, Layers } from 'lucide-react'
 import useMyNavigation from '@cm/hooks/globalHooks/useMyNavigation'
 
 export default function HakobunAnalysisDashboard() {

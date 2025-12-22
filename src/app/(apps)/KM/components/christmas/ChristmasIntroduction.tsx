@@ -1,6 +1,6 @@
 'use client'
 
-import { Kaizen, KM } from '@app/(apps)/KM/class/Kaizen'
+import { Kaizen } from '@app/(apps)/KM/class/Kaizen'
 import BackGroundImage from '@cm/components/utils/BackGroundImage'
 import useWindowSize from '@cm/hooks/useWindowSize'
 import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'

@@ -6,7 +6,7 @@ import useWindowSize from '@cm/hooks/useWindowSize'
 import { MyContainer, R_Stack } from '@cm/components/styles/common-components/common-components'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { Mail, Clock, MessageSquare, CheckCircle, Gift, Star, Snowflake, TreePine } from 'lucide-react'
+import { Clock, MessageSquare, CheckCircle, Gift, Star, Snowflake, TreePine } from 'lucide-react'
 
 export const ChristmasContact = () => {
   const { width } = useWindowSize()

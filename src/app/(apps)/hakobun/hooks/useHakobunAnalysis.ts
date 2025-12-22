@@ -17,7 +17,8 @@ const initialState: AppState = {
 }
 
 export const useHakobunAnalysis = () => {
-  const {selectedClientId: globalClientId} = useSelectedClient()
+  const {selectedClientId, selectedClient} = useSelectedClient()
+  const globalClientId = selectedClient?.clientId
   const [state, setState] = useState<AppState>(initialState)
   const [clients, setClients] = useState<HakobunClient[]>([])
   const [editedExtracts, setEditedExtracts] = useState<ExtractEdit[]>([])

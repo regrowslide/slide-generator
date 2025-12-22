@@ -1,13 +1,13 @@
 'use client'
 
-import React, {useState, useEffect, useRef, useCallback} from 'react'
-import {Loader2, Clock, AlertTriangle, CheckCircle, XCircle} from 'lucide-react'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { Loader2, Clock, AlertTriangle, CheckCircle, XCircle } from 'lucide-react'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
 
 // Google Maps APIのタイプ定義
 declare global {
   interface Window {
-    //@ts-expect-error - google is not typed
+
     google: any
     initMap: () => void
   }
@@ -23,13 +23,13 @@ type DeliveryRouteMapProps = {
  * 配達ルート表示コンポーネント
  * Google Maps APIを使用して配達ルートを表示
  */
-const DeliveryRouteMap: React.FC<DeliveryRouteMapProps> = ({reservations, teamId, optimizeRoute = false}) => {
+const DeliveryRouteMap: React.FC<DeliveryRouteMapProps> = ({ reservations, teamId, optimizeRoute = false }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [routeData, setRouteData] = useState<any>(null)
   const [sortedReservations, setSortedReservations] = useState<ReservationType[]>([])
-  const [travelTimes, setTravelTimes] = useState<{[key: string]: number}>({})
-  const [timeValidation, setTimeValidation] = useState<{[key: string]: 'ok' | 'warning' | 'error'}>({})
+  const [travelTimes, setTravelTimes] = useState<{ [key: string]: number }>({})
+  const [timeValidation, setTimeValidation] = useState<{ [key: string]: 'ok' | 'warning' | 'error' }>({})
 
   const mapRef = useRef<HTMLDivElement>(null)
   const googleMapRef = useRef<any>(null)
@@ -78,7 +78,7 @@ const DeliveryRouteMap: React.FC<DeliveryRouteMapProps> = ({reservations, teamId
     try {
       // 地図を作成
       const map = new window.google.maps.Map(mapRef.current, {
-        center: {lat: 35.6812, lng: 139.7671}, // 東京
+        center: { lat: 35.6812, lng: 139.7671 }, // 東京
         zoom: 12,
         mapTypeControl: true,
         streetViewControl: false,
@@ -108,11 +108,11 @@ const DeliveryRouteMap: React.FC<DeliveryRouteMapProps> = ({reservations, teamId
       const geocodePromises = sortedReservations.map((reservation, index) => {
         const address = `${reservation.prefecture}${reservation.city}${reservation.street}`
 
-        return new Promise<{reservation: ReservationType; position: any}>((resolve, reject) => {
-          geocoder.geocode({address}, (results: any, status: any) => {
+        return new Promise<{ reservation: ReservationType; position: any }>((resolve, reject) => {
+          geocoder.geocode({ address }, (results: any, status: any) => {
             if (status === 'OK' && results[0]) {
               const position = results[0].geometry.location
-              resolve({reservation, position})
+              resolve({ reservation, position })
             } else {
               reject(`住所のジオコーディングに失敗しました: ${address}`)
             }
@@ -124,7 +124,7 @@ const DeliveryRouteMap: React.FC<DeliveryRouteMapProps> = ({reservations, teamId
       Promise.all(geocodePromises)
         .then(results => {
           // マーカーを設置
-          results.forEach(({reservation, position}, index) => {
+          results.forEach(({ reservation, position }, index) => {
             const marker = new window.google.maps.Marker({
               position,
               map,
@@ -216,8 +216,8 @@ const DeliveryRouteMap: React.FC<DeliveryRouteMapProps> = ({reservations, teamId
 
   // 各地点間の所要時間を計算
   const calculateTravelTimes = useCallback((routeResponse: any, geocodedResults: any[]) => {
-    const times: {[key: string]: number} = {}
-    const validation: {[key: string]: 'ok' | 'warning' | 'error'} = {}
+    const times: { [key: string]: number } = {}
+    const validation: { [key: string]: 'ok' | 'warning' | 'error' } = {}
 
     // ルートのレッグ（地点間）ごとに所要時間を取得
     const legs = routeResponse.routes[0].legs

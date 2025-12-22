@@ -58,14 +58,14 @@ export async function POST(request: NextRequest) {
     })
 
     // 2. 直近修正事例50件取得（アーカイブ済みは除外）
-    const corrections = await prisma.hakobunCorrection.findMany({
+    const corrections = (await prisma.hakobunCorrection.findMany({
       where: {
         hakobunClientId: client.id,
         archived: false,
       },
       orderBy: {createdAt: 'desc'},
       take: 50,
-    })
+    })) as any
 
     // 3. 全ルール取得
     const rules = await prisma.hakobunRule.findMany({

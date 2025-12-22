@@ -153,13 +153,16 @@ export const ScheduleCard = React.memo(
     const bgColor = tbmDriveSchedule.duplicated ? '#FF0000' : TbmRouteGroup?.color ?? ''
 
 
+
+
+
     return (
       <div
         className={cn(
-          `border border-gray-300 rounded-sm p-1  hover:shadow-sm transition-shadow`,
+          `border border-gray-300 rounded-sm p-1  hover:shadow-sm transition-shadow `,
 
         )}
-        style={{ ...getColorStyles(bgColor) }}
+        style={bgColor ? { ...getColorStyles(bgColor) } : {}}
       >
         <C_Stack className="gap-1 relative">
           <div className={` absolute top-0 right-0 text-[10px] text-gray-500`}>{tbmDriveSchedule.id}</div>

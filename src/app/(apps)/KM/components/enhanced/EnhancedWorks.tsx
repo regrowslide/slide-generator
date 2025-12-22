@@ -1,6 +1,6 @@
 'use client'
 
-import { C_Stack, MyContainer, Padding } from '@cm/components/styles/common-components/common-components'
+import { Padding } from '@cm/components/styles/common-components/common-components'
 import { WorkCard } from '@app/(apps)/KM/(public)/top/WorkCard'
 import { Fields } from '@cm/class/Fields/Fields'
 import useBasicFormProps from '@cm/hooks/useBasicForm/useBasicFormProps'
@@ -103,7 +103,7 @@ export const EnhancedWorks = ({ works }: { works: any[] }) => {
   }
 
   return (
-    <MyContainer>
+    <div className="w-full">
       <Padding className="relative">
         <div ref={ref} className="py-8">
           {/* ヘッダー */}
@@ -115,23 +115,15 @@ export const EnhancedWorks = ({ works }: { works: any[] }) => {
             <p className="mx-auto max-w-2xl text-base text-gray-600 sm:text-lg">様々な業界・業種で業務改善を実現してきました</p>
           </div>
 
-          {/* 実績カードグリッド */}
-          <C_Stack className="gap-16  mx-auto">
+          {/* 実績カード一覧 */}
+          <div className="w-full">
             {workState.filter(work => work.description).length > 0 ? (
-              <div className="items-start justify-center gap-6 sm:gap-8 lg:gap-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-y-8">
+              <div className="grid grid-cols-1 gap-6 xl:grid-cols-2  xl:gap-32">
                 {workState
                   .filter(work => work.description)
                   .map((work, index) => (
-                    <div
-                      key={work.id || index}
-                      // initial={{opacity: 0, scale: 0.9}}
-                      // animate={inView ? {opacity: 1, scale: 1} : {}}
-                      // transition={{duration: 0.6, delay: 0.1 * (index % 6)}}
-                      className="w-full "
-                    >
-                      <div className="h-full transform transition-all duration-300 ">
-                        <WorkCard {...{ work, works }} />
-                      </div>
+                    <div key={work.id || index}>
+                      <WorkCard {...{ work, works }} />
                     </div>
                   ))}
               </div>
@@ -142,7 +134,7 @@ export const EnhancedWorks = ({ works }: { works: any[] }) => {
                 <p className="mt-2 text-sm text-gray-500">別の条件で検索してみてください</p>
               </motion.div>
             )}
-          </C_Stack>
+          </div>
 
           {/* 表示件数 */}
           {workState.filter(work => work.description).length > 0 && (
@@ -160,7 +152,7 @@ export const EnhancedWorks = ({ works }: { works: any[] }) => {
             </div>
           )}
         </div>
-      </Padding>
-    </MyContainer>
+      </Padding >
+    </div >
   )
 }

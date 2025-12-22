@@ -5,7 +5,6 @@ import { getScopes } from 'src/non-common/scope-lib/getScopes'
 import { tbm_PAGES } from 'src/non-common/getPages/getTbm_PAGES'
 
 import { KM_PAGES } from 'src/non-common/getPages/KM_PAGES'
-import { stock_PAGES } from 'src/non-common/getPages/stock_PAGES'
 
 import { training_PAGES } from 'src/non-common/getPages/training_PAGES'
 

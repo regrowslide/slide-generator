@@ -2,7 +2,7 @@ import {Days} from './../../../../cm/class/Days/Days'
 import {NextRequest, NextResponse} from 'next/server'
 import prisma from 'src/lib/prisma'
 import {FeedbackRequest, FeedbackResponse} from '@app/(apps)/hakobun/types'
-import {getMidnight, toUtc} from '@cm/class/Days/date-utils/calculations'
+import {getMidnight} from '@cm/class/Days/date-utils/calculations'
 
 export async function POST(request: NextRequest) {
   try {

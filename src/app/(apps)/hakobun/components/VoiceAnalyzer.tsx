@@ -3,7 +3,7 @@
 import React from 'react'
 import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
 import { HakobunClient } from '../types'
-import { Loader2, Send, Building2 } from 'lucide-react'
+import { Loader2, Send } from 'lucide-react'
 import useSelectedClient from '../(globalHooks)/useSelectedClient'
 
 interface VoiceAnalyzerProps {
