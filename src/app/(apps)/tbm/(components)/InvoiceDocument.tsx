@@ -5,7 +5,8 @@ import { InvoiceData, CategorySummary, CategoryDetail, PriceVariation } from '@a
 import { formatDate } from '@cm/class/Days/date-utils/formatters'
 import { Button } from '@cm/components/styles/common-components/Button'
 import { cn } from '@cm/shadcn/lib/utils'
-import { Trash2, RotateCcw } from 'lucide-react'
+import { Trash2, RotateCcw, Edit } from 'lucide-react'
+import Image from 'next/image'
 
 const showUnitPrice = false
 
@@ -13,6 +14,7 @@ interface InvoiceDocumentProps {
   invoiceData: InvoiceData
   onSave?: (summaryByCategory: CategorySummary[], detailsByCategory: CategoryDetail[]) => void
   onResetDetail?: (detail: CategoryDetail) => Promise<CategoryDetail | null>
+  onEditRouteGroup?: (tbmRouteGroupId: number) => void
 }
 
 export interface InvoiceDocumentRef {
@@ -23,7 +25,7 @@ export interface InvoiceDocumentRef {
 }
 
 export const InvoiceDocument = forwardRef<InvoiceDocumentRef, InvoiceDocumentProps>(
-  ({ invoiceData, onSave, onResetDetail }, ref) => {
+  ({ invoiceData, onSave, onResetDetail, onEditRouteGroup }, ref) => {
     const { companyInfo, customerInfo, invoiceDetails } = invoiceData
     const {
       yearMonth,
@@ -273,31 +275,51 @@ export const InvoiceDocument = forwardRef<InvoiceDocumentRef, InvoiceDocumentPro
           )}
 
           {/* 1ページ目: 請求書サマリー */}
-          <div className="w-[297mm] min-h-[210mm] mx-auto p-8 page-break-after-always">
+          <div className="w-[297mm] min-h-[210mm] mx-auto p-8 py-4 page-break-after-always relative">
             {/* ヘッダー */}
             <div className="flex justify-between items-start mb-8">
+              {/* 左側: お客様情報 */}
               <div className="flex-1">
-                <h1 className="text-3xl font-bold text-center mb-6">請求書</h1>
-                <div className="text-right text-sm mb-4">
+                <div className="text-lg font-bold">{customerInfo.name}</div>
+                {customerInfo.address && <div className="text-sm">{customerInfo.address}</div>}
+              </div>
+              {/* 中央: 請求書タイトル */}
+              <div className="flex-1 flex flex-col items-center relative">
+                {/* ロゴマーク（請求書の真上） */}
+                <div className="mb-2">
+                  <Image
+                    src="/image/tbm/nnu_logo.png"
+                    alt="ロゴ"
+                    width={80}
+                    height={40}
+                    className="object-contain"
+                  />
+                </div>
+                <h1 className="text-3xl font-bold mb-2">請求書</h1>
+                <div className="text-sm">
                   <div>{formatDate(new Date(), 'YYYY年MM月DD日')}</div>
                 </div>
               </div>
-              <div className="text-right">
+              {/* 右側: 自社情報 */}
+              <div className="flex-1 text-right relative pr-10">
+                {/* 角印（会社情報エリアに少しかぶるように、Y軸中央、X軸やや右） */}
+                <div className="absolute top-1/2 -translate-y-1/2 right-[-20px] z-10">
+                  <Image
+                    src="/image/tbm/kakuin.png"
+                    alt="角印"
+                    width={80}
+                    height={80}
+                    className="object-contain"
+                  />
+                </div>
                 <div className="text-sm mb-2">
                   <div className="font-bold text-lg">{companyInfo.name}</div>
-                  <div className="mt-1">{companyInfo.address}</div>
                   <div className="mt-1">
                     TEL {companyInfo.tel} FAX {companyInfo.fax}
                   </div>
                   <div className="mt-2 text-xs whitespace-pre-line">{companyInfo.bankInfo}</div>
                 </div>
               </div>
-            </div>
-
-            {/* 請求先情報 */}
-            <div className="mb-6">
-              <div className="text-lg font-bold">{customerInfo.name}</div>
-              {customerInfo.address && <div className="text-sm">{customerInfo.address}</div>}
             </div>
 
             {/* 請求期間 */}
@@ -421,7 +443,7 @@ export const InvoiceDocument = forwardRef<InvoiceDocumentRef, InvoiceDocumentPro
                     {showUnitPrice && <th className="border border-gray-400 p-2">通行料単価</th>}
                     <th className="border border-gray-400 p-2">通行料合計</th>
                     <th className="border border-gray-400 p-2">合計</th>
-                    {onSave && <th className="border border-gray-400 p-2">操作</th>}
+                    {onSave && <th className="border border-gray-400 p-2 no-print">操作</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -454,16 +476,27 @@ export const InvoiceDocument = forwardRef<InvoiceDocumentRef, InvoiceDocumentPro
                           )}
                         </td>
                         <td className="border border-gray-400 p-2">
-                          {onSave ? (
-                            <input
-                              type="text"
-                              value={detail.name}
-                              onChange={e => handleDetailEdit(globalIndex, 'name', e.target.value)}
-                              className="w-full bg-transparent border-none p-0"
-                            />
-                          ) : (
-                            detail.name
-                          )}
+                          <div className="flex items-center gap-2">
+                            {onSave ? (
+                              <input
+                                type="text"
+                                value={detail.name}
+                                onChange={e => handleDetailEdit(globalIndex, 'name', e.target.value)}
+                                className="w-full bg-transparent border-none p-0"
+                              />
+                            ) : (
+                              <span>{detail.name}</span>
+                            )}
+                            {onEditRouteGroup && detail.tbmRouteGroupId && (
+                              <button
+                                onClick={() => onEditRouteGroup(detail.tbmRouteGroupId!)}
+                                className="no-print text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 rounded"
+                                title="便を編集"
+                              >
+                                <Edit size={16} />
+                              </button>
+                            )}
+                          </div>
                         </td>
                         <td className="border border-gray-400 p-2 text-center">
                           {onSave ? (
@@ -585,12 +618,12 @@ export const InvoiceDocument = forwardRef<InvoiceDocumentRef, InvoiceDocumentPro
                           ).toLocaleString()}
                         </td>
                         {onSave && (
-                          <td className="border border-gray-400 p-2">
+                          <td className="border border-gray-400 p-2 no-print">
                             <div className="flex items-center justify-center gap-2">
                               {/* 削除ボタン */}
                               <button
                                 onClick={() => handleDeleteDetail(globalIndex)}
-                                className="text-red-600 hover:text-red-800 p-1 hover:bg-red-50 rounded"
+                                className="text-red-600 hover:text-red-800 p-1 hover:bg-red-50 rounded no-print"
                                 title="削除"
                               >
                                 <Trash2 size={16} />
@@ -599,7 +632,7 @@ export const InvoiceDocument = forwardRef<InvoiceDocumentRef, InvoiceDocumentPro
                               {!detail.isManualAdded && (
                                 <button
                                   onClick={() => handleResetDetail(globalIndex)}
-                                  className="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 rounded"
+                                  className="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 rounded no-print"
                                   title="アプリ連動データに戻す"
                                 >
                                   <RotateCcw size={16} />
@@ -612,11 +645,11 @@ export const InvoiceDocument = forwardRef<InvoiceDocumentRef, InvoiceDocumentPro
                     )
                   })}
                   {onSave && (
-                    <tr>
+                    <tr className="no-print">
                       <td colSpan={12} className="border border-gray-400 p-2">
                         <button
                           onClick={() => handleAddDetail(categoryCode)}
-                          className="text-blue-600 hover:text-blue-800 text-sm"
+                          className="text-blue-600 hover:text-blue-800 text-sm no-print"
                         >
                           + 行を追加
                         </button>

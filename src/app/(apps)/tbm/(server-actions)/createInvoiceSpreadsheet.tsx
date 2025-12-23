@@ -1,8 +1,8 @@
 'use server'
 
-import {GoogleSheet_copy, GoogleSheet_Update, GoogleSheet_getSheetByNameOrCreate} from '@app/api/google/actions/sheetAPI'
-import {InvoiceData, CategoryDetail} from './getInvoiceData'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
+import { GoogleSheet_copy, GoogleSheet_Update, GoogleSheet_getSheetByNameOrCreate } from '@app/api/google/actions/sheetAPI'
+import { InvoiceData, CategoryDetail } from './getInvoiceData'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
 
 // 設定値
 const TEMPLATE_SPREADSHEET_ID = '1boTm_Ipdp0ZZBlc2XdlZLa4tpefm0DnD-Y61yglN-iY'
@@ -18,8 +18,8 @@ export type SpreadsheetExportResult = {
 
 export const createInvoiceSpreadsheet = async (invoiceData: InvoiceData): Promise<SpreadsheetExportResult> => {
   try {
-    const {customerInfo, invoiceDetails} = invoiceData
-    const {yearMonth} = invoiceDetails
+    const { customerInfo, invoiceDetails } = invoiceData
+    const { yearMonth } = invoiceDetails
 
     // ファイル名を生成: "YYYY年MM月_顧客名"
     const fileName = `${formatDate(yearMonth, 'YYYY年MM月')}_${customerInfo.name}`
@@ -63,8 +63,8 @@ export const createInvoiceSpreadsheet = async (invoiceData: InvoiceData): Promis
 
 // 請求書表紙シートの更新
 async function updateCoverSheet(spreadsheetId: string, invoiceData: InvoiceData) {
-  const {customerInfo, invoiceDetails, companyInfo} = invoiceData
-  const {yearMonth, summaryByCategory, totalAmount, taxAmount, grandTotal} = invoiceDetails
+  const { customerInfo, invoiceDetails, companyInfo } = invoiceData
+  const { yearMonth, summaryByCategory, totalAmount, taxAmount, grandTotal } = invoiceDetails
 
   // 請求書表紙シートの更新データ（添付画像の黄色セルに基づく）
   const coverUpdates = [
@@ -88,7 +88,6 @@ async function updateCoverSheet(spreadsheetId: string, invoiceData: InvoiceData)
       range: '請求書表紙!F3:F8',
       values: [
         [companyInfo.name],
-        [companyInfo.address],
         [`TEL ${companyInfo.tel}`],
         [`FAX ${companyInfo.fax}`],
         [''],
@@ -141,8 +140,8 @@ async function updateCoverSheet(spreadsheetId: string, invoiceData: InvoiceData)
 
 // 区分別シートの作成と更新
 async function createCategorySheets(spreadsheetId: string, invoiceData: InvoiceData) {
-  const {invoiceDetails, customerInfo, companyInfo} = invoiceData
-  const {detailsByCategory, yearMonth} = invoiceDetails
+  const { invoiceDetails, customerInfo, companyInfo } = invoiceData
+  const { detailsByCategory, yearMonth } = invoiceDetails
 
   // 区分ごとにグループ化
   const categoryGroups = detailsByCategory.reduce(

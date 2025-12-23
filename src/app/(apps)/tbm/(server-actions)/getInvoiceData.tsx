@@ -62,7 +62,6 @@ function calculatePriceVariations(
 export type InvoiceData = {
   companyInfo: {
     name: string
-    address: string
     tel: string
     fax: string
     bankInfo: string
@@ -117,6 +116,7 @@ export type CategoryDetail = {
   specialAddition?: number
   isManualEdit?: boolean // 手動編集された行かどうか
   isManualAdded?: boolean // 手動追加された行かどうか
+  tbmRouteGroupId?: number // 便グループID（編集ボタン用）
   // 後方互換性のため残す
   unitPrice?: number // 運賃単価（非推奨）
 }
@@ -263,6 +263,14 @@ export const getInvoiceData = async ({
         // 運行日でソート
         const sortedSchedules = [...routeSchedules].sort((a, b) => a.date.getTime() - b.date.getTime())
 
+        // 対象月の月間通行料設定を取得
+        const routeGroup = routeSchedules[0]?.TbmRouteGroup
+        const monthlyConfig = routeGroup?.TbmMonthlyConfigForRouteGroup?.[0]
+        const monthlyTollTotal = monthlyConfig?.monthlyTollTotal || 0
+        const tsukoryoSeikyuGaku = monthlyConfig?.tsukoryoSeikyuGaku || 0
+        // 月間通行料合計額（一般 + 郵便）を初期値として使用
+        const initialTollTotal = monthlyTollTotal + tsukoryoSeikyuGaku
+
         // 各運行スケジュールに対して適切な料金設定を取得
         type FeeInfo = {
           schedule: DriveScheduleData
@@ -286,7 +294,8 @@ export const getInvoiceData = async ({
         // 運賃・付帯料金・通行料の合計を計算
         const totalDriverFee = feeInfos.reduce((sum, info) => sum + info.driverFee, 0)
         const totalFutaiFee = feeInfos.reduce((sum, info) => sum + info.futaiFee, 0)
-        const totalTollFee = feeInfos.reduce((sum, info) => sum + info.tollFee, 0)
+        // 月間通行料合計額が設定されている場合はそれを使用、なければ実績値の合計を使用
+        const totalTollFee = initialTollTotal > 0 ? initialTollTotal : feeInfos.reduce((sum, info) => sum + info.tollFee, 0)
 
         // 運賃単価のバリエーションを計算
         const driverFeeVariations = calculatePriceVariations(feeInfos, 'driverFee', whereQuery.lte)
@@ -320,6 +329,7 @@ export const getInvoiceData = async ({
           tollFeeVariations: tollFeeVariations.length > 1 ? tollFeeVariations : undefined,
           tollFeeUnitPrice,
           tollFee: totalTollFee,
+          tbmRouteGroupId: routeSchedules[0]?.TbmRouteGroup.id,
           // 後方互換性のため
           unitPrice: driverFeeUnitPrice,
         }
@@ -360,7 +370,6 @@ export const getInvoiceData = async ({
   const invoiceData: InvoiceData = {
     companyInfo: {
       name: '西日本運送株式会社',
-      address: '九州支社 御中',
       tel: '0943-72-2361',
       fax: '0943-72-4160',
       bankInfo: '振込銀行 福岡銀行 田主丸支店\n（普通）９００８３\n登録番号 T2290020049699',

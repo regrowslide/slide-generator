@@ -10,6 +10,7 @@ import {toast} from 'react-toastify'
 import {resetInvoiceManualEdit, saveInvoiceManualEdit} from '@app/(apps)/tbm/(server-actions)/invoiceManualEdit'
 import {useRouter} from 'next/navigation'
 import {getInvoiceData} from '@app/(apps)/tbm/(server-actions)/getInvoiceData'
+import useTbmRouteGroupDetailGMF from '@app/(apps)/tbm/(globalHooks)/useTbmRouteGroupDetailGMF'
 
 interface InvoiceViewerProps {
   invoiceData: InvoiceData
@@ -22,6 +23,7 @@ export default function InvoiceViewer({invoiceData, customerId}: InvoiceViewerPr
   const [isResetting, setIsResetting] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const router = useRouter()
+  const {setGMF_OPEN, Modal: RouteGroupDetailModal} = useTbmRouteGroupDetailGMF()
 
   const handlePrint = useReactToPrint({
     contentRef: componentRef,
@@ -118,6 +120,17 @@ export default function InvoiceViewer({invoiceData, customerId}: InvoiceViewerPr
     }
   }
 
+  // 便編集ボタンクリック時のハンドラ
+  const handleEditRouteGroup = (tbmRouteGroupId: number) => {
+    setGMF_OPEN({
+      tbmRouteGroupId,
+      onClose: () => {
+        // 編集完了後にリフレッシュ
+        router.refresh()
+      },
+    })
+  }
+
   return (
     <div className="space-y-4">
       {/* 操作ボタン */}
@@ -153,8 +166,12 @@ export default function InvoiceViewer({invoiceData, customerId}: InvoiceViewerPr
           invoiceData={invoiceData}
           onSave={handleSave}
           onResetDetail={handleResetDetail}
+          onEditRouteGroup={handleEditRouteGroup}
         />
       </div>
+
+      {/* 便編集Modal */}
+      <RouteGroupDetailModal />
 
       {/* <style jsx>{`
         @media print {
