@@ -38,13 +38,13 @@ export const TbmRouteGroupColBuilder = (props: columnGetterType) => {
         td: { style: { ...regularStyle, minWidth: 75 } },
         search: {},
       },
-      // {
-      //   id: 'color',
-      //   label: '色',
-      //   type: 'color',
-      //   form: { defaultValue: null },
+      {
+        id: 'color',
+        label: '色',
+        type: 'color',
+        form: { defaultValue: null },
 
-      // },
+      },
       {
         id: 'displayExpiryDate',
         label: '表示期限',

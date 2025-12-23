@@ -135,10 +135,6 @@ export const fetchUnkoMeisaiData = async ({
       const jitsudoKaisu = routeGroupTripCountMap.get(schedule.tbmRouteGroupId) || 1
 
 
-
-
-
-
       const unkoMeisaiKeyValue = TbmReportCl.reportCols.createUnkoMeisaiRow(schedule, jitsudoKaisu)
       return {
         schedule,

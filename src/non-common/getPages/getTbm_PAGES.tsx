@@ -108,10 +108,10 @@ export const tbm_PAGES = (props: PageGetterType) => {
           label: <IconLetter {...{ Icon: FileText }}>簡易走行記録（PDF）</IconLetter>
         },
 
-        // {
-        //   tabId: 'unkobinKyuyo',
-        //   label: <IconLetter {...{ Icon: JapaneseYenIcon }}>簡易給与レポート</IconLetter>
-        // },
+        {
+          tabId: 'unkobinKyuyo',
+          label: <IconLetter {...{ Icon: JapaneseYenIcon }}>簡易給与レポート</IconLetter>
+        },
         { tabId: `testProgress`, label: 'テストレポート' },
       ],
     },

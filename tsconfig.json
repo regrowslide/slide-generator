@@ -63,6 +63,7 @@
     "**/*.test.ts",
     "coverage",
     "**/scheme-json-export.js",
+    "src/app/(apps)/KM/**/*",
     "src/app/(apps)/aidocument/**/*",
     "src/app/(apps)/compas/**/*",
     "src/app/(apps)/counseling/**/*",
@@ -76,7 +77,6 @@
     "src/app/(apps)/portal/**/*",
     "src/app/(apps)/sbm/**/*",
     "src/app/(apps)/stock/**/*",
-    "src/app/(apps)/tbm/**/*",
     "src/app/(apps)/teamSynapse/**/*",
     "src/app/(apps)/tmp/**/*",
     "src/app/(apps)/training/**/*"

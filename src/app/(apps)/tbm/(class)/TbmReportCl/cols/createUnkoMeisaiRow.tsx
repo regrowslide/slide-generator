@@ -47,7 +47,8 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData, jitsudoKaisu: n
 
   // const Q_driverFee = (feeOnDate?.driverFee ?? 0) + (feeOnDate?.futaiFee ?? 0)
 
-  const L_postalFee = (ConfigForRoute?.tsukoryoSeikyuGaku ?? 0) / jitsudoKaisu
+  const taxRate = 0.1 // 消費税率10%
+  const L_postalFee = ((ConfigForRoute?.tsukoryoSeikyuGaku ?? 0) / jitsudoKaisu) * (1 + taxRate)
   const M_postalHighwayFee = schedule.M_postalHighwayFee ?? 0
 
   // 月間通行料合計額が設定されている場合は自動計算、そうでなければ従来の1便あたり設定値を使用
@@ -170,7 +171,7 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData, jitsudoKaisu: n
     },
     P_KosokuShiyodai: {
       label: 'P高速使用代',
-      cellValue: S_jomuinFutan,
+      cellValue: NumHandler.round(S_jomuinFutan, 0),
     },
     Q_driverFee: {
       label: 'Q運賃',
@@ -182,7 +183,7 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData, jitsudoKaisu: n
     },
     R_JomuinUnchin: {
       label: 'R給与算定運賃',
-      cellValue: R_JomuinUnchin,
+      cellValue: NumHandler.round(R_JomuinUnchin, 0),
       style: {
         minWidth: 100,
         backgroundColor: '#defceb',
@@ -194,7 +195,7 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData, jitsudoKaisu: n
           <div>S乗務員負担</div> <div>高速代-(通行料+30％)</div>
         </div>
       ),
-      cellValue: S_jomuinFutan,
+      cellValue: NumHandler.round(S_jomuinFutan, 0),
       style: { backgroundColor: '#defceb' },
     },
     T_thirteenPercentOfPostalHighway: {
@@ -203,11 +204,11 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData, jitsudoKaisu: n
           <div>T運賃から負担</div> <div>高速代の30％</div>
         </div>
       ),
-      cellValue: T_thirteenPercentOfPostalHighway,
+      cellValue: NumHandler.round(T_thirteenPercentOfPostalHighway, 0),
     },
     U_general: {
       label: 'U高速代-通行料',
-      cellValue: U_general,
+      cellValue: NumHandler.round(U_general, 0),
       style: { backgroundColor: '#9ec1ff' },
     },
     V_highwayExcess: {
