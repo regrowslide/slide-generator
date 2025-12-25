@@ -18,7 +18,7 @@ export const EnhancedWorks = ({ works }: { works: any[] }) => {
     threshold: 0.05,
   })
 
-  const publicWorks = works.filter(row => row.isPublic)
+  const publicWorks = works.filter((row, i) => row.isPublic)
   const [workState, setWorkState] = useState<any>(publicWorks)
 
   const getUniqueValues = ({ works, key }: { works: any[]; key: string }) => {
@@ -123,7 +123,7 @@ export const EnhancedWorks = ({ works }: { works: any[] }) => {
                   .filter(work => work.description)
                   .map((work, index) => (
                     <div key={work.id || index}>
-                      <WorkCard {...{ work, works }} />
+                      <WorkCard {...{ work, }} />
                     </div>
                   ))}
               </div>

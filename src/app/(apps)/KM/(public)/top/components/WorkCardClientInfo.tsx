@@ -22,7 +22,7 @@ export const WorkCardClientInfo = ({
           <BuildingIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-indigo-600" />
         </div>
         <span className="text-lg sm:text-2xl font-semibold text-slate-700 break-words">
-          {allowShowClient && KaizenClient?.name ? `${KaizenClient.name} 様` : '匿名のお客様'}
+          {allowShowClient && KaizenClient?.name ? `${KaizenClient.name} 様` : '匿名'}
         </span>
       </div>
       <div className="flex items-center gap-2 sm:gap-3 flex-wrap">

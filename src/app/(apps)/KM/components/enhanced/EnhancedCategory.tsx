@@ -1,12 +1,13 @@
 'use client'
-import {Kaizen} from '@app/(apps)/KM/class/Kaizen'
+import { Kaizen } from '@app/(apps)/KM/class/Kaizen'
 import Loader from '@cm/components/utils/loader/Loader'
 import useDoStandardPrisma from '@cm/hooks/useDoStandardPrisma'
-import { R_Stack} from '@cm/components/styles/common-components/common-components'
-import {motion} from 'framer-motion'
-import {useInView} from 'react-intersection-observer'
-import {Briefcase, Layers, Link as LinkIcon} from 'lucide-react'
-import {arr__uniqArray} from '@cm/class/ArrHandler/array-utils/basic-operations'
+import { R_Stack } from '@cm/components/styles/common-components/common-components'
+import { motion } from 'framer-motion'
+import { useInView } from 'react-intersection-observer'
+import { Briefcase, Layers, Link as LinkIcon } from 'lucide-react'
+import { arr__uniqArray } from '@cm/class/ArrHandler/array-utils/basic-operations'
+import { superTrim } from '@cm/lib/methods/common'
 
 const iconMap = {
   jobCategory: Briefcase,
@@ -15,7 +16,7 @@ const iconMap = {
 }
 
 export const EnhancedCategory = () => {
-  const {ref, inView} = useInView({
+  const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.1,
   })
@@ -31,16 +32,16 @@ export const EnhancedCategory = () => {
       tagBg: 'bg-emerald-100/80',
       tagText: 'text-emerald-800',
     },
-    {
-      colId: 'systemCategory',
-      title: 'スプレッドシート・WEBアプリなど、各種媒体に対応',
-      subtitle: '幅広い開発実績',
-      iconColor: 'text-purple-600',
-      borderColor: 'border-purple-500/30',
-      bgColor: 'bg-gradient-to-br from-purple-50/50 via-white to-purple-50/30',
-      tagBg: 'bg-purple-100/80',
-      tagText: 'text-purple-800',
-    },
+    // {
+    //   colId: 'systemCategory',
+    //   title: 'スプレッドシート・WEBアプリなど、各種媒体に対応',
+    //   subtitle: '幅広い開発実績',
+    //   iconColor: 'text-purple-600',
+    //   borderColor: 'border-purple-500/30',
+    //   bgColor: 'bg-gradient-to-br from-purple-50/50 via-white to-purple-50/30',
+    //   tagBg: 'bg-purple-100/80',
+    //   tagText: 'text-purple-800',
+    // },
     {
       colId: 'collaborationTool',
       title: '外部サービス・API連携も',
@@ -55,15 +56,15 @@ export const EnhancedCategory = () => {
 
   return (
     <div ref={ref}>
-      <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4`}>
+      <div className={`grid grid-cols-1  gap-6`}>
         {master.map((m, i) => {
           const Icon = iconMap[m.colId as keyof typeof iconMap]
           return (
             <motion.div
               key={i}
-              initial={{opacity: 0, x: -20}}
-              animate={inView ? {opacity: 1, x: 0} : {}}
-              transition={{duration: 0.5, delay: i * 0.1}}
+              initial={{ opacity: 0, x: -20 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
               className={`group relative overflow-hidden rounded-2xl border-2 ${m.borderColor} ${m.bgColor} p-2 shadow-md transition-all duration-300 hover:scale-[1.02] hover:shadow-xl`}
             >
               {/* 左側装飾バー */}
@@ -84,7 +85,7 @@ export const EnhancedCategory = () => {
 
               {/* コンテンツ */}
               <div className="pl-2">
-                <CategoryTags {...{categoryColName: m.colId, tagBg: m.tagBg, tagText: m.tagText}} />
+                <CategoryTags {...{ categoryColName: m.colId, tagBg: m.tagBg, tagText: m.tagText }} />
               </div>
             </motion.div>
           )
@@ -94,15 +95,15 @@ export const EnhancedCategory = () => {
   )
 }
 
-export const CategoryTags = (props: {categoryColName: string; tagBg?: string; tagText?: string}) => {
-  const {categoryColName = 'jobCategory', tagBg = 'bg-gray-100', tagText = 'text-gray-700'} = props
+export const CategoryTags = (props: { categoryColName: string; tagBg?: string; tagText?: string }) => {
+  const { categoryColName = 'jobCategory', tagBg = 'bg-gray-100', tagText = 'text-gray-700' } = props
 
-  const {data: categories} = useDoStandardPrisma('kaizenWork', 'findMany', {
+  const { data: categories } = useDoStandardPrisma('kaizenWork', 'findMany', {
     select: {
       [categoryColName]: true,
     },
     distinct: [categoryColName as any],
-    orderBy: [{[categoryColName]: 'asc'}],
+    orderBy: [{ [categoryColName]: 'asc' }],
     // orderBy: [{sortOrder: 'asc'}],
   })
 
@@ -115,21 +116,21 @@ export const CategoryTags = (props: {categoryColName: string; tagBg?: string; ta
       .map(c => c?.[categoryColName])
       .filter(Boolean)
       .map(c => Kaizen.KaizenWork.parseTags(c))
-      .flat()
+      .flat().map(c => superTrim(c))
   ).sort((a, b) => String(a).localeCompare(String(b)))
 
   return (
     <div>
       <div>
         <div className="max-w-full">
-          <R_Stack className="gap-1.5 pb-1">
+          <R_Stack className="pb-1 gap-3">
             {tags?.map((value, index) => {
               return (
                 <motion.div
                   key={index}
-                  initial={{opacity: 0, scale: 0.9}}
-                  animate={{opacity: 1, scale: 1}}
-                  transition={{duration: 0.2, delay: index * 0.02}}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.2, delay: index * 0.02 }}
                 >
                   <div
                     className={`rounded-lg ${tagBg} ${tagText} border border-current/20 px-2.5 py-1 text-xs font-medium shadow-sm transition-all hover:scale-105 hover:shadow-md`}

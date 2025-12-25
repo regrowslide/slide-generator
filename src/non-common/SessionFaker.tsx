@@ -12,6 +12,7 @@ export class SessionFaker {
       modelNames: [
         //
         { name: 'user', id_pw: { id: 'email', pw: 'password' }, globalId: globalIds.globalUserId },
+        { name: 'user', id_pw: { id: 'code', pw: 'password' }, globalId: globalIds.globalUserId },
       ],
     },
   }

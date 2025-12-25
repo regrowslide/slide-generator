@@ -7,7 +7,6 @@ import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { WorkCardHeader } from './components/WorkCardHeader'
 import { WorkCardClientInfo } from './components/WorkCardClientInfo'
-import { WorkCardImageCarousel } from './components/WorkCardImageCarousel'
 import { WorkCardChallenge } from './components/WorkCardChallenge'
 import { WorkCardSolution } from './components/WorkCardSolution'
 import { WorkCardResult } from './components/WorkCardResult'
@@ -34,9 +33,10 @@ interface WorkCardProps {
     systemCategory?: string | null
     collaborationTool?: string | null
   }
+  className?: string
 }
 
-export const WorkCard = ({ work }: WorkCardProps) => {
+export const WorkCard = ({ work, className }: WorkCardProps) => {
   const { width } = useWindowSize()
   const { ref, inView } = useInView({
     triggerOnce: true,
@@ -63,7 +63,7 @@ export const WorkCard = ({ work }: WorkCardProps) => {
       transition={{ duration: 0.5 }}
 
     >
-      <div className="group overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-slate-50 via-white to-blue-50 shadow-xl transition-all duration-300 hover:shadow-2xl border-2 border-slate-100">
+      <div className={`group overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-slate-50 via-white to-blue-50 shadow-xl transition-all duration-300 hover:shadow-2xl border-2 border-slate-100 ${className}   `}>
         {/* ヘッダー */}
         <WorkCardHeader
           title={work.title}

@@ -1,104 +1,129 @@
 'use client'
 
-import {MyContainer} from '@cm/components/styles/common-components/common-components'
-import {getSecondLayerMenus} from '@app/(apps)/KM/components/common'
-import {motion} from 'framer-motion'
-import {useInView} from 'react-intersection-observer'
-import {Code, GraduationCap, Users2} from 'lucide-react'
+import { C_Stack, MyContainer, R_Stack } from '@cm/components/styles/common-components/common-components'
 
-const iconMap = {
-  manager: Code,
-  collaborationWithUniversity: Users2,
-  coach: GraduationCap,
-}
+import { useInView } from 'react-intersection-observer'
+import { motion } from 'framer-motion'
+import { Award, Building2, Code2, Sparkles, TrendingUp } from 'lucide-react'
+import { Developer } from '@app/(apps)/KM/components/Developer'
+import { EnhancedCategory } from '@app/(apps)/KM/components/enhanced/EnhancedCategory'
+import { EnhancedPartners } from '@app/(apps)/KM/components/enhanced/EnhancedPartners'
 
-export const EnhancedServices = ({kaizenClient}: {kaizenClient: any[]}) => {
-  const {ref, inView} = useInView({
+export const EnhancedServices = ({ kaizenClient }: { kaizenClient: any[] }) => {
+  const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.1,
   })
 
-  const menus = getSecondLayerMenus({kaizenClient})
-  const wrapperClas = ' w-screen-lg max-w-[90vw]'
+  const sections = [
+    {
+      icon: Award,
+      badge: '200+',
+      badgeLabel: '案件',
+      title: 'フリーランスマッチングサイトでの実績',
+      subtitle: 'ココナラ、Lancers等で高評価を獲得',
+      gradient: 'from-amber-400 via-orange-400 to-amber-500',
+      bgGradient: 'from-amber-50/40 via-orange-50/30 to-amber-50/20',
+      borderColor: 'border-amber-100/80',
+      content: <Developer />,
+    },
+    {
+      icon: Code2,
+      badge: null,
+      title: '開発実績',
+      subtitle: '多様な事業者様向けにシステム開発・業務改善をサポート',
+      gradient: 'from-slate-400 via-slate-500 to-slate-600',
+      bgGradient: 'from-slate-50/40 via-gray-50/30 to-slate-50/20',
+      borderColor: 'border-slate-100/80',
+      content: <EnhancedCategory />,
+    },
+    {
+      icon: Building2,
+      badge: null,
+      title: '多彩なクライアント様との取引実績',
+      subtitle: '企業・大学・個人事業主様など幅広くサポート',
+      gradient: 'from-blue-400 via-blue-500 to-indigo-500',
+      bgGradient: 'from-blue-50/40 via-indigo-50/30 to-blue-50/20',
+      borderColor: 'border-blue-100/80',
+      content: <EnhancedPartners {...{ kaizenClient }} />,
+    },
+  ]
+
   return (
-    <MyContainer className={`p-2   mx-auto ${wrapperClas}`}>
-      <div ref={ref} className="py-4">
-        {menus.map((menu, index) => {
-          const {value, label, id} = menu
-          const Icon = iconMap[id as keyof typeof iconMap] || Code
-          const isEven = index % 2 === 0
+    <MyContainer className="mx-auto max-w-7xl px-4 py-8">
+      <div ref={ref}>
+        {/* セクションヘッダー */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="mb-10 text-center"
+        >
+          <R_Stack className="mb-3 justify-center gap-2">
+            <Sparkles className="h-5 w-5 text-slate-400" />
+            <span className="text-sm font-semibold uppercase tracking-widest text-slate-500">Track Record</span>
+            <Sparkles className="h-5 w-5 text-slate-400" />
+          </R_Stack>
+          <h2 className="mb-2 text-3xl font-bold tracking-tight text-gray-900 md:text-4xl">
+            実績・サービス
+          </h2>
+          <p className="mx-auto max-w-2xl text-gray-600">
+            これまでの開発実績とサービス内容をご紹介します
+          </p>
+        </motion.div>
 
-          return (
-            <motion.div
-              key={id}
-              id={id}
-              initial={{opacity: 0, y: 50}}
-              animate={inView ? {opacity: 1, y: 0} : {}}
-              transition={{duration: 0.8, delay: index * 0.2}}
-              className="mb-8 last:mb-0"
-            >
-              <div>
-                <div
-                  className={`overflow-hidden rounded-2xl shadow-xl transition-all duration-300 hover:shadow-2xl ${
-                    isEven
-                      ? 'bg-gradient-to-br from-blue-900/5 via-white to-blue-900/5'
-                      : 'bg-gradient-to-br from-amber-50 via-white to-amber-50'
-                  }`}
-                >
-                  {/* ヘッダー部分 */}
-                  <div
-                    className={`p-2 sm:p-5 ${
-                      isEven ? 'bg-gradient-to-r from-blue-800 to-blue-950' : 'bg-gradient-to-r from-amber-600 to-amber-700'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      {/* アイコン */}
-                      <motion.div
-                        initial={{scale: 0}}
-                        animate={inView ? {scale: 1} : {}}
-                        transition={{duration: 0.5, delay: index * 0.2 + 0.3, type: 'spring'}}
-                        className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm sm:h-14 sm:w-14"
-                      >
-                        <Icon className="h-6 w-6 text-white sm:h-7 sm:w-7" />
-                      </motion.div>
+        {/* セクションカード */}
+        <C_Stack className="gap-8">
+          {sections.map((section, index) => {
+            const Icon = section.icon
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: index * 0.15 }}
+                className={`group relative overflow-hidden rounded-3xl border ${section.borderColor} bg-gradient-to-br ${section.bgGradient} p-6 shadow-lg transition-all duration-500 hover:shadow-2xl md:p-8`}
+              >
+                {/* 背景装飾 */}
+                <div className={`absolute -right-20 -top-20 h-40 w-40 rounded-full bg-gradient-to-br ${section.gradient} opacity-5 blur-3xl transition-all duration-500 group-hover:opacity-10`} />
+                <div className={`absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-gradient-to-br ${section.gradient} opacity-3 blur-2xl`} />
 
-                      {/* タイトル */}
-                      <div>
-                        <motion.h3
-                          initial={{opacity: 0, x: -20}}
-                          animate={inView ? {opacity: 1, x: 0} : {}}
-                          transition={{duration: 0.6, delay: index * 0.2 + 0.4}}
-                          className="text-lg font-bold text-white sm:text-xl lg:text-2xl"
-                        >
-                          {label}
-                        </motion.h3>
-                      </div>
-                    </div>
+                {/* ヘッダー */}
+                <R_Stack className="mb-6 flex-wrap items-start gap-4">
+                  {/* アイコン */}
+                  <div className={`flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${section.gradient} shadow-lg`}>
+                    <Icon className="h-7 w-7 text-white" />
                   </div>
 
-                  {/* コンテンツ部分 */}
-                  <motion.div
-                    initial={{opacity: 0}}
-                    animate={inView ? {opacity: 1} : {}}
-                    transition={{duration: 0.6, delay: index * 0.2 + 0.5}}
-                    className="p-2 sm:p-5"
-                  >
-                    <div className="prose prose-base max-w-none">{value}</div>
-                  </motion.div>
-
-                  {/* 装飾ライン */}
-                  <div className="h-1 w-full">
-                    <div
-                      className={`h-full w-full ${
-                        isEven ? 'bg-gradient-to-r from-blue-700 to-blue-900' : 'bg-gradient-to-r from-amber-400 to-amber-600'
-                      }`}
-                    ></div>
+                  {/* タイトル */}
+                  <div className="flex-1">
+                    <R_Stack className="mb-1 flex-wrap items-center gap-3">
+                      <h3 className="text-xl font-bold text-gray-900 md:text-2xl">{section.title}</h3>
+                      {section.badge && (
+                        <div className={`flex items-center gap-1.5 rounded-full bg-gradient-to-r ${section.gradient} px-3 py-1 shadow-md`}>
+                          <TrendingUp className="h-3.5 w-3.5 text-white" />
+                          <span className="text-sm font-bold text-white">{section.badge}</span>
+                          {section.badgeLabel && (
+                            <span className="text-xs text-white/80">{section.badgeLabel}</span>
+                          )}
+                        </div>
+                      )}
+                    </R_Stack>
+                    <p className="text-sm text-gray-600 md:text-base">{section.subtitle}</p>
                   </div>
+                </R_Stack>
+
+                {/* コンテンツ */}
+                <div className="relative">
+                  {section.content}
                 </div>
-              </div>
-            </motion.div>
-          )
-        })}
+
+                {/* 下部アクセント */}
+                <div className={`absolute bottom-0 left-0 h-0.5 w-full bg-gradient-to-r ${section.gradient} opacity-40`} />
+              </motion.div>
+            )
+          })}
+        </C_Stack>
       </div>
     </MyContainer>
   )

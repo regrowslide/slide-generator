@@ -3,7 +3,8 @@
 import { useState, useTransition } from 'react'
 import { Save, Loader2, Eye } from 'lucide-react'
 import { upsertKaizenWork, deleteKaizenWork } from '../actions'
-import { WorkPreview } from './WorkPreview'
+import { R_Stack } from '@cm/components/styles/common-components/common-components'
+import { WorkCard } from '@app/(apps)/KM/(public)/top/WorkCard'
 
 interface WorkEditFormProps {
   work: any | null
@@ -96,8 +97,8 @@ export const WorkEditForm = ({ work, clients, onClose, isNew = false }: WorkEdit
   }
 
   return (
-    <>
-      <form onSubmit={handleSubmit} className="flex flex-col h-full w-[1000px] text-sm">
+    <R_Stack className={` flex-nowrap w-[90vw] overflow-auto items-start`}>
+      <form onSubmit={handleSubmit} className="flex flex-col h-full min-w-[1000px] text-sm">
         {/* ヘッダー */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
           <h2 className="text-lg font-bold text-gray-900">
@@ -346,6 +347,18 @@ export const WorkEditForm = ({ work, clients, onClose, isNew = false }: WorkEdit
                 />
               </fieldset>
 
+              <fieldset className="border border-blue-200 rounded-lg p-4 bg-blue-50/30">
+                <legend className="text-sm font-semibold text-blue-700 px-2">提供ソリューション</legend>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  rows={4}
+                  placeholder="提供したソリューションの詳細を記載"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </fieldset>
+
               <fieldset className="border border-green-200 rounded-lg p-4 bg-green-50/30">
                 <legend className="text-sm font-semibold text-green-700 px-2">定量成果（最重要）</legend>
                 <textarea
@@ -358,17 +371,7 @@ export const WorkEditForm = ({ work, clients, onClose, isNew = false }: WorkEdit
                 />
               </fieldset>
 
-              <fieldset className="border border-blue-200 rounded-lg p-4 bg-blue-50/30">
-                <legend className="text-sm font-semibold text-blue-700 px-2">提供ソリューション</legend>
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  rows={4}
-                  placeholder="提供したソリューションの詳細を記載"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </fieldset>
+
 
               <fieldset className="border border-purple-200 rounded-lg p-4 bg-purple-50/30">
                 <legend className="text-sm font-semibold text-purple-700 px-2">技術的工夫</legend>
@@ -447,10 +450,13 @@ export const WorkEditForm = ({ work, clients, onClose, isNew = false }: WorkEdit
         </div>
       </form>
 
-      {/* プレビューモーダル */}
-      {showPreview && (
-        <WorkPreview work={previewData} onClose={() => setShowPreview(false)} />
-      )}
-    </>
+      <div>
+        <WorkCard
+          work={formData} />
+      </div>
+
+
+
+    </R_Stack>
   )
 }

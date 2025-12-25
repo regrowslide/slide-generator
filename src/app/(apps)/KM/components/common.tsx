@@ -1,21 +1,18 @@
 'use client'
 
-import {EnhancedCategory} from '@app/(apps)/KM/components/enhanced/EnhancedCategory'
-import {Contact} from '@app/(apps)/KM/components/Contact'
+import { Contact } from '@app/(apps)/KM/components/Contact'
 
-import {Developer} from '@app/(apps)/KM/components/Developer'
-import {Partners} from '@app/(apps)/KM/components/Partner'
-import {Services} from '@app/(apps)/KM/components/Services'
-import {Works} from '@app/(apps)/KM/components/Works'
+import { Services } from '@app/(apps)/KM/components/Services'
+import { Works } from '@app/(apps)/KM/components/Works'
 
 
 import useWindowSize from '@cm/hooks/useWindowSize'
-import {cl} from '@cm/lib/methods/common'
-import {Button} from '@cm/components/styles/common-components/Button'
-import {C_Stack, R_Stack} from '@cm/components/styles/common-components/common-components'
-import {useCallback, useState} from 'react'
+import { cl } from '@cm/lib/methods/common'
+import { Button } from '@cm/components/styles/common-components/Button'
+import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
+import { useCallback, useState } from 'react'
 
-export const EasyProfile = ({kaizenClient, works}) => {
+export const EasyProfile = ({ kaizenClient, works }) => {
   return (
     <C_Stack id="EasyProfile" className={`mx-auto  items-center gap-[80px] `}>
       <div className={`w-full`}>
@@ -44,99 +41,30 @@ export const EasyProfile = ({kaizenClient, works}) => {
   )
 }
 
-export const getFirstLayerMenus = ({kaizenClient, works}) => {
+export const getFirstLayerMenus = ({ kaizenClient, works }) => {
   return [
     {
       id: 'mainActivity',
       label: 'お仕事',
-      component: <Services {...{kaizenClient}} />,
+      component: <Services {...{ kaizenClient }} />,
       kaizenClient,
       works,
-      secondLayerMenus: getSecondLayerMenus({kaizenClient}),
+
     },
-    {id: 'works', label: '実績・制作物', component: <Works works={works} />},
-    {id: 'works', label: 'お問い合わせ', component: <Contact />},
+    { id: 'works', label: '実績・制作物', component: <Works works={works} /> },
+    { id: 'works', label: 'お問い合わせ', component: <Contact /> },
   ]
 }
 
-export const getSecondLayerMenus = ({kaizenClient}) => [
-  {
-    id: 'manager',
-    label: '企業DX・ITシステム開発',
-    value: (
-      <C_Stack className={`gap-6`}>
-        <C_Stack>
-          <h3 className={`text-xl`}>ココナラ、Lancers等のフリーランスマッチングサイトにて、200件以上の実績</h3>
-          <Developer />
-          <hr />
-        </C_Stack>
 
-        <C_Stack>
-          <h3 className={`text-xl`}>
-            <div>開発実績</div>
-            <div className={`text-base text-gray-600`}>多様な事業者様向けに システム開発・業務改善をサポート</div>
-          </h3>
 
-          <EnhancedCategory />
-          <hr />
-        </C_Stack>
-
-        <C_Stack>
-          <h3 className={`text-xl`}>様々な企業、大学、個人事業主様など、実績多数</h3>
-          <Partners {...{kaizenClient}} />
-          <hr />
-        </C_Stack>
-      </C_Stack>
-    ),
-  },
-  {
-    id: 'collaborationWithUniversity',
-    label: '大学研究室との共同プロジェクト',
-    value: <p>心理学の専門知を応用した学習アプリ【Grouping】の共同開発プロジェクト</p>,
-  },
-  {
-    id: 'coach',
-    label: '講師 /コーチング ',
-    value: (
-      <R_Stack className={` items-start`}>
-        <C_Stack className={`gap-4`}>
-          <section>
-            <p>エンジニア、事業主向けのITコーチング</p>
-            <small>
-              <ul className={` ml-4 leading-5`}>
-                <li>JavaScript / React / Next JS WEB開発コーチング</li>
-                <li>Google Work Space / Google Apps Scriptコーチング</li>
-              </ul>
-            </small>
-          </section>
-          <section>
-            <p>プログラミング教室オンライン講師</p>
-            <small>
-              <ul className={` ml-4 leading-5`}>
-                <li>JavaScript基礎学習</li>
-              </ul>
-            </small>
-          </section>
-        </C_Stack>
-        {/* <ContentPlayer
-          {...{
-            className: 'shadow-md rounded-md',
-            styles: {thumbnail: {width: 200, height: 200}},
-            src: '/image/KM/coaching-programs.png',
-          }}
-        /> */}
-      </R_Stack>
-    ),
-  },
-]
-
-export const TableOfContents = ({firstLayerMenus}) => {
+export const TableOfContents = ({ firstLayerMenus }) => {
   const [showMenuInSP, setshowMenuInSP] = useState(false)
-  const {device} = useWindowSize()
+  const { device } = useWindowSize()
 
   const scrollToElement = useCallback(id => {
     const element = document?.getElementById(id)
-    element?.scrollIntoView?.({behavior: 'smooth'})
+    element?.scrollIntoView?.({ behavior: 'smooth' })
   }, [])
 
   const renderContents = () => {

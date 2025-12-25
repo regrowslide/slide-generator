@@ -1,22 +1,24 @@
 'use server'
 
-import {verifyPassword} from '@cm/lib/crypt'
+import { verifyPassword } from '@cm/lib/crypt'
 import prisma from 'src/lib/prisma'
-import {SessionFaker} from 'src/non-common/SessionFaker'
+import { SessionFaker } from 'src/non-common/SessionFaker'
 
-export const CheckLogin = async ({authId, authPw}) => {
+export const CheckLogin = async ({ authId, authPw }) => {
   const targetModels = SessionFaker.getTargetModels()
 
   let foundUser
 
-  let i = 0
-  while (foundUser === undefined) {
+
+
+  for (let i = 0; i < targetModels.length; i++) {
     const targetModel = targetModels[i]
+
     if (!targetModel) {
       break
     }
 
-    const {name, id_pw} = targetModel
+    const { name, id_pw } = targetModel
 
     const authKey = {
       id: id_pw?.id ?? 'email',
@@ -25,17 +27,27 @@ export const CheckLogin = async ({authId, authPw}) => {
 
     const PrismaClient = prisma?.[name] as any
 
-    const userData = await PrismaClient?.findUnique({where: {[authKey.id]: authId}})
+    try {
+      const userData = await PrismaClient?.findUnique({ where: { [authKey.id]: authId } })
 
-    if (userData) {
-      foundUser = {...userData, authKey}
-      // continue
+      if (userData) {
+        foundUser = { ...userData, authKey }
+        // continue
+      }
+
+    } catch (error) {
+      console.error({
+        model: name,
+        msg: error.message,
+      })   //////////
     }
-    i++
+
   }
 
+
+
   if (foundUser) {
-    const {authKey, ...userData} = foundUser
+    const { authKey, ...userData } = foundUser
 
     let match = false
 
@@ -47,12 +59,12 @@ export const CheckLogin = async ({authId, authPw}) => {
     }
 
     if (match) {
-      const {name, email, role, type} = userData ?? {}
-      console.info('user confirmed', {name, email, role, type})
+      const { name, email, role, type } = userData ?? {}
+      console.info('user confirmed', { name, email, role, type })
       return foundUser
     }
   }
 
-  console.info('ログイン失敗', {foundUser: null})
+  console.info('ログイン失敗', { foundUser: null })
   return null
 }

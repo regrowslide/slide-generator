@@ -1,11 +1,13 @@
 'use client'
 
-import {motion} from 'framer-motion'
-import {useInView} from 'react-intersection-observer'
-import {Building2, GraduationCap, Users, Sparkles} from 'lucide-react'
+import { motion } from 'framer-motion'
+import { useInView } from 'react-intersection-observer'
+import { Building2, GraduationCap, Users } from 'lucide-react'
+import { cn } from '@cm/shadcn/lib/utils'
+import { ImageLabel } from '@cm/components/styles/common-components/ImageLabel'
 
-export const EnhancedPartners = ({kaizenClient}: {kaizenClient: any[]}) => {
-  const {ref, inView} = useInView({
+export const EnhancedPartners = ({ kaizenClient }: { kaizenClient: any[] }) => {
+  const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.1,
   })
@@ -41,107 +43,114 @@ export const EnhancedPartners = ({kaizenClient}: {kaizenClient: any[]}) => {
     },
   ].filter(cat => cat.clients.length > 0) // クライアントがいるカテゴリーのみ表示
 
-  // カテゴリーがない場合は全て表示
-  const displayCategories =
-    categories.length === 1 && categories[0].clients.length === kaizenClient.length
-      ? [
-          {
-            icon: Sparkles,
-            title: '取引実績',
-            color: 'from-indigo-600 to-indigo-800',
-            bgColor: 'from-indigo-50/50 to-indigo-100/30',
-            iconBg: 'bg-indigo-100',
-            iconColor: 'text-indigo-700',
-            clients: kaizenClient,
-          },
-        ]
-      : categories
+
+  // アニメーション用にクライアントリストを複製（シームレスループのため）
+  const duplicatedClients = [...kaizenClient, ...kaizenClient]
 
   return (
     <div ref={ref} className="space-y-6">
       {/* ヘッダー統計 */}
       <motion.div
-        initial={{opacity: 0, y: 20}}
-        animate={inView ? {opacity: 1, y: 0} : {}}
-        transition={{duration: 0.6}}
+        initial={{ opacity: 0, y: 20 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6 }}
         className="mb-6 text-center"
       >
-        <div className="mx-auto inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 shadow-lg">
-          <Building2 className="h-5 w-5 text-white" />
-          <span className="text-lg font-bold text-white">
-            {kaizenClient.length}
-            <span className="ml-1 text-sm font-normal text-white/90">社との取引実績</span>
-          </span>
-        </div>
+
       </motion.div>
 
       {/* カテゴリー別表示 */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {displayCategories.map((category, categoryIndex) => {
-          const Icon = category.icon
-          return (
-            <motion.div
-              key={categoryIndex}
-              initial={{opacity: 0, scale: 0.95}}
-              animate={inView ? {opacity: 1, scale: 1} : {}}
-              transition={{duration: 0.5, delay: categoryIndex * 0.15}}
-              className="group"
-            >
-              <div className="h-full overflow-hidden rounded-2xl border-2 border-gray-200/50 bg-white shadow-md transition-all duration-300 hover:scale-[1.02] hover:border-gray-300 hover:shadow-xl">
-                {/* カテゴリーヘッダー */}
-                <div className={`bg-gradient-to-br ${category.bgColor} p-4`}>
-                  <div className="flex items-center gap-3">
-                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${category.iconBg}`}>
-                      <Icon className={`h-5 w-5 ${category.iconColor}`} />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-gray-900">{category.title}</h4>
-                      <p className="text-xs text-gray-600">{category.clients.length}社</p>
-                    </div>
-                  </div>
-                </div>
 
-                {/* クライアントリスト */}
-                <div className="max-h-60 overflow-y-auto p-4">
-                  <div className="space-y-2">
-                    {category.clients.map((client, clientIndex) => (
-                      <motion.div
-                        key={clientIndex}
-                        initial={{opacity: 0, x: -10}}
-                        animate={inView ? {opacity: 1, x: 0} : {}}
-                        transition={{duration: 0.3, delay: categoryIndex * 0.15 + clientIndex * 0.05}}
-                        className="group/item flex items-center gap-2 rounded-lg bg-gray-50 p-2.5 transition-all hover:bg-gray-100"
-                      >
-                        <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-white">
-                          <span className="text-xs font-bold text-gray-400">{client.name?.substring(0, 1) || '?'}</span>
-                        </div>
-                        <span className="flex-1 text-sm font-medium text-gray-700 group-hover/item:text-gray-900">
-                          {client.name}
-                        </span>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
 
-                {/* フッター統計 */}
-                <div className={`border-t border-gray-100 bg-gradient-to-r ${category.color} p-3`}>
-                  <div className="text-center text-xs font-semibold text-white">{category.clients.length}件の実績</div>
-                </div>
-              </div>
-            </motion.div>
-          )
-        })}
-      </div>
+      {/* マーキー（横スクロール）コンテナ */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 1 } : {}}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-50 via-white to-slate-50 py-6"
+      >
+        {/* 左右のグラデーションオーバーレイ */}
+        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-24 bg-gradient-to-r from-slate-50 to-transparent" />
+        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-24 bg-gradient-to-l from-slate-50 to-transparent" />
+
+        {/* マーキーアニメーション - framer-motion使用 */}
+        <motion.div
+          className="flex w-max"
+          animate={{
+            x: ['0%', '-50%']
+          }}
+          transition={{
+            x: {
+              duration: 70,
+              repeat: Infinity,
+              ease: 'linear',
+            }
+          }}
+        >
+          {duplicatedClients.map((p, index) => (
+            <PartnerMarqueeItem key={`${p.id || index}-${index}`} p={p} index={index % kaizenClient.length} />
+          ))}
+        </motion.div>
+      </motion.div>
 
       {/* 補足メッセージ */}
       <motion.div
-        initial={{opacity: 0}}
-        animate={inView ? {opacity: 1} : {}}
-        transition={{duration: 0.8, delay: 0.8}}
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 1 } : {}}
+        transition={{ duration: 0.8, delay: 0.8 }}
         className="mt-6 text-center"
       >
         <p className="text-sm text-gray-600">業界・規模を問わず、様々なお客様の業務改善をサポートしております</p>
       </motion.div>
+    </div>
+  )
+}
+
+
+// マーキー用の個別アイテムコンポーネント
+const PartnerMarqueeItem = ({ p, index }: { p: any; index: number }) => {
+  const hasIcon = p?.iconUrl && p?.iconUrl !== ''
+  const colors = [
+    'from-blue-400 to-blue-600',
+    'from-purple-400 to-purple-600',
+    'from-emerald-400 to-emerald-600',
+    'from-amber-400 to-amber-600',
+    'from-rose-400 to-rose-600',
+    'from-cyan-400 to-cyan-600',
+  ]
+  const colorClass = colors[index % colors.length]
+
+  return (
+    <div className="mx-2 flex-shrink-0">
+      <div
+        className={cn(
+          'group flex min-w-[180px] items-center gap-3 rounded-xl border border-gray-200 bg-white px-2 py-1 shadow-sm transition-all duration-300 hover:scale-105 hover:shadow-lg'
+        )}
+      >
+        {/* ロゴ/アイコン */}
+        {hasIcon ? (
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gray-50">
+            <ImageLabel
+              {...{
+                style: { width: 40, height: 40, objectFit: 'contain' },
+                src: p?.iconUrl,
+              }}
+            />
+          </div>
+        ) : (
+          <div>
+            <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${colorClass}`}>
+              <span className="text-base font-bold text-white">{p?.name?.substring(0, 1) || '?'}</span>
+            </div>
+          </div>
+        )}
+
+        {/* 企業名 */}
+        <div className="flex flex-col overflow-hidden">
+          {p?.organization && <span className="truncate text-[10px] text-gray-500">{p.organization}</span>}
+          <span className="truncate text-sm font-semibold text-gray-800">{p?.name || '---'}</span>
+        </div>
+      </div>
     </div>
   )
 }

@@ -1,16 +1,16 @@
 'use client'
 
-import {C_Stack, MyContainer, Padding, R_Stack} from '@cm/components/styles/common-components/common-components'
-import {WorkCard} from '@app/(apps)/KM/(public)/top/WorkCard'
-import {Fields} from '@cm/class/Fields/Fields'
+import { C_Stack, MyContainer, Padding, R_Stack } from '@cm/components/styles/common-components/common-components'
+import { WorkCard } from '@app/(apps)/KM/(public)/top/WorkCard'
+import { Fields } from '@cm/class/Fields/Fields'
 import useBasicFormProps from '@cm/hooks/useBasicForm/useBasicFormProps'
-import {useState} from 'react'
+import { useState } from 'react'
 import BasicModal from '@cm/components/utils/modal/BasicModal'
-import {Search} from 'lucide-react'
+import { Search } from 'lucide-react'
 
-export const Works = ({works}) => {
+export const Works = ({ works }) => {
   works = works.filter(row => row.isPublic)
-  const getUniqueValues = ({works, key}) => {
+  const getUniqueValues = ({ works, key }) => {
     const options = works
       .reduce((acc, work) => {
         const dataKey = work[key]
@@ -25,33 +25,33 @@ export const Works = ({works}) => {
   const [workState, setworkState] = useState<any>(works)
   const Seracher = () => {
     const columns = Fields.transposeColumns([
-      {id: 'title', label: 'キーワード検索', type: 'text', form: {}},
+      { id: 'title', label: 'キーワード検索', type: 'text', form: {} },
       {
         id: 'jobCategory',
         label: '業界・業種',
         forSelect: {
-          optionsOrOptionFetcher: getUniqueValues({works, key: 'jobCategory'}),
+          optionsOrOptionFetcher: getUniqueValues({ works, key: 'jobCategory' }),
         },
       },
       {
         id: 'systemCategory',
         label: 'ツール種類',
         forSelect: {
-          optionsOrOptionFetcher: getUniqueValues({works, key: 'systemCategory'}),
+          optionsOrOptionFetcher: getUniqueValues({ works, key: 'systemCategory' }),
         },
       },
       {
         id: 'collaborationTool',
         label: '連携サービス',
         forSelect: {
-          optionsOrOptionFetcher: getUniqueValues({works, key: 'collaborationTool'}),
+          optionsOrOptionFetcher: getUniqueValues({ works, key: 'collaborationTool' }),
         },
       },
     ])
-    const {BasicForm, latestFormData} = useBasicFormProps({
+    const { BasicForm, latestFormData } = useBasicFormProps({
       columns,
       onFormItemBlur: props => {
-        const {newlatestFormData} = props
+        const { newlatestFormData } = props
 
         const newWorkState = workState.filter(work => {
           const isHit = Object.keys(newlatestFormData).reduce((acc, key) => {
@@ -80,7 +80,7 @@ export const Works = ({works}) => {
           // </Button>
         }
       >
-        <BasicForm {...{latestFormData, alignMode: 'row'}}></BasicForm>
+        <BasicForm {...{ latestFormData, alignMode: 'row' }}></BasicForm>
       </BasicModal>
     )
   }
@@ -100,7 +100,7 @@ export const Works = ({works}) => {
             {workState
               .filter(work => work.description)
               .map((work, index) => {
-                return <WorkCard key={index} {...{work, works}} />
+                return <WorkCard key={index} {...{ work, }} />
               })}
           </R_Stack>
         </C_Stack>

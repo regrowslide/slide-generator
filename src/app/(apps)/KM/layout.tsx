@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 
-import { Zen_Old_Mincho } from 'next/font/google'
 
 import { isDev } from '@cm/lib/methods/common'
 import Admin from '@cm/components/layout/Admin/Admin'

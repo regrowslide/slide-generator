@@ -1,16 +1,15 @@
 'use client'
 
-import {MyContainer, Padding} from '@cm/components/styles/common-components/common-components'
+import { MyContainer } from '@cm/components/styles/common-components/common-components'
 
-import {getSecondLayerMenus} from '@app/(apps)/KM/components/common'
-import {ParameterCard} from '@cm/components/styles/common-components/ParameterCard'
 
-export const Services = ({kaizenClient}) => {
+
+export const Services = ({ kaizenClient }) => {
   return (
     <MyContainer>
       <div>
-        {getSecondLayerMenus({kaizenClient}).map((menu, index) => {
-          const {value, label, id} = menu
+        {/* {getSecondLayerMenus({ kaizenClient }).map((menu, index) => {
+          const { value, label, id } = menu
           return (
             <div id={id} key={id}>
               <Padding>
@@ -22,7 +21,7 @@ export const Services = ({kaizenClient}) => {
                       value: <div>{value}</div>,
                       styling: {
                         styles: {
-                          wrapper: {background: 'white', padding: 20},
+                          wrapper: { background: 'white', padding: 20 },
                         },
                       },
                     }}
@@ -31,7 +30,7 @@ export const Services = ({kaizenClient}) => {
               </Padding>
             </div>
           )
-        })}
+        })} */}
       </div>
     </MyContainer>
   )

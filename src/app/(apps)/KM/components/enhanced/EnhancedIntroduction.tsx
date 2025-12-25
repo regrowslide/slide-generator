@@ -5,9 +5,8 @@ import BackGroundImage from '@cm/components/utils/BackGroundImage'
 import useWindowSize from '@cm/hooks/useWindowSize'
 import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
-import { ArrowDown } from 'lucide-react'
-import { cn } from '@cm/shadcn/lib/utils'
+import { motion, Variants } from 'framer-motion'
+import { Sparkles } from 'lucide-react'
 
 export const EnhancedIntroduction = () => {
   const { width } = useWindowSize()
@@ -20,148 +19,198 @@ export const EnhancedIntroduction = () => {
 
   const bgUrl = '/image/KM/intro-bg.png'
 
+  // アニメーション設定
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.3,
+      },
+    },
+  }
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: 'easeOut',
+      },
+    },
+  }
+
   const Message = () => {
     return (
-      <div className="relative z-10 py-4 pt-4">
-        {/* {isDev && <Button onClick={async () => await seedKM()}>seedKM</Button>} 開発環境のみシーディング */}
+      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 py-8">
+        {/* 装飾要素 - 浮遊するパーティクル */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          {[...Array(6)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute h-2 w-2 rounded-full bg-white/20"
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: [0.2, 0.5, 0.2],
+                y: [0, -30, 0],
+                x: [0, Math.random() * 20 - 10, 0],
+              }}
+              transition={{
+                duration: 4 + Math.random() * 2,
+                repeat: Infinity,
+                delay: i * 0.5,
+              }}
+              style={{
+                left: `${15 + i * 15}%`,
+                top: `${20 + (i % 3) * 25}%`,
+              }}
+            />
+          ))}
+        </div>
+
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 50 }}
-          transition={{ duration: 1, delay: 0.3 }}
-          className="mx-auto max-w-3xl"
+          variants={containerVariants}
+          initial="hidden"
+          animate={isVisible ? 'visible' : 'hidden'}
+          className="w-full max-w-4xl"
         >
-          <div
-            className={cn(
-              `${fontBig} mx-2 lg:mx-4 rounded-2xl bg-white/70 p-4 font-bold shadow-2xl backdrop-blur-xs  sm:p-5 lg:p-6  `
-            )}
+          {/* メインカード */}
+          <motion.div
+            variants={itemVariants}
+            className="relative overflow-hidden rounded-3xl border border-white/20 bg-white/80 p-6 shadow-2xl backdrop-blur-xl sm:p-8 lg:p-10"
           >
-            <C_Stack className="items-center gap-4 sm:gap-">
+            {/* 背景グラデーション装飾 */}
+            <div className="pointer-events-none absolute -right-20 -top-20 h-40 w-40 rounded-full bg-gradient-to-br from-blue-400/20 to-transparent blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-20 -left-20 h-40 w-40 rounded-full bg-gradient-to-tr from-amber-400/20 to-transparent blur-3xl" />
+
+            <C_Stack className="relative z-10 items-center gap-6 sm:gap-8">
               {/* サブタイトル */}
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: isVisible ? 1 : 0 }} transition={{ duration: 0.8, delay: 0.7 }}>
-                <C_Stack className={`text-center ${fontSm}`}>
-                  <h2 className="text-gray-700">業務改善・自動化に特化したツール開発で</h2>
-                  <p className="text-gray-700">中小企業、事業主様の業務改善を担います。</p>
-                </C_Stack>
+              <motion.div variants={itemVariants}>
+                <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50/80 px-5 py-2.5 text-base font-medium text-blue-800 backdrop-blur-sm sm:text-lg">
+                  <Sparkles className="h-5 w-5" />
+                  業務改善・自動化に特化したツール開発
+                </div>
               </motion.div>
 
               {/* メインキャッチコピー */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: isVisible ? 1 : 0, scale: isVisible ? 1 : 0.9 }}
-                transition={{ duration: 0.8, delay: 0.9 }}
-                className="relative"
-              >
-                <C_Stack className={`${fontBig} p-0 lg:p-4 text-center`}>
-                  <div className="relative">
-                    <h1 className="text-center text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900">
-                      <span className="bg-gradient-to-r from-blue-700 to-blue-900 bg-clip-text text-transparent">
+              <motion.div variants={itemVariants} className="w-full">
+                <C_Stack className="gap-4 text-center">
+                  <div className="relative inline-block">
+                    <h1 className="text-2xl font-black tracking-tight sm:text-3xl lg:text-5xl">
+                      <span className="bg-gradient-to-r from-slate-800 via-blue-900 to-slate-800 bg-clip-text text-transparent">
                         無駄な業務の撲滅を。
                       </span>
                     </h1>
-                    <div className="absolute -bottom-1 left-1/2 h-1 w-3/4 -translate-x-1/2 transform rounded-full bg-gradient-to-r from-blue-700 to-blue-900"></div>
+                    <motion.div
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{ duration: 0.8, delay: 0.8 }}
+                      className="absolute -bottom-2 left-0 h-1 w-full origin-left rounded-full bg-gradient-to-r from-blue-600 via-blue-800 to-blue-600"
+                    />
                   </div>
-                  <div className="relative mt-2">
-                    <h2 className="text-end text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900">
-                      <span className="bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
+
+                  <div className="relative inline-block self-end">
+                    <h2 className="text-2xl font-black tracking-tight sm:text-3xl lg:text-5xl">
+                      <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 bg-clip-text text-transparent">
                         ヒトの時間に余白を。
                       </span>
                     </h2>
-                    <div className="absolute -bottom-1 right-0 h-1 w-3/4 rounded-full bg-gradient-to-r from-amber-400 to-amber-600"></div>
+                    <motion.div
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{ duration: 0.8, delay: 1 }}
+                      className="absolute -bottom-2 right-0 h-1 w-full origin-right rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400"
+                    />
                   </div>
                 </C_Stack>
               </motion.div>
 
-              {/* 信念 */}
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: isVisible ? 1 : 0 }} transition={{ duration: 0.8, delay: 1.1 }}>
-                <C_Stack className={`text-center ${fontSm} `}>
-                  <p className="text-gray-700">をモットーとし、</p>
-                  <div className="flex flex-wrap justify-center gap-2">
-                    <span className="rounded-lg bg-blue-900/10 px-2 py-1 text-sm font-semibold text-blue-900">
-                      揺るぎない信念
-                    </span>
-                    <span className="rounded-lg bg-blue-900/10 px-2 py-1 text-sm font-semibold text-blue-900">確固たる意志</span>
-                  </div>
-                  <p className="text-gray-700">で、本気の業務改善を。</p>
-                </C_Stack>
+              {/* 哲学 */}
+              <motion.div variants={itemVariants} className="text-center">
+                <p className="text-lg text-slate-600 sm:text-xl">
+                  をモットーに、
+                  <span className="mx-1 font-bold text-blue-900">揺るぎない信念</span>と
+                  <span className="mx-1 font-bold text-blue-900">確固たる意志</span>で
+                </p>
+                <p className="mt-1 text-xl font-semibold text-slate-800 sm:text-2xl">本気の業務改善をお届けします。</p>
               </motion.div>
 
-              {/* 実績と特徴 */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: isVisible ? 1 : 0 }}
-                transition={{ duration: 0.8, delay: 1.3 }}
-                className="w-full"
-              >
-                <C_Stack className={`text-center ${fontSm}`}>
-                  <div className="rounded-lg bg-blue-900/5 p-3">
-                    <div className="mb-1  text-gray-700">エンジニア・マネージャとしての開発経験。</div>
-                    <div className="text-base font-bold text-blue-900 sm:text-lg">
-                      エージェント実績280件超。
-                      <div>
-                        <small className="ml-2 text-xs text-gray-600">(ココナラ・ランサーズ)</small>
-                      </div>
-                    </div>
+
+
+              {/* 特徴テキスト */}
+              <motion.div variants={itemVariants}>
+                <R_Stack className="flex-wrap justify-center gap-3 text-center text-base sm:text-lg">
+                  <div className="rounded-xl border border-blue-100 bg-gradient-to-r from-blue-50 to-slate-50 px-5 py-3 shadow-sm">
+                    <KM.CoolStrong>誰よりも「めんどくさがり」</KM.CoolStrong>
+                    <span className="text-slate-600">だからこそ、</span>
                   </div>
-
-                  <R_Stack className="mt-3 justify-center gap-2  text-gray-700 sm:text-base">
-                    <div className="w-fit rounded-lg bg-gradient-to-r from-blue-900/5 to-white p-2 shadow-sm">
-                      <KM.CoolStrong>誰よりも「めんどくさがり」</KM.CoolStrong>
-                      <span className="ml-1">だからこそ、</span>
-                    </div>
-
-                    <div className="w-fit rounded-lg bg-gradient-to-r from-amber-50 to-white p-2 shadow-sm">
-                      <KM.WarmStrong>誰よりも使い手の利便性</KM.WarmStrong>
-                      <span className="ml-1">にこだわり、</span>
-                    </div>
-
-                    <div>あなたの業務を改善します。</div>
-                  </R_Stack>
-                </C_Stack>
+                  <div className="rounded-xl border border-amber-100 bg-gradient-to-r from-amber-50 to-slate-50 px-5 py-3 shadow-sm">
+                    <KM.WarmStrong>誰よりも使い手の利便性</KM.WarmStrong>
+                    <span className="text-slate-600">にこだわる。</span>
+                  </div>
+                </R_Stack>
               </motion.div>
 
               {/* CTA */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
-                transition={{ duration: 0.8, delay: 1.5 }}
-                className="mt-3"
-              >
-                <div className="rounded-xl bg-gradient-to-r from-blue-800 to-blue-950 p-4 text-white shadow-xl">
-                  <div className={`${fontBig} mb-1 text-center text-lg sm:text-xl lg:text-2xl`}>
-                    ~マイデスクから始める業務改善~
+              <motion.div variants={itemVariants} className="w-full">
+                <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 p-6 shadow-xl transition-all duration-500 hover:shadow-2xl sm:p-8">
+                  {/* ホバー時の光沢エフェクト */}
+                  <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+
+                  <div className="relative z-10 text-center">
+                    <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm text-white/90 sm:text-base">
+                      <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
+                      新規ご相談受付中
+                    </div>
+                    <h3 className="mb-2 text-xl font-bold text-white sm:text-2xl lg:text-3xl">
+                      ~マイデスクから始める業務改善~
+                    </h3>
+                    <p className="text-lg text-white/90 sm:text-xl">を一緒に始めませんか?
+                    </p>
                   </div>
-                  <div className="text-center text-base sm:text-lg">を一緒にやりませんか？</div>
                 </div>
               </motion.div>
             </C_Stack>
-          </div>
+          </motion.div>
         </motion.div>
 
-        {/* スクロールダウン矢印 */}
+        {/* スクロールダウン */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: isVisible ? 1 : 0 }}
           transition={{ duration: 0.8, delay: 2 }}
-          className="mt-8 flex justify-center"
+          className="mt-10"
         >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="cursor-pointer text-white"
+          <motion.button
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             onClick={() => {
               const element = document.getElementById('mainActivity')
               element?.scrollIntoView({ behavior: 'smooth' })
             }}
+            className="group flex flex-col items-center gap-2 text-white/90 transition-colors hover:text-white"
           >
-            <ArrowDown className="h-8 w-8 drop-shadow-lg" />
-          </motion.div>
+            <span className="text-base font-medium tracking-wider">SCROLL</span>
+            <div className="flex h-10 w-6 items-start justify-center rounded-full border-2 border-white/50 p-1 transition-colors group-hover:border-white">
+              <motion.div
+                animate={{ y: [0, 12, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="h-2 w-1 rounded-full bg-white"
+              />
+            </div>
+          </motion.button>
         </motion.div>
       </div>
     )
   }
 
   return (
-    <header id="introduction" className="relative min-h-screen" role="banner">
+    <header id="introduction" className="relative min-h-screen overflow-hidden" role="banner">
+      {/* オーバーレイ */}
+      <div className="absolute inset-0 z-[1] bg-gradient-to-b from-slate-900/30 via-transparent to-slate-900/50" />
       <BackGroundImage {...{ url: bgUrl, alt: '改善マニア システム開発・業務改善のプロフェッショナル' }} />
       <Message />
     </header>

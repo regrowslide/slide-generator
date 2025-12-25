@@ -21,6 +21,10 @@ export const FakeOrKeepSession = async ({ query, realSession }) => {
   for (let i = 0; i < models.length; i++) {
     const { name: modelName, id_pw } = models[i]
 
+
+
+
+
     const isValidModel = schema[StrHandler.capitalizeFirstLetter(modelName)]
 
     if (!isValidModel) continue

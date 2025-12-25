@@ -3,16 +3,16 @@
 import useDoStandardPrisma from '@cm/hooks/useDoStandardPrisma'
 import SlateEditor from '@cm/components/SlateEditor/SlateEditor'
 import useWindowSize from '@cm/hooks/useWindowSize'
-import {MyContainer, R_Stack} from '@cm/components/styles/common-components/common-components'
-import {motion} from 'framer-motion'
-import {useInView} from 'react-intersection-observer'
-import {Mail, Clock, MessageSquare, CheckCircle} from 'lucide-react'
+import { MyContainer, R_Stack } from '@cm/components/styles/common-components/common-components'
+import { motion } from 'framer-motion'
+import { useInView } from 'react-intersection-observer'
+import { Mail, Clock, MessageSquare, CheckCircle } from 'lucide-react'
 
 export const EnhancedContact = () => {
-  const {width} = useWindowSize()
-  const {data: kaizenCMS} = useDoStandardPrisma('kaizenCMS', 'findFirst', {orderBy: [{id: 'desc'}]}, {deps: []})
+  const { width } = useWindowSize()
+  const { data: kaizenCMS } = useDoStandardPrisma('kaizenCMS', 'findFirst', { orderBy: [{ id: 'desc' }] }, { deps: [] })
 
-  const {ref, inView} = useInView({
+  const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.1,
   })
@@ -20,9 +20,9 @@ export const EnhancedContact = () => {
   if (!kaizenCMS) return <></>
 
   const benefits = [
-    {icon: MessageSquare, title: '相談無料', description: 'まずは気軽にご相談ください'},
-    {icon: Clock, title: '半日以内に返信', description: '迅速な対応を心がけています'},
-    {icon: CheckCircle, title: '要件が曖昧でもOK', description: '一緒に整理していきます'},
+    { icon: MessageSquare, title: '相談無料', description: 'まずは気軽にご相談ください' },
+    { icon: Clock, title: '半日以内に返信', description: '迅速な対応を心がけています' },
+    { icon: CheckCircle, title: '要件が曖昧でもOK', description: '一緒に整理していきます' },
   ]
 
   const wrapperClas = ' w-screen-lg max-w-[90vw]'
@@ -31,9 +31,9 @@ export const EnhancedContact = () => {
       <div ref={ref} className="py-4">
         {/* ヘッダー */}
         <motion.div
-          initial={{opacity: 0, y: 30}}
-          animate={inView ? {opacity: 1, y: 0} : {}}
-          transition={{duration: 0.8}}
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}
           className="mb-8 text-center"
         >
           <div className="mb-3 inline-block rounded-full bg-blue-900/10 px-3 py-1">
@@ -47,9 +47,9 @@ export const EnhancedContact = () => {
 
         {/* メリット表示 */}
         <motion.div
-          initial={{opacity: 0, y: 20}}
-          animate={inView ? {opacity: 1, y: 0} : {}}
-          transition={{duration: 0.8, delay: 0.2}}
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.2 }}
           className="mb-8"
         >
           <div className="grid gap-3 sm:grid-cols-3">
@@ -58,9 +58,9 @@ export const EnhancedContact = () => {
               return (
                 <motion.div
                   key={index}
-                  initial={{opacity: 0, scale: 0.9}}
-                  animate={inView ? {opacity: 1, scale: 1} : {}}
-                  transition={{duration: 0.6, delay: 0.3 + index * 0.1}}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={inView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
                   className="rounded-xl bg-gradient-to-br from-blue-900/5 to-white p-4 text-center shadow-md transition-all hover:shadow-xl"
                 >
                   <div className="mb-2 flex justify-center">
@@ -78,14 +78,14 @@ export const EnhancedContact = () => {
 
         {/* コンテンツエリア */}
         <motion.div
-          initial={{opacity: 0, y: 20}}
-          animate={inView ? {opacity: 1, y: 0} : {}}
-          transition={{duration: 0.8, delay: 0.5}}
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.5 }}
         >
           <R_Stack className="items-stretch gap-0 gap-y-12">
             {/* 左側: メッセージ */}
             <div className="w-full xl:w-1/2 xl:p-4">
-              <div className="h-full rounded-2xl bg-gradient-to-br from-blue-900/5 via-white to-blue-900/5 p-4 shadow-lg sm:p-5">
+              <div className="h-full rounded-2xl bg-white shadow-2xl p-5">
                 <div className="mb-3 flex items-center gap-2">
                   <Mail className="h-5 w-5 text-blue-900" />
                   <h3 className="text-lg font-bold text-gray-900">ご相談内容</h3>
@@ -102,9 +102,7 @@ export const EnhancedContact = () => {
             {/* 右側: フォーム */}
             <div className="w-full xl:w-1/2 xl:p-4">
               <div className="overflow-hidden rounded-2xl bg-white shadow-2xl">
-                <div className="bg-gradient-to-r from-blue-800 to-blue-950 p-3 text-center">
-                  <h3 className="text-lg font-bold text-white">お問い合わせフォーム</h3>
-                </div>
+
                 <iframe
                   src="https://docs.google.com/forms/d/e/1FAIpQLSejumStkkME2f5sdC1dtBO1nbq0mntWxcfxuZvjTyD2NPPUeA/viewform?embedded=true"
                   style={{
@@ -125,9 +123,9 @@ export const EnhancedContact = () => {
 
         {/* フッターメッセージ */}
         <motion.div
-          initial={{opacity: 0}}
-          animate={inView ? {opacity: 1} : {}}
-          transition={{duration: 0.8, delay: 0.8}}
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.8, delay: 0.8 }}
           className="mt-8 text-center"
         >
           <div className="mx-auto max-w-2xl rounded-2xl bg-gradient-to-r from-blue-800 to-blue-950 p-4 text-white shadow-xl sm:p-5">
