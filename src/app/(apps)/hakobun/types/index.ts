@@ -3,7 +3,7 @@
 // ============================================
 
 // --- 感情タイプ ---
-export type SentimentType = '好意的' | '不満' | 'リクエスト'
+export type SentimentType = '好意的' | '不満' | 'リクエスト' | 'その他'
 
 // --- ポジネガ ---
 export type PosiNegaType = 'positive' | 'negative' | 'neutral'
@@ -57,6 +57,24 @@ export interface HakobunRule {
   hakobunClientId: number
 }
 
+// --- 業種 ---
+export interface HakobunIndustry {
+  id: number
+  createdAt: Date
+  code: string
+  name: string
+  generalCategories?: HakobunIndustryGeneralCategory[]
+}
+
+// --- 業種別一般カテゴリ ---
+export interface HakobunIndustryGeneralCategory {
+  id: number
+  sortOrder: number
+  name: string
+  description?: string | null
+  industryId: number
+}
+
 // --- クライアント ---
 export interface HakobunClient {
   id: number
@@ -64,6 +82,11 @@ export interface HakobunClient {
   name: string
   createdAt: Date
   updatedAt?: Date | null
+  // AI分析用設定
+  inputDataExplain?: string | null
+  analysisStartDate?: Date | null
+  analysisEndDate?: Date | null
+  industryId?: number | null
 }
 
 // --- 顧客の声 ---

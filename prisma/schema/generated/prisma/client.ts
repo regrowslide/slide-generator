@@ -130,6 +130,16 @@ export type CounselingReservation = Prisma.CounselingReservationModel
  */
 export type CounselingSlot = Prisma.CounselingSlotModel
 /**
+ * Model HakobunIndustry
+ * 
+ */
+export type HakobunIndustry = Prisma.HakobunIndustryModel
+/**
+ * Model HakobunIndustryGeneralCategory
+ * 
+ */
+export type HakobunIndustryGeneralCategory = Prisma.HakobunIndustryGeneralCategoryModel
+/**
  * Model HakobunClient
  * 
  */

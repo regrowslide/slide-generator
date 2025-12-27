@@ -58,9 +58,10 @@ export const PAGES: any = {
         label: 'マスタ管理',
         ROOT: [rootPath],
         children: [
+          { tabId: 'master/clients', label: 'クライアント管理', ROOT: [rootPath] },
+          { tabId: 'master/general-categories', label: '一般カテゴリ管理', ROOT: [rootPath] },
           { tabId: 'master/categories', label: 'カテゴリ管理', ROOT: [rootPath] },
           { tabId: 'master/rules', label: 'ルール管理', ROOT: [rootPath] },
-          { tabId: 'master/clients', label: 'クライアント管理', ROOT: [rootPath] },
           {
             tabId: 'master/rules/auto-create',
             label: '自動生成ルール',

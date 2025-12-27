@@ -118,7 +118,7 @@ export const EnhancedWorks = ({ works }: { works: any[] }) => {
           {/* 実績カード一覧 */}
           <div className="w-full">
             {workState.filter(work => work.description).length > 0 ? (
-              <div className="grid grid-cols-1 gap-6 xl:grid-cols-2  xl:gap-32">
+              <div className="grid grid-cols-1 gap-6   xl:gap-32">
                 {workState
                   .filter(work => work.description)
                   .map((work, index) => (

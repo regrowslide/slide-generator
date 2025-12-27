@@ -1,5 +1,28 @@
 // Hakobun Analysis - 顧客の声構造化システム
 
+// 業種マスタ
+model HakobunIndustry {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  code      String    @unique  // "restaurant", "sports_event"
+  name      String              // "飲食店", "スポーツイベント"
+
+  generalCategories HakobunIndustryGeneralCategory[]
+  clients           HakobunClient[]
+}
+
+// 業種別一般カテゴリプリセット
+model HakobunIndustryGeneralCategory {
+  id        Int      @id @default(autoincrement())
+  sortOrder Float    @default(0)
+
+  name        String  // "接客・サービス"
+  description String? // "スタッフの対応、接客態度..."
+
+  industry   HakobunIndustry @relation(fields: [industryId], references: [id], onDelete: Cascade)
+  industryId Int
+}
+
 // クライアント（組織）
 model HakobunClient {
   id        Int       @id @default(autoincrement())
@@ -9,6 +32,15 @@ model HakobunClient {
 
   clientId String @unique // "cafe_sample_01"
   name     String
+
+  // AI分析用設定
+  inputDataExplain  String? // 投稿データの説明（文節分け用ポ回答データの説明）
+  analysisStartDate DateTime? // 分析期間開始日
+  analysisEndDate   DateTime? // 分析期間終了日
+
+  // 業種紐づけ
+  industry   HakobunIndustry? @relation(fields: [industryId], references: [id])
+  industryId Int?
 
   HakobunCategory   HakobunCategory[]
   HakobunCorrection HakobunCorrection[]

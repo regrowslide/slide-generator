@@ -66,19 +66,22 @@ export default function CategoriesManagementPage() {
 
   // 保存
   const handleSave = async () => {
-    if (!globalClientId || !formData.category_code || !formData.general_category || !formData.specific_category) {
-      alert('必須項目を入力してください（クライアントが選択されていません）')
+    if (!globalClientId) {
+      alert('クライアントが選択されていません')
+      return
+    }
+
+    if (!formData.category_code || !formData.general_category || !formData.specific_category) {
+      alert('必須項目を入力してください')
       return
     }
 
     try {
       if (editingId) {
-
-
         // 更新
-        await fetch('/api/hakobun/categories', {
+        const res = await fetch('/api/hakobun/categories', {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
             id: editingId,
             general_category: formData.general_category,
@@ -86,11 +89,16 @@ export default function CategoriesManagementPage() {
             description: formData.description,
           }),
         })
+        const data = await res.json()
+        if (!data.success) {
+          alert(data.error || '更新に失敗しました')
+          return
+        }
       } else {
         // 新規作成
-        await fetch('/api/hakobun/categories', {
+        const res = await fetch('/api/hakobun/categories', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
             client_id: globalClientId,
             category_code: formData.category_code,
@@ -99,6 +107,11 @@ export default function CategoriesManagementPage() {
             description: formData.description,
           }),
         })
+        const data = await res.json()
+        if (!data.success) {
+          alert(data.error || '作成に失敗しました')
+          return
+        }
       }
       setShowForm(false)
       setEditingId(null)
@@ -107,6 +120,7 @@ export default function CategoriesManagementPage() {
         fetchCategories(globalClientId)
       }
     } catch (error) {
+      console.error('Save error:', error)
       alert('保存に失敗しました')
     }
   }

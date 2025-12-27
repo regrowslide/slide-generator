@@ -69,6 +69,8 @@ export const ModelName = {
   CounselingClient: 'CounselingClient',
   CounselingReservation: 'CounselingReservation',
   CounselingSlot: 'CounselingSlot',
+  HakobunIndustry: 'HakobunIndustry',
+  HakobunIndustryGeneralCategory: 'HakobunIndustryGeneralCategory',
   HakobunClient: 'HakobunClient',
   HakobunCategory: 'HakobunCategory',
   HakobunCorrection: 'HakobunCorrection',
@@ -460,13 +462,38 @@ export const CounselingSlotScalarFieldEnum = {
 export type CounselingSlotScalarFieldEnum = (typeof CounselingSlotScalarFieldEnum)[keyof typeof CounselingSlotScalarFieldEnum]
 
 
+export const HakobunIndustryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  code: 'code',
+  name: 'name'
+} as const
+
+export type HakobunIndustryScalarFieldEnum = (typeof HakobunIndustryScalarFieldEnum)[keyof typeof HakobunIndustryScalarFieldEnum]
+
+
+export const HakobunIndustryGeneralCategoryScalarFieldEnum = {
+  id: 'id',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  description: 'description',
+  industryId: 'industryId'
+} as const
+
+export type HakobunIndustryGeneralCategoryScalarFieldEnum = (typeof HakobunIndustryGeneralCategoryScalarFieldEnum)[keyof typeof HakobunIndustryGeneralCategoryScalarFieldEnum]
+
+
 export const HakobunClientScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   sortOrder: 'sortOrder',
   clientId: 'clientId',
-  name: 'name'
+  name: 'name',
+  inputDataExplain: 'inputDataExplain',
+  analysisStartDate: 'analysisStartDate',
+  analysisEndDate: 'analysisEndDate',
+  industryId: 'industryId'
 } as const
 
 export type HakobunClientScalarFieldEnum = (typeof HakobunClientScalarFieldEnum)[keyof typeof HakobunClientScalarFieldEnum]

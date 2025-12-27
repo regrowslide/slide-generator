@@ -402,6 +402,8 @@ export const ModelName = {
   CounselingClient: 'CounselingClient',
   CounselingReservation: 'CounselingReservation',
   CounselingSlot: 'CounselingSlot',
+  HakobunIndustry: 'HakobunIndustry',
+  HakobunIndustryGeneralCategory: 'HakobunIndustryGeneralCategory',
   HakobunClient: 'HakobunClient',
   HakobunCategory: 'HakobunCategory',
   HakobunCorrection: 'HakobunCorrection',
@@ -491,7 +493,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "hakobunClient" | "hakobunCategory" | "hakobunCorrection" | "hakobunRule" | "hakobunVoice" | "keihiExpense" | "keihiAttachment" | "keihiAccountMaster" | "keihiOptionMaster" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "stockConfig" | "stock" | "stockHistory" | "tbmBase" | "tbmRouteGroupCalendar" | "tbmKeihi" | "tbmDriveScheduleImage" | "tbmBase_MonthConfig" | "tbmVehicle" | "tbmFuelCard" | "tbmVehicleMaintenanceRecord" | "tbmRouteGroup" | "tbmRouteGroupFee" | "tbmRouteGroupStandardSalary" | "tbmMonthlyConfigForRouteGroup" | "mid_TbmRouteGroup_TbmCustomer" | "tbmBillingAddress" | "tbmInvoiceDetail" | "tbmCustomer" | "tbmInvoiceManualEdit" | "tbmRefuelHistory" | "tbmCarWashHistory" | "tbmDriveSchedule" | "tbmEtcMeisai" | "etcCsvRaw" | "odometerInput" | "userWorkStatus" | "kyuyoTableRecord" | "tbmRouteGroupShare" | "tbmRelatedRouteGroup" | "teamSynapseAnalysis" | "exerciseMaster" | "workoutLog"
+    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "hakobunIndustry" | "hakobunIndustryGeneralCategory" | "hakobunClient" | "hakobunCategory" | "hakobunCorrection" | "hakobunRule" | "hakobunVoice" | "keihiExpense" | "keihiAttachment" | "keihiAccountMaster" | "keihiOptionMaster" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "stockConfig" | "stock" | "stockHistory" | "tbmBase" | "tbmRouteGroupCalendar" | "tbmKeihi" | "tbmDriveScheduleImage" | "tbmBase_MonthConfig" | "tbmVehicle" | "tbmFuelCard" | "tbmVehicleMaintenanceRecord" | "tbmRouteGroup" | "tbmRouteGroupFee" | "tbmRouteGroupStandardSalary" | "tbmMonthlyConfigForRouteGroup" | "mid_TbmRouteGroup_TbmCustomer" | "tbmBillingAddress" | "tbmInvoiceDetail" | "tbmCustomer" | "tbmInvoiceManualEdit" | "tbmRefuelHistory" | "tbmCarWashHistory" | "tbmDriveSchedule" | "tbmEtcMeisai" | "etcCsvRaw" | "odometerInput" | "userWorkStatus" | "kyuyoTableRecord" | "tbmRouteGroupShare" | "tbmRelatedRouteGroup" | "teamSynapseAnalysis" | "exerciseMaster" | "workoutLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1824,6 +1826,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CounselingSlotCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CounselingSlotCountAggregateOutputType> | number
+        }
+      }
+    }
+    HakobunIndustry: {
+      payload: Prisma.$HakobunIndustryPayload<ExtArgs>
+      fields: Prisma.HakobunIndustryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HakobunIndustryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HakobunIndustryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryPayload>
+        }
+        findFirst: {
+          args: Prisma.HakobunIndustryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HakobunIndustryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryPayload>
+        }
+        findMany: {
+          args: Prisma.HakobunIndustryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryPayload>[]
+        }
+        create: {
+          args: Prisma.HakobunIndustryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryPayload>
+        }
+        createMany: {
+          args: Prisma.HakobunIndustryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HakobunIndustryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryPayload>[]
+        }
+        delete: {
+          args: Prisma.HakobunIndustryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryPayload>
+        }
+        update: {
+          args: Prisma.HakobunIndustryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryPayload>
+        }
+        deleteMany: {
+          args: Prisma.HakobunIndustryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HakobunIndustryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HakobunIndustryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryPayload>[]
+        }
+        upsert: {
+          args: Prisma.HakobunIndustryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryPayload>
+        }
+        aggregate: {
+          args: Prisma.HakobunIndustryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHakobunIndustry>
+        }
+        groupBy: {
+          args: Prisma.HakobunIndustryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HakobunIndustryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HakobunIndustryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HakobunIndustryCountAggregateOutputType> | number
+        }
+      }
+    }
+    HakobunIndustryGeneralCategory: {
+      payload: Prisma.$HakobunIndustryGeneralCategoryPayload<ExtArgs>
+      fields: Prisma.HakobunIndustryGeneralCategoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HakobunIndustryGeneralCategoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryGeneralCategoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HakobunIndustryGeneralCategoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryGeneralCategoryPayload>
+        }
+        findFirst: {
+          args: Prisma.HakobunIndustryGeneralCategoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryGeneralCategoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HakobunIndustryGeneralCategoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryGeneralCategoryPayload>
+        }
+        findMany: {
+          args: Prisma.HakobunIndustryGeneralCategoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryGeneralCategoryPayload>[]
+        }
+        create: {
+          args: Prisma.HakobunIndustryGeneralCategoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryGeneralCategoryPayload>
+        }
+        createMany: {
+          args: Prisma.HakobunIndustryGeneralCategoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HakobunIndustryGeneralCategoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryGeneralCategoryPayload>[]
+        }
+        delete: {
+          args: Prisma.HakobunIndustryGeneralCategoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryGeneralCategoryPayload>
+        }
+        update: {
+          args: Prisma.HakobunIndustryGeneralCategoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryGeneralCategoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.HakobunIndustryGeneralCategoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HakobunIndustryGeneralCategoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HakobunIndustryGeneralCategoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryGeneralCategoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.HakobunIndustryGeneralCategoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HakobunIndustryGeneralCategoryPayload>
+        }
+        aggregate: {
+          args: Prisma.HakobunIndustryGeneralCategoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHakobunIndustryGeneralCategory>
+        }
+        groupBy: {
+          args: Prisma.HakobunIndustryGeneralCategoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HakobunIndustryGeneralCategoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HakobunIndustryGeneralCategoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HakobunIndustryGeneralCategoryCountAggregateOutputType> | number
         }
       }
     }
@@ -7641,13 +7791,38 @@ export const CounselingSlotScalarFieldEnum = {
 export type CounselingSlotScalarFieldEnum = (typeof CounselingSlotScalarFieldEnum)[keyof typeof CounselingSlotScalarFieldEnum]
 
 
+export const HakobunIndustryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  code: 'code',
+  name: 'name'
+} as const
+
+export type HakobunIndustryScalarFieldEnum = (typeof HakobunIndustryScalarFieldEnum)[keyof typeof HakobunIndustryScalarFieldEnum]
+
+
+export const HakobunIndustryGeneralCategoryScalarFieldEnum = {
+  id: 'id',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  description: 'description',
+  industryId: 'industryId'
+} as const
+
+export type HakobunIndustryGeneralCategoryScalarFieldEnum = (typeof HakobunIndustryGeneralCategoryScalarFieldEnum)[keyof typeof HakobunIndustryGeneralCategoryScalarFieldEnum]
+
+
 export const HakobunClientScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   sortOrder: 'sortOrder',
   clientId: 'clientId',
-  name: 'name'
+  name: 'name',
+  inputDataExplain: 'inputDataExplain',
+  analysisStartDate: 'analysisStartDate',
+  analysisEndDate: 'analysisEndDate',
+  industryId: 'industryId'
 } as const
 
 export type HakobunClientScalarFieldEnum = (typeof HakobunClientScalarFieldEnum)[keyof typeof HakobunClientScalarFieldEnum]
@@ -9186,6 +9361,8 @@ export type GlobalOmitConfig = {
   counselingClient?: Prisma.CounselingClientOmit
   counselingReservation?: Prisma.CounselingReservationOmit
   counselingSlot?: Prisma.CounselingSlotOmit
+  hakobunIndustry?: Prisma.HakobunIndustryOmit
+  hakobunIndustryGeneralCategory?: Prisma.HakobunIndustryGeneralCategoryOmit
   hakobunClient?: Prisma.HakobunClientOmit
   hakobunCategory?: Prisma.HakobunCategoryOmit
   hakobunCorrection?: Prisma.HakobunCorrectionOmit

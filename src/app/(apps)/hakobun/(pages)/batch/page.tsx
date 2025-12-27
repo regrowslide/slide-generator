@@ -40,6 +40,8 @@ export default function BatchAnalysisPage() {
   const [categories, setCategories] = useState<HakobunCategory[]>([])
   const [tableRows, setTableRows] = useState<TableRow[]>([])
   const [isSavingAll, setIsSavingAll] = useState(false)
+  const [industryGeneralCategories, setIndustryGeneralCategories] = useState<{name: string; description: string | null}[]>([])
+  const [proposedCategoryGeneralCategories, setProposedCategoryGeneralCategories] = useState<Record<number, string>>({})
 
   // カテゴリ作成モーダル
   const categoryModal = useModal<number | null>()
@@ -61,6 +63,26 @@ export default function BatchAnalysisPage() {
           }
         })
         .catch(error => console.error('Failed to fetch categories:', error))
+
+      // 業種別一般カテゴリ取得
+      fetch(`/api/hakobun/clients`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.clients) {
+            const client = data.clients.find((c: any) => c.clientId === selectedClient.clientId)
+            if (client?.industryId) {
+              fetch(`/api/hakobun/industries/${client.industryId}/general-categories`)
+                .then(res => res.json())
+                .then(industryData => {
+                  if (industryData.success) {
+                    setIndustryGeneralCategories(industryData.generalCategories)
+                  }
+                })
+                .catch(error => console.error('Failed to fetch industry general categories:', error))
+            }
+          }
+        })
+        .catch(error => console.error('Failed to fetch clients:', error))
     }
   }, [selectedClient])
 
@@ -441,28 +463,110 @@ export default function BatchAnalysisPage() {
               <Sparkles className="w-5 h-5 text-purple-600" />
               <h2 className="text-lg font-bold text-gray-900">提案された新規カテゴリ</h2>
             </R_Stack>
-            <C_Stack className="gap-3">
-              {proposedCategories.map((proposed, index) => (
-                <div key={index} className="bg-white rounded-lg p-4 border border-purple-200">
-                  <R_Stack className="justify-between items-start">
-                    <div className="flex-1">
-                      <R_Stack className="items-center gap-2 mb-2">
-                        <span className="font-medium text-gray-900">{proposed.category}</span>
-                        <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded">
-                          {proposed.count}回使用
-                        </span>
-                      </R_Stack>
-                      <p className="text-sm text-gray-600 mb-2">使用例:</p>
-                      <ul className="text-xs text-gray-500 space-y-1">
-                        {proposed.examples.map((example, i) => (
-                          <li key={i} className="pl-2">• {example.substring(0, 80)}...</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </R_Stack>
-                </div>
-              ))}
-            </C_Stack>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="bg-purple-100 border-b border-purple-300">
+                    <th className="text-left text-xs font-medium text-gray-700 uppercase tracking-wider p-3">カテゴリ名</th>
+                    <th className="text-left text-xs font-medium text-gray-700 uppercase tracking-wider p-3">一般カテゴリ</th>
+                    <th className="text-left text-xs font-medium text-gray-700 uppercase tracking-wider p-3">出現回数</th>
+                    <th className="text-left text-xs font-medium text-gray-700 uppercase tracking-wider p-3">登録</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {proposedCategories.map((proposed, index) => {
+                    const generalCategory = proposedCategoryGeneralCategories[index] || (industryGeneralCategories.length > 0 ? industryGeneralCategories[0].name : '')
+                    return (
+                      <tr key={index} className="bg-white border-b border-purple-200 hover:bg-purple-50">
+                        <td className="p-3">
+                          <div className="font-medium text-gray-900">{proposed.category}</div>
+                          <details className="mt-1">
+                            <summary className="text-xs text-gray-500 cursor-pointer">使用例を見る</summary>
+                            <ul className="text-xs text-gray-500 space-y-1 mt-1 pl-4">
+                              {proposed.examples.map((example, i) => (
+                                <li key={i}>• {example.substring(0, 80)}...</li>
+                              ))}
+                            </ul>
+                          </details>
+                        </td>
+                        <td className="p-3">
+                          {industryGeneralCategories.length > 0 ? (
+                            <select
+                              value={generalCategory}
+                              onChange={e => setProposedCategoryGeneralCategories({...proposedCategoryGeneralCategories, [index]: e.target.value})}
+                              className="text-sm border border-gray-300 rounded px-2 py-1 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white w-full"
+                            >
+                              {industryGeneralCategories.map(gc => (
+                                <option key={gc.name} value={gc.name}>{gc.name}</option>
+                              ))}
+                            </select>
+                          ) : (
+                            <span className="text-sm text-gray-500">業種が設定されていません</span>
+                          )}
+                        </td>
+                        <td className="p-3">
+                          <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">
+                            {proposed.count}回
+                          </span>
+                        </td>
+                        <td className="p-3">
+                          <button
+                            onClick={async () => {
+                              if (!selectedClient?.clientId) {
+                                alert('クライアントが選択されていません')
+                                return
+                              }
+                              if (!generalCategory) {
+                                alert('一般カテゴリを選択してください')
+                                return
+                              }
+                              try {
+                                const response = await fetch('/api/hakobun/categories', {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  body: JSON.stringify({
+                                    client_id: selectedClient.clientId,
+                                    category_code: `CAT_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                                    general_category: generalCategory,
+                                    specific_category: proposed.category,
+                                    description: null,
+                                  }),
+                                })
+                                const data = await response.json()
+                                if (data.success) {
+                                  alert('カテゴリを登録しました')
+                                  setCategories(prev => [...prev, data.category])
+                                  setProposedCategories(prev => prev.filter((_, i) => i !== index))
+                                  setProposedCategoryGeneralCategories(prev => {
+                                    const newState = {...prev}
+                                    delete newState[index]
+                                    return newState
+                                  })
+                                } else {
+                                  alert(`登録エラー: ${data.error}`)
+                                }
+                              } catch (error) {
+                                console.error('Category registration error:', error)
+                                alert('登録に失敗しました')
+                              }
+                            }}
+                            disabled={!generalCategory || industryGeneralCategories.length === 0}
+                            className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+                              !generalCategory || industryGeneralCategories.length === 0
+                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                : 'bg-blue-600 text-white hover:bg-blue-700'
+                            }`}
+                          >
+                            <Plus className="w-4 h-4" />
+                            登録
+                          </button>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
             <div className="mt-4 flex items-start gap-2 p-3 bg-blue-50 rounded-lg">
               <AlertCircle className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
               <div className="text-sm text-blue-700">
@@ -682,6 +786,7 @@ export default function BatchAnalysisPage() {
                           <option value="好意的">好意的</option>
                           <option value="不満">不満</option>
                           <option value="リクエスト">リクエスト</option>
+                          <option value="その他">その他</option>
                         </select>
                       </td>
                       <td className=" text-sm bg-blue-50">

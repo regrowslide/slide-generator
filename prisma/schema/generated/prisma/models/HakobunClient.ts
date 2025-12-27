@@ -29,11 +29,13 @@ export type AggregateHakobunClient = {
 export type HakobunClientAvgAggregateOutputType = {
   id: number | null
   sortOrder: number | null
+  industryId: number | null
 }
 
 export type HakobunClientSumAggregateOutputType = {
   id: number | null
   sortOrder: number | null
+  industryId: number | null
 }
 
 export type HakobunClientMinAggregateOutputType = {
@@ -43,6 +45,10 @@ export type HakobunClientMinAggregateOutputType = {
   sortOrder: number | null
   clientId: string | null
   name: string | null
+  inputDataExplain: string | null
+  analysisStartDate: Date | null
+  analysisEndDate: Date | null
+  industryId: number | null
 }
 
 export type HakobunClientMaxAggregateOutputType = {
@@ -52,6 +58,10 @@ export type HakobunClientMaxAggregateOutputType = {
   sortOrder: number | null
   clientId: string | null
   name: string | null
+  inputDataExplain: string | null
+  analysisStartDate: Date | null
+  analysisEndDate: Date | null
+  industryId: number | null
 }
 
 export type HakobunClientCountAggregateOutputType = {
@@ -61,6 +71,10 @@ export type HakobunClientCountAggregateOutputType = {
   sortOrder: number
   clientId: number
   name: number
+  inputDataExplain: number
+  analysisStartDate: number
+  analysisEndDate: number
+  industryId: number
   _all: number
 }
 
@@ -68,11 +82,13 @@ export type HakobunClientCountAggregateOutputType = {
 export type HakobunClientAvgAggregateInputType = {
   id?: true
   sortOrder?: true
+  industryId?: true
 }
 
 export type HakobunClientSumAggregateInputType = {
   id?: true
   sortOrder?: true
+  industryId?: true
 }
 
 export type HakobunClientMinAggregateInputType = {
@@ -82,6 +98,10 @@ export type HakobunClientMinAggregateInputType = {
   sortOrder?: true
   clientId?: true
   name?: true
+  inputDataExplain?: true
+  analysisStartDate?: true
+  analysisEndDate?: true
+  industryId?: true
 }
 
 export type HakobunClientMaxAggregateInputType = {
@@ -91,6 +111,10 @@ export type HakobunClientMaxAggregateInputType = {
   sortOrder?: true
   clientId?: true
   name?: true
+  inputDataExplain?: true
+  analysisStartDate?: true
+  analysisEndDate?: true
+  industryId?: true
 }
 
 export type HakobunClientCountAggregateInputType = {
@@ -100,6 +124,10 @@ export type HakobunClientCountAggregateInputType = {
   sortOrder?: true
   clientId?: true
   name?: true
+  inputDataExplain?: true
+  analysisStartDate?: true
+  analysisEndDate?: true
+  industryId?: true
   _all?: true
 }
 
@@ -196,6 +224,10 @@ export type HakobunClientGroupByOutputType = {
   sortOrder: number
   clientId: string
   name: string
+  inputDataExplain: string | null
+  analysisStartDate: Date | null
+  analysisEndDate: Date | null
+  industryId: number | null
   _count: HakobunClientCountAggregateOutputType | null
   _avg: HakobunClientAvgAggregateOutputType | null
   _sum: HakobunClientSumAggregateOutputType | null
@@ -228,6 +260,11 @@ export type HakobunClientWhereInput = {
   sortOrder?: Prisma.FloatFilter<"HakobunClient"> | number
   clientId?: Prisma.StringFilter<"HakobunClient"> | string
   name?: Prisma.StringFilter<"HakobunClient"> | string
+  inputDataExplain?: Prisma.StringNullableFilter<"HakobunClient"> | string | null
+  analysisStartDate?: Prisma.DateTimeNullableFilter<"HakobunClient"> | Date | string | null
+  analysisEndDate?: Prisma.DateTimeNullableFilter<"HakobunClient"> | Date | string | null
+  industryId?: Prisma.IntNullableFilter<"HakobunClient"> | number | null
+  industry?: Prisma.XOR<Prisma.HakobunIndustryNullableScalarRelationFilter, Prisma.HakobunIndustryWhereInput> | null
   HakobunCategory?: Prisma.HakobunCategoryListRelationFilter
   HakobunCorrection?: Prisma.HakobunCorrectionListRelationFilter
   HakobunRule?: Prisma.HakobunRuleListRelationFilter
@@ -241,6 +278,11 @@ export type HakobunClientOrderByWithRelationInput = {
   sortOrder?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  inputDataExplain?: Prisma.SortOrderInput | Prisma.SortOrder
+  analysisStartDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  analysisEndDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  industryId?: Prisma.SortOrderInput | Prisma.SortOrder
+  industry?: Prisma.HakobunIndustryOrderByWithRelationInput
   HakobunCategory?: Prisma.HakobunCategoryOrderByRelationAggregateInput
   HakobunCorrection?: Prisma.HakobunCorrectionOrderByRelationAggregateInput
   HakobunRule?: Prisma.HakobunRuleOrderByRelationAggregateInput
@@ -257,6 +299,11 @@ export type HakobunClientWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeNullableFilter<"HakobunClient"> | Date | string | null
   sortOrder?: Prisma.FloatFilter<"HakobunClient"> | number
   name?: Prisma.StringFilter<"HakobunClient"> | string
+  inputDataExplain?: Prisma.StringNullableFilter<"HakobunClient"> | string | null
+  analysisStartDate?: Prisma.DateTimeNullableFilter<"HakobunClient"> | Date | string | null
+  analysisEndDate?: Prisma.DateTimeNullableFilter<"HakobunClient"> | Date | string | null
+  industryId?: Prisma.IntNullableFilter<"HakobunClient"> | number | null
+  industry?: Prisma.XOR<Prisma.HakobunIndustryNullableScalarRelationFilter, Prisma.HakobunIndustryWhereInput> | null
   HakobunCategory?: Prisma.HakobunCategoryListRelationFilter
   HakobunCorrection?: Prisma.HakobunCorrectionListRelationFilter
   HakobunRule?: Prisma.HakobunRuleListRelationFilter
@@ -270,6 +317,10 @@ export type HakobunClientOrderByWithAggregationInput = {
   sortOrder?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  inputDataExplain?: Prisma.SortOrderInput | Prisma.SortOrder
+  analysisStartDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  analysisEndDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  industryId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.HakobunClientCountOrderByAggregateInput
   _avg?: Prisma.HakobunClientAvgOrderByAggregateInput
   _max?: Prisma.HakobunClientMaxOrderByAggregateInput
@@ -287,6 +338,10 @@ export type HakobunClientScalarWhereWithAggregatesInput = {
   sortOrder?: Prisma.FloatWithAggregatesFilter<"HakobunClient"> | number
   clientId?: Prisma.StringWithAggregatesFilter<"HakobunClient"> | string
   name?: Prisma.StringWithAggregatesFilter<"HakobunClient"> | string
+  inputDataExplain?: Prisma.StringNullableWithAggregatesFilter<"HakobunClient"> | string | null
+  analysisStartDate?: Prisma.DateTimeNullableWithAggregatesFilter<"HakobunClient"> | Date | string | null
+  analysisEndDate?: Prisma.DateTimeNullableWithAggregatesFilter<"HakobunClient"> | Date | string | null
+  industryId?: Prisma.IntNullableWithAggregatesFilter<"HakobunClient"> | number | null
 }
 
 export type HakobunClientCreateInput = {
@@ -295,6 +350,10 @@ export type HakobunClientCreateInput = {
   sortOrder?: number
   clientId: string
   name: string
+  inputDataExplain?: string | null
+  analysisStartDate?: Date | string | null
+  analysisEndDate?: Date | string | null
+  industry?: Prisma.HakobunIndustryCreateNestedOneWithoutClientsInput
   HakobunCategory?: Prisma.HakobunCategoryCreateNestedManyWithoutHakobunClientInput
   HakobunCorrection?: Prisma.HakobunCorrectionCreateNestedManyWithoutHakobunClientInput
   HakobunRule?: Prisma.HakobunRuleCreateNestedManyWithoutHakobunClientInput
@@ -308,6 +367,10 @@ export type HakobunClientUncheckedCreateInput = {
   sortOrder?: number
   clientId: string
   name: string
+  inputDataExplain?: string | null
+  analysisStartDate?: Date | string | null
+  analysisEndDate?: Date | string | null
+  industryId?: number | null
   HakobunCategory?: Prisma.HakobunCategoryUncheckedCreateNestedManyWithoutHakobunClientInput
   HakobunCorrection?: Prisma.HakobunCorrectionUncheckedCreateNestedManyWithoutHakobunClientInput
   HakobunRule?: Prisma.HakobunRuleUncheckedCreateNestedManyWithoutHakobunClientInput
@@ -320,6 +383,10 @@ export type HakobunClientUpdateInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  inputDataExplain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  analysisEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  industry?: Prisma.HakobunIndustryUpdateOneWithoutClientsNestedInput
   HakobunCategory?: Prisma.HakobunCategoryUpdateManyWithoutHakobunClientNestedInput
   HakobunCorrection?: Prisma.HakobunCorrectionUpdateManyWithoutHakobunClientNestedInput
   HakobunRule?: Prisma.HakobunRuleUpdateManyWithoutHakobunClientNestedInput
@@ -333,6 +400,10 @@ export type HakobunClientUncheckedUpdateInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  inputDataExplain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  analysisEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  industryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   HakobunCategory?: Prisma.HakobunCategoryUncheckedUpdateManyWithoutHakobunClientNestedInput
   HakobunCorrection?: Prisma.HakobunCorrectionUncheckedUpdateManyWithoutHakobunClientNestedInput
   HakobunRule?: Prisma.HakobunRuleUncheckedUpdateManyWithoutHakobunClientNestedInput
@@ -346,6 +417,10 @@ export type HakobunClientCreateManyInput = {
   sortOrder?: number
   clientId: string
   name: string
+  inputDataExplain?: string | null
+  analysisStartDate?: Date | string | null
+  analysisEndDate?: Date | string | null
+  industryId?: number | null
 }
 
 export type HakobunClientUpdateManyMutationInput = {
@@ -354,6 +429,9 @@ export type HakobunClientUpdateManyMutationInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  inputDataExplain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  analysisEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type HakobunClientUncheckedUpdateManyInput = {
@@ -363,6 +441,20 @@ export type HakobunClientUncheckedUpdateManyInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  inputDataExplain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  analysisEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  industryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type HakobunClientListRelationFilter = {
+  every?: Prisma.HakobunClientWhereInput
+  some?: Prisma.HakobunClientWhereInput
+  none?: Prisma.HakobunClientWhereInput
+}
+
+export type HakobunClientOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type HakobunClientCountOrderByAggregateInput = {
@@ -372,11 +464,16 @@ export type HakobunClientCountOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  inputDataExplain?: Prisma.SortOrder
+  analysisStartDate?: Prisma.SortOrder
+  analysisEndDate?: Prisma.SortOrder
+  industryId?: Prisma.SortOrder
 }
 
 export type HakobunClientAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
+  industryId?: Prisma.SortOrder
 }
 
 export type HakobunClientMaxOrderByAggregateInput = {
@@ -386,6 +483,10 @@ export type HakobunClientMaxOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  inputDataExplain?: Prisma.SortOrder
+  analysisStartDate?: Prisma.SortOrder
+  analysisEndDate?: Prisma.SortOrder
+  industryId?: Prisma.SortOrder
 }
 
 export type HakobunClientMinOrderByAggregateInput = {
@@ -395,16 +496,63 @@ export type HakobunClientMinOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  inputDataExplain?: Prisma.SortOrder
+  analysisStartDate?: Prisma.SortOrder
+  analysisEndDate?: Prisma.SortOrder
+  industryId?: Prisma.SortOrder
 }
 
 export type HakobunClientSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
+  industryId?: Prisma.SortOrder
 }
 
 export type HakobunClientScalarRelationFilter = {
   is?: Prisma.HakobunClientWhereInput
   isNot?: Prisma.HakobunClientWhereInput
+}
+
+export type HakobunClientCreateNestedManyWithoutIndustryInput = {
+  create?: Prisma.XOR<Prisma.HakobunClientCreateWithoutIndustryInput, Prisma.HakobunClientUncheckedCreateWithoutIndustryInput> | Prisma.HakobunClientCreateWithoutIndustryInput[] | Prisma.HakobunClientUncheckedCreateWithoutIndustryInput[]
+  connectOrCreate?: Prisma.HakobunClientCreateOrConnectWithoutIndustryInput | Prisma.HakobunClientCreateOrConnectWithoutIndustryInput[]
+  createMany?: Prisma.HakobunClientCreateManyIndustryInputEnvelope
+  connect?: Prisma.HakobunClientWhereUniqueInput | Prisma.HakobunClientWhereUniqueInput[]
+}
+
+export type HakobunClientUncheckedCreateNestedManyWithoutIndustryInput = {
+  create?: Prisma.XOR<Prisma.HakobunClientCreateWithoutIndustryInput, Prisma.HakobunClientUncheckedCreateWithoutIndustryInput> | Prisma.HakobunClientCreateWithoutIndustryInput[] | Prisma.HakobunClientUncheckedCreateWithoutIndustryInput[]
+  connectOrCreate?: Prisma.HakobunClientCreateOrConnectWithoutIndustryInput | Prisma.HakobunClientCreateOrConnectWithoutIndustryInput[]
+  createMany?: Prisma.HakobunClientCreateManyIndustryInputEnvelope
+  connect?: Prisma.HakobunClientWhereUniqueInput | Prisma.HakobunClientWhereUniqueInput[]
+}
+
+export type HakobunClientUpdateManyWithoutIndustryNestedInput = {
+  create?: Prisma.XOR<Prisma.HakobunClientCreateWithoutIndustryInput, Prisma.HakobunClientUncheckedCreateWithoutIndustryInput> | Prisma.HakobunClientCreateWithoutIndustryInput[] | Prisma.HakobunClientUncheckedCreateWithoutIndustryInput[]
+  connectOrCreate?: Prisma.HakobunClientCreateOrConnectWithoutIndustryInput | Prisma.HakobunClientCreateOrConnectWithoutIndustryInput[]
+  upsert?: Prisma.HakobunClientUpsertWithWhereUniqueWithoutIndustryInput | Prisma.HakobunClientUpsertWithWhereUniqueWithoutIndustryInput[]
+  createMany?: Prisma.HakobunClientCreateManyIndustryInputEnvelope
+  set?: Prisma.HakobunClientWhereUniqueInput | Prisma.HakobunClientWhereUniqueInput[]
+  disconnect?: Prisma.HakobunClientWhereUniqueInput | Prisma.HakobunClientWhereUniqueInput[]
+  delete?: Prisma.HakobunClientWhereUniqueInput | Prisma.HakobunClientWhereUniqueInput[]
+  connect?: Prisma.HakobunClientWhereUniqueInput | Prisma.HakobunClientWhereUniqueInput[]
+  update?: Prisma.HakobunClientUpdateWithWhereUniqueWithoutIndustryInput | Prisma.HakobunClientUpdateWithWhereUniqueWithoutIndustryInput[]
+  updateMany?: Prisma.HakobunClientUpdateManyWithWhereWithoutIndustryInput | Prisma.HakobunClientUpdateManyWithWhereWithoutIndustryInput[]
+  deleteMany?: Prisma.HakobunClientScalarWhereInput | Prisma.HakobunClientScalarWhereInput[]
+}
+
+export type HakobunClientUncheckedUpdateManyWithoutIndustryNestedInput = {
+  create?: Prisma.XOR<Prisma.HakobunClientCreateWithoutIndustryInput, Prisma.HakobunClientUncheckedCreateWithoutIndustryInput> | Prisma.HakobunClientCreateWithoutIndustryInput[] | Prisma.HakobunClientUncheckedCreateWithoutIndustryInput[]
+  connectOrCreate?: Prisma.HakobunClientCreateOrConnectWithoutIndustryInput | Prisma.HakobunClientCreateOrConnectWithoutIndustryInput[]
+  upsert?: Prisma.HakobunClientUpsertWithWhereUniqueWithoutIndustryInput | Prisma.HakobunClientUpsertWithWhereUniqueWithoutIndustryInput[]
+  createMany?: Prisma.HakobunClientCreateManyIndustryInputEnvelope
+  set?: Prisma.HakobunClientWhereUniqueInput | Prisma.HakobunClientWhereUniqueInput[]
+  disconnect?: Prisma.HakobunClientWhereUniqueInput | Prisma.HakobunClientWhereUniqueInput[]
+  delete?: Prisma.HakobunClientWhereUniqueInput | Prisma.HakobunClientWhereUniqueInput[]
+  connect?: Prisma.HakobunClientWhereUniqueInput | Prisma.HakobunClientWhereUniqueInput[]
+  update?: Prisma.HakobunClientUpdateWithWhereUniqueWithoutIndustryInput | Prisma.HakobunClientUpdateWithWhereUniqueWithoutIndustryInput[]
+  updateMany?: Prisma.HakobunClientUpdateManyWithWhereWithoutIndustryInput | Prisma.HakobunClientUpdateManyWithWhereWithoutIndustryInput[]
+  deleteMany?: Prisma.HakobunClientScalarWhereInput | Prisma.HakobunClientScalarWhereInput[]
 }
 
 export type HakobunClientCreateNestedOneWithoutHakobunCategoryInput = {
@@ -463,12 +611,89 @@ export type HakobunClientUpdateOneRequiredWithoutHakobunVoiceNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.HakobunClientUpdateToOneWithWhereWithoutHakobunVoiceInput, Prisma.HakobunClientUpdateWithoutHakobunVoiceInput>, Prisma.HakobunClientUncheckedUpdateWithoutHakobunVoiceInput>
 }
 
+export type HakobunClientCreateWithoutIndustryInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  clientId: string
+  name: string
+  inputDataExplain?: string | null
+  analysisStartDate?: Date | string | null
+  analysisEndDate?: Date | string | null
+  HakobunCategory?: Prisma.HakobunCategoryCreateNestedManyWithoutHakobunClientInput
+  HakobunCorrection?: Prisma.HakobunCorrectionCreateNestedManyWithoutHakobunClientInput
+  HakobunRule?: Prisma.HakobunRuleCreateNestedManyWithoutHakobunClientInput
+  HakobunVoice?: Prisma.HakobunVoiceCreateNestedManyWithoutHakobunClientInput
+}
+
+export type HakobunClientUncheckedCreateWithoutIndustryInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  clientId: string
+  name: string
+  inputDataExplain?: string | null
+  analysisStartDate?: Date | string | null
+  analysisEndDate?: Date | string | null
+  HakobunCategory?: Prisma.HakobunCategoryUncheckedCreateNestedManyWithoutHakobunClientInput
+  HakobunCorrection?: Prisma.HakobunCorrectionUncheckedCreateNestedManyWithoutHakobunClientInput
+  HakobunRule?: Prisma.HakobunRuleUncheckedCreateNestedManyWithoutHakobunClientInput
+  HakobunVoice?: Prisma.HakobunVoiceUncheckedCreateNestedManyWithoutHakobunClientInput
+}
+
+export type HakobunClientCreateOrConnectWithoutIndustryInput = {
+  where: Prisma.HakobunClientWhereUniqueInput
+  create: Prisma.XOR<Prisma.HakobunClientCreateWithoutIndustryInput, Prisma.HakobunClientUncheckedCreateWithoutIndustryInput>
+}
+
+export type HakobunClientCreateManyIndustryInputEnvelope = {
+  data: Prisma.HakobunClientCreateManyIndustryInput | Prisma.HakobunClientCreateManyIndustryInput[]
+  skipDuplicates?: boolean
+}
+
+export type HakobunClientUpsertWithWhereUniqueWithoutIndustryInput = {
+  where: Prisma.HakobunClientWhereUniqueInput
+  update: Prisma.XOR<Prisma.HakobunClientUpdateWithoutIndustryInput, Prisma.HakobunClientUncheckedUpdateWithoutIndustryInput>
+  create: Prisma.XOR<Prisma.HakobunClientCreateWithoutIndustryInput, Prisma.HakobunClientUncheckedCreateWithoutIndustryInput>
+}
+
+export type HakobunClientUpdateWithWhereUniqueWithoutIndustryInput = {
+  where: Prisma.HakobunClientWhereUniqueInput
+  data: Prisma.XOR<Prisma.HakobunClientUpdateWithoutIndustryInput, Prisma.HakobunClientUncheckedUpdateWithoutIndustryInput>
+}
+
+export type HakobunClientUpdateManyWithWhereWithoutIndustryInput = {
+  where: Prisma.HakobunClientScalarWhereInput
+  data: Prisma.XOR<Prisma.HakobunClientUpdateManyMutationInput, Prisma.HakobunClientUncheckedUpdateManyWithoutIndustryInput>
+}
+
+export type HakobunClientScalarWhereInput = {
+  AND?: Prisma.HakobunClientScalarWhereInput | Prisma.HakobunClientScalarWhereInput[]
+  OR?: Prisma.HakobunClientScalarWhereInput[]
+  NOT?: Prisma.HakobunClientScalarWhereInput | Prisma.HakobunClientScalarWhereInput[]
+  id?: Prisma.IntFilter<"HakobunClient"> | number
+  createdAt?: Prisma.DateTimeFilter<"HakobunClient"> | Date | string
+  updatedAt?: Prisma.DateTimeNullableFilter<"HakobunClient"> | Date | string | null
+  sortOrder?: Prisma.FloatFilter<"HakobunClient"> | number
+  clientId?: Prisma.StringFilter<"HakobunClient"> | string
+  name?: Prisma.StringFilter<"HakobunClient"> | string
+  inputDataExplain?: Prisma.StringNullableFilter<"HakobunClient"> | string | null
+  analysisStartDate?: Prisma.DateTimeNullableFilter<"HakobunClient"> | Date | string | null
+  analysisEndDate?: Prisma.DateTimeNullableFilter<"HakobunClient"> | Date | string | null
+  industryId?: Prisma.IntNullableFilter<"HakobunClient"> | number | null
+}
+
 export type HakobunClientCreateWithoutHakobunCategoryInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
   clientId: string
   name: string
+  inputDataExplain?: string | null
+  analysisStartDate?: Date | string | null
+  analysisEndDate?: Date | string | null
+  industry?: Prisma.HakobunIndustryCreateNestedOneWithoutClientsInput
   HakobunCorrection?: Prisma.HakobunCorrectionCreateNestedManyWithoutHakobunClientInput
   HakobunRule?: Prisma.HakobunRuleCreateNestedManyWithoutHakobunClientInput
   HakobunVoice?: Prisma.HakobunVoiceCreateNestedManyWithoutHakobunClientInput
@@ -481,6 +706,10 @@ export type HakobunClientUncheckedCreateWithoutHakobunCategoryInput = {
   sortOrder?: number
   clientId: string
   name: string
+  inputDataExplain?: string | null
+  analysisStartDate?: Date | string | null
+  analysisEndDate?: Date | string | null
+  industryId?: number | null
   HakobunCorrection?: Prisma.HakobunCorrectionUncheckedCreateNestedManyWithoutHakobunClientInput
   HakobunRule?: Prisma.HakobunRuleUncheckedCreateNestedManyWithoutHakobunClientInput
   HakobunVoice?: Prisma.HakobunVoiceUncheckedCreateNestedManyWithoutHakobunClientInput
@@ -508,6 +737,10 @@ export type HakobunClientUpdateWithoutHakobunCategoryInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  inputDataExplain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  analysisEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  industry?: Prisma.HakobunIndustryUpdateOneWithoutClientsNestedInput
   HakobunCorrection?: Prisma.HakobunCorrectionUpdateManyWithoutHakobunClientNestedInput
   HakobunRule?: Prisma.HakobunRuleUpdateManyWithoutHakobunClientNestedInput
   HakobunVoice?: Prisma.HakobunVoiceUpdateManyWithoutHakobunClientNestedInput
@@ -520,6 +753,10 @@ export type HakobunClientUncheckedUpdateWithoutHakobunCategoryInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  inputDataExplain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  analysisEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  industryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   HakobunCorrection?: Prisma.HakobunCorrectionUncheckedUpdateManyWithoutHakobunClientNestedInput
   HakobunRule?: Prisma.HakobunRuleUncheckedUpdateManyWithoutHakobunClientNestedInput
   HakobunVoice?: Prisma.HakobunVoiceUncheckedUpdateManyWithoutHakobunClientNestedInput
@@ -531,6 +768,10 @@ export type HakobunClientCreateWithoutHakobunCorrectionInput = {
   sortOrder?: number
   clientId: string
   name: string
+  inputDataExplain?: string | null
+  analysisStartDate?: Date | string | null
+  analysisEndDate?: Date | string | null
+  industry?: Prisma.HakobunIndustryCreateNestedOneWithoutClientsInput
   HakobunCategory?: Prisma.HakobunCategoryCreateNestedManyWithoutHakobunClientInput
   HakobunRule?: Prisma.HakobunRuleCreateNestedManyWithoutHakobunClientInput
   HakobunVoice?: Prisma.HakobunVoiceCreateNestedManyWithoutHakobunClientInput
@@ -543,6 +784,10 @@ export type HakobunClientUncheckedCreateWithoutHakobunCorrectionInput = {
   sortOrder?: number
   clientId: string
   name: string
+  inputDataExplain?: string | null
+  analysisStartDate?: Date | string | null
+  analysisEndDate?: Date | string | null
+  industryId?: number | null
   HakobunCategory?: Prisma.HakobunCategoryUncheckedCreateNestedManyWithoutHakobunClientInput
   HakobunRule?: Prisma.HakobunRuleUncheckedCreateNestedManyWithoutHakobunClientInput
   HakobunVoice?: Prisma.HakobunVoiceUncheckedCreateNestedManyWithoutHakobunClientInput
@@ -570,6 +815,10 @@ export type HakobunClientUpdateWithoutHakobunCorrectionInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  inputDataExplain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  analysisEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  industry?: Prisma.HakobunIndustryUpdateOneWithoutClientsNestedInput
   HakobunCategory?: Prisma.HakobunCategoryUpdateManyWithoutHakobunClientNestedInput
   HakobunRule?: Prisma.HakobunRuleUpdateManyWithoutHakobunClientNestedInput
   HakobunVoice?: Prisma.HakobunVoiceUpdateManyWithoutHakobunClientNestedInput
@@ -582,6 +831,10 @@ export type HakobunClientUncheckedUpdateWithoutHakobunCorrectionInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  inputDataExplain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  analysisEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  industryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   HakobunCategory?: Prisma.HakobunCategoryUncheckedUpdateManyWithoutHakobunClientNestedInput
   HakobunRule?: Prisma.HakobunRuleUncheckedUpdateManyWithoutHakobunClientNestedInput
   HakobunVoice?: Prisma.HakobunVoiceUncheckedUpdateManyWithoutHakobunClientNestedInput
@@ -593,6 +846,10 @@ export type HakobunClientCreateWithoutHakobunRuleInput = {
   sortOrder?: number
   clientId: string
   name: string
+  inputDataExplain?: string | null
+  analysisStartDate?: Date | string | null
+  analysisEndDate?: Date | string | null
+  industry?: Prisma.HakobunIndustryCreateNestedOneWithoutClientsInput
   HakobunCategory?: Prisma.HakobunCategoryCreateNestedManyWithoutHakobunClientInput
   HakobunCorrection?: Prisma.HakobunCorrectionCreateNestedManyWithoutHakobunClientInput
   HakobunVoice?: Prisma.HakobunVoiceCreateNestedManyWithoutHakobunClientInput
@@ -605,6 +862,10 @@ export type HakobunClientUncheckedCreateWithoutHakobunRuleInput = {
   sortOrder?: number
   clientId: string
   name: string
+  inputDataExplain?: string | null
+  analysisStartDate?: Date | string | null
+  analysisEndDate?: Date | string | null
+  industryId?: number | null
   HakobunCategory?: Prisma.HakobunCategoryUncheckedCreateNestedManyWithoutHakobunClientInput
   HakobunCorrection?: Prisma.HakobunCorrectionUncheckedCreateNestedManyWithoutHakobunClientInput
   HakobunVoice?: Prisma.HakobunVoiceUncheckedCreateNestedManyWithoutHakobunClientInput
@@ -632,6 +893,10 @@ export type HakobunClientUpdateWithoutHakobunRuleInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  inputDataExplain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  analysisEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  industry?: Prisma.HakobunIndustryUpdateOneWithoutClientsNestedInput
   HakobunCategory?: Prisma.HakobunCategoryUpdateManyWithoutHakobunClientNestedInput
   HakobunCorrection?: Prisma.HakobunCorrectionUpdateManyWithoutHakobunClientNestedInput
   HakobunVoice?: Prisma.HakobunVoiceUpdateManyWithoutHakobunClientNestedInput
@@ -644,6 +909,10 @@ export type HakobunClientUncheckedUpdateWithoutHakobunRuleInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  inputDataExplain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  analysisEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  industryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   HakobunCategory?: Prisma.HakobunCategoryUncheckedUpdateManyWithoutHakobunClientNestedInput
   HakobunCorrection?: Prisma.HakobunCorrectionUncheckedUpdateManyWithoutHakobunClientNestedInput
   HakobunVoice?: Prisma.HakobunVoiceUncheckedUpdateManyWithoutHakobunClientNestedInput
@@ -655,6 +924,10 @@ export type HakobunClientCreateWithoutHakobunVoiceInput = {
   sortOrder?: number
   clientId: string
   name: string
+  inputDataExplain?: string | null
+  analysisStartDate?: Date | string | null
+  analysisEndDate?: Date | string | null
+  industry?: Prisma.HakobunIndustryCreateNestedOneWithoutClientsInput
   HakobunCategory?: Prisma.HakobunCategoryCreateNestedManyWithoutHakobunClientInput
   HakobunCorrection?: Prisma.HakobunCorrectionCreateNestedManyWithoutHakobunClientInput
   HakobunRule?: Prisma.HakobunRuleCreateNestedManyWithoutHakobunClientInput
@@ -667,6 +940,10 @@ export type HakobunClientUncheckedCreateWithoutHakobunVoiceInput = {
   sortOrder?: number
   clientId: string
   name: string
+  inputDataExplain?: string | null
+  analysisStartDate?: Date | string | null
+  analysisEndDate?: Date | string | null
+  industryId?: number | null
   HakobunCategory?: Prisma.HakobunCategoryUncheckedCreateNestedManyWithoutHakobunClientInput
   HakobunCorrection?: Prisma.HakobunCorrectionUncheckedCreateNestedManyWithoutHakobunClientInput
   HakobunRule?: Prisma.HakobunRuleUncheckedCreateNestedManyWithoutHakobunClientInput
@@ -694,6 +971,10 @@ export type HakobunClientUpdateWithoutHakobunVoiceInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  inputDataExplain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  analysisEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  industry?: Prisma.HakobunIndustryUpdateOneWithoutClientsNestedInput
   HakobunCategory?: Prisma.HakobunCategoryUpdateManyWithoutHakobunClientNestedInput
   HakobunCorrection?: Prisma.HakobunCorrectionUpdateManyWithoutHakobunClientNestedInput
   HakobunRule?: Prisma.HakobunRuleUpdateManyWithoutHakobunClientNestedInput
@@ -706,9 +987,68 @@ export type HakobunClientUncheckedUpdateWithoutHakobunVoiceInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  inputDataExplain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  analysisEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  industryId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   HakobunCategory?: Prisma.HakobunCategoryUncheckedUpdateManyWithoutHakobunClientNestedInput
   HakobunCorrection?: Prisma.HakobunCorrectionUncheckedUpdateManyWithoutHakobunClientNestedInput
   HakobunRule?: Prisma.HakobunRuleUncheckedUpdateManyWithoutHakobunClientNestedInput
+}
+
+export type HakobunClientCreateManyIndustryInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  clientId: string
+  name: string
+  inputDataExplain?: string | null
+  analysisStartDate?: Date | string | null
+  analysisEndDate?: Date | string | null
+}
+
+export type HakobunClientUpdateWithoutIndustryInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  inputDataExplain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  analysisEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  HakobunCategory?: Prisma.HakobunCategoryUpdateManyWithoutHakobunClientNestedInput
+  HakobunCorrection?: Prisma.HakobunCorrectionUpdateManyWithoutHakobunClientNestedInput
+  HakobunRule?: Prisma.HakobunRuleUpdateManyWithoutHakobunClientNestedInput
+  HakobunVoice?: Prisma.HakobunVoiceUpdateManyWithoutHakobunClientNestedInput
+}
+
+export type HakobunClientUncheckedUpdateWithoutIndustryInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  inputDataExplain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  analysisEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  HakobunCategory?: Prisma.HakobunCategoryUncheckedUpdateManyWithoutHakobunClientNestedInput
+  HakobunCorrection?: Prisma.HakobunCorrectionUncheckedUpdateManyWithoutHakobunClientNestedInput
+  HakobunRule?: Prisma.HakobunRuleUncheckedUpdateManyWithoutHakobunClientNestedInput
+  HakobunVoice?: Prisma.HakobunVoiceUncheckedUpdateManyWithoutHakobunClientNestedInput
+}
+
+export type HakobunClientUncheckedUpdateManyWithoutIndustryInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  inputDataExplain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  analysisEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -776,6 +1116,11 @@ export type HakobunClientSelect<ExtArgs extends runtime.Types.Extensions.Interna
   sortOrder?: boolean
   clientId?: boolean
   name?: boolean
+  inputDataExplain?: boolean
+  analysisStartDate?: boolean
+  analysisEndDate?: boolean
+  industryId?: boolean
+  industry?: boolean | Prisma.HakobunClient$industryArgs<ExtArgs>
   HakobunCategory?: boolean | Prisma.HakobunClient$HakobunCategoryArgs<ExtArgs>
   HakobunCorrection?: boolean | Prisma.HakobunClient$HakobunCorrectionArgs<ExtArgs>
   HakobunRule?: boolean | Prisma.HakobunClient$HakobunRuleArgs<ExtArgs>
@@ -790,6 +1135,11 @@ export type HakobunClientSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   sortOrder?: boolean
   clientId?: boolean
   name?: boolean
+  inputDataExplain?: boolean
+  analysisStartDate?: boolean
+  analysisEndDate?: boolean
+  industryId?: boolean
+  industry?: boolean | Prisma.HakobunClient$industryArgs<ExtArgs>
 }, ExtArgs["result"]["hakobunClient"]>
 
 export type HakobunClientSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -799,6 +1149,11 @@ export type HakobunClientSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   sortOrder?: boolean
   clientId?: boolean
   name?: boolean
+  inputDataExplain?: boolean
+  analysisStartDate?: boolean
+  analysisEndDate?: boolean
+  industryId?: boolean
+  industry?: boolean | Prisma.HakobunClient$industryArgs<ExtArgs>
 }, ExtArgs["result"]["hakobunClient"]>
 
 export type HakobunClientSelectScalar = {
@@ -808,22 +1163,32 @@ export type HakobunClientSelectScalar = {
   sortOrder?: boolean
   clientId?: boolean
   name?: boolean
+  inputDataExplain?: boolean
+  analysisStartDate?: boolean
+  analysisEndDate?: boolean
+  industryId?: boolean
 }
 
-export type HakobunClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "clientId" | "name", ExtArgs["result"]["hakobunClient"]>
+export type HakobunClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "clientId" | "name" | "inputDataExplain" | "analysisStartDate" | "analysisEndDate" | "industryId", ExtArgs["result"]["hakobunClient"]>
 export type HakobunClientInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  industry?: boolean | Prisma.HakobunClient$industryArgs<ExtArgs>
   HakobunCategory?: boolean | Prisma.HakobunClient$HakobunCategoryArgs<ExtArgs>
   HakobunCorrection?: boolean | Prisma.HakobunClient$HakobunCorrectionArgs<ExtArgs>
   HakobunRule?: boolean | Prisma.HakobunClient$HakobunRuleArgs<ExtArgs>
   HakobunVoice?: boolean | Prisma.HakobunClient$HakobunVoiceArgs<ExtArgs>
   _count?: boolean | Prisma.HakobunClientCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type HakobunClientIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type HakobunClientIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type HakobunClientIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  industry?: boolean | Prisma.HakobunClient$industryArgs<ExtArgs>
+}
+export type HakobunClientIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  industry?: boolean | Prisma.HakobunClient$industryArgs<ExtArgs>
+}
 
 export type $HakobunClientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "HakobunClient"
   objects: {
+    industry: Prisma.$HakobunIndustryPayload<ExtArgs> | null
     HakobunCategory: Prisma.$HakobunCategoryPayload<ExtArgs>[]
     HakobunCorrection: Prisma.$HakobunCorrectionPayload<ExtArgs>[]
     HakobunRule: Prisma.$HakobunRulePayload<ExtArgs>[]
@@ -836,6 +1201,10 @@ export type $HakobunClientPayload<ExtArgs extends runtime.Types.Extensions.Inter
     sortOrder: number
     clientId: string
     name: string
+    inputDataExplain: string | null
+    analysisStartDate: Date | null
+    analysisEndDate: Date | null
+    industryId: number | null
   }, ExtArgs["result"]["hakobunClient"]>
   composites: {}
 }
@@ -1230,6 +1599,7 @@ readonly fields: HakobunClientFieldRefs;
  */
 export interface Prisma__HakobunClientClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  industry<T extends Prisma.HakobunClient$industryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HakobunClient$industryArgs<ExtArgs>>): Prisma.Prisma__HakobunIndustryClient<runtime.Types.Result.GetResult<Prisma.$HakobunIndustryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   HakobunCategory<T extends Prisma.HakobunClient$HakobunCategoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HakobunClient$HakobunCategoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HakobunCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   HakobunCorrection<T extends Prisma.HakobunClient$HakobunCorrectionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HakobunClient$HakobunCorrectionArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HakobunCorrectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   HakobunRule<T extends Prisma.HakobunClient$HakobunRuleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HakobunClient$HakobunRuleArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HakobunRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1269,6 +1639,10 @@ export interface HakobunClientFieldRefs {
   readonly sortOrder: Prisma.FieldRef<"HakobunClient", 'Float'>
   readonly clientId: Prisma.FieldRef<"HakobunClient", 'String'>
   readonly name: Prisma.FieldRef<"HakobunClient", 'String'>
+  readonly inputDataExplain: Prisma.FieldRef<"HakobunClient", 'String'>
+  readonly analysisStartDate: Prisma.FieldRef<"HakobunClient", 'DateTime'>
+  readonly analysisEndDate: Prisma.FieldRef<"HakobunClient", 'DateTime'>
+  readonly industryId: Prisma.FieldRef<"HakobunClient", 'Int'>
 }
     
 
@@ -1518,6 +1892,10 @@ export type HakobunClientCreateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    */
   data: Prisma.HakobunClientCreateManyInput | Prisma.HakobunClientCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HakobunClientIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1588,6 +1966,10 @@ export type HakobunClientUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    * Limit how many HakobunClients to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HakobunClientIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1654,6 +2036,25 @@ export type HakobunClientDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many HakobunClients to delete.
    */
   limit?: number
+}
+
+/**
+ * HakobunClient.industry
+ */
+export type HakobunClient$industryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HakobunIndustry
+   */
+  select?: Prisma.HakobunIndustrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HakobunIndustry
+   */
+  omit?: Prisma.HakobunIndustryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HakobunIndustryInclude<ExtArgs> | null
+  where?: Prisma.HakobunIndustryWhereInput
 }
 
 /**

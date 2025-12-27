@@ -2,8 +2,7 @@ import {NextRequest, NextResponse} from 'next/server'
 import prisma from 'src/lib/prisma'
 import {BatchAnalyzeRequest, BatchAnalyzeResponse, AnalysisResult, Extract, ProposedCategory} from '@app/(apps)/hakobun/types'
 import {v4 as uuidv4} from 'uuid'
-
-const GEMINI_API_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent'
+import {callGeminiForJson, HAKOBUN_ANALYSIS_SCHEMA} from '@app/api/google/actions/geminiAPI'
 
 export async function POST(request: NextRequest) {
   try {
@@ -73,8 +72,23 @@ export async function POST(request: NextRequest) {
       orderBy: [{priority: 'asc'}, {createdAt: 'desc'}],
     })
 
+    // 4. 業種別一般カテゴリ取得
+    const industryGeneralCategories = (client as any).industryId
+      ? await prisma.hakobunIndustryGeneralCategory.findMany({
+          where: {industryId: (client as any).industryId},
+          orderBy: {sortOrder: 'asc'},
+        })
+      : []
+
     // ===== Phase 2: 動的プロンプト構築 =====
-    const systemPrompt = buildSystemPrompt(categories, corrections, rules, allow_category_generation)
+    const systemPrompt = buildSystemPrompt(
+      categories,
+      corrections,
+      rules,
+      allow_category_generation,
+      (client as any).inputDataExplain,
+      industryGeneralCategories
+    )
 
     // ===== Phase 3: 一括分析実行 =====
     const results: AnalysisResult[] = []
@@ -86,59 +100,29 @@ export async function POST(request: NextRequest) {
       const generatedVoiceId = uuidv4()
 
       try {
-        const response = await fetch(`${GEMINI_API_ENDPOINT}?key=${apiKey}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+        const fullPrompt = `${systemPrompt}\n\n【分析対象テキスト】\n${text}`
+
+        const geminiResponse = await callGeminiForJson<Omit<Extract, 'raw_text'>[]>(fullPrompt, HAKOBUN_ANALYSIS_SCHEMA, {
+          model: 'gemini-2.0-flash',
+          maxRetries: 2,
+          generationConfig: {
+            temperature: 0.2,
+            topK: 40,
+            topP: 0.95,
+            maxOutputTokens: 4096,
           },
-          body: JSON.stringify({
-            contents: [
-              {
-                parts: [
-                  {
-                    text: `${systemPrompt}\n\n【分析対象テキスト】\n${text}`,
-                  },
-                ],
-              },
-            ],
-            generationConfig: {
-              temperature: 0.2,
-              topK: 40,
-              topP: 0.95,
-              maxOutputTokens: 4096,
-            },
-          }),
         })
 
-        if (!response.ok) {
-          const errorText = await response.text()
-          console.error('Gemini API Error:', errorText)
+        if (!geminiResponse.success || !geminiResponse.data) {
+          console.error('Gemini API Error:', geminiResponse.error, geminiResponse.rawText)
           continue
         }
 
-        const data = await response.json()
-        const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || ''
-
-        if (!responseText) continue
-
-        // JSON部分を抽出（配列形式を想定）
-        const jsonMatch = responseText.match(/```json\n([\s\S]*?)\n```/) || responseText.match(/\[[\s\S]*\]/)
-        if (!jsonMatch) continue
-
-        const jsonText = jsonMatch[1] || jsonMatch[0]
-        let parsedExtracts: Extract[]
-
-        try {
-          const rawExtracts = JSON.parse(jsonText)
-          // 各extractに原文（raw_text）を追加
-          parsedExtracts = rawExtracts.map((extract: Omit<Extract, 'raw_text'>) => ({
-            ...extract,
-            raw_text: text, // トピック分割前の全文を追加
-          }))
-        } catch (parseError) {
-          console.error('JSON parse error:', parseError)
-          continue
-        }
+        // 各extractに原文（raw_text）を追加
+        const parsedExtracts: Extract[] = geminiResponse.data.map((extract: Omit<Extract, 'raw_text'>) => ({
+          ...extract,
+          raw_text: text, // トピック分割前の全文を追加
+        }))
 
         // 結果オブジェクトを構築
         const parsedResult: AnalysisResult = {
@@ -214,7 +198,9 @@ function buildSystemPrompt(
   categories: {categoryCode: string; generalCategory: string; specificCategory: string; description: string | null}[],
   corrections: {rawSegment: string; correctCategoryCode: string; sentiment: string}[],
   rules: {targetCategory: string; ruleDescription: string; priority: string}[],
-  allowCategoryGeneration: boolean = true
+  allowCategoryGeneration: boolean = true,
+  inputDataExplain?: string | null,
+  industryGeneralCategories: {name: string; description: string | null}[] = []
 ): string {
   // マスタカテゴリ一覧（一般カテゴリごとにグループ化）
   const categoryGroups = categories.reduce(
@@ -251,17 +237,45 @@ function buildSystemPrompt(
           .join('\n')
       : ''
 
+  // 一般カテゴリ一覧（業種別またはデフォルト）
+  const generalCategoriesList =
+    industryGeneralCategories.length > 0
+      ? industryGeneralCategories.map(gc => `- **${gc.name}**: ${gc.description || '該当する評価'}`).join('\n')
+      : `- **接客・サービス**: スタッフの対応、接客態度、サービス全般に関する評価
+- **店内**: 店舗の雰囲気、内装、清潔感、座席など店内環境に関する評価
+- **料理・ドリンク**: 食べ物・飲み物の味、品質、メニューに関する評価
+- **備品・設備**: 設備、備品、Wi-Fi、電源、BGM、空調など設備に関する評価
+- **値段**: 価格、コストパフォーマンスに関する評価
+- **立地**: 場所、アクセス、わかりやすさに関する評価
+- **その他**: 上記に該当しない評価`
+
+  // 一般カテゴリ名リスト（禁止事項チェック用）
+  const generalCategoryNames =
+    industryGeneralCategories.length > 0
+      ? industryGeneralCategories.map(gc => `「${gc.name}」`).join('、')
+      : '「接客・サービス」「店内」「料理・ドリンク」「備品・設備」「値段」「立地」「その他」'
+
+  // 投稿データの説明
+  const inputDataExplainSection = inputDataExplain
+    ? `## Inputデータの説明
+
+${inputDataExplain}
+
+---
+`
+    : ''
+
   return `あなたは、投稿内容を「トピック単位」で整理してカテゴリ分類するアシスタントです。
 
-## ★重要：トピック単位とは（最優先で理解）
+${inputDataExplainSection}## ★重要：トピック単位とは（最優先で理解）
 
-**トピック単位とは「意味のまとまり」のことです。言語学的な「文節」ではありません。**
+**トピック単位とは「①事実/事象＋②ユーザーの感想や感覚」の構成でできている意味のまとまりのことです。言語学的な「文節」ではありません。**
 
 - ❌ 言語学的文節の例（これは間違い）：「オシャレな内装と」「コーヒーの味も」「店内の雰囲気も」
 - ✅ トピック単位の例（正しい分割）：
-  - 「オシャレでカッコいい。店内の雰囲気もノリが良かったよ。」→ 店内環境に関するトピック
-  - 「コーヒーの味も最高だったし、」→ 商品の味に関するトピック
-  - 「スタッフの人たちもフレンドリーでよかった。」→ 接客に関するトピック
+  - 「オシャレでカッコいい。店内の雰囲気もノリが良かったよ。」→ ①店内環境の事実＋②好意的な感想
+  - 「コーヒーの味も最高だったし、」→ ①商品の味の事実＋②好意的な感想
+  - 「スタッフの人たちもフレンドリーでよかった。」→ ①接客の事実＋②好意的な感想
 
 **絶対に文の途中で切らないでください。必ず句点「。」や読点「、」で意味が完結する単位で分割します。**
 
@@ -280,6 +294,8 @@ function buildSystemPrompt(
 - 他店舗との比較、過去経験との比較、補足説明（例：「ちなみに」「〜ですが」）なども含め、同じテーマを補強するものは必ず一つにまとめる。
 - これらを別カテゴリに分けることは絶対にしない。
 - 例：「サラダが悪い」「府中店ではそうではなかった」 → 統合して『サラダ品質への不満』
+- 例：「提供速度が遅い」「改善してほしい」 → 統合して『提供速度への不満』（細かく分けない）
+- 例：「店内が寒い」「エアコンの調整をしてほしい」「ブランケットが欲しい」 → 統合して『店内温度への不満』（温度に関する同一テーマとして統合）
 
 3. **異なるテーマが含まれている場合のみ分割する**
 - 1つの投稿文に複数のテーマ（例：「パンが美味しい」と「接客が雑」）が混在している場合は、テーマごとにトピック単位を分ける。
@@ -299,13 +315,7 @@ function buildSystemPrompt(
 
 ### 一般カテゴリ一覧（固定・必ずこの中から選択）
 
-- **接客・サービス**: スタッフの対応、接客態度、サービス全般に関する評価
-- **店内**: 店舗の雰囲気、内装、清潔感、座席など店内環境に関する評価
-- **料理・ドリンク**: 食べ物・飲み物の味、品質、メニューに関する評価
-- **備品・設備**: 設備、備品、Wi-Fi、電源、BGM、空調など設備に関する評価
-- **値段**: 価格、コストパフォーマンスに関する評価
-- **立地**: 場所、アクセス、わかりやすさに関する評価
-- **その他**: 上記に該当しない評価
+${generalCategoriesList}
 
 ### カテゴリマスター一覧（最優先で使用）
 ${fixedCategories}
@@ -315,11 +325,17 @@ ${fixedCategories}
 ## カテゴリ名ルール
 
 - 出力は必ず「一般カテゴリ」「カテゴリ」「トピック単位」のセットで行う。
-- カテゴリ名は **13文字前後（±3文字）** にする。
+- カテゴリ名は **原則13文字以内** にする。やむを得ない場合は最大15文字まで許容。
+- カテゴリ名を区切る際は、**全角ナカグロ（・）** を使用すること。
+  - 例：「オシャレ・雰囲気が良い」「治安・イメージが悪い」
+- **英字・数字は必ず半角** を使用すること（例：Wi-Fi、BGM、100円）。
 - **短いラベル**として「何がどう良い／悪い／要望か」が一読で分かるようにする。
 - 抽象的すぎず／細かすぎない。**1段階抽象化**を心がける。
 - 店舗名や個別商品名は使わない。ただし**ブランド名レベル**は安定ラベルとして許容。
 - 曖昧な表現（例：×「満足」）は禁止。必ず方向性を含める。
+- **感情の方向性がわかる命名**を心がける：
+  - × テナントが多い → ○ テナントが多く充実（好意的）/ テナント過多で混雑（不満）
+  - × イベントがある → ○ イベントが充実している（好意的）/ イベント開催希望（リクエスト）
 
 ### 表現テンプレ（参考）
 - 評価（良い）: 「Xが美味しい」「Xが早い」「Xが良い」「清潔感がある・綺麗」
@@ -341,7 +357,7 @@ ${additionalRules ? `### 追加ルール（厳守）\n${additionalRules}\n` : ''
 
 ## 出力前の必須チェック
 
-NG1：カテゴリ名の長さが10〜16字か、方向性語（良さ/不満/要望/安心感/不足/改善希望 等）を含むか
+NG1：カテゴリ名の長さが13文字以内（最大15文字）か、方向性語（良さ/不満/要望/安心感/不足/改善希望 等）を含むか
 NG2：比較・補足・感謝を独立テーマにしていないか（必ず統合）
 NG3：文の途中で切っていないか？「〜と」「〜も」で終わるものは不正（必ず意味が完結する形に統合）
 NG4：一般カテゴリが「接客・サービス」「店内」「料理・ドリンク」「備品・設備」「値段」「立地」「その他」のいずれかであるか
@@ -351,11 +367,34 @@ OK3：各トピック単位が意味的に完結しているか確認
 
 ---
 
+## 1カテゴリ1感情ルール（厳守）
+
+- **一つのカテゴリに対して、「好意的」と「リクエスト/不満」が混在することは絶対に禁止**
+- 同一トピック内に好意的な感想とリクエストが混在する場合：
+  - **主たる感情（文章全体のトーン）で判定**
+  - 「〜して欲しい」「〜だったらいいな」は文脈で判断
+  - 好意的な評価の中での期待・希望は「好意的」に分類
+
+【NG例】
+入力: 「好みの展示会ですごく気に入りました。今後とも四季折々のタイミングでこのイベントを開催して欲しいですし、そうなったら絶対通いたいと思ってます！」
+× カテゴリ「イベントが充実」+ 感情「リクエスト」
+
+【OK例】
+入力: 同上
+○ カテゴリ「イベントが充実」+ 感情「好意的」
+（主たるトーンが好意的なため、リクエスト部分も好意的に含める）
+
+---
+
 ## 感情(sentiment)の定義
 
 - **好意的**：肯定的・賞賛的な評価語が含まれる
 - **不満**：否定的・批判的な評価語が含まれる
 - **リクエスト**：改善要望や提案語句が含まれる
+- **その他**：上記3つのいずれにも明確に分類できない場合のみ使用。
+  【重要】「その他」は最後の手段です。安易に使用しないでください。
+  必ず「好意的」「不満」「リクエスト」での分類を試み、
+  本当に分類不可能な場合のみ「その他」を選択すること。
 
 ## 熱量スコア(magnitude)の定義（0–100）
 
@@ -380,7 +419,7 @@ ${correctionExamples ? `## 直近の正解事例（Few-Shot）\n${correctionExam
 |-----------|------|
 | sentence | トピック単位（意味が完結した原文） |
 | general_category | 一般カテゴリ（「接客・サービス」「店内」「料理・ドリンク」「備品・設備」「値段」「立地」「その他」のいずれか） |
-| category | カテゴリ（詳細な分類名、10〜16文字） |
+| category | カテゴリ（詳細な分類名、原則13文字以内、最大15文字） |
 | sentiment | 感情（「好意的」「不満」「リクエスト」のいずれか） |
 | posi_nega | ポジネガ判定（「positive」「negative」「neutral」のいずれか） |
 | magnitude | 熱量スコア（0-100） |
@@ -409,9 +448,9 @@ ${correctionExamples ? `## 直近の正解事例（Few-Shot）\n${correctionExam
 - 応答にJSON以外の文字列を含めないこと。余計な説明や補足は禁止。
 - 番号の附番
 - 余計な文字の追加
-- 感情(sentiment)の値を"好意的"、"不満"、"リクエスト"以外にしないこと
+- 感情(sentiment)の値を"好意的"、"不満"、"リクエスト"、"その他"以外にしないこと
 - posi_negaの値を"positive"、"negative"、"neutral"以外にしないこと
-- general_categoryの値を「接客・サービス」「店内」「料理・ドリンク」「備品・設備」「値段」「立地」「その他」以外にしないこと
+- general_categoryの値を${generalCategoryNames}以外にしないこと
 
 ---`
 }

@@ -68,7 +68,13 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()
-    const {id, name} = body
+    const {
+      id,
+      name,
+      inputDataExplain,
+      analysisStartDate,
+      analysisEndDate,
+    } = body
 
     if (!id) {
       return NextResponse.json(
@@ -80,11 +86,17 @@ export async function PUT(request: NextRequest) {
       )
     }
 
+    const updateData: any = {}
+    if (name !== undefined) updateData.name = name
+    if (inputDataExplain !== undefined) updateData.inputDataExplain = inputDataExplain || null
+    if (analysisStartDate !== undefined)
+      updateData.analysisStartDate = analysisStartDate ? new Date(analysisStartDate) : null
+    if (analysisEndDate !== undefined)
+      updateData.analysisEndDate = analysisEndDate ? new Date(analysisEndDate) : null
+
     const client = await prisma.hakobunClient.update({
       where: {id},
-      data: {
-        ...(name && {name}),
-      },
+      data: updateData,
     })
 
     return NextResponse.json({

@@ -9,7 +9,7 @@ interface StepArrowProps {
 
 export const StepArrow = ({ color = 'indigo-400' }: StepArrowProps) => {
   return (
-    <div className="flex justify-center my-3 sm:my-4">
+    <div className="flex justify-center  absolute center-x ">
       <div className="flex flex-col items-center">
         <ArrowDownIcon
           className={cl(

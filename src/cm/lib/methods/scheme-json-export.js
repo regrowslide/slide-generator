@@ -391,6 +391,29 @@ model CounselingSlot {
 
 // Hakobun Analysis - 顧客の声構造化システム
 
+// 業種マスタ
+model HakobunIndustry {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  code      String    @unique  // "restaurant", "sports_event"
+  name      String              // "飲食店", "スポーツイベント"
+
+  generalCategories HakobunIndustryGeneralCategory[]
+  clients           HakobunClient[]
+}
+
+// 業種別一般カテゴリプリセット
+model HakobunIndustryGeneralCategory {
+  id        Int      @id @default(autoincrement())
+  sortOrder Float    @default(0)
+
+  name        String  // "接客・サービス"
+  description String? // "スタッフの対応、接客態度..."
+
+  industry   HakobunIndustry @relation(fields: [industryId], references: [id], onDelete: Cascade)
+  industryId Int
+}
+
 // クライアント（組織）
 model HakobunClient {
   id        Int       @id @default(autoincrement())
@@ -400,6 +423,15 @@ model HakobunClient {
 
   clientId String @unique // "cafe_sample_01"
   name     String
+
+  // AI分析用設定
+  inputDataExplain  String? // 投稿データの説明（文節分け用ポ回答データの説明）
+  analysisStartDate DateTime? // 分析期間開始日
+  analysisEndDate   DateTime? // 分析期間終了日
+
+  // 業種紐づけ
+  industry   HakobunIndustry? @relation(fields: [industryId], references: [id])
+  industryId Int?
 
   HakobunCategory   HakobunCategory[]
   HakobunCorrection HakobunCorrection[]
@@ -1033,7 +1065,7 @@ model SbmProductIngredient {
 
 datasource db {
   provider = "postgresql"
-  url = "postgres://mutsuo:timeSpacer817@localhost:5432/KM"
+  url = "postgres://mutsuo:timeSpacer817@localhost:5432/hakobun"
 }
 
 generator client {
@@ -6021,6 +6053,223 @@ export const prismaDMMF = {
       "isGenerated": false
     },
     {
+      "name": "HakobunIndustry",
+      "dbName": null,
+      "schema": null,
+      "fields": [
+        {
+          "name": "id",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": true,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Int",
+          "nativeType": null,
+          "default": {
+            "name": "autoincrement",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "createdAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "DateTime",
+          "nativeType": null,
+          "default": {
+            "name": "now",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "code",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": true,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "name",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "generalCategories",
+          "kind": "object",
+          "isList": true,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "HakobunIndustryGeneralCategory",
+          "nativeType": null,
+          "relationName": "HakobunIndustryToHakobunIndustryGeneralCategory",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "clients",
+          "kind": "object",
+          "isList": true,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "HakobunClient",
+          "nativeType": null,
+          "relationName": "HakobunClientToHakobunIndustry",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        }
+      ],
+      "primaryKey": null,
+      "uniqueFields": [],
+      "uniqueIndexes": [],
+      "isGenerated": false
+    },
+    {
+      "name": "HakobunIndustryGeneralCategory",
+      "dbName": null,
+      "schema": null,
+      "fields": [
+        {
+          "name": "id",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": true,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Int",
+          "nativeType": null,
+          "default": {
+            "name": "autoincrement",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "sortOrder",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Float",
+          "nativeType": null,
+          "default": 0,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "name",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "description",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "industry",
+          "kind": "object",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "HakobunIndustry",
+          "nativeType": null,
+          "relationName": "HakobunIndustryToHakobunIndustryGeneralCategory",
+          "relationFromFields": [
+            "industryId"
+          ],
+          "relationToFields": [
+            "id"
+          ],
+          "relationOnDelete": "Cascade",
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "industryId",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": true,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        }
+      ],
+      "primaryKey": null,
+      "uniqueFields": [],
+      "uniqueIndexes": [],
+      "isGenerated": false
+    },
+    {
       "name": "HakobunClient",
       "dbName": null,
       "schema": null,
@@ -6118,6 +6367,83 @@ export const prismaDMMF = {
           "isReadOnly": false,
           "hasDefaultValue": false,
           "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "inputDataExplain",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "analysisStartDate",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "DateTime",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "analysisEndDate",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "DateTime",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "industry",
+          "kind": "object",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "HakobunIndustry",
+          "nativeType": null,
+          "relationName": "HakobunClientToHakobunIndustry",
+          "relationFromFields": [
+            "industryId"
+          ],
+          "relationToFields": [
+            "id"
+          ],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "industryId",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": true,
+          "hasDefaultValue": false,
+          "type": "Int",
           "nativeType": null,
           "isGenerated": false,
           "isUpdatedAt": false
@@ -23313,6 +23639,36 @@ export const prismaDMMF = {
     },
     {
       "model": "CounselingSlot",
+      "type": "id",
+      "isDefinedOnField": true,
+      "fields": [
+        {
+          "name": "id"
+        }
+      ]
+    },
+    {
+      "model": "HakobunIndustry",
+      "type": "id",
+      "isDefinedOnField": true,
+      "fields": [
+        {
+          "name": "id"
+        }
+      ]
+    },
+    {
+      "model": "HakobunIndustry",
+      "type": "unique",
+      "isDefinedOnField": true,
+      "fields": [
+        {
+          "name": "code"
+        }
+      ]
+    },
+    {
+      "model": "HakobunIndustryGeneralCategory",
       "type": "id",
       "isDefinedOnField": true,
       "fields": [

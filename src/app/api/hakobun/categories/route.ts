@@ -126,14 +126,76 @@ export async function PUT(request: NextRequest) {
       )
     }
 
+    // カテゴリの存在確認
+    const existing = await prisma.hakobunCategory.findUnique({
+      where: {id},
+    })
+
+    if (!existing) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'カテゴリが見つかりません',
+        },
+        {status: 404}
+      )
+    }
+
+    // 必須項目の検証
+    if (general_category === undefined && specific_category === undefined && description === undefined && enabled === undefined) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: '更新する項目を指定してください',
+        },
+        {status: 400}
+      )
+    }
+
+    const updateData: {
+      generalCategory?: string
+      specificCategory?: string
+      description?: string | null
+      enabled?: boolean
+    } = {}
+
+    if (general_category !== undefined) {
+      if (!general_category) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'general_category は空にできません',
+          },
+          {status: 400}
+        )
+      }
+      updateData.generalCategory = general_category
+    }
+
+    if (specific_category !== undefined) {
+      if (!specific_category) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'specific_category は空にできません',
+          },
+          {status: 400}
+        )
+      }
+      updateData.specificCategory = specific_category
+    }
+
+    if (description !== undefined) {
+      updateData.description = description || null
+    }
+
+    if (enabled !== undefined) {
+      updateData.enabled = enabled
+    }
+
     const category = await prisma.hakobunCategory.update({
       where: {id},
-      data: {
-        ...(general_category && {generalCategory: general_category}),
-        ...(specific_category && {specificCategory: specific_category}),
-        ...(description !== undefined && {description}),
-        ...(enabled !== undefined && {enabled}),
-      },
+      data: updateData,
     })
 
     return NextResponse.json({

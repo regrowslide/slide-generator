@@ -13,13 +13,13 @@ import Image from 'next/image'
 //   subsets: ['latin', 'latin-ext'],
 // })
 
-const AppName = ``
+const AppName = <div className={` bg-gradient-to-r from-blue-900 via-blue-600 to-blue-900 bg-clip-text text-transparent`}>合同会社改善マニア</div>
 const Logo = <R_Stack className={`gap-0.5`}>
   {/* <Image className={``} src={'/image/KM/logoText.png'} width={200} height={200} alt="" /> */}
   <Image className={``} src={'/image/KM/logo.png'} width={100} height={100} alt="" />
 </R_Stack>
 
-export const metadata: Metadata = { title: AppName }
+export const metadata: Metadata = { title: '合同会社改善マニア' }
 
 export default async function AppLayout({ children }) {
   if (process.env.NEXT_PUBLIC_ROOTPATH !== 'KM' && !isDev) {
