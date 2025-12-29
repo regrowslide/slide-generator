@@ -55,12 +55,22 @@ export const PAGES: any = {
 
       {
         tabId: '',
-        label: 'マスタ管理',
+        label: '共通マスタ',
         ROOT: [rootPath],
         children: [
           { tabId: 'master/clients', label: 'クライアント管理', ROOT: [rootPath] },
-          { tabId: 'master/general-categories', label: '一般カテゴリ管理', ROOT: [rootPath] },
-          { tabId: 'master/categories', label: 'カテゴリ管理', ROOT: [rootPath] },
+          { tabId: 'master/general-categories', label: '[共通]一般カテゴリ管理', ROOT: [rootPath] },
+
+
+
+        ],
+        exclusiveTo: !!login,
+      },
+      {
+        tabId: '',
+        label: 'クライアント別マスタ',
+        ROOT: [rootPath],
+        children: [
           { tabId: 'master/rules', label: 'ルール管理', ROOT: [rootPath] },
           {
             tabId: 'master/rules/auto-create',

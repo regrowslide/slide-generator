@@ -32,12 +32,24 @@ export const getUnkoBinKyuyoDriveScheduleList = async (props: {
     }
     : {}
 
+  // 共有便を含む便グループのフィルター条件
+  const routeGroupBaseFilter = tbmBaseId
+    ? {
+        OR: [
+          { tbmBaseId },
+          { TbmRouteGroupShare: { some: { tbmBaseId, isActive: true } } },
+        ],
+      }
+    : {}
+
   const whereArgs = {
     approved: allowNonApprovedSchedule ? undefined : TbmReportCl.allowNonApprovedSchedule ? undefined : true,
     date: whereQuery,
-    tbmBaseId,
     userId,
-    TbmRouteGroup: displayExpiryDateFilter,
+    TbmRouteGroup: {
+      ...displayExpiryDateFilter,
+      ...routeGroupBaseFilter,
+    },
   }
 
   const tbmDriveSchedule = await prisma.tbmDriveSchedule.findMany({

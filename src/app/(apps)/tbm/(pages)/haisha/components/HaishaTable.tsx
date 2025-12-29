@@ -76,6 +76,9 @@ export default function HaishaTable({ days, tbmBase, whereQuery }: HaishaTablePr
 
 
   const { TbmDriveSchedule, userList, tbmRouteGroup, userWorkStatusCount } = listDataState ?? {}
+  console.log({ tbmRouteGroup: tbmRouteGroup?.length })  //logs
+
+
 
 
   const ModalMemo = useMemo(() => <HK_HaishaTableEditorGMF.Modal />, [HK_HaishaTableEditorGMF.GMF_OPEN])
@@ -105,7 +108,7 @@ export default function HaishaTable({ days, tbmBase, whereQuery }: HaishaTablePr
           canEdit,
         } as any)}
       />
-      <div className={` flex justify-around text-gray-500`}>{maxRecord}件のデータを表示</div>
+
 
       {/* 一括割り当てモーダル */}
       <BulkAssignmentModalReturn.Modal>

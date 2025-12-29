@@ -225,6 +225,7 @@ export type HakobunIndustryGeneralCategoryWhereInput = {
   description?: Prisma.StringNullableFilter<"HakobunIndustryGeneralCategory"> | string | null
   industryId?: Prisma.IntFilter<"HakobunIndustryGeneralCategory"> | number
   industry?: Prisma.XOR<Prisma.HakobunIndustryScalarRelationFilter, Prisma.HakobunIndustryWhereInput>
+  categories?: Prisma.HakobunIndustryCategoryListRelationFilter
 }
 
 export type HakobunIndustryGeneralCategoryOrderByWithRelationInput = {
@@ -234,6 +235,7 @@ export type HakobunIndustryGeneralCategoryOrderByWithRelationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   industryId?: Prisma.SortOrder
   industry?: Prisma.HakobunIndustryOrderByWithRelationInput
+  categories?: Prisma.HakobunIndustryCategoryOrderByRelationAggregateInput
 }
 
 export type HakobunIndustryGeneralCategoryWhereUniqueInput = Prisma.AtLeast<{
@@ -246,6 +248,7 @@ export type HakobunIndustryGeneralCategoryWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringNullableFilter<"HakobunIndustryGeneralCategory"> | string | null
   industryId?: Prisma.IntFilter<"HakobunIndustryGeneralCategory"> | number
   industry?: Prisma.XOR<Prisma.HakobunIndustryScalarRelationFilter, Prisma.HakobunIndustryWhereInput>
+  categories?: Prisma.HakobunIndustryCategoryListRelationFilter
 }, "id">
 
 export type HakobunIndustryGeneralCategoryOrderByWithAggregationInput = {
@@ -277,6 +280,7 @@ export type HakobunIndustryGeneralCategoryCreateInput = {
   name: string
   description?: string | null
   industry: Prisma.HakobunIndustryCreateNestedOneWithoutGeneralCategoriesInput
+  categories?: Prisma.HakobunIndustryCategoryCreateNestedManyWithoutGeneralCategoryInput
 }
 
 export type HakobunIndustryGeneralCategoryUncheckedCreateInput = {
@@ -285,6 +289,7 @@ export type HakobunIndustryGeneralCategoryUncheckedCreateInput = {
   name: string
   description?: string | null
   industryId: number
+  categories?: Prisma.HakobunIndustryCategoryUncheckedCreateNestedManyWithoutGeneralCategoryInput
 }
 
 export type HakobunIndustryGeneralCategoryUpdateInput = {
@@ -292,6 +297,7 @@ export type HakobunIndustryGeneralCategoryUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.HakobunIndustryUpdateOneRequiredWithoutGeneralCategoriesNestedInput
+  categories?: Prisma.HakobunIndustryCategoryUpdateManyWithoutGeneralCategoryNestedInput
 }
 
 export type HakobunIndustryGeneralCategoryUncheckedUpdateInput = {
@@ -300,6 +306,7 @@ export type HakobunIndustryGeneralCategoryUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industryId?: Prisma.IntFieldUpdateOperationsInput | number
+  categories?: Prisma.HakobunIndustryCategoryUncheckedUpdateManyWithoutGeneralCategoryNestedInput
 }
 
 export type HakobunIndustryGeneralCategoryCreateManyInput = {
@@ -370,6 +377,11 @@ export type HakobunIndustryGeneralCategorySumOrderByAggregateInput = {
   industryId?: Prisma.SortOrder
 }
 
+export type HakobunIndustryGeneralCategoryScalarRelationFilter = {
+  is?: Prisma.HakobunIndustryGeneralCategoryWhereInput
+  isNot?: Prisma.HakobunIndustryGeneralCategoryWhereInput
+}
+
 export type HakobunIndustryGeneralCategoryCreateNestedManyWithoutIndustryInput = {
   create?: Prisma.XOR<Prisma.HakobunIndustryGeneralCategoryCreateWithoutIndustryInput, Prisma.HakobunIndustryGeneralCategoryUncheckedCreateWithoutIndustryInput> | Prisma.HakobunIndustryGeneralCategoryCreateWithoutIndustryInput[] | Prisma.HakobunIndustryGeneralCategoryUncheckedCreateWithoutIndustryInput[]
   connectOrCreate?: Prisma.HakobunIndustryGeneralCategoryCreateOrConnectWithoutIndustryInput | Prisma.HakobunIndustryGeneralCategoryCreateOrConnectWithoutIndustryInput[]
@@ -412,10 +424,25 @@ export type HakobunIndustryGeneralCategoryUncheckedUpdateManyWithoutIndustryNest
   deleteMany?: Prisma.HakobunIndustryGeneralCategoryScalarWhereInput | Prisma.HakobunIndustryGeneralCategoryScalarWhereInput[]
 }
 
+export type HakobunIndustryGeneralCategoryCreateNestedOneWithoutCategoriesInput = {
+  create?: Prisma.XOR<Prisma.HakobunIndustryGeneralCategoryCreateWithoutCategoriesInput, Prisma.HakobunIndustryGeneralCategoryUncheckedCreateWithoutCategoriesInput>
+  connectOrCreate?: Prisma.HakobunIndustryGeneralCategoryCreateOrConnectWithoutCategoriesInput
+  connect?: Prisma.HakobunIndustryGeneralCategoryWhereUniqueInput
+}
+
+export type HakobunIndustryGeneralCategoryUpdateOneRequiredWithoutCategoriesNestedInput = {
+  create?: Prisma.XOR<Prisma.HakobunIndustryGeneralCategoryCreateWithoutCategoriesInput, Prisma.HakobunIndustryGeneralCategoryUncheckedCreateWithoutCategoriesInput>
+  connectOrCreate?: Prisma.HakobunIndustryGeneralCategoryCreateOrConnectWithoutCategoriesInput
+  upsert?: Prisma.HakobunIndustryGeneralCategoryUpsertWithoutCategoriesInput
+  connect?: Prisma.HakobunIndustryGeneralCategoryWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.HakobunIndustryGeneralCategoryUpdateToOneWithWhereWithoutCategoriesInput, Prisma.HakobunIndustryGeneralCategoryUpdateWithoutCategoriesInput>, Prisma.HakobunIndustryGeneralCategoryUncheckedUpdateWithoutCategoriesInput>
+}
+
 export type HakobunIndustryGeneralCategoryCreateWithoutIndustryInput = {
   sortOrder?: number
   name: string
   description?: string | null
+  categories?: Prisma.HakobunIndustryCategoryCreateNestedManyWithoutGeneralCategoryInput
 }
 
 export type HakobunIndustryGeneralCategoryUncheckedCreateWithoutIndustryInput = {
@@ -423,6 +450,7 @@ export type HakobunIndustryGeneralCategoryUncheckedCreateWithoutIndustryInput = 
   sortOrder?: number
   name: string
   description?: string | null
+  categories?: Prisma.HakobunIndustryCategoryUncheckedCreateNestedManyWithoutGeneralCategoryInput
 }
 
 export type HakobunIndustryGeneralCategoryCreateOrConnectWithoutIndustryInput = {
@@ -462,6 +490,52 @@ export type HakobunIndustryGeneralCategoryScalarWhereInput = {
   industryId?: Prisma.IntFilter<"HakobunIndustryGeneralCategory"> | number
 }
 
+export type HakobunIndustryGeneralCategoryCreateWithoutCategoriesInput = {
+  sortOrder?: number
+  name: string
+  description?: string | null
+  industry: Prisma.HakobunIndustryCreateNestedOneWithoutGeneralCategoriesInput
+}
+
+export type HakobunIndustryGeneralCategoryUncheckedCreateWithoutCategoriesInput = {
+  id?: number
+  sortOrder?: number
+  name: string
+  description?: string | null
+  industryId: number
+}
+
+export type HakobunIndustryGeneralCategoryCreateOrConnectWithoutCategoriesInput = {
+  where: Prisma.HakobunIndustryGeneralCategoryWhereUniqueInput
+  create: Prisma.XOR<Prisma.HakobunIndustryGeneralCategoryCreateWithoutCategoriesInput, Prisma.HakobunIndustryGeneralCategoryUncheckedCreateWithoutCategoriesInput>
+}
+
+export type HakobunIndustryGeneralCategoryUpsertWithoutCategoriesInput = {
+  update: Prisma.XOR<Prisma.HakobunIndustryGeneralCategoryUpdateWithoutCategoriesInput, Prisma.HakobunIndustryGeneralCategoryUncheckedUpdateWithoutCategoriesInput>
+  create: Prisma.XOR<Prisma.HakobunIndustryGeneralCategoryCreateWithoutCategoriesInput, Prisma.HakobunIndustryGeneralCategoryUncheckedCreateWithoutCategoriesInput>
+  where?: Prisma.HakobunIndustryGeneralCategoryWhereInput
+}
+
+export type HakobunIndustryGeneralCategoryUpdateToOneWithWhereWithoutCategoriesInput = {
+  where?: Prisma.HakobunIndustryGeneralCategoryWhereInput
+  data: Prisma.XOR<Prisma.HakobunIndustryGeneralCategoryUpdateWithoutCategoriesInput, Prisma.HakobunIndustryGeneralCategoryUncheckedUpdateWithoutCategoriesInput>
+}
+
+export type HakobunIndustryGeneralCategoryUpdateWithoutCategoriesInput = {
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.HakobunIndustryUpdateOneRequiredWithoutGeneralCategoriesNestedInput
+}
+
+export type HakobunIndustryGeneralCategoryUncheckedUpdateWithoutCategoriesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industryId?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
 export type HakobunIndustryGeneralCategoryCreateManyIndustryInput = {
   id?: number
   sortOrder?: number
@@ -473,6 +547,7 @@ export type HakobunIndustryGeneralCategoryUpdateWithoutIndustryInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  categories?: Prisma.HakobunIndustryCategoryUpdateManyWithoutGeneralCategoryNestedInput
 }
 
 export type HakobunIndustryGeneralCategoryUncheckedUpdateWithoutIndustryInput = {
@@ -480,6 +555,7 @@ export type HakobunIndustryGeneralCategoryUncheckedUpdateWithoutIndustryInput = 
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  categories?: Prisma.HakobunIndustryCategoryUncheckedUpdateManyWithoutGeneralCategoryNestedInput
 }
 
 export type HakobunIndustryGeneralCategoryUncheckedUpdateManyWithoutIndustryInput = {
@@ -490,6 +566,35 @@ export type HakobunIndustryGeneralCategoryUncheckedUpdateManyWithoutIndustryInpu
 }
 
 
+/**
+ * Count Type HakobunIndustryGeneralCategoryCountOutputType
+ */
+
+export type HakobunIndustryGeneralCategoryCountOutputType = {
+  categories: number
+}
+
+export type HakobunIndustryGeneralCategoryCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  categories?: boolean | HakobunIndustryGeneralCategoryCountOutputTypeCountCategoriesArgs
+}
+
+/**
+ * HakobunIndustryGeneralCategoryCountOutputType without action
+ */
+export type HakobunIndustryGeneralCategoryCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HakobunIndustryGeneralCategoryCountOutputType
+   */
+  select?: Prisma.HakobunIndustryGeneralCategoryCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * HakobunIndustryGeneralCategoryCountOutputType without action
+ */
+export type HakobunIndustryGeneralCategoryCountOutputTypeCountCategoriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HakobunIndustryCategoryWhereInput
+}
+
 
 export type HakobunIndustryGeneralCategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -498,6 +603,8 @@ export type HakobunIndustryGeneralCategorySelect<ExtArgs extends runtime.Types.E
   description?: boolean
   industryId?: boolean
   industry?: boolean | Prisma.HakobunIndustryDefaultArgs<ExtArgs>
+  categories?: boolean | Prisma.HakobunIndustryGeneralCategory$categoriesArgs<ExtArgs>
+  _count?: boolean | Prisma.HakobunIndustryGeneralCategoryCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["hakobunIndustryGeneralCategory"]>
 
 export type HakobunIndustryGeneralCategorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -529,6 +636,8 @@ export type HakobunIndustryGeneralCategorySelectScalar = {
 export type HakobunIndustryGeneralCategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sortOrder" | "name" | "description" | "industryId", ExtArgs["result"]["hakobunIndustryGeneralCategory"]>
 export type HakobunIndustryGeneralCategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   industry?: boolean | Prisma.HakobunIndustryDefaultArgs<ExtArgs>
+  categories?: boolean | Prisma.HakobunIndustryGeneralCategory$categoriesArgs<ExtArgs>
+  _count?: boolean | Prisma.HakobunIndustryGeneralCategoryCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type HakobunIndustryGeneralCategoryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   industry?: boolean | Prisma.HakobunIndustryDefaultArgs<ExtArgs>
@@ -541,6 +650,7 @@ export type $HakobunIndustryGeneralCategoryPayload<ExtArgs extends runtime.Types
   name: "HakobunIndustryGeneralCategory"
   objects: {
     industry: Prisma.$HakobunIndustryPayload<ExtArgs>
+    categories: Prisma.$HakobunIndustryCategoryPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -943,6 +1053,7 @@ readonly fields: HakobunIndustryGeneralCategoryFieldRefs;
 export interface Prisma__HakobunIndustryGeneralCategoryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   industry<T extends Prisma.HakobunIndustryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HakobunIndustryDefaultArgs<ExtArgs>>): Prisma.Prisma__HakobunIndustryClient<runtime.Types.Result.GetResult<Prisma.$HakobunIndustryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  categories<T extends Prisma.HakobunIndustryGeneralCategory$categoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HakobunIndustryGeneralCategory$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HakobunIndustryCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1370,6 +1481,30 @@ export type HakobunIndustryGeneralCategoryDeleteManyArgs<ExtArgs extends runtime
    * Limit how many HakobunIndustryGeneralCategories to delete.
    */
   limit?: number
+}
+
+/**
+ * HakobunIndustryGeneralCategory.categories
+ */
+export type HakobunIndustryGeneralCategory$categoriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HakobunIndustryCategory
+   */
+  select?: Prisma.HakobunIndustryCategorySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HakobunIndustryCategory
+   */
+  omit?: Prisma.HakobunIndustryCategoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HakobunIndustryCategoryInclude<ExtArgs> | null
+  where?: Prisma.HakobunIndustryCategoryWhereInput
+  orderBy?: Prisma.HakobunIndustryCategoryOrderByWithRelationInput | Prisma.HakobunIndustryCategoryOrderByWithRelationInput[]
+  cursor?: Prisma.HakobunIndustryCategoryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HakobunIndustryCategoryScalarFieldEnum | Prisma.HakobunIndustryCategoryScalarFieldEnum[]
 }
 
 /**

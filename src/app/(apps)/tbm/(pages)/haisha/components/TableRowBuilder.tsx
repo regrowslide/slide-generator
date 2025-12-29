@@ -110,6 +110,10 @@ export const TableRowBuilder = {
         const customer = RouteCl.Customer
         const timeRange = RouteCl.timeRange
 
+        // 共有便かどうかを判定（現在の営業所とは異なる営業所の便）
+        const isSharedFromOther = route.tbmBaseId !== tbmBase?.id
+        const ownerBaseName = route.TbmBase?.name
+
         return {
           csvTableRow: [
             // ルート情報（固定列）
@@ -117,6 +121,15 @@ export const TableRowBuilder = {
               label: '便',
               cellValue: (
                 <div>
+                  {/* 共有便の場合、共有元営業所を表示 */}
+                  {isSharedFromOther && ownerBaseName && (
+                    <div className="mb-1">
+                      <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-yellow-100 text-yellow-800 rounded border border-yellow-300">
+                        🔗 {ownerBaseName}より共有
+                      </span>
+                    </div>
+                  )}
+
                   <R_Stack className={`  justify-between flex-nowrap`}>
                     <R_Stack className={`gap-0.5 items-center`}>
                       <span>{i + 1}.</span>

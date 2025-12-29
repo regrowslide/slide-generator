@@ -393,10 +393,10 @@ model CounselingSlot {
 
 // 業種マスタ
 model HakobunIndustry {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  code      String    @unique  // "restaurant", "sports_event"
-  name      String              // "飲食店", "スポーツイベント"
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  code      String   @unique // "restaurant", "sports_event"
+  name      String // "飲食店", "スポーツイベント"
 
   generalCategories HakobunIndustryGeneralCategory[]
   clients           HakobunClient[]
@@ -404,14 +404,31 @@ model HakobunIndustry {
 
 // 業種別一般カテゴリプリセット
 model HakobunIndustryGeneralCategory {
-  id        Int      @id @default(autoincrement())
-  sortOrder Float    @default(0)
+  id        Int   @id @default(autoincrement())
+  sortOrder Float @default(0)
 
-  name        String  // "接客・サービス"
+  name        String // "接客・サービス"
   description String? // "スタッフの対応、接客態度..."
 
   industry   HakobunIndustry @relation(fields: [industryId], references: [id], onDelete: Cascade)
   industryId Int
+
+  // 詳細カテゴリ
+  categories HakobunIndustryCategory[]
+}
+
+// 業種別詳細カテゴリ（一般カテゴリに紐づく）
+model HakobunIndustryCategory {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  sortOrder Float    @default(0)
+
+  name        String // "オシャレ・雰囲気が良い"
+  description String? // カテゴリの説明や分類基準
+  enabled     Boolean @default(true) // 有効/無効フラグ
+
+  generalCategory   HakobunIndustryGeneralCategory @relation(fields: [generalCategoryId], references: [id], onDelete: Cascade)
+  generalCategoryId Int
 }
 
 // クライアント（組織）
@@ -433,29 +450,9 @@ model HakobunClient {
   industry   HakobunIndustry? @relation(fields: [industryId], references: [id])
   industryId Int?
 
-  HakobunCategory   HakobunCategory[]
   HakobunCorrection HakobunCorrection[]
   HakobunRule       HakobunRule[]
   HakobunVoice      HakobunVoice[]
-}
-
-// A. カテゴリマスター
-model HakobunCategory {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  categoryCode     String // "cat_01"
-  generalCategory  String // "店内"
-  specificCategory String // "オシャレ・雰囲気が良い"
-  description      String?
-  enabled          Boolean @default(true) // 有効/無効フラグ
-
-  HakobunClient   HakobunClient @relation(fields: [hakobunClientId], references: [id], onDelete: Cascade)
-  hakobunClientId Int
-
-  @@unique([hakobunClientId, categoryCode])
 }
 
 // B. 修正データペアテーブル
@@ -476,10 +473,6 @@ model HakobunCorrection {
   correctGeneralCategory String? // 修正後の一般カテゴリ（例：備品・設備）
   correctCategory        String // 修正後のカテゴリ（例：BGMが大きすぎる）
   correctSentiment       String // 修正後の感情（例：不満）
-
-  // 後方互換性のため残す（今後は使用しない）
-  correctCategoryCode String? // 正解カテゴリコード（非推奨）
-  sentiment           String? // 感情（非推奨、correctSentimentを使用）
 
   reviewerComment String?
   archived        Boolean @default(false)
@@ -6262,6 +6255,164 @@ export const prismaDMMF = {
           "nativeType": null,
           "isGenerated": false,
           "isUpdatedAt": false
+        },
+        {
+          "name": "categories",
+          "kind": "object",
+          "isList": true,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "HakobunIndustryCategory",
+          "nativeType": null,
+          "relationName": "HakobunIndustryCategoryToHakobunIndustryGeneralCategory",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        }
+      ],
+      "primaryKey": null,
+      "uniqueFields": [],
+      "uniqueIndexes": [],
+      "isGenerated": false
+    },
+    {
+      "name": "HakobunIndustryCategory",
+      "dbName": null,
+      "schema": null,
+      "fields": [
+        {
+          "name": "id",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": true,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Int",
+          "nativeType": null,
+          "default": {
+            "name": "autoincrement",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "createdAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "DateTime",
+          "nativeType": null,
+          "default": {
+            "name": "now",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "sortOrder",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Float",
+          "nativeType": null,
+          "default": 0,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "name",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "description",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "enabled",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Boolean",
+          "nativeType": null,
+          "default": true,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "generalCategory",
+          "kind": "object",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "HakobunIndustryGeneralCategory",
+          "nativeType": null,
+          "relationName": "HakobunIndustryCategoryToHakobunIndustryGeneralCategory",
+          "relationFromFields": [
+            "generalCategoryId"
+          ],
+          "relationToFields": [
+            "id"
+          ],
+          "relationOnDelete": "Cascade",
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "generalCategoryId",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": true,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
         }
       ],
       "primaryKey": null,
@@ -6449,23 +6600,6 @@ export const prismaDMMF = {
           "isUpdatedAt": false
         },
         {
-          "name": "HakobunCategory",
-          "kind": "object",
-          "isList": true,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "HakobunCategory",
-          "nativeType": null,
-          "relationName": "HakobunCategoryToHakobunClient",
-          "relationFromFields": [],
-          "relationToFields": [],
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
           "name": "HakobunCorrection",
           "kind": "object",
           "isList": true,
@@ -6520,206 +6654,6 @@ export const prismaDMMF = {
       "primaryKey": null,
       "uniqueFields": [],
       "uniqueIndexes": [],
-      "isGenerated": false
-    },
-    {
-      "name": "HakobunCategory",
-      "dbName": null,
-      "schema": null,
-      "fields": [
-        {
-          "name": "id",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": true,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Int",
-          "nativeType": null,
-          "default": {
-            "name": "autoincrement",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "createdAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "DateTime",
-          "nativeType": null,
-          "default": {
-            "name": "now",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "updatedAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "DateTime",
-          "nativeType": null,
-          "default": {
-            "name": "now",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": true
-        },
-        {
-          "name": "sortOrder",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Float",
-          "nativeType": null,
-          "default": 0,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "categoryCode",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "generalCategory",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "specificCategory",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "description",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "enabled",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Boolean",
-          "nativeType": null,
-          "default": true,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "HakobunClient",
-          "kind": "object",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "HakobunClient",
-          "nativeType": null,
-          "relationName": "HakobunCategoryToHakobunClient",
-          "relationFromFields": [
-            "hakobunClientId"
-          ],
-          "relationToFields": [
-            "id"
-          ],
-          "relationOnDelete": "Cascade",
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "hakobunClientId",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": true,
-          "hasDefaultValue": false,
-          "type": "Int",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        }
-      ],
-      "primaryKey": null,
-      "uniqueFields": [
-        [
-          "hakobunClientId",
-          "categoryCode"
-        ]
-      ],
-      "uniqueIndexes": [
-        {
-          "name": null,
-          "fields": [
-            "hakobunClientId",
-            "categoryCode"
-          ]
-        }
-      ],
       "isGenerated": false
     },
     {
@@ -6885,34 +6819,6 @@ export const prismaDMMF = {
           "kind": "scalar",
           "isList": false,
           "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "correctCategoryCode",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "sentiment",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
           "isUnique": false,
           "isId": false,
           "isReadOnly": false,
@@ -23678,6 +23584,16 @@ export const prismaDMMF = {
       ]
     },
     {
+      "model": "HakobunIndustryCategory",
+      "type": "id",
+      "isDefinedOnField": true,
+      "fields": [
+        {
+          "name": "id"
+        }
+      ]
+    },
+    {
       "model": "HakobunClient",
       "type": "id",
       "isDefinedOnField": true,
@@ -23694,29 +23610,6 @@ export const prismaDMMF = {
       "fields": [
         {
           "name": "clientId"
-        }
-      ]
-    },
-    {
-      "model": "HakobunCategory",
-      "type": "id",
-      "isDefinedOnField": true,
-      "fields": [
-        {
-          "name": "id"
-        }
-      ]
-    },
-    {
-      "model": "HakobunCategory",
-      "type": "unique",
-      "isDefinedOnField": false,
-      "fields": [
-        {
-          "name": "hakobunClientId"
-        },
-        {
-          "name": "categoryCode"
         }
       ]
     },

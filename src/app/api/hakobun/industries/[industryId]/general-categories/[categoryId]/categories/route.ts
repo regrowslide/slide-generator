@@ -1,39 +1,34 @@
 import {NextRequest, NextResponse} from 'next/server'
 import prisma from 'src/lib/prisma'
 
-// 業種別一般カテゴリ取得
+// 詳細カテゴリ一覧取得
 export async function GET(request: NextRequest, props) {
   const params = await props.params
 
   try {
-    const industryId = parseInt(params.industryId)
+    const generalCategoryId = parseInt(params.categoryId)
 
-    if (!industryId || isNaN(industryId)) {
+    if (!generalCategoryId || isNaN(generalCategoryId)) {
       return NextResponse.json(
         {
           success: false,
-          error: '無効なindustryIdです',
+          error: '無効なgeneralCategoryIdです',
         },
         {status: 400}
       )
     }
 
-    const generalCategories = await prisma.hakobunIndustryGeneralCategory.findMany({
-      where: {industryId},
-      include: {
-        categories: {
-          orderBy: {sortOrder: 'asc'},
-        },
-      },
+    const categories = await prisma.hakobunIndustryCategory.findMany({
+      where: {generalCategoryId},
       orderBy: {sortOrder: 'asc'},
     })
 
     return NextResponse.json({
       success: true,
-      generalCategories,
+      categories,
     })
   } catch (error) {
-    console.error('Get industry general categories error:', error)
+    console.error('Get categories error:', error)
     return NextResponse.json(
       {
         success: false,
@@ -44,17 +39,18 @@ export async function GET(request: NextRequest, props) {
   }
 }
 
-// 一般カテゴリ作成
+// 詳細カテゴリ作成
 export async function POST(request: NextRequest, props) {
   const params = await props.params
-  try {
-    const industryId = parseInt(params.industryId)
 
-    if (!industryId || isNaN(industryId)) {
+  try {
+    const generalCategoryId = parseInt(params.categoryId)
+
+    if (!generalCategoryId || isNaN(generalCategoryId)) {
       return NextResponse.json(
         {
           success: false,
-          error: '無効なindustryIdです',
+          error: '無効なgeneralCategoryIdです',
         },
         {status: 400}
       )
@@ -73,36 +69,37 @@ export async function POST(request: NextRequest, props) {
       )
     }
 
-    // 業種の存在確認
-    const industry = await prisma.hakobunIndustry.findUnique({
-      where: {id: industryId},
+    // 一般カテゴリの存在確認
+    const generalCategory = await prisma.hakobunIndustryGeneralCategory.findUnique({
+      where: {id: generalCategoryId},
     })
 
-    if (!industry) {
+    if (!generalCategory) {
       return NextResponse.json(
         {
           success: false,
-          error: '業種が見つかりません',
+          error: '一般カテゴリが見つかりません',
         },
         {status: 404}
       )
     }
 
-    const generalCategory = await prisma.hakobunIndustryGeneralCategory.create({
+    const category = await prisma.hakobunIndustryCategory.create({
       data: {
-        industryId,
+        generalCategoryId,
         name,
         description: description || null,
         sortOrder: sortOrder ?? 0,
+        enabled: true,
       },
     })
 
     return NextResponse.json({
       success: true,
-      generalCategory,
+      category,
     })
   } catch (error) {
-    console.error('Create general category error:', error)
+    console.error('Create category error:', error)
     return NextResponse.json(
       {
         success: false,
@@ -112,3 +109,4 @@ export async function POST(request: NextRequest, props) {
     )
   }
 }
+

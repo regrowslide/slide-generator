@@ -48,24 +48,55 @@ export async function POST(request: NextRequest) {
 
     // ===== Phase 1: コンテキスト取得 (Retrieval) =====
 
-    // 1. 有効なカテゴリマスター取得
-    const categories = await prisma.hakobunCategory.findMany({
+    // クライアントに業種が紐づいていない場合はエラー
+    if (!client.industryId) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'クライアントに業種が紐づけられていません。クライアント管理で業種を設定してください。',
+        } as AnalyzeResponse,
+        {status: 400}
+      )
+    }
+
+    // 1. 業種別一般カテゴリと詳細カテゴリ取得
+    const industryGeneralCategories = await prisma.hakobunIndustryGeneralCategory.findMany({
       where: {
-        hakobunClientId: client.id,
-        enabled: true, // 有効なカテゴリのみ
+        industryId: client.industryId,
       },
-      orderBy: {categoryCode: 'asc'},
+      include: {
+        categories: {
+          where: {
+            enabled: true, // 有効なカテゴリのみ
+          },
+          orderBy: {sortOrder: 'asc'},
+        },
+      },
+      orderBy: {sortOrder: 'asc'},
     })
 
-    // 2. 直近修正事例50件取得（アーカイブ済みは除外）
-    const corrections = (await prisma.hakobunCorrection.findMany({
+    // 2. 直近修正事例50件取得（アーカイブ済みは除外、かつ現在の業種のカテゴリに一致するもののみ）
+    const allCorrections = await prisma.hakobunCorrection.findMany({
       where: {
         hakobunClientId: client.id,
         archived: false,
       },
       orderBy: {createdAt: 'desc'},
-      take: 50,
-    })) as any[]
+      take: 100, // フィルタリング前により多く取得
+    })
+
+    // 現在の業種の一般カテゴリ名のセットを作成
+    const validGeneralCategoryNames = new Set(industryGeneralCategories.map(gc => gc.name))
+
+    // 現在の業種のカテゴリに一致する修正事例のみをフィルタリング
+    const corrections = allCorrections
+      .filter(c => {
+        // correctGeneralCategoryがnullの場合は除外
+        if (!c.correctGeneralCategory) return false
+        // 現在の業種の一般カテゴリに一致するもののみ
+        return validGeneralCategoryNames.has(c.correctGeneralCategory)
+      })
+      .slice(0, 50) // 最大50件まで
 
     // 3. 全ルール取得
     const rules = await prisma.hakobunRule.findMany({
@@ -73,23 +104,13 @@ export async function POST(request: NextRequest) {
       orderBy: [{priority: 'asc'}, {createdAt: 'desc'}],
     })
 
-    // 4. 業種別一般カテゴリ取得
-    const industryGeneralCategories =
-      (client as any).industryId
-        ? await prisma.hakobunIndustryGeneralCategory.findMany({
-            where: {industryId: (client as any).industryId},
-            orderBy: {sortOrder: 'asc'},
-          })
-        : []
-
     // ===== Phase 2: 動的プロンプト構築 =====
     const systemPrompt = buildSystemPrompt(
-      categories,
+      industryGeneralCategories,
       corrections,
       rules,
       allow_category_generation,
-      (client as any).inputDataExplain,
-      industryGeneralCategories
+      client.inputDataExplain
     )
 
     // ===== Phase 3: Gemini API呼び出し（共通ヘルパー使用） =====
@@ -133,16 +154,8 @@ export async function POST(request: NextRequest) {
       extracts: parsedExtracts,
     }
 
-    // ===== 結果をDBに保存 =====
-    await prisma.hakobunVoice.create({
-      data: {
-        voiceId: generatedVoiceId,
-        rawText: raw_text,
-        processedAt: new Date(),
-        resultJson: parsedResult as any,
-        hakobunClientId: client.id,
-      },
-    })
+    // 分析結果はDBに保存しない（フロントエンドに表示のみ）
+    // 保存は一括保存API（batch-save）で行う
 
     return NextResponse.json({
       success: true,
@@ -162,31 +175,23 @@ export async function POST(request: NextRequest) {
 
 // 動的プロンプト構築関数（current-prompt.md統合版）
 function buildSystemPrompt(
-  categories: {categoryCode: string; generalCategory: string; specificCategory: string; description: string | null}[],
-  corrections: {rawSegment: string; correctCategoryCode: string; sentiment: string}[],
+  industryGeneralCategories: {
+    name: string
+    description: string | null
+    categories: {name: string; description: string | null}[]
+  }[],
+  corrections: {rawSegment: string; correctCategory: string; correctSentiment: string}[],
   rules: {targetCategory: string; ruleDescription: string; priority: string}[],
   allowCategoryGeneration: boolean = true,
-  inputDataExplain?: string | null,
-  industryGeneralCategories: {name: string; description: string | null}[] = []
+  inputDataExplain?: string | null
 ): string {
   // マスタカテゴリ一覧（一般カテゴリごとにグループ化）
-  const categoryGroups = categories.reduce(
-    (acc, c) => {
-      if (!acc[c.generalCategory]) {
-        acc[c.generalCategory] = []
-      }
-      acc[c.generalCategory].push(c)
-      return acc
-    },
-    {} as Record<string, typeof categories>
-  )
-
   const fixedCategories =
-    categories.length > 0
-      ? Object.entries(categoryGroups)
+    industryGeneralCategories.length > 0
+      ? industryGeneralCategories
           .map(
-            ([general, cats]) =>
-              `【${general}】\n${cats.map(c => `  - ${c.specificCategory}${c.description ? `（${c.description}）` : ''}`).join('\n')}`
+            gc =>
+              `【${gc.name}】\n${gc.categories.map(c => `  - ${c.name}${c.description ? `（${c.description}）` : ''}`).join('\n')}`
           )
           .join('\n')
       : '（マスタカテゴリが未登録です）'
@@ -200,11 +205,11 @@ function buildSystemPrompt(
     corrections.length > 0
       ? corrections
           .slice(0, 20)
-          .map(c => `入力「${c.rawSegment}」→ カテゴリ: ${c.correctCategoryCode} / 感情: ${c.sentiment}`)
+          .map(c => `入力「${c.rawSegment}」→ 一般カテゴリ: ${c.correctGeneralCategory || '-'} / カテゴリ: ${c.correctCategory} / 感情: ${c.correctSentiment}`)
           .join('\n')
       : ''
 
-  // 一般カテゴリ一覧（業種別またはデフォルト）
+  // 一般カテゴリ一覧
   const generalCategoriesList =
     industryGeneralCategories.length > 0
       ? industryGeneralCategories
@@ -213,19 +218,18 @@ function buildSystemPrompt(
               `- **${gc.name}**: ${gc.description || '該当する評価'}`
           )
           .join('\n')
-      : `- **接客・サービス**: スタッフの対応、接客態度、サービス全般に関する評価
-- **店内**: 店舗の雰囲気、内装、清潔感、座席など店内環境に関する評価
-- **料理・ドリンク**: 食べ物・飲み物の味、品質、メニューに関する評価
-- **備品・設備**: 設備、備品、Wi-Fi、電源、BGM、空調など設備に関する評価
-- **値段**: 価格、コストパフォーマンスに関する評価
-- **立地**: 場所、アクセス、わかりやすさに関する評価
-- **その他**: 上記に該当しない評価`
+      : '（一般カテゴリが未登録です）'
 
   // 一般カテゴリ名リスト（禁止事項チェック用）
   const generalCategoryNames =
     industryGeneralCategories.length > 0
       ? industryGeneralCategories.map(gc => `「${gc.name}」`).join('、')
-      : '「接客・サービス」「店内」「料理・ドリンク」「備品・設備」「値段」「立地」「その他」'
+      : ''
+
+  // 一般カテゴリが空の場合はエラー
+  if (!generalCategoryNames) {
+    return 'エラー: 業種に一般カテゴリが設定されていません。'
+  }
 
   // 投稿データの説明
   const inputDataExplainSection = inputDataExplain
@@ -412,8 +416,16 @@ ${correctionExamples ? `## 直近の正解事例（Few-Shot）\n${correctionExam
 ### カテゴリ選択ルール
 
 1. マスタカテゴリ一覧を最優先で使用
-2. ${allowCategoryGeneration ? 'マスターに該当するカテゴリがない場合のみ、is_new_generated: true として新しいカテゴリを提案してください' : 'マスターカテゴリ一覧から必ず選択してください。新規カテゴリの生成は禁止です。'}
-3. 一般カテゴリは必ず固定リスト（「接客・サービス」「店内」「料理・ドリンク」「備品・設備」「値段」「立地」「その他」）から選択
+2. ${allowCategoryGeneration ? `マスターに該当するカテゴリがない場合のみ、is_new_generated: true として新しいカテゴリを提案してください。
+
+**新規カテゴリ提案時の粒度ルール（重要）**:
+- 既存のカテゴリマスター一覧の粒度（抽象度・詳細度）を必ず参考にすること
+- 既存カテゴリと同じレベルの抽象化を行うこと（抽象的すぎず、細かすぎない）
+- 既存カテゴリの命名規則（13文字以内、全角ナカグロ使用、方向性を含む）に従うこと
+- 既存カテゴリの表現スタイル（例：「Xが美味しい」「Xが早い」「清潔感がある・綺麗」など）を参考にすること
+- 既存カテゴリと同程度の粒度で、一貫性のあるカテゴリ名を提案すること` : 'マスターカテゴリ一覧から必ず選択してください。新規カテゴリの生成は禁止です。'}
+3. 一般カテゴリは必ず${generalCategoryNames}から選択
+4. ${allowCategoryGeneration ? '新規一般カテゴリを提案する場合も、既存の一般カテゴリの粒度と抽象度を参考にすること' : ''}
 
 ### 禁止事項
 

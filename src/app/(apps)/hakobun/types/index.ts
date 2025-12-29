@@ -11,17 +11,6 @@ export type PosiNegaType = 'positive' | 'negative' | 'neutral'
 // --- 優先度 ---
 export type PriorityType = 'High' | 'Medium' | 'Low'
 
-// --- カテゴリマスター ---
-export interface HakobunCategory {
-  id: number
-  categoryCode: string
-  generalCategory: string
-  specificCategory: string
-  description?: string | null
-  enabled: boolean
-  hakobunClientId: number
-}
-
 // --- 修正データペア ---
 export interface HakobunCorrection {
   id: number
@@ -73,6 +62,18 @@ export interface HakobunIndustryGeneralCategory {
   name: string
   description?: string | null
   industryId: number
+  categories?: HakobunIndustryCategory[]
+}
+
+// --- 業種別詳細カテゴリ ---
+export interface HakobunIndustryCategory {
+  id: number
+  createdAt: Date
+  sortOrder: number
+  name: string
+  description?: string | null
+  enabled: boolean
+  generalCategoryId: number
 }
 
 // --- クライアント ---
@@ -199,13 +200,6 @@ export interface FeedbackResponse {
   error?: string
 }
 
-// --- カテゴリAPIレスポンス ---
-export interface CategoriesResponse {
-  success: boolean
-  categories?: HakobunCategory[]
-  error?: string
-}
-
 // --- ルールAPIレスポンス ---
 export interface RulesResponse {
   success: boolean
@@ -239,7 +233,6 @@ export interface AppState {
   analysisResult: AnalysisResult | null
   status: AnalysisStatus
   logs: LogEntry[]
-  categories: HakobunCategory[]
   rules: HakobunRule[]
   corrections: HakobunCorrection[]
 }
@@ -252,4 +245,77 @@ export interface ExtractEdit {
   editedSentiment: SentimentType
   comment: string
   isModified: boolean
+}
+
+// ============================================
+// バッチ分析用型定義
+// ============================================
+
+// --- テーブル行（バッチ分析結果表示用）---
+export interface TableRow {
+  resultIndex: number
+  extractIndex: number
+  extract: Extract
+  voiceId: string
+  feedbackGeneralCategory: string
+  feedbackCategory: string
+  feedbackSentiment: SentimentType
+  feedbackComment: string
+  isModified: boolean
+  /** CorrectionのID（一括登録記録閲覧ページで使用） */
+  correctionId?: number
+}
+
+// --- 業種別一般カテゴリ（フロントエンド用）---
+export interface IndustryGeneralCategoryWithCategories {
+  id: number
+  name: string
+  description: string | null
+  sortOrder: number
+  categories: {
+    id: number
+    name: string
+    description: string | null
+    sortOrder: number
+  }[]
+}
+
+// --- カテゴリ差分（既存 vs AI分析で新規生成）---
+export interface CategoryDiff {
+  /** DB登録済みの一般カテゴリ名リスト */
+  existingGeneralCategories: string[]
+  /** DB登録済みのカテゴリ名リスト */
+  existingCategories: string[]
+  /** AI分析で検出された一般カテゴリ名リスト */
+  detectedGeneralCategories: string[]
+  /** AI分析で検出されたカテゴリ名リスト */
+  detectedCategories: string[]
+  /** AI分析で新規に生成された一般カテゴリ（DB未登録）*/
+  newGeneralCategories: string[]
+  /** AI分析で新規に生成されたカテゴリ（DB未登録）*/
+  newCategories: string[]
+}
+
+// --- 保留中の一般カテゴリ（DB未保存、state保持）---
+export interface PendingGeneralCategory {
+  /** 一時ID（state管理用） */
+  tempId: string
+  /** カテゴリ名 */
+  name: string
+  /** 説明 */
+  description?: string
+  /** 紐づく保留中カテゴリ */
+  pendingCategories: PendingCategory[]
+}
+
+// --- 保留中のカテゴリ（DB未保存、state保持）---
+export interface PendingCategory {
+  /** 一時ID（state管理用） */
+  tempId: string
+  /** 親となる一般カテゴリ名 */
+  generalCategoryName: string
+  /** カテゴリ名 */
+  name: string
+  /** 説明 */
+  description?: string
 }

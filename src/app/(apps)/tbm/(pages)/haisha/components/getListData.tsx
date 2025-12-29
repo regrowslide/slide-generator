@@ -30,9 +30,20 @@ const getCachedVehicleList = (tbmBaseId: number) => {
 // ============================================================================
 
 export const getListData = async (props: GetListDataParams): Promise<HaishaListData> => {
-  const { tbmBaseId, whereQuery, mode, takeSkip, sortBy = 'departureTime', tbmCustomerId } = props
+  const { tbmBaseId, whereQuery, mode, takeSkip, sortBy = 'departureTime', tbmCustomerId, routeNameFilter } = props
 
-  const commonWhere = { tbmBaseId }
+  // 共有便を含む便グループのフィルター条件
+  const routeGroupBaseFilter = {
+    OR: [
+      { tbmBaseId }, // 所有している便
+      { TbmRouteGroupShare: { some: { tbmBaseId, isActive: true } } }, // 共有されている便
+    ],
+  }
+
+  const commonWhere = {
+    name: { contains: routeNameFilter },
+    ...routeGroupBaseFilter,
+  }
 
   // 表示期限のフィルタリング: 指定月の初日時点で表示期限を超過している便は非表示
   const firstDayOfMonth = whereQuery.gte
@@ -100,6 +111,14 @@ export const getListData = async (props: GetListDataParams): Promise<HaishaListD
               departureTime: true,
               finalArrivalTime: true,
               allowDuplicate: true,
+              isShared: true, // 共有フラグ
+              tbmBaseId: true, // 共有元営業所の判定用
+              TbmBase: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
               Mid_TbmRouteGroup_TbmCustomer: {
                 select: {
                   TbmCustomer: {
@@ -156,6 +175,7 @@ export const getListData = async (props: GetListDataParams): Promise<HaishaListD
           TbmRouteGroup: {
             ...displayExpiryDateFilter,
             ...customerFilter,
+            ...routeGroupBaseFilter, // 共有便を含める
           },
         },
         orderBy: getOrderBy(),
@@ -173,7 +193,9 @@ export const getListData = async (props: GetListDataParams): Promise<HaishaListD
             where: { date: whereQuery },
           },
         },
-        where: commonWhere,
+        where: {
+          tbmBaseId,
+        },
         orderBy: { code: 'asc' },
         ...(mode === 'DRIVER' ? { ...takeSkip } : {}),
       }),
@@ -191,6 +213,26 @@ export const getListData = async (props: GetListDataParams): Promise<HaishaListD
           allowDuplicate: true,
           serviceNumber: true,
           tbmBaseId: true,
+          isShared: true, // 共有フラグ
+          TbmBase: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          TbmRouteGroupShare: {
+            select: {
+              id: true,
+              tbmBaseId: true,
+              isActive: true,
+              TbmBase: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
           Mid_TbmRouteGroup_TbmCustomer: {
             select: {
               TbmCustomer: {
@@ -204,7 +246,10 @@ export const getListData = async (props: GetListDataParams): Promise<HaishaListD
           },
           TbmRouteGroupCalendar: {
             select: { id: true, date: true, holidayType: true, remark: true },
-            where: { date: whereQuery },
+            where: {
+              date: whereQuery,
+
+            },
           },
           // 関連便データを取得
           RelatedRouteGroupsAsParent: {
@@ -243,6 +288,8 @@ export const getListData = async (props: GetListDataParams): Promise<HaishaListD
           ...commonWhere,
           ...displayExpiryDateFilter,
           ...customerFilter,
+          ...routeGroupBaseFilter,
+
         },
         orderBy: getRouteGroupOrderBy(),
         ...(mode === 'ROUTE' ? { ...takeSkip } : {}),
@@ -267,7 +314,7 @@ export const getListData = async (props: GetListDataParams): Promise<HaishaListD
             ...customerFilter,
           },
         })
-        : prisma.user.count({ where: commonWhere }),
+        : prisma.user.count({ where: { name: { contains: routeNameFilter }, tbmBaseId } }),
     ])
 
   // ============================================================================
@@ -333,6 +380,8 @@ export const getListData = async (props: GetListDataParams): Promise<HaishaListD
       return codeCompare
     })
   }
+
+
 
   const result = {
     tbmBase,

@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
-import { formatDate } from '@cm/class/Days/date-utils/formatters'
 import { showSpendTime } from '@cm/lib/methods/toast-helper'
 import useLocalLoading from '@cm/hooks/globalHooks/useLocalLoading'
 import { getListData } from '../components/getListData'
@@ -33,10 +32,10 @@ export function useHaishaData({
         const takeSkip = { take: itemsPerPage, skip: (currentPage - 1) * itemsPerPage }
         const sortBy = (query.sortBy as HaishaSortBy) ?? 'departureTime'
         const tbmCustomerId = query.tbmCustomerId ? parseInt(query.tbmCustomerId) : undefined
-
+        const routeNameFilter = query.routeNameFilter as string
         console.time('HaishaPage')
 
-        const data = await getListData({ tbmBaseId, whereQuery, mode, takeSkip, sortBy, tbmCustomerId })
+        const data = await getListData({ tbmBaseId, whereQuery, mode, takeSkip, sortBy, tbmCustomerId, routeNameFilter })
         console.timeEnd('HaishaPage')
         setMaxRecord(data.maxCount)
         setListDataState(data)
@@ -49,35 +48,9 @@ export function useHaishaData({
 
   useEffect(() => {
     fetchData()
-
   }, [query])
 
-  // スケジュールデータを日付とユーザー/ルートで整理
-  const scheduleByDateAndUser =
-    listDataState?.TbmDriveSchedule?.reduce(
-      (acc, schedule) => {
-        const dateKey = formatDate(schedule.date)
-        const userKey = String(schedule.userId)
-        if (!acc[dateKey]) acc[dateKey] = {}
-        if (!acc[dateKey][userKey]) acc[dateKey][userKey] = []
-        acc[dateKey][userKey].push(schedule)
-        return acc
-      },
-      {} as Record<string, Record<string, TbmDriveScheduleWithDuplicated[]>>
-    ) ?? {}
 
-  const scheduleByDateAndRoute =
-    listDataState?.TbmDriveSchedule?.reduce(
-      (acc, schedule) => {
-        const dateKey = formatDate(schedule.date)
-        const routeKey = String(schedule.tbmRouteGroupId)
-        if (!acc[dateKey]) acc[dateKey] = {}
-        if (!acc[dateKey][routeKey]) acc[dateKey][routeKey] = []
-        acc[dateKey][routeKey].push(schedule)
-        return acc
-      },
-      {} as Record<string, Record<string, TbmDriveScheduleWithDuplicated[]>>
-    ) ?? {}
 
   // ローカルstate更新用のヘルパー関数
   const updateScheduleInState = useCallback((updatedSchedule: TbmDriveScheduleWithDuplicated) => {

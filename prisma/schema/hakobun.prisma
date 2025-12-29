@@ -2,10 +2,10 @@
 
 // 業種マスタ
 model HakobunIndustry {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  code      String    @unique  // "restaurant", "sports_event"
-  name      String              // "飲食店", "スポーツイベント"
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  code      String   @unique // "restaurant", "sports_event"
+  name      String // "飲食店", "スポーツイベント"
 
   generalCategories HakobunIndustryGeneralCategory[]
   clients           HakobunClient[]
@@ -13,14 +13,31 @@ model HakobunIndustry {
 
 // 業種別一般カテゴリプリセット
 model HakobunIndustryGeneralCategory {
-  id        Int      @id @default(autoincrement())
-  sortOrder Float    @default(0)
+  id        Int   @id @default(autoincrement())
+  sortOrder Float @default(0)
 
-  name        String  // "接客・サービス"
+  name        String // "接客・サービス"
   description String? // "スタッフの対応、接客態度..."
 
   industry   HakobunIndustry @relation(fields: [industryId], references: [id], onDelete: Cascade)
   industryId Int
+
+  // 詳細カテゴリ
+  categories HakobunIndustryCategory[]
+}
+
+// 業種別詳細カテゴリ（一般カテゴリに紐づく）
+model HakobunIndustryCategory {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  sortOrder Float    @default(0)
+
+  name        String // "オシャレ・雰囲気が良い"
+  description String? // カテゴリの説明や分類基準
+  enabled     Boolean @default(true) // 有効/無効フラグ
+
+  generalCategory   HakobunIndustryGeneralCategory @relation(fields: [generalCategoryId], references: [id], onDelete: Cascade)
+  generalCategoryId Int
 }
 
 // クライアント（組織）
@@ -42,29 +59,9 @@ model HakobunClient {
   industry   HakobunIndustry? @relation(fields: [industryId], references: [id])
   industryId Int?
 
-  HakobunCategory   HakobunCategory[]
   HakobunCorrection HakobunCorrection[]
   HakobunRule       HakobunRule[]
   HakobunVoice      HakobunVoice[]
-}
-
-// A. カテゴリマスター
-model HakobunCategory {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  categoryCode     String // "cat_01"
-  generalCategory  String // "店内"
-  specificCategory String // "オシャレ・雰囲気が良い"
-  description      String?
-  enabled          Boolean @default(true) // 有効/無効フラグ
-
-  HakobunClient   HakobunClient @relation(fields: [hakobunClientId], references: [id], onDelete: Cascade)
-  hakobunClientId Int
-
-  @@unique([hakobunClientId, categoryCode])
 }
 
 // B. 修正データペアテーブル
@@ -85,10 +82,6 @@ model HakobunCorrection {
   correctGeneralCategory String? // 修正後の一般カテゴリ（例：備品・設備）
   correctCategory        String // 修正後のカテゴリ（例：BGMが大きすぎる）
   correctSentiment       String // 修正後の感情（例：不満）
-
-  // 後方互換性のため残す（今後は使用しない）
-  correctCategoryCode String? // 正解カテゴリコード（非推奨）
-  sentiment           String? // 感情（非推奨、correctSentimentを使用）
 
   reviewerComment String?
   archived        Boolean @default(false)

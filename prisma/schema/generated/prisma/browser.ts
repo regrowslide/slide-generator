@@ -118,15 +118,15 @@ export type HakobunIndustry = Prisma.HakobunIndustryModel
  */
 export type HakobunIndustryGeneralCategory = Prisma.HakobunIndustryGeneralCategoryModel
 /**
+ * Model HakobunIndustryCategory
+ * 
+ */
+export type HakobunIndustryCategory = Prisma.HakobunIndustryCategoryModel
+/**
  * Model HakobunClient
  * 
  */
 export type HakobunClient = Prisma.HakobunClientModel
-/**
- * Model HakobunCategory
- * 
- */
-export type HakobunCategory = Prisma.HakobunCategoryModel
 /**
  * Model HakobunCorrection
  * 

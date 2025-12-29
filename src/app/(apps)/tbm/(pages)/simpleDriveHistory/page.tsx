@@ -45,13 +45,23 @@ export default async function SimpleDriveHistoryPage(props) {
     }
     : {}
 
+  // 共有便を含む便グループのフィルター条件
+  const routeGroupBaseFilter = {
+    OR: [
+      { tbmBaseId },
+      { TbmRouteGroupShare: { some: { tbmBaseId, isActive: true } } },
+    ],
+  }
+
   // 走行記録データの取得
   const driveHistory = await prisma.tbmDriveSchedule.findMany({
     where: {
       userId: query.driverId ? parseInt(query.driverId) : undefined,
       date: whereQuery,
-      tbmBaseId: tbmBaseId,
-      TbmRouteGroup: displayExpiryDateFilter,
+      TbmRouteGroup: {
+        ...displayExpiryDateFilter,
+        ...routeGroupBaseFilter,
+      },
       // approved: TbmReportCl.allowNonApprovedSchedule,
     },
     include: {

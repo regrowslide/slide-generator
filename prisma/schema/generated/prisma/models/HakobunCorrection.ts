@@ -50,8 +50,6 @@ export type HakobunCorrectionMinAggregateOutputType = {
   correctGeneralCategory: string | null
   correctCategory: string | null
   correctSentiment: string | null
-  correctCategoryCode: string | null
-  sentiment: string | null
   reviewerComment: string | null
   archived: boolean | null
   hakobunClientId: number | null
@@ -69,8 +67,6 @@ export type HakobunCorrectionMaxAggregateOutputType = {
   correctGeneralCategory: string | null
   correctCategory: string | null
   correctSentiment: string | null
-  correctCategoryCode: string | null
-  sentiment: string | null
   reviewerComment: string | null
   archived: boolean | null
   hakobunClientId: number | null
@@ -88,8 +84,6 @@ export type HakobunCorrectionCountAggregateOutputType = {
   correctGeneralCategory: number
   correctCategory: number
   correctSentiment: number
-  correctCategoryCode: number
-  sentiment: number
   reviewerComment: number
   archived: number
   hakobunClientId: number
@@ -121,8 +115,6 @@ export type HakobunCorrectionMinAggregateInputType = {
   correctGeneralCategory?: true
   correctCategory?: true
   correctSentiment?: true
-  correctCategoryCode?: true
-  sentiment?: true
   reviewerComment?: true
   archived?: true
   hakobunClientId?: true
@@ -140,8 +132,6 @@ export type HakobunCorrectionMaxAggregateInputType = {
   correctGeneralCategory?: true
   correctCategory?: true
   correctSentiment?: true
-  correctCategoryCode?: true
-  sentiment?: true
   reviewerComment?: true
   archived?: true
   hakobunClientId?: true
@@ -159,8 +149,6 @@ export type HakobunCorrectionCountAggregateInputType = {
   correctGeneralCategory?: true
   correctCategory?: true
   correctSentiment?: true
-  correctCategoryCode?: true
-  sentiment?: true
   reviewerComment?: true
   archived?: true
   hakobunClientId?: true
@@ -265,8 +253,6 @@ export type HakobunCorrectionGroupByOutputType = {
   correctGeneralCategory: string | null
   correctCategory: string
   correctSentiment: string
-  correctCategoryCode: string | null
-  sentiment: string | null
   reviewerComment: string | null
   archived: boolean
   hakobunClientId: number
@@ -307,8 +293,6 @@ export type HakobunCorrectionWhereInput = {
   correctGeneralCategory?: Prisma.StringNullableFilter<"HakobunCorrection"> | string | null
   correctCategory?: Prisma.StringFilter<"HakobunCorrection"> | string
   correctSentiment?: Prisma.StringFilter<"HakobunCorrection"> | string
-  correctCategoryCode?: Prisma.StringNullableFilter<"HakobunCorrection"> | string | null
-  sentiment?: Prisma.StringNullableFilter<"HakobunCorrection"> | string | null
   reviewerComment?: Prisma.StringNullableFilter<"HakobunCorrection"> | string | null
   archived?: Prisma.BoolFilter<"HakobunCorrection"> | boolean
   hakobunClientId?: Prisma.IntFilter<"HakobunCorrection"> | number
@@ -327,8 +311,6 @@ export type HakobunCorrectionOrderByWithRelationInput = {
   correctGeneralCategory?: Prisma.SortOrderInput | Prisma.SortOrder
   correctCategory?: Prisma.SortOrder
   correctSentiment?: Prisma.SortOrder
-  correctCategoryCode?: Prisma.SortOrderInput | Prisma.SortOrder
-  sentiment?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewerComment?: Prisma.SortOrderInput | Prisma.SortOrder
   archived?: Prisma.SortOrder
   hakobunClientId?: Prisma.SortOrder
@@ -350,8 +332,6 @@ export type HakobunCorrectionWhereUniqueInput = Prisma.AtLeast<{
   correctGeneralCategory?: Prisma.StringNullableFilter<"HakobunCorrection"> | string | null
   correctCategory?: Prisma.StringFilter<"HakobunCorrection"> | string
   correctSentiment?: Prisma.StringFilter<"HakobunCorrection"> | string
-  correctCategoryCode?: Prisma.StringNullableFilter<"HakobunCorrection"> | string | null
-  sentiment?: Prisma.StringNullableFilter<"HakobunCorrection"> | string | null
   reviewerComment?: Prisma.StringNullableFilter<"HakobunCorrection"> | string | null
   archived?: Prisma.BoolFilter<"HakobunCorrection"> | boolean
   hakobunClientId?: Prisma.IntFilter<"HakobunCorrection"> | number
@@ -370,8 +350,6 @@ export type HakobunCorrectionOrderByWithAggregationInput = {
   correctGeneralCategory?: Prisma.SortOrderInput | Prisma.SortOrder
   correctCategory?: Prisma.SortOrder
   correctSentiment?: Prisma.SortOrder
-  correctCategoryCode?: Prisma.SortOrderInput | Prisma.SortOrder
-  sentiment?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewerComment?: Prisma.SortOrderInput | Prisma.SortOrder
   archived?: Prisma.SortOrder
   hakobunClientId?: Prisma.SortOrder
@@ -397,8 +375,6 @@ export type HakobunCorrectionScalarWhereWithAggregatesInput = {
   correctGeneralCategory?: Prisma.StringNullableWithAggregatesFilter<"HakobunCorrection"> | string | null
   correctCategory?: Prisma.StringWithAggregatesFilter<"HakobunCorrection"> | string
   correctSentiment?: Prisma.StringWithAggregatesFilter<"HakobunCorrection"> | string
-  correctCategoryCode?: Prisma.StringNullableWithAggregatesFilter<"HakobunCorrection"> | string | null
-  sentiment?: Prisma.StringNullableWithAggregatesFilter<"HakobunCorrection"> | string | null
   reviewerComment?: Prisma.StringNullableWithAggregatesFilter<"HakobunCorrection"> | string | null
   archived?: Prisma.BoolWithAggregatesFilter<"HakobunCorrection"> | boolean
   hakobunClientId?: Prisma.IntWithAggregatesFilter<"HakobunCorrection"> | number
@@ -415,8 +391,6 @@ export type HakobunCorrectionCreateInput = {
   correctGeneralCategory?: string | null
   correctCategory: string
   correctSentiment: string
-  correctCategoryCode?: string | null
-  sentiment?: string | null
   reviewerComment?: string | null
   archived?: boolean
   HakobunClient: Prisma.HakobunClientCreateNestedOneWithoutHakobunCorrectionInput
@@ -434,8 +408,6 @@ export type HakobunCorrectionUncheckedCreateInput = {
   correctGeneralCategory?: string | null
   correctCategory: string
   correctSentiment: string
-  correctCategoryCode?: string | null
-  sentiment?: string | null
   reviewerComment?: string | null
   archived?: boolean
   hakobunClientId: number
@@ -452,8 +424,6 @@ export type HakobunCorrectionUpdateInput = {
   correctGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   correctCategory?: Prisma.StringFieldUpdateOperationsInput | string
   correctSentiment?: Prisma.StringFieldUpdateOperationsInput | string
-  correctCategoryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  sentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   HakobunClient?: Prisma.HakobunClientUpdateOneRequiredWithoutHakobunCorrectionNestedInput
@@ -471,8 +441,6 @@ export type HakobunCorrectionUncheckedUpdateInput = {
   correctGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   correctCategory?: Prisma.StringFieldUpdateOperationsInput | string
   correctSentiment?: Prisma.StringFieldUpdateOperationsInput | string
-  correctCategoryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  sentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hakobunClientId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -490,8 +458,6 @@ export type HakobunCorrectionCreateManyInput = {
   correctGeneralCategory?: string | null
   correctCategory: string
   correctSentiment: string
-  correctCategoryCode?: string | null
-  sentiment?: string | null
   reviewerComment?: string | null
   archived?: boolean
   hakobunClientId: number
@@ -508,8 +474,6 @@ export type HakobunCorrectionUpdateManyMutationInput = {
   correctGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   correctCategory?: Prisma.StringFieldUpdateOperationsInput | string
   correctSentiment?: Prisma.StringFieldUpdateOperationsInput | string
-  correctCategoryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  sentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
@@ -526,8 +490,6 @@ export type HakobunCorrectionUncheckedUpdateManyInput = {
   correctGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   correctCategory?: Prisma.StringFieldUpdateOperationsInput | string
   correctSentiment?: Prisma.StringFieldUpdateOperationsInput | string
-  correctCategoryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  sentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hakobunClientId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -555,8 +517,6 @@ export type HakobunCorrectionCountOrderByAggregateInput = {
   correctGeneralCategory?: Prisma.SortOrder
   correctCategory?: Prisma.SortOrder
   correctSentiment?: Prisma.SortOrder
-  correctCategoryCode?: Prisma.SortOrder
-  sentiment?: Prisma.SortOrder
   reviewerComment?: Prisma.SortOrder
   archived?: Prisma.SortOrder
   hakobunClientId?: Prisma.SortOrder
@@ -580,8 +540,6 @@ export type HakobunCorrectionMaxOrderByAggregateInput = {
   correctGeneralCategory?: Prisma.SortOrder
   correctCategory?: Prisma.SortOrder
   correctSentiment?: Prisma.SortOrder
-  correctCategoryCode?: Prisma.SortOrder
-  sentiment?: Prisma.SortOrder
   reviewerComment?: Prisma.SortOrder
   archived?: Prisma.SortOrder
   hakobunClientId?: Prisma.SortOrder
@@ -599,8 +557,6 @@ export type HakobunCorrectionMinOrderByAggregateInput = {
   correctGeneralCategory?: Prisma.SortOrder
   correctCategory?: Prisma.SortOrder
   correctSentiment?: Prisma.SortOrder
-  correctCategoryCode?: Prisma.SortOrder
-  sentiment?: Prisma.SortOrder
   reviewerComment?: Prisma.SortOrder
   archived?: Prisma.SortOrder
   hakobunClientId?: Prisma.SortOrder
@@ -665,8 +621,6 @@ export type HakobunCorrectionCreateWithoutHakobunClientInput = {
   correctGeneralCategory?: string | null
   correctCategory: string
   correctSentiment: string
-  correctCategoryCode?: string | null
-  sentiment?: string | null
   reviewerComment?: string | null
   archived?: boolean
 }
@@ -683,8 +637,6 @@ export type HakobunCorrectionUncheckedCreateWithoutHakobunClientInput = {
   correctGeneralCategory?: string | null
   correctCategory: string
   correctSentiment: string
-  correctCategoryCode?: string | null
-  sentiment?: string | null
   reviewerComment?: string | null
   archived?: boolean
 }
@@ -730,8 +682,6 @@ export type HakobunCorrectionScalarWhereInput = {
   correctGeneralCategory?: Prisma.StringNullableFilter<"HakobunCorrection"> | string | null
   correctCategory?: Prisma.StringFilter<"HakobunCorrection"> | string
   correctSentiment?: Prisma.StringFilter<"HakobunCorrection"> | string
-  correctCategoryCode?: Prisma.StringNullableFilter<"HakobunCorrection"> | string | null
-  sentiment?: Prisma.StringNullableFilter<"HakobunCorrection"> | string | null
   reviewerComment?: Prisma.StringNullableFilter<"HakobunCorrection"> | string | null
   archived?: Prisma.BoolFilter<"HakobunCorrection"> | boolean
   hakobunClientId?: Prisma.IntFilter<"HakobunCorrection"> | number
@@ -749,8 +699,6 @@ export type HakobunCorrectionCreateManyHakobunClientInput = {
   correctGeneralCategory?: string | null
   correctCategory: string
   correctSentiment: string
-  correctCategoryCode?: string | null
-  sentiment?: string | null
   reviewerComment?: string | null
   archived?: boolean
 }
@@ -766,8 +714,6 @@ export type HakobunCorrectionUpdateWithoutHakobunClientInput = {
   correctGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   correctCategory?: Prisma.StringFieldUpdateOperationsInput | string
   correctSentiment?: Prisma.StringFieldUpdateOperationsInput | string
-  correctCategoryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  sentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
@@ -784,8 +730,6 @@ export type HakobunCorrectionUncheckedUpdateWithoutHakobunClientInput = {
   correctGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   correctCategory?: Prisma.StringFieldUpdateOperationsInput | string
   correctSentiment?: Prisma.StringFieldUpdateOperationsInput | string
-  correctCategoryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  sentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
@@ -802,8 +746,6 @@ export type HakobunCorrectionUncheckedUpdateManyWithoutHakobunClientInput = {
   correctGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   correctCategory?: Prisma.StringFieldUpdateOperationsInput | string
   correctSentiment?: Prisma.StringFieldUpdateOperationsInput | string
-  correctCategoryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  sentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
@@ -822,8 +764,6 @@ export type HakobunCorrectionSelect<ExtArgs extends runtime.Types.Extensions.Int
   correctGeneralCategory?: boolean
   correctCategory?: boolean
   correctSentiment?: boolean
-  correctCategoryCode?: boolean
-  sentiment?: boolean
   reviewerComment?: boolean
   archived?: boolean
   hakobunClientId?: boolean
@@ -842,8 +782,6 @@ export type HakobunCorrectionSelectCreateManyAndReturn<ExtArgs extends runtime.T
   correctGeneralCategory?: boolean
   correctCategory?: boolean
   correctSentiment?: boolean
-  correctCategoryCode?: boolean
-  sentiment?: boolean
   reviewerComment?: boolean
   archived?: boolean
   hakobunClientId?: boolean
@@ -862,8 +800,6 @@ export type HakobunCorrectionSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   correctGeneralCategory?: boolean
   correctCategory?: boolean
   correctSentiment?: boolean
-  correctCategoryCode?: boolean
-  sentiment?: boolean
   reviewerComment?: boolean
   archived?: boolean
   hakobunClientId?: boolean
@@ -882,14 +818,12 @@ export type HakobunCorrectionSelectScalar = {
   correctGeneralCategory?: boolean
   correctCategory?: boolean
   correctSentiment?: boolean
-  correctCategoryCode?: boolean
-  sentiment?: boolean
   reviewerComment?: boolean
   archived?: boolean
   hakobunClientId?: boolean
 }
 
-export type HakobunCorrectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "rawSegment" | "originalGeneralCategory" | "originalCategory" | "originalSentiment" | "correctGeneralCategory" | "correctCategory" | "correctSentiment" | "correctCategoryCode" | "sentiment" | "reviewerComment" | "archived" | "hakobunClientId", ExtArgs["result"]["hakobunCorrection"]>
+export type HakobunCorrectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "rawSegment" | "originalGeneralCategory" | "originalCategory" | "originalSentiment" | "correctGeneralCategory" | "correctCategory" | "correctSentiment" | "reviewerComment" | "archived" | "hakobunClientId", ExtArgs["result"]["hakobunCorrection"]>
 export type HakobunCorrectionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   HakobunClient?: boolean | Prisma.HakobunClientDefaultArgs<ExtArgs>
 }
@@ -917,8 +851,6 @@ export type $HakobunCorrectionPayload<ExtArgs extends runtime.Types.Extensions.I
     correctGeneralCategory: string | null
     correctCategory: string
     correctSentiment: string
-    correctCategoryCode: string | null
-    sentiment: string | null
     reviewerComment: string | null
     archived: boolean
     hakobunClientId: number
@@ -1357,8 +1289,6 @@ export interface HakobunCorrectionFieldRefs {
   readonly correctGeneralCategory: Prisma.FieldRef<"HakobunCorrection", 'String'>
   readonly correctCategory: Prisma.FieldRef<"HakobunCorrection", 'String'>
   readonly correctSentiment: Prisma.FieldRef<"HakobunCorrection", 'String'>
-  readonly correctCategoryCode: Prisma.FieldRef<"HakobunCorrection", 'String'>
-  readonly sentiment: Prisma.FieldRef<"HakobunCorrection", 'String'>
   readonly reviewerComment: Prisma.FieldRef<"HakobunCorrection", 'String'>
   readonly archived: Prisma.FieldRef<"HakobunCorrection", 'Boolean'>
   readonly hakobunClientId: Prisma.FieldRef<"HakobunCorrection", 'Int'>

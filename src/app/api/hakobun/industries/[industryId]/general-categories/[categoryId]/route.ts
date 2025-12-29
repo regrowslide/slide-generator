@@ -2,10 +2,8 @@ import {NextRequest, NextResponse} from 'next/server'
 import prisma from 'src/lib/prisma'
 
 // 一般カテゴリ更新
-export async function PUT(
-  request: NextRequest,
-  {params}: {params: {industryId: string; categoryId: string}}
-) {
+export async function PUT(request: NextRequest, props) {
+  const params = await props.params
   try {
     const industryId = parseInt(params.industryId)
     const categoryId = parseInt(params.categoryId)
@@ -74,10 +72,9 @@ export async function PUT(
 }
 
 // 一般カテゴリ削除
-export async function DELETE(
-  request: NextRequest,
-  {params}: {params: {industryId: string; categoryId: string}}
-) {
+export async function DELETE(request: NextRequest, props) {
+  const params = await props.params
+
   try {
     const industryId = parseInt(params.industryId)
     const categoryId = parseInt(params.categoryId)
@@ -126,4 +123,3 @@ export async function DELETE(
     )
   }
 }
-

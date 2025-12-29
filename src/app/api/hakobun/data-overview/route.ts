@@ -32,11 +32,7 @@ export async function GET(request: NextRequest) {
     }
 
     // 全データを並列取得
-    const [categories, rules, voices, corrections] = await Promise.all([
-      prisma.hakobunCategory.findMany({
-        where: {hakobunClientId: client.id},
-        orderBy: [{generalCategory: 'asc'}, {specificCategory: 'asc'}],
-      }),
+    const [rules, voices, corrections] = await Promise.all([
       prisma.hakobunRule.findMany({
         where: {hakobunClientId: client.id},
         orderBy: [{priority: 'asc'}, {createdAt: 'desc'}],
@@ -60,14 +56,11 @@ export async function GET(request: NextRequest) {
       success: true,
       client,
       data: {
-        categories,
         rules,
         voices,
         corrections,
       },
       summary: {
-        categoriesCount: categories.length,
-        enabledCategoriesCount: categories.filter(c => c.enabled).length,
         rulesCount: rules.length,
         voicesCount: voices.length,
         correctionsCount: corrections.length,

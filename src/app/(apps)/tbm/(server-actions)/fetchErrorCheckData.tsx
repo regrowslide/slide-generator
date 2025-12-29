@@ -33,12 +33,20 @@ export const fetchErrorCheckData = async ({tbmBaseId}) => {
     },
   })
 
+  // 共有便を含む便グループのフィルター条件
+  const routeGroupBaseFilter = {
+    OR: [
+      { tbmBaseId },
+      { TbmRouteGroupShare: { some: { tbmBaseId, isActive: true } } },
+    ],
+  }
+
   // 2. 運行入力エラー: 完了されているが、ドライバーの締めや管理者の承認がされていないもの
   const driveScheduleErrors = await prisma.tbmDriveSchedule.findMany({
     where: {
-      tbmBaseId,
       finished: true,
       OR: [{confirmed: false}, {confirmed: null}, {approved: false}, {approved: null}],
+      TbmRouteGroup: routeGroupBaseFilter,
     },
     include: {
       User: {

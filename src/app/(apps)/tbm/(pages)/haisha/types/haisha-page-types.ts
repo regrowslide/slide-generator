@@ -60,11 +60,24 @@ export interface RelatedRouteGroupChildInfo {
   }
 }
 
+/** 共有情報 */
+export interface TbmRouteGroupShareInfo {
+  id: number
+  tbmBaseId: number
+  isActive: boolean
+  TbmBase: {
+    id: number
+    name: string
+  }
+}
+
 /** カレンダー情報付きのルートグループ */
 export type TbmRouteGroupWithCalendar = TbmRouteGroup & {
   TbmRouteGroupCalendar: TbmRouteGroupCalendar[]
   RelatedRouteGroupsAsParent?: RelatedRouteGroupInfo[]
   RelatedRouteGroupsAsChild?: RelatedRouteGroupChildInfo[]
+  TbmBase?: {id: number; name: string} // 所有元営業所
+  TbmRouteGroupShare?: TbmRouteGroupShareInfo[] // 共有情報
 }
 
 /** 重複フラグ付きの配車スケジュール */
@@ -120,6 +133,7 @@ export interface GetListDataParams {
   takeSkip: PaginationConfig
   sortBy?: HaishaSortBy
   tbmCustomerId?: number
+  routeNameFilter?: string
 }
 
 // ============================================================================
@@ -189,7 +203,7 @@ export interface HaishaCardProps {
   tbmRouteGroup?: TbmRouteGroupWithCalendar
   date: Date
   tbmBase: TbmBase | null
-  canEdit?: boolean
+  canEdit: boolean
 }
 
 /** モーダルオープン時のパラメータ */
@@ -232,7 +246,7 @@ export interface HaishaTableContentProps {
   setModalOpen: (props: ModalOpenParams) => void
   admin: boolean
   query: any // TODO: クエリの型を定義
-  canEdit?: boolean
+  canEdit: boolean
 }
 
 /** TableRowBuilderのプロパティ */
@@ -248,7 +262,7 @@ export interface TableRowBuilderProps {
   userWorkStatusCount: UserWorkStatusCount[]
   scheduleByDateAndUser?: ScheduleByDateAndUser
   scheduleByDateAndRoute?: ScheduleByDateAndRoute
-  canEdit?: boolean
+  canEdit: boolean
 }
 
 /** DateCellビルダーのパラメータ */
@@ -264,7 +278,7 @@ export interface DateCellBuilderParams {
   setModalOpen: (props: ModalOpenParams) => void
   query: any // TODO: クエリの型を定義
   cellStyle?: CSSProperties
-  canEdit?: boolean
+  canEdit: boolean
 }
 
 // ============================================================================
@@ -277,7 +291,7 @@ export interface WorkStatusSelectorProps {
   user: UserWithWorkStatus
   date: Date
   fetchData: () => void
-  canEdit?: boolean
+  canEdit: boolean
 }
 
 /** AddScheduleButtonコンポーネントのプロパティ */
@@ -287,7 +301,7 @@ export interface AddScheduleButtonProps {
   user?: UserWithWorkStatus
   tbmRouteGroup?: TbmRouteGroupWithCalendar
   setModalOpen: (props: ModalOpenParams) => void
-  canEdit?: boolean
+  canEdit: boolean
 }
 
 /** ScheduleCardコンポーネントのプロパティ */
@@ -299,12 +313,12 @@ export interface ScheduleCardProps {
   fetchData: () => void
   query: any // TODO: クエリの型を定義
   tbmBase: TbmBase | null
-  canEdit?: boolean
+  canEdit: boolean
 }
 
 /** StatusButtonsコンポーネントのプロパティ */
 export interface StatusButtonsProps {
   tbmDriveSchedule: TbmDriveScheduleWithDuplicated
   fetchData: () => void
-  canEdit?: boolean
+  canEdit: boolean
 }

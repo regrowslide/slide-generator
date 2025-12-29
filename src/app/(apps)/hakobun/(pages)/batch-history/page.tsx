@@ -1,59 +1,47 @@
 'use client'
 
-import React, { useCallback } from 'react'
-import { C_Stack } from '@cm/components/styles/common-components/common-components'
+import React, {useCallback} from 'react'
+import {C_Stack, R_Stack} from '@cm/components/styles/common-components/common-components'
 import useSelectedClient from '../../(globalHooks)/useSelectedClient'
-import useModal from '@cm/components/utils/modal/useModal'
 import useCategoryManager from '../../hooks/useCategoryManager'
-import useBatchAnalysis from '../../hooks/useBatchAnalysis'
+import useBatchHistory from '../../hooks/useBatchHistory'
 import useCategoryModal from '../../hooks/useCategoryModal'
-import { InputSection } from '../../components/BatchInputSection'
-import { ResultsTable } from '../../components/BatchResultsTable'
-import { CategoryModal } from '../../components/BatchCategoryModal'
+import useModal from '@cm/components/utils/modal/useModal'
+import {ResultsTable} from '../../components/BatchResultsTable'
+import {CategoryModal} from '../../components/BatchCategoryModal'
+import {Loader2, RefreshCw} from 'lucide-react'
 
-export default function BatchAnalysisPage() {
+export default function BatchHistoryPage() {
   // グローバルクライアント選択
-  const { selectedClient } = useSelectedClient()
+  const {selectedClient} = useSelectedClient()
 
-  // カテゴリ管理
+  // カテゴリ管理（既存カテゴリの取得用）
   const {
     mergedGeneralCategories,
     pendingGeneralCategories,
     pendingCategories,
     categoryDiff,
-    computeCategoryDiff,
     isNewGeneratedGeneralCategory,
     isNewGeneratedCategory,
     isPendingGeneralCategory,
     isPendingCategory,
     createGeneralCategory,
     createCategory,
-    savePendingCategories,
-    clearPendingCategories,
     error: categoryError,
-  } = useCategoryManager({ selectedClient })
+  } = useCategoryManager({selectedClient})
 
-  // 一括分析
+  // 一括登録記録閲覧
   const {
-    rawTexts,
-    setRawTexts,
-    allowCategoryGeneration,
-    setAllowCategoryGeneration,
-    isAnalyzing,
-    results,
+    isLoading,
     tableRows,
     updateTableRow,
-    isSavingAll,
-    handleBatchAnalyze,
+    isSaving,
+    handleSaveRow,
     handleSaveAll,
+    reload,
     getSentimentColor,
-    canExportCsv,
-    exportToCsv,
-  } = useBatchAnalysis({
+  } = useBatchHistory({
     clientId: selectedClient?.clientId,
-    computeCategoryDiff,
-    savePendingCategories,
-    clearPendingCategories,
   })
 
   // カテゴリ作成モーダル
@@ -69,7 +57,7 @@ export default function BatchAnalysisPage() {
   } = useCategoryModal()
 
   // モーダルUI用
-  const newCategoryModalUI = useModal<{ rowIndex: number; type: 'general' | 'category' }>()
+  const newCategoryModalUI = useModal<{rowIndex: number; type: 'general' | 'category'}>()
 
   // 新規一般カテゴリ作成ハンドラ（stateに追加、DBには保存しない）
   const handleCreateGeneralCategory = useCallback(() => {
@@ -83,12 +71,11 @@ export default function BatchAnalysisPage() {
       // 作成成功時、該当レコードの「修正一般カテゴリ」にセット
       const rowIndex = modalState.rowIndex >= 0 ? modalState.rowIndex : newCategoryModalUI.open?.rowIndex ?? -1
       if (rowIndex >= 0 && rowIndex < tableRows.length) {
-        updateTableRow(rowIndex, { feedbackGeneralCategory: newCategoryName })
+        updateTableRow(rowIndex, {feedbackGeneralCategory: newCategoryName})
       }
       closeModal()
       newCategoryModalUI.handleClose()
       resetInputs()
-      // alert不要（一括保存時にDBに保存されることを凡例で表示）
     } else if (categoryError) {
       alert(categoryError)
     }
@@ -106,8 +93,6 @@ export default function BatchAnalysisPage() {
     categoryError,
   ])
 
-
-
   // 新規詳細カテゴリ作成ハンドラ（stateに追加、DBには保存しない）
   const handleCreateCategory = useCallback(() => {
     if (!newCategoryName.trim()) {
@@ -115,7 +100,6 @@ export default function BatchAnalysisPage() {
       return
     }
 
-    // rowIndexを確実に取得
     const rowIndex = modalState.rowIndex >= 0 ? modalState.rowIndex : newCategoryModalUI.open?.rowIndex ?? -1
     if (rowIndex < 0 || rowIndex >= tableRows.length) {
       alert('対象レコードが見つかりません')
@@ -125,21 +109,13 @@ export default function BatchAnalysisPage() {
     const row = tableRows[rowIndex]
     if (!row) return
 
-    const success = createCategory(
-      row.feedbackGeneralCategory,
-      newCategoryName,
-      newCategoryDescription
-    )
+    const success = createCategory(row.feedbackGeneralCategory, newCategoryName, newCategoryDescription)
     if (success) {
-      // 作成成功時、該当レコードの「修正カテゴリ」
-
-      updateTableRow(rowIndex, {
-        feedbackCategory: newCategoryName
-      })
+      // 作成成功時、該当レコードの「修正カテゴリ」にセット
+      updateTableRow(rowIndex, {feedbackCategory: newCategoryName})
       closeModal()
       newCategoryModalUI.handleClose()
       resetInputs()
-      // alert不要（一括保存時にDBに保存されることを凡例で表示）
     } else if (categoryError) {
       alert(categoryError)
     }
@@ -161,7 +137,7 @@ export default function BatchAnalysisPage() {
   const handleOpenModal = useCallback(
     (type: 'general' | 'category', rowIndex: number, initialName?: string) => {
       openModal(type, rowIndex, initialName)
-      newCategoryModalUI.handleOpen({ rowIndex, type })
+      newCategoryModalUI.handleOpen({rowIndex, type})
     },
     [openModal, newCategoryModalUI]
   )
@@ -173,30 +149,50 @@ export default function BatchAnalysisPage() {
     resetInputs()
   }, [closeModal, newCategoryModalUI, resetInputs])
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto text-blue-600" />
+          <p className="mt-4 text-gray-600">読み込み中...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <C_Stack className="max-w-[1800px] mx-auto gap-6">
-        {/* 入力エリア */}
-        <InputSection
-          rawTexts={rawTexts}
-          setRawTexts={setRawTexts}
-          allowCategoryGeneration={allowCategoryGeneration}
-          setAllowCategoryGeneration={setAllowCategoryGeneration}
-          isAnalyzing={isAnalyzing}
-          selectedClientId={selectedClient?.clientId}
-          onAnalyze={handleBatchAnalyze}
-        />
+        {/* ヘッダー */}
+        <div className="bg-white rounded-lg shadow-sm p-4">
+          <R_Stack className="justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">一括登録記録</h1>
+              <p className="text-sm text-gray-600 mt-1">
+                過去に一括登録したデータを閲覧・編集できます
+              </p>
+            </div>
+            <button
+              onClick={reload}
+              disabled={isLoading}
+              className="px-4 py-2 text-sm font-medium rounded-lg transition-colors flex items-center gap-2 bg-gray-600 text-white hover:bg-gray-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+            >
+              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+              再読み込み
+            </button>
+          </R_Stack>
+        </div>
 
         {/* 分析結果テーブル */}
-        {tableRows.length > 0 && (
+        {tableRows.length > 0 ? (
           <ResultsTable
             tableRows={tableRows}
-            results={results}
+            results={[]} // 閲覧ページでは不要だが、型の都合で空配列を渡す
             mergedGeneralCategories={mergedGeneralCategories}
             categoryDiff={categoryDiff}
             pendingGeneralCategories={pendingGeneralCategories}
             pendingCategories={pendingCategories}
-            isSavingAll={isSavingAll}
+            isSavingAll={isSaving}
             isNewGeneratedGeneralCategory={isNewGeneratedGeneralCategory}
             isNewGeneratedCategory={isNewGeneratedCategory}
             isPendingGeneralCategory={isPendingGeneralCategory}
@@ -205,9 +201,14 @@ export default function BatchAnalysisPage() {
             updateTableRow={updateTableRow}
             onSaveAll={handleSaveAll}
             onOpenModal={handleOpenModal}
-            canExportCsv={canExportCsv}
-            onExportCsv={exportToCsv}
+            canExportCsv={false} // 閲覧ページではCSVエクスポートは不要
+            onExportCsv={() => {}}
+            onSaveRow={handleSaveRow} // 個別保存
           />
+        ) : (
+          <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+            <p className="text-gray-600">一括登録記録がありません</p>
+          </div>
         )}
       </C_Stack>
 
@@ -222,7 +223,7 @@ export default function BatchAnalysisPage() {
           name={newCategoryName}
           setName={setNewCategoryName}
           description={newCategoryDescription}
-
+          setDescription={setNewCategoryDescription}
           onCancel={handleCloseModal}
           onCreate={modalState.type === 'general' ? handleCreateGeneralCategory : handleCreateCategory}
         />
@@ -230,3 +231,4 @@ export default function BatchAnalysisPage() {
     </div>
   )
 }
+

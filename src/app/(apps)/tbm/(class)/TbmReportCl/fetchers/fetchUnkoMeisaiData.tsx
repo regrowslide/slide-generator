@@ -48,12 +48,29 @@ export const getDriveScheduleList = async (props: {
     }
     : {}
 
+  // 共有便を含む便グループのフィルター条件
+  const routeGroupBaseFilter = tbmBaseId
+    ? {
+      OR: [
+        { tbmBaseId },
+        { TbmRouteGroupShare: { some: { tbmBaseId, isActive: true } } },
+      ],
+    }
+    : {}
+
+
   const whereArgs = {
     approved: allowNonApprovedSchedule ? undefined : TbmReportCl.allowNonApprovedSchedule ? undefined : true,
     date: whereQuery,
-    tbmBaseId,
-    userId,
-    TbmRouteGroup: displayExpiryDateFilter,
+
+    User: {
+      id: userId,
+      tbmBaseId: tbmBaseId,
+    },
+    TbmRouteGroup: {
+      ...displayExpiryDateFilter,
+      ...routeGroupBaseFilter,
+    },
   }
 
 
@@ -72,7 +89,7 @@ export const getDriveScheduleList = async (props: {
       },
       TbmVehicle: {},
       User: {
-        where: { id: userId },
+        where: { id: userId, },
         include: { TbmVehicle: {} },
       },
       TbmDriveScheduleImage: {

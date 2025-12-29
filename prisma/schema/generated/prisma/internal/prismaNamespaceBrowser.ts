@@ -71,8 +71,8 @@ export const ModelName = {
   CounselingSlot: 'CounselingSlot',
   HakobunIndustry: 'HakobunIndustry',
   HakobunIndustryGeneralCategory: 'HakobunIndustryGeneralCategory',
+  HakobunIndustryCategory: 'HakobunIndustryCategory',
   HakobunClient: 'HakobunClient',
-  HakobunCategory: 'HakobunCategory',
   HakobunCorrection: 'HakobunCorrection',
   HakobunRule: 'HakobunRule',
   HakobunVoice: 'HakobunVoice',
@@ -483,6 +483,19 @@ export const HakobunIndustryGeneralCategoryScalarFieldEnum = {
 export type HakobunIndustryGeneralCategoryScalarFieldEnum = (typeof HakobunIndustryGeneralCategoryScalarFieldEnum)[keyof typeof HakobunIndustryGeneralCategoryScalarFieldEnum]
 
 
+export const HakobunIndustryCategoryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  description: 'description',
+  enabled: 'enabled',
+  generalCategoryId: 'generalCategoryId'
+} as const
+
+export type HakobunIndustryCategoryScalarFieldEnum = (typeof HakobunIndustryCategoryScalarFieldEnum)[keyof typeof HakobunIndustryCategoryScalarFieldEnum]
+
+
 export const HakobunClientScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -499,22 +512,6 @@ export const HakobunClientScalarFieldEnum = {
 export type HakobunClientScalarFieldEnum = (typeof HakobunClientScalarFieldEnum)[keyof typeof HakobunClientScalarFieldEnum]
 
 
-export const HakobunCategoryScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  categoryCode: 'categoryCode',
-  generalCategory: 'generalCategory',
-  specificCategory: 'specificCategory',
-  description: 'description',
-  enabled: 'enabled',
-  hakobunClientId: 'hakobunClientId'
-} as const
-
-export type HakobunCategoryScalarFieldEnum = (typeof HakobunCategoryScalarFieldEnum)[keyof typeof HakobunCategoryScalarFieldEnum]
-
-
 export const HakobunCorrectionScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -527,8 +524,6 @@ export const HakobunCorrectionScalarFieldEnum = {
   correctGeneralCategory: 'correctGeneralCategory',
   correctCategory: 'correctCategory',
   correctSentiment: 'correctSentiment',
-  correctCategoryCode: 'correctCategoryCode',
-  sentiment: 'sentiment',
   reviewerComment: 'reviewerComment',
   archived: 'archived',
   hakobunClientId: 'hakobunClientId'

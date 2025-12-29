@@ -1,15 +1,6 @@
 'use client'
 
-import React, { useEffect } from 'react'
-import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
-import { useHakobunAnalysis } from '../hooks/useHakobunAnalysis'
-import { VoiceAnalyzer } from '../components/VoiceAnalyzer'
-import { AnalysisResultView } from '../components/AnalysisResult'
-import { FeedbackEditor } from '../components/FeedbackEditor'
-import { ProcessLog } from '../components/ProcessLog'
-import { BarChart3, RefreshCw, Database, BookOpen, Layers } from 'lucide-react'
-import useMyNavigation from '@cm/hooks/globalHooks/useMyNavigation'
-import { redirect } from 'next/dist/server/api-utils'
+import React from 'react'
 import Redirector from '@cm/components/utils/Redirector'
 
 export default function HakobunAnalysisDashboard() {

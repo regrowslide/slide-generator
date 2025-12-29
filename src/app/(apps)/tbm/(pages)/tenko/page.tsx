@@ -28,8 +28,19 @@ export default function TenkoPage(props) {
   const date = toUtc(query.date || query.month)
   const tbmBaseId = Number(query.tbmBaseId)
 
+  // 共有便を含む便グループのフィルター条件
+  const routeGroupBaseFilter = {
+    OR: [
+      { tbmBaseId },
+      { TbmRouteGroupShare: { some: { tbmBaseId, isActive: true } } },
+    ],
+  }
+
   const { data = [] } = useDoStandardPrisma(`tbmDriveSchedule`, `findMany`, {
-    where: { date: date, tbmBaseId },
+    where: {
+      date: date,
+      TbmRouteGroup: routeGroupBaseFilter,
+    },
     include: { User: {}, TbmVehicle: {}, TbmRouteGroup: {} },
   })
 

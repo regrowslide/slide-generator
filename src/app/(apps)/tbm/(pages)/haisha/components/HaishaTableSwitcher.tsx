@@ -1,16 +1,18 @@
-import {Fields} from '@cm/class/Fields/Fields'
-import {Button} from '@cm/components/styles/common-components/Button'
-import {R_Stack} from '@cm/components/styles/common-components/common-components'
+import { Fields } from '@cm/class/Fields/Fields'
+import { Button } from '@cm/components/styles/common-components/Button'
+import { R_Stack } from '@cm/components/styles/common-components/common-components'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import useBasicFormProps from '@cm/hooks/useBasicForm/useBasicFormProps'
+import { isDev } from '@cm/lib/methods/common'
+import { colType } from '@cm/types/col-types'
 import React from 'react'
-import {getScopes} from 'src/non-common/scope-lib/getScopes'
+import { getScopes } from 'src/non-common/scope-lib/getScopes'
 
 export default function HaishaTableSwitcher() {
-  const {query, addQuery, shallowAddQuery, session} = useGlobal()
-  const scopes = getScopes(session, {query})
-  const {tbmBaseId} = scopes.getTbmScopes()
-  const {BasicForm, latestFormData} = useBasicFormProps({
+  const { query, addQuery, shallowAddQuery, session } = useGlobal()
+  const scopes = getScopes(session, { query })
+  const { tbmBaseId } = scopes.getTbmScopes()
+  const { BasicForm, latestFormData } = useBasicFormProps({
     columns: new Fields([
       //
       {
@@ -18,8 +20,8 @@ export default function HaishaTableSwitcher() {
         label: `モード`,
         forSelect: {
           optionsOrOptionFetcher: [
-            {name: 'ドライバ', label: 'ドライバ', value: 'DRIVER'},
-            {name: '便', label: '便', value: 'ROUTE'},
+            { name: 'ドライバ', label: 'ドライバ', value: 'DRIVER' },
+            { name: '便', label: '便', value: 'ROUTE' },
           ],
         },
       },
@@ -28,9 +30,9 @@ export default function HaishaTableSwitcher() {
         label: `並び順`,
         forSelect: {
           optionsOrOptionFetcher: [
-            {name: '出発時間順', label: '出発時間順', value: 'departureTime'},
-            {name: '便コード順', label: '便コード順', value: 'routeCode'},
-            {name: '荷主コード順', label: '荷主コード順', value: 'customerCode'},
+            { name: '出発時間順', label: '出発時間順', value: 'departureTime' },
+            { name: '便コード順', label: '便コード順', value: 'routeCode' },
+            { name: '荷主コード順', label: '荷主コード順', value: 'customerCode' },
           ],
         },
       },
@@ -41,16 +43,22 @@ export default function HaishaTableSwitcher() {
           config: {
             modelName: 'tbmCustomer',
             where: {},
-            orderBy: [{code: 'asc'}, {name: 'asc'}],
+            orderBy: [{ code: 'asc' }, { name: 'asc' }],
           },
         },
       },
-    ]).transposeColumns(),
+      isDev && {
+        id: `routeNameFilter`,
+        label: `便名`,
+        form: { style: { width: 200 } },
+      },
+    ].filter(item => item) as colType[]).transposeColumns(),
 
     formData: {
       mode: query.mode ?? 'DRIVER',
       sortBy: query.sortBy ?? 'departureTime',
       tbmCustomerId: query.tbmCustomerId ? parseInt(query.tbmCustomerId) : undefined,
+      routeNameFilter: query.routeNameFilter ?? '',
     },
   })
 

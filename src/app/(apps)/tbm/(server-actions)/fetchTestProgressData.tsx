@@ -15,12 +15,22 @@ export const fetchTestProgressData = async ({ tbmBaseId, whereQuery }) => {
       }
     : {}
 
+  // 共有便を含む便グループのフィルター条件
+  const routeGroupBaseFilter = {
+    OR: [
+      { tbmBaseId },
+      { TbmRouteGroupShare: { some: { tbmBaseId, isActive: true } } },
+    ],
+  }
+
   // 1. 配車設定状況（便別）
   const driveSchedules = await prisma.tbmDriveSchedule.findMany({
     where: {
-      tbmBaseId,
       date: whereQuery,
-      TbmRouteGroup: displayExpiryDateFilter,
+      TbmRouteGroup: {
+        ...displayExpiryDateFilter,
+        ...routeGroupBaseFilter,
+      },
     },
     include: {
       TbmRouteGroup: {
