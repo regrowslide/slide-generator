@@ -21,8 +21,6 @@ export const updateSimply = async (props: {
 }) => {
   const { columns, latestFormData, dataModelName, additionalPayload, additionalInclude, initialModelData, extraFormState } = props
 
-
-
   //=============複数選択の場合=============
   const MultiItems = columns.flat().filter(col => isMultiItem(col.id))
   const cleansedFormData = { ...latestFormData }
@@ -37,12 +35,6 @@ export const updateSimply = async (props: {
     additionalPayload,
     columns,
   })
-
-
-
-
-
-
 
   //==========リレーションを削除し、後でトランザクションで処理==========
 
@@ -71,8 +63,6 @@ export const updateSimply = async (props: {
   })
 
   let updatedModelRes: requestResultType
-
-
 
   if (id) {
     updatedModelRes = await generalDoStandardPrisma(dataModelName, 'update', {

@@ -3,14 +3,16 @@ import {identifyPathItem, PAGES} from 'src/non-common/path-title-constsnts'
 import {rootPaths} from 'src/middleware'
 import {useGlobalPropType} from 'src/cm/hooks/globalHooks/useGlobalOrigin'
 import {AccessValidationResult, CheckValidAccessProps} from '@cm/components/layout/Admin/type'
+import {addQuerySentence} from '@cm/lib/methods/urls'
 
 const checkValidAccess = (props: CheckValidAccessProps) => {
-  const {allPathsPatterns, pathname, origin = ''} = props
+  const {allPathsPatterns, pathname, origin = '', redirectUrl} = props
   const matchedPathItem = identifyPathItem({allPathsPattenrs: allPathsPatterns, pathname})
 
   if (matchedPathItem?.exclusiveTo === false) {
     const rootPath = matchedPathItem?.href?.split('/')[1]
-    const path = `${origin}/not-found?rootPath=${rootPath}`
+    const encodedRedirectUrl = encodeURIComponent(redirectUrl)
+    const path = `${origin}/not-found?rootPath=${encodedRedirectUrl ?? rootPath}`
 
     return {valid: false, path}
   } else {
@@ -45,6 +47,7 @@ export const useAccessValidation = (useGlobalProps: useGlobalPropType): AccessVa
           allPathsPatterns,
           pathname,
           origin: '',
+          redirectUrl: pathname + addQuerySentence(query),
         })
       })
 

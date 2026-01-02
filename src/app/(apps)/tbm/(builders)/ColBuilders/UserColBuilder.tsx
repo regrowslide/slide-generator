@@ -5,7 +5,7 @@ import { Fields } from '@cm/class/Fields/Fields'
 import { columnGetterType } from '@cm/types/types'
 
 export const UserColBuilder = (props: columnGetterType) => {
-  const { tbmBaseId } = props.ColBuilderExtraProps ?? {}
+  const { tbmBaseId } = props.useGlobalProps.accessScopes().getTbmScopes()
   return new Fields([
     { id: 'tbmBaseId', label: '営業所', forSelect: {}, form: { ...defaultRegister, defaultValue: tbmBaseId } },
     { id: 'code', label: '社員コード', form: {} },

@@ -107,7 +107,7 @@ export const getRecord = (props: {col: colType; currentValue: any; options: any[
     if (currentValue === undefined) return ''
 
     if (OptionGetType == 'array') {
-      record = options.find(obj => obj.id == currentValue) ?? {}
+      record = options.find(obj => obj.value == currentValue) ?? {}
     } else {
       const modelName = convertColIdToModelName({col})
       const idIsNumber = !isNaN(Number(currentValue))

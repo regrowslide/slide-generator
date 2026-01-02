@@ -48,7 +48,7 @@ export class VehicleCl {
         if (op) {
           const vehicle = op as unknown as TbmVehicle
 
-          return { ...op, name: withFrame ? new VehicleCl(vehicle).nameWithFrame : new VehicleCl(vehicle).name }
+          return { ...op, label: withFrame ? new VehicleCl(vehicle).nameWithFrame : new VehicleCl(vehicle).name }
         }
 
         return op

@@ -184,11 +184,7 @@ export const useMyTableLogic = (props: MyTableLogicProps) => {
     scrollKey: tableId,
   })
 
-  // const {SearchHandlerMemo} = useSearchHandler({
-  //   columns: ClientProps2.columns,
-  //   dataModelName: ClientProps2.dataModelName,
-  //   useGlobalProps: ClientProps2.useGlobalProps,
-  // })
+
 
   const TableConfigProps: TableConfigPropsType = {
     columns,

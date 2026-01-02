@@ -55,8 +55,6 @@ export const ModalCore = React.memo((props: ModalCorePropType) => {
     ? prev => {
         if (confirm(String(alertOnClose))) {
           props.setopen(false)
-        } else {
-          props.setopen(!prev)
         }
       }
     : props.setopen

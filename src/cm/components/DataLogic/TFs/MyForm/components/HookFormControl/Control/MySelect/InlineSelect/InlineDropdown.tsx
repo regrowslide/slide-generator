@@ -30,7 +30,7 @@ export const InlineDropdown = React.memo((props: InlineDropdownProps) => {
  }
 
  // nullオプション（選択解除）
- const nullOption: optionType = { id: null as any, label: '選択解除', name: '選択解除', value: null as any }
+ const nullOption: optionType = { value: null as any, label: '選択解除' }
 
  return (
   <div
@@ -54,7 +54,7 @@ export const InlineDropdown = React.memo((props: InlineDropdownProps) => {
      {filteredOptions.map((option: optionType, index: number) => {
       return (
        <div
-        key={option.id ?? index}
+        key={option.value ?? index}
         onClick={() => onSelect(option)}
         className="cursor-pointer hover:opacity-70 rounded-sm hover:bg-gray-100"
        >

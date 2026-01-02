@@ -58,7 +58,7 @@ const Main = (props: ControlProps & {options}) => {
           <R_Stack className={`cursor-pointer border-b !border-gray-200 flex-nowrap gap-1`} key={i}>
             <input className={`h-4`} type="checkbox" checked={isActive} onChange={() => undefined} />
             <span color={op.color ?? ''} className={` text-[14px]`} onClick={() => onClick({op, nextActive: !isActive})}>
-              {op.name}
+              {op.label ?? op.name}
             </span>
           </R_Stack>
         )

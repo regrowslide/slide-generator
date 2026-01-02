@@ -39,6 +39,7 @@ export type AccessValidationResult = {
 }
 
 export type CheckValidAccessProps = {
+  redirectUrl: string
   pathname: string
   origin: string
   allPathsPatterns: any[]

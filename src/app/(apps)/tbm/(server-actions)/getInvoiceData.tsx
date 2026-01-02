@@ -369,7 +369,7 @@ export const getInvoiceData = async ({
 
   const invoiceData: InvoiceData = {
     companyInfo: {
-      name: '西日本運送株式会社',
+      name: '西日本運送有限会社',
       tel: '0943-72-2361',
       fax: '0943-72-4160',
       bankInfo: '振込銀行 福岡銀行 田主丸支店\n（普通）９００８３\n登録番号 T2290020049699',

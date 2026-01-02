@@ -17,7 +17,6 @@ const InlineSelect = React.memo((props: {contexts: contextsType}) => {
   const {MySelectContextValue, controlContextValue} = contexts
   const {currentValueToReadableStr, filteredOptions, handleOptionClick, COLOR, options} = MySelectContextValue
   const {col, formProps, ControlStyle, field} = controlContextValue
-  const displayExtractKeys = col?.forSelect?.config?.displayExtractKeys ?? [`name`]
 
   const [isFocused, setIsFocused] = useState(false)
   const [inputValue, setInputValue] = useState('')
@@ -40,22 +39,16 @@ const InlineSelect = React.memo((props: {contexts: contextsType}) => {
   }
 
   // オプションから表示文字列を取得
-  const getOptionDisplayString = useCallback(
-    (option: optionType): string => {
-      if (option.label) {
-        return String(option.label)
-      }
-      const displayParts = displayExtractKeys.map(key => option[key]).filter(Boolean)
-      return displayParts.join(' ') || String(option.id || '')
-    },
-    [displayExtractKeys]
-  )
+  const getOptionDisplayString = useCallback((option: optionType): string => {
+    // label があればそれを使用、なければ value を文字列化
+    return option.label ? String(option.label) : String(option.value ?? '')
+  }, [])
 
   // オプション選択（クリックのみで確定）
   const handleSelectOption = useCallback(
     async (option: optionType) => {
       // 選択解除の場合は空文字を表示
-      const isNullOption = option.id === null || option.id === undefined
+      const isNullOption = option.value === null || option.value === undefined
       const displayStr = isNullOption ? '' : getOptionDisplayString(option)
       setInputValue(displayStr)
       setIsFocused(false)

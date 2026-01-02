@@ -33,11 +33,10 @@ export default function useInitMySelect(props: ControlProps) {
   const options = Cached_Option_Props?.allOptions?.[selectId]
 
   const record: any = getRecord({col, currentValue, options})
-  const displayExtractKeys = col?.forSelect?.config?.displayExtractKeys ?? [`name`]
 
-  const currentValueToReadableStr = getcurrentValueToReadableStr({col, record, currentValue, options, displayExtractKeys}) ?? ''
+  const currentValueToReadableStr = getcurrentValueToReadableStr({col, record, currentValue, options}) ?? ''
 
-  const COLOR = options?.find(op => op?.id === currentValue)?.color
+  const COLOR = options?.find(op => op?.value === currentValue)?.color
 
   const [searchedInput, setsearchedInput] = useState('')
 
@@ -45,8 +44,10 @@ export default function useInitMySelect(props: ControlProps) {
   useEffect(() => {
     if (options) {
       const pickedOption = mapAdjustOptionValue([record])[0]
-      const pickedOptionsIsAlreadyInOptions = pickedOption?.id && options?.find(op => op?.id === pickedOption?.id)
+
+      const pickedOptionsIsAlreadyInOptions = pickedOption?.value && options?.find(op => op?.value === pickedOption?.value)
       const uniqueOptions = pickedOption?.value && !pickedOptionsIsAlreadyInOptions ? [...options, pickedOption] : options
+
       const sorted = [...uniqueOptions]
       setFilteredOptions(sorted)
     }
@@ -58,7 +59,8 @@ export default function useInitMySelect(props: ControlProps) {
       const {liftUpNewValueOnChange, ReactHookForm, field} = controlContextValue
       try {
         setIsOptionsVisible(false)
-        const newValue = option?.['id'] ?? ''
+        // option.value がDBに格納される値
+        const newValue = option?.value ?? ''
 
         const props = {id: col.id, newValue, ReactHookForm}
 
@@ -95,25 +97,29 @@ export default function useInitMySelect(props: ControlProps) {
   return {contexts}
 }
 
-/**最新の値（文字） */
-const getcurrentValueToReadableStr = ({col, record, currentValue, options, displayExtractKeys}) => {
-  let currentValueToReadableStr
+/**
+ * 現在の値を読みやすい文字列に変換
+ * - options から value が一致するものの label を返す
+ */
+const getcurrentValueToReadableStr = ({col, record, currentValue, options}) => {
+  // options から現在の値に一致するオプションの label を取得
+  const matchedOption = options?.find(op => op?.value === currentValue)
 
-  const asignIfValid = val => {
-    if (!currentValueToReadableStr && val) {
-      if (typeof val === 'string' || typeof val === 'number') {
-        currentValueToReadableStr = val
-      }
-    }
+  if (matchedOption?.label) {
+    return matchedOption.label
   }
 
-  asignIfValid(options?.find(op => op?.id === currentValue)?.label)
-  asignIfValid(options?.find(op => displayExtractKeys.find(key => op[key])))
-  asignIfValid(getNameFromSelectOption({col, record}))
-  asignIfValid(displayExtractKeys.map(key => record[key]).join(' '))
-  asignIfValid(record)
+  // record から取得
+  if (record?.name) return record.name
 
-  return currentValueToReadableStr
+  if (getNameFromSelectOption({col, record})) return getNameFromSelectOption({col, record})
+
+  // プリミティブ値の場合
+  if (typeof record === 'string' || typeof record === 'number') {
+    return record
+  }
+
+  return undefined
 }
 
 export const parseContexts = (contexts: contextsType) => {

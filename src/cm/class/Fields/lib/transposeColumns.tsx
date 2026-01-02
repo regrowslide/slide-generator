@@ -79,7 +79,11 @@ export const transposeColumns = (columns: colType[], transposeColumnsOptions?: t
         col.form = {...col.form}
 
         if (col.forSelect.codeMaster) {
-          col.forSelect.optionsOrOptionFetcher = col.forSelect.codeMaster.array
+          col.forSelect.optionsOrOptionFetcher = col.forSelect.codeMaster.array.map(d => ({
+            id: d.code,
+            label: d.label,
+            color: d.color,
+          }))
         }
 
         col.format = defaultFormat

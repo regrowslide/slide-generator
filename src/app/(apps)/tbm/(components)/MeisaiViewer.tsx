@@ -108,7 +108,7 @@ const MeisaiDocument = ({ meisaiData }: { meisaiData: MeisaiData }) => {
         {/* ヘッダー */}
         <View style={styles.header}>
           <Text style={styles.title}>令和{new Date(meisaiData.yearMonth).getFullYear() - 2018}年{formatDate(meisaiData.yearMonth, 'M')}月度 運行明細</Text>
-          <Text style={styles.companyInfo}>西日本運送有限会社 関東営業所</Text>
+          <Text style={styles.companyInfo}>西日本運送有限会社</Text>
         </View>
 
         {/* テーブル */}

@@ -1,7 +1,7 @@
-import { R_Stack } from 'src/cm/components/styles/common-components/common-components'
+import {R_Stack} from 'src/cm/components/styles/common-components/common-components'
 import React from 'react'
-const AppLogo = React.memo((props: { showLogoOnly; AppName; Logo }) => {
-  const { showLogoOnly, AppName, Logo } = props
+const AppLogo = React.memo((props: {showLogoOnly; AppName; Logo}) => {
+  const {showLogoOnly, AppName, Logo} = props
 
   return (
     <div className={`row-stack  `}>

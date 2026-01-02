@@ -35,7 +35,5 @@ export const confirmSearch = ({
   // ページングパラメータを削除（新しいプレフィックス方式に対応）
   resetPaginationParams(query, newQuery)
 
-  toggleLoad(async () => {
-    addQuery(newQuery)
-  })
+  addQuery(newQuery)
 }

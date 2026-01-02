@@ -118,11 +118,11 @@ export class ColBuilder {
               organization: `text`,
             },
             nameChanger: op => {
-              let name = ''
-              if (op?.name) name = op.name
-              if (op?.organization) name = name + `(${op.organization})`
+              let label = ''
+              if (op?.name) label = op.name
+              if (op?.organization) label = label + `(${op.organization})`
 
-              return { ...op, name }
+              return { ...op, label }
             },
           },
         },

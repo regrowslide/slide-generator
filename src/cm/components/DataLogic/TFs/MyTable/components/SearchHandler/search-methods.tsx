@@ -115,12 +115,14 @@ export const Sub = {
       }))
       const searchTypeSelectorCols = searchableCols.map((col: colType | any) => {
         let serachOptions = col.searchFormats.map(format => {
-          const result = {value: format.searchType, name: format.label}
-          return result
+          return {
+            value: format.searchType,
+            label: format.label,
+          }
         })
 
         serachOptions = mapAdjustOptionValue(serachOptions) as optionType[]
-        const defaultValue = serachOptions[0]?.value
+
         const noOption = serachOptions.length === 1
 
         const newCol: colType = {
@@ -132,7 +134,7 @@ export const Sub = {
           form: {
             showResetBtn: false,
             disabled: noOption,
-            defaultValue: defaultValue,
+            defaultValue: serachOptions[0]?.value,
             style: {
               width: 120,
               color: 'gray',
@@ -270,6 +272,7 @@ export const SearchQuery = {
         const mainCol = MainColObject[key.replace('_searchNotation', '')]
         // allDataからsearchColのidに対応する値を取得し、searchNotationに代入
         const searchNotation: searchNotationType = allData[searchCol?.id]
+
         // mainColのidをsearchKeyに代入
         const searchKey = mainCol.id
         // allDataからmainColのidに対応する値を取得し、searchValueに代入

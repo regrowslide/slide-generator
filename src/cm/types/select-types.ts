@@ -15,7 +15,7 @@ export type forSelectConfig = {
   where?: anyObject | ((props: {col: colType; latestFormData: anyObject}) => anyObject)
   orderBy?: any
   include?: any
-  nameChanger?: (op: optionType & anyObject) => optionType & {name: any}
+  nameChanger?: (op: optionType & anyObject) => optionType & {label: any}
   messageWhenNoHit?: string
 }
 

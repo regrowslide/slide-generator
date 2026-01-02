@@ -11,6 +11,7 @@ export type transposeColumnsOptionProps = {
 export type optionsOrOptionFetcherProps = {
   latestFormData?: anyObject
   col: colType
+  searchInput?: string
   // additionalQuery?: anyObject
 }
 
@@ -18,9 +19,14 @@ export type optionsOrOptionFetcherType = (
   props: optionsOrOptionFetcherProps
 ) => Promise<{optionObjArr: optionType[]; modelName?: string}>
 
+/**
+ * セレクトオプションの型定義
+ * - value: DBに格納される値（必須）
+ * - label: UIに表示される値（任意、なければvalueを文字列化）
+ * - color: オプションの色（任意）
+ */
 export type optionType = {
-  id?: any
+  value: any
   label?: string
-  value: string
   color?: string
 } & anyObject

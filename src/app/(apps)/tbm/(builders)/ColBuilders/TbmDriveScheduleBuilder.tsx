@@ -48,7 +48,7 @@ export const TbmDriveScheduleBuilder = (props: columnGetterType) => {
           orderBy: [{ id: 'asc' }],
           nameChanger(op) {
 
-            return { ...op, name: op ? [`[${op.id}]`, op.name].join(` `) : '' }
+            return { ...op, label: op ? [`[${op.id}]`, op.name].join(` `) : '' }
           },
         },
       },

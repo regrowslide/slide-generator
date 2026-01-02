@@ -1,13 +1,13 @@
 import ColOption from '@cm/components/DataLogic/TFs/MyTable/components/MainTable/TdContent/ColOption/ColOption'
-import { R_Stack } from 'src/cm/components/styles/common-components/common-components'
+import {R_Stack} from 'src/cm/components/styles/common-components/common-components'
 import React from 'react'
 
-import { Fields } from '@cm/class/Fields/Fields'
-import { DH__switchColType } from '@cm/class/DataHandler/type-converter'
-import { colType } from '@cm/types/col-types'
-import { DisplayedState } from '@cm/components/DataLogic/TFs/MyTable/components/MainTable/TdContent/childrens/DisplayedState'
+import {Fields} from '@cm/class/Fields/Fields'
+import {DH__switchColType} from '@cm/class/DataHandler/type-converter'
+import {colType} from '@cm/types/col-types'
+import {DisplayedState} from '@cm/components/DataLogic/TFs/MyTable/components/MainTable/TdContent/childrens/DisplayedState'
 import InlineEditableValue from '@cm/components/DataLogic/TFs/MyTable/components/MainTable/TdContent/InlineEditableValue'
-import { UseRecordsReturn } from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/useRecords/useRecords'
+import {UseRecordsReturn} from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/useRecords/useRecords'
 
 const TdContent = React.memo(
   (props: {
@@ -18,18 +18,16 @@ const TdContent = React.memo(
     UseRecordsReturn?: UseRecordsReturn
     tdStyle?: React.CSSProperties
   }) => {
-    const { dataModelName, col, record, value, UseRecordsReturn, tdStyle } = props
+    const {dataModelName, col, record, value, UseRecordsReturn, tdStyle} = props
 
-    const isEditableCell = col?.td?.editable && ![`file`].includes(DH__switchColType({ type: col.type }))
-
-
+    const isEditableCell = col?.td?.editable && ![`file`].includes(DH__switchColType({type: col.type}))
 
     const showLabel = col?.isMain === undefined && Fields.doShowLabel(col)
 
     const Label = () => {
       return (
-        <span className={`leading-[8px]`} style={{ ...col?.td?.style }}>
-          <ColOption {...{ col, dataModelName }}>{col.label}</ColOption>
+        <span className={`leading-[8px]`} style={{...col?.td?.style}}>
+          <ColOption {...{col, dataModelName}}>{col.label}</ColOption>
         </span>
       )
     }
@@ -45,7 +43,7 @@ const TdContent = React.memo(
             UseRecordsReturn={UseRecordsReturn as unknown as UseRecordsReturn}
           />
         ) : (
-          <DisplayedState {...{ col, record, value }} />
+          <DisplayedState {...{col, record, value}} />
         )}
       </div>
     )

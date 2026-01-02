@@ -18,7 +18,7 @@ export const SelectOption = (props: {contexts: contextsType; option: optionType;
   return (
     <span
       // type="button"
-      id={`option-${option.id}`}
+      id={`option-${option.value}`}
       onClick={() => {
         setTimeout(async () => {
           await handleOptionClick(option, filteredOptions)

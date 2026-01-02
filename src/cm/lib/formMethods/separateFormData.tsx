@@ -1,8 +1,8 @@
-import { additionalPropsType, dataModelNameType } from '@cm/types/types'
+import {additionalPropsType, dataModelNameType} from '@cm/types/types'
 
-import { anyObject } from '@cm/types/utility-types'
+import {anyObject} from '@cm/types/utility-types'
 
-import { getModelFieldsInfomation } from '@cm/lib/methods/prisma-schema'
+import {getModelFieldsInfomation} from '@cm/lib/methods/prisma-schema'
 
 export type myFormDefaultUpsertPropType = {
   latestFormData: anyObject
@@ -13,8 +13,8 @@ export type myFormDefaultUpsertPropType = {
   columns
 }
 
-export const separateFormData = ({ dataModelName, latestFormData, additionalPayload, columns }) => {
-  const prismaDataObject = { ...additionalPayload, ...latestFormData, }
+export const separateFormData = ({dataModelName, latestFormData, additionalPayload, columns}) => {
+  const prismaDataObject = {...additionalPayload, ...latestFormData}
 
   Object.keys(prismaDataObject).forEach(key => {
     if (key.includes('readOnly')) {
@@ -22,7 +22,7 @@ export const separateFormData = ({ dataModelName, latestFormData, additionalPayl
     }
   })
 
-  const { primitiveFieldObj, objectFieldObj } = getModelFieldsInfomation(dataModelName)
+  const {primitiveFieldObj, objectFieldObj} = getModelFieldsInfomation(dataModelName)
 
   // // const basicFields=
 
@@ -73,7 +73,7 @@ export const separateFormData = ({ dataModelName, latestFormData, additionalPayl
     }
   })
 
-  const { id, ...modelBasicData } = pseudoModelBasicData
+  const {id, ...modelBasicData} = pseudoModelBasicData
   return {
     id,
     modelBasicData: modelBasicData,

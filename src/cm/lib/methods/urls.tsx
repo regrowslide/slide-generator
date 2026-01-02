@@ -11,7 +11,9 @@ export const addQuerySentence = (additionalQuery = {}, currentQuery = {}, keepOl
     const value = newQuery[key]
 
     if (value) {
-      const queryString = `${key}=${value}`
+      const encodedKey = encodeURIComponent(key)
+      const encodedValue = encodeURIComponent(String(value))
+      const queryString = `${encodedKey}=${encodedValue}`
       const preFix = accu ? '&' : '?'
 
       return accu + preFix + queryString

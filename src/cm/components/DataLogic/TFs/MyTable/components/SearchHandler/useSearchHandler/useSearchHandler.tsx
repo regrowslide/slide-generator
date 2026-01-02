@@ -147,7 +147,8 @@ export const useSearchHandler = (props: SearchHandler) => {
   }, [SearchCols, modalOpen, query, ReactHookForm, columns])
 
   const SearchedItemListMemo = useMemo(() => {
-    if (query[searchQueryKey]) {
+    const isSearchActive = Object.keys(currentSearchedQuerys).length > 0
+    if (isSearchActive) {
       return (
         <div>
           <R_Stack className={`text-gray-main gap-2  `}>
@@ -168,28 +169,7 @@ export const useSearchHandler = (props: SearchHandler) => {
         </div>
       )
     }
-  }, [query, ResetBtnMemo, modalOpen])
+  }, [query, ResetBtnMemo, currentSearchedQuerys])
 
   return {SearchedItemListMemo, SearchModalMemo}
-}
-
-export const confirmSeach = ({
-  allData,
-  MainColObject,
-  SearchColObject,
-  dataModelName,
-  addQuery,
-  searchQueryKey,
-  SearchQuery,
-  toggleLoad,
-}) => {
-  const searchQueryResult = SearchQuery.createQueryStr({allData, MainColObject, SearchColObject})
-
-  const newQuery = {
-    [searchQueryKey]: `${dataModelName.toUpperCase()}${searchQueryResult}`,
-  }
-
-  toggleLoad(async () => {
-    addQuery(newQuery)
-  })
 }

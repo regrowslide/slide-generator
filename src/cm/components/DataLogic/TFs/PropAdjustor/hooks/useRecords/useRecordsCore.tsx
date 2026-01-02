@@ -4,6 +4,7 @@ import {getInitModelRecordsProps, serverFetchProps} from '@cm/components/DataLog
 import {tableRecord} from './useRecords'
 import {atomKey, useJotaiByKey} from '@cm/hooks/useJotai'
 import {dataModelNameType} from '@cm/types/types'
+import {generalDoStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
 
 interface UseRecordsCoreProps {
   dataModelName: dataModelNameType
@@ -28,6 +29,7 @@ interface UseRecordsCoreReturn {
   updateData: () => void
   mutateRecords: ({record}: {record: tableRecord}) => void
   deleteRecord: ({record}: {record: tableRecord}) => void
+  refreshSingleRecord: ({findUniqueWhereArgs}: {findUniqueWhereArgs: any}) => Promise<void>
 }
 
 // 初期状態を定数として分離
@@ -89,7 +91,7 @@ export const useRecordsCore = (props: UseRecordsCoreProps): UseRecordsCoreReturn
 
   const [easySearchPrismaDataOnServer, seteasySearchPrismaDataOnServer] =
     useState<easySearchDataSwrType>(INITIAL_EASY_SEARCH_DATA)
-  const [prismaDataExtractionQuery, setprismaDataExtractionQuery] = useState({})
+  const [prismaDataExtractionQuery, setprismaDataExtractionQuery] = useState<any>({})
   const [EasySearcherQuery, setEasySearcherQuery] = useState({})
 
   // 初期データ取得
@@ -122,6 +124,18 @@ export const useRecordsCore = (props: UseRecordsCoreProps): UseRecordsCoreReturn
   const mutateRecords = useCallback(({record}: {record: tableRecord}) => {
     setrecords(prev => updateRecordInArray(prev, record))
   }, [])
+
+  const refreshSingleRecord = useCallback(
+    async ({findUniqueWhereArgs}: {findUniqueWhereArgs: any}) => {
+      const {result: latestRecord} = await generalDoStandardPrisma(dataModelName, 'findUnique', {
+        where: findUniqueWhereArgs,
+        include: prismaDataExtractionQuery?.include,
+      })
+
+      mutateRecords({record: latestRecord})
+    },
+    [prismaDataExtractionQuery]
+  )
 
   // レコード削除
   const deleteRecord = useCallback(({record}: {record: tableRecord}) => {
@@ -182,5 +196,6 @@ export const useRecordsCore = (props: UseRecordsCoreProps): UseRecordsCoreReturn
     updateData,
     mutateRecords,
     deleteRecord,
+    refreshSingleRecord,
   }
 }

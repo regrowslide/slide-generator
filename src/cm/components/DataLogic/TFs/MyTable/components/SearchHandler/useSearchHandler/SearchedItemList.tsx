@@ -20,7 +20,7 @@ export default function SearchedItemList(props: {
   ResetBtnMemo
   query
 }) {
-  const {Cached_Option_Props, columns, SearchQuery, searchQueryKey, dataModelName, ResetBtnMemo, query} = props
+  const {Cached_Option_Props, columns, SearchQuery, searchQueryKey, dataModelName, query} = props
   const AND = SearchQuery.createWhere({dataModelName, query})
   if (Object.keys(AND).length === 0) return null
 

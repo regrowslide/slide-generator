@@ -90,7 +90,7 @@ export class RouteGroupCl {
           }
           return {
             ...op,
-            name: new RouteGroupCl(routeGroup).name,
+            label: new RouteGroupCl(routeGroup).name,
           }
         }
         return op

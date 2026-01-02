@@ -1,6 +1,5 @@
-import {obj__initializeProperty} from '@cm/class/ObjHandler/transformers'
 import {StrHandler} from '@cm/class/StrHandler'
-import {prismaSchemaString, prismaDMMF} from '@cm/lib/methods/scheme-json-export'
+import {prismaDMMF} from '@cm/lib/methods/scheme-json-export'
 
 /**
  * Prisma DMMF (Data Model Meta Format) の型定義
@@ -126,44 +125,7 @@ export type UcarModelStructure = {
   }
 }
 
-/**
- * @deprecated getDMMFModel() または modelExists() を使用してください
- * スキーマをオブジェクト形式で取得する
- * DMMFデータを使用した新しい実装
- */
-export const getSchema = () => {
-  const schemaAsObj = {}
-
-  // DMMFが利用可能な場合はそちらを使用
-  if (prismaDMMF && prismaDMMF.models) {
-    prismaDMMF.models.forEach(model => {
-      schemaAsObj[model.name] = model.fields.map(field => {
-        // フィールド情報を文字列形式に変換（後方互換性のため）
-        const isArray = field.isList ? '[]' : ''
-        const isOptional = !field.isRequired ? '?' : ''
-        return `  ${field.name}${isOptional} ${field.type}${isArray}`
-      })
-    })
-    return schemaAsObj
-  }
-
-  // フォールバック: 従来の文字列解析方式
-  const schemaAsStr = prismaSchemaString
-  let modelName = ''
-  schemaAsStr.split('\n').forEach(line => {
-    if (line.includes('model') && line.includes('{')) {
-      modelName = line.split(' ').filter(val => val)[1]
-    }
-    if (line.includes('}') || line.includes('{') || !line) {
-      return
-    }
-
-    obj__initializeProperty(schemaAsObj, modelName, [])
-    schemaAsObj[modelName].push(line)
-  })
-
-  return schemaAsObj
-}
+//
 
 /**
  * @deprecated getRelationFields() を使用してください

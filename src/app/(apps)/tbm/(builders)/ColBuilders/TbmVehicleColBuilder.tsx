@@ -9,6 +9,7 @@ import { VehicleCl } from '@app/(apps)/tbm/(class)/VehicleCl'
 import { TBM_CODE } from '@app/(apps)/tbm/(class)/TBM_CODE'
 
 export const TbmVehicleColBuilder = (props: columnGetterType) => {
+  const { tbmBaseId } = props.useGlobalProps.accessScopes().getTbmScopes()
   return new Fields([
     ...new Fields([
       ...new Fields([
@@ -21,7 +22,7 @@ export const TbmVehicleColBuilder = (props: columnGetterType) => {
         { id: 'frameNo', label: 'フレームNo', form: { ...defaultRegister }, search: {} },
         { id: 'chassisNumber', label: '車体番号', form: {}, search: {} },
         {
-          id: 'tbmBaseId', label: '営業所', forSelect: {}, form: { ...defaultRegister }
+          id: 'tbmBaseId', label: '営業所', forSelect: {}, form: { ...defaultRegister, defaultValue: tbmBaseId }
         },
         { id: 'vehicleNumber', label: '車両番号', form: { ...defaultRegister }, search: {} },
         { id: 'shodoTorokubi', label: '初度登録日', form: {}, type: `date` },

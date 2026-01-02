@@ -1,12 +1,12 @@
 'use client'
 
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
 
-import {C_Stack, R_Stack} from '@cm/components/styles/common-components/common-components'
-import {CsvTable} from '@cm/components/styles/common-components/CsvTable/CsvTable'
-import React, {Fragment} from 'react'
+import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
+import { CsvTable } from '@cm/components/styles/common-components/CsvTable/CsvTable'
+import React, { Fragment } from 'react'
 
-export default function TenkoPaperHeader({date, tableStyle}) {
+export default function TenkoPaperHeader({ date, tableStyle }) {
   const sections = [
     {
       header: '注意・指示事項',
@@ -58,14 +58,14 @@ export default function TenkoPaperHeader({date, tableStyle}) {
   ]
 
   return (
-    <div style={{...tableStyle}}>
+    <div style={{ ...tableStyle }}>
       <R_Stack className={` w-full justify-between text-[20px] font-bold [&>*]:border-box [&_*]:border-collapse`}>
         <section>点呼記録簿</section>
 
         <R_Stack className={`gap-4`}>
           <C_Stack className={` gap-0`}>
-            <div className={`text-[12px]`}>西日本運送株式会社</div>
-            <div>愛知営業所</div>
+            <div className={`text-[12px]`}>西日本運送有限会社</div>
+
           </C_Stack>
           <span>{formatDate(date, 'YYYY/M/D(ddd)')}</span>
         </R_Stack>
@@ -74,16 +74,16 @@ export default function TenkoPaperHeader({date, tableStyle}) {
           <div>
             {CsvTable({
               records: [
-                {role: `運行管理者`, name: ``, check: `印`},
-                {role: `運行管理補助者`, name: ``, check: `印`},
-                {role: `運行管理補助者`, name: ``, check: `印`},
+                { role: `運行管理者`, name: ``, check: `印` },
+                { role: `運行管理補助者`, name: ``, check: `印` },
+                { role: `運行管理補助者`, name: ``, check: `印` },
               ].map(data => {
                 return {
                   csvTableRow: [
                     //
-                    {label: `職務`, cellValue: data.role},
-                    {label: `氏名`, cellValue: data.name, style: {width: 180}},
-                    {label: `印鑑`, cellValue: data.check},
+                    { label: `職務`, cellValue: data.role },
+                    { label: `氏名`, cellValue: data.name, style: { width: 180 } },
+                    { label: `印鑑`, cellValue: data.check },
                   ],
                 }
               }),
@@ -105,7 +105,7 @@ export default function TenkoPaperHeader({date, tableStyle}) {
           </R_Stack>
 
           {/* サブヘッダー */}
-          <div style={{margin: '10px 0 6px 0', fontSize: 11}}>
+          <div style={{ margin: '10px 0 6px 0', fontSize: 11 }}>
             運行管理者はアルコール検知器を使い「特例的に」点呼する。義務あり。
             <br />
             定期的に個別チェックすることを求められる。
