@@ -4,10 +4,8 @@ import prisma from 'src/lib/prisma'
 /**
  * Correctionを更新
  */
-export async function PATCH(
-  request: NextRequest,
-  {params}: {params: {correctionId: string}}
-) {
+export async function PATCH(request: NextRequest, props) {
+  const params = await props.params
   try {
     const correctionId = parseInt(params.correctionId)
     if (isNaN(correctionId)) {
@@ -21,12 +19,7 @@ export async function PATCH(
     }
 
     const body = await request.json()
-    const {
-      correct_general_category,
-      correct_category,
-      correct_sentiment,
-      reviewer_comment,
-    } = body
+    const {correct_general_category, correct_category, correct_sentiment, reviewer_comment} = body
 
     // Correctionが存在するか確認
     const existingCorrection = await prisma.hakobunCorrection.findUnique({
@@ -82,10 +75,8 @@ export async function PATCH(
 /**
  * Correctionを削除（アーカイブ）
  */
-export async function DELETE(
-  request: NextRequest,
-  {params}: {params: {correctionId: string}}
-) {
+export async function DELETE(request: NextRequest, props) {
+  const params = await props.params
   try {
     const correctionId = parseInt(params.correctionId)
     if (isNaN(correctionId)) {
@@ -137,4 +128,3 @@ export async function DELETE(
     )
   }
 }
-

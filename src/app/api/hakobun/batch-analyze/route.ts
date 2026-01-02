@@ -239,10 +239,7 @@ function buildSystemPrompt(
     corrections.length > 0
       ? corrections
           .slice(0, 20)
-          .map(
-            c =>
-              `入力「${c.rawSegment}」→ 一般カテゴリ: ${c.correctGeneralCategory || '-'} / カテゴリ: ${c.correctCategory} / 感情: ${c.correctSentiment}`
-          )
+          .map(c => `入力「${c.rawSegment}」→ カテゴリ: ${c.correctCategory} / 感情: ${c.correctSentiment}`)
           .join('\n')
       : ''
 

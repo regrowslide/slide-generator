@@ -76,7 +76,7 @@ export default function HaishaTable({ days, tbmBase, whereQuery }: HaishaTablePr
 
 
   const { TbmDriveSchedule, userList, tbmRouteGroup, userWorkStatusCount } = listDataState ?? {}
-  console.log({ tbmRouteGroup: tbmRouteGroup?.length })  //logs
+
 
 
 

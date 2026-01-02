@@ -1,6 +1,6 @@
 'use client'
 
-import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
+import { R_Stack } from '@cm/components/styles/common-components/common-components'
 import { SentimentType, TableRow, PendingGeneralCategory, PendingCategory } from '../types'
 import { Loader2, Save, Plus, Clock, Download } from 'lucide-react'
 import { cn } from '@cm/shadcn/lib/utils'

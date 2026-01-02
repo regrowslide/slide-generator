@@ -14,7 +14,7 @@ export type myFormDefaultUpsertPropType = {
 }
 
 export const separateFormData = ({ dataModelName, latestFormData, additionalPayload, columns }) => {
-  const prismaDataObject = { ...latestFormData, ...additionalPayload }
+  const prismaDataObject = { ...additionalPayload, ...latestFormData, }
 
   Object.keys(prismaDataObject).forEach(key => {
     if (key.includes('readOnly')) {

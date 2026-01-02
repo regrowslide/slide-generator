@@ -205,26 +205,22 @@ function buildSystemPrompt(
     corrections.length > 0
       ? corrections
           .slice(0, 20)
-          .map(c => `入力「${c.rawSegment}」→ 一般カテゴリ: ${c.correctGeneralCategory || '-'} / カテゴリ: ${c.correctCategory} / 感情: ${c.correctSentiment}`)
+          .map(
+            c =>
+              `入力「${c.rawSegment}」→ 一般カテゴリ: ${c.correctCategory || '-'} / カテゴリ: ${c.correctCategory} / 感情: ${c.correctSentiment}`
+          )
           .join('\n')
       : ''
 
   // 一般カテゴリ一覧
   const generalCategoriesList =
     industryGeneralCategories.length > 0
-      ? industryGeneralCategories
-          .map(
-            gc =>
-              `- **${gc.name}**: ${gc.description || '該当する評価'}`
-          )
-          .join('\n')
+      ? industryGeneralCategories.map(gc => `- **${gc.name}**: ${gc.description || '該当する評価'}`).join('\n')
       : '（一般カテゴリが未登録です）'
 
   // 一般カテゴリ名リスト（禁止事項チェック用）
   const generalCategoryNames =
-    industryGeneralCategories.length > 0
-      ? industryGeneralCategories.map(gc => `「${gc.name}」`).join('、')
-      : ''
+    industryGeneralCategories.length > 0 ? industryGeneralCategories.map(gc => `「${gc.name}」`).join('、') : ''
 
   // 一般カテゴリが空の場合はエラー
   if (!generalCategoryNames) {
@@ -416,14 +412,18 @@ ${correctionExamples ? `## 直近の正解事例（Few-Shot）\n${correctionExam
 ### カテゴリ選択ルール
 
 1. マスタカテゴリ一覧を最優先で使用
-2. ${allowCategoryGeneration ? `マスターに該当するカテゴリがない場合のみ、is_new_generated: true として新しいカテゴリを提案してください。
+2. ${
+    allowCategoryGeneration
+      ? `マスターに該当するカテゴリがない場合のみ、is_new_generated: true として新しいカテゴリを提案してください。
 
 **新規カテゴリ提案時の粒度ルール（重要）**:
 - 既存のカテゴリマスター一覧の粒度（抽象度・詳細度）を必ず参考にすること
 - 既存カテゴリと同じレベルの抽象化を行うこと（抽象的すぎず、細かすぎない）
 - 既存カテゴリの命名規則（13文字以内、全角ナカグロ使用、方向性を含む）に従うこと
 - 既存カテゴリの表現スタイル（例：「Xが美味しい」「Xが早い」「清潔感がある・綺麗」など）を参考にすること
-- 既存カテゴリと同程度の粒度で、一貫性のあるカテゴリ名を提案すること` : 'マスターカテゴリ一覧から必ず選択してください。新規カテゴリの生成は禁止です。'}
+- 既存カテゴリと同程度の粒度で、一貫性のあるカテゴリ名を提案すること`
+      : 'マスターカテゴリ一覧から必ず選択してください。新規カテゴリの生成は禁止です。'
+  }
 3. 一般カテゴリは必ず${generalCategoryNames}から選択
 4. ${allowCategoryGeneration ? '新規一般カテゴリを提案する場合も、既存の一般カテゴリの粒度と抽象度を参考にすること' : ''}
 

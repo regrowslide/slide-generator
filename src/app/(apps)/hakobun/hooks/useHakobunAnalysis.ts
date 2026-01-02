@@ -11,7 +11,7 @@ const initialState: AppState = {
   analysisResult: null,
   status: 'idle',
   logs: [],
-  categories: [],
+
   rules: [],
   corrections: [],
 }

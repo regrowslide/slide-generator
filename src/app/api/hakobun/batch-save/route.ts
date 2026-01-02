@@ -1,6 +1,6 @@
 import {NextRequest, NextResponse} from 'next/server'
 import prisma from 'src/lib/prisma'
-import {AnalysisResult, Extract} from '@app/(apps)/hakobun/types'
+import {AnalysisResult} from '@app/(apps)/hakobun/types'
 
 interface BatchSaveRequest {
   client_id: string

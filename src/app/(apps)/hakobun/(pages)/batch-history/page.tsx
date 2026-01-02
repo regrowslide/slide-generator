@@ -1,19 +1,19 @@
 'use client'
 
-import React, {useCallback} from 'react'
-import {C_Stack, R_Stack} from '@cm/components/styles/common-components/common-components'
+import React, { useCallback } from 'react'
+import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
 import useSelectedClient from '../../(globalHooks)/useSelectedClient'
 import useCategoryManager from '../../hooks/useCategoryManager'
 import useBatchHistory from '../../hooks/useBatchHistory'
 import useCategoryModal from '../../hooks/useCategoryModal'
 import useModal from '@cm/components/utils/modal/useModal'
-import {ResultsTable} from '../../components/BatchResultsTable'
-import {CategoryModal} from '../../components/BatchCategoryModal'
-import {Loader2, RefreshCw} from 'lucide-react'
+import { ResultsTable } from '../../components/BatchResultsTable'
+import { CategoryModal } from '../../components/BatchCategoryModal'
+import { Loader2, RefreshCw } from 'lucide-react'
 
 export default function BatchHistoryPage() {
   // グローバルクライアント選択
-  const {selectedClient} = useSelectedClient()
+  const { selectedClient } = useSelectedClient()
 
   // カテゴリ管理（既存カテゴリの取得用）
   const {
@@ -28,7 +28,7 @@ export default function BatchHistoryPage() {
     createGeneralCategory,
     createCategory,
     error: categoryError,
-  } = useCategoryManager({selectedClient})
+  } = useCategoryManager({ selectedClient })
 
   // 一括登録記録閲覧
   const {
@@ -57,7 +57,7 @@ export default function BatchHistoryPage() {
   } = useCategoryModal()
 
   // モーダルUI用
-  const newCategoryModalUI = useModal<{rowIndex: number; type: 'general' | 'category'}>()
+  const newCategoryModalUI = useModal<{ rowIndex: number; type: 'general' | 'category' }>()
 
   // 新規一般カテゴリ作成ハンドラ（stateに追加、DBには保存しない）
   const handleCreateGeneralCategory = useCallback(() => {
@@ -71,7 +71,7 @@ export default function BatchHistoryPage() {
       // 作成成功時、該当レコードの「修正一般カテゴリ」にセット
       const rowIndex = modalState.rowIndex >= 0 ? modalState.rowIndex : newCategoryModalUI.open?.rowIndex ?? -1
       if (rowIndex >= 0 && rowIndex < tableRows.length) {
-        updateTableRow(rowIndex, {feedbackGeneralCategory: newCategoryName})
+        updateTableRow(rowIndex, { feedbackGeneralCategory: newCategoryName })
       }
       closeModal()
       newCategoryModalUI.handleClose()
@@ -112,7 +112,7 @@ export default function BatchHistoryPage() {
     const success = createCategory(row.feedbackGeneralCategory, newCategoryName, newCategoryDescription)
     if (success) {
       // 作成成功時、該当レコードの「修正カテゴリ」にセット
-      updateTableRow(rowIndex, {feedbackCategory: newCategoryName})
+      updateTableRow(rowIndex, { feedbackCategory: newCategoryName })
       closeModal()
       newCategoryModalUI.handleClose()
       resetInputs()
@@ -137,7 +137,7 @@ export default function BatchHistoryPage() {
   const handleOpenModal = useCallback(
     (type: 'general' | 'category', rowIndex: number, initialName?: string) => {
       openModal(type, rowIndex, initialName)
-      newCategoryModalUI.handleOpen({rowIndex, type})
+      newCategoryModalUI.handleOpen({ rowIndex, type })
     },
     [openModal, newCategoryModalUI]
   )
@@ -202,7 +202,7 @@ export default function BatchHistoryPage() {
             onSaveAll={handleSaveAll}
             onOpenModal={handleOpenModal}
             canExportCsv={false} // 閲覧ページではCSVエクスポートは不要
-            onExportCsv={() => {}}
+            onExportCsv={() => { }}
             onSaveRow={handleSaveRow} // 個別保存
           />
         ) : (
@@ -223,7 +223,7 @@ export default function BatchHistoryPage() {
           name={newCategoryName}
           setName={setNewCategoryName}
           description={newCategoryDescription}
-          setDescription={setNewCategoryDescription}
+          // setDescription={setNewCategoryDescription}
           onCancel={handleCloseModal}
           onCreate={modalState.type === 'general' ? handleCreateGeneralCategory : handleCreateCategory}
         />

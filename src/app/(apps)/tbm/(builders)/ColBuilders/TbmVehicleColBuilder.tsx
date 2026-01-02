@@ -20,7 +20,9 @@ export const TbmVehicleColBuilder = (props: columnGetterType) => {
         },
         { id: 'frameNo', label: 'フレームNo', form: { ...defaultRegister }, search: {} },
         { id: 'chassisNumber', label: '車体番号', form: {}, search: {} },
-        { id: 'tbmBaseId', label: '営業所', forSelect: {}, form: { ...defaultRegister } },
+        {
+          id: 'tbmBaseId', label: '営業所', forSelect: {}, form: { ...defaultRegister }
+        },
         { id: 'vehicleNumber', label: '車両番号', form: { ...defaultRegister }, search: {} },
         { id: 'shodoTorokubi', label: '初度登録日', form: {}, type: `date` },
       ]).showSummaryInTd({

@@ -2,12 +2,12 @@
 
 import React from 'react'
 import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
-import { AnalysisResult, HakobunCategory, ExtractEdit, SentimentType } from '../types'
+import { AnalysisResult, ExtractEdit, SentimentType } from '../types'
 import { MessageSquare, Edit3, Send, Check, AlertCircle, Flame } from 'lucide-react'
 
 interface FeedbackEditorProps {
   result: AnalysisResult
-  categories: HakobunCategory[]
+  categories: any[]
   editedExtracts: ExtractEdit[]
   onUpdateExtract: (extractIndex: number, updates: Partial<ExtractEdit>) => void
   onSubmitFeedback: () => void
@@ -49,7 +49,7 @@ export const FeedbackEditor: React.FC<FeedbackEditorProps> = ({
       acc[cat.generalCategory].push(cat)
       return acc
     },
-    {} as Record<string, HakobunCategory[]>
+    {} as Record<string, any[]>
   )
 
   // ユニークなカテゴリ名のリスト（既存のカテゴリ選択肢として）
@@ -162,8 +162,8 @@ export const FeedbackEditor: React.FC<FeedbackEditorProps> = ({
                           key={sentiment}
                           onClick={() => onUpdateExtract(extractIndex, { editedSentiment: sentiment })}
                           className={`px-3 py-2 rounded-lg text-sm border-2 transition-colors ${editData.editedSentiment === sentiment
-                              ? getSentimentColor(sentiment)
-                              : 'border-gray-200 bg-white hover:bg-gray-50'
+                            ? getSentimentColor(sentiment)
+                            : 'border-gray-200 bg-white hover:bg-gray-50'
                             }`}
                         >
                           {sentiment}

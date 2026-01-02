@@ -1058,7 +1058,7 @@ model SbmProductIngredient {
 
 datasource db {
   provider = "postgresql"
-  url = "postgres://mutsuo:timeSpacer817@localhost:5432/hakobun"
+  url = "postgres://mutsuo:timeSpacer817@localhost:5432/tbm"
 }
 
 generator client {
@@ -2043,7 +2043,7 @@ model TbmRouteGroupShare {
   TbmBase   TbmBase @relation(fields: [tbmBaseId], references: [id], onDelete: Cascade)
   tbmBaseId Int
 
-  // 共有状態のフラグ（将来的に承認プロセスなどを追加する場合に使用）
+  // 共有状態のフラグ（将来的に承認プロセスなどを追加する場合に使用）P
   isActive Boolean @default(true)
 
   @@unique([tbmRouteGroupId, tbmBaseId], name: "unique_tbmRouteGroupId_tbmBaseId")

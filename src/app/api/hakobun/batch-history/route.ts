@@ -62,14 +62,12 @@ export async function GET(request: NextRequest) {
     for (const voice of voices) {
       if (!voice.resultJson) continue
 
-      const result = voice.resultJson as AnalysisResult
+      const result = voice.resultJson as unknown as AnalysisResult
 
       // このVoiceに紐づくCorrectionをマッピング（rawSegmentでマッチング）
       const extractsWithCorrections = result.extracts.map((extract, extractIndex) => {
         // rawSegmentで一致するCorrectionを探す
-        const matchingCorrection = corrections.find(
-          correction => correction.rawSegment === extract.sentence
-        )
+        const matchingCorrection = corrections.find(correction => correction.rawSegment === extract.sentence)
 
         return {
           ...extract,
@@ -84,9 +82,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Correctionの詳細情報も返す（IDで参照できるように）
-    const correctionMap = new Map(
-      corrections.map(c => [c.id, c])
-    )
+    const correctionMap = new Map(corrections.map(c => [c.id, c]))
 
     return NextResponse.json({
       success: true,
@@ -106,4 +102,3 @@ export async function GET(request: NextRequest) {
     )
   }
 }
-
