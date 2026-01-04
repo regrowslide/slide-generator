@@ -4,9 +4,9 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
 import { Plus, Edit2, Trash2, Save, X, Search } from 'lucide-react'
 import { toast } from 'react-toastify'
-import { DBCategory, EnrichedSchema } from '@app/(apps)/lifeos/types'
+import { DBCategory, EnrichedSchema, ArchetypeType } from '@app/(apps)/lifeos/types'
 import { SchemaFieldEditor } from '@app/(apps)/lifeos/components/SchemaFieldEditor'
-import BasicModal from '@cm/components/utils/modal/BasicModal'
+import { ArchetypeSelector } from '@app/(apps)/lifeos/components/ArchetypeSelector'
 import useModal from '@cm/components/utils/modal/useModal'
 import ShadModal from '@cm/shadcn/ui/Organisms/ShadModal'
 
@@ -20,10 +20,12 @@ export default function CategoriesPage() {
     name: string
     description?: string
     schema: EnrichedSchema
+    archetypes: ArchetypeType[]
   }>({
     name: '',
     description: '',
     schema: {},
+    archetypes: [],
   })
 
   // カテゴリ一覧取得
@@ -53,7 +55,7 @@ export default function CategoriesPage() {
   // 新規作成フォームを開く
   const openCreateForm = () => {
     setEditingId(null)
-    setFormData({ name: '', description: '', schema: {} })
+    setFormData({ name: '', description: '', schema: {}, archetypes: [] })
     setShowForm(true)
   }
 
@@ -64,6 +66,7 @@ export default function CategoriesPage() {
       name: category.name,
       description: category.description || '',
       schema: category.schema || {},
+      archetypes: category.archetypes || [],
     })
     setShowForm(true)
   }
@@ -72,7 +75,7 @@ export default function CategoriesPage() {
   const closeForm = () => {
     setShowForm(false)
     setEditingId(null)
-    setFormData({ name: '', description: '', schema: {} })
+    setFormData({ name: '', description: '', schema: {}, archetypes: [] })
   }
 
   // カテゴリを保存
@@ -216,8 +219,11 @@ export default function CategoriesPage() {
                     </button>
                   </R_Stack>
                 </div>
-                <div className="text-xs text-gray-500">
-                  スキーマ: {Object.keys(category.schema || {}).length} フィールド
+                <div className="text-xs text-gray-500 space-y-1">
+                  <div>スキーマ: {Object.keys(category.schema || {}).length} フィールド</div>
+                  {category.archetypes && category.archetypes.length > 0 && (
+                    <div>アーキタイプ: {category.archetypes.join(', ')}</div>
+                  )}
                 </div>
               </div>
             ))}
@@ -272,6 +278,13 @@ export default function CategoriesPage() {
                 <SchemaFieldEditor
                   schema={formData.schema || {}}
                   onChange={(schema) => setFormData({ ...formData, schema })}
+                />
+              </div>
+
+              <div>
+                <ArchetypeSelector
+                  archetypes={formData.archetypes || []}
+                  onChange={(archetypes) => setFormData({ ...formData, archetypes })}
                 />
               </div>
 

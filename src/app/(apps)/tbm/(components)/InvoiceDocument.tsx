@@ -463,26 +463,26 @@ export const InvoiceDocument = forwardRef<InvoiceDocumentRef, InvoiceDocumentPro
                     const isManual = detail.isManualEdit || detail.isManualAdded
                     return (
                       <tr key={`${categoryCode}-${detailIndex}`} className={isManual ? 'bg-yellow-50' : ''}>
-                        <td className="border border-gray-400 p-2">
+                        <td className="border border-gray-400 p-2 min-w-[180px]">
                           {onSave ? (
                             <input
-                              type="text"
+
                               value={detail.routeName}
                               onChange={e => handleDetailEdit(globalIndex, 'routeName', e.target.value)}
-                              className="w-full bg-transparent border-none p-0"
+                              className="w-full bg-transparent border-none p-0 resize-none"
                             />
                           ) : (
                             detail.routeName
                           )}
                         </td>
-                        <td className="border border-gray-400 p-2">
+                        <td className="border border-gray-400 p-2 min-w-[260px]">
                           <div className="flex items-center gap-2">
                             {onSave ? (
                               <input
-                                type="text"
+
                                 value={detail.name}
                                 onChange={e => handleDetailEdit(globalIndex, 'name', e.target.value)}
-                                className="w-full bg-transparent border-none p-0"
+                                className="w-full bg-transparent border-none p-0 resize-none "
                               />
                             ) : (
                               <span>{detail.name}</span>

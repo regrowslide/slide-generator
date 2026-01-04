@@ -39,6 +39,56 @@ const getEduCommonMenus = ({ isSchoolLeader, admin }) => {
 
 export const PAGES: any = {
 
+  lifeos_PAGES: (props: PageGetterType) => {
+    const { roles, query, session, rootPath, pathname } = props
+
+    const { login, admin } = getScopes(session, { query, roles })
+
+    const loginPaths = [
+      {
+        tabId: '',
+        label: 'ダッシュボード',
+        ROOT: [rootPath],
+        exclusiveTo: !!login,
+      },
+      {
+        tabId: 'categories',
+        label: 'カテゴリ管理',
+        ROOT: [rootPath],
+        exclusiveTo: !!login,
+      },
+      {
+        tabId: 'logs',
+        label: 'ログ一覧',
+        ROOT: [rootPath],
+        exclusiveTo: !!login,
+      },
+      {
+        tabId: 'chat',
+        label: 'チャット',
+        ROOT: [rootPath],
+        exclusiveTo: !!login,
+      },
+    ]
+
+    const adminPaths = []
+
+    const pathSource: pathItemType[] = [...loginPaths, ...adminPaths]
+
+    const { cleansedPathSource, navItems, breads, allPathsPattenrs } = CleansePathSource({
+      rootPath,
+      pathSource,
+      pathname,
+      session,
+    })
+
+    return {
+      allPathsPattenrs,
+      pathSource: cleansedPathSource,
+      navItems,
+      breads,
+    }
+  },
   hakobun_PAGES: (props: PageGetterType) => {
     const { roles, query, session, rootPath, pathname } = props
 
@@ -53,34 +103,6 @@ export const PAGES: any = {
         exclusiveTo: !!login,
       },
 
-      {
-        tabId: '',
-        label: '共通マスタ',
-        ROOT: [rootPath],
-        children: [
-          { tabId: 'master/clients', label: 'クライアント管理', ROOT: [rootPath] },
-          { tabId: 'master/general-categories', label: '[共通]一般カテゴリ管理', ROOT: [rootPath] },
-
-
-
-        ],
-        exclusiveTo: !!login,
-      },
-      {
-        tabId: '',
-        label: 'クライアント別マスタ',
-        ROOT: [rootPath],
-        children: [
-          { tabId: 'master/rules', label: 'ルール管理', ROOT: [rootPath] },
-          {
-            tabId: 'master/rules/auto-create',
-            label: '自動生成ルール',
-            ROOT: [rootPath],
-            exclusiveTo: !!login,
-          },
-        ],
-        exclusiveTo: !!login,
-      },
     ]
 
     const adminPaths = []

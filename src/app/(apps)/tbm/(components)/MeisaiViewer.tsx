@@ -74,13 +74,13 @@ const styles = StyleSheet.create({
     width: '8%',
   },
   routeNameCell: {
-    width: '18%',
+    width: '20%',
   },
   serviceNameCell: {
-    width: '18%',
+    width: '24%',
   },
   vehicleCell: {
-    width: '9%',
+    width: '13%',
   },
   driverCell: {
     width: '13%',
@@ -93,9 +93,9 @@ const styles = StyleSheet.create({
     width: '11%',
     textAlign: 'right',
   },
-  remarkCell: {
-    width: '12%',
-  },
+  // remarkCell: {
+  //   width: '12%',
+  // },
 })
 
 // PDFドキュメントコンポーネント
@@ -136,9 +136,9 @@ const MeisaiDocument = ({ meisaiData }: { meisaiData: MeisaiData }) => {
             <View style={[styles.tableCell, styles.futaiFeeCell]}>
               <Text>付帯費用</Text>
             </View>
-            <View style={[styles.tableCell, styles.remarkCell]}>
+            {/* <View style={[styles.tableCell, styles.remarkCell]}>
               <Text>備考</Text>
-            </View>
+            </View> */}
           </View>
 
           {/* データ行 */}
@@ -165,11 +165,11 @@ const MeisaiDocument = ({ meisaiData }: { meisaiData: MeisaiData }) => {
               <View style={[styles.tableCell, styles.futaiFeeCell]}>
                 <Text>¥{row.futaiFee.toLocaleString()}</Text>
               </View>
-              <View style={[styles.tableCell, styles.remarkCell]}>
+              {/* <View style={[styles.tableCell, styles.remarkCell]}>
                 <Text>
 
                 </Text>
-              </View>
+              </View> */}
             </View>
           ))}
         </View>

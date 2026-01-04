@@ -1,13 +1,13 @@
 'use client' // Error components must be Client Components
 
-import {Center, C_Stack} from 'src/cm/components/styles/common-components/common-components'
+import { Center, C_Stack } from 'src/cm/components/styles/common-components/common-components'
 import BasicModal from 'src/cm/components/utils/modal/BasicModal'
 import useMyNavigation from 'src/cm/hooks/globalHooks/useMyNavigation'
-import {useEffect} from 'react'
-import {Button} from '@cm/components/styles/common-components/Button'
+import { useEffect } from 'react'
+import { Button } from '@cm/components/styles/common-components/Button'
 
-export default function Error({error, reset}) {
-  const {router} = useMyNavigation()
+export default function Error({ error, reset }) {
+  const { router } = useMyNavigation()
   useEffect(() => {
     // Log the error to an error reporting service
     console.error(error)

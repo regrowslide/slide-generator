@@ -354,6 +354,7 @@ model TbmCustomer {
   code                          String?                         @unique
   name                          String                          @unique
   kana                          String?
+  postalCode                    String?
   address                       String?
   phoneNumber                   String?
   faxNumber                     String?

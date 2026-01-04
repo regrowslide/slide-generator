@@ -1,11 +1,12 @@
-import {Contact} from '@app/(apps)/KM/components/Contact'
-import {Padding} from '@cm/components/styles/common-components/common-components'
+import { Contact } from '@app/(apps)/KM/components/Contact'
+import { EnhancedContact } from '@app/(apps)/KM/components/enhanced/EnhancedContact'
+import { Padding } from '@cm/components/styles/common-components/common-components'
 
 const Page = async () => {
   return (
     <div>
       <Padding>
-        <Contact />
+        <EnhancedContact />
       </Padding>
     </div>
   )

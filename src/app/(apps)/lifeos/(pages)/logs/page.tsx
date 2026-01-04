@@ -4,15 +4,15 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
 import { Search, Calendar, Trash2, Download } from 'lucide-react'
 import { toast } from 'react-toastify'
-import { DBCategory, DBLog } from '@app/(apps)/lifeos/types'
+import { DBCategory, DBLog, ArchetypeType } from '@app/(apps)/lifeos/types'
 import { useArchetype } from '@app/(apps)/lifeos/hooks/useArchetype'
 import { LogTableView } from '@app/(apps)/lifeos/components/LogTableView'
 import { LogEditModal } from '@app/(apps)/lifeos/components/LogEditModal'
 import { ViewToggle, ViewMode } from '@app/(apps)/lifeos/components/ViewToggle'
 import { getLogSchema } from '@app/(apps)/lifeos/lib/schemaUtils'
 import Link from 'next/link'
-import ShadModal from '@cm/shadcn/ui/Organisms/ShadModal'
 import BasicModal from '@cm/components/utils/modal/BasicModal'
+import BasicTabs from '@cm/components/utils/tabs/BasicTabs'
 
 export default function LogsPage() {
   const [logs, setLogs] = useState<DBLog[]>([])
@@ -23,8 +23,8 @@ export default function LogsPage() {
   const [dateFilter, setDateFilter] = useState<'all' | 'today' | 'week' | 'month'>('all')
   const [viewMode, setViewMode] = useState<ViewMode>('table')
   const [editingLog, setEditingLog] = useState<DBLog | null>(null)
-
-  console.log(editingLog)  //logs
+  // カテゴリごとのarchetype選択状態
+  const [selectedArchetypes, setSelectedArchetypes] = useState<Record<number, ArchetypeType>>({})
 
   // ログ一覧取得
   const fetchLogs = useCallback(async () => {
@@ -121,7 +121,7 @@ export default function LogsPage() {
             createdAt: new Date(),
             updatedAt: null,
             sortOrder: 0,
-          },
+          } as any,
           logs: [],
         }
       }
@@ -234,13 +234,136 @@ export default function LogsPage() {
     link.href = URL.createObjectURL(blob)
     link.download = `lifeos-logs-${new Date().toISOString().split('T')[0]}.csv`
     link.click()
+
+
+
   }
 
+  const TabComponentsArray = logsByCategory.map(({ category, logs: categoryLogs }) => {
+    const categoryArchetypes = category.archetypes || []
+    const defaultArchetype = categoryArchetypes[0] || 'attribute-card'
+    const selectedArchetype = selectedArchetypes[category.id] || defaultArchetype
+
+    return {
+      label: category.name,
+      component: <div key={category.id} className="" style={{ width: 420, maxWidth: '85vw' }}>
+        {/* カテゴリヘッダー */}
+        <div >
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <h2 className="font-semibold text-gray-900">{category.name}</h2>
+            </div>
+
+
+            <div className="flex items-center gap-4">
+              {/* archetype選択UI（アーキタイプビュー時のみ表示） */}
+              {viewMode === 'archetype' && categoryArchetypes.length > 1 && (
+                <div className="flex items-center gap-2">
+                  <label className="text-sm font-medium text-gray-700">表示形式:</label>
+                  <select
+                    value={selectedArchetype}
+                    onChange={(e) =>
+                      setSelectedArchetypes({
+                        ...selectedArchetypes,
+                        [category.id]: e.target.value as ArchetypeType,
+                      })
+                    }
+                    className="px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  >
+                    {categoryArchetypes.map((arch) => (
+                      <option key={arch} value={arch}>
+                        {arch}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              <div className="text-sm text-gray-500">
+                {categoryLogs.length} 件
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* カテゴリごとのログ表示 */}
+        <div className="">
+          {viewMode === 'table' ? (
+            <LogTableView logs={categoryLogs} onEdit={setEditingLog} />
+          ) : (
+            <C_Stack className="gap-4">
+              {categoryLogs.map((log) => {
+                const schema = getLogSchema(log)
+                const logData = {
+                  id: String(log.id),
+                  category: {
+                    id: String(log.categoryId),
+                    name: log.category?.name || '',
+                    schema,
+                  },
+                  schema,
+                  archetype: selectedArchetype, // カテゴリで選択されたarchetypeを使用
+                  data: log.data,
+                  createdAt: log.createdAt,
+                  updatedAt: log.updatedAt || undefined,
+                }
+
+                const { Component } = useArchetype({ archetype: selectedArchetype })
+
+                return (
+                  <div
+                    key={log.id}
+                    className="bg-gray-50 rounded-lg shadow-sm p-6 border border-gray-200 hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <span className="px-2 py-1 text-xs bg-blue-100 text-blue-600 rounded">
+                            {selectedArchetype}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-4 text-sm text-gray-500">
+                          <div className="flex items-center gap-1">
+                            <Calendar className="w-4 h-4" />
+                            {new Date(log.createdAt).toLocaleString('ja-JP')}
+                          </div>
+                        </div>
+                      </div>
+                      <R_Stack className="gap-2">
+                        <button
+                          onClick={() => setEditingLog(log)}
+                          className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                          title="編集"
+                        >
+                          編集
+                        </button>
+                        <button
+                          onClick={() => handleDelete(log.id)}
+                          className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
+                          title="削除"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </R_Stack>
+                    </div>
+
+                    {/* アーキタイプコンポーネントで表示 */}
+                    <div className="mt-4">
+                      <Component log={logData as any} />
+                    </div>
+                  </div>
+                )
+              })}
+            </C_Stack>
+          )}
+        </div>
+      </div>
+    }
+  })
 
 
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-white! p-6">
       <C_Stack className="max-w-7xl mx-auto gap-6">
         {/* ヘッダー */}
         <div className="flex items-center justify-between">
@@ -337,101 +460,17 @@ export default function LogsPage() {
             </Link>
           </div>
         ) : (
-          <C_Stack className="gap-6">
+          <C_Stack className="gap-2.5">
             <div className="text-sm text-gray-600">
               {filteredLogs.length} 件のログが見つかりました
             </div>
 
-            {logsByCategory.map(({ category, logs: categoryLogs }) => (
-              <div key={category.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                {/* カテゴリヘッダー */}
-                <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h2 className="text-xl font-semibold text-gray-900">{category.name}</h2>
-                      {category.description && (
-                        <p className="text-sm text-gray-600 mt-1">{category.description}</p>
-                      )}
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      {categoryLogs.length} 件
-                    </div>
-                  </div>
-                </div>
+            <BasicTabs {...{
+              id: 'lifeos-logs',
+              showAll: true,
 
-                {/* カテゴリごとのログ表示 */}
-                <div className="p-6">
-                  {viewMode === 'table' ? (
-                    <LogTableView logs={categoryLogs} onEdit={setEditingLog} />
-                  ) : (
-                    <C_Stack className="gap-4">
-                      {categoryLogs.map((log) => {
-                        const schema = getLogSchema(log)
-                        const logData = {
-                          id: String(log.id),
-                          category: {
-                            id: String(log.categoryId),
-                            name: log.category?.name || '',
-                            schema,
-                          },
-                          schema,
-                          archetype: log.archetype,
-                          data: log.data,
-                          createdAt: log.createdAt,
-                          updatedAt: log.updatedAt || undefined,
-                        }
-
-                        const { Component } = useArchetype({ archetype: log.archetype })
-
-                        return (
-                          <div
-                            key={log.id}
-                            className="bg-gray-50 rounded-lg shadow-sm p-6 border border-gray-200 hover:shadow-md transition-shadow"
-                          >
-                            <div className="flex items-start justify-between mb-4">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-3 mb-2">
-                                  <span className="px-2 py-1 text-xs bg-blue-100 text-blue-600 rounded">
-                                    {log.archetype}
-                                  </span>
-                                </div>
-                                <div className="flex items-center gap-4 text-sm text-gray-500">
-                                  <div className="flex items-center gap-1">
-                                    <Calendar className="w-4 h-4" />
-                                    {new Date(log.createdAt).toLocaleString('ja-JP')}
-                                  </div>
-                                </div>
-                              </div>
-                              <R_Stack className="gap-2">
-                                <button
-                                  onClick={() => setEditingLog(log)}
-                                  className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
-                                  title="編集"
-                                >
-                                  編集
-                                </button>
-                                <button
-                                  onClick={() => handleDelete(log.id)}
-                                  className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
-                                  title="削除"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
-                              </R_Stack>
-                            </div>
-
-                            {/* アーキタイプコンポーネントで表示 */}
-                            <div className="mt-4">
-                              <Component log={logData as any} />
-                            </div>
-                          </div>
-                        )
-                      })}
-                    </C_Stack>
-                  )}
-                </div>
-              </div>
-            ))}
+              TabComponentArray: TabComponentsArray
+            }} />
           </C_Stack>
         )}
         <BasicModal
@@ -439,7 +478,7 @@ export default function LogsPage() {
           setopen={setEditingLog}
           title="ログ編集"
           description={`カテゴリ: ${editingLog?.category?.name} (変更不可)`}
-          style={{ width: '600px', maxWidth: '95vw' }}
+
 
         >
           <LogEditModal

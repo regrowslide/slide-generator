@@ -46,6 +46,7 @@ export type TbmCustomerMinAggregateOutputType = {
   code: string | null
   name: string | null
   kana: string | null
+  postalCode: string | null
   address: string | null
   phoneNumber: string | null
   faxNumber: string | null
@@ -61,6 +62,7 @@ export type TbmCustomerMaxAggregateOutputType = {
   code: string | null
   name: string | null
   kana: string | null
+  postalCode: string | null
   address: string | null
   phoneNumber: string | null
   faxNumber: string | null
@@ -76,6 +78,7 @@ export type TbmCustomerCountAggregateOutputType = {
   code: number
   name: number
   kana: number
+  postalCode: number
   address: number
   phoneNumber: number
   faxNumber: number
@@ -105,6 +108,7 @@ export type TbmCustomerMinAggregateInputType = {
   code?: true
   name?: true
   kana?: true
+  postalCode?: true
   address?: true
   phoneNumber?: true
   faxNumber?: true
@@ -120,6 +124,7 @@ export type TbmCustomerMaxAggregateInputType = {
   code?: true
   name?: true
   kana?: true
+  postalCode?: true
   address?: true
   phoneNumber?: true
   faxNumber?: true
@@ -135,6 +140,7 @@ export type TbmCustomerCountAggregateInputType = {
   code?: true
   name?: true
   kana?: true
+  postalCode?: true
   address?: true
   phoneNumber?: true
   faxNumber?: true
@@ -237,6 +243,7 @@ export type TbmCustomerGroupByOutputType = {
   code: string | null
   name: string
   kana: string | null
+  postalCode: string | null
   address: string | null
   phoneNumber: string | null
   faxNumber: string | null
@@ -275,6 +282,7 @@ export type TbmCustomerWhereInput = {
   code?: Prisma.StringNullableFilter<"TbmCustomer"> | string | null
   name?: Prisma.StringFilter<"TbmCustomer"> | string
   kana?: Prisma.StringNullableFilter<"TbmCustomer"> | string | null
+  postalCode?: Prisma.StringNullableFilter<"TbmCustomer"> | string | null
   address?: Prisma.StringNullableFilter<"TbmCustomer"> | string | null
   phoneNumber?: Prisma.StringNullableFilter<"TbmCustomer"> | string | null
   faxNumber?: Prisma.StringNullableFilter<"TbmCustomer"> | string | null
@@ -293,6 +301,7 @@ export type TbmCustomerOrderByWithRelationInput = {
   code?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   kana?: Prisma.SortOrderInput | Prisma.SortOrder
+  postalCode?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   phoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   faxNumber?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -315,6 +324,7 @@ export type TbmCustomerWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeNullableFilter<"TbmCustomer"> | Date | string | null
   sortOrder?: Prisma.FloatFilter<"TbmCustomer"> | number
   kana?: Prisma.StringNullableFilter<"TbmCustomer"> | string | null
+  postalCode?: Prisma.StringNullableFilter<"TbmCustomer"> | string | null
   address?: Prisma.StringNullableFilter<"TbmCustomer"> | string | null
   phoneNumber?: Prisma.StringNullableFilter<"TbmCustomer"> | string | null
   faxNumber?: Prisma.StringNullableFilter<"TbmCustomer"> | string | null
@@ -333,6 +343,7 @@ export type TbmCustomerOrderByWithAggregationInput = {
   code?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
   kana?: Prisma.SortOrderInput | Prisma.SortOrder
+  postalCode?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   phoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   faxNumber?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -356,6 +367,7 @@ export type TbmCustomerScalarWhereWithAggregatesInput = {
   code?: Prisma.StringNullableWithAggregatesFilter<"TbmCustomer"> | string | null
   name?: Prisma.StringWithAggregatesFilter<"TbmCustomer"> | string
   kana?: Prisma.StringNullableWithAggregatesFilter<"TbmCustomer"> | string | null
+  postalCode?: Prisma.StringNullableWithAggregatesFilter<"TbmCustomer"> | string | null
   address?: Prisma.StringNullableWithAggregatesFilter<"TbmCustomer"> | string | null
   phoneNumber?: Prisma.StringNullableWithAggregatesFilter<"TbmCustomer"> | string | null
   faxNumber?: Prisma.StringNullableWithAggregatesFilter<"TbmCustomer"> | string | null
@@ -370,6 +382,7 @@ export type TbmCustomerCreateInput = {
   code?: string | null
   name: string
   kana?: string | null
+  postalCode?: string | null
   address?: string | null
   phoneNumber?: string | null
   faxNumber?: string | null
@@ -387,6 +400,7 @@ export type TbmCustomerUncheckedCreateInput = {
   code?: string | null
   name: string
   kana?: string | null
+  postalCode?: string | null
   address?: string | null
   phoneNumber?: string | null
   faxNumber?: string | null
@@ -403,6 +417,7 @@ export type TbmCustomerUpdateInput = {
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   faxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -420,6 +435,7 @@ export type TbmCustomerUncheckedUpdateInput = {
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   faxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -437,6 +453,7 @@ export type TbmCustomerCreateManyInput = {
   code?: string | null
   name: string
   kana?: string | null
+  postalCode?: string | null
   address?: string | null
   phoneNumber?: string | null
   faxNumber?: string | null
@@ -451,6 +468,7 @@ export type TbmCustomerUpdateManyMutationInput = {
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   faxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -465,6 +483,7 @@ export type TbmCustomerUncheckedUpdateManyInput = {
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   faxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -500,6 +519,7 @@ export type TbmCustomerCountOrderByAggregateInput = {
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
   kana?: Prisma.SortOrder
+  postalCode?: Prisma.SortOrder
   address?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   faxNumber?: Prisma.SortOrder
@@ -521,6 +541,7 @@ export type TbmCustomerMaxOrderByAggregateInput = {
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
   kana?: Prisma.SortOrder
+  postalCode?: Prisma.SortOrder
   address?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   faxNumber?: Prisma.SortOrder
@@ -536,6 +557,7 @@ export type TbmCustomerMinOrderByAggregateInput = {
   code?: Prisma.SortOrder
   name?: Prisma.SortOrder
   kana?: Prisma.SortOrder
+  postalCode?: Prisma.SortOrder
   address?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   faxNumber?: Prisma.SortOrder
@@ -626,6 +648,7 @@ export type TbmCustomerCreateWithoutTbmBaseInput = {
   code?: string | null
   name: string
   kana?: string | null
+  postalCode?: string | null
   address?: string | null
   phoneNumber?: string | null
   faxNumber?: string | null
@@ -642,6 +665,7 @@ export type TbmCustomerUncheckedCreateWithoutTbmBaseInput = {
   code?: string | null
   name: string
   kana?: string | null
+  postalCode?: string | null
   address?: string | null
   phoneNumber?: string | null
   faxNumber?: string | null
@@ -687,6 +711,7 @@ export type TbmCustomerScalarWhereInput = {
   code?: Prisma.StringNullableFilter<"TbmCustomer"> | string | null
   name?: Prisma.StringFilter<"TbmCustomer"> | string
   kana?: Prisma.StringNullableFilter<"TbmCustomer"> | string | null
+  postalCode?: Prisma.StringNullableFilter<"TbmCustomer"> | string | null
   address?: Prisma.StringNullableFilter<"TbmCustomer"> | string | null
   phoneNumber?: Prisma.StringNullableFilter<"TbmCustomer"> | string | null
   faxNumber?: Prisma.StringNullableFilter<"TbmCustomer"> | string | null
@@ -701,6 +726,7 @@ export type TbmCustomerCreateWithoutMid_TbmRouteGroup_TbmCustomerInput = {
   code?: string | null
   name: string
   kana?: string | null
+  postalCode?: string | null
   address?: string | null
   phoneNumber?: string | null
   faxNumber?: string | null
@@ -717,6 +743,7 @@ export type TbmCustomerUncheckedCreateWithoutMid_TbmRouteGroup_TbmCustomerInput 
   code?: string | null
   name: string
   kana?: string | null
+  postalCode?: string | null
   address?: string | null
   phoneNumber?: string | null
   faxNumber?: string | null
@@ -748,6 +775,7 @@ export type TbmCustomerUpdateWithoutMid_TbmRouteGroup_TbmCustomerInput = {
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   faxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -764,6 +792,7 @@ export type TbmCustomerUncheckedUpdateWithoutMid_TbmRouteGroup_TbmCustomerInput 
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   faxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -779,6 +808,7 @@ export type TbmCustomerCreateWithoutTbmInvoiceManualEditInput = {
   code?: string | null
   name: string
   kana?: string | null
+  postalCode?: string | null
   address?: string | null
   phoneNumber?: string | null
   faxNumber?: string | null
@@ -795,6 +825,7 @@ export type TbmCustomerUncheckedCreateWithoutTbmInvoiceManualEditInput = {
   code?: string | null
   name: string
   kana?: string | null
+  postalCode?: string | null
   address?: string | null
   phoneNumber?: string | null
   faxNumber?: string | null
@@ -826,6 +857,7 @@ export type TbmCustomerUpdateWithoutTbmInvoiceManualEditInput = {
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   faxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -842,6 +874,7 @@ export type TbmCustomerUncheckedUpdateWithoutTbmInvoiceManualEditInput = {
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   faxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -858,6 +891,7 @@ export type TbmCustomerCreateManyTbmBaseInput = {
   code?: string | null
   name: string
   kana?: string | null
+  postalCode?: string | null
   address?: string | null
   phoneNumber?: string | null
   faxNumber?: string | null
@@ -871,6 +905,7 @@ export type TbmCustomerUpdateWithoutTbmBaseInput = {
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   faxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -887,6 +922,7 @@ export type TbmCustomerUncheckedUpdateWithoutTbmBaseInput = {
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   faxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -903,6 +939,7 @@ export type TbmCustomerUncheckedUpdateManyWithoutTbmBaseInput = {
   code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   faxNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -957,6 +994,7 @@ export type TbmCustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   code?: boolean
   name?: boolean
   kana?: boolean
+  postalCode?: boolean
   address?: boolean
   phoneNumber?: boolean
   faxNumber?: boolean
@@ -976,6 +1014,7 @@ export type TbmCustomerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   code?: boolean
   name?: boolean
   kana?: boolean
+  postalCode?: boolean
   address?: boolean
   phoneNumber?: boolean
   faxNumber?: boolean
@@ -992,6 +1031,7 @@ export type TbmCustomerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   code?: boolean
   name?: boolean
   kana?: boolean
+  postalCode?: boolean
   address?: boolean
   phoneNumber?: boolean
   faxNumber?: boolean
@@ -1008,6 +1048,7 @@ export type TbmCustomerSelectScalar = {
   code?: boolean
   name?: boolean
   kana?: boolean
+  postalCode?: boolean
   address?: boolean
   phoneNumber?: boolean
   faxNumber?: boolean
@@ -1015,7 +1056,7 @@ export type TbmCustomerSelectScalar = {
   tbmBaseId?: boolean
 }
 
-export type TbmCustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "code" | "name" | "kana" | "address" | "phoneNumber" | "faxNumber" | "bankInformation" | "tbmBaseId", ExtArgs["result"]["tbmCustomer"]>
+export type TbmCustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "code" | "name" | "kana" | "postalCode" | "address" | "phoneNumber" | "faxNumber" | "bankInformation" | "tbmBaseId", ExtArgs["result"]["tbmCustomer"]>
 export type TbmCustomerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Mid_TbmRouteGroup_TbmCustomer?: boolean | Prisma.TbmCustomer$Mid_TbmRouteGroup_TbmCustomerArgs<ExtArgs>
   TbmInvoiceManualEdit?: boolean | Prisma.TbmCustomer$TbmInvoiceManualEditArgs<ExtArgs>
@@ -1044,6 +1085,7 @@ export type $TbmCustomerPayload<ExtArgs extends runtime.Types.Extensions.Interna
     code: string | null
     name: string
     kana: string | null
+    postalCode: string | null
     address: string | null
     phoneNumber: string | null
     faxNumber: string | null
@@ -1482,6 +1524,7 @@ export interface TbmCustomerFieldRefs {
   readonly code: Prisma.FieldRef<"TbmCustomer", 'String'>
   readonly name: Prisma.FieldRef<"TbmCustomer", 'String'>
   readonly kana: Prisma.FieldRef<"TbmCustomer", 'String'>
+  readonly postalCode: Prisma.FieldRef<"TbmCustomer", 'String'>
   readonly address: Prisma.FieldRef<"TbmCustomer", 'String'>
   readonly phoneNumber: Prisma.FieldRef<"TbmCustomer", 'String'>
   readonly faxNumber: Prisma.FieldRef<"TbmCustomer", 'String'>

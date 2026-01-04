@@ -43,7 +43,7 @@ export interface LifeOSData {
   id: string
   category: Category
   schema: Record<string, EnrichedSchemaField> // カテゴリから取得したスキーマ
-  archetype: ArchetypeType
+  archetype: ArchetypeType // 表示用（カテゴリのarchetypesから選択）
   data: Record<string, any>
   createdAt: Date
   updatedAt?: Date
@@ -54,6 +54,7 @@ export interface Category {
   name: string
   description?: string
   schema: Record<string, EnrichedSchemaField>
+  archetypes?: ArchetypeType[] // カテゴリが持つアーキタイプの配列
   createdAt?: Date
   updatedAt?: Date
 }
@@ -69,18 +70,19 @@ export interface DBCategory {
   name: string
   description: string | null
   schema: EnrichedSchema
+  archetypes: ArchetypeType[] // カテゴリが持つアーキタイプの配列
 }
 
 /**
  * データベース用ログ型（Prismaモデル対応）
- * schemaフィールドは削除され、カテゴリのスキーマを参照する
+ * schemaとarchetypeフィールドは削除され、カテゴリから参照する
  */
 export interface DBLog {
   id: number
   createdAt: Date
   updatedAt: Date | null
   sortOrder: number
-  archetype: ArchetypeType
+  // archetype: ArchetypeType  ← 削除（カテゴリのarchetypesを参照）
   // schema: EnrichedSchema  ← 削除（カテゴリのスキーマを参照）
   data: Record<string, unknown>
   description: string | null

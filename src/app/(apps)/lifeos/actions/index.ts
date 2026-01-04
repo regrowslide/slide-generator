@@ -78,14 +78,25 @@ function convertAILogRecordToPlan(record: AILogRecord, index: number): Plan {
 /**
  * AIプロンプトを生成
  */
-function generatePrompt(input: string, existingCategories: Category[]): string {
+function generatePrompt(input: string, existingCategories: DBCategory[]): string {
   const categoryNames = existingCategories.map(cat => cat.name).join('、')
   const categoryList = categoryNames ? `既存カテゴリ: ${categoryNames}` : '既存カテゴリはありません'
+
+  // 既存カテゴリのスキーマ情報とarchetypes情報をJSON形式で準備
+  const categorySchemas = existingCategories.map(cat => ({
+    name: cat.name,
+    schema: cat.schema,
+    archetypes: cat.archetypes || [],
+  }))
+  const categorySchemasJson = JSON.stringify(categorySchemas, null, 2)
 
   return `あなたはユーザーの自然言語入力から、複数のログレコードを抽出する専門家です。
 
 【入力テキスト】
 ${input}
+
+【既存カテゴリとスキーマ情報】
+${categorySchemasJson}
 
 【タスク】
 1. 入力テキストから、記録すべき情報を可能な限り分割して抽出してください
@@ -96,6 +107,27 @@ ${input}
    - data: 抽出されたデータ（数値、文字列、日付など、実際の値を含むオブジェクト）
    - description: 元のテキストからの説明（簡潔に）
    - confidence: 抽出の確信度（0-1の数値）
+
+【archetype選択の重要な原則】
+1. **既存カテゴリを使用する場合**：
+   - 既存カテゴリのarchetypes配列を参照してください
+   - 既存カテゴリにarchetypesが定義されている場合、その中から最も適切なarchetypeを選択してください
+   - 既存カテゴリにarchetypesが定義されていない、または空配列の場合、データの特性に基づいて適切なarchetypeを選択してください
+   - 選択したarchetypeが既存カテゴリのarchetypesに含まれていない場合、それは新規archetypeとして扱われます
+
+2. **新規カテゴリを作成する場合**：
+   - データの特性に基づいて適切なarchetypeを選択してください
+
+【スキーマ生成の重要な原則】
+1. **既存カテゴリを使用する場合**：
+   - 既存カテゴリのスキーマ情報を参照し、そのスキーマ構造に合わせてデータを抽出してください
+   - 既存スキーマのフィールド名、型、ラベル、表示タイプなどを可能な限り維持してください
+   - ユーザーの発話に既存スキーマにない新しい項目が含まれている場合は、その新規項目もスキーマに追加してください
+   - 既存のenumフィールドに新しい選択肢が含まれている場合は、enum配列に追加してください
+
+2. **新規カテゴリを作成する場合**：
+   - ユーザーの発話から適切なスキーマを生成してください
+   - スキーマフィールドには必ず必要なメタデータ（type, label, displayType, sortOrder等）を含めてください
 
 【スキーマの必須フィールド】
 schemaの各フィールドには必ず以下を含めてください：
@@ -160,20 +192,29 @@ schemaの各フィールドには必ず以下を含めてください：
 【重要な注意事項】
 - 入力テキストに含まれるすべての記録すべき情報を抽出してください
 - 各ログレコードは独立した情報として扱ってください
-- カテゴリ名は既存カテゴリに該当する場合は既存カテゴリ名を使用し、該当しない場合は適切な新規カテゴリ名を生成してください
+- **既存カテゴリを使用する場合**：
+  * 既存スキーマのフィールド構造を可能な限り維持してください
+  * 既存フィールドのsortOrder、required、unit、descriptionなどのメタデータも維持してください
+  * ユーザーの発話に新規項目が含まれている場合は、既存スキーマに追加してください
+  * 新規フィールドのsortOrderは既存フィールドの最大値+1から始めてください
+  * archetypeは既存カテゴリのarchetypesから選択し、新規archetypeがあればそれも含めてください
+- **新規カテゴリを作成する場合**：
+  * カテゴリ名は既存カテゴリに該当しない場合のみ、適切な新規カテゴリ名を生成してください
+  * スキーマフィールドには必ずlabel（日本語表示名）、displayType（UI表示タイプ）、sortOrder（表示順序）を含めてください
+  * archetypeはデータの特性に基づいて適切に選択してください
 - archetypeはデータの特性に応じて適切に選択してください：
   * metric-tracker: 数値データを追跡する場合（体重、距離、カロリーなど）
   * task-list: タスクやTODO項目の場合
   * timeline-log: 時系列のイベントやログの場合
   * attribute-card: 属性や特徴を記録する場合（読書、気分など）
   * heatmap: 時間帯や期間の分布を可視化する場合
-- schemaの各フィールドには必ずlabel（日本語表示名）、displayType（UI表示タイプ）、sortOrder（表示順序）を含めてください
 - schemaとdataの構造（キー名）は完全に一致させてください
 - 数値には適切な単位を含めてください
 - 日付や時刻はISO 8601形式で記録してください
 - sortOrderは0から始まる連番で、小さい順に表示されます
 - requiredがtrueのフィールドは必須項目として扱われます
-- enum型のフィールドにはenum配列を必ず含めてください`
+- enum型のフィールドにはenum配列を必ず含めてください
+- 既存enumフィールドに新しい選択肢を追加する場合は、既存の選択肢も維持してください`
 }
 
 /**
@@ -208,7 +249,7 @@ export async function processNaturalLanguage(input: string): Promise<ProcessNatu
       }
     }
 
-    const prompt = generatePrompt(input, existingCategories as unknown as Category[])
+    const prompt = generatePrompt(input, existingCategories)
 
     let response
     try {

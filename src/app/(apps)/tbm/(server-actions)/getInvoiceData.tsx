@@ -68,6 +68,7 @@ export type InvoiceData = {
   }
   customerInfo: {
     name: string
+    postalCode?: string
     address?: string
   }
   invoiceDetails: {
@@ -376,6 +377,7 @@ export const getInvoiceData = async ({
     },
     customerInfo: {
       name: customer.name,
+      postalCode: customer.postalCode ?? undefined,
       address: customer.address ?? undefined,
     },
     invoiceDetails: {

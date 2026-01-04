@@ -1,16 +1,16 @@
 'use client'
 
 import PlaceHolder from 'src/cm/components/utils/loader/PlaceHolder'
-import {JSX} from 'react'
+import { JSX } from 'react'
 import useWindowSize from 'src/cm/hooks/useWindowSize'
-import {cl} from 'src/cm/lib/methods/common'
-import {CSSProperties, useEffect} from 'react'
+import { cl } from 'src/cm/lib/methods/common'
+import { CSSProperties, useEffect } from 'react'
 
-import {anyObject} from '@cm/types/utility-types'
+import { anyObject } from '@cm/types/utility-types'
 
-import {useJotaiByKey, atomTypes} from '@cm/hooks/useJotai'
-import {Tabs, TabsList, TabsTrigger, TabsContent} from '@cm/shadcn/ui/tabs'
-import {cn} from '@shadcn/lib/utils'
+import { useJotaiByKey, atomTypes } from '@cm/hooks/useJotai'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@cm/shadcn/ui/tabs'
+import { cn } from '@shadcn/lib/utils'
 
 export type tabComponent = {
   style?: CSSProperties
@@ -34,18 +34,18 @@ export default function BasicTabs({
   showAll,
   TabComponentArray,
   className,
-  style = {maxWidth: '90vw'},
+  style = { maxWidth: '90vw' },
 
   ...props
 }: BasicTabsType) {
-  const {width} = useWindowSize()
+  const { width } = useWindowSize()
 
   const [value, setValue] = useJotaiByKey<atomTypes[`globalCurrentTabIdx`]>(`globalCurrentTabIdx`, {})
 
   const currentTabIdx = value[id] ?? 0
 
   const setcurrentTabIdx = newValue => {
-    setValue({...value, [id]: newValue})
+    setValue({ ...value, [id]: newValue })
   }
 
   const filteredTabComponentArray = TabComponentArray.filter(obj => obj?.exclusiveTo !== false)
@@ -67,7 +67,7 @@ export default function BasicTabs({
   }
 
   return (
-    <div style={{maxWidth: '90vw', ...style}} className={cn('mx-auto', className)} {...props}>
+    <div style={{ maxWidth: '90vw', ...style }} className={cn('mx-auto', className)} {...props}>
       {headingText && (
         <div className="mb-4">
           {typeof headingText === 'string' ? <h2 className="text-xl font-semibold text-gray-800">{headingText}</h2> : headingText}
@@ -75,22 +75,22 @@ export default function BasicTabs({
       )}
 
       {showAll
-        ? renderShowAll({filteredTabComponentArray})
+        ? renderShowAll({ filteredTabComponentArray })
         : renderTabsComponent({
-            filteredTabComponentArray,
-            currentTabValue,
-            handleTabChange,
-          })}
+          filteredTabComponentArray,
+          currentTabValue,
+          handleTabChange,
+        })}
     </div>
   )
 }
 
 /**全てのコンポーネントをflexで表示 */
-const renderShowAll = ({filteredTabComponentArray}) => {
+const renderShowAll = ({ filteredTabComponentArray }) => {
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-6 lg:grid-cols-2 ">
       {filteredTabComponentArray.map((obj, idx) => {
-        const {containerClass, label, description} = obj ?? {}
+        const { containerClass, label, description } = obj ?? {}
 
         return (
           <div
@@ -116,13 +116,13 @@ const renderShowAll = ({filteredTabComponentArray}) => {
   )
 }
 
-const renderTabsComponent = ({filteredTabComponentArray, currentTabValue, handleTabChange}) => {
+const renderTabsComponent = ({ filteredTabComponentArray, currentTabValue, handleTabChange }) => {
   return (
     <div>
       <Tabs value={currentTabValue} onValueChange={handleTabChange} className="w-full ">
         <TabsList
           className="grid w-full bg-gray-200 "
-          style={{gridTemplateColumns: `repeat(${filteredTabComponentArray.length}, 1fr)`}}
+          style={{ gridTemplateColumns: `repeat(${filteredTabComponentArray.length}, 1fr)` }}
         >
           {filteredTabComponentArray
             .filter(obj => obj?.label)
@@ -138,7 +138,7 @@ const renderTabsComponent = ({filteredTabComponentArray, currentTabValue, handle
         </TabsList>
 
         {filteredTabComponentArray.map((obj, i) => {
-          const {containerClass = 'mx-auto w-fit'} = obj ?? {}
+          const { containerClass = 'mx-auto w-fit' } = obj ?? {}
 
           return (
             <TabsContent

@@ -20,6 +20,7 @@ export const categoryStore = {
     return categories.map(cat => ({
       ...cat,
       schema: cat.schema as unknown as EnrichedSchema,
+      archetypes: (cat.archetypes as ArchetypeType[]) || [],
     }))
   },
 
@@ -34,6 +35,7 @@ export const categoryStore = {
     return {
       ...category,
       schema: category.schema as unknown as EnrichedSchema,
+      archetypes: (category.archetypes as ArchetypeType[]) || [],
     }
   },
 
@@ -48,23 +50,31 @@ export const categoryStore = {
     return {
       ...category,
       schema: category.schema as unknown as EnrichedSchema,
+      archetypes: (category.archetypes as ArchetypeType[]) || [],
     }
   },
 
   /**
    * カテゴリを作成
    */
-  create: async (data: {name: string; description?: string; schema: EnrichedSchema}): Promise<DBCategory> => {
+  create: async (data: {
+    name: string
+    description?: string
+    schema: EnrichedSchema
+    archetypes?: ArchetypeType[]
+  }): Promise<DBCategory> => {
     const category = await prisma.lifeOSCategory.create({
       data: {
         name: data.name,
         description: data.description,
         schema: data.schema as any,
+        archetypes: (data.archetypes || []) as any,
       },
     })
     return {
       ...category,
       schema: category.schema as unknown as EnrichedSchema,
+      archetypes: (category.archetypes as ArchetypeType[]) || [],
     }
   },
 
@@ -77,6 +87,7 @@ export const categoryStore = {
       name?: string
       description?: string
       schema?: EnrichedSchema
+      archetypes?: ArchetypeType[]
     }
   ): Promise<DBCategory | null> => {
     try {
@@ -86,11 +97,13 @@ export const categoryStore = {
           name: data.name,
           description: data.description,
           schema: data.schema as any,
+          archetypes: data.archetypes !== undefined ? (data.archetypes as any) : undefined,
         },
       })
       return {
         ...category,
         schema: category.schema as unknown as EnrichedSchema,
+        archetypes: (category.archetypes as ArchetypeType[]) || [],
       }
     } catch {
       return null
@@ -139,13 +152,14 @@ export const logStore = {
 
     return logs.map(log => ({
       ...log,
-      archetype: log.archetype as ArchetypeType,
+      // archetypeフィールドは削除（カテゴリのarchetypesを参照）
       // schemaフィールドは削除（カテゴリのスキーマを参照）
       data: log.data as Record<string, unknown>,
       category: log.category
         ? {
             ...log.category,
             schema: log.category.schema as unknown as EnrichedSchema,
+            archetypes: (log.category.archetypes as ArchetypeType[]) || [],
           }
         : undefined,
     }))
@@ -162,13 +176,14 @@ export const logStore = {
     if (!log) return null
     return {
       ...log,
-      archetype: log.archetype as ArchetypeType,
+      // archetypeフィールドは削除（カテゴリのarchetypesを参照）
       // schemaフィールドは削除（カテゴリのスキーマを参照）
       data: log.data as Record<string, unknown>,
       category: log.category
         ? {
             ...log.category,
             schema: log.category.schema as unknown as EnrichedSchema,
+            archetypes: (log.category.archetypes as ArchetypeType[]) || [],
           }
         : undefined,
     }
@@ -177,15 +192,9 @@ export const logStore = {
   /**
    * ログを作成
    */
-  create: async (data: {
-    archetype: ArchetypeType
-    data: Record<string, unknown>
-    description?: string
-    categoryId: number
-  }): Promise<DBLog> => {
+  create: async (data: {data: Record<string, unknown>; description?: string; categoryId: number}): Promise<DBLog> => {
     const log = await prisma.lifeOSLog.create({
       data: {
-        archetype: data.archetype,
         data: data.data as any,
         description: data.description,
         categoryId: data.categoryId,
@@ -194,13 +203,14 @@ export const logStore = {
     })
     return {
       ...log,
-      archetype: log.archetype as ArchetypeType,
+      // archetypeフィールドは削除（カテゴリのarchetypesを参照）
       // schemaフィールドは削除（カテゴリのスキーマを参照）
       data: log.data as Record<string, unknown>,
       category: log.category
         ? {
             ...log.category,
             schema: log.category.schema as unknown as EnrichedSchema,
+            archetypes: (log.category.archetypes as ArchetypeType[]) || [],
           }
         : undefined,
     }
@@ -212,7 +222,6 @@ export const logStore = {
   update: async (
     id: number,
     data: {
-      archetype?: ArchetypeType
       data?: Record<string, unknown>
       description?: string
       categoryId?: number
@@ -222,7 +231,6 @@ export const logStore = {
       const log = await prisma.lifeOSLog.update({
         where: {id},
         data: {
-          archetype: data.archetype,
           data: data.data as any,
           description: data.description,
           categoryId: data.categoryId,
@@ -231,13 +239,14 @@ export const logStore = {
       })
       return {
         ...log,
-        archetype: log.archetype as ArchetypeType,
+        // archetypeフィールドは削除（カテゴリのarchetypesを参照）
         // schemaフィールドは削除（カテゴリのスキーマを参照）
         data: log.data as Record<string, unknown>,
         category: log.category
           ? {
               ...log.category,
               schema: log.category.schema as unknown as EnrichedSchema,
+              archetypes: (log.category.archetypes as ArchetypeType[]) || [],
             }
           : undefined,
       }
@@ -297,13 +306,14 @@ export const getStats = async () => {
     totalCategories,
     recentLogs: recentLogs.map(log => ({
       ...log,
-      archetype: log.archetype as ArchetypeType,
+      // archetypeフィールドは削除（カテゴリのarchetypesを参照）
       // schemaフィールドは削除（カテゴリのスキーマを参照）
       data: log.data as Record<string, unknown>,
       category: log.category
         ? {
             ...log.category,
             schema: log.category.schema as unknown as EnrichedSchema,
+            archetypes: (log.category.archetypes as ArchetypeType[]) || [],
           }
         : undefined,
     })),
@@ -317,7 +327,12 @@ export const getStats = async () => {
 /**
  * カテゴリ名からカテゴリを取得または作成
  */
-export const getOrCreateCategory = async (name: string, schema: EnrichedSchema, description?: string): Promise<DBCategory> => {
+export const getOrCreateCategory = async (
+  name: string,
+  schema: EnrichedSchema,
+  description?: string,
+  archetypes?: ArchetypeType[]
+): Promise<DBCategory> => {
   const existing = await categoryStore.getByName(name)
   if (existing) return existing
 
@@ -325,5 +340,6 @@ export const getOrCreateCategory = async (name: string, schema: EnrichedSchema, 
     name,
     description,
     schema,
+    archetypes: archetypes || [],
   })
 }

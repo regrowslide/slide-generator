@@ -10,7 +10,6 @@ interface EtcDataTableProps {
   toggleRowSelection: (id: number) => void
   ungroupRecords: (meisaiId: number) => Promise<void>
   handleLinkSchedule: (etcMeisaiId: number, scheduleId: number | null, scheduleDate: Date) => void
-  canEdit?: boolean
 }
 
 export const EtcDataTable: React.FC<EtcDataTableProps> = ({
@@ -19,7 +18,6 @@ export const EtcDataTable: React.FC<EtcDataTableProps> = ({
   toggleRowSelection,
   ungroupRecords,
   handleLinkSchedule,
-  canEdit = true,
 }) => {
   const tableData = useMemo(() => {
     if (etcRawData.length === 0) return []
@@ -159,12 +157,8 @@ export const EtcDataTable: React.FC<EtcDataTableProps> = ({
                     <td>
                       <R_Stack className={` flex-nowrap gap-0.5`}>
                         <button
-                          onClick={() => canEdit && ungroupRecords(groupHeader.meisaiId)}
-                          disabled={!canEdit}
-                          className={cn(
-                            "text-xs px-2 py-1 bg-red-200 border-red-400 border hover:bg-red-300 rounded",
-                            !canEdit && "pointer-events-none opacity-50"
-                          )}
+                          onClick={() => ungroupRecords(groupHeader.meisaiId)}
+                          className="text-xs px-2 py-1 bg-red-200 border-red-400 border hover:bg-red-300 rounded"
                           title="グループ解除"
                         >
                           {groupHeader.groupIndex + 1}
@@ -172,15 +166,9 @@ export const EtcDataTable: React.FC<EtcDataTableProps> = ({
                         <button
                           onClick={e => {
                             e.stopPropagation()
-                            if (canEdit) {
-                              handleLinkSchedule(groupHeader.meisaiId, groupHeader.tbmDriveScheduleId || 0, groupHeader.fromDate)
-                            }
+                            handleLinkSchedule(groupHeader.meisaiId, groupHeader.tbmDriveScheduleId || 0, groupHeader.fromDate)
                           }}
-                          disabled={!canEdit}
-                          className={cn(
-                            "text-xs px-2 py-1 bg-blue-100 border-blue-300 border hover:bg-blue-200 rounded ml-1",
-                            !canEdit && "pointer-events-none opacity-50"
-                          )}
+                          className="text-xs px-2 py-1 bg-blue-100 border-blue-300 border hover:bg-blue-200 rounded ml-1"
                           title="運行データと紐付け"
                         >
                           {groupHeader.tbmDriveScheduleId ? '紐付け済' : '紐付け'}

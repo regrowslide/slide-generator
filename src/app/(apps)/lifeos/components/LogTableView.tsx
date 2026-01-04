@@ -1,9 +1,10 @@
 'use client'
 
 import React from 'react'
-import {Edit, AlertTriangle} from 'lucide-react'
-import {DBLog, EnrichedSchema} from '../types'
-import {mergeLogWithSchema, formatFieldValue, getFieldLabel} from '../lib/schemaUtils'
+import { Edit, AlertTriangle } from 'lucide-react'
+import { DBLog } from '../types'
+import { mergeLogWithSchema, formatFieldValue } from '../lib/schemaUtils'
+import { cn } from '@cm/shadcn/lib/utils'
 
 export interface LogTableViewProps {
   logs: DBLog[]
@@ -13,7 +14,7 @@ export interface LogTableViewProps {
 /**
  * ログをテーブル形式で表示するコンポーネント
  */
-export const LogTableView: React.FC<LogTableViewProps> = ({logs, onEdit}) => {
+export const LogTableView: React.FC<LogTableViewProps> = ({ logs, onEdit }) => {
   if (logs.length === 0) {
     return (
       <div className="bg-white rounded-lg shadow-sm p-12 border border-gray-200 text-center">
@@ -32,8 +33,15 @@ export const LogTableView: React.FC<LogTableViewProps> = ({logs, onEdit}) => {
     .sort(([, a], [, b]) => (a.sortOrder || 0) - (b.sortOrder || 0))
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-      <div className="overflow-x-auto">
+    <div className="bg-white  border rounded shadow border-gray-300  overflow-hidden">
+      <div className={cn("overflow-x-auto",
+
+        '[&_th]:p-2 ',
+        '[&_td]:px-2',
+        '[&_td]:py-1',
+
+
+      )}>
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50 sticky top-0 z-10">
             <tr>
@@ -41,13 +49,13 @@ export const LogTableView: React.FC<LogTableViewProps> = ({logs, onEdit}) => {
                 <th
                   key={key}
                   scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  className="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
                   {field.label}
                   {field.required && <span className="text-red-500 ml-1">*</span>}
                 </th>
               ))}
-              <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th scope="col" className="px-2 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                 操作
               </th>
             </tr>
@@ -109,19 +117,19 @@ export const LogTableView: React.FC<LogTableViewProps> = ({logs, onEdit}) => {
         const merged = mergeLogWithSchema(log, categorySchema)
         return Object.keys(merged.orphanFields).length > 0
       }) && (
-        <div className="bg-yellow-50 border-t border-yellow-200 p-4">
-          <div className="flex items-start gap-2">
-            <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-            <div className="text-sm text-yellow-800">
-              <p className="font-semibold mb-1">未定義フィールドの警告</p>
-              <p className="text-xs">
-                一部のログに、現在のスキーマに定義されていないフィールドが含まれています。
-                これらは読み取り専用として表示されます。
-              </p>
+          <div className="bg-yellow-50 border-t border-yellow-200 p-4">
+            <div className="flex items-start gap-2">
+              <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+              <div className="text-sm text-yellow-800">
+                <p className="font-semibold mb-1">未定義フィールドの警告</p>
+                <p className="text-xs">
+                  一部のログに、現在のスキーマに定義されていないフィールドが含まれています。
+                  これらは読み取り専用として表示されます。
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
     </div>
   )
 }

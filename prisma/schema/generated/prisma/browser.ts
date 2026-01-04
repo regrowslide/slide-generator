@@ -163,6 +163,16 @@ export type KeihiAccountMaster = Prisma.KeihiAccountMasterModel
  */
 export type KeihiOptionMaster = Prisma.KeihiOptionMasterModel
 /**
+ * Model LifeOSCategory
+ * 
+ */
+export type LifeOSCategory = Prisma.LifeOSCategoryModel
+/**
+ * Model LifeOSLog
+ * 
+ */
+export type LifeOSLog = Prisma.LifeOSLogModel
+/**
  * Model Product
  * 
  */

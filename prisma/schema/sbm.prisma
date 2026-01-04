@@ -223,7 +223,7 @@ model SbmReservationChangeHistory {
   changedAt DateTime @default(now())
 
   // リレーション
-  SbmReservation SbmReservation? @relation(fields: [sbmReservationId], references: [id], onDelete: SetNull)
+  SbmReservation SbmReservation? @relation(fields: [sbmReservationId], references: [id])
 
   userId Int?
   User   User? @relation(fields: [userId], references: [id], onDelete: SetNull)

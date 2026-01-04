@@ -2,7 +2,7 @@
 
 import React from 'react'
 import {Table, LayoutGrid} from 'lucide-react'
-import {C_Stack, R_Stack} from '@cm/components/styles/common-components/common-components'
+import { R_Stack} from '@cm/components/styles/common-components/common-components'
 
 export type ViewMode = 'table' | 'archetype'
 

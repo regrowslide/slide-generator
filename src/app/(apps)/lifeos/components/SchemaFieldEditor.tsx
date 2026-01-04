@@ -1,7 +1,7 @@
 'use client'
 
 import React, {useState} from 'react'
-import {Plus, Trash2, GripVertical, ChevronDown, ChevronUp} from 'lucide-react'
+import {Plus, Trash2, ChevronDown, ChevronUp} from 'lucide-react'
 import {EnrichedSchema, EnrichedSchemaField} from '../types'
 import {C_Stack, R_Stack} from '@cm/components/styles/common-components/common-components'
 

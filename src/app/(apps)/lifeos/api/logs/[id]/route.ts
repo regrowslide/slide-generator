@@ -70,12 +70,11 @@ export async function PUT(request: NextRequest, {params}: RouteParams) {
     }
 
     const body = await request.json()
-    const {data, description, archetype, categoryId} = body
+    const {data, description, categoryId} = body
 
     const log = await logStore.update(numId, {
       data,
       description,
-      archetype,
       categoryId,
     })
 

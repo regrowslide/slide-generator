@@ -413,6 +413,8 @@ export const ModelName = {
   KeihiAttachment: 'KeihiAttachment',
   KeihiAccountMaster: 'KeihiAccountMaster',
   KeihiOptionMaster: 'KeihiOptionMaster',
+  LifeOSCategory: 'LifeOSCategory',
+  LifeOSLog: 'LifeOSLog',
   Product: 'Product',
   RawMaterial: 'RawMaterial',
   ProductRecipe: 'ProductRecipe',
@@ -493,7 +495,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "hakobunIndustry" | "hakobunIndustryGeneralCategory" | "hakobunIndustryCategory" | "hakobunClient" | "hakobunCorrection" | "hakobunRule" | "hakobunVoice" | "keihiExpense" | "keihiAttachment" | "keihiAccountMaster" | "keihiOptionMaster" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "stockConfig" | "stock" | "stockHistory" | "tbmBase" | "tbmRouteGroupCalendar" | "tbmKeihi" | "tbmDriveScheduleImage" | "tbmBase_MonthConfig" | "tbmVehicle" | "tbmFuelCard" | "tbmVehicleMaintenanceRecord" | "tbmRouteGroup" | "tbmRouteGroupFee" | "tbmRouteGroupStandardSalary" | "tbmMonthlyConfigForRouteGroup" | "mid_TbmRouteGroup_TbmCustomer" | "tbmBillingAddress" | "tbmInvoiceDetail" | "tbmCustomer" | "tbmInvoiceManualEdit" | "tbmRefuelHistory" | "tbmCarWashHistory" | "tbmDriveSchedule" | "tbmEtcMeisai" | "etcCsvRaw" | "odometerInput" | "userWorkStatus" | "kyuyoTableRecord" | "tbmRouteGroupShare" | "tbmRelatedRouteGroup" | "teamSynapseAnalysis" | "exerciseMaster" | "workoutLog"
+    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "hakobunIndustry" | "hakobunIndustryGeneralCategory" | "hakobunIndustryCategory" | "hakobunClient" | "hakobunCorrection" | "hakobunRule" | "hakobunVoice" | "keihiExpense" | "keihiAttachment" | "keihiAccountMaster" | "keihiOptionMaster" | "lifeOSCategory" | "lifeOSLog" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "stockConfig" | "stock" | "stockHistory" | "tbmBase" | "tbmRouteGroupCalendar" | "tbmKeihi" | "tbmDriveScheduleImage" | "tbmBase_MonthConfig" | "tbmVehicle" | "tbmFuelCard" | "tbmVehicleMaintenanceRecord" | "tbmRouteGroup" | "tbmRouteGroupFee" | "tbmRouteGroupStandardSalary" | "tbmMonthlyConfigForRouteGroup" | "mid_TbmRouteGroup_TbmCustomer" | "tbmBillingAddress" | "tbmInvoiceDetail" | "tbmCustomer" | "tbmInvoiceManualEdit" | "tbmRefuelHistory" | "tbmCarWashHistory" | "tbmDriveSchedule" | "tbmEtcMeisai" | "etcCsvRaw" | "odometerInput" | "userWorkStatus" | "kyuyoTableRecord" | "tbmRouteGroupShare" | "tbmRelatedRouteGroup" | "teamSynapseAnalysis" | "exerciseMaster" | "workoutLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2640,6 +2642,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.KeihiOptionMasterCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.KeihiOptionMasterCountAggregateOutputType> | number
+        }
+      }
+    }
+    LifeOSCategory: {
+      payload: Prisma.$LifeOSCategoryPayload<ExtArgs>
+      fields: Prisma.LifeOSCategoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LifeOSCategoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSCategoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LifeOSCategoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSCategoryPayload>
+        }
+        findFirst: {
+          args: Prisma.LifeOSCategoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSCategoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LifeOSCategoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSCategoryPayload>
+        }
+        findMany: {
+          args: Prisma.LifeOSCategoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSCategoryPayload>[]
+        }
+        create: {
+          args: Prisma.LifeOSCategoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSCategoryPayload>
+        }
+        createMany: {
+          args: Prisma.LifeOSCategoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LifeOSCategoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSCategoryPayload>[]
+        }
+        delete: {
+          args: Prisma.LifeOSCategoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSCategoryPayload>
+        }
+        update: {
+          args: Prisma.LifeOSCategoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSCategoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.LifeOSCategoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LifeOSCategoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LifeOSCategoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSCategoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.LifeOSCategoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSCategoryPayload>
+        }
+        aggregate: {
+          args: Prisma.LifeOSCategoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLifeOSCategory>
+        }
+        groupBy: {
+          args: Prisma.LifeOSCategoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LifeOSCategoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LifeOSCategoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LifeOSCategoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    LifeOSLog: {
+      payload: Prisma.$LifeOSLogPayload<ExtArgs>
+      fields: Prisma.LifeOSLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LifeOSLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LifeOSLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSLogPayload>
+        }
+        findFirst: {
+          args: Prisma.LifeOSLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LifeOSLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSLogPayload>
+        }
+        findMany: {
+          args: Prisma.LifeOSLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSLogPayload>[]
+        }
+        create: {
+          args: Prisma.LifeOSLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSLogPayload>
+        }
+        createMany: {
+          args: Prisma.LifeOSLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LifeOSLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSLogPayload>[]
+        }
+        delete: {
+          args: Prisma.LifeOSLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSLogPayload>
+        }
+        update: {
+          args: Prisma.LifeOSLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.LifeOSLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LifeOSLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LifeOSLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.LifeOSLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LifeOSLogPayload>
+        }
+        aggregate: {
+          args: Prisma.LifeOSLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLifeOSLog>
+        }
+        groupBy: {
+          args: Prisma.LifeOSLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LifeOSLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LifeOSLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LifeOSLogCountAggregateOutputType> | number
         }
       }
     }
@@ -7963,6 +8113,33 @@ export const KeihiOptionMasterScalarFieldEnum = {
 export type KeihiOptionMasterScalarFieldEnum = (typeof KeihiOptionMasterScalarFieldEnum)[keyof typeof KeihiOptionMasterScalarFieldEnum]
 
 
+export const LifeOSCategoryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  description: 'description',
+  schema: 'schema',
+  archetypes: 'archetypes'
+} as const
+
+export type LifeOSCategoryScalarFieldEnum = (typeof LifeOSCategoryScalarFieldEnum)[keyof typeof LifeOSCategoryScalarFieldEnum]
+
+
+export const LifeOSLogScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  data: 'data',
+  description: 'description',
+  categoryId: 'categoryId'
+} as const
+
+export type LifeOSLogScalarFieldEnum = (typeof LifeOSLogScalarFieldEnum)[keyof typeof LifeOSLogScalarFieldEnum]
+
+
 export const ProductScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -8860,6 +9037,7 @@ export const TbmCustomerScalarFieldEnum = {
   code: 'code',
   name: 'name',
   kana: 'kana',
+  postalCode: 'postalCode',
   address: 'address',
   phoneNumber: 'phoneNumber',
   faxNumber: 'faxNumber',
@@ -9367,6 +9545,8 @@ export type GlobalOmitConfig = {
   keihiAttachment?: Prisma.KeihiAttachmentOmit
   keihiAccountMaster?: Prisma.KeihiAccountMasterOmit
   keihiOptionMaster?: Prisma.KeihiOptionMasterOmit
+  lifeOSCategory?: Prisma.LifeOSCategoryOmit
+  lifeOSLog?: Prisma.LifeOSLogOmit
   product?: Prisma.ProductOmit
   rawMaterial?: Prisma.RawMaterialOmit
   productRecipe?: Prisma.ProductRecipeOmit
