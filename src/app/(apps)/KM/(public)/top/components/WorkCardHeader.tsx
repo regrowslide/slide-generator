@@ -2,7 +2,6 @@
 
 import { SparklesIcon } from 'lucide-react'
 import { R_Stack } from '@cm/components/styles/common-components/common-components'
-import ContentPlayer from '@cm/components/utils/ContentPlayer'
 import { Tags } from './Tags'
 import { ReviewScore } from './ReviewScore'
 
@@ -54,16 +53,7 @@ export const WorkCardHeader = ({
 
 
 
-            {allowShowClient && KaizenClient?.iconUrl && (
-              <div className="w-fit rounded-xl sm:rounded-2xl bg-white p-1.5 sm:p-2 shadow-lg ring-2 sm:ring-4 ring-white/30 flex-shrink-0">
-                <ContentPlayer
-                  {...{
-                    styles: { thumbnail: { width: isMobile ? 40 : 55, height: isMobile ? 40 : 55 } },
-                    src: KaizenClient?.iconUrl,
-                  }}
-                />
-              </div>
-            )}
+
           </div>
 
           {/* タグ */}
@@ -80,6 +70,8 @@ export const WorkCardHeader = ({
             </div>
           </div>
         )}
+
+
 
 
       </R_Stack>

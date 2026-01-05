@@ -13,10 +13,9 @@ import Image from 'next/image'
 //   subsets: ['latin', 'latin-ext'],
 // })
 
-const AppName = <div className={` bg-gradient-to-r from-blue-900 via-blue-600 to-blue-900 bg-clip-text text-transparent`}>合同会社改善マニア</div>
-const Logo = <R_Stack className={`gap-0.5`}>
-  {/* <Image className={``} src={'/image/KM/logoText.png'} width={200} height={200} alt="" /> */}
-  <div ><Image className={`rounded-none scale-75`} src={'/image/KM/KAIZEN_MANIA.png'} width={120} height={120} alt="" /></div>
+const AppName = <div className={` bg-gradient-to-r from-blue-900 via-blue-600 to-blue-900 bg-clip-text text-transparent`}>Kaizen Mania LLC</div>
+const Logo = <R_Stack className={`gap-0.5 p-0.5`}>
+  <div ><Image className={`rounded-full `} src={'/image/KM/logo.png'} width={50} height={50} alt="" /></div>
 </R_Stack>
 
 export const metadata: Metadata = { title: '合同会社改善マニア' }

@@ -4,10 +4,9 @@ import { C_Stack, MyContainer, R_Stack } from '@cm/components/styles/common-comp
 
 import { useInView } from 'react-intersection-observer'
 import { motion } from 'framer-motion'
-import { Award, Building2, Code2, Sparkles, TrendingUp } from 'lucide-react'
+import { Award, Code2, Sparkles, TrendingUp } from 'lucide-react'
 import { Developer } from '@app/(apps)/KM/components/Developer'
 import { EnhancedCategory } from '@app/(apps)/KM/components/enhanced/EnhancedCategory'
-import { EnhancedPartners } from '@app/(apps)/KM/components/enhanced/EnhancedPartners'
 
 export const EnhancedServices = ({ kaizenClient }: { kaizenClient: any[] }) => {
   const { ref, inView } = useInView({
@@ -37,16 +36,16 @@ export const EnhancedServices = ({ kaizenClient }: { kaizenClient: any[] }) => {
       borderColor: 'border-slate-100/80',
       content: <EnhancedCategory />,
     },
-    {
-      icon: Building2,
-      badge: null,
-      title: '多彩なクライアント様との取引実績',
-      subtitle: '企業・大学・個人事業主様など幅広くサポート',
-      gradient: 'from-blue-400 via-blue-500 to-indigo-500',
-      bgGradient: 'from-blue-50/40 via-indigo-50/30 to-blue-50/20',
-      borderColor: 'border-blue-100/80',
-      content: <EnhancedPartners {...{ kaizenClient }} />,
-    },
+    // {
+    //   icon: Building2,
+    //   badge: null,
+    //   title: '多彩なクライアント様との取引実績',
+    //   subtitle: '企業・大学・個人事業主様など幅広くサポート',
+    //   gradient: 'from-blue-400 via-blue-500 to-indigo-500',
+    //   bgGradient: 'from-blue-50/40 via-indigo-50/30 to-blue-50/20',
+    //   borderColor: 'border-blue-100/80',
+    //   content: <EnhancedPartners {...{ kaizenClient }} />,
+    // },
   ]
 
   return (

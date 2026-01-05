@@ -2,12 +2,12 @@ import { DemoDrivenDevelopment } from '@app/(apps)/KM/components/DemoDrivenDevel
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'デモ駆動開発 | 合同会社改善マニア',
+  title: 'デモ先行開発 | 合同会社改善マニア',
   description:
     '契約前に「動くデモ」で正解を可視化。要件定義書だけでは伝わらないシステムの使い勝手を、契約前に確認できる新しい開発プロセス。',
-  keywords: ['デモ駆動開発', 'システム開発', 'プロトタイプ', '業務改善', '改善マニア', 'アジャイル'],
+  keywords: ['デモ先行開発', 'システム開発', 'プロトタイプ', '業務改善', '改善マニア', 'アジャイル'],
   openGraph: {
-    title: 'デモ駆動開発 | 合同会社改善マニア',
+    title: 'デモ先行開発 | 合同会社改善マニア',
     description: '契約前に「動くデモ」で正解を可視化。システム開発の不確実性を排除する新しいアプローチ。',
     type: 'website',
     locale: 'ja_JP',

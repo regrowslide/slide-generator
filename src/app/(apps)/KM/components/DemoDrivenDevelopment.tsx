@@ -140,7 +140,7 @@ const ConcernsSection = () => {
      </p>
      <p className="mt-3 text-xl font-bold text-blue-800">
       私たちはこの不確実性を排除するため、
-      <span className="bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">「デモ駆動開発」</span>
+      <span className="bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">「デモ先行開発」</span>
       という手法を標準採用しています。
      </p>
     </motion.div>
@@ -592,7 +592,7 @@ export const DemoDrivenDevelopment = () => {
       variants={itemVariants}
       className="mb-6 text-4xl font-black tracking-tight text-white lg:text-6xl"
      >
-      <span className="block">デモ駆動開発</span>
+      <span className="block">デモ先行開発</span>
       <span className="mt-2 block bg-gradient-to-r from-amber-300 via-amber-400 to-amber-300 bg-clip-text text-2xl font-bold text-transparent lg:text-4xl">
        Demo-Driven Development
       </span>

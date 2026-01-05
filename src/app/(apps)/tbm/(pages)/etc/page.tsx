@@ -199,7 +199,7 @@ export default function EtcCsvImportPage() {
                         toggleRowSelection={toggleRowSelection}
                         ungroupRecords={ungroupRecords}
                         handleLinkSchedule={handleLinkSchedule}
-                        canEdit={canEdit}
+
                       />
                     </>
                   ) : (

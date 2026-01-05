@@ -1,15 +1,12 @@
-import { Contact } from '@app/(apps)/KM/components/Contact'
 import { EnhancedContact } from '@app/(apps)/KM/components/enhanced/EnhancedContact'
 import { Padding } from '@cm/components/styles/common-components/common-components'
+import React from 'react'
 
-const Page = async () => {
-  return (
-    <div>
-      <Padding>
-        <EnhancedContact />
-      </Padding>
-    </div>
-  )
+export default function Page() {
+ return (
+  <Padding>
+   <EnhancedContact />
+
+  </Padding>
+ )
 }
-
-export default Page

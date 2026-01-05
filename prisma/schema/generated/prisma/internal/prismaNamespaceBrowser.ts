@@ -80,8 +80,6 @@ export const ModelName = {
   KeihiAttachment: 'KeihiAttachment',
   KeihiAccountMaster: 'KeihiAccountMaster',
   KeihiOptionMaster: 'KeihiOptionMaster',
-  LifeOSCategory: 'LifeOSCategory',
-  LifeOSLog: 'LifeOSLog',
   Product: 'Product',
   RawMaterial: 'RawMaterial',
   ProductRecipe: 'ProductRecipe',
@@ -634,33 +632,6 @@ export const KeihiOptionMasterScalarFieldEnum = {
 } as const
 
 export type KeihiOptionMasterScalarFieldEnum = (typeof KeihiOptionMasterScalarFieldEnum)[keyof typeof KeihiOptionMasterScalarFieldEnum]
-
-
-export const LifeOSCategoryScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  name: 'name',
-  description: 'description',
-  schema: 'schema',
-  archetypes: 'archetypes'
-} as const
-
-export type LifeOSCategoryScalarFieldEnum = (typeof LifeOSCategoryScalarFieldEnum)[keyof typeof LifeOSCategoryScalarFieldEnum]
-
-
-export const LifeOSLogScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  data: 'data',
-  description: 'description',
-  categoryId: 'categoryId'
-} as const
-
-export type LifeOSLogScalarFieldEnum = (typeof LifeOSLogScalarFieldEnum)[keyof typeof LifeOSLogScalarFieldEnum]
 
 
 export const ProductScalarFieldEnum = {

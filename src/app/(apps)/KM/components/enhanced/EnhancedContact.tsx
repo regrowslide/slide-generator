@@ -102,7 +102,7 @@ export const EnhancedContact = () => {
                     </p>
                   </div>
 
-                  {/* デモ駆動開発の紹介 */}
+                  {/* デモ先行開発の紹介 */}
                   <div className="mt-4">
                     <button
                       onClick={() => setIsModalOpen(true)}
@@ -114,7 +114,7 @@ export const EnhancedContact = () => {
                         </div>
                         <div className="flex-1">
                           <div className="mb-1 flex items-center gap-2">
-                            <span className="text-sm font-bold text-amber-900">デモ駆動開発</span>
+                            <span className="text-sm font-bold text-amber-900">デモ先行開発</span>
                             <ArrowRight className="h-4 w-4 text-amber-600 transition-transform duration-300 group-hover:translate-x-1" />
                           </div>
                           <p className="text-xs leading-relaxed text-gray-700">
@@ -244,7 +244,7 @@ export const EnhancedContact = () => {
         </motion.div>
       </div>
 
-      {/* デモ駆動開発モーダル */}
+      {/* デモ先行開発モーダル */}
       <AnimatePresence>
         {isModalOpen && (
           <motion.div
@@ -268,7 +268,7 @@ export const EnhancedContact = () => {
             >
               {/* ヘッダー */}
               <div className="sticky top-0 z-20 flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4 shadow-sm">
-                <h2 className="text-xl font-bold text-gray-900">デモ駆動開発について</h2>
+                <h2 className="text-xl font-bold text-gray-900">デモ先行開発について</h2>
                 <button
                   onClick={() => setIsModalOpen(false)}
                   className="flex h-10 w-10 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900"
