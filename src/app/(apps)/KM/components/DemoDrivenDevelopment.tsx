@@ -3,23 +3,7 @@
 import { R_Stack } from '@cm/components/styles/common-components/common-components'
 import { motion, Variants } from 'framer-motion'
 import {
- AlertTriangle,
- CheckCircle2,
  ChevronRight,
- Code2,
- Eye,
- HandshakeIcon,
- Home,
- Lightbulb,
- MessageCircle,
- MousePointer2,
- Rocket,
- Settings,
- Shield,
- Sparkles,
- Target,
- Users,
- Zap,
 } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
@@ -82,17 +66,14 @@ const Section = ({
 const ConcernsSection = () => {
  const concerns = [
   {
-   icon: <Eye className="h-6 w-6" />,
    title: '実物が見えない不安',
    description: '要件定義書だけで話が進み、完成直前まで実物が確認できない。',
   },
   {
-   icon: <Settings className="h-6 w-6" />,
    title: '現場との乖離',
    description: '納品されたシステムが、現場の実際の業務フローと噛み合わない。',
   },
   {
-   icon: <AlertTriangle className="h-6 w-6" />,
    title: '追加費用の発生',
    description: '「仕様通りです」と言われ、使い勝手の改善に追加費用が発生する。',
   },
@@ -103,7 +84,6 @@ const ConcernsSection = () => {
    <div className="mx-auto max-w-6xl px-4">
     <motion.div variants={itemVariants} className="mb-12 text-center">
      <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-medium text-amber-800">
-      <AlertTriangle className="h-4 w-4" />
       従来の開発プロセスにおける懸念
      </div>
      <h2 className="mb-4 text-2xl font-bold text-slate-800 lg:text-4xl">
@@ -122,9 +102,6 @@ const ConcernsSection = () => {
       >
        <div className="absolute right-0 top-0 h-24 w-24 -translate-y-8 translate-x-8 rounded-full bg-gradient-to-br from-amber-100 to-transparent opacity-50 transition-transform duration-300 group-hover:scale-150" />
        <div className="relative z-10">
-        <div className="mb-4 inline-flex items-center justify-center rounded-xl bg-amber-100 p-3 text-amber-600">
-         {concern.icon}
-        </div>
         <h3 className="mb-2 text-lg font-bold text-slate-800">{concern.title}</h3>
         <p className="text-slate-600">{concern.description}</p>
        </div>
@@ -153,19 +130,16 @@ const ConcernsSection = () => {
 const VisualizationSection = () => {
  const qualities = [
   {
-   icon: <MousePointer2 className="h-6 w-6" />,
    title: '操作性',
    description: '直感的に扱えるUIか？ 入力にストレスはないか？',
    color: 'blue',
   },
   {
-   icon: <Target className="h-6 w-6" />,
    title: '実効性',
    description: '貴社のボトルネックは、具体的にどう解消されるか？',
    color: 'emerald',
   },
   {
-   icon: <Users className="h-6 w-6" />,
    title: '定着性',
    description: 'ITリテラシーに関わらず、現場の誰もが使いこなせるか？',
    color: 'amber',
@@ -218,7 +192,6 @@ const VisualizationSection = () => {
     <motion.div variants={itemVariants} className="mb-8">
      <div className="mb-8 text-center">
       <h3 className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-5 py-2 text-lg font-bold text-blue-800">
-       <CheckCircle2 className="h-5 w-5" />
        デモで検証する3つの品質
       </h3>
       <p className="mt-4 text-slate-600">
@@ -243,9 +216,6 @@ const VisualizationSection = () => {
          variants={itemVariants}
          className={`rounded-2xl border ${colors.border} bg-white p-6 shadow-sm transition-all duration-300 ${colors.hoverBorder} hover:shadow-lg`}
         >
-         <div className={`mb-4 inline-flex items-center justify-center rounded-xl ${colors.bg} p-3 ${colors.text}`}>
-          {quality.icon}
-         </div>
          <h4 className="mb-2 text-xl font-bold text-slate-800">{quality.title}</h4>
          <p className="text-slate-600">{quality.description}</p>
         </motion.div>
@@ -262,10 +232,9 @@ const VisualizationSection = () => {
      <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-blue-500/10 blur-3xl" />
      <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-amber-500/10 blur-3xl" />
      <div className="relative z-10">
-      <R_Stack className="items-center gap-4 mb-6">
-       <Home className="h-8 w-8 text-amber-400" />
+      <div className="mb-6">
        <span className="text-xl font-bold">たとえるなら...</span>
-      </R_Stack>
+      </div>
       <p className="text-lg leading-relaxed text-slate-200">
        注文住宅を建てる際、
        <span className="text-white font-semibold">図面だけで契約する人はいません。</span>
@@ -288,11 +257,9 @@ const VisualizationSection = () => {
 const TechnologySection = () => {
  const benefits = [
   {
-   icon: <Zap className="h-5 w-5" />,
    text: '高速で構築できるため、コストを転嫁する必要がない。',
   },
   {
-   icon: <Sparkles className="h-5 w-5" />,
    text: '修正コストが低いため、納得いくまでブラッシュアップできる。',
   },
  ]
@@ -329,7 +296,6 @@ const TechnologySection = () => {
       {/* 秘密の見出し */}
       <div className="mb-8 text-center">
        <div className="inline-flex items-center gap-3 rounded-full border border-emerald-300 bg-emerald-100 px-6 py-3">
-        <Code2 className="h-6 w-6 text-emerald-700" />
         <span className="text-lg font-bold text-emerald-800">
          秘密は「独自開発のプロトタイピングエンジン」
         </span>
@@ -358,11 +324,8 @@ const TechnologySection = () => {
         <motion.div
          key={index}
          variants={itemVariants}
-         className="flex items-center gap-4 rounded-xl bg-white p-4 shadow-sm transition-all duration-300 hover:shadow-md"
+         className="rounded-xl bg-white p-4 shadow-sm transition-all duration-300 hover:shadow-md"
         >
-         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
-          {benefit.icon}
-         </div>
          <p className="text-lg font-medium text-slate-700">{benefit.text}</p>
         </motion.div>
        ))}
@@ -386,7 +349,6 @@ const TechnologySection = () => {
       >
        <div className="text-center">
         <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-300 bg-white px-5 py-2 text-sm font-bold text-emerald-700">
-         <Shield className="h-5 w-5" />
          安心してお任せいただけるように
         </div>
         <p className="mb-2 text-xl font-bold text-slate-800 lg:text-2xl">
@@ -461,7 +423,6 @@ const ConsultationSection = () => {
     >
      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-600/20 via-transparent to-transparent" />
      <div className="relative z-10">
-      <MessageCircle className="mx-auto mb-6 h-12 w-12 text-amber-400" />
       <p className="mb-4 text-xl text-slate-200">
        そのお悩みに対し、私たちは難解な専門用語ではなく、
       </p>
@@ -478,8 +439,7 @@ const ConsultationSection = () => {
 
       {/* 無償の明記 */}
       <div className="mt-8 rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm">
-       <div className="flex items-center justify-center gap-2 text-center">
-        <Shield className="h-5 w-5 text-amber-300" />
+       <div className="text-center">
         <p className="text-base font-bold text-white lg:text-lg">
          <span className="text-amber-300">デモ開発・お見積りまで無償</span>
          <span className="mx-2 text-slate-300">|</span>
@@ -518,15 +478,12 @@ const FooterSection = () => {
      {/* 信頼のバッジ */}
      <div className="flex flex-wrap justify-center gap-4">
       <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm text-blue-800">
-       <Shield className="h-4 w-4" />
        誠実な対応
       </div>
       <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm text-emerald-800">
-       <HandshakeIcon className="h-4 w-4" />
        信頼の実績
       </div>
       <div className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800">
-       <Rocket className="h-4 w-4" />
        高速開発
       </div>
      </div>
@@ -534,10 +491,9 @@ const FooterSection = () => {
      {/* お問い合わせボタン */}
      <div className="mt-8">
       <a
-       href="/KM/top/contact"
+       href="/KM/contact"
        className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-800 px-8 py-4 text-lg font-bold text-white shadow-lg transition-all duration-300 hover:from-blue-700 hover:to-blue-900 hover:shadow-xl"
       >
-       <MessageCircle className="h-5 w-5" />
        お問い合わせはこちら
       </a>
      </div>
@@ -583,7 +539,6 @@ export const DemoDrivenDevelopment = () => {
     >
      <motion.div variants={itemVariants} className="mb-6">
       <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-medium text-white/90 backdrop-blur-sm">
-       <Lightbulb className="h-4 w-4 text-amber-400" />
        システム開発の新しいカタチ
       </div>
      </motion.div>
@@ -611,18 +566,9 @@ export const DemoDrivenDevelopment = () => {
      {/* 信頼のメッセージ */}
      <motion.div variants={itemVariants} className="mt-10">
       <div className="inline-flex flex-wrap justify-center gap-6 text-sm text-slate-400">
-       <span className="flex items-center gap-2">
-        <Shield className="h-4 w-4 text-blue-400" />
-        誠実な対応
-       </span>
-       <span className="flex items-center gap-2">
-        <HandshakeIcon className="h-4 w-4 text-emerald-400" />
-        信頼第一
-       </span>
-       <span className="flex items-center gap-2">
-        <CheckCircle2 className="h-4 w-4 text-amber-400" />
-        透明性の確保
-       </span>
+       <span>誠実な対応</span>
+       <span>信頼第一</span>
+       <span>透明性の確保</span>
       </div>
      </motion.div>
 

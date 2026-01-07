@@ -19,7 +19,7 @@ export const ReviewScore = ({ dealPoint, toolPoint }: ReviewScoreProps) => {
     )
   }
 
-  const StarRating = ({ rating, label, emoji }: { rating: number; label: string; emoji: string }) => (
+  const StarRating = ({ rating, label }: { rating: number; label: string }) => (
     <C_Stack className=" gap-0 items-center bg-yellow-50 backdrop-blur-sm rounded-lg sm:rounded-xl px-2.5  py-0.5 sm:py-1.5 shadow-md border text-gray-600 border-yellow-400/30 ">
 
 
@@ -50,8 +50,8 @@ export const ReviewScore = ({ dealPoint, toolPoint }: ReviewScoreProps) => {
 
   return (
     <div className="flex justify-end flex-row sm:flex-col w-full  gap-1.5 sm:gap-4 ">
-      {dealPoint && <StarRating rating={dealPoint} label="取引評価" emoji="🤝" />}
-      {toolPoint && <StarRating rating={toolPoint} label="成果物評価" emoji="⭐" />}
+      {dealPoint && <StarRating rating={dealPoint} label="取引評価" />}
+      {toolPoint && <StarRating rating={toolPoint} label="成果物評価" />}
     </div>
   )
 }

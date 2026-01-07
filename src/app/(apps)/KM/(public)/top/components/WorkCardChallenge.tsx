@@ -1,7 +1,6 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { AlertCircleIcon } from 'lucide-react'
 import { StepArrow } from './StepArrow'
 
 interface WorkCardChallengeProps {
@@ -23,10 +22,8 @@ export const WorkCardChallenge = ({ beforeChallenge, inView }: WorkCardChallenge
             <span className="text-white font-black text-base sm:text-lg">1</span>
           </div>
           <div className="flex items-center gap-1.5 sm:gap-2 flex-1 min-w-0">
-            <AlertCircleIcon className="h-4 w-4 sm:h-5 sm:w-5 text-red-500 flex-shrink-0" />
             <span className="text-base sm:text-lg font-bold text-slate-800">お悩み・課題</span>
           </div>
-          <div className="text-xl sm:text-2xl flex-shrink-0">😰</div>
         </div>
 
         {/* 課題カード */}

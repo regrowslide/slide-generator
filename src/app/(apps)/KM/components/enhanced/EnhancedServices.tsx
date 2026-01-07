@@ -4,7 +4,7 @@ import { C_Stack, MyContainer, R_Stack } from '@cm/components/styles/common-comp
 
 import { useInView } from 'react-intersection-observer'
 import { motion } from 'framer-motion'
-import { Award, Code2, Sparkles, TrendingUp } from 'lucide-react'
+import { Award, Code2, TrendingUp } from 'lucide-react'
 import { Developer } from '@app/(apps)/KM/components/Developer'
 import { EnhancedCategory } from '@app/(apps)/KM/components/enhanced/EnhancedCategory'
 
@@ -58,11 +58,9 @@ export const EnhancedServices = ({ kaizenClient }: { kaizenClient: any[] }) => {
           transition={{ duration: 0.6 }}
           className="mb-10 text-center"
         >
-          <R_Stack className="mb-3 justify-center gap-2">
-            <Sparkles className="h-5 w-5 text-slate-400" />
+          <div className="mb-3 text-center">
             <span className="text-sm font-semibold uppercase tracking-widest text-slate-500">Track Record</span>
-            <Sparkles className="h-5 w-5 text-slate-400" />
-          </R_Stack>
+          </div>
           <h2 className="mb-2 text-3xl font-bold tracking-tight text-gray-900 md:text-4xl">
             実績・サービス
           </h2>

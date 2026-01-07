@@ -5,7 +5,7 @@ import useWindowSize from '@cm/hooks/useWindowSize'
 import { MyContainer, R_Stack } from '@cm/components/styles/common-components/common-components'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { Mail, Clock, MessageSquare, CheckCircle, Shield, HandshakeIcon, Lightbulb, ArrowRight, X, Sparkles } from 'lucide-react'
+import { X } from 'lucide-react'
 import { DemoDrivenDevelopment } from '@app/(apps)/KM/components/DemoDrivenDevelopment'
 
 export const EnhancedContact = () => {
@@ -18,9 +18,9 @@ export const EnhancedContact = () => {
   })
 
   const benefits = [
-    { icon: MessageSquare, title: '相談無料', description: 'まずは気軽にご相談ください' },
-    { icon: Clock, title: '半日以内に返信', description: '迅速な対応を心がけています' },
-    { icon: CheckCircle, title: '要件が曖昧でもOK', description: '一緒に整理していきます' },
+    { title: '相談無料', description: 'まずは気軽にご相談ください' },
+    { title: '半日以内に返信', description: '迅速な対応を心がけています' },
+    { title: '要件が曖昧でもOK', description: '一緒に整理していきます' },
   ]
 
   const wrapperClas = ' w-screen-lg max-w-[90vw]'
@@ -52,7 +52,6 @@ export const EnhancedContact = () => {
         >
           <div className="grid gap-3 sm:grid-cols-3">
             {benefits.map((benefit, index) => {
-              const Icon = benefit.icon
               return (
                 <motion.div
                   key={index}
@@ -61,11 +60,6 @@ export const EnhancedContact = () => {
                   transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
                   className="rounded-xl bg-gradient-to-br from-blue-900/5 to-white p-4 text-center shadow-md transition-all hover:shadow-xl"
                 >
-                  <div className="mb-2 flex justify-center">
-                    <div className="rounded-full bg-blue-900/10 p-2">
-                      <Icon className="h-5 w-5 text-blue-900" />
-                    </div>
-                  </div>
                   <h3 className="mb-1 text-base font-bold text-gray-900">{benefit.title}</h3>
                   <p className="text-xs text-gray-600">{benefit.description}</p>
                 </motion.div>
@@ -84,8 +78,7 @@ export const EnhancedContact = () => {
             {/* 左側: メッセージ */}
             <div className="w-full xl:w-1/2 xl:p-4">
               <div className="h-full rounded-2xl bg-white shadow-2xl p-6 lg:p-8">
-                <div className="mb-6 flex items-center gap-2">
-                  <Mail className="h-5 w-5 text-blue-900" />
+                <div className="mb-6">
                   <h3 className="text-lg font-bold text-gray-900">ご相談について</h3>
                 </div>
 
@@ -109,13 +102,9 @@ export const EnhancedContact = () => {
                       className="group w-full rounded-xl border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 p-4 text-left transition-all duration-300 hover:border-amber-300 hover:shadow-lg"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600 transition-transform duration-300 group-hover:scale-110">
-                          <Sparkles className="h-5 w-5" />
-                        </div>
                         <div className="flex-1">
                           <div className="mb-1 flex items-center gap-2">
                             <span className="text-sm font-bold text-amber-900">デモ先行開発</span>
-                            <ArrowRight className="h-4 w-4 text-amber-600 transition-transform duration-300 group-hover:translate-x-1" />
                           </div>
                           <p className="text-xs leading-relaxed text-gray-700">
                             契約前に「動くデモ」をお見せします。要件定義書だけでは伝わらないシステムの「使い勝手」を、実際に触って確認してから安心してご契約いただけます。
@@ -134,8 +123,7 @@ export const EnhancedContact = () => {
                         <span className="text-sm font-bold">1</span>
                       </div>
                       <div className="flex-1">
-                        <h4 className="mb-2 flex items-center gap-2 text-base font-bold text-gray-900">
-                          <Lightbulb className="h-4 w-4 text-amber-500" />
+                        <h4 className="mb-2 text-base font-bold text-gray-900">
                           「改善」のハードルを下げるために
                         </h4>
                         <p className="text-sm leading-relaxed text-gray-700">
@@ -158,8 +146,7 @@ export const EnhancedContact = () => {
                         <span className="text-sm font-bold">2</span>
                       </div>
                       <div className="flex-1">
-                        <h4 className="mb-2 flex items-center gap-2 text-base font-bold text-gray-900">
-                          <Shield className="h-4 w-4 text-emerald-600" />
+                        <h4 className="mb-2 text-base font-bold text-gray-900">
                           納得と信頼の上でプロジェクトを進めるために
                         </h4>
                         <p className="text-sm leading-relaxed text-gray-700">
@@ -179,8 +166,7 @@ export const EnhancedContact = () => {
                         <span className="text-sm font-bold">3</span>
                       </div>
                       <div className="flex-1">
-                        <h4 className="mb-2 flex items-center gap-2 text-base font-bold text-gray-900">
-                          <HandshakeIcon className="h-4 w-4 text-amber-600" />
+                        <h4 className="mb-2 text-base font-bold text-gray-900">
                           共に最適解を創るパートナーとして
                         </h4>
                         <p className="text-sm leading-relaxed text-gray-700">
@@ -202,7 +188,6 @@ export const EnhancedContact = () => {
                       <h4 className="mb-1 text-base font-bold text-blue-900">お問い合わせフォーム</h4>
                       <p className="text-sm text-blue-800">以下のフォームよりお気軽にご相談ください</p>
                     </div>
-                    <ArrowRight className="h-5 w-5 text-blue-700" />
                   </div>
                 </div>
               </div>

@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { MessageCircleIcon, PartyPopperIcon } from 'lucide-react'
+import { MessageCircleIcon } from 'lucide-react'
 import SlateEditor from '@cm/components/SlateEditor/SlateEditor'
 
 interface WorkCardTestimonialProps {
@@ -24,7 +24,6 @@ export const WorkCardTestimonial = ({ impression, reply, inView }: WorkCardTesti
             <MessageCircleIcon className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
           </div>
           <span className="text-base sm:text-lg font-bold text-amber-800">お客様の声</span>
-          <PartyPopperIcon className="h-4 w-4 sm:h-5 sm:w-5 text-amber-500 flex-shrink-0" />
         </div>
 
         <div className="ml-1 sm:ml-2 pl-3 sm:pl-4 border-l-4 border-amber-300">
@@ -34,7 +33,7 @@ export const WorkCardTestimonial = ({ impression, reply, inView }: WorkCardTesti
         {reply && (
           <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t-2 border-amber-200/50">
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs sm:text-sm font-bold text-amber-700">💪 改善マニアより</span>
+              <span className="text-xs sm:text-sm font-bold text-amber-700">改善マニアより</span>
             </div>
             <div className="text-xs sm:text-sm text-slate-600 bg-white/50 rounded-lg sm:rounded-xl p-2 sm:p-3">
               <SlateEditor readOnly>{reply}</SlateEditor>

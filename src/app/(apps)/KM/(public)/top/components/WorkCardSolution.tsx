@@ -1,7 +1,6 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { LightbulbIcon, WrenchIcon, ZapIcon } from 'lucide-react'
 import SlateEditor from '@cm/components/SlateEditor/SlateEditor'
 import { StepArrow } from './StepArrow'
 
@@ -28,10 +27,8 @@ export const WorkCardSolution = ({ description, points, quantitativeResult, inVi
             <span className="text-white font-black text-base sm:text-lg">2</span>
           </div>
           <div className="flex items-center gap-1.5 sm:gap-2 flex-1 min-w-0">
-            <LightbulbIcon className="h-4 w-4 sm:h-5 sm:w-5 text-indigo-500 flex-shrink-0" />
             <span className="text-base sm:text-lg font-bold text-slate-800">改善マニアの解決策</span>
           </div>
-          <div className="text-xl sm:text-2xl flex-shrink-0">💡</div>
         </div>
 
         {/* ソリューションカード */}
@@ -47,9 +44,7 @@ export const WorkCardSolution = ({ description, points, quantitativeResult, inVi
             {points && (
               <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t-2 border-indigo-100">
                 <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                  <WrenchIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-purple-500 flex-shrink-0" />
                   <span className="text-sm sm:text-base font-bold text-purple-900">技術的工夫</span>
-                  <ZapIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-yellow-500 flex-shrink-0" />
                 </div>
                 <div className="text-slate-600 leading-relaxed text-base sm:text-lg mt-2">
                   <SlateEditor readOnly>{points}</SlateEditor>

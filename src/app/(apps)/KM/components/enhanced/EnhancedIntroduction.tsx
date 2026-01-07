@@ -90,7 +90,7 @@ export const EnhancedIntroduction = () => {
               {/* サブタイトル */}
               <motion.div variants={itemVariants}>
                 <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50/80 px-5 py-2.5 text-base font-medium text-blue-800 backdrop-blur-sm sm:text-lg">
-                  <Sparkles className="h-5 w-5" />
+
                   業務改善・自動化に特化したツール開発
                 </div>
               </motion.div>
