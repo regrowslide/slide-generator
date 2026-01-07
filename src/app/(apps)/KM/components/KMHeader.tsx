@@ -15,35 +15,17 @@ import {
 import { cn } from '@shadcn/lib/utils'
 import { useIsMobile } from '@cm/shadcn/hooks/use-mobile'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
-
-export type MenuItem = {
-  label: string
-  href: string
-}
-
-const defaultMenuItems: MenuItem[] = [
-  { label: 'ホーム', href: '/KM' },
-  { label: 'デモ先行開発', href: '/KM/demoDriven' },
-  { label: 'こんなお客様に', href: '/KM/services' },
-  { label: 'お客様の声', href: '/KM/testimonials' },
-  { label: 'お問い合わせ', href: '/KM/contact' },
-]
+import { DEFAULT_MENU_ITEMS, type MenuItem } from '../constants/menuConstants'
+import { isActivePath } from '../utils/navigationUtils'
 
 interface KMHeaderProps {
   menuItems?: MenuItem[]
 }
 
-export const KMHeader: React.FC<KMHeaderProps> = ({ menuItems = defaultMenuItems }) => {
+export const KMHeader: React.FC<KMHeaderProps> = ({ menuItems = DEFAULT_MENU_ITEMS }) => {
   const { pathname } = useGlobal()
   const isMobile = useIsMobile()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-
-  const isActive = (href: string) => {
-    if (href === '/KM') {
-      return pathname === '/KM' || pathname === '/KM/'
-    }
-    return pathname === href || pathname.startsWith(href + '/')
-  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow-sm">
@@ -71,7 +53,7 @@ export const KMHeader: React.FC<KMHeaderProps> = ({ menuItems = defaultMenuItems
                 href={item.href}
                 className={cn(
                   'px-4 py-2 rounded-md text-sm font-medium transition-colors',
-                  isActive(item.href)
+                  isActivePath(item.href, pathname)
                     ? 'bg-blue-50 text-blue-700'
                     : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                 )}
@@ -103,7 +85,7 @@ export const KMHeader: React.FC<KMHeaderProps> = ({ menuItems = defaultMenuItems
                         href={item.href}
                         className={cn(
                           'px-4 py-3 rounded-md text-base font-medium transition-colors',
-                          isActive(item.href)
+                          isActivePath(item.href, pathname)
                             ? 'bg-blue-50 text-blue-700'
                             : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
                         )}
