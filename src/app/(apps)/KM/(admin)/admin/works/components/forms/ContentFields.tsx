@@ -1,8 +1,8 @@
 'use client'
 
 import React from 'react'
-import type { WorkFormData } from '../../../../types/works'
-import { RATING_POINT_RANGE } from '../../../../constants/workFormConstants'
+import type { WorkFormData } from '@app/(apps)/KM/types/works'
+import { RATING_POINT_RANGE } from '@app/(apps)/KM/constants/workFormConstants'
 
 interface ContentFieldsProps {
   formData: WorkFormData

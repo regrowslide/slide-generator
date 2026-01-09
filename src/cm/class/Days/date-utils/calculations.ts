@@ -14,10 +14,6 @@ export const getMidnight = (date = new Date()) => {
     midnightDate = toUtc(midnightDate)
   }
 
-  if (midnightDate?.toISOString().includes(`15:00`) === false) {
-    console.error(`getMidnightError`, date, new Date(year, month - 1, day, 0, 0, 0), midnightDate.toISOString())
-  }
-
   return midnightDate
 }
 

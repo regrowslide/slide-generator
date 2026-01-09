@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import type { WorkFormData } from '../../../../types/works'
+import type { WorkFormData } from '@app/(apps)/KM/types/works'
 
 interface BasicInfoFieldsProps {
   formData: WorkFormData

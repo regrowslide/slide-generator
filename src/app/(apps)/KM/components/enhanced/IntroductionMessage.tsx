@@ -23,8 +23,8 @@ export const IntroductionMessage: React.FC<IntroductionMessageProps> = ({ isVisi
             className="absolute h-2 w-2 rounded-full bg-white/20"
             initial={{ opacity: 0 }}
             animate={{
-              opacity: PARTICLE_ANIMATION.OPACITY_RANGE,
-              y: PARTICLE_ANIMATION.Y_RANGE,
+              opacity: PARTICLE_ANIMATION.OPACITY_RANGE as any,
+              y: PARTICLE_ANIMATION.Y_RANGE as any,
               x: [0, Math.random() * PARTICLE_ANIMATION.X_VARIANCE - PARTICLE_ANIMATION.X_VARIANCE / 2, 0],
             }}
             transition={{
@@ -150,7 +150,7 @@ export const IntroductionMessage: React.FC<IntroductionMessageProps> = ({ isVisi
         className="mt-10"
       >
         <motion.button
-          animate={{ y: SCROLL_DOWN_ANIMATION.Y_RANGE }}
+          animate={{ y: SCROLL_DOWN_ANIMATION.Y_RANGE as any }}
           transition={{
             duration: SCROLL_DOWN_ANIMATION.DURATION,
             repeat: SCROLL_DOWN_ANIMATION.REPEAT,

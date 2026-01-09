@@ -5,7 +5,7 @@ import { Save, Loader2, Eye } from 'lucide-react'
 import { upsertKaizenWork, deleteKaizenWork } from '../actions'
 import { R_Stack } from '@cm/components/styles/common-components/common-components'
 import { WorkCard } from '@app/(apps)/KM/(public)/top/WorkCard'
-import { useWorkForm } from '../../../hooks/useWorkForm'
+import { useWorkForm } from '@app/(apps)/KM/hooks/useWorkForm'
 import { BasicInfoFields } from './forms/BasicInfoFields'
 import { ClientFields } from './forms/ClientFields'
 import { CategoryFields } from './forms/CategoryFields'
@@ -145,7 +145,7 @@ export const WorkEditForm = ({ work, clients, onClose, isNew = false }: WorkEdit
 
       <div>
         <WorkCard
-          work={formData} />
+          work={formData as any} />
       </div>
 
 

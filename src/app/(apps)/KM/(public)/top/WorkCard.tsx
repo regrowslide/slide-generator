@@ -1,8 +1,8 @@
 'use client'
 
+import React from 'react'
 import PlaceHolder from '@cm/components/utils/loader/PlaceHolder'
 import useWindowSize from '@cm/hooks/useWindowSize'
-import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { WorkCardHeader } from './components/WorkCardHeader'
@@ -11,6 +11,10 @@ import { WorkCardChallenge } from './components/WorkCardChallenge'
 import { WorkCardSolution } from './components/WorkCardSolution'
 import { WorkCardResult } from './components/WorkCardResult'
 import { WorkCardTestimonial } from './components/WorkCardTestimonial'
+import { useWorkCardReady } from '../../hooks/useWorkCardReady'
+import { MOBILE_BREAKPOINT, WORK_CARD_INTERSECTION_CONFIG } from '../../constants/workCardConstants'
+
+import { WORK_CARD_ANIMATION } from '@app/(apps)/KM/constants/animationConstants'
 
 interface WorkCardProps {
   work: {
@@ -36,32 +40,25 @@ interface WorkCardProps {
   className?: string
 }
 
-export const WorkCard = ({ work, className }: WorkCardProps) => {
+export const WorkCard = React.memo(({ work, className }: WorkCardProps) => {
   const { width } = useWindowSize()
   const { ref, inView } = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
+    triggerOnce: WORK_CARD_INTERSECTION_CONFIG.TRIGGER_ONCE,
+    threshold: WORK_CARD_INTERSECTION_CONFIG.THRESHOLD,
   })
 
-  const [ready, setready] = useState(false)
-
-  useEffect(() => {
-    setTimeout(() => {
-      setready(true)
-    }, 300)
-  }, [])
+  const ready = useWorkCardReady()
 
   if (!ready) return <PlaceHolder></PlaceHolder>
 
-  const isMobile = width < 640
+  const isMobile = width < MOBILE_BREAKPOINT
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 30 }}
+      initial={WORK_CARD_ANIMATION.initial}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5 }}
-
+      transition={WORK_CARD_ANIMATION.transition}
     >
       <div className={`group overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-slate-50 via-white to-blue-50 shadow-xl transition-all duration-300 hover:shadow-2xl border-2 border-slate-100 ${className}   `}>
         {/* ヘッダー */}
@@ -115,4 +112,4 @@ export const WorkCard = ({ work, className }: WorkCardProps) => {
       </div>
     </motion.div>
   )
-}
+})

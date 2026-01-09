@@ -1,8 +1,8 @@
 'use client'
 
 import React from 'react'
-import type { WorkFormData } from '../../../../types/works'
-import { COMPANY_SCALE_OPTIONS, PROJECT_DURATION_OPTIONS } from '../../../../constants/workFormConstants'
+import type { WorkFormData } from '@app/(apps)/KM/types/works'
+import { COMPANY_SCALE_OPTIONS, PROJECT_DURATION_OPTIONS } from '@app/(apps)/KM/constants/workFormConstants'
 
 interface CategoryFieldsProps {
   formData: WorkFormData

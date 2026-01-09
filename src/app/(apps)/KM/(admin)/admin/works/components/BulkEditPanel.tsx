@@ -8,8 +8,8 @@ import { WorkEditForm } from './WorkEditForm'
 import { BulkEditToolbar } from './BulkEditToolbar'
 import { WorkTableRow } from './WorkTableRow'
 import ShadModal from '@cm/shadcn/ui/Organisms/ShadModal'
-import { useWorksBulkFilter } from '../../../hooks/useWorksBulkFilter'
-import { useDragAndDrop } from '../../../hooks/useDragAndDrop'
+import { useWorksBulkFilter } from '@app/(apps)/KM/hooks/useWorksBulkFilter'
+import { useDragAndDrop } from '@app/(apps)/KM/hooks/useDragAndDrop'
 
 interface BulkEditPanelProps {
   clients: any[]
