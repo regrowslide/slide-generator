@@ -1,5 +1,6 @@
 import { DriveScheduleData, tbmTableKeyValue } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
-import { TimeHandler } from '@app/(apps)/tbm/(class)/TimeHandler'
+import { BillingHandler } from '@app/(apps)/tbm/(class)/TimeHandler'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
 import { NumHandler } from '@cm/class/NumHandler'
 
 export type unkoMeisaiKey =
@@ -52,11 +53,24 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData, jitsudoKaisu: n
   const M_postalHighwayFee = schedule.M_postalHighwayFee ?? 0
 
   // 月間通行料合計額が設定されている場合は自動計算、そうでなければ従来の1便あたり設定値を使用
+
+
+
+  const name = schedule.TbmRouteGroup.name
+
   const N_generalFee = ConfigForRoute?.monthlyTollTotal
     ? ConfigForRoute.monthlyTollTotal / jitsudoKaisu
     : ConfigForRoute?.generalFee ?? 0
   const O_generalHighwayFee = schedule.O_generalHighwayFee ?? 0
 
+  // if (name === 'ゆパ上下二') {
+  //   console.log({
+  //     tsukoryoSeikyuGaku: ConfigForRoute?.tsukoryoSeikyuGaku,
+  //     jitsudoKaisu: jitsudoKaisu,
+
+
+  //   })//////logs
+  // }
 
 
   const T_thirteenPercentOfPostalHighway = M_postalHighwayFee * 0.3
@@ -68,17 +82,10 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData, jitsudoKaisu: n
   const Customer = schedule.TbmRouteGroup?.Mid_TbmRouteGroup_TbmCustomer?.TbmCustomer
 
   // 運行明細ページでは、出発時刻が2400以降の場合は翌日に表示
-  const displayDate = (() => {
-    const parsed = TimeHandler.parseTimeString(schedule.TbmRouteGroup.departureTime)
-    if (parsed && parsed.originalHour >= 24) {
-      // 24:00以降（翌日扱い）の場合、翌日の日付を返す
-      const nextDay = new Date(schedule.date)
-      nextDay.setDate(nextDay.getDate() + 1)
-      return nextDay
-    }
-    // 24:00未満の場合は運行日のまま
-    return schedule.date
-  })()
+  const displayDate = BillingHandler.getDisplayDate(
+    schedule.date,
+    schedule.TbmRouteGroup.departureTime
+  )
 
   const keyValue: unkoMeisaiKeyValue = {
     date: {
@@ -139,7 +146,7 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData, jitsudoKaisu: n
           <div>L通行料</div> <div>(郵便)</div>
         </div>
       ),
-      cellValue: NumHandler.round(L_postalFee, 0),
+      cellValue: NumHandler.round(L_postalFee, 1),
       style: { backgroundColor: '#fcdede' },
     },
     M_postalHighwayFee: {
@@ -148,7 +155,7 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData, jitsudoKaisu: n
           <div>M有料利用料</div> <div>(郵便)</div>
         </div>
       ),
-      cellValue: NumHandler.round(M_postalHighwayFee, 0),
+      cellValue: NumHandler.round(M_postalHighwayFee, 1),
       style: { backgroundColor: '#fcdede' },
     },
     N_generalFee: {
@@ -157,7 +164,7 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData, jitsudoKaisu: n
           <div>N通行料</div> <div>(一般)</div>
         </div>
       ),
-      cellValue: NumHandler.round(N_generalFee, 0),
+      cellValue: NumHandler.round(N_generalFee, 1),
       style: { backgroundColor: '#deebfc' },
     },
     O_generalHighwayFee: {
@@ -171,7 +178,7 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData, jitsudoKaisu: n
     },
     P_KosokuShiyodai: {
       label: 'P高速使用代',
-      cellValue: NumHandler.round(S_jomuinFutan, 0),
+      cellValue: NumHandler.round(S_jomuinFutan, 1),
     },
     Q_driverFee: {
       label: 'Q運賃',
@@ -183,7 +190,7 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData, jitsudoKaisu: n
     },
     R_JomuinUnchin: {
       label: 'R給与算定運賃',
-      cellValue: NumHandler.round(R_JomuinUnchin, 0),
+      cellValue: NumHandler.round(R_JomuinUnchin, 1),
       style: {
         minWidth: 100,
         backgroundColor: '#defceb',
@@ -195,7 +202,7 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData, jitsudoKaisu: n
           <div>S乗務員負担</div> <div>高速代-(通行料+30％)</div>
         </div>
       ),
-      cellValue: NumHandler.round(S_jomuinFutan, 0),
+      cellValue: NumHandler.round(S_jomuinFutan, 1),
       style: { backgroundColor: '#defceb' },
     },
     T_thirteenPercentOfPostalHighway: {
@@ -204,11 +211,11 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData, jitsudoKaisu: n
           <div>T運賃から負担</div> <div>高速代の30％</div>
         </div>
       ),
-      cellValue: NumHandler.round(T_thirteenPercentOfPostalHighway, 0),
+      cellValue: NumHandler.round(T_thirteenPercentOfPostalHighway, 1),
     },
     U_general: {
       label: 'U高速代-通行料',
-      cellValue: NumHandler.round(U_general, 0),
+      cellValue: NumHandler.round(U_general, 1),
       style: { backgroundColor: '#9ec1ff' },
     },
     V_highwayExcess: {

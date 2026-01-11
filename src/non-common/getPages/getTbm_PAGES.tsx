@@ -200,7 +200,7 @@ export const tbm_PAGES = (props: PageGetterType) => {
 
   return {
     allPathsPattenrs,
-    pathSource: cleansedPathSource,
+    cleansedPathSource,
     navItems,
     breads,
   }

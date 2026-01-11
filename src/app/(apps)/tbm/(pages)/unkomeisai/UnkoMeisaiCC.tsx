@@ -18,6 +18,7 @@ import { useMemo, useCallback } from 'react'
 import useBasicFormProps from '@cm/hooks/useBasicForm/useBasicFormProps'
 import { Fields } from '@cm/class/Fields/Fields'
 import { Button } from '@cm/components/styles/common-components/Button'
+import { optionType } from '@cm/class/Fields/col-operator-types'
 
 type TbmRouteGroupWithCustomer = TbmRouteGroup & {
   Mid_TbmRouteGroup_TbmCustomer?: {
@@ -85,52 +86,52 @@ export default function UnkoMeisaiCC({
     const { routeGroupCountMap, userCountMap, customerCountMap, vehicleCountMap } = countMaps
 
     // 便選択肢（コード順）
-    const routeGroupOptions = tbmRouteGroupList
+    const routeGroupOptions: optionType[] = tbmRouteGroupList
       .filter(route => routeGroupCountMap.has(route.id))
       .sort((a, b) => String(a.code ?? '').localeCompare(String(b.code ?? '')))
       .map(route => {
         const count = routeGroupCountMap.get(route.id) || 0
         return {
           value: route.id,
-          name: `${route.code ? `[${route.code}] ` : ''}${route.name}（${count}）`,
+          label: `${route.code ? `[${route.code}] ` : ''}${route.name}（${count}）`,
         }
       })
 
     // ドライバー選択肢（コード順）
-    const userOptions = userList
+    const userOptions: optionType[] = userList
       .filter(user => userCountMap.has(user.id))
       .sort((a, b) => String(a.code ?? '').localeCompare(String(b.code ?? '')))
       .map(user => {
         const count = userCountMap.get(user.id) || 0
         return {
           value: user.id,
-          name: `${user.code ? `[${user.code}] ` : ''}${user.name}（${count}）`,
+          label: `${user.code ? `[${user.code}] ` : ''}${user.name}（${count}）`,
         }
       })
 
 
 
     // 取引先選択肢（コード順）
-    const customerOptions = tbmCustomerList
+    const customerOptions: optionType[] = tbmCustomerList
       .filter(customer => customerCountMap.has(customer.id))
       .sort((a, b) => String(a.code ?? '').localeCompare(String(b.code ?? '')))
       .map(customer => {
         const count = customerCountMap.get(customer.id) || 0
         return {
           value: customer.id,
-          name: `${customer.code ? `[${customer.code}] ` : ''}${customer.name}（${count}）`,
+          label: `${customer.code ? `[${customer.code}] ` : ''}${customer.name}（${count}）`,
         }
       })
 
     // 車両選択肢（車両番号順）
-    const vehicleOptions = tbmVehicleList
+    const vehicleOptions: optionType[] = tbmVehicleList
       .filter(vehicle => vehicleCountMap.has(vehicle.id))
       .sort((a, b) => String(a.vehicleNumber ?? '').localeCompare(String(b.vehicleNumber ?? '')))
       .map(vehicle => {
         const count = vehicleCountMap.get(vehicle.id) || 0
         return {
           value: vehicle.id,
-          name: `${vehicle.vehicleNumber}（${count}）`,
+          label: `${vehicle.vehicleNumber}（${count}）`,
         }
       })
 
@@ -338,8 +339,8 @@ export default function UnkoMeisaiCC({
                   cellValue: (
                     <button
                       className={`flex items-center gap-1 text-xs ${imageCount > 0
-                          ? 'text-blue-600 hover:text-blue-800 cursor-pointer'
-                          : 'text-gray-400 cursor-not-allowed'
+                        ? 'text-blue-600 hover:text-blue-800 cursor-pointer'
+                        : 'text-gray-400 cursor-not-allowed'
                         }`}
                       onClick={() => {
                         if (imageCount > 0) {

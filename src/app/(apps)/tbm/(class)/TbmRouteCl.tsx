@@ -7,7 +7,7 @@ import {
   Mid_TbmRouteGroup_TbmCustomer,
   TbmCustomer,
 } from '@prisma/generated/prisma/client'
-import { TimeHandler } from './TimeHandler'
+import { TimeHandler, BillingHandler } from './TimeHandler'
 export type TbmRouteData = TbmRouteGroup & {
   TbmMonthlyConfigForRouteGroup: TbmMonthlyConfigForRouteGroup[]
   TbmDriveSchedule: TbmDriveSchedule[]
@@ -35,8 +35,16 @@ export default class TbmRouteCl {
   }
 
   getMonthlyData(month: Date) {
+    // 月初日のDateオブジェクトを作成（belongsToMonthの引数として使用）
+    const firstDayOfMonth = new Date(month.getFullYear(), month.getMonth(), 1)
+
     const DriveSchedule = this?.data?.TbmDriveSchedule?.filter(schedule => {
-      return Days.validate.isSameMonth(month, schedule.date)
+      return BillingHandler.belongsToMonth(
+        schedule.date,
+        this.data.departureTime,
+        this.data.id,
+        firstDayOfMonth
+      )
     })
 
     const monthConfig = this?.data?.TbmMonthlyConfigForRouteGroup?.find(config => {
@@ -46,8 +54,6 @@ export default class TbmRouteCl {
     const { tsukoryoSeikyuGaku = 0 } = monthConfig ?? {}
 
     const jitsudoKaisu = DriveSchedule?.length ?? 0
-
-
 
     return { jitsudoKaisu }
   }

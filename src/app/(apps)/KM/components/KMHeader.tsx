@@ -34,14 +34,14 @@ export const KMHeader: React.FC<KMHeaderProps> = ({ menuItems = DEFAULT_MENU_ITE
           {/* Logo */}
           <Link href="/KM" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
             <Image
-              src="/image/KM/logo.png"
+              src="/image/KM/km-logo-2.png"
               alt="改善マニア"
               width={40}
               height={40}
               className="rounded-full"
             />
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-900 via-blue-600 to-blue-900 bg-clip-text text-transparent">
-              改善マニア
+            <span className="text-2xl  font-bold bg-gradient-to-r from-blue-900 via-blue-700 to-blue-900 bg-clip-text text-transparent">
+              <span>Kaizen Mania</span>
             </span>
           </Link>
 

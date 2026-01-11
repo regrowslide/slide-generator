@@ -8,8 +8,35 @@ import { KM_PAGES } from 'src/non-common/getPages/KM_PAGES'
 
 import { training_PAGES } from 'src/non-common/getPages/training_PAGES'
 
+/**
+ * ページ設定取得関数の戻り値型
+ */
+export type PageGetterResult = {
+  allPathsPattenrs: pathItemType[]
+  cleansedPathSource: pathItemType[]
+  navItems: pathItemType[]
+  breads: breadType[]
+}
 
-const getEduCommonMenus = ({ isSchoolLeader, admin }) => {
+/**
+ * ページ設定取得関数の型定義
+ */
+export type PageGetterFunction = (props: PageGetterType) => PageGetterResult
+
+
+/**
+ * 教育系アプリ共通メニューの生成
+ */
+const getEduCommonMenus = ({
+  isSchoolLeader,
+  admin,
+}: {
+  isSchoolLeader: boolean
+  admin: boolean
+}): {
+  appSelector: pathItemType
+  config: pathItemType
+} => {
   return {
     appSelector: {
       ROOT: ['edu'],
@@ -37,7 +64,10 @@ const getEduCommonMenus = ({ isSchoolLeader, admin }) => {
   }
 }
 
-export const PAGES: any = {
+/**
+ * 各アプリケーションのページ設定取得関数を格納するオブジェクト
+ */
+export const PAGES: Record<string, PageGetterFunction> = {
 
   lifeos_PAGES: (props: PageGetterType) => {
     const { roles, query, session, rootPath, pathname } = props
@@ -84,7 +114,7 @@ export const PAGES: any = {
 
     return {
       allPathsPattenrs,
-      pathSource: cleansedPathSource,
+      cleansedPathSource,
       navItems,
       breads,
     }
@@ -118,11 +148,12 @@ export const PAGES: any = {
 
     return {
       allPathsPattenrs,
-      pathSource: cleansedPathSource,
+      cleansedPathSource,
       navItems,
       breads,
     }
   },
+
   tbm_PAGES,
   KM_PAGES,
   training_PAGES,
@@ -179,7 +210,7 @@ export const PAGES: any = {
 
     return {
       allPathsPattenrs,
-      pathSource: cleansedPathSource,
+      cleansedPathSource,
       navItems,
       breads,
     }
@@ -234,7 +265,7 @@ export const PAGES: any = {
 
     return {
       allPathsPattenrs,
-      pathSource: cleansedPathSource,
+      cleansedPathSource,
       navItems,
       breads,
     }
@@ -293,7 +324,7 @@ export const PAGES: any = {
 
     return {
       allPathsPattenrs,
-      pathSource: cleansedPathSource,
+      cleansedPathSource,
       navItems,
       breads,
     }
@@ -348,7 +379,7 @@ export const PAGES: any = {
 
     return {
       allPathsPattenrs,
-      pathSource: cleansedPathSource,
+      cleansedPathSource,
       navItems,
       breads,
     }
@@ -371,7 +402,7 @@ export const PAGES: any = {
     })
     return {
       allPathsPattenrs,
-      pathSource: cleansedPathSource,
+      cleansedPathSource,
       navItems,
       breads,
     }
@@ -416,7 +447,7 @@ export const PAGES: any = {
     })
     return {
       allPathsPattenrs,
-      pathSource: cleansedPathSource,
+      cleansedPathSource,
       navItems,
       breads,
     }
@@ -466,7 +497,7 @@ export const PAGES: any = {
 
     return {
       allPathsPattenrs,
-      pathSource: cleansedPathSource,
+      cleansedPathSource,
       navItems,
       breads,
     }
@@ -501,7 +532,7 @@ export const PAGES: any = {
 
     return {
       allPathsPattenrs,
-      pathSource: cleansedPathSource,
+      cleansedPathSource,
       navItems,
       breads,
     }
@@ -509,147 +540,181 @@ export const PAGES: any = {
 
 }
 
-export const CleansePathSource = (props: anyObject) => {
-  const { rootPath, pathname, query, session, dynamicRoutingParams, roles } = props
+/**
+ * CleansePathSource関数の引数型
+ */
+type CleansePathSourceProps = {
+  rootPath: string
+  pathname: string
+  query?: anyObject
+  session?: anyObject
+  dynamicRoutingParams?: anyObject
+  roles?: any[]
+  pathSource: pathItemType[]
+}
+
+/**
+ * パスソースをクレンジングし、ナビゲーションアイテム、パンくずリスト、全パスパターンを生成
+ */
+export const CleansePathSource = (props: CleansePathSourceProps): PageGetterResult => {
+  const { rootPath, pathname, query = {}, session = {}, dynamicRoutingParams, roles } = props
   const { login } = getScopes(session, { query, roles })
   const { pathSource } = props
 
   const navItems: pathItemType[] = []
-  const breads: any[] = []
-  const allPathsPattenrs: object[] = []
+  const breads: breadType[] = []
+  const allPathsPattenrs: pathItemType[] = []
 
-  Object.keys(pathSource).forEach(key => {
-    const item = pathSource[key]
-    type roopCleansingProps = {
-      parent: pathItemType
-      item: pathItemType
-      key?: string
-    }
-    /**exclusiveToによるデータクレンジング */
-    const roopCleansing = (props: roopCleansingProps) => {
-      const { parent, item, key } = props
-      const { children } = parent
-      if (children && children?.length > 0) {
-        children.forEach(child => {
-          roopCleansing({ parent: item, item: child })
-        })
-      }
-    }
-    roopCleansing({ parent: pathSource, item, key })
-  })
-
-  type constructItemProps = {
+  /**
+   * パスアイテムを構築し、hrefとjoinedPathを設定
+   */
+  type ConstructItemProps = {
     item: pathItemType
-    CURRENT_ROOT?: any[]
+    CURRENT_ROOT?: string[]
   }
 
-  const constructItem = (props: constructItemProps) => {
+  const constructItem = (props: ConstructItemProps): pathItemType => {
     let { item } = props
+    const { CURRENT_ROOT = [] } = props
+    const { tabId, link = { query: {} }, children, ROOT } = item
 
-    const { CURRENT_ROOT } = props
-    const { tabId, link = { query: {} }, label, children, ROOT } = item
+    // tabIdをstringに変換（RegExpの場合は空文字列に）
+    const tabIdString = typeof tabId === 'string' ? tabId : ''
 
-    const thisRoot = ROOT ? ROOT : (CURRENT_ROOT ?? [])
-    let href: string | undefined = item?.href ?? undefined
+    const thisRoot: string[] = ROOT ? ROOT : CURRENT_ROOT
+
+    // hrefが未設定の場合、tabIdとROOTから構築
+    let href: string | undefined = item?.href
     if (href === undefined) {
-      if (thisRoot?.join('/').length > 0) {
-        href = link
-          ? '/' + thisRoot?.join('/') + '/' + tabId
-          : // + addQuerySentence(query)
-          undefined
+      const rootPath = thisRoot.join('/')
+      if (rootPath.length > 0) {
+        href = link ? `/${rootPath}/${tabIdString}` : undefined
       } else {
-        href = link
-          ? '/' + tabId
-          : // + addQuerySentence(query)
-          undefined
+        href = link ? `/${tabIdString}` : undefined
       }
     }
 
     item = { ...item, href }
 
-    /**bread crumbようの処理 */
+    // パンくずリスト用のパスオブジェクトを作成
+    const joinedPath = [...thisRoot, tabIdString].filter(Boolean).join('/')
     const pathObject: pathItemType = {
       ...item,
-      href: `/${[...thisRoot, tabId].join('/')}`,
-      joinedPath: [...(thisRoot ?? []), tabId].join('/'),
+      href: `/${joinedPath}`,
+      joinedPath,
     }
     allPathsPattenrs.push(pathObject)
 
-    if (item.children) {
-      item.children.forEach((item, i) => {
-        const newRoot = [...thisRoot, tabId]
-        constructItem({ item, CURRENT_ROOT: newRoot })
+    // 子要素を再帰的に処理
+    if (item.children && item.children.length > 0) {
+      const newRoot = [...thisRoot, tabIdString].filter(Boolean)
+      item.children.forEach(child => {
+        constructItem({ item: child, CURRENT_ROOT: newRoot })
       })
     }
 
     return item
   }
-  /**nav itemsを作る ( 部分的にbreadsの前処理を含む) */
-  pathSource?.forEach((item: pathItemType) => {
-    const recursive = (props: { item: pathItemType; result: pathItemType[] }) => {
-      let { item } = props
-      const { result } = props
-      const { ROOT } = item
-      item = {
-        ...constructItem({ item: item, CURRENT_ROOT: ROOT }),
-        children: item.children?.map(child => {
-          if (child?.exclusiveTo === undefined) {
-            child.exclusiveTo = item.exclusiveTo
-          }
-          return constructItem({
-            item: child,
-            CURRENT_ROOT: ROOT,
-          })
-        }),
-      }
+  /**
+   * ナビゲーションアイテムを作成（パンくずリストの前処理も含む）
+   */
+  pathSource.forEach((item: pathItemType) => {
+    const { ROOT = [] } = item
 
-      if (item.exclusiveTo !== false) {
-        result.push(item)
-        return result
+    // アイテムを構築
+    const constructedItem = constructItem({ item, CURRENT_ROOT: ROOT })
+
+    // 子要素を構築（exclusiveToを継承）
+    const constructedChildren = constructedItem.children?.map(child => {
+      const childWithInheritedExclusiveTo: pathItemType = {
+        ...child,
+        exclusiveTo: child.exclusiveTo !== undefined ? child.exclusiveTo : constructedItem.exclusiveTo,
       }
+      return constructItem({ item: childWithInheritedExclusiveTo, CURRENT_ROOT: ROOT })
+    })
+
+    const finalItem: pathItemType = {
+      ...constructedItem,
+      children: constructedChildren,
     }
-    recursive({ item, result: navItems })
+
+    // exclusiveToがfalseでない場合のみナビゲーションアイテムに追加
+    if (finalItem.exclusiveTo !== false) {
+      navItems.push(finalItem)
+    }
   })
 
-  /**breadsを作る */
-  const pathnameSplit: string[] = String(pathname).split('/')
+  /**
+   * パンくずリストを作成
+   * 現在のパス名を分割し、各セグメントに対応するパスアイテムを検索
+   */
+  const pathnameSplit: string[] = String(pathname)
+    .split('/')
+    .filter(Boolean) // 空文字列を除外
 
-  const curr: any = []
+  const currentPathSegments: string[] = []
 
-  for (let i = 0; i < pathnameSplit.length; i++) {
-    curr.push(pathnameSplit[i])
-    const A = curr.join('/') //現在のパス
+  for (const segment of pathnameSplit) {
+    currentPathSegments.push(segment)
+    const currentPath = `/${currentPathSegments.join('/')}`
 
-    const matched = allPathsPattenrs.find((path: { joinedPath: string }) => {
-      const B = `/${path.joinedPath}` //ループ対象パス
-      const isHit = A === B
-
-      return isHit
+    const matchedPath = allPathsPattenrs.find((path: pathItemType) => {
+      if (!path.joinedPath) return false
+      const pathToMatch = `/${path.joinedPath}`
+      return currentPath === pathToMatch
     })
-    if (matched) {
-      breads.push(matched)
+
+    if (matchedPath) {
+      breads.push(matchedPath as breadType)
     }
   }
 
-  return { cleansedPathSource: pathSource, navItems, breads, allPathsPattenrs }
+  return {
+    cleansedPathSource: pathSource,
+    navItems,
+    breads,
+    allPathsPattenrs,
+  }
 }
 
-export const identifyPathItem = ({ allPathsPattenrs, pathname }) => {
-  const pathnameSplitArr = String(pathname).split('/')
+/**
+ * パス名から対応するパスアイテムを特定
+ */
+export const identifyPathItem = ({
+  allPathsPattenrs,
+  pathname,
+}: {
+  allPathsPattenrs: pathItemType[]
+  pathname: string
+}): pathItemType | undefined => {
+  const pathnameSplitArr = String(pathname)
+    .split('/')
+    .filter(Boolean) // 空文字列を除外
+
   const matchedPathItem = allPathsPattenrs.find(item => {
-    const itemHrefArray = item?.href?.split('/')
+    if (!item.href) return false
 
-    const check = itemHrefArray.reduce((acc, cur, i) => {
-      const pathSegmentMatched = pathnameSplitArr[i] === cur
-      return pathSegmentMatched ? (acc += 1) : acc
-    }, 0)
+    const itemHrefArray = item.href.split('/').filter(Boolean)
 
-    return check === pathnameSplitArr.length && pathnameSplitArr.length === itemHrefArray.length
+    // パスセグメントの数が一致する必要がある
+    if (pathnameSplitArr.length !== itemHrefArray.length) {
+      return false
+    }
+
+    // すべてのセグメントが一致するかチェック
+    const allSegmentsMatch = itemHrefArray.every((segment, index) => {
+      return segment === pathnameSplitArr[index]
+    })
+
+    return allSegmentsMatch
   })
 
-  return matchedPathItem as pathItemType
+  return matchedPathItem
 }
 
+/**
+ * パスアイテムの型定義
+ */
 export type pathItemType = {
   tabId?: string | RegExp
   label?: string | JSX.Element
@@ -661,22 +726,28 @@ export type pathItemType = {
   exclusiveTo?: boolean | 'always'
   children?: pathItemType[]
   link?: {
-    query?: object
+    query?: Record<string, unknown>
   }
-  joinedPath?: any
+  joinedPath?: string
 }
 
+/**
+ * パンくずリストアイテムの型定義
+ */
 export type breadType = {
   href: string
   label: string
   joinedPath: string
 } & pathItemType
 
+/**
+ * ページ設定取得関数の引数型
+ */
 export type PageGetterType = {
   session: anyObject
   rootPath: string
   pathname: string
-  query: anyObject
-  dynamicRoutingParams: anyObject
-  roles: any[]
+  query?: anyObject
+  dynamicRoutingParams?: anyObject
+  roles?: any[]
 }

@@ -47,95 +47,95 @@ export const monthHelpers = {
     return newDate
   },
 
-  getMonthDatum: (
-    monthDt: Date,
-    options?: {
-      getFrom: (monthDt: Date) => Date
-      getTo: (monthDt: Date) => Date
-    }
-  ) => {
-    const dateConverter = isServer ? toUtc : val => val
-    const year = toJst(monthDt).getFullYear()
-    const month = toJst(monthDt).getMonth() //月よりも-1
-    const date = 1
+  // getMonthDatum: (
+  //   monthDt: Date,
+  //   options?: {
+  //     getFrom: (monthDt: Date) => Date
+  //     getTo: (monthDt: Date) => Date
+  //   }
+  // ) => {
+  //   const dateConverter = isServer ? toUtc : val => val
+  //   const year = toJst(monthDt).getFullYear()
+  //   const month = toJst(monthDt).getMonth() //月よりも-1
+  //   const date = 1
 
-    const getFromTo = () => {
-      if (options) {
-        return {
-          firstDayOfMonth: options.getFrom(monthDt),
-          lastDayOfMonth: options.getTo(monthDt),
-        }
-      } else {
-        return {
-          firstDayOfMonth: dateConverter(new Date(year, month, 1)),
-          lastDayOfMonth: dateConverter(new Date(year, month + 1, 0)),
-        }
-      }
-    }
+  //   const getFromTo = () => {
+  //     if (options) {
+  //       return {
+  //         firstDayOfMonth: options.getFrom(monthDt),
+  //         lastDayOfMonth: options.getTo(monthDt),
+  //       }
+  //     } else {
+  //       return {
+  //         firstDayOfMonth: dateConverter(new Date(year, month, 1)),
+  //         lastDayOfMonth: dateConverter(new Date(year, month + 1, 0)),
+  //       }
+  //     }
+  //   }
 
-    const {firstDayOfMonth, lastDayOfMonth} = getFromTo()
+  //   const {firstDayOfMonth, lastDayOfMonth} = getFromTo()
 
-    const days = dayHelpers.getDaysBetweenDates(firstDayOfMonth, lastDayOfMonth)
+  //   const days = dayHelpers.getDaysBetweenDates(firstDayOfMonth, lastDayOfMonth)
 
-    const getWeeks = (
-      startDateString: '月' | '火' | '水' | '木' | '金' | '土' | '日',
-      options?: {
-        showPrevAndNextMonth?: boolean
-      }
-    ) => {
-      const weekDayStart = startDateString
-      const weekdayMaster = [`日`, '月', '火', '水', '木', '金', '土']
-      const weekdays = weekdayMaster
-        .slice(weekdayMaster.indexOf(weekDayStart), 7)
-        .concat(weekdayMaster.slice(0, weekdayMaster.indexOf(weekDayStart)))
+  //   const getWeeks = (
+  //     startDateString: '月' | '火' | '水' | '木' | '金' | '土' | '日',
+  //     options?: {
+  //       showPrevAndNextMonth?: boolean
+  //     }
+  //   ) => {
+  //     const weekDayStart = startDateString
+  //     const weekdayMaster = [`日`, '月', '火', '水', '木', '金', '土']
+  //     const weekdays = weekdayMaster
+  //       .slice(weekdayMaster.indexOf(weekDayStart), 7)
+  //       .concat(weekdayMaster.slice(0, weekdayMaster.indexOf(weekDayStart)))
 
-      let weeks: Date[][] = [[]]
+  //     let weeks: Date[][] = [[]]
 
-      const firstWeekOffset = getDayIndexOfWeek(firstDayOfMonth, weekdays)
-      const prevMonthDays = new Array(firstWeekOffset)
-        .fill(0)
-        .map((_, i) => dayHelpers.subtract(firstDayOfMonth, firstWeekOffset - i))
+  //     const firstWeekOffset = getDayIndexOfWeek(firstDayOfMonth, weekdays)
+  //     const prevMonthDays = new Array(firstWeekOffset)
+  //       .fill(0)
+  //       .map((_, i) => dayHelpers.subtract(firstDayOfMonth, firstWeekOffset - i))
 
-      const lastWeekOffset = 6 - getDayIndexOfWeek(lastDayOfMonth, weekdays)
-      const nextMonthDays = new Array(lastWeekOffset).fill(0).map((_, i) => dayHelpers.add(lastDayOfMonth, i + 1))
+  //     const lastWeekOffset = 6 - getDayIndexOfWeek(lastDayOfMonth, weekdays)
+  //     const nextMonthDays = new Array(lastWeekOffset).fill(0).map((_, i) => dayHelpers.add(lastDayOfMonth, i + 1))
 
-      const daysShownOnCalendar = [...prevMonthDays, ...days, ...nextMonthDays]
+  //     const daysShownOnCalendar = [...prevMonthDays, ...days, ...nextMonthDays]
 
-      for (let i = 0; i < daysShownOnCalendar.length; i += 7) {
-        weeks.push(daysShownOnCalendar.slice(i, i + 7))
-      }
-      const remainingDayCount = 7 - weeks[weeks.length - 1].length
+  //     for (let i = 0; i < daysShownOnCalendar.length; i += 7) {
+  //       weeks.push(daysShownOnCalendar.slice(i, i + 7))
+  //     }
+  //     const remainingDayCount = 7 - weeks[weeks.length - 1].length
 
-      for (let i = 0; i < remainingDayCount; i++) {
-        weeks[weeks.length - 1].push(nextMonthDays[i])
-      }
+  //     for (let i = 0; i < remainingDayCount; i++) {
+  //       weeks[weeks.length - 1].push(nextMonthDays[i])
+  //     }
 
-      weeks = weeks.filter(week => week.length === 7)
+  //     weeks = weeks.filter(week => week.length === 7)
 
-      return weeks
-    }
+  //     return weeks
+  //   }
 
-    // 曜日のインデックスを取得するヘルパー関数 (0: 日, 1: 月, ..., 6: 土)
-    function getDayIndexOfWeek(date: Date, weekdays): number {
-      const currentWeekdayIndex = weekdays.indexOf(date.toLocaleDateString('ja', {weekday: 'short'}).slice(0, 1))
+  //   // 曜日のインデックスを取得するヘルパー関数 (0: 日, 1: 月, ..., 6: 土)
+  //   function getDayIndexOfWeek(date: Date, weekdays): number {
+  //     const currentWeekdayIndex = weekdays.indexOf(date.toLocaleDateString('ja', {weekday: 'short'}).slice(0, 1))
 
-      // offsetを常に正の値にする
-      return currentWeekdayIndex
-    }
-    const BASICS = {
-      year,
-      month: month + 1,
-      date,
-      firstDayOfMonth,
-      lastDayOfMonth,
-    }
+  //     // offsetを常に正の値にする
+  //     return currentWeekdayIndex
+  //   }
+  //   const BASICS = {
+  //     year,
+  //     month: month + 1,
+  //     date,
+  //     firstDayOfMonth,
+  //     lastDayOfMonth,
+  //   }
 
-    return {
-      ...BASICS,
-      getWeeks,
-      days,
-    }
-  },
+  //   return {
+  //     ...BASICS,
+  //     getWeeks,
+  //     days,
+  //   }
+  // },
 }
 
 // Year関連のヘルパー
@@ -280,9 +280,6 @@ export const dayHelpers = {
       start.setDate(start.getDate() + 1)
     }
 
-    if (days.some(d => !d.toISOString().includes('15:00:00'))) {
-      throw new Error(`getDaysBetweenDates: UTC ではありません。`)
-    }
     if (convertToUtc) {
       console.warn(`getDaysBetweenDates: convert to UTC`)
     }

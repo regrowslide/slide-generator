@@ -1,3 +1,6 @@
+import { toUtc } from "@cm/class/Days/date-utils/calculations"
+import { formatDate } from "@cm/class/Days/date-utils/formatters"
+import { Days } from "@cm/class/Days/Days"
 
 /**
  * 統合時間処理ユーティリティクラス
@@ -224,40 +227,111 @@ export class BillingHandler {
    * 月末日跨ぎ運行の請求月を判定
    * @param operationDate - 運行日
    * @param departureTime - 出発時刻（4桁文字列）
-   * @returns 請求対象月の年月
+   * @param routeGroupId - 便グループID（未使用だが互換性のため保持）
+   * @returns 請求対象月の年月（月初日のDateオブジェクト）
+   *
+   * ルール:
+   * - 出発時刻が未設定の場合: 運行日の月を使用
+   * - 出発時刻が24:00以降（2400, 2530など）の場合: 運行日の翌日の月を使用
+   * - 出発時刻が24:00未満の場合: 運行日の月を使用
    */
   static getBillingMonth(
-    //
+    targetMonth: Date,
     operationDate: Date,
     departureTime: string | null | undefined,
-    routeGroupId: number
+    schedule
   ): Date {
-    let result: Date
     const parsed = TimeHandler.parseTimeString(departureTime)
 
+    if (formatDate(operationDate, 'YYYYMM') === formatDate(targetMonth, 'YYYYMM')) {
+
+      if (!parsed) {
+        const result = toUtc(new Date(operationDate.getFullYear(), operationDate.getMonth(), 1))
+        // 出発時刻が不明な場合は運行日の月を使用
+        return result
+      }
 
 
 
-    if (!parsed) {
-      // 出発時刻が不明な場合は運行日の月を使用
-      result = new Date(operationDate.getFullYear(), operationDate.getMonth(), 1)
-      return result
+      // 24:00以降（翌日扱い）の場合
+      if (parsed.originalHour >= 24) {
+        const billingDate = new Date(targetMonth)
+        billingDate.setDate(billingDate.getDate() + 1)
+        return new Date(billingDate.getFullYear(), billingDate.getMonth(), 1)
+      }
+
+
+
+
+      // 24:00未満の場合は運行日の月
+      return targetMonth
+
+    } else {
+
+      const lastMonthLastDay = Days.day.subtract(targetMonth, 1)
+
+      // 24:00以降（翌日扱い）の場合
+      if (parsed && parsed.originalHour >= 24 && Days.validate.isSameDate(operationDate, lastMonthLastDay)) {
+
+        const billingDate = new Date(targetMonth)
+        billingDate.setDate(billingDate.getDate() + 1)
+        return new Date(billingDate.getFullYear(), billingDate.getMonth(), 1)
+      }
+
+
+      return Days.month.getMonthDatum(operationDate).firstDayOfMonth
     }
 
-    // 24:00以降（翌日扱い）の場合
-    if (parsed.originalHour >= 24) {
-      const billingDate = new Date(operationDate)
-      billingDate.setDate(billingDate.getDate() + 1)
 
-      return billingDate
+  }
+
+  /**
+   * 表示用日付を計算（運行明細ページなどで使用）
+   * 出発時刻が24:00以降の場合は翌日の日付を返す
+   * @param operationDate - 運行日
+   * @param departureTime - 出発時刻（4桁文字列）
+   * @returns 表示用の日付
+   */
+  static getDisplayDate(
+    operationDate: Date,
+    departureTime: string | null | undefined
+  ): Date {
+    const parsed = TimeHandler.parseTimeString(departureTime)
+
+    if (parsed && parsed.originalHour >= 24) {
+      // 24:00以降（翌日扱い）の場合、翌日の日付を返す
+      const nextDay = new Date(operationDate)
+      nextDay.setDate(nextDay.getDate() + 1)
+      return nextDay
     }
 
-    // 24:00未満の場合は運行日の月
-    result = operationDate
+    // 24:00未満または出発時刻未設定の場合は運行日のまま
+    return operationDate
+  }
+
+  /**
+   * 指定された月に属するかどうかを判定
+   * @param operationDate - 運行日
+   * @param departureTime - 出発時刻（4桁文字列）
+   * @param routeGroupId - 便グループID
+   * @param targetMonth - 対象月（月初日のDateオブジェクト）
+   * @returns 指定された月に属する場合true
+   */
+  static belongsToMonth(
+    operationDate: Date,
+    departureTime: string | null | undefined,
+    routeGroupId: number,
+    targetMonth: Date
+  ): boolean {
+    const billingMonth = this.getBillingMonth(targetMonth, operationDate, departureTime, routeGroupId)
 
 
 
-    return result
+
+    return (
+      billingMonth.getFullYear() === targetMonth.getFullYear() &&
+      billingMonth.getMonth() === targetMonth.getMonth()
+    )
   }
 
   /**

@@ -93,87 +93,129 @@ const styles = StyleSheet.create({
     width: '11%',
     textAlign: 'right',
   },
+  footer: {
+    position: 'absolute',
+    bottom: 20,
+    right: 30,
+    fontSize: 9,
+    fontFamily: 'Nasu-Regular',
+  },
+  pageNumber: {
+    fontSize: 9,
+    fontFamily: 'Nasu-Regular',
+  },
   // remarkCell: {
   //   width: '12%',
   // },
 })
 
+// 1ページあたりの行数を計算（A4サイズ、パディング、ヘッダー、フッターを考慮）
+const ROWS_PER_PAGE = 16
+
+// データ行をページごとに分割する関数
+const splitRowsIntoPages = (rows: MeisaiData['rows']) => {
+  const pages: MeisaiData['rows'][] = []
+  for (let i = 0; i < rows.length; i += ROWS_PER_PAGE) {
+    pages.push(rows.slice(i, i + ROWS_PER_PAGE))
+  }
+  return pages
+}
+
 // PDFドキュメントコンポーネント
 const MeisaiDocument = ({ meisaiData }: { meisaiData: MeisaiData }) => {
-  const yearMonthStr = formatDate(meisaiData.yearMonth, 'YYYY年MM月')
+  // データ行をページごとに分割
+  const pages = splitRowsIntoPages(meisaiData.rows)
+  const totalPages = pages.length
 
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
-        {/* ヘッダー */}
-        <View style={styles.header}>
-          <Text style={styles.title}>令和{new Date(meisaiData.yearMonth).getFullYear() - 2018}年{formatDate(meisaiData.yearMonth, 'M')}月度 運行明細</Text>
-          <Text style={styles.companyInfo}>西日本運送有限会社</Text>
-        </View>
+      {pages.map((pageRows, pageIndex) => {
+        const currentPage = pageIndex + 1
 
-        {/* テーブル */}
-        <View style={styles.table}>
-          {/* ヘッダー行 */}
-          <View style={[styles.tableRow, styles.tableHeader]}>
-            <View style={[styles.tableCell, styles.dateCell]}>
-              <Text>運行日</Text>
+        return (
+          <Page
+            key={pageIndex}
+            size="A4"
+            style={styles.page}
+          >
+            {/* ヘッダー */}
+            <View style={styles.header}>
+              <Text style={styles.title}>令和{new Date(meisaiData.yearMonth).getFullYear() - 2018}年{formatDate(meisaiData.yearMonth, 'M')}月度 運行明細</Text>
+              <Text style={styles.companyInfo}>西日本運送有限会社</Text>
             </View>
-            <View style={[styles.tableCell, styles.routeNameCell]}>
-              <Text>路線名</Text>
-            </View>
-            <View style={[styles.tableCell, styles.serviceNameCell]}>
-              <Text>便名</Text>
-            </View>
-            <View style={[styles.tableCell, styles.vehicleCell]}>
-              <Text>車番</Text>
-            </View>
-            <View style={[styles.tableCell, styles.driverCell]}>
-              <Text>運転手</Text>
-            </View>
-            <View style={[styles.tableCell, styles.fareCell]}>
-              <Text>運賃</Text>
-            </View>
-            <View style={[styles.tableCell, styles.futaiFeeCell]}>
-              <Text>付帯費用</Text>
-            </View>
-            {/* <View style={[styles.tableCell, styles.remarkCell]}>
-              <Text>備考</Text>
-            </View> */}
-          </View>
 
-          {/* データ行 */}
-          {meisaiData.rows.map((row, index) => (
-            <View key={index} style={styles.tableRow}>
-              <View style={[styles.tableCell, styles.dateCell]}>
-                <Text>{formatDate(row.date, 'M月D日')}</Text>
+            {/* テーブル */}
+            <View style={styles.table}>
+              {/* ヘッダー行 */}
+              <View style={[styles.tableRow, styles.tableHeader]}>
+                <View style={[styles.tableCell, styles.dateCell]}>
+                  <Text>運行日</Text>
+                </View>
+                <View style={[styles.tableCell, styles.routeNameCell]}>
+                  <Text>路線名</Text>
+                </View>
+                <View style={[styles.tableCell, styles.serviceNameCell]}>
+                  <Text>便名</Text>
+                </View>
+                <View style={[styles.tableCell, styles.vehicleCell]}>
+                  <Text>車番</Text>
+                </View>
+                <View style={[styles.tableCell, styles.driverCell]}>
+                  <Text>運転手</Text>
+                </View>
+                <View style={[styles.tableCell, styles.fareCell]}>
+                  <Text>運賃</Text>
+                </View>
+                <View style={[styles.tableCell, styles.futaiFeeCell]}>
+                  <Text>付帯費用</Text>
+                </View>
+                {/* <View style={[styles.tableCell, styles.remarkCell]}>
+                  <Text>備考</Text>
+                </View> */}
               </View>
-              <View style={[styles.tableCell, styles.routeNameCell]}>
-                <Text>{row.routeName || '-'}</Text>
-              </View>
-              <View style={[styles.tableCell, styles.serviceNameCell]}>
-                <Text>{row.serviceName}</Text>
-              </View>
-              <View style={[styles.tableCell, styles.vehicleCell]}>
-                <Text>{row.vehicleNumber || '-'}</Text>
-              </View>
-              <View style={[styles.tableCell, styles.driverCell]}>
-                <Text>{row.driver || '-'}</Text>
-              </View>
-              <View style={[styles.tableCell, styles.fareCell]}>
-                <Text>¥{row.fare.toLocaleString()}</Text>
-              </View>
-              <View style={[styles.tableCell, styles.futaiFeeCell]}>
-                <Text>¥{row.futaiFee.toLocaleString()}</Text>
-              </View>
-              {/* <View style={[styles.tableCell, styles.remarkCell]}>
-                <Text>
 
-                </Text>
-              </View> */}
+              {/* データ行 */}
+              {pageRows.map((row, index) => (
+                <View key={index} style={styles.tableRow}>
+                  <View style={[styles.tableCell, styles.dateCell]}>
+                    <Text>{formatDate(row.date, 'M月D日')}</Text>
+                  </View>
+                  <View style={[styles.tableCell, styles.routeNameCell]}>
+                    <Text>{row.routeName || '-'}</Text>
+                  </View>
+                  <View style={[styles.tableCell, styles.serviceNameCell]}>
+                    <Text>{row.serviceName}</Text>
+                  </View>
+                  <View style={[styles.tableCell, styles.vehicleCell]}>
+                    <Text>{row.vehicleNumber || '-'}</Text>
+                  </View>
+                  <View style={[styles.tableCell, styles.driverCell]}>
+                    <Text>{row.driver || '-'}</Text>
+                  </View>
+                  <View style={[styles.tableCell, styles.fareCell]}>
+                    <Text>¥{row.fare.toLocaleString()}</Text>
+                  </View>
+                  <View style={[styles.tableCell, styles.futaiFeeCell]}>
+                    <Text>¥{row.futaiFee.toLocaleString()}</Text>
+                  </View>
+                  {/* <View style={[styles.tableCell, styles.remarkCell]}>
+                    <Text>
+
+                    </Text>
+                  </View> */}
+                </View>
+              ))}
             </View>
-          ))}
-        </View>
-      </Page>
+
+            {/* フッター（ページ番号） */}
+            <View style={styles.footer}>
+              <Text style={styles.pageNumber}>
+                ページ {currentPage} / {totalPages}
+              </Text>
+            </View>
+          </Page>
+        )
+      })}
     </Document>
   )
 }

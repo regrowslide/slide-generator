@@ -1,6 +1,6 @@
 'use server'
 
-import { getDriveScheduleList } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
+import { DriveScheduleData, getDriveScheduleList } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
 import { BillingHandler, TimeHandler } from '@app/(apps)/tbm/(class)/TimeHandler'
 import { toUtc } from '@cm/class/Days/date-utils/calculations'
 import { formatDate } from '@cm/class/Days/date-utils/formatters'
@@ -28,12 +28,15 @@ export type MeisaiData = {
 export const getMeisaiData = async ({
  whereQuery,
  customerId,
+ driveScheduleList: providedDriveScheduleList,
 }: {
  whereQuery: { gte: Date; lte: Date }
  customerId: number
+ driveScheduleList?: DriveScheduleData[] // オプション: 既に取得済みのデータを再利用
 }): Promise<MeisaiData> => {
  // 運行スケジュールデータ取得（承認済みのみ）
- const driveScheduleList = await getDriveScheduleList({
+ // 既に取得済みのデータがある場合は再利用
+ const driveScheduleList = providedDriveScheduleList || await getDriveScheduleList({
   firstDayOfMonth: whereQuery.gte,
   whereQuery: {
    ...whereQuery,
@@ -51,11 +54,12 @@ export const getMeisaiData = async ({
   if (!matchesCustomer) return false
 
   // 請求月の判定（月末日跨ぎ運行対応）
-  const billingMonth = BillingHandler.getBillingMonth(schedule.date, schedule.TbmRouteGroup.departureTime, schedule.TbmRouteGroup.id)
-
   // 指定された月と請求月が一致するかチェック
   const targetMonth = toUtc(new Date(whereQuery.gte.getFullYear(), whereQuery.gte.getMonth() + 1, 1))
 
+  const billingMonth = BillingHandler.getBillingMonth(
+   targetMonth,
+   schedule.date, schedule.TbmRouteGroup.departureTime, schedule.TbmRouteGroup.id)
   return formatDate(billingMonth, 'YYYYMM') === formatDate(targetMonth, 'YYYYMM')
  })
 

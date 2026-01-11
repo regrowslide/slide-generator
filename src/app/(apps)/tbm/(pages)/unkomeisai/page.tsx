@@ -10,13 +10,17 @@ import { initServerComopnent } from 'src/non-common/serverSideFunction'
 import { fetchUnkoMeisaiData } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
 import prisma from 'src/lib/prisma'
 
+
 export default async function Page(props) {
+
   const query = await props.searchParams
   const { session, scopes } = await initServerComopnent({ query })
   const { tbmBaseId } = scopes.getTbmScopes()
   const { redirectPath, whereQuery } = await dateSwitcherTemplate({ query })
 
+
   if (redirectPath) return <Redirector {...{ redirectPath }} />
+
 
 
   const { monthlyTbmDriveList, ConfigForMonth } = await fetchUnkoMeisaiData({
@@ -25,6 +29,9 @@ export default async function Page(props) {
     tbmBaseId,
     userId: undefined,
   })
+
+
+
 
   // フィルター用のマスタデータを取得
   const [tbmRouteGroupList, userList, tbmCustomerList, tbmVehicleList, tbmBase] = await Promise.all([

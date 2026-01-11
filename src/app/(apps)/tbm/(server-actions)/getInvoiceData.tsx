@@ -125,16 +125,12 @@ export type CategoryDetail = {
 export const getInvoiceData = async ({
   whereQuery,
   customerId,
+  driveScheduleList: providedDriveScheduleList,
 }: {
-
   whereQuery: { gte: Date; lte: Date }
   customerId: number // 必須に変更
+  driveScheduleList?: DriveScheduleData[] // オプション: 既に取得済みのデータを再利用
 }) => {
-
-
-
-
-
   // 顧客情報取得（必須）
   const customer = await prisma.tbmCustomer.findFirst({
     where: { id: customerId },
@@ -146,7 +142,8 @@ export const getInvoiceData = async ({
 
   // 運行スケジュールデータ取得（承認済みのみ）
   // 月末日跨ぎ運行対応のため、前日も含めて取得（11/30の運行で出発時刻2400の場合は12月請求）
-  const driveScheduleList = await getDriveScheduleList({
+  // 既に取得済みのデータがある場合は再利用
+  const driveScheduleList = providedDriveScheduleList || await getDriveScheduleList({
     firstDayOfMonth: whereQuery.gte,
     whereQuery: {
       ...whereQuery,
@@ -163,9 +160,11 @@ export const getInvoiceData = async ({
     const matchesCustomer = schedule.TbmRouteGroup.Mid_TbmRouteGroup_TbmCustomer?.TbmCustomer?.id === customerId
     if (!matchesCustomer) return false
 
+    const targetMonth = toUtc(new Date(whereQuery.gte.getFullYear(), whereQuery.gte.getMonth() + 1, 1))
     // 請求月の判定（月末日跨ぎ運行対応）
     const billingMonth = BillingHandler.getBillingMonth(
       //
+      targetMonth,
       schedule.date, schedule.TbmRouteGroup.departureTime, schedule.TbmRouteGroup.id)
 
 
@@ -173,7 +172,6 @@ export const getInvoiceData = async ({
 
     // 指定された月と請求月が一致するかチェック
 
-    const targetMonth = toUtc(new Date(whereQuery.gte.getFullYear(), whereQuery.gte.getMonth() + 1, 1))
 
 
 
@@ -204,6 +202,7 @@ export const getInvoiceData = async ({
   // 便区分ごとの集計
   // TBM_CODE.ROUTE_KBNの定義順序に従って並べ替え
   const routeKbnOrder = TBM_CODE.ROUTE_KBN.array.map(item => item.code)
+  const taxRate = 0.1
   const summaryByCategory: CategorySummary[] = routeKbnOrder
     .filter(code => schedulesByCategory[code]) // データが存在するもののみ
     .map(categoryCode => {
@@ -211,19 +210,47 @@ export const getInvoiceData = async ({
       const category = TBM_CODE.ROUTE_KBN.byCode(categoryCode)?.label || '不明'
       const totalTrips = schedules.length
 
-      // 各スケジュールの料金計算
-      const totalAmount = schedules.reduce((sum, schedule) => {
-        // 運行日に対して適切な料金設定を取得（startDate <= schedule.date のうち最新のもの）
-        const feeOnDate = schedule.TbmRouteGroup.TbmRouteGroupFee.sort(
-          (a, b) => b.startDate.getTime() - a.startDate.getTime()
-        ).find(fee => fee.startDate <= schedule.date)
+      // 便グループごとにグループ化
+      const schedulesByRouteGroup = schedules.reduce(
+        (acc, schedule) => {
+          const routeGroupId = schedule.TbmRouteGroup.id
+          if (!acc[routeGroupId]) {
+            acc[routeGroupId] = []
+          }
+          acc[routeGroupId].push(schedule)
+          return acc
+        },
+        {} as Record<number, DriveScheduleData[]>
+      )
 
-        // 基本料金（運賃 + 付帯料金）
-        const baseFee = (feeOnDate?.driverFee || 0) + (feeOnDate?.futaiFee || 0)
-        // 通行料
-        const tollFee = (schedule.M_postalHighwayFee || 0) + (schedule.O_generalHighwayFee || 0)
+      // 各スケジュールの料金計算（運賃 + 付帯料金 + 通行料（税抜））
+      const totalAmount = Object.values(schedulesByRouteGroup).reduce((categorySum, routeSchedules) => {
+        // 便グループごとの運賃・付帯料金の合計
+        const routeGroupBaseFee = routeSchedules.reduce((sum, schedule) => {
+          const feeOnDate = schedule.TbmRouteGroup.TbmRouteGroupFee.sort(
+            (a, b) => b.startDate.getTime() - a.startDate.getTime()
+          ).find(fee => fee.startDate <= schedule.date)
+          return sum + (feeOnDate?.driverFee || 0) + (feeOnDate?.futaiFee || 0)
+        }, 0)
 
-        return sum + baseFee + tollFee
+        // 便グループごとの通行料計算（月間通行料合計額が設定されている場合はそれを使用）
+        const routeGroup = routeSchedules[0]?.TbmRouteGroup
+        const monthlyConfig = routeGroup?.TbmMonthlyConfigForRouteGroup?.[0]
+        const monthlyTollTotal = monthlyConfig?.monthlyTollTotal || 0
+        const tsukoryoSeikyuGaku = monthlyConfig?.tsukoryoSeikyuGaku || 0
+        const initialTollTotal = monthlyTollTotal + tsukoryoSeikyuGaku
+
+        // 月間通行料合計額が設定されている場合はそれを使用、なければ実績値の合計を使用
+        const totalTollFeeInclTax = initialTollTotal > 0
+          ? initialTollTotal
+          : routeSchedules.reduce((sum, schedule) => {
+            return sum + (schedule.M_postalHighwayFee || 0) + (schedule.O_generalHighwayFee || 0)
+          }, 0)
+
+        // 通行料を税抜に変換
+        const totalTollFeeExclTax = Math.round(totalTollFeeInclTax / (1 + taxRate))
+
+        return categorySum + routeGroupBaseFee + totalTollFeeExclTax
       }, 0)
 
       return {
@@ -280,15 +307,20 @@ export const getInvoiceData = async ({
           tollFee: number
         }
 
+        const taxRate = 0.1
         const feeInfos: FeeInfo[] = sortedSchedules.map(schedule => {
           const feeSorted = schedule.TbmRouteGroup.TbmRouteGroupFee.sort((a, b) => b.startDate.getTime() - a.startDate.getTime())
           const feeOnDate = feeSorted.find(fee => schedule.date.getTime() >= fee.startDate.getTime())
+
+          // 通行料（税込）を税抜に変換
+          const tollFeeInclTax = (schedule.M_postalHighwayFee || 0) + (schedule.O_generalHighwayFee || 0)
+          const tollFeeExclTax = Math.round(tollFeeInclTax / (1 + taxRate))
 
           return {
             schedule,
             driverFee: feeOnDate?.driverFee || 0,
             futaiFee: feeOnDate?.futaiFee || 0,
-            tollFee: (schedule.M_postalHighwayFee || 0) + (schedule.O_generalHighwayFee || 0),
+            tollFee: tollFeeExclTax, // 税抜で保存
           }
         })
 
@@ -296,13 +328,18 @@ export const getInvoiceData = async ({
         const totalDriverFee = feeInfos.reduce((sum, info) => sum + info.driverFee, 0)
         const totalFutaiFee = feeInfos.reduce((sum, info) => sum + info.futaiFee, 0)
         // 月間通行料合計額が設定されている場合はそれを使用、なければ実績値の合計を使用
-        const totalTollFee = initialTollTotal > 0 ? initialTollTotal : feeInfos.reduce((sum, info) => sum + info.tollFee, 0)
+        // 月間通行料合計額は税込なので、税抜に変換
+        const totalTollFeeInclTax = initialTollTotal > 0 ? initialTollTotal : sortedSchedules.reduce((sum, schedule) => {
+          const tollFeeInclTax = (schedule.M_postalHighwayFee || 0) + (schedule.O_generalHighwayFee || 0)
+          return sum + tollFeeInclTax
+        }, 0)
+        const totalTollFee = Math.round(totalTollFeeInclTax / (1 + taxRate))
 
         // 運賃単価のバリエーションを計算
         const driverFeeVariations = calculatePriceVariations(feeInfos, 'driverFee', whereQuery.lte)
         // 付帯料金単価のバリエーションを計算
         const futaiFeeVariations = calculatePriceVariations(feeInfos, 'futaiFee', whereQuery.lte)
-        // 通行料単価のバリエーションを計算
+        // 通行料単価のバリエーションを計算（税抜）
         const tollFeeVariations = calculatePriceVariations(feeInfos, 'tollFee', whereQuery.lte)
 
         // 単一の単価がある場合は後方互換性のため設定
@@ -338,11 +375,6 @@ export const getInvoiceData = async ({
     }
     )
 
-  // 合計金額計算
-  let totalAmount = summaryByCategory.reduce((sum, item) => sum + item.totalAmount, 0)
-  let taxAmount = Math.floor(totalAmount * 0.1) // 10%消費税
-  let grandTotal = totalAmount + taxAmount
-
   // 手動編集データを取得
   const manualEditData = await getInvoiceManualEdit({
     tbmCustomerId: customerId,
@@ -355,18 +387,18 @@ export const getInvoiceData = async ({
 
   if (manualEditData.summaryByCategory) {
     finalSummaryByCategory = manualEditData.summaryByCategory
-    // 手動編集されたサマリーから合計金額を再計算
-    const manualTotalAmount = finalSummaryByCategory.reduce((sum, item) => sum + item.totalAmount, 0)
-    const manualTaxAmount = Math.floor(manualTotalAmount * 0.1)
-    const manualGrandTotal = manualTotalAmount + manualTaxAmount
-    totalAmount = manualTotalAmount
-    taxAmount = manualTaxAmount
-    grandTotal = manualGrandTotal
   }
 
   if (manualEditData.detailsByCategory) {
     finalDetailsByCategory = manualEditData.detailsByCategory
   }
+
+  // 合計金額計算（運賃+付帯料金+通行料（税抜））
+  const totalAmount = finalSummaryByCategory.reduce((sum, item) => sum + item.totalAmount, 0)
+  // 消費税は合計（税抜）に対して計算
+  const taxAmount = Math.floor(totalAmount * 0.1) // 10%消費税
+  // 総計 = 合計（税抜）+ 消費税
+  const grandTotal = totalAmount + taxAmount
 
   const invoiceData: InvoiceData = {
     companyInfo: {

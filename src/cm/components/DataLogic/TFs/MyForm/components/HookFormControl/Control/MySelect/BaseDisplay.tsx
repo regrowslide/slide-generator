@@ -1,26 +1,28 @@
-import {R_Stack} from 'src/cm/components/styles/common-components/common-components'
+import { R_Stack } from 'src/cm/components/styles/common-components/common-components'
 import PlaceHolder from 'src/cm/components/utils/loader/PlaceHolder'
-import {MarkDownDisplay} from 'src/cm/components/utils/texts/MarkdownDisplay'
-import {contextsType} from '@cm/components/DataLogic/TFs/MyForm/components/HookFormControl/Control/MySelect/my-select-types'
-import {CssString} from 'src/cm/components/styles/cssString'
+import { MarkDownDisplay } from 'src/cm/components/utils/texts/MarkdownDisplay'
+import { contextsType } from '@cm/components/DataLogic/TFs/MyForm/components/HookFormControl/Control/MySelect/my-select-types'
+import { CssString } from 'src/cm/components/styles/cssString'
 
 import React from 'react'
-import {IconBtnForSelect} from '@cm/components/styles/common-components/IconBtn'
-import {twMerge} from 'tailwind-merge'
-import {ChevronDown} from 'lucide-react'
-import {cn} from '@cm/shadcn/lib/utils'
+import { IconBtnForSelect } from '@cm/components/styles/common-components/IconBtn'
+import { twMerge } from 'tailwind-merge'
+import { ChevronDown } from 'lucide-react'
+import { cn } from '@cm/shadcn/lib/utils'
 
-const BaseDisplay = React.memo((props: {contexts: contextsType}) => {
-  const {MySelectContextValue, controlContextValue} = props.contexts
-  const {COLOR, currentValueToReadableStr, setIsOptionsVisible, options} = MySelectContextValue
+const BaseDisplay = React.memo((props: { contexts: contextsType }) => {
+  const { MySelectContextValue, controlContextValue } = props.contexts
+  const { COLOR, currentValueToReadableStr, setIsOptionsVisible, options } = MySelectContextValue
 
-  const {col, formProps, ControlOptions} = controlContextValue
+  const { col, formProps, ControlOptions } = controlContextValue
 
   if (currentValueToReadableStr === undefined) {
     return <PlaceHolder />
   }
 
   const displayValue = currentValueToReadableStr && typeof currentValueToReadableStr !== 'object'
+
+
 
   const showSelector = e => {
     if (e.key === 'Enter' || e.type === 'click') {
@@ -44,7 +46,7 @@ const BaseDisplay = React.memo((props: {contexts: contextsType}) => {
         <ChevronDown className={`w-6 h-6`} />
       </div>
 
-      <R_Stack style={{...controlContextValue.ControlStyle}} className={cn(formProps.className, 'py-0')}>
+      <R_Stack style={{ ...controlContextValue.ControlStyle }} className={cn(formProps.className, 'py-0')}>
         <IconBtnForSelect
           color={COLOR}
           className={twMerge(

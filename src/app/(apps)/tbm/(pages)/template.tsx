@@ -25,6 +25,8 @@ export default function Template({ children }) {
     // return <div>営業所が設定されていません。</div>
   }
 
+
+
   return (
     <div>
       <HK_ProductMidEditor.Modal />

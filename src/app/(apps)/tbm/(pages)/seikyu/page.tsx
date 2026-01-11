@@ -23,6 +23,9 @@ export default async function Page(props) {
   const { redirectPath, whereQuery } = await dateSwitcherTemplate({ query })
 
 
+
+
+
   if (redirectPath) return <Redirector {...{ redirectPath }} />
 
   // 顧客IDをクエリパラメータから取得（必須）
@@ -40,7 +43,11 @@ export default async function Page(props) {
       },
     },
     distinct: ['tbmCustomerId'],
+
+
   })
+
+  console.log(whereQuery)  //log
 
   // 重複を除去して顧客リストを作成
   const customers = customersFromRoutes
@@ -48,30 +55,71 @@ export default async function Page(props) {
     .filter(customer => customer.name) // nameが存在するもののみ
     .sort((a, b) => a.name.localeCompare(b.name))
 
+  // 運行スケジュールデータを1回だけ取得（全顧客・請求書・明細で再利用）
+  let driveScheduleList: Awaited<ReturnType<typeof getDriveScheduleList>> | null = null
+  if (whereQuery?.gte && whereQuery?.lte) {
+    driveScheduleList = await getDriveScheduleList({
+      firstDayOfMonth: whereQuery.gte,
+      whereQuery: {
+        ...whereQuery,
+        gte: whereQuery.gte ? Days.day.subtract(whereQuery.gte, 1) : undefined,
+
+      },
+      tbmBaseId: undefined,
+      userId: undefined,
+    })
+  }
+
+
+
+
+
+  if (!whereQuery?.gte) return
+  const firstDayOfMonth = toUtc(new Date(whereQuery.gte.getFullYear(), whereQuery.gte.getMonth() + 1, 1))
+
+
+
   // 取引件数を計算（選択中の月の承認済み運行スケジュール数）
-  const getTransactionCount = async (customerId: number): Promise<number> => {
-    if (!whereQuery?.gte || !whereQuery?.lte) return 0
+  // メモリ内でフィルタリングして計算
+  const getTransactionCount = (customerId: number, scheduleList: typeof driveScheduleList): number => {
+    if (!scheduleList || !whereQuery?.gte || !whereQuery?.lte) return 0
 
     try {
-      const driveScheduleList = await getDriveScheduleList({
-        firstDayOfMonth: whereQuery.gte,
-        whereQuery: {
-          ...whereQuery,
-          gte: Days.day.subtract(whereQuery.gte, 1),
-        },
-        tbmBaseId: undefined,
-        userId: undefined,
-      })
 
-      const targetMonth = toUtc(new Date(whereQuery.gte.getFullYear(), whereQuery.gte.getMonth() + 1, 1))
-
-      const filteredSchedules = driveScheduleList.filter(schedule => {
+      const filteredSchedules = scheduleList.filter(schedule => {
         const matchesCustomer = schedule.TbmRouteGroup.Mid_TbmRouteGroup_TbmCustomer?.TbmCustomer?.id === customerId
+
+
+
         if (!matchesCustomer) return false
 
-        const billingMonth = BillingHandler.getBillingMonth(schedule.date, schedule.TbmRouteGroup.departureTime, schedule.TbmRouteGroup.id)
-        return formatDate(billingMonth, 'YYYYMM') === formatDate(targetMonth, 'YYYYMM')
+
+
+        const billingMonth = BillingHandler.getBillingMonth(
+          firstDayOfMonth,
+          schedule.date,
+          schedule.TbmRouteGroup.departureTime,
+          schedule
+        )
+
+
+
+        return formatDate(billingMonth, 'YYYYMM') === formatDate(firstDayOfMonth, 'YYYYMM')
+        const isBelongsToMonth = !firstDayOfMonth || BillingHandler.belongsToMonth(
+          schedule.date,
+          schedule.TbmRouteGroup.departureTime,
+          schedule.TbmRouteGroup.id,
+          firstDayOfMonth
+        )
+        return isBelongsToMonth
       })
+
+
+
+
+
+
+
 
       return filteredSchedules.length
     } catch {
@@ -79,13 +127,11 @@ export default async function Page(props) {
     }
   }
 
-  // 各顧客の取引件数を取得
-  const customersWithCount = await Promise.all(
-    customers.map(async customer => ({
-      ...customer,
-      transactionCount: await getTransactionCount(customer.id),
-    }))
-  )
+  // 各顧客の取引件数を取得（メモリ内で計算）
+  const customersWithCount = customers.map(customer => ({
+    ...customer,
+    transactionCount: getTransactionCount(customer.id, driveScheduleList),
+  }))
 
   // 顧客データが存在しない場合の処理
   if (customers.length === 0) {
@@ -125,16 +171,23 @@ export default async function Page(props) {
     throw new Error('日付の設定が不正です')
   }
 
+  // driveScheduleListが取得できていない場合はエラー
+  if (!driveScheduleList) {
+    throw new Error('運行スケジュールデータの取得に失敗しました')
+  }
 
   try {
+    // 取得済みのdriveScheduleListを再利用
     const invoiceData = await getInvoiceData({
       whereQuery: { gte: whereQuery.gte, lte: whereQuery.lte },
       customerId,
+      driveScheduleList,
     })
 
     const meisaiData = await getMeisaiData({
       whereQuery: { gte: whereQuery.gte, lte: whereQuery.lte },
       customerId,
+      driveScheduleList,
     })
 
     return (

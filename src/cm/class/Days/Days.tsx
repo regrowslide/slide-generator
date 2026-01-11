@@ -1,18 +1,18 @@
-import {isServer} from 'src/cm/lib/methods/common'
+import { isServer } from 'src/cm/lib/methods/common'
 
 import dayjs from 'dayjs'
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import 'dayjs/locale/ja'
 
-import {colTypeStr} from '@cm/types/types'
+import { colTypeStr } from '@cm/types/types'
 
-import {getColorStyles} from '@cm/lib/methods/colors'
-import {Calendar} from '@prisma/generated/prisma/client'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
-import {DateInput} from '@cm/class/Days/date-utils/date-utils-type'
-import {toJst, toUtc} from '@cm/class/Days/date-utils/calculations'
-import {getMidnight} from '@cm/class/Days/date-utils/calculations'
+import { getColorStyles } from '@cm/lib/methods/colors'
+import { Calendar } from '@prisma/generated/prisma/client'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
+import { DateInput } from '@cm/class/Days/date-utils/date-utils-type'
+import { toJst, toUtc } from '@cm/class/Days/date-utils/calculations'
+import { getMidnight } from '@cm/class/Days/date-utils/calculations'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -115,8 +115,8 @@ export class Days {
         return {
           ymd: undefined,
           hms: undefined,
-          templateCreate: {createYmd: undefined, createHms: undefined, updateYmd: undefined, updateHms: undefined},
-          templateUpdate: {updateYmd: undefined, updateHms: undefined},
+          templateCreate: { createYmd: undefined, createHms: undefined, updateYmd: undefined, updateHms: undefined },
+          templateUpdate: { updateYmd: undefined, updateHms: undefined },
         }
       }
       const toDateObj = new Date(date)
@@ -126,8 +126,8 @@ export class Days {
         return {
           ymd: undefined,
           hms: undefined,
-          templateCreate: {createYmd: undefined, createHms: undefined, updateYmd: undefined, updateHms: undefined},
-          templateUpdate: {updateYmd: undefined, updateHms: undefined},
+          templateCreate: { createYmd: undefined, createHms: undefined, updateYmd: undefined, updateHms: undefined },
+          templateUpdate: { updateYmd: undefined, updateHms: undefined },
         }
       }
 
@@ -146,8 +146,8 @@ export class Days {
       return {
         ymd,
         hms,
-        templateCreate: {createYmd: ymd, createHms: hms, updateYmd: ymd, updateHms: hms},
-        templateUpdate: {updateYmd: ymd, updateHms: hms},
+        templateCreate: { createYmd: ymd, createHms: hms, updateYmd: ymd, updateHms: hms },
+        templateUpdate: { updateYmd: ymd, updateHms: hms },
       }
     },
 
@@ -224,11 +224,11 @@ export class Days {
       const isShukujitsu = holidays?.some(h => Days.validate.isSameDate(h.date, date))
 
       if (isShukujitsu) {
-        return {style: {...getColorStyles('#fbeb8e')}}
+        return { style: { ...getColorStyles('#fbeb8e') } }
       } else if (formatDate(date, 'ddd') === '土') {
-        return {style: {...getColorStyles('#c6eeff')}}
+        return { style: { ...getColorStyles('#c6eeff') } }
       } else if (formatDate(date, 'ddd') === '日') {
-        return {style: {...getColorStyles('#ffd7d7')}}
+        return { style: { ...getColorStyles('#ffd7d7') } }
       }
     },
 
@@ -261,7 +261,7 @@ export class Days {
         days.push(new Date(newDate))
       }
 
-      return {days}
+      return { days }
     },
 
     getDaysBetweenDates: (startDate: Date, endDate: Date): Date[] => {
@@ -286,12 +286,6 @@ export class Days {
         start.setDate(start.getDate() + 1)
       }
 
-      if (days.some(d => !d.toISOString().includes('15:00:00'))) {
-        throw new Error(`getDaysBetweenDates: UTC ではありません。`)
-      }
-      // if (convertToUtc) {
-      //   console.warn(`getDaysBetweenDates: convert to UTC`)
-      // }
 
       return days
     },
@@ -354,6 +348,11 @@ export class Days {
       const month = toJst(monthDt).getMonth() //月よりも-1
       const date = 1
 
+
+
+      // アメリカでは { origin: [ 2026, 0, 1 ], toJst: [ 2026, 0, 1 ] }
+
+
       const getFromTo = () => {
         if (options) {
           return {
@@ -368,7 +367,7 @@ export class Days {
         }
       }
 
-      const {firstDayOfMonth, lastDayOfMonth} = getFromTo()
+      const { firstDayOfMonth, lastDayOfMonth } = getFromTo()
 
       const days = Days.day.getDaysBetweenDates(firstDayOfMonth, lastDayOfMonth)
 
@@ -412,7 +411,7 @@ export class Days {
 
       // 曜日のインデックスを取得するヘルパー関数 (0: 日, 1: 月, ..., 6: 土)
       function getDayIndexOfWeek(date: Date, weekdays): number {
-        const currentWeekdayIndex = weekdays.indexOf(date.toLocaleDateString('ja', {weekday: 'short'}).slice(0, 1))
+        const currentWeekdayIndex = weekdays.indexOf(date.toLocaleDateString('ja', { weekday: 'short' }).slice(0, 1))
 
         // offsetを常に正の値にする
         return currentWeekdayIndex
@@ -484,7 +483,7 @@ export class Days {
       const lastDateOfYear = new Date(year, 11, 31)
 
       const getSpecifiedMonthOnThisYear = month => {
-        return {first: toUtc(new Date(year, month - 1, 1)), last: Days.day.add(toUtc(new Date(year, month, 1)), -1)}
+        return { first: toUtc(new Date(year, month - 1, 1)), last: Days.day.add(toUtc(new Date(year, month, 1)), -1) }
       }
 
       const getAllMonthsInYear = () => {
@@ -495,7 +494,7 @@ export class Days {
         return months
       }
 
-      return {firstDateOfYear, lastDateOfYear, getSpecifiedMonthOnThisYear, getAllMonthsInYear}
+      return { firstDateOfYear, lastDateOfYear, getSpecifiedMonthOnThisYear, getAllMonthsInYear }
     },
   }
 
@@ -544,7 +543,7 @@ export class Days {
         end: Date
       }
     }) => {
-      const {range1, range2} = props
+      const { range1, range2 } = props
       // 入力値がDateオブジェクトであることを確認します。
       const range1Start = new Date(range1.start)
       const range1End = new Date(range1.end)
@@ -591,7 +590,7 @@ export class Days {
       const timeFormatForDaysJs = timeFormat.replace(/yyyy/g, 'YYYY').replace(/dd/g, 'DD')
       const timeFormatForDateFns = timeFormat.replace(/yyyy/g, 'yyyy').replace(/dd/g, 'dd')
 
-      return {timeFormatForDaysJs, timeFormatForDateFns}
+      return { timeFormatForDaysJs, timeFormatForDateFns }
     },
   }
 

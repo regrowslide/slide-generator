@@ -38,9 +38,11 @@ export type AccessValidationResult = {
   needsRedirect: boolean
 }
 
+import type {pathItemType} from 'src/non-common/path-title-constsnts'
+
 export type CheckValidAccessProps = {
   redirectUrl: string
   pathname: string
   origin: string
-  allPathsPatterns: any[]
+  allPathsPatterns: pathItemType[]
 }
