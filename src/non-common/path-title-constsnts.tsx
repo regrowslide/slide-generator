@@ -125,14 +125,29 @@ export const PAGES: Record<string, PageGetterFunction> = {
     const { login, admin } = getScopes(session, { query, roles })
 
     const loginPaths = [
-
+      {
+        tabId: 'analysis-box',
+        label: '分析BOX',
+        ROOT: [rootPath],
+        // exclusiveTo: !!login,
+      },
+      {
+        tabId: '',
+        label: 'マスタ管理',
+        ROOT: [rootPath],
+        // exclusiveTo: !!login,
+        children: [
+          { tabId: 'master/industries', label: '業種マスタ' },
+          { tabId: 'master/clients', label: 'クライアント' },
+          { tabId: 'master/settings', label: 'AI分析設定' },
+        ],
+      },
       {
         tabId: 'batch',
-        label: '一括分析',
+        label: '一括分析（旧）',
         ROOT: [rootPath],
-        exclusiveTo: !!login,
+        // exclusiveTo: !!login,
       },
-
     ]
 
     const adminPaths = []

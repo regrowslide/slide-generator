@@ -1,6 +1,6 @@
-import {isDev} from '@cm/lib/methods/common'
+import { isDev } from '@cm/lib/methods/common'
 import prisma from 'src/lib/prisma'
-import {NextResponse} from 'next/server'
+import { NextResponse } from 'next/server'
 
 export const POST = async () => {
   const data = {
@@ -16,7 +16,7 @@ export const POST = async () => {
     rentaStoreId: 5,
   }
   if (isDev) {
-    const user = await prisma.user.upsert({where: {email: data.email}, create: data, update: data})
+    const user = await prisma.user.upsert({ where: { email: data.email }, create: data, update: data })
   }
   return NextResponse.json({})
 }

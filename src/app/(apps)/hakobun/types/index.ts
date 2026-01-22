@@ -108,10 +108,14 @@ export interface HakobunVoice {
 // --- 一般カテゴリタイプ ---
 export type GeneralCategoryType = '接客・サービス' | '店内' | '料理・ドリンク' | '備品・設備' | '値段' | '立地' | 'その他'
 
+// --- ステージタイプ ---
+export type StageType = '認知' | '興味' | '検討' | '購入' | '利用' | 'リピート' | 'その他'
+
 // --- 抽出要素（トピック単位）---
 export interface Extract {
   raw_text: string // 原文（トピック分割前の全文）
   sentence: string // トピック単位（意味が完結した形）
+  stage: StageType // カスタマージャーニーのステージ
   general_category: GeneralCategoryType // 一般カテゴリ（抽象度の高い区分）
   category: string // カテゴリ（詳細なカテゴリ名）
   sentiment: SentimentType // 感情
@@ -318,4 +322,97 @@ export interface PendingCategory {
   name: string
   /** 説明 */
   description?: string
+}
+
+// ============================================
+// 分析BOX / SESSION / Record 型定義
+// ============================================
+
+// --- 分析SESSIONステータス ---
+export type AnalysisSessionStatus = 'pending' | 'analyzing' | 'completed' | 'error'
+
+// --- 分析BOX ---
+export interface HakobunAnalysisBox {
+  id: number
+  createdAt: Date
+  updatedAt?: Date | null
+  sortOrder: number
+  name: string
+  description?: string | null
+  hakobunClientId: number
+  sessions?: HakobunAnalysisSession[]
+}
+
+// --- 分析SESSION ---
+export interface HakobunAnalysisSession {
+  id: number
+  createdAt: Date
+  updatedAt?: Date | null
+  sortOrder: number
+  name: string
+  status: AnalysisSessionStatus
+  analyzedAt?: Date | null
+  errorMessage?: string | null
+  analysisBoxId: number
+  records?: HakobunAnalysisRecord[]
+}
+
+// --- 分析結果レコード ---
+export interface HakobunAnalysisRecord {
+  id: number
+  createdAt: Date
+  updatedAt?: Date | null
+  sortOrder: number
+  rawText: string
+  // 分析結果
+  analysisStage?: string | null
+  analysisSentiment?: string | null
+  analysisGeneralCategory?: string | null
+  analysisCategory?: string | null
+  analysisTopic?: string | null
+  // 修正結果
+  feedbackStage?: string | null
+  feedbackSentiment?: string | null
+  feedbackGeneralCategory?: string | null
+  feedbackCategory?: string | null
+  feedbackTopic?: string | null
+  // フラグ・コメント
+  isModified: boolean
+  reviewerComment?: string | null
+  sessionId: number
+}
+
+// --- 分析BOX作成用入力 ---
+export interface CreateAnalysisBoxInput {
+  name: string
+  description?: string
+  hakobunClientId: number
+}
+
+// --- 分析SESSION作成用入力 ---
+export interface CreateAnalysisSessionInput {
+  name: string
+  analysisBoxId: number
+}
+
+// --- 分析レコード作成用入力（CSVからの一括登録） ---
+export interface CreateAnalysisRecordInput {
+  rawText: string
+  analysisStage?: string
+  analysisSentiment?: string
+  analysisGeneralCategory?: string
+  analysisCategory?: string
+  analysisTopic?: string
+  sessionId: number
+}
+
+// --- フィードバック更新用入力 ---
+export interface UpdateAnalysisRecordFeedbackInput {
+  feedbackStage?: string
+  feedbackSentiment?: string
+  feedbackGeneralCategory?: string
+  feedbackCategory?: string
+  feedbackTopic?: string
+  reviewerComment?: string
+  isModified: boolean
 }

@@ -6,6 +6,12 @@ import {ClientsResponse} from '@app/(apps)/hakobun/types'
 export async function GET() {
   try {
     const clients = await prisma.hakobunClient.findMany({
+      include: {
+        industry: true,
+        HakobunClientStage: {
+          orderBy: {sortOrder: 'asc'},
+        },
+      },
       orderBy: {name: 'asc'},
     })
 
@@ -29,7 +35,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const {client_id, name} = body
+    const {client_id, name, industryId} = body
 
     if (!client_id || !name) {
       return NextResponse.json(
@@ -45,8 +51,21 @@ export async function POST(request: NextRequest) {
       data: {
         clientId: client_id,
         name,
+        industryId: industryId || null,
       },
     })
+
+    // デフォルトステージを作成
+    const defaultStages = ['認知', '興味', '検討', '購入', '利用', 'リピート', 'その他']
+    for (let i = 0; i < defaultStages.length; i++) {
+      await prisma.hakobunClientStage.create({
+        data: {
+          name: defaultStages[i],
+          sortOrder: i,
+          hakobunClientId: client.id,
+        },
+      })
+    }
 
     return NextResponse.json({
       success: true,
@@ -74,6 +93,7 @@ export async function PUT(request: NextRequest) {
       inputDataExplain,
       analysisStartDate,
       analysisEndDate,
+      industryId,
     } = body
 
     if (!id) {
@@ -93,6 +113,7 @@ export async function PUT(request: NextRequest) {
       updateData.analysisStartDate = analysisStartDate ? new Date(analysisStartDate) : null
     if (analysisEndDate !== undefined)
       updateData.analysisEndDate = analysisEndDate ? new Date(analysisEndDate) : null
+    if (industryId !== undefined) updateData.industryId = industryId || null
 
     const client = await prisma.hakobunClient.update({
       where: {id},

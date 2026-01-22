@@ -128,6 +128,11 @@ export type HakobunIndustryCategory = Prisma.HakobunIndustryCategoryModel
  */
 export type HakobunClient = Prisma.HakobunClientModel
 /**
+ * Model HakobunClientStage
+ * 
+ */
+export type HakobunClientStage = Prisma.HakobunClientStageModel
+/**
  * Model HakobunCorrection
  * 
  */
@@ -142,6 +147,21 @@ export type HakobunRule = Prisma.HakobunRuleModel
  * 
  */
 export type HakobunVoice = Prisma.HakobunVoiceModel
+/**
+ * Model HakobunAnalysisBox
+ * 
+ */
+export type HakobunAnalysisBox = Prisma.HakobunAnalysisBoxModel
+/**
+ * Model HakobunAnalysisSession
+ * 
+ */
+export type HakobunAnalysisSession = Prisma.HakobunAnalysisSessionModel
+/**
+ * Model HakobunAnalysisRecord
+ * 
+ */
+export type HakobunAnalysisRecord = Prisma.HakobunAnalysisRecordModel
 /**
  * Model KeihiExpense
  * 

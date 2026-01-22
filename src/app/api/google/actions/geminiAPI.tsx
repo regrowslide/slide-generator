@@ -390,6 +390,7 @@ export const HAKOBUN_ANALYSIS_SCHEMA: GeminiResponseSchema = {
     type: 'object',
     properties: {
       sentence: {type: 'string', description: 'トピック単位（意味が完結した原文）'},
+      stage: {type: 'string', enum: ['認知', '興味', '検討', '購入', '利用', 'リピート', 'その他'], description: 'カスタマージャーニーのステージ'},
       general_category: {type: 'string', description: '一般カテゴリ'},
       category: {type: 'string', description: 'カテゴリ（詳細な分類名）'},
       sentiment: {type: 'string', enum: ['好意的', '不満', 'リクエスト', 'その他']},
@@ -397,7 +398,7 @@ export const HAKOBUN_ANALYSIS_SCHEMA: GeminiResponseSchema = {
       magnitude: {type: 'number', description: '熱量スコア（0-100）'},
       is_new_generated: {type: 'boolean', description: '新規生成カテゴリの場合true'},
     },
-    required: ['sentence', 'general_category', 'category', 'sentiment', 'posi_nega', 'magnitude'],
+    required: ['sentence', 'stage', 'general_category', 'category', 'sentiment', 'posi_nega', 'magnitude'],
   },
 }
 
