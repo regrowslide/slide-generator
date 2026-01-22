@@ -9,7 +9,7 @@ import { CompactWorkCard } from './works/CompactWorkCard'
 import { WorkDetailModal } from './works/WorkDetailModal'
 import { useWorksFilter } from '../../hooks/useWorksFilter'
 import { getUniqueValues, isPopularCategory } from '../../utils/worksUtils'
-import { INTERSECTION_OBSERVER_CONFIG, GRID_COLUMNS } from '../../constants/worksConstants'
+import { INTERSECTION_OBSERVER_CONFIG } from '../../constants/worksConstants'
 import type { CategoryType } from '../../types/works'
 
 export const EnhancedWorks = ({ works }: { works: any[] }) => {

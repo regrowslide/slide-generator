@@ -50,6 +50,7 @@ const CompactWorkCardComponent: React.FC<CompactWorkCardProps> = ({ work, onClic
               {work.title}
             </h3>
           </div>
+
           {work.subtitle && (
             <p className="text-sm text-gray-600">{work.subtitle}</p>
           )}

@@ -465,11 +465,11 @@ const FooterSection = () => {
     >
      <R_Stack className="justify-center gap-4 mb-6">
       <Image
-       src="/image/KM/logo.png"
+       src="/image/KM/logo-symbol.png"
        alt="改善マニア"
        width={80}
        height={80}
-       className="rounded-full shadow-lg"
+
       />
      </R_Stack>
      <h3 className="mb-2 text-2xl font-bold text-slate-800 lg:text-3xl">合同会社改善マニア</h3>
@@ -525,8 +525,7 @@ export const DemoDrivenDevelopment = () => {
     <div
      className="absolute inset-0 opacity-5"
      style={{
-      backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+      backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
       backgroundSize: '50px 50px',
      }}
     />
@@ -563,14 +562,7 @@ export const DemoDrivenDevelopment = () => {
       実際に触って確認してから、安心してご契約いただけます。
      </motion.p>
 
-     {/* 信頼のメッセージ */}
-     <motion.div variants={itemVariants} className="mt-10">
-      <div className="inline-flex flex-wrap justify-center gap-6 text-sm text-slate-400">
-       <span>誠実な対応</span>
-       <span>信頼第一</span>
-       <span>透明性の確保</span>
-      </div>
-     </motion.div>
+
 
      {/* 無償の明記 */}
      <motion.div

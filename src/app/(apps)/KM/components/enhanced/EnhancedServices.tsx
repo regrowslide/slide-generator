@@ -17,9 +17,9 @@ export const EnhancedServices = ({ kaizenClient }: { kaizenClient: any[] }) => {
   const sections = [
     {
       icon: Award,
-      badge: '200+',
+      badge: '',
       badgeLabel: '案件',
-      title: 'フリーランスマッチングサイトでの実績',
+      title: '小規模から大規模まで200以上の受託実績',
       subtitle: 'ココナラ、Lancers等で高評価を獲得',
       gradient: 'from-amber-400 via-orange-400 to-amber-500',
       bgGradient: 'from-amber-50/40 via-orange-50/30 to-amber-50/20',

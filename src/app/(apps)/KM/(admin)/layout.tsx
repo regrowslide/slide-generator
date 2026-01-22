@@ -15,7 +15,7 @@ import Image from 'next/image'
 
 const AppName = <div className={` bg-gradient-to-r from-blue-900 via-blue-600 to-blue-900 bg-clip-text text-transparent`}>Kaizen Mania LLC</div>
 const Logo = <R_Stack className={`gap-0.5 p-0.5`}>
-  <div ><Image className={`rounded-full `} src={'/image/KM/logo.png'} width={50} height={50} alt="" /></div>
+  <div ><Image className={`rounded-full `} src={'/image/KM/logo_yoko.png'} width={50} height={50} alt="" /></div>
 </R_Stack>
 
 export const metadata: Metadata = { title: '合同会社改善マニア' }

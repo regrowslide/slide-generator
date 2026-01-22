@@ -2,7 +2,6 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Search } from 'lucide-react'
 import { TestimonialCard } from './TestimonialCard'
 import { TESTIMONIAL_ANIMATION } from '../constants/animationConstants'
 import type { TestimonialData } from '@app/(apps)/KM/(public)/testimonials/page'

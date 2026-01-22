@@ -2,7 +2,7 @@
  * Works検索用のカスタムフック
  */
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import type { Work } from '../types/works'
 
 interface UseWorksSearchOptions {

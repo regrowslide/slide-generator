@@ -1,16 +1,16 @@
 'use client'
-import {T_LINK} from '@cm/components/styles/common-components/links'
+import { T_LINK } from '@cm/components/styles/common-components/links'
 import Redirector from '@cm/components/utils/Redirector'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
-import {HREF} from '@cm/lib/methods/urls'
-import {Absolute, Center, C_Stack, R_Stack} from 'src/cm/components/styles/common-components/common-components'
+import { HREF } from '@cm/lib/methods/urls'
+import { Absolute, Center, C_Stack, R_Stack } from 'src/cm/components/styles/common-components/common-components'
 
 const UnAuthorizedPage = () => {
-  const {query, router, session} = useGlobal()
-  const {rootPath} = query
+  const { query, router, session } = useGlobal()
+  const { rootPath } = query
 
-  if (session?.id) {
-    return <Redirector {...{redirectPath: `/`}} />
+  if (session.id) {
+    return <Redirector {...{ redirectPath: `/` }} />
   }
 
   return (
@@ -28,13 +28,11 @@ const UnAuthorizedPage = () => {
           <R_Stack className={` justify-center gap-8`}>
             <div
               className={`t-link `}
-              onClick={e => {
-                router.push(`/${rootPath}`)
-              }}
+              onClick={e => router.back()}
             >
               戻る
             </div>
-            <T_LINK href={HREF(`/login?rootPath=${rootPath}`, {}, query)}>ログイン</T_LINK>
+            <T_LINK href={HREF(`/login`, { rootPath }, query)}>ログイン</T_LINK>
           </R_Stack>
         </C_Stack>
       </Center>

@@ -98,6 +98,8 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
 
     const {pathname, origin} = req.nextUrl
 
+    console.log(pathname) //logs
+
     // 対象となるルートパスを検索
     const targetPathConfig = rootPaths.find(config => {
       const rootPathRegex = new RegExp(`^/${config.rootPath}`)
@@ -144,7 +146,7 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
  * マッチャーで対象となるパスを指定
  * Next.jsのmiddlewareでは、config.matcherは静的な値である必要があります
  */
-export const config = {
+ const config = {
   matcher: ['/Grouping(.*)', '/tbm(.*)', '/KM(.*)', '/((?!api|_next/static|favicon.ico|manifest|next-js-icon).*)'],
 } as const
 

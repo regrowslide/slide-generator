@@ -67,7 +67,7 @@ const HeroSection = () => {
         <motion.div variants={itemVariants} className="text-center">
 
           <h1 className="mb-6 text-3xl font-bold text-slate-900 lg:text-5xl">
-            既存SaaSでは届かない
+            既存ソフトでは届かない
             <br />
             <span className="bg-gradient-to-r from-blue-600 to-amber-600 bg-clip-text text-transparent">
               「業務の隙間」
@@ -75,8 +75,7 @@ const HeroSection = () => {
             をシステム化する
           </h1>
           <p className="mx-auto max-w-3xl text-lg text-slate-700 lg:text-xl">
-            高額な開発も、帯に短し襷に長しなパッケージソフトも不要です。
-            <br />
+
             御社独自の「お作法」に合わせた現場特化型システムで、確実なコスト削減と業務効率化を実現します。
           </p>
         </motion.div>
@@ -90,45 +89,38 @@ const FitJudgmentSection = () => {
   const fitItems = [
     {
       title: 'デジタル化を進めたいが、何から手をつけて良いか不明確',
-      description: 'ボトルネックの特定から依頼したい。',
+      description: '既存業務にあった改善のアイデアをともに考え、実現します。',
     },
     {
-      title: '既存SaaSやパッケージでは自社の業務フローに対応しきれない',
-      description: '御社独自の「お作法」に合わせたシステムが必要。',
+      title: '既存ソフトやパッケージでは自社の業務フローに対応しきれない',
+      description: '御社独自の「お作法」に合わせたシステムを開発します。',
     },
     {
       title: '点在する複数ツールを自動連携させたい',
-      description: '会計・カレンダー・LINE・メールなど、複数ツールの連携を実現。',
+      description: '会計・カレンダー・LINE・メールなど、複数ツールの連携を実現します。',
     },
     {
       title: '大規模な受託開発は予算オーバー',
-      description: 'まずはミニマルに始めて効果検証したい。',
+      description: '小規模から大規模まで対応可能です。まずはミニマルに始めて効果検証します。',
     },
   ]
 
   const notFitItems = [
-    {
-      title: 'エンターテインメント性が高く、不特定多数の一般消費者を対象としたBtoCアプリ開発',
-    },
-    {
-      title: 'オンプレミス（自社設置サーバー）環境におけるクローズドな開発案件',
-    },
-    {
-      title: '目的が不明確で、ただ「流行りの技術（AI等）を使いたい」だけのPoC開発',
-    },
+    { title: 'エンターテインメント性のある華麗な装飾を必要とする改発', },
+    { title: '不特定多数の一般消費者を対象としたBtoCアプリ開発', },
+
+
   ]
 
   return (
     <Section className="bg-white">
       <div className="mx-auto max-w-6xl px-4">
         <motion.div variants={itemVariants} className="mb-12 text-center">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-medium text-amber-800">
-            サービス適合判断
-          </div>
+
           <h2 className="mb-4 text-2xl font-bold text-slate-800 lg:text-4xl">
-            以下の課題感をお持ちの企業様において、
+            以下の課題感をお持ちの企業様に
             <br className="hidden sm:block" />
-            最も高いROI（投資対効果）を発揮します
+
           </h2>
         </motion.div>
 
@@ -146,8 +138,8 @@ const FitJudgmentSection = () => {
                 <div className="relative z-10 flex items-start gap-4">
                   <CheckCircle2 className="mt-1 h-6 w-6 flex-shrink-0 text-green-600" />
                   <div>
-                    <h4 className="mb-2 font-bold text-slate-800">{item.title}</h4>
-                    <p className="text-sm text-slate-600">{item.description}</p>
+                    <h4 className="mb-2 font-bold text-xl text-slate-800">{item.title}</h4>
+                    <p className="text text-slate-600">{item.description}</p>
                   </div>
                 </div>
               </motion.div>
@@ -182,33 +174,79 @@ const FitJudgmentSection = () => {
 
 // 業務改善カバー領域セクション
 const CoverageAreaSection = () => {
-  const [activeTab, setActiveTab] = React.useState<'backoffice' | 'sales' | 'field'>('backoffice')
+  const [activeTab, setActiveTab] = React.useState<'backoffice' | 'sales' | 'field' | 'customer' | 'finance' | 'purchasing'>('backoffice')
 
   const tabs = [
     { id: 'backoffice' as const, label: 'バックオフィス', icon: Building2 },
     { id: 'sales' as const, label: '営業・販促', icon: TrendingUp },
     { id: 'field' as const, label: '計画・現場管理', icon: Calendar },
+    { id: 'customer' as const, label: 'カスタマーサポート', icon: XCircle },
+    { id: 'finance' as const, label: '財務・経理', icon: TrendingUp },
+    { id: 'purchasing' as const, label: '購買・調達', icon: XCircle },
   ]
 
   const areas = {
     backoffice: [
       '備品・施設管理',
-      '入退社手続き',
-      '勤怠管理',
+      '入退社・異動手続き',
+      '勤怠・休暇管理',
       '会計・経費精算',
       '売掛・買掛管理',
+      '請求書発行・支払い管理',
+      '契約書管理',
     ],
     sales: [
       '問い合わせ自動集約',
       '商談履歴・見積作成',
+      '顧客情報の一元管理',
       '定型メール一斉配信',
       '次回アクション通知',
+      'リードスコアリング',
+      'セールスレポート作成',
     ],
     field: [
       '製造ライン稼働計画',
-      '配車ルート作成',
+      '配車・ルート最適化',
       '独自ルールのシフト生成',
-      'スマホ日報',
+      'スマホ日報入力',
+      '現場写真報告',
+      '安全点検チェックリスト',
+    ],
+    customer: [
+      '問い合わせ管理・チケット発行',
+      'FAQ自動応答',
+      '対応履歴の記録',
+      '顧客満足度アンケート集計',
+      'チャット・メールサポート',
+    ],
+
+    hr: [
+      '採用候補者管理',
+      '従業員情報管理',
+      '評価・目標進捗管理',
+      '人事異動申請',
+      '社内研修管理',
+    ],
+    finance: [
+      '予算管理',
+      '月次決算サポート',
+      '帳簿・伝票入力',
+      '支払い処理・銀行連携',
+      '財務レポート作成',
+    ],
+    marketing: [
+      'キャンペーン管理',
+      '顧客分析レポート作成',
+      'SNS投稿・反応集計',
+      'アンケート自動集計',
+      'コンテンツ配信スケジュール',
+    ],
+    purchasing: [
+      '仕入れ先管理',
+      '見積依頼・比較',
+      '発注・納品管理',
+      '在庫自動補充提案',
+      '購買契約書管理',
     ],
   }
 
@@ -216,11 +254,9 @@ const CoverageAreaSection = () => {
     <Section className="bg-gradient-to-b from-slate-50 to-white">
       <div className="mx-auto max-w-6xl px-4">
         <motion.div variants={itemVariants} className="mb-12 text-center">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-800">
-            業務改善カバー領域
-          </div>
+
           <h2 className="mb-4 text-2xl font-bold text-slate-800 lg:text-4xl">
-            現場の泥臭い業務からバックオフィスまで、
+            現場の実務からバックオフィスまで、
             <br className="hidden sm:block" />
             データの「隙間」を埋めます
           </h2>
@@ -323,19 +359,7 @@ const CaseStudySection = () => {
         '「入力ミス」による誤配送・クレームの防止',
       ],
     },
-    {
-      industry: '不動産・管理',
-      title: '巡回清掃・物件管理レポート自動化',
-      capabilities: [
-        '写真の自動整理: アプリで撮影した写真を、物件ごと・日付ごとのフォルダへ自動振り分け',
-        '報告書ワンタッチ生成: 写真と定型コメント（「異常なし」「清掃完了」等）を選択するだけで、オーナー提出用のPDF報告書が完成',
-        '現地完結: 帰社することなく、スマホ一つで報告業務まで完了',
-      ],
-      effects: [
-        '「写真をPCに取り込んでExcelに貼り付ける」作業の全廃',
-        '報告リードタイムの短縮により、管理可能物件数が1.5倍に増加',
-      ],
-    },
+
     {
       industry: '製造・在庫',
       title: 'QRコードによる在庫・備品管理',
@@ -349,19 +373,7 @@ const CaseStudySection = () => {
         '「モノを探す時間」の大幅削減',
       ],
     },
-    {
-      industry: 'イベント',
-      title: 'QR受付・来場者管理システム',
-      capabilities: [
-        '0.5秒受付: 参加証のQRコードをiPadにかざすだけで受付完了。「〇〇様、お待ちしておりました」と画面表示',
-        'VIP通知: 重要顧客が来場した際、担当営業のスマホへ即座に通知を飛ばす',
-        'お礼メール即時配信: 受付完了のトリガーで、資料ダウンロードURL付きのお礼メールを自動送信',
-      ],
-      effects: [
-        '受付待ち行列の解消と、運営スタッフの人員削減',
-        '来場直後の「鉄が熱いうち」のアプローチによる成約率向上',
-      ],
-    },
+
     {
       industry: '飲食・多店舗',
       title: '日次売上・日報のチャット通知',
@@ -388,37 +400,13 @@ const CaseStudySection = () => {
         '現場でのメモ書き紛失や、記憶頼りの不正確な報告を防止',
       ],
     },
-    {
-      industry: '経理・請求',
-      title: '入金消込（マッチング）自動化',
-      capabilities: [
-        '名義ゆらぎ吸収: 「カ）カイゼン」「カイゼンマニア」などの振込名義のゆらぎをAIが学習し、同一顧客として認識',
-        '複合入金の処理: 「3ヶ月分まとめて振込」などのケースも、請求データと照合して消込候補を提示',
-        '会計ソフト連携: 消込結果を、お使いの会計ソフト（弥生・勘定奉行等）に合わせた仕訳データとして出力',
-      ],
-      effects: [
-        '月末の「通帳とExcelのにらめっこ」時間を数秒に短縮',
-        '経理担当者の精神的ストレス（1円のズレも許されないプレッシャー）の大幅軽減',
-      ],
-    },
-    {
-      industry: '医療・専門職',
-      title: '複雑な検査フローと帳票作成のデジタル化（検診システム）',
-      capabilities: [
-        '入力ロジック制御: 膨大かつ複雑な検査項目に対し、入力漏れや論理矛盾（あり得ない数値）をリアルタイムで警告',
-        '過去データ比較: 前回の検査値を並列表示し、変動幅が大きい場合にアラートを表示',
-        '帳票自動出力: 複雑なレイアウトの受診票や結果報告書を、ワンクリックでPDF生成',
-      ],
-      effects: [
-        '専門職の事務作業時間を削減し、本来の「診断・ケア」業務へリソースを集中',
-        '転記ミスや判断ミスによる医療事故リスクの低減',
-      ],
-    },
+
+
     {
       industry: '飲食・製造',
-      title: 'ナレッジ（手順・配合）の標準化と原価連動',
+      title: 'レシピ（手順・配合）の標準化と原価連動',
       capabilities: [
-        'リッチマニュアル: 動画や画像を用いた手順書をクラウド共有し、変更があれば即座に全拠点へ反映',
+        'リッチレシピ: 動画や画像を用いた手順書をクラウド共有し、変更があれば即座に全拠点へ反映',
         '動的原価計算: 原材料の仕入れ価格が変動した際、全レシピの原価率・利益率を自動で再計算',
         '成分表示出力: レシピデータに基づき、アレルギー情報やカロリー計算を自動化',
       ],
@@ -453,6 +441,120 @@ const CaseStudySection = () => {
         '調査項目の抜け漏れ防止による、再調査コストの削減',
       ],
     },
+    {
+      industry: '自動車・修理',
+      title: '中古車修理プロセスの完全可視化システム',
+      capabilities: [
+        'QRコード工程管理: 車両ごとにQRコードを割り当て、各工程（入庫→見積→修理→検査→出庫）をスキャンで記録',
+        '進捗リアルタイム共有: 顧客用マイページで「今どの工程か」をリアルタイムで確認可能',
+        '写真付き作業記録: ビフォー・アフター写真を自動整理し、納品時の説明資料として活用',
+      ],
+      effects: [
+        '「今どこまで進んでる？」という問い合わせ対応の削減',
+        '工程の見える化による顧客満足度の向上と信頼性の確保',
+      ],
+    },
+
+
+    {
+      industry: '物流・運送',
+      title: '運行管理基幹システム - 配車計画の自動最適化',
+      capabilities: [
+        'AI配車アルゴリズム: 荷物量・配送先・ドライバーの勤務時間を考慮した最適配車案を自動生成',
+        '自動配布機能: 確定した配車表を各ドライバーのアプリへ自動配信',
+        'GoogleMap連動: 配送ルートを地図上で可視化し、渋滞情報も反映した最適ルート提案',
+      ],
+      effects: [
+        '配車担当者の業務時間を50%削減',
+        '車両稼働率の向上と、ドライバーの残業時間削減による労務環境改善',
+      ],
+    },
+
+
+    {
+      industry: '受付・問い合わせ',
+      title: 'GoogleForm申込顧客管理システム',
+      capabilities: [
+        'フォーム自動集約: 複数のGoogleFormからの申込情報を一元管理',
+        'ステータス管理: 「未対応→対応中→完了」のステータスを可視化し、対応漏れを防止',
+        'リマインド通知: 対応期限が近づいた案件を担当者へSlackやメールで自動通知',
+      ],
+      effects: [
+        '申込対応漏れの完全防止',
+        '顧客満足度の向上と、対応スピードの改善による商談化率アップ',
+      ],
+    },
+
+
+    {
+      industry: 'EC・受注管理',
+      title: 'LP申込自動化 - メール返信 & 進捗管理',
+      capabilities: [
+        '申込即時対応: LPからの申込を検知し、確認メールを即座に自動返信',
+        '進捗ステータス管理: 「申込→見積提出→受注→納品」の各段階を可視化',
+        'リマインダー機能: 見積提出期限や納品期限をSlackやメールで通知し、対応遅延を防止',
+      ],
+      effects: [
+        '初動対応の迅速化による受注率の向上',
+        '案件管理の見える化による対応漏れの防止とプロジェクト進行のスムーズ化',
+      ],
+    },
+    {
+      industry: '人材・採用',
+      title: '求人管理システム - 応募者一元管理',
+      capabilities: [
+        '複数媒体の一元管理: Indeed・マイナビ・自社サイトなど、複数経路からの応募を一括管理',
+        '選考ステータス追跡: 「書類選考→一次面接→最終面接→内定」の進捗を可視化',
+        '自動リマインド: 面接日前日に応募者と面接官の両方へリマインドメール送信',
+      ],
+      effects: [
+        '応募者対応の迅速化による採用成功率の向上',
+        '人事担当者の管理工数を50%削減し、面接の質向上に注力可能',
+      ],
+    },
+
+    {
+      industry: 'データ分析',
+      title: '感情分析Webアプリ - テキストマイニング',
+      capabilities: [
+        'AI感情分析: 顧客の声やレビューをAIが解析し、ポジティブ/ネガティブを判定',
+        'トレンド可視化: 時系列でのトレンド変化をグラフで表示し、傾向を把握',
+        'キーワード抽出: 頻出単語や重要トピックを自動抽出し、改善ポイントを特定',
+      ],
+      effects: [
+        '顧客の潜在ニーズの早期発見と対応',
+        'データドリブンな意思決定の実現による商品・サービス改善',
+      ],
+    },
+    {
+      industry: '経理・会計',
+      title: '売上管理ツール - Freee連携',
+      capabilities: [
+        'Freee自動同期: 会計ソフトfreeeから売上データを自動取得',
+        'ダッシュボード可視化: 月次売上・前年比・利益率などを見やすくグラフ化',
+        'アラート機能: 売上目標に対する達成率が低い場合に経営層へ通知',
+      ],
+      effects: [
+        '経営判断に必要なデータをリアルタイムで把握',
+        '経理担当者のレポート作成業務の削減と、経営層の意思決定スピード向上',
+      ],
+    },
+
+
+
+    {
+      industry: '製造・入出荷',
+      title: '入出荷管理システム - バーコード連携',
+      capabilities: [
+        'バーコードスキャン: 入出荷時にバーコードをスキャンし、在庫を自動更新',
+        '出荷指示書自動生成: 受注データから出荷指示書を自動作成',
+        '在庫アラート: 在庫が閾値を下回った際に発注担当者へ自動通知',
+      ],
+      effects: [
+        '入出荷作業時間の40%削減',
+        '在庫精度の向上と、欠品による機会損失の防止',
+      ],
+    },
   ]
 
   return (
@@ -463,7 +565,7 @@ const CaseStudySection = () => {
             導入実績・ケーススタディ
           </div>
           <h2 className="mb-4 text-2xl font-bold text-slate-800 lg:text-4xl">
-            14件の導入実績から
+            導入実績から
             <br className="hidden sm:block" />
             具体的な解決事例をご紹介
           </h2>

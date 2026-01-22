@@ -7,14 +7,14 @@ import Image from 'next/image'
 
 export const Developer = () => {
   return (
-    <C_Stack>
-      <R_Stack className={` justify-center mx-auto w-fit gap-8  font-normal`}>
+    <>
+      <R_Stack className={`  mx-auto w-full gap-8  font-normal  justify-start `}>
         <T_LINK target={'_blank'} href={Kaizen.const.coconara.myPage}>
-          <Image src={Kaizen.const.coconara.icon} width={200} height={60} alt="" />
+          <div className={`bg-white h-[80px] flex items-center px-4`}><Image src={Kaizen.const.coconara.icon} width={200} height={60} alt="" /></div>
         </T_LINK>
 
         <T_LINK target={'_blank'} href={Kaizen.const.lancers.myPage}>
-          <Image src={Kaizen.const.lancers.icon} width={200} height={60} alt="" />
+          <div className={`bg-white h-[80px] flex items-center px-4`}><Image src={Kaizen.const.lancers.icon} width={200} height={60} alt="" /></div>
           {/* <ImageLabel
             {...{
               src: Kaizen.const.lancers.icon,
@@ -23,6 +23,6 @@ export const Developer = () => {
           /> */}
         </T_LINK>
       </R_Stack>
-    </C_Stack>
+    </>
   )
 }

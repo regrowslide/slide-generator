@@ -14,6 +14,7 @@ module.exports = [
       '.next/**/*',
       'public/**/*.js',
       'scripts/**/*.js',
+      'scripts/**/*.ts',
       'node_modules/**/*',
       'prisma.config.ts',
       'prisma/schema/generated/**/*',

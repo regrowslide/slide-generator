@@ -279,8 +279,9 @@ export const InvoiceDocument = forwardRef<InvoiceDocumentRef, InvoiceDocumentPro
             {/* ヘッダー */}
             <div className="flex justify-between items-start mb-8">
               {/* 左側: お客様情報 */}
-              <div className="flex-1">
-                <div className="text-lg font-bold">{customerInfo.name}</div>
+              <div className="flex flex-col pl-8 pt-16">
+                <div className="text-lg font-bold">{customerInfo.name} 御中</div>
+                {customerInfo.postalCode && <div className="text-sm">〒{customerInfo.postalCode}</div>}
                 {customerInfo.address && <div className="text-sm">{customerInfo.address}</div>}
               </div>
               {/* 中央: 請求書タイトル */}
@@ -301,9 +302,9 @@ export const InvoiceDocument = forwardRef<InvoiceDocumentRef, InvoiceDocumentPro
                 </div>
               </div>
               {/* 右側: 自社情報 */}
-              <div className="flex-1 text-right relative pr-10">
+              <div className="flex-1 text-right relative pr-20">
                 {/* 角印（会社情報エリアに少しかぶるように、Y軸中央、X軸やや右） */}
-                <div className="absolute top-1/2 -translate-y-1/2 right-[-20px] z-10">
+                <div className="absolute top-1/2 -translate-y-1/2 right-[10px] z-10">
                   <Image
                     src="/image/tbm/kakuin.png"
                     alt="角印"
@@ -312,7 +313,7 @@ export const InvoiceDocument = forwardRef<InvoiceDocumentRef, InvoiceDocumentPro
                     className="object-contain"
                   />
                 </div>
-                <div className="text-sm mb-2">
+                <div className="text-sm mb-2 pt-16">
                   <div className="font-bold text-lg">{companyInfo.name}</div>
                   <div className="mt-1">
                     TEL {companyInfo.tel} FAX {companyInfo.fax}

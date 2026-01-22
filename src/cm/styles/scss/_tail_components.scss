@@ -256,11 +256,8 @@
   }
 
   &:hover {
-   opacity: 0.5;
-   box-shadow:
-    0 1px 10px rgba(0, 0, 0, 0.4),
-    0 0 50px rgba(128, 128, 128, 0.1);
-   border-color: transparent;
+   // opacity: 0.5;
+   box-shadow: 4px 3px 3px 0px rgba(0, 0, 0, 0.5) !important;
   }
  }
 

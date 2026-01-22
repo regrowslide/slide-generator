@@ -1,6 +1,5 @@
 import { DriveScheduleData, tbmTableKeyValue } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
 import { BillingHandler } from '@app/(apps)/tbm/(class)/TimeHandler'
-import { formatDate } from '@cm/class/Days/date-utils/formatters'
 import { NumHandler } from '@cm/class/NumHandler'
 
 export type unkoMeisaiKey =
@@ -67,9 +66,7 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData, jitsudoKaisu: n
   //   console.log({
   //     tsukoryoSeikyuGaku: ConfigForRoute?.tsukoryoSeikyuGaku,
   //     jitsudoKaisu: jitsudoKaisu,
-
-
-  //   })//////logs
+  //   })
   // }
 
 

@@ -110,6 +110,19 @@ export const EnhancedContact = () => {
                             契約前に「動くデモ」をお見せします。要件定義書だけでは伝わらないシステムの「使い勝手」を、実際に触って確認してから安心してご契約いただけます。
                           </p>
                         </div>
+                        <span className="ml-2 flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-amber-300 to-orange-200 shadow-lg text-amber-900 font-bold text-sm  group-hover:scale-105 group-hover:underline group-hover:bg-gradient-to-r group-hover:from-amber-400 group-hover:to-orange-300 cursor-pointer">
+                          <span className="drop-shadow-[0_1px_0_rgba(255,255,255,0.6)] tracking-wide">詳細はこちら</span>
+                          <svg
+                            className="w-5 h-5 inline-block text-amber-700 group-hover:text-amber-900 transition-colors drop-shadow-[0_1px_1px_rgba(255,255,255,0.3)]"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"></path>
+                          </svg>
+                        </span>
                       </div>
                     </button>
                   </div>
