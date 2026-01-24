@@ -1,5 +1,5 @@
-import {normalCredentialsProvider} from '@app/api/auth/[...nextauth]/constants/next-auth-providers'
-import {googleProvider} from '@app/api/auth/[...nextauth]/constants/GoogleProvider'
+import { normalCredentialsProvider } from '@app/api/auth/[...nextauth]/constants/normalCredentialsProvider'
+import { googleProvider } from '@app/api/auth/[...nextauth]/constants/GoogleProvider'
 
 const maxAge = process.env.NEXT_PUBLIC_ROOTPATH === 'Grouping' ? 60 * 60 : 30 * 24 * 60 * 60
 
@@ -14,7 +14,7 @@ export const authOptions: any = {
   ],
 
   callbacks: {
-    async jwt({token, user, account}) {
+    async jwt({ token, user, account }) {
       // 最初のサインイン
       if (account && user) {
         return {
@@ -25,11 +25,11 @@ export const authOptions: any = {
 
       return token
     },
-    async session({session, token}) {
+    async session({ session, token }) {
       session.accmessToken = token.accessToken
       session.refreshToken = token.refreshToken
       session.accessTokenExpires = token.accessTokenExpires
-      session.user = {...token.user}
+      session.user = { ...token.user }
 
       return session
     },

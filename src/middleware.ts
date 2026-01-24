@@ -80,7 +80,7 @@ export const rootPaths: RootPathConfig[] = [
     rootPath: 'KM',
     paths: [
       {
-        matcher: getFreePathsMatcher('KM', ['/demoDriven']),
+        matcher: getFreePathsMatcher('KM', ['/demoDriven', '/services', '/testimonials', '/contact']),
         ...pathValidation,
       },
     ],
@@ -146,7 +146,7 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
  * マッチャーで対象となるパスを指定
  * Next.jsのmiddlewareでは、config.matcherは静的な値である必要があります
  */
- const config = {
+const config = {
   matcher: ['/Grouping(.*)', '/tbm(.*)', '/KM(.*)', '/((?!api|_next/static|favicon.ico|manifest|next-js-icon).*)'],
 } as const
 

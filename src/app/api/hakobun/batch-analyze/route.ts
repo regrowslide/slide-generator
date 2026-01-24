@@ -8,12 +8,25 @@ import pLimit from 'p-limit'
 // Gemini API同時実行数（環境変数で設定可能、デフォルト4）
 const GEMINI_CONCURRENCY = parseInt(process.env.GEMINI_CONCURRENCY || '4')
 
+// ログユーティリティ
+const log = (phase: string, message: string, data?: Record<string, unknown>) => {
+  const timestamp = new Date().toISOString()
+  const dataStr = data ? ` | ${JSON.stringify(data)}` : ''
+  console.log(`[${timestamp}] [Hakobun] [${phase}] ${message}${dataStr}`)
+}
+
 export async function POST(request: NextRequest) {
+  const requestId = Math.random().toString(36).substring(7)
+  const totalStartTime = Date.now()
+
+  log('START', `Request started`, { requestId })
+
   try {
     const body: BatchAnalyzeRequest = await request.json()
     const {client_id, texts, allow_category_generation = true} = body
 
     if (!client_id || !texts || !Array.isArray(texts) || texts.length === 0) {
+      log('ERROR', 'Validation failed: missing required fields', { requestId })
       return NextResponse.json(
         {
           success: false,
@@ -49,7 +62,15 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    log('INIT', `Processing ${texts.length} texts for client: ${client_id}`, {
+      requestId,
+      textCount: texts.length,
+      allowCategoryGeneration: allow_category_generation,
+    })
+
     // ===== Phase 1: コンテキスト取得 (Retrieval) =====
+    const phase1Start = Date.now()
+    log('PHASE1', 'Starting context retrieval', { requestId })
 
     // クライアントに業種が紐づいていない場合はエラー
     if (!client.industryId) {
@@ -107,7 +128,17 @@ export async function POST(request: NextRequest) {
       orderBy: [{priority: 'asc'}, {createdAt: 'desc'}],
     })
 
+    log('PHASE1', `Context retrieval completed`, {
+      requestId,
+      durationMs: Date.now() - phase1Start,
+      generalCategoryCount: industryGeneralCategories.length,
+      correctionCount: corrections.length,
+      ruleCount: rules.length,
+    })
+
     // ===== Phase 2: 動的プロンプト構築 =====
+    const phase2Start = Date.now()
+    log('PHASE2', 'Building dynamic prompt', { requestId })
     const systemPrompt = buildSystemPrompt(
       industryGeneralCategories,
       corrections,
@@ -116,19 +147,35 @@ export async function POST(request: NextRequest) {
       client.inputDataExplain
     )
 
+    log('PHASE2', `Prompt built`, {
+      requestId,
+      durationMs: Date.now() - phase2Start,
+      promptLength: systemPrompt.length,
+    })
+
     // ===== Phase 3: 一括分析実行（並列処理） =====
-    const startTime = Date.now()
+    const phase3Start = Date.now()
     const limit = pLimit(GEMINI_CONCURRENCY)
 
     // 空のテキストを除外
     const validTexts = texts.filter(t => t.trim())
-    console.log(`[Batch Analyze] Starting parallel analysis: ${validTexts.length} texts, concurrency: ${GEMINI_CONCURRENCY}`)
+    log('PHASE3', `Starting parallel analysis`, {
+      requestId,
+      totalTexts: validTexts.length,
+      concurrency: GEMINI_CONCURRENCY,
+      estimatedTimeSeconds: Math.ceil(validTexts.length / GEMINI_CONCURRENCY) * 3, // 1テキストあたり約3秒と推定
+    })
+
+    // 進捗トラッキング
+    let completedCount = 0
+    let errorCount = 0
 
     // 並列でGemini API呼び出し
     const apiResults = await Promise.all(
-      validTexts.map(text =>
+      validTexts.map((text, index) =>
         limit(async () => {
           const generatedVoiceId = uuidv4()
+          const itemStartTime = Date.now()
           try {
             const fullPrompt = `${systemPrompt}\n\n【分析対象テキスト】\n${text}`
 
@@ -144,7 +191,13 @@ export async function POST(request: NextRequest) {
             })
 
             if (!geminiResponse.success || !geminiResponse.data) {
-              console.error('Gemini API Error:', geminiResponse.error, geminiResponse.rawText)
+              errorCount++
+              log('PHASE3', `Item ${index + 1}/${validTexts.length} FAILED`, {
+                requestId,
+                itemIndex: index + 1,
+                error: geminiResponse.error,
+                durationMs: Date.now() - itemStartTime,
+              })
               return null
             }
 
@@ -161,9 +214,28 @@ export async function POST(request: NextRequest) {
               extracts: parsedExtracts,
             }
 
+            completedCount++
+            // 10件ごと、または最初と最後にログ出力
+            if (completedCount === 1 || completedCount === validTexts.length || completedCount % 10 === 0) {
+              const progress = Math.round((completedCount / validTexts.length) * 100)
+              log('PHASE3', `Progress: ${completedCount}/${validTexts.length} (${progress}%)`, {
+                requestId,
+                completed: completedCount,
+                total: validTexts.length,
+                errors: errorCount,
+                elapsedMs: Date.now() - phase3Start,
+              })
+            }
+
             return {result: parsedResult, extracts: parsedExtracts}
           } catch (error) {
-            console.error(`Error analyzing text: ${text.substring(0, 50)}...`, error)
+            errorCount++
+            log('PHASE3', `Item ${index + 1}/${validTexts.length} ERROR`, {
+              requestId,
+              itemIndex: index + 1,
+              error: error instanceof Error ? error.message : 'Unknown error',
+              durationMs: Date.now() - itemStartTime,
+            })
             return null
           }
         })
@@ -200,8 +272,15 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const processingTime = Date.now() - startTime
-    console.log(`[Batch Analyze] Completed: ${results.length}/${validTexts.length} texts in ${processingTime}ms (${(processingTime / 1000).toFixed(1)}s)`)
+    const phase3Duration = Date.now() - phase3Start
+    log('PHASE3', `Analysis completed`, {
+      requestId,
+      successCount: results.length,
+      errorCount,
+      totalTexts: validTexts.length,
+      durationMs: phase3Duration,
+      avgTimePerTextMs: Math.round(phase3Duration / validTexts.length),
+    })
 
     // 提案カテゴリを配列に変換
     const proposedCategories: ProposedCategory[] = Array.from(allProposedCategories.entries()).map(([category, data]) => ({
@@ -210,13 +289,27 @@ export async function POST(request: NextRequest) {
       examples: data.examples,
     }))
 
+    const totalDuration = Date.now() - totalStartTime
+    log('COMPLETE', `Request completed successfully`, {
+      requestId,
+      totalDurationMs: totalDuration,
+      totalDurationSec: (totalDuration / 1000).toFixed(1),
+      resultsCount: results.length,
+      proposedCategoriesCount: proposedCategories.length,
+    })
+
     return NextResponse.json({
       success: true,
       results,
       proposed_categories: proposedCategories.length > 0 ? proposedCategories : undefined,
     } as BatchAnalyzeResponse)
   } catch (error) {
-    console.error('Batch analyze error:', error)
+    const totalDuration = Date.now() - totalStartTime
+    log('ERROR', `Request failed`, {
+      requestId,
+      totalDurationMs: totalDuration,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    })
     return NextResponse.json(
       {
         success: false,

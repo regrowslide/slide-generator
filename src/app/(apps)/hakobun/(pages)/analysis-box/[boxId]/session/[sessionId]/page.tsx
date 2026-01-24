@@ -7,18 +7,15 @@ import {
   ArrowLeft,
   Upload,
   Play,
-  Save,
   AlertCircle,
   Loader2,
-  Edit2,
   X,
   Plus,
   ChevronLeft,
   ChevronRight,
   Eye,
-  Sparkles,
-  BookOpen,
   Download,
+  Clock,
 } from 'lucide-react'
 import Link from 'next/link'
 import {
@@ -182,13 +179,23 @@ export default function AnalysisSessionDetailPage() {
   const [analysisError, setAnalysisError] = useState<string | null>(null)
   const [allowCategoryGeneration, setAllowCategoryGeneration] = useState(false) // デフォルトはOFF
 
+  // 分析プログレス
+  const [analysisProgress, setAnalysisProgress] = useState<{
+    total: number
+    estimated: number // 推定所要時間（秒）
+    startTime: number | null
+    elapsed: number
+  }>({ total: 0, estimated: 0, startTime: null, elapsed: 0 })
+
+  // 全レコード統計用（ページネーションに関係なく全件で計算）
+  const [allRecordsForStats, setAllRecordsForStats] = useState<HakobunAnalysisRecord[]>([])
+
   // フィードバック編集
   const [editStates, setEditStates] = useState<Map<number, RecordEditState>>(new Map())
-  const [isSaving, setIsSaving] = useState(false)
 
-  // 集計統計（useMemo）
+  // 集計統計（useMemo）- 全レコードで計算
   const statistics = useMemo(() => {
-    if (records.length === 0) return null
+    if (allRecordsForStats.length === 0) return null
 
     // フィードバックがあればそちらを優先
     const getValue = (record: HakobunAnalysisRecord, feedbackKey: keyof HakobunAnalysisRecord, analysisKey: keyof HakobunAnalysisRecord) => {
@@ -196,12 +203,12 @@ export default function AnalysisSessionDetailPage() {
     }
 
     // 原文のユニーク数
-    const uniqueRawTexts = new Set(records.map(r => r.rawText))
+    const uniqueRawTexts = new Set(allRecordsForStats.map(r => r.rawText))
 
     // 各項目の集計
     const countByField = (getter: (r: HakobunAnalysisRecord) => string) => {
       const counts = new Map<string, number>()
-      records.forEach(r => {
+      allRecordsForStats.forEach(r => {
         const value = getter(r) || '(未設定)'
         counts.set(value, (counts.get(value) || 0) + 1)
       })
@@ -212,13 +219,13 @@ export default function AnalysisSessionDetailPage() {
 
     return {
       rawTextCount: uniqueRawTexts.size,
-      topicCount: records.length,
+      topicCount: allRecordsForStats.length,
       stages: countByField(r => getValue(r, 'feedbackStage', 'analysisStage')),
       sentiments: countByField(r => getValue(r, 'feedbackSentiment', 'analysisSentiment')),
       generalCategories: countByField(r => getValue(r, 'feedbackGeneralCategory', 'analysisGeneralCategory')),
       categories: countByField(r => getValue(r, 'feedbackCategory', 'analysisCategory')),
     }
-  }, [records])
+  }, [allRecordsForStats])
 
   // SESSION詳細取得
   const fetchSession = useCallback(async () => {
@@ -230,6 +237,19 @@ export default function AnalysisSessionDetailPage() {
       }
     } catch (error) {
       console.error('SESSION取得エラー:', error)
+    }
+  }, [sessionId])
+
+  // 統計用の全レコード取得
+  const fetchAllRecordsForStats = useCallback(async () => {
+    if (!sessionId) return
+    try {
+      const result = await getSessionRecordsForExport(sessionId)
+      if (result.success && result.data) {
+        setAllRecordsForStats(result.data as HakobunAnalysisRecord[])
+      }
+    } catch (error) {
+      console.error('統計用レコード取得エラー:', error)
     }
   }, [sessionId])
 
@@ -274,6 +294,13 @@ export default function AnalysisSessionDetailPage() {
   useEffect(() => {
     fetchRecords()
   }, [fetchRecords])
+
+  // 統計用レコード取得（totalCountが変わったら再取得）
+  useEffect(() => {
+    if (totalCount > 0) {
+      fetchAllRecordsForStats()
+    }
+  }, [totalCount, fetchAllRecordsForStats])
 
   // CSVパース関数（ダブルクォートで囲まれた複数行セルに対応）
   const parseCSV = useCallback((text: string): string[][] => {
@@ -361,9 +388,22 @@ export default function AnalysisSessionDetailPage() {
     }
   }, [parseCSV])
 
+  // 分析プログレスの経過時間更新
+  useEffect(() => {
+    if (!isAnalyzing || !analysisProgress.startTime) return
+
+    const interval = setInterval(() => {
+      setAnalysisProgress(prev => ({
+        ...prev,
+        elapsed: Math.floor((Date.now() - (prev.startTime || 0)) / 1000),
+      }))
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [isAnalyzing, analysisProgress.startTime])
+
   // 分析実行
   const handleAnalyze = useCallback(async () => {
-
     if (!selectedClient?.clientId || csvTexts.length === 0) {
       alert('CSVデータがありません')
       return
@@ -371,6 +411,16 @@ export default function AnalysisSessionDetailPage() {
 
     setIsAnalyzing(true)
     setAnalysisError(null)
+
+    // プログレス初期化（1テキストあたり約2-3秒、同時実行4として計算）
+    const concurrency = 4
+    const estimatedSeconds = Math.ceil(csvTexts.length / concurrency) * 3
+    setAnalysisProgress({
+      total: csvTexts.length,
+      estimated: estimatedSeconds,
+      startTime: Date.now(),
+      elapsed: 0,
+    })
 
     try {
       // ステータスを「分析中」に更新
@@ -408,6 +458,7 @@ export default function AnalysisSessionDetailPage() {
         // 再取得
         await fetchSession()
         await fetchRecords()
+        await fetchAllRecordsForStats()
         setCsvTexts([])
       } else {
         setAnalysisError(data.error || '分析に失敗しました')
@@ -419,8 +470,9 @@ export default function AnalysisSessionDetailPage() {
       await updateAnalysisSessionStatus(sessionId, 'error', errorMessage)
     } finally {
       setIsAnalyzing(false)
+      setAnalysisProgress(prev => ({ ...prev, startTime: null }))
     }
-  }, [selectedClient?.clientId, csvTexts, sessionId, fetchSession, fetchRecords, allowCategoryGeneration])
+  }, [selectedClient?.clientId, csvTexts, sessionId, fetchSession, fetchRecords, fetchAllRecordsForStats, allowCategoryGeneration])
 
   // 編集状態更新
   const updateEditState = useCallback((recordId: number, updates: Partial<RecordEditState>) => {
@@ -627,7 +679,6 @@ export default function AnalysisSessionDetailPage() {
   }
 
   const hasRecords = totalCount > 0
-  const hasModifiedRecords = Array.from(editStates.values()).some((s) => s.isModified)
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -758,33 +809,53 @@ export default function AnalysisSessionDetailPage() {
                       className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
                     <div className="flex-1">
-                      <R_Stack className="items-center gap-2">
-                        <Sparkles className="w-4 h-4 text-amber-500" />
-                        <span className="text-sm font-medium text-gray-800">新規カテゴリの自動提案を許可</span>
-                      </R_Stack>
+                      <span className="text-sm font-medium text-gray-800">新規カテゴリの自動提案を許可</span>
                       <p className="text-xs text-gray-500 mt-1">
-                        マスタに該当するカテゴリがない場合に、AIが新しいカテゴリを提案します。
-                        提案されたカテゴリは分析後に確認・採用できます。
+                        マスタに該当するカテゴリがない場合に、新しいカテゴリを提案します。
                       </p>
                     </div>
                   </label>
                   <div className={`text-xs p-2 rounded ${allowCategoryGeneration ? 'bg-amber-50 text-amber-700' : 'bg-blue-50 text-blue-700'}`}>
-                    <R_Stack className="items-center gap-2">
-                      {allowCategoryGeneration ? (
-                        <>
-                          <Sparkles className="w-3 h-3" />
-                          <span>既存カテゴリを優先しつつ、必要に応じて新規カテゴリを提案します</span>
-                        </>
-                      ) : (
-                        <>
-                          <BookOpen className="w-3 h-3" />
-                          <span>マスタカテゴリのみを使用します（新規カテゴリは生成されません）</span>
-                        </>
-                      )}
-                    </R_Stack>
+                    <span>
+                      {allowCategoryGeneration
+                        ? '既存カテゴリを優先しつつ、必要に応じて新規カテゴリを提案します'
+                        : 'マスタカテゴリのみを使用します（新規カテゴリは生成されません）'}
+                    </span>
                   </div>
                 </div>
               </div>
+
+              {/* 分析プログレス */}
+              {isAnalyzing && analysisProgress.startTime && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <R_Stack className="items-center gap-3 mb-3">
+                    <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-blue-800">
+                        分析処理中… {analysisProgress.total}件のデータを処理しています
+                      </p>
+                      <p className="text-xs text-blue-600 mt-1">
+                        <Clock className="w-3 h-3 inline mr-1" />
+                        経過: {Math.floor(analysisProgress.elapsed / 60)}分{analysisProgress.elapsed % 60}秒
+                        {' / '}
+                        推定: 約{Math.floor(analysisProgress.estimated / 60)}分{analysisProgress.estimated % 60}秒
+                      </p>
+                    </div>
+                  </R_Stack>
+                  {/* プログレスバー */}
+                  <div className="w-full bg-blue-200 rounded-full h-2 overflow-hidden">
+                    <div
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-1000"
+                      style={{
+                        width: `${Math.min(100, (analysisProgress.elapsed / analysisProgress.estimated) * 100)}%`,
+                      }}
+                    />
+                  </div>
+                  <p className="text-xs text-blue-500 mt-2 text-center">
+                    処理が完了するまでこのページを閉じないでください
+                  </p>
+                </div>
+              )}
 
               <R_Stack className="justify-end">
                 <button
@@ -795,7 +866,7 @@ export default function AnalysisSessionDetailPage() {
                   {isAnalyzing ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      分析中...
+                      分析中…
                     </>
                   ) : (
                     <>
