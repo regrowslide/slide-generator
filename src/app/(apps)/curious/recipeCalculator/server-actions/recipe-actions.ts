@@ -37,6 +37,7 @@ export type RecipeIngredientInput = {
   // 外部検索結果の詳細
   externalProductName?: string | null
   externalProductId?: string | null
+  externalProductUrl?: string | null
   externalPrice?: number | null
   externalWeight?: number | null
   externalWeightText?: string | null
@@ -122,6 +123,7 @@ export const addRecipeIngredient = async (data: RecipeIngredientInput): Promise<
     // 外部検索結果の詳細
     externalProductName: data.externalProductName,
     externalProductId: data.externalProductId,
+    externalProductUrl: data.externalProductUrl,
     externalPrice: data.externalPrice,
     externalWeight: data.externalWeight,
     externalWeightText: data.externalWeightText,

@@ -276,6 +276,7 @@ const normalizeIngredientNameForSearch = async (ingredientName: string): Promise
 export interface PriceSearchResult {
   productName: string // 検索で見つかった商品名
   productId: string | null // 商品ID（あれば）
+  productUrl: string | null // 商品ページURL
   price: number // 販売価格（円）
   priceText: string // 価格表示テキスト
   weight: number | null // 重量（g）
@@ -311,6 +312,7 @@ export const searchIngredientPrice = async (ingredientName: string): Promise<Pri
       return {
         productName: data.product.name,
         productId: data.product.productId,
+        productUrl: data.product.productUrl,
         price: data.product.price,
         priceText: data.product.priceText,
         weight: data.product.weight,

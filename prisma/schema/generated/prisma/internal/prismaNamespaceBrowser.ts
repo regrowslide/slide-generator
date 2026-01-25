@@ -899,6 +899,7 @@ export const RcRecipeIngredientScalarFieldEnum = {
   matchReason: 'matchReason',
   externalProductName: 'externalProductName',
   externalProductId: 'externalProductId',
+  externalProductUrl: 'externalProductUrl',
   externalPrice: 'externalPrice',
   externalWeight: 'externalWeight',
   externalWeightText: 'externalWeightText'

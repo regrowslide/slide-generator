@@ -97,8 +97,8 @@ export const IngredientTable = ({
                         onMasterSelect?.(idx, masterId)
                       }}
                       className={`w-full text-sm border rounded px-2 py-1 pr-6 appearance-none ${ing.ingredientMasterId
-                          ? 'bg-green-50 border-green-300 text-green-800'
-                          : 'bg-slate-50 border-slate-200 text-slate-600'
+                        ? 'bg-green-50 border-green-300 text-green-800'
+                        : 'bg-slate-50 border-slate-200 text-slate-600'
                         }`}
                     >
                       <option value="">-- 未割当 --</option>
@@ -127,9 +127,22 @@ export const IngredientTable = ({
                     <div className="text-xs space-y-0.5">
                       <div className="font-medium text-orange-700 flex items-center gap-1">
                         <Package className="w-3 h-3" />
-                        <span className="truncate max-w-[160px]" title={ing.externalProductName}>
+
+                        <a
+                          href={
+                            ing.source === 'A-Price' ? `https://a-price.jp/search?q=${ing.externalProductName}` :
+                              ing.source === '楽天市場' ? `https://search.rakuten.co.jp/search/mall/${ing.externalProductName}` :
+                                ing.externalProductUrl ?? ""
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="truncate max-w-[140px] hover:underline flex items-center gap-0.5"
+                          title={ing.externalProductName}
+                        >
                           {ing.externalProductName}
-                        </span>
+                          <ExternalLink className="w-3 h-3 flex-shrink-0" />
+                        </a>
+
                       </div>
                       <div className="text-slate-500 flex items-center gap-2">
                         {ing.externalPrice && (

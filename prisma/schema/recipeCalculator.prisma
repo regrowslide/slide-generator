@@ -93,6 +93,7 @@ model RcRecipeIngredient {
   // 外部検索結果の詳細
   externalProductName String? // 外部検索で見つかった商品名
   externalProductId   String? // 外部検索の商品ID
+  externalProductUrl  String? // 外部検索の商品URL
   externalPrice       Float?  // 外部検索の販売価格（円）
   externalWeight      Float?  // 外部検索の重量（g）
   externalWeightText  String? // 外部検索の重量表示テキスト

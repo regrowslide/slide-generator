@@ -75,6 +75,7 @@ export type RcRecipeIngredientMinAggregateOutputType = {
   matchReason: string | null
   externalProductName: string | null
   externalProductId: string | null
+  externalProductUrl: string | null
   externalPrice: number | null
   externalWeight: number | null
   externalWeightText: string | null
@@ -101,6 +102,7 @@ export type RcRecipeIngredientMaxAggregateOutputType = {
   matchReason: string | null
   externalProductName: string | null
   externalProductId: string | null
+  externalProductUrl: string | null
   externalPrice: number | null
   externalWeight: number | null
   externalWeightText: string | null
@@ -127,6 +129,7 @@ export type RcRecipeIngredientCountAggregateOutputType = {
   matchReason: number
   externalProductName: number
   externalProductId: number
+  externalProductUrl: number
   externalPrice: number
   externalWeight: number
   externalWeightText: number
@@ -183,6 +186,7 @@ export type RcRecipeIngredientMinAggregateInputType = {
   matchReason?: true
   externalProductName?: true
   externalProductId?: true
+  externalProductUrl?: true
   externalPrice?: true
   externalWeight?: true
   externalWeightText?: true
@@ -209,6 +213,7 @@ export type RcRecipeIngredientMaxAggregateInputType = {
   matchReason?: true
   externalProductName?: true
   externalProductId?: true
+  externalProductUrl?: true
   externalPrice?: true
   externalWeight?: true
   externalWeightText?: true
@@ -235,6 +240,7 @@ export type RcRecipeIngredientCountAggregateInputType = {
   matchReason?: true
   externalProductName?: true
   externalProductId?: true
+  externalProductUrl?: true
   externalPrice?: true
   externalWeight?: true
   externalWeightText?: true
@@ -348,6 +354,7 @@ export type RcRecipeIngredientGroupByOutputType = {
   matchReason: string | null
   externalProductName: string | null
   externalProductId: string | null
+  externalProductUrl: string | null
   externalPrice: number | null
   externalWeight: number | null
   externalWeightText: string | null
@@ -397,6 +404,7 @@ export type RcRecipeIngredientWhereInput = {
   matchReason?: Prisma.StringNullableFilter<"RcRecipeIngredient"> | string | null
   externalProductName?: Prisma.StringNullableFilter<"RcRecipeIngredient"> | string | null
   externalProductId?: Prisma.StringNullableFilter<"RcRecipeIngredient"> | string | null
+  externalProductUrl?: Prisma.StringNullableFilter<"RcRecipeIngredient"> | string | null
   externalPrice?: Prisma.FloatNullableFilter<"RcRecipeIngredient"> | number | null
   externalWeight?: Prisma.FloatNullableFilter<"RcRecipeIngredient"> | number | null
   externalWeightText?: Prisma.StringNullableFilter<"RcRecipeIngredient"> | string | null
@@ -425,6 +433,7 @@ export type RcRecipeIngredientOrderByWithRelationInput = {
   matchReason?: Prisma.SortOrderInput | Prisma.SortOrder
   externalProductName?: Prisma.SortOrderInput | Prisma.SortOrder
   externalProductId?: Prisma.SortOrderInput | Prisma.SortOrder
+  externalProductUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   externalPrice?: Prisma.SortOrderInput | Prisma.SortOrder
   externalWeight?: Prisma.SortOrderInput | Prisma.SortOrder
   externalWeightText?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -456,6 +465,7 @@ export type RcRecipeIngredientWhereUniqueInput = Prisma.AtLeast<{
   matchReason?: Prisma.StringNullableFilter<"RcRecipeIngredient"> | string | null
   externalProductName?: Prisma.StringNullableFilter<"RcRecipeIngredient"> | string | null
   externalProductId?: Prisma.StringNullableFilter<"RcRecipeIngredient"> | string | null
+  externalProductUrl?: Prisma.StringNullableFilter<"RcRecipeIngredient"> | string | null
   externalPrice?: Prisma.FloatNullableFilter<"RcRecipeIngredient"> | number | null
   externalWeight?: Prisma.FloatNullableFilter<"RcRecipeIngredient"> | number | null
   externalWeightText?: Prisma.StringNullableFilter<"RcRecipeIngredient"> | string | null
@@ -484,6 +494,7 @@ export type RcRecipeIngredientOrderByWithAggregationInput = {
   matchReason?: Prisma.SortOrderInput | Prisma.SortOrder
   externalProductName?: Prisma.SortOrderInput | Prisma.SortOrder
   externalProductId?: Prisma.SortOrderInput | Prisma.SortOrder
+  externalProductUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   externalPrice?: Prisma.SortOrderInput | Prisma.SortOrder
   externalWeight?: Prisma.SortOrderInput | Prisma.SortOrder
   externalWeightText?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -518,6 +529,7 @@ export type RcRecipeIngredientScalarWhereWithAggregatesInput = {
   matchReason?: Prisma.StringNullableWithAggregatesFilter<"RcRecipeIngredient"> | string | null
   externalProductName?: Prisma.StringNullableWithAggregatesFilter<"RcRecipeIngredient"> | string | null
   externalProductId?: Prisma.StringNullableWithAggregatesFilter<"RcRecipeIngredient"> | string | null
+  externalProductUrl?: Prisma.StringNullableWithAggregatesFilter<"RcRecipeIngredient"> | string | null
   externalPrice?: Prisma.FloatNullableWithAggregatesFilter<"RcRecipeIngredient"> | number | null
   externalWeight?: Prisma.FloatNullableWithAggregatesFilter<"RcRecipeIngredient"> | number | null
   externalWeightText?: Prisma.StringNullableWithAggregatesFilter<"RcRecipeIngredient"> | string | null
@@ -541,6 +553,7 @@ export type RcRecipeIngredientCreateInput = {
   matchReason?: string | null
   externalProductName?: string | null
   externalProductId?: string | null
+  externalProductUrl?: string | null
   externalPrice?: number | null
   externalWeight?: number | null
   externalWeightText?: string | null
@@ -569,6 +582,7 @@ export type RcRecipeIngredientUncheckedCreateInput = {
   matchReason?: string | null
   externalProductName?: string | null
   externalProductId?: string | null
+  externalProductUrl?: string | null
   externalPrice?: number | null
   externalWeight?: number | null
   externalWeightText?: string | null
@@ -592,6 +606,7 @@ export type RcRecipeIngredientUpdateInput = {
   matchReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalProductName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalProductId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalProductUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   externalWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   externalWeightText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -620,6 +635,7 @@ export type RcRecipeIngredientUncheckedUpdateInput = {
   matchReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalProductName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalProductId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalProductUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   externalWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   externalWeightText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -646,6 +662,7 @@ export type RcRecipeIngredientCreateManyInput = {
   matchReason?: string | null
   externalProductName?: string | null
   externalProductId?: string | null
+  externalProductUrl?: string | null
   externalPrice?: number | null
   externalWeight?: number | null
   externalWeightText?: string | null
@@ -669,6 +686,7 @@ export type RcRecipeIngredientUpdateManyMutationInput = {
   matchReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalProductName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalProductId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalProductUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   externalWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   externalWeightText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -695,6 +713,7 @@ export type RcRecipeIngredientUncheckedUpdateManyInput = {
   matchReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalProductName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalProductId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalProductUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   externalWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   externalWeightText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -731,6 +750,7 @@ export type RcRecipeIngredientCountOrderByAggregateInput = {
   matchReason?: Prisma.SortOrder
   externalProductName?: Prisma.SortOrder
   externalProductId?: Prisma.SortOrder
+  externalProductUrl?: Prisma.SortOrder
   externalPrice?: Prisma.SortOrder
   externalWeight?: Prisma.SortOrder
   externalWeightText?: Prisma.SortOrder
@@ -771,6 +791,7 @@ export type RcRecipeIngredientMaxOrderByAggregateInput = {
   matchReason?: Prisma.SortOrder
   externalProductName?: Prisma.SortOrder
   externalProductId?: Prisma.SortOrder
+  externalProductUrl?: Prisma.SortOrder
   externalPrice?: Prisma.SortOrder
   externalWeight?: Prisma.SortOrder
   externalWeightText?: Prisma.SortOrder
@@ -797,6 +818,7 @@ export type RcRecipeIngredientMinOrderByAggregateInput = {
   matchReason?: Prisma.SortOrder
   externalProductName?: Prisma.SortOrder
   externalProductId?: Prisma.SortOrder
+  externalProductUrl?: Prisma.SortOrder
   externalPrice?: Prisma.SortOrder
   externalWeight?: Prisma.SortOrder
   externalWeightText?: Prisma.SortOrder
@@ -918,6 +940,7 @@ export type RcRecipeIngredientCreateWithoutRcIngredientMasterInput = {
   matchReason?: string | null
   externalProductName?: string | null
   externalProductId?: string | null
+  externalProductUrl?: string | null
   externalPrice?: number | null
   externalWeight?: number | null
   externalWeightText?: string | null
@@ -944,6 +967,7 @@ export type RcRecipeIngredientUncheckedCreateWithoutRcIngredientMasterInput = {
   matchReason?: string | null
   externalProductName?: string | null
   externalProductId?: string | null
+  externalProductUrl?: string | null
   externalPrice?: number | null
   externalWeight?: number | null
   externalWeightText?: string | null
@@ -999,6 +1023,7 @@ export type RcRecipeIngredientScalarWhereInput = {
   matchReason?: Prisma.StringNullableFilter<"RcRecipeIngredient"> | string | null
   externalProductName?: Prisma.StringNullableFilter<"RcRecipeIngredient"> | string | null
   externalProductId?: Prisma.StringNullableFilter<"RcRecipeIngredient"> | string | null
+  externalProductUrl?: Prisma.StringNullableFilter<"RcRecipeIngredient"> | string | null
   externalPrice?: Prisma.FloatNullableFilter<"RcRecipeIngredient"> | number | null
   externalWeight?: Prisma.FloatNullableFilter<"RcRecipeIngredient"> | number | null
   externalWeightText?: Prisma.StringNullableFilter<"RcRecipeIngredient"> | string | null
@@ -1022,6 +1047,7 @@ export type RcRecipeIngredientCreateWithoutRcRecipeInput = {
   matchReason?: string | null
   externalProductName?: string | null
   externalProductId?: string | null
+  externalProductUrl?: string | null
   externalPrice?: number | null
   externalWeight?: number | null
   externalWeightText?: string | null
@@ -1048,6 +1074,7 @@ export type RcRecipeIngredientUncheckedCreateWithoutRcRecipeInput = {
   matchReason?: string | null
   externalProductName?: string | null
   externalProductId?: string | null
+  externalProductUrl?: string | null
   externalPrice?: number | null
   externalWeight?: number | null
   externalWeightText?: string | null
@@ -1099,6 +1126,7 @@ export type RcRecipeIngredientCreateManyRcIngredientMasterInput = {
   matchReason?: string | null
   externalProductName?: string | null
   externalProductId?: string | null
+  externalProductUrl?: string | null
   externalPrice?: number | null
   externalWeight?: number | null
   externalWeightText?: string | null
@@ -1122,6 +1150,7 @@ export type RcRecipeIngredientUpdateWithoutRcIngredientMasterInput = {
   matchReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalProductName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalProductId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalProductUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   externalWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   externalWeightText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1148,6 +1177,7 @@ export type RcRecipeIngredientUncheckedUpdateWithoutRcIngredientMasterInput = {
   matchReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalProductName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalProductId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalProductUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   externalWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   externalWeightText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1173,6 +1203,7 @@ export type RcRecipeIngredientUncheckedUpdateManyWithoutRcIngredientMasterInput 
   matchReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalProductName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalProductId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalProductUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   externalWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   externalWeightText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1198,6 +1229,7 @@ export type RcRecipeIngredientCreateManyRcRecipeInput = {
   matchReason?: string | null
   externalProductName?: string | null
   externalProductId?: string | null
+  externalProductUrl?: string | null
   externalPrice?: number | null
   externalWeight?: number | null
   externalWeightText?: string | null
@@ -1221,6 +1253,7 @@ export type RcRecipeIngredientUpdateWithoutRcRecipeInput = {
   matchReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalProductName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalProductId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalProductUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   externalWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   externalWeightText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1247,6 +1280,7 @@ export type RcRecipeIngredientUncheckedUpdateWithoutRcRecipeInput = {
   matchReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalProductName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalProductId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalProductUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   externalWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   externalWeightText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1272,6 +1306,7 @@ export type RcRecipeIngredientUncheckedUpdateManyWithoutRcRecipeInput = {
   matchReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalProductName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalProductId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalProductUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   externalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   externalWeight?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   externalWeightText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1300,6 +1335,7 @@ export type RcRecipeIngredientSelect<ExtArgs extends runtime.Types.Extensions.In
   matchReason?: boolean
   externalProductName?: boolean
   externalProductId?: boolean
+  externalProductUrl?: boolean
   externalPrice?: boolean
   externalWeight?: boolean
   externalWeightText?: boolean
@@ -1328,6 +1364,7 @@ export type RcRecipeIngredientSelectCreateManyAndReturn<ExtArgs extends runtime.
   matchReason?: boolean
   externalProductName?: boolean
   externalProductId?: boolean
+  externalProductUrl?: boolean
   externalPrice?: boolean
   externalWeight?: boolean
   externalWeightText?: boolean
@@ -1356,6 +1393,7 @@ export type RcRecipeIngredientSelectUpdateManyAndReturn<ExtArgs extends runtime.
   matchReason?: boolean
   externalProductName?: boolean
   externalProductId?: boolean
+  externalProductUrl?: boolean
   externalPrice?: boolean
   externalWeight?: boolean
   externalWeightText?: boolean
@@ -1384,12 +1422,13 @@ export type RcRecipeIngredientSelectScalar = {
   matchReason?: boolean
   externalProductName?: boolean
   externalProductId?: boolean
+  externalProductUrl?: boolean
   externalPrice?: boolean
   externalWeight?: boolean
   externalWeightText?: boolean
 }
 
-export type RcRecipeIngredientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "recipeId" | "ingredientMasterId" | "name" | "originalName" | "amount" | "unit" | "weightKg" | "pricePerKg" | "yieldRate" | "cost" | "isExternal" | "source" | "status" | "matchReason" | "externalProductName" | "externalProductId" | "externalPrice" | "externalWeight" | "externalWeightText", ExtArgs["result"]["rcRecipeIngredient"]>
+export type RcRecipeIngredientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "recipeId" | "ingredientMasterId" | "name" | "originalName" | "amount" | "unit" | "weightKg" | "pricePerKg" | "yieldRate" | "cost" | "isExternal" | "source" | "status" | "matchReason" | "externalProductName" | "externalProductId" | "externalProductUrl" | "externalPrice" | "externalWeight" | "externalWeightText", ExtArgs["result"]["rcRecipeIngredient"]>
 export type RcRecipeIngredientInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   RcRecipe?: boolean | Prisma.RcRecipeDefaultArgs<ExtArgs>
   RcIngredientMaster?: boolean | Prisma.RcRecipeIngredient$RcIngredientMasterArgs<ExtArgs>
@@ -1430,6 +1469,7 @@ export type $RcRecipeIngredientPayload<ExtArgs extends runtime.Types.Extensions.
     matchReason: string | null
     externalProductName: string | null
     externalProductId: string | null
+    externalProductUrl: string | null
     externalPrice: number | null
     externalWeight: number | null
     externalWeightText: string | null
@@ -1878,6 +1918,7 @@ export interface RcRecipeIngredientFieldRefs {
   readonly matchReason: Prisma.FieldRef<"RcRecipeIngredient", 'String'>
   readonly externalProductName: Prisma.FieldRef<"RcRecipeIngredient", 'String'>
   readonly externalProductId: Prisma.FieldRef<"RcRecipeIngredient", 'String'>
+  readonly externalProductUrl: Prisma.FieldRef<"RcRecipeIngredient", 'String'>
   readonly externalPrice: Prisma.FieldRef<"RcRecipeIngredient", 'Float'>
   readonly externalWeight: Prisma.FieldRef<"RcRecipeIngredient", 'Float'>
   readonly externalWeightText: Prisma.FieldRef<"RcRecipeIngredient", 'String'>

@@ -9081,6 +9081,20 @@
           "isUpdatedAt": false
         },
         {
+          "name": "externalProductUrl",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
           "name": "externalPrice",
           "kind": "scalar",
           "isList": false,
