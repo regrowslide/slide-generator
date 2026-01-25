@@ -1,29 +1,36 @@
 /**
- * A-Price商品検索API
+ * 商品価格検索API
  *
- * Gemini APIのGoogle Search Grounding機能を使用して
- * a-price.jpから商品データを取得する
+ * Gemini API のGoogle Search Grounding機能を使用
+ * 商品名、価格、重量、キロ単価をAIで計算して取得
+ *
+ * 検索順序: a-price.jp → 楽天市場 → 一般検索
  */
 
 import {NextRequest, NextResponse} from 'next/server'
 
 // ===== 型定義 =====
 
+export type SearchSource = 'a-price' | 'rakuten' | 'market' | 'none'
+
 export interface PriceSearchProduct {
   name: string // 商品名
-  price: number | null // 価格（税込）
+  productId: string | null // 商品ID（あれば）
+  price: number | null // 販売価格（円）
   priceText: string // 価格表示テキスト
-  description: string | null // 商品説明
-  category: string | null // カテゴリ
+  weight: number | null // 重量（g）
+  weightText: string | null // 重量表示テキスト
+  pricePerKg: number | null // キロ単価（円/kg）- AIで計算
+  confidence: number // 0-100%
 }
 
 export interface PriceSearchResponse {
   success: boolean
   query: string
-  products: PriceSearchProduct[]
-  totalFound: number
+  source: SearchSource
+  product: PriceSearchProduct | null
   error?: string
-  rawText?: string // デバッグ用
+  rawText?: string
 }
 
 // ===== 定数 =====
@@ -33,213 +40,273 @@ const MODEL = 'gemini-2.0-flash'
 
 // ===== Gemini API Response型 =====
 
+interface GroundingSupport {
+  groundingChunkIndices?: number[]
+  confidenceScores?: number[]
+}
+
 interface GeminiGroundingResponse {
   candidates?: Array<{
-    content?: {
-      parts?: Array<{
-        text?: string
-      }>
-    }
+    content?: {parts?: Array<{text?: string}>}
     groundingMetadata?: {
-      groundingChunks?: Array<{
-        web?: {
-          uri?: string
-          title?: string
-        }
-      }>
+      groundingSupports?: GroundingSupport[]
     }
   }>
-  error?: {
-    message: string
-  }
+  error?: {message: string}
 }
 
-// ===== JSON修復・パース関数 =====
+// ===== ユーティリティ関数 =====
+
+const parseNumber = (str: string | number | null | undefined): number | null => {
+  if (str === null || str === undefined) return null
+  if (typeof str === 'number') return str
+  const num = parseFloat(String(str).replace(/[^\d.]/g, ''))
+  return isNaN(num) ? null : num
+}
 
 /**
- * 不完全なJSONを修復する
- * - 途中で切れた文字列を閉じる
- * - 途中で切れたオブジェクト/配列を閉じる
- * - 不完全なオブジェクトを除去
+ * 信頼性スコア計算
  */
-const repairIncompleteJson = (jsonStr: string): string => {
-  let str = jsonStr.trim()
+const calcConfidence = (
+  hasName: boolean,
+  hasPrice: boolean,
+  hasWeight: boolean,
+  hasPricePerKg: boolean,
+  supports: GroundingSupport[] | undefined
+): number => {
+  let score = 0
+  if (hasName) score += 20
+  if (hasPrice) score += 25
+  if (hasWeight) score += 15
+  if (hasPricePerKg) score += 20
 
-  // コードブロックを除去
-  str = str.replace(/```json\s*/gi, '').replace(/```\s*$/g, '')
-
-  // 配列の開始を確認
-  if (!str.startsWith('[')) {
-    const arrayStart = str.indexOf('[')
-    if (arrayStart !== -1) {
-      str = str.substring(arrayStart)
-    } else {
-      return '[]'
-    }
+  if (supports?.length) {
+    const avg =
+      supports.reduce((sum, s) => {
+        const scores = s.confidenceScores || []
+        return sum + (scores.length ? scores.reduce((a, b) => a + b, 0) / scores.length : 0)
+      }, 0) / supports.length
+    score += Math.round(avg * 20)
   }
 
-  // 最後の完全なオブジェクトを見つける
-  const completedObjects: string[] = []
+  return Math.min(100, score)
+}
+
+interface ParsedProduct {
+  name: string
+  productId: string | null
+  price: number | null
+  priceText: string
+  weight: number | null
+  weightText: string | null
+  pricePerKg: number | null
+}
+
+/**
+ * JSONから商品情報抽出（重量・キロ単価含む）
+ */
+const extractProduct = (text: string): ParsedProduct | null => {
+  // コードブロック除去
+  const str = text
+    .replace(/```json\s*/gi, '')
+    .replace(/```\s*$/g, '')
+    .trim()
+
+  // オブジェクト抽出
   let depth = 0
-  let inString = false
-  let escapeNext = false
-  let objectStart = -1
-
+  let start = -1
   for (let i = 0; i < str.length; i++) {
-    const char = str[i]
-
-    if (escapeNext) {
-      escapeNext = false
-      continue
-    }
-
-    if (char === '\\') {
-      escapeNext = true
-      continue
-    }
-
-    if (char === '"' && !escapeNext) {
-      inString = !inString
-      continue
-    }
-
-    if (inString) continue
-
-    if (char === '{') {
-      if (depth === 1) {
-        objectStart = i
-      }
+    if (str[i] === '{') {
+      if (depth === 0) start = i
       depth++
-    } else if (char === '}') {
+    } else if (str[i] === '}') {
       depth--
-      if (depth === 1 && objectStart !== -1) {
-        // 完全なオブジェクトを抽出
-        const obj = str.substring(objectStart, i + 1)
-        completedObjects.push(obj)
-        objectStart = -1
+      if (depth === 0 && start !== -1) {
+        try {
+          const obj = JSON.parse(str.substring(start, i + 1))
+          if (obj.name && typeof obj.name === 'string' && obj.name.length >= 2) {
+            const price = parseNumber(obj.price)
+            const weight = parseNumber(obj.weight || obj.weightG)
+            const pricePerKg = parseNumber(obj.pricePerKg)
+
+            return {
+              name: String(obj.name).trim(),
+              productId: obj.productId ? String(obj.productId) : null,
+              price,
+              priceText: obj.priceText ? String(obj.priceText) : price ? `${price.toLocaleString()}円` : '価格不明',
+              weight,
+              weightText: obj.weightText ? String(obj.weightText) : weight ? `${weight}g` : null,
+              pricePerKg,
+            }
+          }
+        } catch {
+          // パース失敗、次のオブジェクトを探す
+        }
+        start = -1
       }
-    } else if (char === '[' && depth === 0) {
-      depth = 1
-    } else if (char === ']' && depth === 1) {
-      break
     }
   }
 
-  if (completedObjects.length === 0) {
-    return '[]'
-  }
-
-  return '[' + completedObjects.join(',') + ']'
+  return null
 }
 
-/**
- * 商品オブジェクトが有効かどうかを検証
- */
-const isValidProduct = (obj: unknown): obj is Record<string, unknown> => {
-  if (!obj || typeof obj !== 'object') return false
-  const product = obj as Record<string, unknown>
+// ===== Gemini API呼び出し =====
 
-  // 最低限 name が必要
-  if (!product.name || typeof product.name !== 'string') return false
-  if (product.name.length < 2) return false
-
-  return true
+interface SearchResult {
+  product: PriceSearchProduct | null
+  rawText: string
 }
 
-/**
- * 価格文字列から数値を抽出
- */
-const parsePrice = (priceStr: string): number | null => {
-  if (!priceStr) return null
-  const cleaned = String(priceStr).replace(/[^\d]/g, '')
-  const price = parseInt(cleaned, 10)
-  return isNaN(price) ? null : price
-}
-
-/**
- * JSONテキストから商品配列を抽出
- */
-const extractProductsFromJson = (text: string): PriceSearchProduct[] => {
-  // 修復したJSONをパース
-  const repairedJson = repairIncompleteJson(text)
+const search = async (prompt: string, apiKey: string): Promise<SearchResult> => {
+  const endpoint = `${GEMINI_API_BASE}/${MODEL}:generateContent?key=${apiKey}`
 
   try {
-    const parsed = JSON.parse(repairedJson)
-    const items = Array.isArray(parsed) ? parsed : []
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        contents: [{parts: [{text: prompt}]}],
+        tools: [{google_search: {}}],
+        generationConfig: {temperature: 0, maxOutputTokens: 1024},
+      }),
+    })
 
-    return items
-      .filter(isValidProduct)
-      .slice(0, 10)
-      .map((p): PriceSearchProduct => {
-        const priceValue = typeof p.price === 'number' ? p.price : parsePrice(String(p.price || p.priceText || ''))
+    if (!res.ok) return {product: null, rawText: ''}
 
-        return {
-          name: String(p.name || '').trim(),
-          price: priceValue,
-          priceText: p.priceText ? String(p.priceText) : priceValue ? `${priceValue.toLocaleString()}円` : '価格不明',
-          description: p.description ? String(p.description).trim() : null,
-          category: p.category ? String(p.category).trim() : null,
+    const data: GeminiGroundingResponse = await res.json()
+    if (data.error) return {product: null, rawText: ''}
+
+    // 全candidates・全partsからテキストを結合
+    const texts: string[] = []
+    for (const candidate of data.candidates || []) {
+      for (const part of candidate.content?.parts || []) {
+        if (part.text) {
+          texts.push(part.text)
         }
-      })
-  } catch (error) {
-    console.error('JSON parse failed after repair:', error)
-    console.error('Repaired JSON:', repairedJson.substring(0, 500))
-    return []
-  }
-}
-
-/**
- * テキストレスポンスから商品情報を抽出（フォールバック）
- */
-const extractProductsFromText = (text: string): PriceSearchProduct[] => {
-  const products: PriceSearchProduct[] = []
-
-  // 商品名と価格のパターンを探す
-  // 例: "商品名 - 1,234円" や "商品名: 1234円（税込）"
-  const patterns = [
-    /[「『]([^」』]+)[」』]\s*[:\-－：]?\s*(\d{1,3}(?:,\d{3})*)\s*円/g,
-    /(\S+(?:\s+\S+)*?)\s+(\d{1,3}(?:,\d{3})*)\s*円(?:\s*[(（]税込[)）])?/g,
-  ]
-
-  for (const pattern of patterns) {
-    let match
-    while ((match = pattern.exec(text)) !== null) {
-      const name = match[1].trim()
-      const priceStr = match[2]
-
-      if (name.length >= 2 && !products.some(p => p.name === name)) {
-        const price = parsePrice(priceStr)
-        products.push({
-          name,
-          price,
-          priceText: `${priceStr}円`,
-          description: null,
-          category: null,
-        })
       }
-
-      if (products.length >= 10) break
     }
-    if (products.length >= 10) break
-  }
+    const text = texts.join('\n')
 
-  return products
+    // groundingMetadataは最初のcandidateから取得（通常ここに含まれる）
+    const supports = data.candidates?.[0]?.groundingMetadata?.groundingSupports
+
+    if (!text) return {product: null, rawText: ''}
+
+    // 該当なしチェック
+    if (/該当.*なし|見つかりませんでした|0件/.test(text) && !text.includes('"name"')) {
+      return {product: null, rawText: text}
+    }
+
+    const parsed = extractProduct(text)
+    if (!parsed) return {product: null, rawText: text}
+
+    const confidence = calcConfidence(true, !!parsed.price, !!parsed.weight, !!parsed.pricePerKg, supports)
+
+    return {
+      product: {
+        name: parsed.name,
+        productId: parsed.productId,
+        price: parsed.price,
+        priceText: parsed.priceText,
+        weight: parsed.weight,
+        weightText: parsed.weightText,
+        pricePerKg: parsed.pricePerKg,
+        confidence,
+      },
+      rawText: text,
+    }
+  } catch {
+    return {product: null, rawText: ''}
+  }
 }
+
+// ===== プロンプト =====
+
+const createPrompt = (site: string, searchUrl: string, q: string) => `
+${site}で「${q}」を検索し、業務用食材として最適な商品1件を取得してください。
+検索URL: ${searchUrl}
+
+【取得する情報】
+1. 商品名（正式名称）
+2. 商品ID（あれば）
+3. 販売価格（税込）
+4. 内容量・重量（g単位で計算）
+5. キロ単価（価格÷重量×1000で計算）
+
+【重要】
+- 業務用・大容量商品を優先
+- 重量は必ずg単位に換算（1kg=1000g、1L≒1000g）
+- キロ単価は必ず計算して返す
+
+JSON形式で返してください:
+{
+  "name": "商品名",
+  "productId": "商品ID（あれば、なければnull）",
+  "price": 数値（円）,
+  "priceText": "○○円（税込）",
+  "weight": 数値（g単位）,
+  "weightText": "○kg / ○g / ○ml 等",
+  "pricePerKg": 数値（円/kg）
+}
+
+該当商品がない場合は「該当商品なし」と回答。`
+
+const promptAprice = (q: string) => createPrompt('a-price.jp', `https://a-price.jp/search?q=${encodeURIComponent(q)}`, q)
+
+const promptRakuten = (q: string) =>
+  createPrompt('楽天市場', `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(q)}/`, q)
+
+const promptMarket = (q: string) => `
+「${q}」の業務用食材としての市場価格を調査し、最適な商品1件を取得してください。
+Amazon、業務スーパー、コストコ、卸売サイト等から調査してください。
+
+【取得する情報】
+1. 商品名（正式名称）
+2. 商品ID（あれば）
+3. 販売価格（税込）
+4. 内容量・重量（g単位で計算）
+5. キロ単価（価格÷重量×1000で計算）
+
+【重要】
+- 業務用・大容量商品を優先
+- 重量は必ずg単位に換算（1kg=1000g、1L≒1000g）
+- キロ単価は必ず計算して返す
+
+JSON形式で返してください:
+{
+  "name": "商品名",
+  "productId": "商品ID（あれば、なければnull）",
+  "price": 数値（円）,
+  "priceText": "○○円（税込）",
+  "weight": 数値（g単位）,
+  "weightText": "○kg / ○g / ○ml 等",
+  "pricePerKg": 数値（円/kg）
+}
+
+該当商品がない場合は「該当商品なし」と回答。`
 
 // ===== APIハンドラー =====
 
-export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams
-  const query = searchParams.get('q')
-  const debug = searchParams.get('debug') === 'true'
+const sources: Array<{
+  source: SearchSource
+  prompt: (q: string) => string
+}> = [
+  {source: 'a-price', prompt: promptAprice},
+  {source: 'rakuten', prompt: promptRakuten},
+  {source: 'market', prompt: promptMarket},
+]
+
+export async function GET(req: NextRequest) {
+  const query = req.nextUrl.searchParams.get('q')
+  const debug = req.nextUrl.searchParams.get('debug') === 'true'
 
   if (!query) {
     return NextResponse.json<PriceSearchResponse>(
       {
         success: false,
         query: '',
-        products: [],
-        totalFound: 0,
+        source: 'none',
+        product: null,
         error: '検索クエリ（q）が必要です',
       },
       {status: 400}
@@ -247,161 +314,51 @@ export async function GET(request: NextRequest) {
   }
 
   const apiKey = process.env.GEMINI_API_KEY
-
   if (!apiKey) {
     return NextResponse.json<PriceSearchResponse>(
       {
         success: false,
         query,
-        products: [],
-        totalFound: 0,
+        source: 'none',
+        product: null,
         error: 'GEMINI_API_KEYが設定されていません',
       },
       {status: 500}
     )
   }
 
-  // プロンプト: URLを省略してトークン節約
-  const prompt = `
-a-price.jp で「${query}」を検索して、商品情報をJSON形式で返してください。
+  let lastRaw = ''
 
-検索URL: https://a-price.jp/search?q=${encodeURIComponent(query)}
+  for (const {source, prompt} of sources) {
+    const result = await search(prompt(query), apiKey)
 
-以下の形式で最大10件まで出力:
-\`\`\`json
-[
-  {"name": "商品名", "price": 数値, "priceText": "○○円（税込）", "description": "説明", "category": "カテゴリ"}
-]
-\`\`\`
+    lastRaw = result.rawText
 
-ルール:
-- URLやimageUrlは不要（含めないで）
-- priceは数値のみ（カンマや円記号なし）
-- 商品が見つからない場合は空配列 []
-- 必ずJSON形式で
-`
-
-  const endpoint = `${GEMINI_API_BASE}/${MODEL}:generateContent?key=${apiKey}`
-  const requestBody = {
-    contents: [{parts: [{text: prompt}]}],
-    tools: [{google_search: {}}],
-    generationConfig: {
-      temperature: 0.1,
-    },
-  }
-
-  try {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(requestBody),
-    })
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.error('Gemini API Error:', errorText)
-      return NextResponse.json<PriceSearchResponse>(
-        {
-          success: false,
-          query,
-          products: [],
-          totalFound: 0,
-          error: `Gemini API Error: ${response.status}`,
-        },
-        {status: 500}
-      )
-    }
-
-    const data: GeminiGroundingResponse = await response.json()
-
-    if (data.error) {
-      return NextResponse.json<PriceSearchResponse>(
-        {
-          success: false,
-          query,
-          products: [],
-          totalFound: 0,
-          error: data.error.message,
-        },
-        {status: 500}
-      )
-    }
-
-    // すべてのパーツからテキストを結合
-    const allTexts: string[] = []
-    for (const candidate of data.candidates || []) {
-      for (const part of candidate.content?.parts || []) {
-        if (part.text) {
-          allTexts.push(part.text)
-        }
-      }
-    }
-
-    const fullText = allTexts.join('\n')
-
-    if (debug) {
-      console.log('=== Gemini Response ===')
-      console.log(fullText)
-      console.log('=======================')
-    }
-
-    if (!fullText) {
-      return NextResponse.json<PriceSearchResponse>(
-        {
-          success: false,
-          query,
-          products: [],
-          totalFound: 0,
-          error: '応答が空です',
-        },
-        {status: 500}
-      )
-    }
-
-    // JSONを含むテキストを探す
-    let products: PriceSearchProduct[] = []
-
-    // まずJSONパースを試みる
-    if (fullText.includes('[') && fullText.includes('{')) {
-      products = extractProductsFromJson(fullText)
-    }
-
-    // JSONパースが失敗した場合、テキスト抽出を試みる
-    if (products.length === 0) {
-      products = extractProductsFromText(fullText)
-    }
-
-    const responseData: PriceSearchResponse = {
-      success: true,
-      query,
-      products,
-      totalFound: products.length,
-    }
-
-    // デバッグモードの場合、生テキストも返す
-    if (debug) {
-      responseData.rawText = fullText
-    }
-
-    return NextResponse.json<PriceSearchResponse>(responseData)
-  } catch (error) {
-    console.error('Gemini API call failed:', error)
-    return NextResponse.json<PriceSearchResponse>(
-      {
-        success: false,
+    if (result.product && result.product.pricePerKg) {
+      const res: PriceSearchResponse = {
+        success: true,
         query,
-        products: [],
-        totalFound: 0,
-        error: error instanceof Error ? error.message : 'Unknown error',
-      },
-      {status: 500}
-    )
+        source,
+        product: result.product,
+      }
+      if (debug) res.rawText = result.rawText
+      return NextResponse.json<PriceSearchResponse>(res)
+    }
   }
+
+  const res: PriceSearchResponse = {
+    success: true,
+    query,
+    source: 'none',
+    product: null,
+  }
+  if (debug) res.rawText = lastRaw
+  return NextResponse.json<PriceSearchResponse>(res)
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const body = await request.json()
+    const body = await req.json()
     const query = body.q || body.query
 
     if (!query) {
@@ -409,31 +366,27 @@ export async function POST(request: NextRequest) {
         {
           success: false,
           query: '',
-          products: [],
-          totalFound: 0,
-          error: '検索クエリ（q または query）が必要です',
+          source: 'none',
+          product: null,
+          error: '検索クエリが必要です',
         },
         {status: 400}
       )
     }
 
-    // GETと同じ処理を実行
-    const url = new URL(request.url)
+    const url = new URL(req.url)
     url.searchParams.set('q', query)
-    if (body.debug) {
-      url.searchParams.set('debug', 'true')
-    }
+    if (body.debug) url.searchParams.set('debug', 'true')
 
-    const getRequest = new NextRequest(url)
-    return GET(getRequest)
+    return GET(new NextRequest(url))
   } catch {
     return NextResponse.json<PriceSearchResponse>(
       {
         success: false,
         query: '',
-        products: [],
-        totalFound: 0,
-        error: 'リクエストボディの解析に失敗しました',
+        source: 'none',
+        product: null,
+        error: 'リクエスト解析エラー',
       },
       {status: 400}
     )
