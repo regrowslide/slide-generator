@@ -130,7 +130,9 @@ ${masterList}
 
     const data = await response.json()
     const content = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
-    console.log({targetName, content}) //logs
+    if (!isNaN(Number(content))) {
+      console.log({targetName, content}) //logs
+    }
 
     if (!content || content.toLowerCase() === 'null') return null
 

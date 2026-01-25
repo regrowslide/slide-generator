@@ -187,6 +187,7 @@ export const RecipeManager = () => {
 
   // Step 2: 材料一覧の一括照合（DB or WEB）- 並行処理 + リアルタイムUI更新
   // いつでもやり直し可能（全材料をリセットして再照合）
+  // 個別処理（handleAiSearchIngredient）と同じロジックを並行で実行
   const handleStep2Matching = useCallback(async () => {
     if (!recipe || analysisPhase === 'step2_running') return
 
@@ -195,9 +196,44 @@ export const RecipeManager = () => {
 
     try {
       setAnalysisPhase('step2_running')
-      setAnalysisProgress({ phase: 'matching', message: '全材料をリセット中...', progress: 0 })
 
-      // Step 0: 全材料の既存紐付けをリセット（並行処理）
+      const total = allIngredients.length
+
+      // 進捗トラッキング用（並行処理でも安全にカウント）
+      const progressState = {
+        completed: 0,
+        processing: 0,
+        errors: 0,
+        results: [] as string[],
+      }
+
+      // 進捗表示を更新（処理をブロックしない）
+      const updateProgress = (currentItem?: string) => {
+        const { completed, processing, errors, results } = progressState
+        const lastResults = results.slice(-3).join(' | ')
+        const statusText = currentItem
+          ? `処理中: ${currentItem} | 完了: ${completed}/${total} | エラー: ${errors}`
+          : `完了: ${completed}/${total} | エラー: ${errors}`
+
+        setAnalysisProgress({
+          phase: 'matching',
+          message: lastResults ? `${statusText}\n${lastResults}` : statusText,
+          progress: 5 + Math.round((90 * completed) / total),
+        })
+      }
+
+      // UI更新（非同期で実行、処理をブロックしない）
+      const refreshUIAsync = () => {
+        recalculateRecipeCosts(recipe.id).then(updated => {
+          if (updated) {
+            setRecipe(updated)
+            setRecipes(prev => prev.map(r => r.id === updated.id ? updated : r))
+          }
+        })
+      }
+
+      // Step 0: 全材料を「searching」ステータスに変更（並行処理）
+      setAnalysisProgress({ phase: 'matching', message: '全材料をリセット中...', progress: 0 })
       await Promise.all(
         allIngredients.map(ing =>
           updateRecipeIngredient(ing.id, {
@@ -206,8 +242,8 @@ export const RecipeManager = () => {
             pricePerKg: 0,
             yieldRate: 100,
             isExternal: false,
-            source: '照合待ち',
-            status: 'pending',
+            source: '検索中...',
+            status: 'searching',
             matchReason: null,
             externalProductName: null,
             externalProductId: null,
@@ -219,41 +255,18 @@ export const RecipeManager = () => {
         )
       )
 
-      // UIを更新
-      const resetRecipe = await recalculateRecipeCosts(recipe.id)
-      if (resetRecipe) {
-        setRecipe(resetRecipe)
-        setRecipes((prev) => prev.map(r => r.id === resetRecipe.id ? resetRecipe : r))
-      }
-
+      // リセット後のUIを更新
+      refreshUIAsync()
       setAnalysisProgress({ phase: 'matching', message: '照合開始（並行処理）...', progress: 5 })
 
-      const total = allIngredients.length
-      let completed = 0
-      const completedNames: string[] = []
-
-      // UIを定期的に更新する関数
-      const refreshUI = async () => {
-        const updated = await recalculateRecipeCosts(recipe.id)
-        if (updated) {
-          setRecipe(updated)
-          setRecipes((prev) => prev.map(r => r.id === updated.id ? updated : r))
-        }
-      }
-
-      // 各材料を並行処理（DB照合→WEB検索を1件ずつ即座に保存 + UI更新）
+      // 各材料を処理する関数（handleAiSearchIngredientと同じロジック）
       const processIngredient = async (ing: typeof allIngredients[0]) => {
         const searchName = ing.originalName || ing.name
-
-        // 処理中ステータスを表示
-        setAnalysisProgress({
-          phase: 'matching',
-          message: `照合中: ${searchName}... (${completed}/${total} 完了)`,
-          progress: 5 + Math.round((90 * completed) / total),
-        })
+        progressState.processing++
+        updateProgress(searchName)
 
         try {
-          // Step 1: まずDBマスタ照合を試みる
+          // Step 1: DBマスタ照合を試みる
           const masterMatch = await findIngredientByFuzzyName(searchName)
 
           if (masterMatch) {
@@ -266,9 +279,9 @@ export const RecipeManager = () => {
               isExternal: false,
               source: '社内マスタ',
               status: 'done',
-              matchReason: masterMatch.name === searchName ? '完全一致' : '表記揺れ照合',
+              matchReason: masterMatch.name === searchName ? '完全一致' : 'AI類似照合',
             })
-            completedNames.push(`✓ ${searchName} → マスタ`)
+            progressState.results.push(`✓ ${searchName} → マスタ (¥${masterMatch.price}/kg)`)
           } else {
             // Step 2: DBにない場合はWEB検索 → 即座に保存
             const priceResult = await searchIngredientPrice(searchName)
@@ -286,13 +299,14 @@ export const RecipeManager = () => {
                 externalWeight: priceResult.weight,
                 externalWeightText: priceResult.weightText,
               })
-              completedNames.push(`✓ ${searchName} → ${priceResult.source}`)
+              progressState.results.push(`✓ ${searchName} → ${priceResult.source} (¥${priceResult.pricePerKg}/kg)`)
             } else {
               await updateRecipeIngredient(ing.id, {
                 status: 'error',
                 source: '価格未取得',
               })
-              completedNames.push(`✗ ${searchName} → 未取得`)
+              progressState.errors++
+              progressState.results.push(`✗ ${searchName} → 未取得`)
             }
           }
         } catch (err) {
@@ -301,20 +315,17 @@ export const RecipeManager = () => {
             status: 'error',
             source: 'エラー',
           })
-          completedNames.push(`✗ ${searchName} → エラー`)
+          progressState.errors++
+          progressState.results.push(`✗ ${searchName} → エラー`)
         }
 
-        // 進捗更新
-        completed++
-        const lastResults = completedNames.slice(-3).join(' | ')
-        setAnalysisProgress({
-          phase: 'matching',
-          message: `${completed}/${total} 完了 | ${lastResults}`,
-          progress: 5 + Math.round((90 * completed) / total),
-        })
+        // 進捗更新（完了カウント増加）
+        progressState.completed++
+        progressState.processing--
+        updateProgress()
 
-        // 1件処理完了ごとにUIを更新
-        await refreshUI()
+        // 1件処理完了ごとにUIを非同期更新（処理をブロックしない）
+        refreshUIAsync()
       }
 
       // 全材料を並行処理で実行
@@ -326,9 +337,15 @@ export const RecipeManager = () => {
       await updateRecipe(recipe.id, { status: 'completed' })
 
       setRecipe(finalRecipe)
-      setRecipes((prev) => prev.map(r => r.id === finalRecipe!.id ? finalRecipe! : r))
+      setRecipes(prev => prev.map(r => r.id === finalRecipe!.id ? finalRecipe! : r))
 
-      setAnalysisProgress({ phase: 'done', message: '照合完了', progress: 100 })
+      const errorCount = progressState.errors
+      const successCount = total - errorCount
+      setAnalysisProgress({
+        phase: 'done',
+        message: `照合完了: 成功 ${successCount}件 / エラー ${errorCount}件`,
+        progress: 100,
+      })
       setAnalysisPhase('step2_done')
     } catch (error) {
       console.error('照合エラー:', error)
@@ -341,7 +358,7 @@ export const RecipeManager = () => {
       const latestRecipe = await recalculateRecipeCosts(recipe.id)
       if (latestRecipe) {
         setRecipe(latestRecipe)
-        setRecipes((prev) => prev.map(r => r.id === latestRecipe.id ? latestRecipe : r))
+        setRecipes(prev => prev.map(r => r.id === latestRecipe.id ? latestRecipe : r))
       }
       setAnalysisPhase('step1_done')
     }
