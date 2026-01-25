@@ -1,23 +1,23 @@
 'use client'
-import React, { useMemo } from 'react'
-import { C_Stack, R_Stack } from 'src/cm/components/styles/common-components/common-components'
+import React, {useMemo} from 'react'
+import {C_Stack, R_Stack} from 'src/cm/components/styles/common-components/common-components'
 
-import { Z_INDEX } from '@cm/lib/constants/constants'
+import {Z_INDEX} from '@cm/lib/constants/constants'
 
 import PlaceHolder from '@cm/components/utils/loader/PlaceHolder'
 
-import { usePropAdjustorLogic } from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/usePropAdjusctorLogic/usePropAdjustorLogic'
-import { PropAdjustorPropsType } from '@cm/components/DataLogic/TFs/PropAdjustor/types/propAdjustor-types'
+import {usePropAdjustorLogic} from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/usePropAdjusctorLogic/usePropAdjustorLogic'
+import {PropAdjustorPropsType} from '@cm/components/DataLogic/TFs/PropAdjustor/types/propAdjustor-types'
 import useWindowSize from '@cm/hooks/useWindowSize'
-import { SurroundingComponent } from '@cm/components/DataLogic/TFs/PropAdjustor/components/SurroundingComponent'
+import {SurroundingComponent} from '@cm/components/DataLogic/TFs/PropAdjustor/components/SurroundingComponent'
 import EasySearcher from '@cm/components/DataLogic/TFs/MyTable/components/EasySearcher/EasySearcher'
 import DetailedPageCC from '@cm/components/DataLogic/TFs/PropAdjustor/components/DetailedPageCC'
 
 const PropAdjustor = React.memo<PropAdjustorPropsType>(props => {
-  const { serverFetchProps } = props
-  const { ClientProps2, UseRecordsReturn, modelData, easySearchPrismaDataOnServer, useGlobalProps } = usePropAdjustorLogic(props)
+  const {serverFetchProps} = props
+  const {ClientProps2, UseRecordsReturn, modelData, easySearchPrismaDataOnServer, useGlobalProps} = usePropAdjustorLogic(props)
 
-  const { appbarHeight } = useWindowSize()
+  const {appbarHeight} = useWindowSize()
 
   const hasEasySearch = useMemo(
     () => Object.keys(easySearchPrismaDataOnServer?.availableEasySearchObj || {}).length > 0,
@@ -80,7 +80,7 @@ const PropAdjustor = React.memo<PropAdjustorPropsType>(props => {
       </section>
 
       <section style={mainSectionStyle}>
-        <R_Stack className="mx-auto items-start justify-around">
+        <R_Stack className="mx-auto items-start justify-around  flex-nowrap gap-4 px-2">
           <SurroundingComponent ClientProps2={ClientProps2} type="left" />
           <SurroundingComponent ClientProps2={ClientProps2} type="table" />
           <SurroundingComponent ClientProps2={ClientProps2} type="right" />

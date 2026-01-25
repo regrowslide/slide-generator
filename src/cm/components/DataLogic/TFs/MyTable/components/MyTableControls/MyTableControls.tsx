@@ -1,10 +1,10 @@
 import React from 'react'
-import {cl} from 'src/cm/lib/methods/common'
-import {C_Stack, R_Stack} from 'src/cm/components/styles/common-components/common-components'
-import TableConfig, {TableConfigPropsType} from '../TableConfig'
+import { cl } from 'src/cm/lib/methods/common'
+import { C_Stack, R_Stack } from 'src/cm/components/styles/common-components/common-components'
+import TableConfig, { TableConfigPropsType } from '../TableConfig'
 import MyPagination from '@cm/components/DataLogic/TFs/MyTable/components/Pagination/MyPagination'
 
-import {ClientPropsType2} from '@cm/components/DataLogic/TFs/PropAdjustor/types/propAdjustor-types'
+import { ClientPropsType2 } from '@cm/components/DataLogic/TFs/PropAdjustor/types/propAdjustor-types'
 
 interface MyTableControlsProps {
   SearchedItemListMemo: React.ReactNode
@@ -15,7 +15,7 @@ interface MyTableControlsProps {
   recordCount: number
   totalCount: number
   hasMore: boolean
-  getPaginationProps: (args: {totalCount: number}) => any
+  getPaginationProps: (args: { totalCount: number }) => any
   myTable: any
   paginationProps: any
   sectionStyle: React.CSSProperties

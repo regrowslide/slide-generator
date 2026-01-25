@@ -1,4 +1,4 @@
-import {paginationPrefix} from 'src/non-common/searchParamStr'
+import { paginationPrefix } from 'src/non-common/searchParamStr'
 
 /**
  * ページングパラメータを削除する共通関数
@@ -15,7 +15,7 @@ export const resetPaginationParams = (query: Record<string, any>, newQuery: Reco
   })
 }
 
-export const confirmSearch = ({
+export const confirmSearch = async ({
   allData,
   MainColObject,
   SearchColObject,
@@ -26,7 +26,7 @@ export const confirmSearch = ({
   toggleLoad,
   query,
 }) => {
-  const searchQueryResult = SearchQuery.createQueryStr({allData, MainColObject, SearchColObject})
+  const searchQueryResult = SearchQuery.createQueryStr({ allData, MainColObject, SearchColObject })
 
   const newQuery = {
     [searchQueryKey]: `${dataModelName.toUpperCase()}${searchQueryResult}`,
@@ -35,5 +35,7 @@ export const confirmSearch = ({
   // ページングパラメータを削除（新しいプレフィックス方式に対応）
   resetPaginationParams(query, newQuery)
 
-  addQuery(newQuery)
+  await toggleLoad(async () => {
+    addQuery(newQuery)
+  })
 }

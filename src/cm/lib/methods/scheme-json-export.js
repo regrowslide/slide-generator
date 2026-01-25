@@ -1,2280 +1,5 @@
 
-export const prismaSchemaString = `
-model KaizenClient {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  name                    String?
-  organization            String?
-  iconUrl                 String?
-  bannerUrl               String?
-  website                 String?
-  note                    String?
-  public                  Boolean?       @default(false)
-  introductionRequestedAt DateTime?
-  KaizenWork              KaizenWork[]
-  KaizenReview            KaizenReview[]
-
-  @@unique([name, organization], name: "unique_name_organization")
-}
-
-model KaizenReview {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  username String?
-  review   String?
-  platform String?
-
-  KaizenClient   KaizenClient? @relation(fields: [kaizenClientId], references: [id], onDelete: Cascade)
-  kaizenClientId Int?
-}
-
-model KaizenWork {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  uuid String? @unique @default(uuid())
-
-  // === 基本情報 ===
-  date     DateTime?
-  title    String?
-  subtitle String?
-  status   String?
-
-  // === 課題と成果 ===
-  beforeChallenge    String? // 導入前の課題
-  description        String? // 提供ソリューション詳細
-  quantitativeResult String? // 定量成果（最重要）
-
-  // === 技術・工夫 ===
-  points String? // 技術的工夫・ポイント
-
-  // === 顧客情報 ===
-  clientName   String?
-  organization String?
-  companyScale String? // 企業規模（1-10名/11-50名/51-100名/100名以上）
-
-  // === 評価 ===
-  dealPoint  Float?
-  toolPoint  Float?
-  impression String? // お客様の声
-  reply      String? // 改善マニアからの返信
-
-  // === カテゴリ・タグ ===
-  jobCategory       String? //製造、飲食
-  systemCategory    String? //GAS / アプリ
-  collaborationTool String? //Freee / Insta
-
-  // === プロジェクト情報 ===
-  projectDuration String? // プロジェクト期間
-
-  // === リレーション ===
-  KaizenWorkImage KaizenWorkImage[]
-  showName        Boolean?          @default(false)
-
-  KaizenClient   KaizenClient? @relation(fields: [kaizenClientId], references: [id], onDelete: Cascade)
-  kaizenClientId Int?
-
-  // === 公開設定 ===
-  allowShowClient Boolean? @default(false)
-  isPublic        Boolean? @default(false)
-
-  correctionRequest String?
-
-  @@unique([title, subtitle], name: "unique_title_subtitle")
-}
-
-model KaizenWorkImage {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  url String @unique
-
-  KaizenWork   KaizenWork? @relation(fields: [kaizenWorkId], references: [id], onDelete: Cascade)
-  kaizenWorkId Int?
-}
-
-model KaizenCMS {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  contactPageMsg   String?
-  principlePageMsg String?
-}
-
-// 書類管理システム用Prismaスキーマ
-// ai-agent-direction.mdの規約に従って設計
-
-// 企業マスタ（自社・取引先・下請け）
-model AidocumentCompany {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt()
-  sortOrder Float     @default(0)
-
-  name                String // 企業名
-  type                String // 'self' | 'client' | 'subcontractor'
-  representativeName  String? // 代表者名
-  address             String? // 住所
-  phone               String? // 電話番号
-  constructionLicense Json? // 建設業許可情報（配列）
-  // constructionLicense: [{ type: string, number: string, date: string }]
-  socialInsurance     Json? // 社会保険情報（オブジェクト）
-  // socialInsurance: { health: string, pension: string, employment: string, officeName: string, officeCode: string }
-
-  // リレーション
-  SitesAsClient  AidocumentSite[]          @relation("SiteClient")
-  SitesAsCompany AidocumentSite[]          @relation("SiteCompany")
-  Subcontractors AidocumentSubcontractor[]
-  Users          User[]
-}
-
-// 現場
-model AidocumentSite {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt()
-  sortOrder Float     @default(0)
-
-  clientId     Int // 発注者ID (→ Company.id)
-  companyId    Int // 元請け会社ID (→ Company.id)
-  name         String // 工事名称（件名）
-  address      String? // 現場住所
-  contractDate DateTime? // 契約日
-  startDate    DateTime? // 履行期間（開始日）
-  endDate      DateTime? // 履行期間（終了日）
-
-  // 金額情報
-  amount        Int? // 請負代金額（合計）
-  costBreakdown Json? // 請負代金内訳
-  // costBreakdown: { directCost: number, commonTemporaryCost: number, siteManagementCost: number, generalManagementCost: number, subtotal: number, tax: number }
-
-  // 現場の役割（人物）
-  siteAgent      Json? // 現場代理人
-  // siteAgent: { name: string, qualification: string, authority: string }
-  chiefEngineer  Json? // 主任技術者（または監理技術者）
-  // chiefEngineer: { name: string, type: string, qualification: string, qNumber: string, qDate: string }
-  safetyManager  String? // 安全衛生責任者（氏名）
-  safetyPromoter String? // 安全衛生推進者（氏名）
-
-  // リレーション
-  Client             AidocumentCompany         @relation("SiteClient", fields: [clientId], references: [id], onDelete: Cascade)
-  Company            AidocumentCompany         @relation("SiteCompany", fields: [companyId], references: [id], onDelete: Cascade)
-  Staff              AidocumentStaff[]
-  Subcontractors     AidocumentSubcontractor[]
-  Document           AidocumentDocument[]
-  AnalysisCache      AidocumentAnalysisCache[]
-  aidocumentVehicles AidocumentVehicle[]
-}
-
-// 担当スタッフ（元請けの技術者・作業員）
-model AidocumentStaff {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt()
-  sortOrder Float     @default(0)
-
-  siteId        Int
-  name          String // 氏名
-  role          String? // 役割（例: "専門技術者"）
-  qualification String? // 資格内容
-  workContent   String? // 担当工事内容
-  age           Int? // 年齢
-  gender        String? // 性別
-  term          String? // 担当期間（例: "2024-04-01~2025-03-31"）
-  isForeigner   Boolean @default(false) // 外国人建設就労者
-  isTrainee     Boolean @default(false) // 外国人技能実習生
-
-  // リレーション
-  Site AidocumentSite @relation(fields: [siteId], references: [id], onDelete: Cascade)
-}
-
-// 下請負人
-model AidocumentSubcontractor {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt()
-  sortOrder Float     @default(0)
-
-  siteId            Int
-  companyId         Int // 下請け会社ID (→ Company.id)
-  workType          String? // 担当工種
-  chiefEngineerName String? // （下請けの）主任技術者名
-  safetyManagerName String? // （下請けの）安全衛生責任者名
-  staff             Json? // （下請けの）作業員・技術者（配列）
-  // staff: [{ name: string, role: string, qualification: string, workContent: string, age: number, gender: string, isForeigner: boolean, isTrainee: boolean }]
-
-  // リレーション
-  Site    AidocumentSite    @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  Company AidocumentCompany @relation(fields: [companyId], references: [id], onDelete: Cascade)
-}
-
-// 利用車両（既存モデルを保持）
-model AidocumentVehicle {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt()
-  sortOrder Float     @default(0)
-
-  siteId Int
-  plate  String // プレート番号
-  term   String? // 利用期間（例: "2024-04-01~"）
-
-  // リレーション
-  Site AidocumentSite @relation(fields: [siteId], references: [id], onDelete: Cascade)
-}
-
-// 書類
-model AidocumentDocument {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt()
-  sortOrder Float     @default(0)
-
-  siteId         Int
-  name           String // 書類名称
-  pdfTemplateUrl String? // PDFテンプレートURL（S3）
-  items          Json? // 配置済みアイテム（DocumentItem[]のJSON）
-  // items: [{ componentId: string, x: number, y: number, value?: string }]
-
-  // リレーション
-  Site          AidocumentSite            @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  DocumentItem  AidocumentDocumentItem[]
-  AnalysisCache AidocumentAnalysisCache[]
-}
-
-// 書類の配置項目
-model AidocumentDocumentItem {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt()
-  sortOrder Float     @default(0)
-
-  documentId  Int
-  componentId String // 部品ID（例: 'site.name', 'site.agent.name', 'company.name'）
-  x           Float // X座標（PDF座標系、mm単位）
-  y           Float // Y座標（PDF座標系、mm単位）
-  value       String? // 値（オプション、マスタから取得可能な場合はnull）
-
-  // リレーション
-  Document AidocumentDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
-}
-
-// AI解析キャッシュ
-model AidocumentAnalysisCache {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt()
-
-  documentId     Int
-  pdfUrl         String
-  pdfHash        String // PDFのハッシュ値（重複検出用）
-  siteId         Int
-  analysisResult Json // 解析結果（JSON）
-  confidence     Float? // 全体の信頼度
-
-  // リレーション
-  Document AidocumentDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
-  Site     AidocumentSite     @relation(fields: [siteId], references: [id], onDelete: Cascade)
-
-  @@unique([pdfHash, siteId], name: "pdfHash_siteId_unique")
-  @@index([documentId])
-}
-
-// ===================================================================
-// カウンセリング予約管理システム - Prismaスキーマ
-// ===================================================================
-
-// 店舗マスタ
-model CounselingStore {
- id        Int       @id @default(autoincrement())
- createdAt DateTime  @default(now())
- updatedAt DateTime? @updatedAt
- sortOrder Float     @default(0)
-
- name           String // 店舗名（例：大阪店、名古屋店）
- // リレーション
- Room           CounselingRoom[]
- User           User[]
- CounselingSlot CounselingSlot[]
-}
-
-// 部屋マスタ
-model CounselingRoom {
- id                Int       @id @default(autoincrement())
- createdAt         DateTime  @default(now())
- updatedAt         DateTime? @updatedAt
- sortOrder         Float     @default(0)
- name              String // 部屋名（例：510号室、Aルーム）
- counselingStoreId Int // 所属店舗ID
-
- // リレーション
- CounselingStore CounselingStore  @relation(fields: [counselingStoreId], references: [id], onDelete: Cascade)
- CounselingSlot  CounselingSlot[]
-}
-
-// お客様マスタ
-model CounselingClient {
- id         Int       @id @default(autoincrement())
- createdAt  DateTime  @default(now())
- updatedAt  DateTime? @updatedAt
- sortOrder  Float     @default(0)
- name       String // お名前
- furigana   String? // ふりがな
- phone      String    @unique // 電話番号（一意制約）
- email      String? // メールアドレス
- gender     String? // 性別
- age        String? // 年齢（年代）
- prefecture String? // 都道府県
- address    String? // 住所（市区町村まで）
-
- // リレーション
- CounselingReservation CounselingReservation[]
-}
-
-// 予約情報
-model CounselingReservation {
- id        Int       @id @default(autoincrement())
- createdAt DateTime  @default(now())
- updatedAt DateTime? @updatedAt
- sortOrder Float     @default(0)
-
- status        String // ステータス（unassigned | confirmed | completed | canceled）
- preferredDate DateTime? // 希望日（YYYY-MM-DD形式）
- visitorType   String? // 来られる方（1人 | 2人）
- topics        String? // ご相談内容（JSON配列形式）
- notes         String? // 備考・その他の情報
- paymentMethod String? // 支払い方法（カード | 振込 | 現金 など）
- contactMethod String? // 連絡方法（email | phone）
-
- // リレーション
- CounselingClient   CounselingClient @relation(fields: [counselingClientId], references: [id], onDelete: Cascade)
- counselingClientId Int // お客様ID
-
- CounselingSlot   CounselingSlot? @relation(fields: [counselingSlotId], references: [id], onDelete: SetNull)
- counselingSlotId Int? // 割り当てられたスロットID（未割り当ての場合null）
-}
-
-// 提供可能枠（スロット）
-model CounselingSlot {
- id        Int       @id @default(autoincrement())
- createdAt DateTime  @default(now())
- updatedAt DateTime? @updatedAt
- sortOrder Float     @default(0)
-
- startAt DateTime // 開始日時（UTC）
- endAt   DateTime // 終了日時（UTC）
-
- // リレーション
- CounselingRoom   CounselingRoom @relation(fields: [counselingRoomId], references: [id], onDelete: Cascade)
- counselingRoomId Int // 部屋ID
-
- CounselingStore   CounselingStore @relation(fields: [counselingStoreId], references: [id], onDelete: Cascade)
- counselingStoreId Int // 店舗ID（検索の高速化のため非正規化）
-
- User   User? @relation(fields: [userId], references: [id], onDelete: SetNull)
- userId Int? // 担当カウンセラーID（未定の場合null）
-
- CounselingReservation CounselingReservation[]
-}
-
-// Hakobun Analysis - 顧客の声構造化システム
-
-// 業種マスタ
-model HakobunIndustry {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  code      String   @unique // "restaurant", "sports_event"
-  name      String // "飲食店", "スポーツイベント"
-
-  generalCategories HakobunIndustryGeneralCategory[]
-  clients           HakobunClient[]
-}
-
-// 業種別一般カテゴリプリセット
-model HakobunIndustryGeneralCategory {
-  id        Int   @id @default(autoincrement())
-  sortOrder Float @default(0)
-
-  name        String // "接客・サービス"
-  description String? // "スタッフの対応、接客態度..."
-
-  industry   HakobunIndustry @relation(fields: [industryId], references: [id], onDelete: Cascade)
-  industryId Int
-
-  // 詳細カテゴリ
-  categories HakobunIndustryCategory[]
-}
-
-// 業種別詳細カテゴリ（一般カテゴリに紐づく）
-model HakobunIndustryCategory {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  sortOrder Float    @default(0)
-
-  name        String // "オシャレ・雰囲気が良い"
-  description String? // カテゴリの説明や分類基準
-  enabled     Boolean @default(true) // 有効/無効フラグ
-
-  generalCategory   HakobunIndustryGeneralCategory @relation(fields: [generalCategoryId], references: [id], onDelete: Cascade)
-  generalCategoryId Int
-}
-
-// クライアント（組織）
-model HakobunClient {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  clientId String @unique // "cafe_sample_01"
-  name     String
-
-  // AI分析用設定
-  inputDataExplain  String? // 投稿データの説明（文節分け用ポ回答データの説明）
-  analysisStartDate DateTime? // 分析期間開始日
-  analysisEndDate   DateTime? // 分析期間終了日
-
-  // 業種紐づけ
-  industry   HakobunIndustry? @relation(fields: [industryId], references: [id])
-  industryId Int?
-
-  HakobunCorrection  HakobunCorrection[]
-  HakobunRule        HakobunRule[]
-  HakobunVoice       HakobunVoice[]
-  HakobunAnalysisBox HakobunAnalysisBox[]
-  HakobunClientStage HakobunClientStage[]
-}
-
-// クライアント別ステージマスタ（カスタマージャーニー）
-model HakobunClientStage {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  name        String   // ステージ名（例：認知、興味、検討、購入、利用、リピート）
-  description String?  // ステージの説明
-  enabled     Boolean  @default(true) // 有効/無効フラグ
-
-  // クライアント紐づけ
-  HakobunClient   HakobunClient @relation(fields: [hakobunClientId], references: [id], onDelete: Cascade)
-  hakobunClientId Int
-}
-
-// B. 修正データペアテーブル
-model HakobunCorrection {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  rawSegment String // 入力文節
-
-  // 修正前の情報（日本語名称で記録）
-  originalGeneralCategory String? // 修正前の一般カテゴリ（例：店内）
-  originalCategory        String? // 修正前のカテゴリ（例：オシャレ・雰囲気が良い）
-  originalSentiment       String? // 修正前の感情（例：好意的）
-
-  // 修正後の情報（日本語名称で記録）
-  correctGeneralCategory String? // 修正後の一般カテゴリ（例：備品・設備）
-  correctCategory        String // 修正後のカテゴリ（例：BGMが大きすぎる）
-  correctSentiment       String // 修正後の感情（例：不満）
-
-  reviewerComment String?
-  archived        Boolean @default(false)
-
-  HakobunClient   HakobunClient @relation(fields: [hakobunClientId], references: [id], onDelete: Cascade)
-  hakobunClientId Int
-}
-
-// C. ルール一覧テーブル
-model HakobunRule {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  targetCategory  String // "備品・設備"
-  ruleDescription String
-  priority        String @default("Medium") // "High" | "Medium" | "Low"
-
-  HakobunClient   HakobunClient @relation(fields: [hakobunClientId], references: [id], onDelete: Cascade)
-  hakobunClientId Int
-}
-
-// 顧客の声（分析結果保存用）
-model HakobunVoice {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  voiceId     String    @unique // トランザクションID
-  rawText     String
-  processedAt DateTime?
-  resultJson  Json? // 分析結果JSON
-
-  HakobunClient   HakobunClient @relation(fields: [hakobunClientId], references: [id], onDelete: Cascade)
-  hakobunClientId Int
-}
-
-// ============================================
-// 分析BOX / SESSION / Record（仕様改修）
-// ============================================
-
-// 分析BOX: 1回あたりの分析をまとめる箱
-model HakobunAnalysisBox {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  name        String   // 分析BOX名（例：「2024年1月イベント」）
-  description String?  // 説明
-
-  // クライアント紐づけ
-  HakobunClient   HakobunClient @relation(fields: [hakobunClientId], references: [id], onDelete: Cascade)
-  hakobunClientId Int
-
-  // 分析SESSION（1ToN）
-  sessions HakobunAnalysisSession[]
-}
-
-// 分析SESSION: 分析BOX内で分割して分析・フィードバックを実施
-model HakobunAnalysisSession {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  name          String   // SESSION名（例：「バッチ1」「前半データ」）
-  status        String   @default("pending") // "pending" | "analyzing" | "completed" | "error"
-  analyzedAt    DateTime? // 分析完了日時
-  errorMessage  String?  // エラー時のメッセージ
-
-  // 分析BOX紐づけ
-  analysisBox   HakobunAnalysisBox @relation(fields: [analysisBoxId], references: [id], onDelete: Cascade)
-  analysisBoxId Int
-
-  // 分析結果レコード（1ToN）
-  records HakobunAnalysisRecord[]
-}
-
-// 分析結果レコード: CSVの1行に対応し、分析結果と修正結果を格納
-model HakobunAnalysisRecord {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  // 原文（参照用）
-  rawText String
-
-  // === 分析結果フィールド ===
-  analysisStage           String?  // ステージ
-  analysisSentiment       String?  // 感情
-  analysisGeneralCategory String?  // 一般カテゴリ
-  analysisCategory        String?  // カテゴリ
-  analysisTopic           String?  // トピック単位（意味が完結した文節）
-
-  // === 修正結果フィールド ===
-  feedbackStage           String?  // 修正後ステージ
-  feedbackSentiment       String?  // 修正後感情
-  feedbackGeneralCategory String?  // 修正後一般カテゴリ
-  feedbackCategory        String?  // 修正後カテゴリ
-  feedbackTopic           String?  // 修正後トピック単位
-
-  // 修正フラグ・コメント
-  isModified      Boolean  @default(false) // 修正があったかどうか
-  reviewerComment String?  // レビュアーコメント
-
-  // 分析SESSION紐づけ
-  session   HakobunAnalysisSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  sessionId Int
-}
-
-// 経費記録アプリ用スキーマ
-model KeihiExpense {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // 基本情報
-  date                DateTime
-  amount              Int
-  counterparty        String? // 場所
-  participants        String? // 相手名
-  conversationPurpose String[] // 会話の目的（複数選択対応）
-  keywords            String[] // キーワード（配列）
-
-  // 会話記録
-  summary             String? // 摘要
-  conversationSummary String? // 会話内容の要約
-
-  // AI生成情報（統合版）
-  insight  String? // 統合されたインサイト
-  autoTags String[] // 自動生成タグ
-  // レコード状態
-  status   String?  @default("未設定") // 例: "一次チェック済", "MF連携済み"
-
-  // MoneyForward用情報（統合された科目管理）
-  mfSubject     String? // 統合された科目フィールド（必須）
-  mfSubAccount  String? // MF用補助科目
-  mfTaxCategory String? // MF用税区分
-  mfDepartment  String? // MF用部門
-
-  // ファイル添付
-  KeihiAttachment KeihiAttachment[]
-
-  // ユーザー情報（将来的に）
-  userId String?
-}
-
-model KeihiAttachment {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-
-  filename     String
-  originalName String
-  mimeType     String
-  size         Int
-  url          String // S3 URL or local path
-
-  keihiExpenseId String?
-  KeihiExpense   KeihiExpense? @relation(fields: [keihiExpenseId], references: [id], onDelete: Cascade)
-}
-
-// 勘定科目マスタ（将来的に）
-model KeihiAccountMaster {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  category       String // 帳票
-  classification String // 分類
-  balanceSheet   String // 決算書科目
-  account        String // 勘定科目
-  subAccount     String? // 補助科目
-  taxCategory    String // 税区分
-  searchKey      String? // 検索キー
-  isActive       Boolean @default(true) // 使用
-  sortOrder      Int? // 並び順
-}
-
-// 選択肢マスタ（科目、業種、目的など）
-model KeihiOptionMaster {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  category    String // 'subjects', 'industries', 'purposes'
-  value       String // 選択肢の値
-  label       String // 表示名
-  description String? // 説明
-  isActive    Boolean @default(true) // 有効/無効
-  sortOrder   Int     @default(0) // 並び順
-  color       String? // 色（任意）
-
-  @@unique([category, value], name: "category_value_unique")
-  @@index([category, isActive, sortOrder])
-}
-
-// 生産管理システム用Prismaスキーマ
-// ai-agent-direction.mdの規約に従って設計
-
-// 製品マスター
-model Product {
- id        Int       @id @default(autoincrement())
- createdAt DateTime  @default(now())
- updatedAt DateTime? @updatedAt()
- sortOrder Float     @default(0)
-
- name               String // 商品名
- color              String // カラー
- cost               Int // コスト（税抜）
- productionCapacity Int // 生産能力（枚/人・時）
- allowanceStock     Int // 余裕在庫数（枚）
-
- // リレーション
- ProductRecipe        ProductRecipe[]
- Order                Order[]
- Production           Production[]
- Shipment             Shipment[]
- DailyStaffAssignment DailyStaffAssignment[]
-}
-
-// 原材料マスター
-model RawMaterial {
- id        Int       @id @default(autoincrement())
- createdAt DateTime  @default(now())
- updatedAt DateTime? @updatedAt()
- sortOrder Float     @default(0)
-
- name        String // 名称
- category    String // カテゴリ（例：カラーチップ、ヒーター線など）
- unit        String // 単位（g, 個など）
- cost        Int // コスト（税抜）
- safetyStock Int // 安全在庫数
-
- // リレーション
- ProductRecipe   ProductRecipe[]
- StockAdjustment StockAdjustment[]
-}
-
-// 製品レシピ（製品と原材料の関連）
-model ProductRecipe {
- id        Int       @id @default(autoincrement())
- createdAt DateTime  @default(now())
- updatedAt DateTime? @updatedAt()
- sortOrder Float     @default(0)
-
- productId     Int
- rawMaterialId Int
- amount        Int // 使用量
-
- // リレーション
- Product     Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
- RawMaterial RawMaterial @relation(fields: [rawMaterialId], references: [id], onDelete: Cascade)
-
- @@unique([productId, rawMaterialId], name: "product_rawMaterial_unique")
-}
-
-// 受注データ
-model Order {
- id        Int       @id @default(autoincrement())
- createdAt DateTime  @default(now())
- updatedAt DateTime? @updatedAt()
- sortOrder Float     @default(0)
-
- orderAt   DateTime // 受注日
- productId Int
- quantity  Int // 受注枚数
- amount    Int // 売上金額（受注日時点の商品マスターのコストに基づき自動計算）
- note      String? // 備考（フリーテキスト）
-
- // リレーション
- Product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-}
-
-// 生産データ
-model Production {
- id        Int       @id @default(autoincrement())
- createdAt DateTime  @default(now())
- updatedAt DateTime? @updatedAt()
- sortOrder Float     @default(0)
-
- productionAt DateTime // 生産日
- productId    Int
- quantity     Int // 生産枚数
- type         String // 生産区分（国産または中国産）
- note         String? // 備考（フリーテキスト）
-
- // リレーション
- Product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-}
-
-// 出荷データ
-model Shipment {
- id        Int       @id @default(autoincrement())
- createdAt DateTime  @default(now())
- updatedAt DateTime? @updatedAt()
- sortOrder Float     @default(0)
-
- shipmentId String // ユニークな識別子（バーコードなど）
- shipmentAt DateTime // 出荷日
- productId  Int
- quantity   Int // 出荷数
- note       String? // 備考（フリーテキスト）
-
- // リレーション
- Product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-}
-
-// 在庫調整（原材料の入荷・廃棄など）
-model StockAdjustment {
- id        Int       @id @default(autoincrement())
- createdAt DateTime  @default(now())
- updatedAt DateTime? @updatedAt()
- sortOrder Float     @default(0)
-
- rawMaterialId Int
- adjustmentAt  DateTime // 調整日
- reason        String // 理由（入荷、廃棄、サンプル使用、棚卸差異など）
- quantity      Int // 数量（入荷は正、その他は負）
-
- // リレーション
- RawMaterial RawMaterial @relation(fields: [rawMaterialId], references: [id], onDelete: Cascade)
-}
-
-// 会社カレンダー（休日設定）
-model CompanyHoliday {
- id        Int       @id @default(autoincrement())
- createdAt DateTime  @default(now())
- updatedAt DateTime? @updatedAt()
- sortOrder Float     @default(0)
-
- holidayAt   DateTime @unique // 日付
- holidayType String   @default("休日") // 休日種別（休日、祝日、夏季休暇など）
- note        String? // 備考
-}
-
-// 日別人員配置（ダッシュボード用）
-model DailyStaffAssignment {
- id        Int       @id @default(autoincrement())
- createdAt DateTime  @default(now())
- updatedAt DateTime? @updatedAt()
- sortOrder Float     @default(0)
-
- assignmentAt DateTime // 配置日
- productId    Int
- staffCount   Int      @default(3) // 配置人数（デフォルト3人）
-
- // リレーション
- Product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-
- @@unique([assignmentAt, productId], name: "assignment_product_unique")
-}
-
-// SBM - 仕出し弁当管理システム Prisma Schema
-
-model SbmCustomer {
-  id              Int     @id @default(autoincrement())
-  companyName     String  @db.VarChar(200)
-  contactName     String? @db.VarChar(100)
-  // phoneNumber     String? @db.VarChar(20) // ユニーク制約を削除、メイン電話番号として残す
-  postalCode      String? @db.VarChar(10)
-  prefecture      String? @db.VarChar(50) // 都道府県
-  city            String? @db.VarChar(100) // 市区町村
-  street          String? @db.VarChar(200) // 町名番地
-  building        String? @db.VarChar(100) // その他（建物名等）
-  email           String? @db.VarChar(255)
-  availablePoints Int     @default(0)
-  notes           String? @db.Text
-
-  // タイムスタンプ
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // リレーション
-  SbmReservation   SbmReservation[]
-  SbmCustomerPhone SbmCustomerPhone[]
-}
-
-// 顧客電話番号管理
-model SbmCustomerPhone {
-  id            Int    @id @default(autoincrement())
-  sbmCustomerId Int
-  label         String @db.VarChar(50) // '自宅', '携帯', '職場', 'FAX', 'その他'
-  phoneNumber   String @db.VarChar(20)
-
-  // タイムスタンプ
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // リレーション
-  SbmCustomer SbmCustomer @relation(fields: [sbmCustomerId], references: [id], onDelete: Cascade)
-
-  @@unique([sbmCustomerId, phoneNumber]) // 同じ顧客で同じ電話番号は重複不可
-}
-
-model SbmProduct {
-  id          Int     @id @default(autoincrement())
-  name        String  @db.VarChar(200)
-  description String? @db.Text
-
-  category String  @db.VarChar(100)
-  isActive Boolean @default(true)
-
-  // タイムスタンプ
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // リレーション
-  SbmProductPriceHistory SbmProductPriceHistory[]
-  SbmReservationItem     SbmReservationItem[]
-  SbmProductIngredient   SbmProductIngredient[] // 追加: 材料との関連
-}
-
-model SbmProductPriceHistory {
-  id Int @id @default(autoincrement())
-
-  price         Int // 価格（円）
-  cost          Int // 原価（円）
-  effectiveDate DateTime
-
-  // タイムスタンプ
-  createdAt DateTime @default(now())
-
-  // リレーション
-  SbmProduct   SbmProduct @relation(fields: [sbmProductId], references: [id], onDelete: Cascade)
-  sbmProductId Int
-}
-
-// 配達グループ
-model SbmDeliveryGroup {
-  id                    Int                           @id @default(autoincrement())
-  name                  String
-  deliveryDate          DateTime
-  userId                Int
-  userName              String
-  status                String                        @default("planning") // planning, route_generated, in_progress, completed
-  totalReservations     Int                           @default(0)
-  completedReservations Int                           @default(0)
-  estimatedDuration     Int?
-  actualDuration        Int?
-  routeUrl              String?
-  notes                 String?
-  createdAt             DateTime                      @default(now())
-  updatedAt             DateTime                      @updatedAt
-  optimizedRoute        SbmDeliveryRouteStop[]
-  groupReservations     SbmDeliveryGroupReservation[]
-
-  @@map("sbm_delivery_groups")
-}
-
-// 配達ルートの停止地点
-model SbmDeliveryRouteStop {
-  id                 String           @id @default(uuid())
-  sbmDeliveryGroupId Int
-  sbmReservationId   Int
-  customerName       String
-  address            String
-  lat                Float?
-  lng                Float?
-  estimatedArrival   DateTime?
-  actualArrival      DateTime?
-  deliveryOrder      Int
-  deliveryCompleted  Boolean          @default(false)
-  recoveryCompleted  Boolean          @default(false)
-  estimatedDuration  Int
-  notes              String?
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
-  SbmDeliveryGroup   SbmDeliveryGroup @relation(fields: [sbmDeliveryGroupId], references: [id], onDelete: Cascade)
-  SbmReservation     SbmReservation   @relation(fields: [sbmReservationId], references: [id], onDelete: Cascade)
-
-  @@map("sbm_delivery_route_stops")
-}
-
-// 配達グループと予約の紐付け
-model SbmDeliveryGroupReservation {
-  id                 Int              @id @default(autoincrement())
-  sbmDeliveryGroupId Int
-  sbmReservationId   Int
-  deliveryOrder      Int?
-  isCompleted        Boolean          @default(false)
-  completedAt        DateTime?
-  notes              String?
-  createdAt          DateTime         @default(now())
-  SbmDeliveryGroup   SbmDeliveryGroup @relation(fields: [sbmDeliveryGroupId], references: [id], onDelete: Cascade)
-  SbmReservation     SbmReservation   @relation(fields: [sbmReservationId], references: [id], onDelete: Cascade)
-
-  @@unique([sbmDeliveryGroupId, sbmReservationId])
-  @@map("sbm_delivery_group_reservations")
-}
-
-model SbmReservation {
-  id           Int       @id @default(autoincrement())
-  isCanceled   Boolean   @default(false)
-  canceledAt   DateTime?
-  cancelReason String?
-
-  // 配達関連
-  deliveryRouteStops          SbmDeliveryRouteStop[]
-  SbmDeliveryGroupReservation SbmDeliveryGroupReservation[]
-  sbmCustomerId               Int
-  customerName                String                        @db.VarChar(200)
-  contactName                 String?                       @db.VarChar(100)
-  phoneNumber                 String                        @db.VarChar(20)
-
-  // 配達先住所（5区分）
-  postalCode String? @db.VarChar(10)
-  prefecture String? @db.VarChar(50) // 都道府県
-  city       String? @db.VarChar(100) // 市区町村
-  street     String? @db.VarChar(200) // 町名番地
-  building   String? @db.VarChar(100) // その他（建物名等）
-
-  // 配達情報
-  deliveryDate   DateTime
-  pickupLocation String   @db.VarChar(50) // '配達', '店舗受取'
-
-  // 注文情報
-  purpose       String @db.VarChar(100) // '会議', '研修', '接待', 'イベント', '懇親会', 'その他'
-  paymentMethod String @db.VarChar(50) // '現金', '銀行振込', '請求書', 'クレジットカード'
-  orderChannel  String @db.VarChar(50) // '電話', 'FAX', 'メール', 'Web', '営業', 'その他'
-
-  // 金額情報
-  totalAmount Int // 合計金額（円）
-  pointsUsed  Int @default(0)
-  finalAmount Int // 最終金額（円）
-
-  // 管理情報
-  orderStaff String  @db.VarChar(100)
-  userId     Int?
-  notes      String? @db.Text
-
-  // タスク管理
-  deliveryCompleted Boolean @default(false)
-  recoveryCompleted Boolean @default(false)
-
-  // タイムスタンプ
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // リレーション
-  SbmCustomer        SbmCustomer          @relation(fields: [sbmCustomerId], references: [id], onDelete: Restrict)
-  User               User?                @relation(fields: [userId], references: [id], onDelete: SetNull)
-  SbmReservationItem SbmReservationItem[]
-
-  SbmReservationChangeHistory SbmReservationChangeHistory[]
-  SbmDeliveryAssignment       SbmDeliveryAssignment[]
-}
-
-model SbmReservationItem {
-  id               String @id @default(cuid())
-  sbmReservationId Int
-  sbmProductId     Int
-  productName      String @db.VarChar(200)
-  quantity         Int
-  unitPrice        Int // 単価（円）
-  totalPrice       Int // 小計（円）
-
-  // タイムスタンプ
-  createdAt DateTime @default(now())
-
-  // リレーション
-  SbmReservation SbmReservation @relation(fields: [sbmReservationId], references: [id], onDelete: Cascade)
-  SbmProduct     SbmProduct     @relation(fields: [sbmProductId], references: [id], onDelete: Restrict)
-}
-
-model SbmReservationChangeHistory {
-  id               String @id @default(cuid())
-  sbmReservationId Int
-
-  changeType    String @db.VarChar(50) // 'create', 'update', 'delete'
-  changedFields Json? // 変更されたフィールドの詳細
-  oldValues     Json? // 変更前の値
-  newValues     Json? // 変更後の値
-
-  // タイムスタンプ
-  changedAt DateTime @default(now())
-
-  // リレーション
-  SbmReservation SbmReservation? @relation(fields: [sbmReservationId], references: [id])
-
-  userId Int?
-  User   User? @relation(fields: [userId], references: [id], onDelete: SetNull)
-}
-
-model SbmDeliveryTeam {
-  id   Int      @id @default(autoincrement())
-  name String   @db.VarChar(100)
-  date DateTime
-
-  // タイムスタンプ
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // リレーション
-  SbmDeliveryAssignment SbmDeliveryAssignment[]
-}
-
-model SbmDeliveryAssignment {
-  id                Int      @id @default(autoincrement())
-  sbmDeliveryTeamId Int
-  sbmReservationId  Int
-  assignedBy        String   @db.VarChar(100)
-  userId            Int?
-  deliveryDate      DateTime
-  estimatedDuration Int? // 予想配達時間（分）
-  actualDuration    Int? // 実際の配達時間（分）
-  route             Json? // 配達ルート情報
-  status            String   @default("assigned") @db.VarChar(50) // 'assigned', 'in_progress', 'completed', 'cancelled'
-
-  // タイムスタンプ
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // リレーション
-  SbmDeliveryTeam SbmDeliveryTeam @relation(fields: [sbmDeliveryTeamId], references: [id], onDelete: Restrict)
-  SbmReservation  SbmReservation  @relation(fields: [sbmReservationId], references: [id], onDelete: Cascade)
-  User            User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
-}
-
-// 材料マスター
-model SbmIngredient {
-  id          Int     @id @default(autoincrement())
-  name        String  @db.VarChar(200)
-  description String? @db.Text
-  unit        String  @db.VarChar(50) // 単位（個、g、ml など）
-
-  // タイムスタンプ
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // リレーション
-  SbmProductIngredient SbmProductIngredient[]
-
-  @@map("sbm_ingredients")
-}
-
-// 商品と材料の関連
-model SbmProductIngredient {
-  id              Int   @id @default(autoincrement())
-  sbmProductId    Int
-  sbmIngredientId Int
-  quantity        Float // 必要数量
-
-  // タイムスタンプ
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // リレーション
-  SbmProduct    SbmProduct    @relation(fields: [sbmProductId], references: [id], onDelete: Cascade)
-  SbmIngredient SbmIngredient @relation(fields: [sbmIngredientId], references: [id], onDelete: Restrict)
-
-  @@unique([sbmProductId, sbmIngredientId]) // 同じ商品に同じ材料は一度だけ
-  @@map("sbm_product_ingredients")
-}
-
-datasource db {
-  provider = "postgresql"
-  url = "postgres://mutsuo:timeSpacer817@localhost:5432/hakobun"
-}
-
-generator client {
-  provider = "prisma-client"
-  output   = "./generated/prisma"
-}
-
-model Department {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  code  String? @unique
-  name  String
-  color String?
-
-  User User[]
-}
-
-model User {
-  id            Int       @id @default(autoincrement())
-  code          String?   @unique
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime? @default(now()) @updatedAt()
-  sortOrder     Float     @default(0)
-  active        Boolean   @default(true)
-  hiredAt       DateTime?
-  retiredAt     DateTime?
-  transferredAt DateTime?
-  yukyuCategory String?   @default("A")
-
-  name     String
-  kana     String?
-  email    String? @unique
-  password String? @default("999999")
-
-  type String?
-
-  role String @default("user")
-
-  tempResetCode        String?
-  tempResetCodeExpired DateTime?
-  storeId              Int?
-  schoolId             Int?
-  rentaStoreId         Int?
-  type2                String?
-  shopId               Int?
-  membershipName       String?
-  damageNameMasterId   Int?
-  color                String?
-  app                  String?
-  apps                 String[]
-
-  // tbm
-
-  employeeCode String? @unique
-  phone        String?
-
-  avatar String? // 子ども用アバター画像URL
-
-  bcc String?
-
-  UserRole UserRole[]
-
-  // TbmOperation                     TbmOperation[]
-  // TbmOperationGroup                TbmOperationGroup[]
-
-  TbmBase          TbmBase?           @relation(fields: [tbmBaseId], references: [id])
-  tbmBaseId        Int?
-  TbmDriveSchedule TbmDriveSchedule[]
-  UserWorkStatus   UserWorkStatus[]
-  OdometerInput    OdometerInput[]
-  TbmRefuelHistory TbmRefuelHistory[]
-
-  TbmCarWashHistory TbmCarWashHistory[]
-
-  KyuyoTableRecord KyuyoTableRecord[]
-  Department       Department?        @relation(fields: [departmentId], references: [id])
-  departmentId     Int?
-
-  // TbmVehicle           TbmVehicle?
-  TbmVehicle            TbmVehicle?             @relation(fields: [tbmVehicleId], references: [id])
-  tbmVehicleId          Int?
-  SbmReservation        SbmReservation[]
-  SbmDeliveryAssignment SbmDeliveryAssignment[]
-
-  // トレーニングアプリ リレーション
-  ExerciseMaster              ExerciseMaster[]
-  WorkoutLog                  WorkoutLog[]
-  SbmReservationChangeHistory SbmReservationChangeHistory[]
-  CounselingStore             CounselingStore?              @relation(fields: [counselingStoreId], references: [id])
-  counselingStoreId           Int?
-  CounselingSlot              CounselingSlot[]
-
-  // aidocument
-  aidocumentCompanyId Int?
-  AidocumentCompany   AidocumentCompany? @relation(fields: [aidocumentCompanyId], references: [id], onDelete: SetNull)
-}
-
-model ReleaseNotes {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  rootPath         String
-  title            String?
-  msg              String
-  imgUrl           String?
-  confirmedUserIds Int[]
-}
-
-model Tokens {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  name      String    @unique
-  token     String
-  expiresAt DateTime?
-}
-
-model GoogleAccessToken {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  email         String    @unique
-  access_token  String?
-  refresh_token String?
-  scope         String?
-  token_type    String?
-  id_token      String?
-  expiry_date   DateTime?
-  tokenJSON     String?
-}
-
-model RoleMaster {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
-  sortOrder Float     @default(0)
-
-  name        String     @unique
-  description String?
-  color       String?
-  apps        String[]
-  UserRole    UserRole[]
-}
-
-model UserRole {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
-  sortOrder Float     @default(0)
-
-  User         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       Int
-  RoleMaster   RoleMaster @relation(fields: [roleMasterId], references: [id], onDelete: Cascade)
-  roleMasterId Int
-
-  @@unique([userId, roleMasterId], name: "userId_roleMasterId_unique")
-}
-
-model ChainMethodLock {
-  id        Int       @id @default(autoincrement())
-  isLocked  Boolean   @default(false)
-  expiresAt DateTime?
-  updatedAt DateTime  @updatedAt
-}
-
-model Calendar {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  date DateTime @unique
-
-  holidayType String @default("出勤")
-}
-
-model StockConfig {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Int       @default(0)
-
-  type  String // 設定の種類（例: "threshold", "period", "macd"）
-  name  String // 設定名（例: "上昇閾値", "MACD短期", "RSI期間"）
-  value Float // 設定値
-
-  @@unique([type, name], name: "stockConfig_type_name_unique")
-}
-
-// 設定例:
-// type: "threshold", name: "上昇閾値", value: 5.0
-// type: "period", name: "上昇期間", value: 5.0
-// type: "period", name: "クラッシュ期間", value: 10.0
-// type: "period", name: "短期移動平均", value: 5.0
-// type: "period", name: "長期移動平均", value: 25.0
-// type: "period", name: "RSI期間", value: 14.0
-// type: "threshold", name: "RSI売られすぎ閾値", value: 30.0
-// type: "macd", name: "MACD短期", value: 12.0
-// type: "macd", name: "MACD長期", value: 26.0
-// type: "macd", name: "MACDシグナル", value: 9.0
-
-model Stock {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Int       @default(0)
-
-  favorite        Int?   @default(0)
-  heldCount       Int?   @default(0)
-  averageBuyPrice Float? @default(0)
-
-  profit Float?
-
-  Code               String    @unique // 証券コード
-  Date               DateTime? // 日付
-  CompanyName        String? // 会社名
-  CompanyNameEnglish String? // 会社名（英語）
-  Sector17Code       String? // セクター17コード
-  Sector17CodeName   String? // セクター17コード名
-  Sector33Code       String? // セクター33コード
-  Sector33CodeName   String? // セクター33コード名
-  ScaleCategory      String? // スケールカテゴリ
-  MarketCode         String? // マーケットコード
-  MarketCodeName     String? // マーケットコード名
-
-  last_Date             DateTime?
-  last_Open             Int?
-  last_High             Int?
-  last_Low              Int?
-  last_Close            Int?
-  last_UpperLimit       String?
-  last_LowerLimit       String?
-  last_Volume           Int?
-  last_TurnoverValue    String?
-  last_AdjustmentFactor Int?
-  last_AdjustmentOpen   Int?
-  last_AdjustmentHigh   Int?
-  last_AdjustmentLow    Int?
-  last_AdjustmentClose  Int?
-  last_AdjustmentVolume Int?
-
-  last_updatedAt DateTime? // 最終更新日
-
-  // last_hasBreakoutHigh        Boolean? // 高値ブレイクアウトm
-  // last_hasConsecutiveBullish  Boolean? // 連続上昇
-  // last_hasMADeviationRise     Boolean? // 移動平均乖離上昇
-  // last_hasVolatilitySpike     Boolean? // ボラティリティスパイク
-  // last_hasVolatilitySpikeFall Boolean? // ボラティリティスパイク下降
-  // last_hasVolatilitySpikeRise Boolean? // ボラティリティスパイク上昇
-  // last_hasVolumeBoostRise     Boolean? // 出来高増加
-  // last_hasisSimpleRise        Boolean? // 単純上昇
-
-  last_riseRate                  Int? // 上昇率
-  last_josho                     Boolean?
-  last_dekidakaJosho             Boolean?
-  last_renzokuJosho              Boolean?
-  last_takaneBreakout            Boolean?
-  last_idoHeikinKairiJosho       Boolean?
-  last_spike                     Boolean?
-  last_spikeFall                 Boolean?
-  last_spikeRise                 Boolean?
-  last_recentCrash               Boolean?
-  last_goldenCross               Boolean? // ゴールデンクロス
-  last_rsiOversold               Boolean? // RSI売られすぎ
-  last_crashAndRebound           Boolean? // 急落後リバウンド
-  last_consecutivePositiveCloses Boolean? // 連続陽線
-  last_macdBullish               Boolean? // MACD強気シグナル
-
-  // 新しく追加したシグナル
-  last_volumeBreakout      Boolean? // 出来高ブレイクアウト
-  last_priceVolumeBreakout Boolean? // 価格・出来高同時ブレイクアウト
-  last_deathCross          Boolean? // デッドクロス
-  last_rsiOverbought       Boolean? // RSI買われすぎ
-  last_macdBearish         Boolean? // MACD弱気シグナル
-  last_lowVolatility       Boolean? // 低ボラティリティ
-  last_supportBounce       Boolean? // サポート反発
-  last_resistanceBreak     Boolean? // レジスタンス突破
-
-  // MACD値の保存
-  last_macdLine      Float? // MACDライン
-  last_macdSignal    Float? // MACDシグナルライン
-  last_macdHistogram Float? // MACDヒストグラム
-
-  // 移動平均線の最新値
-  last_ma5  Float? // 5日移動平均
-  last_ma20 Float? // 20日移動平均
-  last_ma60 Float? // 60日移動平均
-
-  // RSI最新値
-  last_rsi     Float? // RSI値
-  StockHistory StockHistory[]
-}
-
-model StockHistory {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Int       @default(0)
-
-  // Start of Selection
-  Date          DateTime? // 日付
-  Code          String? // 証券コード
-  Open          Int? // 始値
-  High          Int? // 高値
-  Low           Int? // 安値
-  Close         Int? // 終値
-  UpperLimit    String? // 上限
-  LowerLimit    String? // 下限
-  Volume        Int? // 出来高
-  TurnoverValue String? // 売買代金
-
-  AdjustmentFactor Int? // 調整係数
-  AdjustmentOpen   Int? // 調整始値
-  AdjustmentHigh   Int? // 調整高値
-  AdjustmentLow    Int? // 調整安値
-  AdjustmentClose  Int? // 調整終値
-  AdjustmentVolume Int? // 調整出来高
-
-  riseRate Int? // 上昇率
-
-  // テクニカル指標（履歴保存用）
-  josho                     Boolean?
-  dekidakaJosho             Boolean?
-  renzokuJosho              Boolean?
-  takaneBreakout            Boolean?
-  idoHeikinKairiJosho       Boolean?
-  spike                     Boolean?
-  spikeFall                 Boolean?
-  spikeRise                 Boolean?
-  recentCrash               Boolean?
-  goldenCross               Boolean? // ゴールデンクロス
-  rsiOversold               Boolean? // RSI売られすぎ
-  crashAndRebound           Boolean? // 急落後リバウンド
-  consecutivePositiveCloses Boolean? // 連続陽線
-  macdBullish               Boolean? // MACD強気シグナル
-
-  // 新しく追加したシグナル（履歴用）
-  volumeBreakout      Boolean? // 出来高ブレイクアウト
-  priceVolumeBreakout Boolean? // 価格・出来高同時ブレイクアウト
-  deathCross          Boolean? // デッドクロス
-  rsiOverbought       Boolean? // RSI買われすぎ
-  macdBearish         Boolean? // MACD弱気シグナル
-  lowVolatility       Boolean? // 低ボラティリティ
-  supportBounce       Boolean? // サポート反発
-  resistanceBreak     Boolean? // レジスタンス突破
-
-  // MACD値の履歴保存
-  macdLine      Float? // MACDライン
-  macdSignal    Float? // MACDシグナルライン
-  macdHistogram Float? // MACDヒストグラム
-
-  // 移動平均線の値
-  ma5  Float? // 5日移動平均
-  ma20 Float? // 20日移動平均
-  ma60 Float? // 60日移動平均
-
-  // RSI値
-  rsi Float? // RSI値
-
-  Stock   Stock @relation(fields: [stockId], references: [id])
-  stockId Int
-
-  @@unique([stockId, Date], name: "stockHistory_stockId_Date_unique")
-  @@index([Date])
-}
-
-model TbmBase {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  code String? @unique
-  name String  @unique
-
-  User                 User[]
-  TbmVehicle           TbmVehicle[]
-  TbmRouteGroup        TbmRouteGroup[]
-  TbmDriveSchedule     TbmDriveSchedule[]
-  // TbmProduct          TbmProduct[]
-  TbmCustomer          TbmCustomer[]
-  TbmBase_MonthConfig  TbmBase_MonthConfig[]
-  TbmKeihi             TbmKeihi[]
-  TbmRouteGroupShare   TbmRouteGroupShare[]
-  TbmInvoiceManualEdit TbmInvoiceManualEdit[]
-}
-
-model TbmRouteGroupCalendar {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  date        DateTime
-  holidayType String?  @default("")
-  remark      String?
-
-  TbmRouteGroup   TbmRouteGroup @relation(fields: [tbmRouteGroupId], references: [id], onDelete: Cascade)
-  tbmRouteGroupId Int
-
-  @@unique([tbmRouteGroupId, date], name: "unique_tbmRouteGroupId_date")
-  @@index([date])
-}
-
-model TbmKeihi {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-  item      String?
-  amount    Float?
-  date      DateTime?
-  remark    String?
-
-  TbmBase   TbmBase @relation(fields: [tbmBaseId], references: [id], onDelete: Cascade)
-  tbmBaseId Int
-}
-
-model TbmDriveScheduleImage {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  imageUrl String
-
-  TbmDriveSchedule   TbmDriveSchedule? @relation(fields: [tbmDriveScheduleId], references: [id])
-  tbmDriveScheduleId Int?
-}
-
-model TbmBase_MonthConfig {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  code      String?
-  yearMonth DateTime
-
-  keiyuPerLiter    Float?
-  gasolinePerLiter Float?
-
-  TbmBase   TbmBase @relation(fields: [tbmBaseId], references: [id], onDelete: Cascade)
-  tbmBaseId Int
-
-  @@unique([tbmBaseId, yearMonth], name: "unique_tbmBaseId_yearMonth")
-}
-
-model TbmVehicle {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  activeStatus String? @default("01")
-  code         String? @unique
-
-  name          String?
-  frameNo       String? @unique
-  chassisNumber String? @unique
-  vehicleNumber String  @unique
-  type          String?
-  shape         String?
-  airSuspension String?
-  oilTireParts  String?
-  maintenance   String?
-  insurance     String?
-
-  shodoTorokubi DateTime?
-  sakenManryobi DateTime?
-  hokenManryobi DateTime?
-
-  sankagetsuTenkenbi DateTime?
-  sokoKyori          Float?
-
-  // 保険情報
-  jibaisekiHokenCompany String? // 自賠責保険会社
-  jibaisekiManryobi     DateTime? // 自賠責満期日
-
-  jidoshaHokenCompany String? // 自動車保険会社（対人、対物）
-  jidoshaManryobi     DateTime? // 自動車保険満期日
-
-  kamotsuHokenCompany String? // 貨物保険会社
-  kamotsuManryobi     DateTime? // 貨物保険満期日
-
-  sharyoHokenCompany String? // 車両保険会社
-  sharyoManryobi     DateTime? // 車両保険満期日
-
-  // ETCカード情報
-  etcCardNumber     String? // ETCカード番号
-  etcCardExpiration DateTime? // ETCカード有効期限
-
-  TbmFuelCard TbmFuelCard[]
-
-  TbmRefuelHistory  TbmRefuelHistory[]
-  TbmBase           TbmBase             @relation(fields: [tbmBaseId], references: [id], onDelete: Cascade)
-  tbmBaseId         Int
-  TbmDriveSchedule  TbmDriveSchedule[]
-  OdometerInput     OdometerInput[]
-  TbmCarWashHistory TbmCarWashHistory[]
-
-  // User   User? @relation(fields: [userId], references: [id])
-  // userId Int?  @unique
-
-  TbmVehicleMaintenanceRecord TbmVehicleMaintenanceRecord[]
-  TbmEtcMeisai                TbmEtcMeisai[]
-  EtcCsvRaw                   EtcCsvRaw[]
-  User                        User[]
-
-  @@unique([tbmBaseId, vehicleNumber], name: "unique_tbmBaseId_vehicleNumber")
-}
-
-model TbmFuelCard {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  name      String
-  startDate DateTime @default(now())
-  endDate   DateTime @default(now())
-
-  TbmVehicle   TbmVehicle? @relation(fields: [tbmVehicleId], references: [id])
-  tbmVehicleId Int?
-}
-
-// 1台ごとに、「日付、件名、金額、依頼先、備考」からなる整備記録の履歴を管理可能
-model TbmVehicleMaintenanceRecord {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  date       DateTime //日付
-  title      String // 件名
-  price      Float // 金額
-  contractor String? // 依頼先事業者
-  remark     String? // 備考
-  type       String? // 3ヶ月点検・車検・その他
-
-  TbmVehicle   TbmVehicle? @relation(fields: [tbmVehicleId], references: [id])
-  tbmVehicleId Int?
-}
-
-model TbmRouteGroup {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  code      String? @unique
-  name      String
-  routeName String?
-
-  serviceNumber    String? // 服務番号
-  departureTime    String? // 出発時刻（4桁文字列: HHMM）
-  finalArrivalTime String? // 最終到着時刻（4桁文字列: HHMM）
-  allowDuplicate   Boolean @default(false) // 重複許可
-
-  pickupTime  String? //接車時間
-  vehicleType String? //車z種
-
-  productName String?
-
-  seikyuKbn String? @default("01")
-
-  // 便共有機能のためのフィールド
-  isShared Boolean @default(false) // この便が共有されているかどうか
-
-  displayExpiryDate DateTime? // 表示期限（レポートページでこの日付を超過した便は非表示）
-
-  color String? // 便のカラー（配車ページのカードに反映）
-
-  TbmBase   TbmBase @relation(fields: [tbmBaseId], references: [id], onDelete: Cascade)
-  tbmBaseId Int
-
-  TbmDriveSchedule TbmDriveSchedule[]
-
-  TbmMonthlyConfigForRouteGroup TbmMonthlyConfigForRouteGroup[]
-  // Mid_TbmRouteGroup_TbmProduct  Mid_TbmRouteGroup_TbmProduct?
-
-  Mid_TbmRouteGroup_TbmCustomer Mid_TbmRouteGroup_TbmCustomer?
-  TbmRouteGroupCalendar         TbmRouteGroupCalendar[]
-
-  TbmRouteGroupFee            TbmRouteGroupFee[]
-  TbmRouteGroupStandardSalary TbmRouteGroupStandardSalary[]
-  TbmRouteGroupShare          TbmRouteGroupShare[]
-
-  // 関連便（この便が親の場合）
-  RelatedRouteGroupsAsParent TbmRelatedRouteGroup[] @relation("ParentRouteGroup")
-  // 関連便（この便が子の場合）
-  RelatedRouteGroupsAsChild  TbmRelatedRouteGroup[] @relation("ChildRouteGroup")
-
-  @@unique([tbmBaseId, code], name: "unique_tbmBaseId_code")
-}
-
-model TbmRouteGroupFee {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  startDate DateTime
-
-  driverFee Int?
-  futaiFee  Int?
-
-  TbmRouteGroup   TbmRouteGroup @relation(fields: [tbmRouteGroupId], references: [id], onDelete: Cascade)
-  tbmRouteGroupId Int
-}
-
-// 便ごとの標準給料履歴管理テーブル
-model TbmRouteGroupStandardSalary {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  startDate DateTime // 適用開始日
-  salary    Int? // 標準給料（円）
-
-  TbmRouteGroup   TbmRouteGroup @relation(fields: [tbmRouteGroupId], references: [id], onDelete: Cascade)
-  tbmRouteGroupId Int
-
-  @@index([tbmRouteGroupId, startDate])
-}
-
-model TbmMonthlyConfigForRouteGroup {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  yearMonth DateTime
-
-  tsukoryoSeikyuGaku Int? //通行料請求額
-  monthlyTollTotal   Int? //月間通行料合計額
-
-  seikyuKaisu Int? //請求回数
-  generalFee  Int? //通行量（一般）[]
-
-  numberOfTrips   Int?
-  TbmRouteGroup   TbmRouteGroup @relation(fields: [tbmRouteGroupId], references: [id], onDelete: Cascade)
-  tbmRouteGroupId Int
-
-  @@unique([yearMonth, tbmRouteGroupId], name: "unique_yearMonth_tbmRouteGroupId")
-}
-
-// model TbmProduct {
-//  id                           Int                            @id @default(autoincrement())
-//  createdAt                    DateTime                       @default(now())
-//  updatedAt                    DateTime?                      @default(now()) @updatedAt()
-//  sortOrder                    Float                          @default(0)
-//  code                         String                         @unique
-//  name                         String                         @unique
-//  Mid_TbmRouteGroup_TbmProduct Mid_TbmRouteGroup_TbmProduct[]
-//  TbmBase                      TbmBase                        @relation(fields: [tbmBaseId], references: [id], onDelete: Cascade)
-//  tbmBaseId                    Int
-
-//  @@unique([tbmBaseId, name], name: "unique_tbmBaseId_name")
-// }
-
-// model Mid_TbmRouteGroup_TbmProduct {
-//  id        Int       @id @default(autoincrement())
-//  createdAt DateTime  @default(now())
-//  updatedAt DateTime? @default(now()) @updatedAt()
-//  sortOrder Float     @default(0)
-
-// TbmRouteGroup   TbmRouteGroup @relation(fields: [tbmRouteGroupId], references: [id], onDelete: Cascade)
-//  tbmRouteGroupId Int           @unique
-
-//  TbmProduct   TbmProduct @relation(fields: [tbmProductId], references: [id], onDelete: Cascade)
-//  tbmProductId Int
-
-//  @@unique([tbmRouteGroupId, tbmProductId], name: "unique_tbmRouteGroupId_tbmProductId")
-// }
-
-model Mid_TbmRouteGroup_TbmCustomer {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  TbmRouteGroup   TbmRouteGroup @relation(fields: [tbmRouteGroupId], references: [id], onDelete: Cascade)
-  tbmRouteGroupId Int           @unique
-
-  TbmCustomer   TbmCustomer @relation(fields: [tbmCustomerId], references: [id], onDelete: Cascade)
-  tbmCustomerId Int
-
-  @@unique([tbmRouteGroupId, tbmCustomerId], name: "unique_tbmRouteGroupId_tbmCustomerId")
-}
-
-model TbmBillingAddress {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  name String
-}
-
-model TbmInvoiceDetail {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  numberOfTrips   Int
-  fare            Float
-  toll            Float
-  specialAddition Float? // 特別付加金
-}
-
-model TbmCustomer {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  code                          String?                         @unique
-  name                          String                          @unique
-  kana                          String?
-  postalCode                    String?
-  address                       String?
-  phoneNumber                   String?
-  faxNumber                     String?
-  bankInformation               String?
-  Mid_TbmRouteGroup_TbmCustomer Mid_TbmRouteGroup_TbmCustomer[]
-  TbmInvoiceManualEdit          TbmInvoiceManualEdit[]
-
-  TbmBase   TbmBase? @relation(fields: [tbmBaseId], references: [id], onDelete: Cascade)
-  tbmBaseId Int?
-
-  @@unique([tbmBaseId, name], name: "unique_tbmBaseId_name")
-}
-
-model TbmInvoiceManualEdit {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  yearMonth DateTime // 請求対象月
-
-  summary Json? // 手動編集されたサマリー (CategorySummary[])
-  details Json? // 手動編集された明細 (CategoryDetail[])
-
-  TbmBase   TbmBase? @relation(fields: [tbmBaseId], references: [id], onDelete: Cascade)
-  tbmBaseId Int?
-
-  TbmCustomer   TbmCustomer @relation(fields: [tbmCustomerId], references: [id], onDelete: Cascade)
-  tbmCustomerId Int
-
-  @@unique([tbmCustomerId, yearMonth], name: "unique_tbmCustomerId_yearMonth")
-}
-
-model TbmRefuelHistory {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  date     DateTime
-  amount   Float
-  odometer Float
-  type     String
-
-  // TbmOperationGroup TbmOperationGroup? @relation(fields: [tbmOperationGroupId], references: [id], onDelete: Cascade)
-  // tbmOperationGroupId Int?
-
-  TbmVehicle   TbmVehicle @relation(fields: [tbmVehicleId], references: [id], onDelete: Cascade)
-  tbmVehicleId Int
-
-  User   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int
-}
-
-model TbmCarWashHistory {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  date  DateTime
-  price Float
-
-  TbmVehicle   TbmVehicle @relation(fields: [tbmVehicleId], references: [id], onDelete: Cascade)
-  tbmVehicleId Int
-
-  User   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int
-}
-
-model TbmDriveSchedule {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  date                DateTime
-  remark              String? // 配車カード備考
-  M_postalHighwayFee  Int? //高速(郵便)
-  O_generalHighwayFee Int? //高速（一般）
-
-  User   User? @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int?
-
-  TbmVehicle   TbmVehicle? @relation(fields: [tbmVehicleId], references: [id], onDelete: Cascade)
-  tbmVehicleId Int?
-
-  TbmRouteGroup   TbmRouteGroup @relation(fields: [tbmRouteGroupId], references: [id], onDelete: Cascade)
-  tbmRouteGroupId Int
-
-  finished  Boolean? @default(false)
-  confirmed Boolean? @default(false)
-  approved  Boolean? @default(false)
-
-  TbmBase   TbmBase @relation(fields: [tbmBaseId], references: [id], onDelete: Cascade)
-  tbmBaseId Int
-
-  // 1対多の関係に変更
-  TbmEtcMeisai          TbmEtcMeisai[]
-  TbmDriveScheduleImage TbmDriveScheduleImage[]
-
-  // パフォーマンス改善用インデックス
-  @@index([date])
-  @@index([tbmRouteGroupId, date])
-  @@index([tbmBaseId, date])
-}
-
-model TbmEtcMeisai {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  groupIndex Int
-  month      DateTime
-
-  info Json[]
-
-  sum Float
-
-  TbmVehicle   TbmVehicle? @relation(fields: [tbmVehicleId], references: [id], onDelete: Cascade)
-  tbmVehicleId Int?
-
-  // 1対多の関係に変更
-  TbmDriveSchedule   TbmDriveSchedule? @relation(fields: [tbmDriveScheduleId], references: [id], onDelete: Cascade)
-  tbmDriveScheduleId Int?
-
-  EtcCsvRaw EtcCsvRaw[]
-
-  @@unique([tbmVehicleId, groupIndex, month], name: "unique_tbmVehicleId_groupIndex_month")
-  @@index([tbmVehicleId])
-}
-
-model EtcCsvRaw {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  // 利用年月日（自）と時分（自）
-  fromDate DateTime
-  fromTime String
-
-  // 利用年月日（至）と時分（至）
-  toDate DateTime
-  toTime String
-
-  // 利用IC
-  fromIc String
-  toIc   String
-
-  // 料金情報
-  originalFee    Float? // 割引前料金
-  discountAmount Float? // ETC割引額
-  fee            Float // 通行料金
-  totalAmount    Float? // 合計金額
-
-  // グルーピングフラグ
-  isGrouped Boolean @default(false)
-
-  remark     String? // 備考
-  cardNumber String? // ETCカード番号
-  carType    String? // 車種
-
-  // 関連
-  TbmVehicle   TbmVehicle @relation(fields: [tbmVehicleId], references: [id], onDelete: Cascade)
-  tbmVehicleId Int
-
-  // グルーピングされた場合の関連
-  TbmEtcMeisai   TbmEtcMeisai? @relation(fields: [tbmEtcMeisaiId], references: [id])
-  tbmEtcMeisaiId Int?
-
-  @@unique([tbmVehicleId, fromDate, fromTime], name: "unique_tbmVehicleId_fromDate_fromTime")
-  @@index([tbmVehicleId])
-}
-
-model OdometerInput {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  odometerStart Float
-  odometerEnd   Float
-  date          DateTime
-
-  TbmVehicle   TbmVehicle @relation(fields: [tbmVehicleId], references: [id], onDelete: Cascade)
-  tbmVehicleId Int
-
-  User   User @relation(fields: [userId], references: [id])
-  userId Int
-
-  @@unique([tbmVehicleId, date], name: "unique_tbmVehicleId_date")
-}
-
-model UserWorkStatus {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  date       DateTime
-  workStatus String?
-  remark     String?
-
-  // 時間データ（分単位で保存）
-  vehicleNumber    String?
-  startTime        String?
-  endTime          String?
-  kyukeiMins       String?
-  shinyaKyukeiMins String?
-  kyusokuMins      String?
-
-  User   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int
-
-  @@unique([userId, date], name: "unique_userId_date")
-}
-
-model KyuyoTableRecord {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  other1      Float?
-  other2      Float?
-  shokuhi     Float?
-  maebaraikin Float?
-  rate        Float? @default(0.5)
-
-  yearMonth DateTime
-  User      User     @relation(fields: [userId], references: [id])
-  userId    Int
-
-  @@unique([userId, yearMonth], name: "unique_userId_yearMonth")
-}
-
-// 便共有機能のためのテーブル
-model TbmRouteGroupShare {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  // 共有元の便
-  TbmRouteGroup   TbmRouteGroup @relation(fields: [tbmRouteGroupId], references: [id], onDelete: Cascade)
-  tbmRouteGroupId Int
-
-  // 共有先の営業所
-  TbmBase   TbmBase @relation(fields: [tbmBaseId], references: [id], onDelete: Cascade)
-  tbmBaseId Int
-
-  // 共有状態のフラグ（将来的に承認プロセスなどを追加する場合に使用）P
-  isActive Boolean @default(true)
-
-  @@unique([tbmRouteGroupId, tbmBaseId], name: "unique_tbmRouteGroupId_tbmBaseId")
-}
-
-// 関連便機能のためのテーブル
-model TbmRelatedRouteGroup {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  daysOffset Int // N日後の値
-
-  // 親便
-  TbmRouteGroup   TbmRouteGroup @relation("ParentRouteGroup", fields: [tbmRouteGroupId], references: [id], onDelete: Cascade)
-  tbmRouteGroupId Int
-
-  // 子便（関連便）
-  childRouteGroup   TbmRouteGroup @relation("ChildRouteGroup", fields: [childRouteGroupId], references: [id], onDelete: Cascade)
-  childRouteGroupId Int
-
-  @@unique([tbmRouteGroupId, childRouteGroupId], name: "unique_tbmRouteGroupId_childRouteGroupId")
-}
-
-model TeamSynapseAnalysis {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-
-  // ユーザー情報
-  userId    Int?
-  userEmail String?   // Google認証時のメールアドレス
-
-  // 入力設定内容（連携サービスとパラメータ）
-  enabledServices Json // ServiceType[]: ['gmail', 'chat', 'drive']
-
-  // Gmail設定
-  gmailTargetEmails Json // string[]
-  gmailDateFrom     DateTime?
-  gmailDateTo       DateTime?
-
-  // Chat設定
-  chatRoomId   String?
-  chatDateFrom DateTime?
-  chatDateTo   DateTime?
-
-  // Drive設定
-  driveFolderUrl String?
-
-  // AI分析結果（JSON）
-  analysisResult Json // AnalysisResult型のJSON
-
-  @@index([userId])
-  @@index([createdAt])
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// トレーニング記録アプリ用スキーマ
-// プロジェクトルール準拠：リレーション名は対象テーブルと同一、大文字で開始
-// 外部キーは小文字で開始、{modelName}Id
-// 日付データは at をつける
-
-model ExerciseMaster {
- id        Int      @id @default(autoincrement())
- createdAt DateTime @default(now())
- updatedAt DateTime @updatedAt
- sortOrder Int      @default(0)
-
- part  String // 部位（胸、背中、肩、腕、足、有酸素など）
- name  String // 種目名
- unit  String // 強度単位（kg、lb、minなど）
- color String? // 色（#000000）
-
- // リレーション名は対象テーブルと同一、大文字で開始
- User       User         @relation(fields: [userId], references: [id])
- userId     Int // ユーザーID（外部キー）
- WorkoutLog WorkoutLog[]
-}
-
-model WorkoutLog {
- id        Int      @id @default(autoincrement())
- createdAt DateTime @default(now())
- updatedAt DateTime @updatedAt
- sortOrder Int      @default(0)
-
- userId     Int // ユーザーID（外部キー）
- exerciseId Int // 外部キーは小文字で開始、{modelName}Id
- date       DateTime // 日付データは at をつける
- strength   Int // 強度
- reps       Int // 回数
-
- // リレーション名は対象テーブルと同一、大文字で開始
- User           User           @relation(fields: [userId], references: [id])
- ExerciseMaster ExerciseMaster @relation(fields: [exerciseId], references: [id])
-}
-
-
-`;
-
-export const prismaDMMF = {
+  export const prismaDMMF = {
   "enums": [],
   "models": [
     {
@@ -10511,6 +8236,899 @@ export const prismaDMMF = {
       "isGenerated": false
     },
     {
+      "name": "RcIngredientMaster",
+      "dbName": null,
+      "schema": null,
+      "fields": [
+        {
+          "name": "id",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": true,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Int",
+          "nativeType": null,
+          "default": {
+            "name": "autoincrement",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "createdAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "DateTime",
+          "nativeType": null,
+          "default": {
+            "name": "now",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "updatedAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "DateTime",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": true
+        },
+        {
+          "name": "sortOrder",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Float",
+          "nativeType": null,
+          "default": 0,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "name",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "price",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "Float",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "yield",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "Float",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "category",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "supplier",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "RcRecipeIngredient",
+          "kind": "object",
+          "isList": true,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "RcRecipeIngredient",
+          "nativeType": null,
+          "relationName": "RcIngredientMasterToRcRecipeIngredient",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        }
+      ],
+      "primaryKey": null,
+      "uniqueFields": [],
+      "uniqueIndexes": [],
+      "isGenerated": false
+    },
+    {
+      "name": "RcRecipe",
+      "dbName": null,
+      "schema": null,
+      "fields": [
+        {
+          "name": "id",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": true,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Int",
+          "nativeType": null,
+          "default": {
+            "name": "autoincrement",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "createdAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "DateTime",
+          "nativeType": null,
+          "default": {
+            "name": "now",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "updatedAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "DateTime",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": true
+        },
+        {
+          "name": "sortOrder",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Float",
+          "nativeType": null,
+          "default": 0,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "name",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "status",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "String",
+          "nativeType": null,
+          "default": "draft",
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "lossRate",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Float",
+          "nativeType": null,
+          "default": 5,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "packWeightG",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Float",
+          "nativeType": null,
+          "default": 200,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "packagingCost",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Float",
+          "nativeType": null,
+          "default": 30,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "processingCost",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Float",
+          "nativeType": null,
+          "default": 50,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "profitMargin",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Float",
+          "nativeType": null,
+          "default": 200,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "totalMaterialCost",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "Float",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "totalWeightKg",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "Float",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "productionWeightKg",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "Float",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "packCount",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "materialCostPerPack",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "Float",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "totalCostPerPack",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "Float",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "sellingPrice",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "Float",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "sourceType",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "sourceFileName",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "sourceFileUrl",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "RcRecipeIngredient",
+          "kind": "object",
+          "isList": true,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "RcRecipeIngredient",
+          "nativeType": null,
+          "relationName": "RcRecipeToRcRecipeIngredient",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        }
+      ],
+      "primaryKey": null,
+      "uniqueFields": [],
+      "uniqueIndexes": [],
+      "isGenerated": false
+    },
+    {
+      "name": "RcRecipeIngredient",
+      "dbName": null,
+      "schema": null,
+      "fields": [
+        {
+          "name": "id",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": true,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Int",
+          "nativeType": null,
+          "default": {
+            "name": "autoincrement",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "createdAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "DateTime",
+          "nativeType": null,
+          "default": {
+            "name": "now",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "updatedAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "DateTime",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": true
+        },
+        {
+          "name": "sortOrder",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Float",
+          "nativeType": null,
+          "default": 0,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "recipeId",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": true,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "RcRecipe",
+          "kind": "object",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "RcRecipe",
+          "nativeType": null,
+          "relationName": "RcRecipeToRcRecipeIngredient",
+          "relationFromFields": [
+            "recipeId"
+          ],
+          "relationToFields": [
+            "id"
+          ],
+          "relationOnDelete": "Cascade",
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "ingredientMasterId",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": true,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "RcIngredientMaster",
+          "kind": "object",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "RcIngredientMaster",
+          "nativeType": null,
+          "relationName": "RcIngredientMasterToRcRecipeIngredient",
+          "relationFromFields": [
+            "ingredientMasterId"
+          ],
+          "relationToFields": [
+            "id"
+          ],
+          "relationOnDelete": "SetNull",
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "name",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "originalName",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "amount",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "Float",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "unit",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "weightKg",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Float",
+          "nativeType": null,
+          "default": 0,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "pricePerKg",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Float",
+          "nativeType": null,
+          "default": 0,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "yieldRate",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Float",
+          "nativeType": null,
+          "default": 100,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "cost",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Float",
+          "nativeType": null,
+          "default": 0,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "isExternal",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Boolean",
+          "nativeType": null,
+          "default": false,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "source",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "String",
+          "nativeType": null,
+          "default": "手動入力",
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "status",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "String",
+          "nativeType": null,
+          "default": "done",
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "matchReason",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "externalProductName",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "externalProductId",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "externalPrice",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "Float",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "externalWeight",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "Float",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "externalWeightText",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        }
+      ],
+      "primaryKey": null,
+      "uniqueFields": [],
+      "uniqueIndexes": [],
+      "isGenerated": false
+    },
+    {
       "name": "SbmCustomer",
       "dbName": null,
       "schema": null,
@@ -15577,6 +14195,169 @@ export const prismaDMMF = {
           "type": "String",
           "nativeType": null,
           "default": "出勤",
+          "isGenerated": false,
+          "isUpdatedAt": false
+        }
+      ],
+      "primaryKey": null,
+      "uniqueFields": [],
+      "uniqueIndexes": [],
+      "isGenerated": false
+    },
+    {
+      "name": "CronExecutionLog",
+      "dbName": null,
+      "schema": null,
+      "fields": [
+        {
+          "name": "id",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": true,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Int",
+          "nativeType": null,
+          "default": {
+            "name": "autoincrement",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "batchId",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "batchName",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "startedAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "DateTime",
+          "nativeType": null,
+          "default": {
+            "name": "now",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "completedAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "DateTime",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "duration",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "status",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "errorMessage",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "result",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "createdAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "DateTime",
+          "nativeType": null,
+          "default": {
+            "name": "now",
+            "args": []
+          },
           "isGenerated": false,
           "isUpdatedAt": false
         }
@@ -24842,6 +23623,36 @@ export const prismaDMMF = {
       ]
     },
     {
+      "model": "RcIngredientMaster",
+      "type": "id",
+      "isDefinedOnField": true,
+      "fields": [
+        {
+          "name": "id"
+        }
+      ]
+    },
+    {
+      "model": "RcRecipe",
+      "type": "id",
+      "isDefinedOnField": true,
+      "fields": [
+        {
+          "name": "id"
+        }
+      ]
+    },
+    {
+      "model": "RcRecipeIngredient",
+      "type": "id",
+      "isDefinedOnField": true,
+      "fields": [
+        {
+          "name": "id"
+        }
+      ]
+    },
+    {
       "model": "SbmCustomer",
       "type": "id",
       "isDefinedOnField": true,
@@ -25201,6 +24012,46 @@ export const prismaDMMF = {
       "fields": [
         {
           "name": "date"
+        }
+      ]
+    },
+    {
+      "model": "CronExecutionLog",
+      "type": "id",
+      "isDefinedOnField": true,
+      "fields": [
+        {
+          "name": "id"
+        }
+      ]
+    },
+    {
+      "model": "CronExecutionLog",
+      "type": "normal",
+      "isDefinedOnField": false,
+      "fields": [
+        {
+          "name": "batchId"
+        }
+      ]
+    },
+    {
+      "model": "CronExecutionLog",
+      "type": "normal",
+      "isDefinedOnField": false,
+      "fields": [
+        {
+          "name": "startedAt"
+        }
+      ]
+    },
+    {
+      "model": "CronExecutionLog",
+      "type": "normal",
+      "isDefinedOnField": false,
+      "fields": [
+        {
+          "name": "status"
         }
       ]
     },

@@ -1,9 +1,9 @@
 'use server'
-import {requestResultType} from '@cm/types/types'
-import {handlePrismaError} from '@cm/lib/prisma-helper'
+import { requestResultType } from '@cm/types/types'
+import { handlePrismaError } from '@cm/lib/prisma-helper'
 
-import {prismaMethodType, PrismaModelNames} from '@cm/types/prisma-types'
-import {PrismaClient} from '@prisma/generated/prisma/client'
+import { prismaMethodType, PrismaModelNames } from '@cm/types/prisma-types'
+import { PrismaClient } from '@prisma/generated/prisma/client'
 
 import {
   doDefaultPrismaMethod,
@@ -11,8 +11,9 @@ import {
   doDeleteMany,
   initQueryObject,
 } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/lib'
-import {prismaChain} from '../../../../../non-common/prismaChain'
+import { prismaChain } from '../../../../../non-common/prismaChain'
 import prisma from '../../../../../lib/prisma'
+import { isServerActionAccessAllowed } from '@app/api/prisma/isAllowed'
 
 export type doStandardPrismaType = <T extends PrismaModelNames, M extends prismaMethodType>(
   model: T,
@@ -27,9 +28,20 @@ export const generalDoStandardPrisma = async (model: any, method: any, queryObje
   return doStandardPrisma(model, method, queryObject, transactionPrisma)
 }
 export const doStandardPrisma: doStandardPrismaType = async (model, method, queryObject, transactionPrisma) => {
+  // 認証チェック
+  const isAllowed = await isServerActionAccessAllowed()
+  if (!isAllowed) {
+    return {
+      success: false,
+      message: 'アクセスが禁止されています',
+      error: 'Unauthorized access',
+      result: null,
+    } as requestResultType
+  }
+
   const PRISMA = transactionPrisma || prisma
   const prismaModel = PRISMA[model] as any
-  const newQueryObject = await initQueryObject({model, method, queryObject, prismaModel})
+  const newQueryObject = await initQueryObject({ model, method, queryObject, prismaModel })
 
   let res: requestResultType
 
@@ -37,17 +49,17 @@ export const doStandardPrisma: doStandardPrismaType = async (model, method, quer
   try {
     switch (method) {
       case 'delete': {
-        res = await doDelete({prismaModel, queryObject: newQueryObject, model, method})
+        res = await doDelete({ prismaModel, queryObject: newQueryObject, model, method })
         break
       }
 
       case 'deleteMany': {
-        res = await doDeleteMany({prismaModel, queryObject: newQueryObject, model, method})
+        res = await doDeleteMany({ prismaModel, queryObject: newQueryObject, model, method })
         break
       }
 
       default: {
-        res = await doDefaultPrismaMethod({prismaModel, method, queryObject: newQueryObject, model})
+        res = await doDefaultPrismaMethod({ prismaModel, method, queryObject: newQueryObject, model })
 
         break
       }
@@ -56,7 +68,7 @@ export const doStandardPrisma: doStandardPrismaType = async (model, method, quer
     const chainMethod = prismaChain[model]?.find(e => e.when.includes(method))?.do
     if (chainMethod) {
       const chainRes: requestResultType = await executeChainMethod(async () => {
-        return await chainMethod({res, queryObject: newQueryObject})
+        return await chainMethod({ res, queryObject: newQueryObject })
       })
       return {
         ...chainRes,
@@ -93,7 +105,7 @@ export const doStandardPrisma: doStandardPrismaType = async (model, method, quer
 const executeChainMethod = async callback => {
   // 現在のロック状態をチェック
   const lockRecord = await prisma.chainMethodLock.findUnique({
-    where: {id: 1}, // IDが固定されている場合
+    where: { id: 1 }, // IDが固定されている場合
   })
 
   const now = new Date()
@@ -101,7 +113,7 @@ const executeChainMethod = async callback => {
   // ロックがかかっているか、ロックの有効期限が切れていないか確認
   if (lockRecord && lockRecord.isLocked && lockRecord.expiresAt && lockRecord.expiresAt > now) {
     console.debug('他のプロセスが実行中です。処理をスキップします。')
-    return {success: false, message: '他のプロセスが実行中です。処理をスキップします。', result: null} as requestResultType
+    return { success: false, message: '他のプロセスが実行中です。処理をスキップします。', result: null } as requestResultType
   }
 
   try {
@@ -111,7 +123,7 @@ const executeChainMethod = async callback => {
     }
     // ロックを設定（有効期限を60秒後に設定）
     await prisma.chainMethodLock.upsert({
-      where: {id: 1},
+      where: { id: 1 },
       create: data,
       update: data,
     })
@@ -123,7 +135,7 @@ const executeChainMethod = async callback => {
     return res
   } catch (error) {
     console.error(error.stack)
-    return {success: false, message: 'エラーが発生しました', result: null} as requestResultType
+    return { success: false, message: 'エラーが発生しました', result: null } as requestResultType
   } finally {
     console.debug(`lock解除`)
     const data = {
@@ -132,7 +144,7 @@ const executeChainMethod = async callback => {
     }
     // ロック解除
     await prisma.chainMethodLock.upsert({
-      where: {id: 1},
+      where: { id: 1 },
       create: data,
       update: data,
     })

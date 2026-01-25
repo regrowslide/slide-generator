@@ -250,6 +250,21 @@ export type CompanyHoliday = Prisma.CompanyHolidayModel
  */
 export type DailyStaffAssignment = Prisma.DailyStaffAssignmentModel
 /**
+ * Model RcIngredientMaster
+ * 
+ */
+export type RcIngredientMaster = Prisma.RcIngredientMasterModel
+/**
+ * Model RcRecipe
+ * 
+ */
+export type RcRecipe = Prisma.RcRecipeModel
+/**
+ * Model RcRecipeIngredient
+ * 
+ */
+export type RcRecipeIngredient = Prisma.RcRecipeIngredientModel
+/**
  * Model SbmCustomer
  * 
  */
@@ -364,6 +379,11 @@ export type ChainMethodLock = Prisma.ChainMethodLockModel
  * 
  */
 export type Calendar = Prisma.CalendarModel
+/**
+ * Model CronExecutionLog
+ * 
+ */
+export type CronExecutionLog = Prisma.CronExecutionLogModel
 /**
  * Model StockConfig
  * 

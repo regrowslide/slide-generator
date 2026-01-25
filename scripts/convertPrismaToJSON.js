@@ -34,11 +34,7 @@ async function generateSchemaExports() {
 
   // ES Module形式でエクスポート（Next.jsで使用）
   const output = `
-export const prismaSchemaString = \`
-${combinedSchema}
-\`;
-
-export const prismaDMMF = ${JSON.stringify(dmmf.datamodel, null, 2)};
+  export const prismaDMMF = ${JSON.stringify(dmmf.datamodel, null, 2)};
 `
 
   const outputPath = path.join('src/cm/lib/methods/scheme-json-export.js')

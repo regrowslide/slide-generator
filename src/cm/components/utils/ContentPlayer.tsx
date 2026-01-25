@@ -1,19 +1,19 @@
 'use client'
-import {FileHandler} from 'src/cm/class/FileHandler'
-// import {extname} from 'path'
+import { FileHandler } from 'src/cm/class/FileHandler/FileHandler'
+
 
 import dynamic from 'next/dynamic'
 
-import {anyObject} from '@cm/types/utility-types'
+import { anyObject } from '@cm/types/utility-types'
 
 import useWindowSize from 'src/cm/hooks/useWindowSize'
 
-import {Center, R_Stack} from 'src/cm/components/styles/common-components/common-components'
-import {cl} from 'src/cm/lib/methods/common'
-import {pathToNoImage} from '@cm/components/DataLogic/TFs/MyForm/components/HookFormControl/Control/MyFileControl/MyFileControl'
-import {DownloadIcon} from 'lucide-react'
-import {T_LINK} from '@cm/components/styles/common-components/links'
-import {useMemo, memo} from 'react'
+import { Center, R_Stack } from 'src/cm/components/styles/common-components/common-components'
+import { cl } from 'src/cm/lib/methods/common'
+import { pathToNoImage } from '@cm/components/DataLogic/TFs/MyForm/components/HookFormControl/Control/MyFileControl/MyFileControl'
+import { DownloadIcon } from 'lucide-react'
+import { T_LINK } from '@cm/components/styles/common-components/links'
+import { useMemo, memo } from 'react'
 import ShadModal from '@cm/shadcn/ui/Organisms/ShadModal'
 
 const ReactPlayer = dynamic(() => import('react-player'), {
@@ -26,14 +26,14 @@ type ContentPlayerProps = {
   src: string
   fileType?: filecolTypeString
   mediaType?: filecolTypeString
-  styles?: {thumbnail?: anyObject; main?: anyObject}
-  options?: {download?: boolean}
+  styles?: { thumbnail?: anyObject; main?: anyObject }
+  options?: { download?: boolean }
   showOnlyMain?: boolean
 } & anyObject
 
-const ImageRenderer = memo(({src, style}: {src: string; style: anyObject}) => <img src={src} alt="" style={style} />)
+const ImageRenderer = memo(({ src, style }: { src: string; style: anyObject }) => <img src={src} alt="" style={style} />)
 
-const VideoRenderer = memo(({src, style}: {src: string; style: anyObject}) => (
+const VideoRenderer = memo(({ src, style }: { src: string; style: anyObject }) => (
   <ReactPlayer url={src} controls={true} style={style} />
 ))
 
@@ -44,8 +44,8 @@ export default function ContentPlayer(props: ContentPlayerProps) {
     return String(src)?.match(reg)?.[0] ?? ''
   }
 
-  const {mediaType, styles = {}, options, ...rest} = props
-  let {src} = props
+  const { mediaType, styles = {}, options, ...rest } = props
+  let { src } = props
   src = src ? src : pathToNoImage
 
   const fileTypeAndStyles = useMemo(() => {
@@ -68,10 +68,10 @@ export default function ContentPlayer(props: ContentPlayerProps) {
       ...styles.main,
     }
 
-    return {fileType, thumbnailStyle, mainStyle}
+    return { fileType, thumbnailStyle, mainStyle }
   }, [src, props.fileType, mediaType, styles, WD.width, WD.height])
 
-  const {thumbnail, main} = (function () {
+  const { thumbnail, main } = (function () {
     let thumbnail, main
 
     const ext = extname(src)
@@ -100,14 +100,14 @@ export default function ContentPlayer(props: ContentPlayerProps) {
         main = <ImageRenderer src={src} style={fileTypeAndStyles.mainStyle} />
       }
     }
-    return {thumbnail, main}
+    return { thumbnail, main }
   })()
 
   const btnClass = ` absolute w-6  hover:opacity-100 z-50`
   if (!src) {
     return <div>画像を読み込めません</div>
   } else if (props.showOnlyMain) {
-    return <Center style={{...styles.main, overflow: 'hidden'}}>{main}</Center>
+    return <Center style={{ ...styles.main, overflow: 'hidden' }}>{main}</Center>
   } else {
     return (
       <main
@@ -118,14 +118,14 @@ export default function ContentPlayer(props: ContentPlayerProps) {
         <></>
 
         <div>
-          <Center className={` relative `} style={{...styles.thumbnail}}>
+          <Center className={` relative `} style={{ ...styles.thumbnail }}>
             <ShadModal
               {...{
                 Trigger: <div className="cursor-zoom-in w-full h-full">{thumbnail}</div>,
                 alertOnClose: false,
               }}
             >
-              <Center style={{...fileTypeAndStyles.mainStyle, overflow: 'hidden'}}>
+              <Center style={{ ...fileTypeAndStyles.mainStyle, overflow: 'hidden' }}>
                 <div className={`w-full h-full`}>{main}</div>
               </Center>
             </ShadModal>
@@ -141,7 +141,7 @@ export default function ContentPlayer(props: ContentPlayerProps) {
   }
 }
 
-const DownloadBtn = ({src, options}: {src: string; options?: {download?: boolean}}) => {
+const DownloadBtn = ({ src, options }: { src: string; options?: { download?: boolean } }) => {
   if (options?.download && !String(src).includes('data:')) {
     return (
       <T_LINK href={src} target="_blank" simple>

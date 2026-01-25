@@ -1,9 +1,13 @@
-import {CSSProperties} from 'react'
+import { cn } from '@cm/shadcn/lib/utils';
+import { CSSProperties } from 'react'
 
-export default function PlaceHolder(props: {style?: CSSProperties; className?: string; children?: any}) {
-  const {style, className, children} = props
+export default function PlaceHolder(props: { style?: CSSProperties; className?: string; children?: any }) {
+  const { style, className, children } = props
 
-  return <div className="text-center p-2 bg-gray-100 rounded">{children}</div>
+  return <div
+    className={cn(`text-center p-2 bg-gray-100 rounded `, className)}
+    style={style}
+  >{children}</div>
   // return (
   //   <Center
   //     {...{

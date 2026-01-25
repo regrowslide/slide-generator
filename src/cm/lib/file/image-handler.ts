@@ -1,4 +1,4 @@
-import {FileHandler} from 'src/cm/class/FileHandler'
+import {FileHandler} from 'src/cm/class/FileHandler/FileHandler'
 import {FileData} from '@cm/types/file-types'
 import {requestResultType} from '@cm/types/types'
 import {colType} from '@cm/types/col-types'

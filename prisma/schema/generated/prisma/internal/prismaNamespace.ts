@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.2.0
- * Query Engine version: 0c8ef2ce45c83248ab3df073180d5eda9e8be7a3
+ * Prisma Client JS version: 7.3.0
+ * Query Engine version: 9d6ad21cbbceab97458517b147a6a09ff43aa735
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.2.0",
-  engine: "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3"
+  client: "7.3.0",
+  engine: "9d6ad21cbbceab97458517b147a6a09ff43aa735"
 }
 
 /**
@@ -426,6 +426,9 @@ export const ModelName = {
   StockAdjustment: 'StockAdjustment',
   CompanyHoliday: 'CompanyHoliday',
   DailyStaffAssignment: 'DailyStaffAssignment',
+  RcIngredientMaster: 'RcIngredientMaster',
+  RcRecipe: 'RcRecipe',
+  RcRecipeIngredient: 'RcRecipeIngredient',
   SbmCustomer: 'SbmCustomer',
   SbmCustomerPhone: 'SbmCustomerPhone',
   SbmProduct: 'SbmProduct',
@@ -449,6 +452,7 @@ export const ModelName = {
   UserRole: 'UserRole',
   ChainMethodLock: 'ChainMethodLock',
   Calendar: 'Calendar',
+  CronExecutionLog: 'CronExecutionLog',
   StockConfig: 'StockConfig',
   Stock: 'Stock',
   StockHistory: 'StockHistory',
@@ -497,7 +501,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "hakobunIndustry" | "hakobunIndustryGeneralCategory" | "hakobunIndustryCategory" | "hakobunClient" | "hakobunClientStage" | "hakobunCorrection" | "hakobunRule" | "hakobunVoice" | "hakobunAnalysisBox" | "hakobunAnalysisSession" | "hakobunAnalysisRecord" | "keihiExpense" | "keihiAttachment" | "keihiAccountMaster" | "keihiOptionMaster" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "stockConfig" | "stock" | "stockHistory" | "tbmBase" | "tbmRouteGroupCalendar" | "tbmKeihi" | "tbmDriveScheduleImage" | "tbmBase_MonthConfig" | "tbmVehicle" | "tbmFuelCard" | "tbmVehicleMaintenanceRecord" | "tbmRouteGroup" | "tbmRouteGroupFee" | "tbmRouteGroupStandardSalary" | "tbmMonthlyConfigForRouteGroup" | "mid_TbmRouteGroup_TbmCustomer" | "tbmBillingAddress" | "tbmInvoiceDetail" | "tbmCustomer" | "tbmInvoiceManualEdit" | "tbmRefuelHistory" | "tbmCarWashHistory" | "tbmDriveSchedule" | "tbmEtcMeisai" | "etcCsvRaw" | "odometerInput" | "userWorkStatus" | "kyuyoTableRecord" | "tbmRouteGroupShare" | "tbmRelatedRouteGroup" | "teamSynapseAnalysis" | "exerciseMaster" | "workoutLog"
+    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "hakobunIndustry" | "hakobunIndustryGeneralCategory" | "hakobunIndustryCategory" | "hakobunClient" | "hakobunClientStage" | "hakobunCorrection" | "hakobunRule" | "hakobunVoice" | "hakobunAnalysisBox" | "hakobunAnalysisSession" | "hakobunAnalysisRecord" | "keihiExpense" | "keihiAttachment" | "keihiAccountMaster" | "keihiOptionMaster" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "rcIngredientMaster" | "rcRecipe" | "rcRecipeIngredient" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "cronExecutionLog" | "stockConfig" | "stock" | "stockHistory" | "tbmBase" | "tbmRouteGroupCalendar" | "tbmKeihi" | "tbmDriveScheduleImage" | "tbmBase_MonthConfig" | "tbmVehicle" | "tbmFuelCard" | "tbmVehicleMaintenanceRecord" | "tbmRouteGroup" | "tbmRouteGroupFee" | "tbmRouteGroupStandardSalary" | "tbmMonthlyConfigForRouteGroup" | "mid_TbmRouteGroup_TbmCustomer" | "tbmBillingAddress" | "tbmInvoiceDetail" | "tbmCustomer" | "tbmInvoiceManualEdit" | "tbmRefuelHistory" | "tbmCarWashHistory" | "tbmDriveSchedule" | "tbmEtcMeisai" | "etcCsvRaw" | "odometerInput" | "userWorkStatus" | "kyuyoTableRecord" | "tbmRouteGroupShare" | "tbmRelatedRouteGroup" | "teamSynapseAnalysis" | "exerciseMaster" | "workoutLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3609,6 +3613,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    RcIngredientMaster: {
+      payload: Prisma.$RcIngredientMasterPayload<ExtArgs>
+      fields: Prisma.RcIngredientMasterFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RcIngredientMasterFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcIngredientMasterPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RcIngredientMasterFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcIngredientMasterPayload>
+        }
+        findFirst: {
+          args: Prisma.RcIngredientMasterFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcIngredientMasterPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RcIngredientMasterFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcIngredientMasterPayload>
+        }
+        findMany: {
+          args: Prisma.RcIngredientMasterFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcIngredientMasterPayload>[]
+        }
+        create: {
+          args: Prisma.RcIngredientMasterCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcIngredientMasterPayload>
+        }
+        createMany: {
+          args: Prisma.RcIngredientMasterCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RcIngredientMasterCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcIngredientMasterPayload>[]
+        }
+        delete: {
+          args: Prisma.RcIngredientMasterDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcIngredientMasterPayload>
+        }
+        update: {
+          args: Prisma.RcIngredientMasterUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcIngredientMasterPayload>
+        }
+        deleteMany: {
+          args: Prisma.RcIngredientMasterDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RcIngredientMasterUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RcIngredientMasterUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcIngredientMasterPayload>[]
+        }
+        upsert: {
+          args: Prisma.RcIngredientMasterUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcIngredientMasterPayload>
+        }
+        aggregate: {
+          args: Prisma.RcIngredientMasterAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRcIngredientMaster>
+        }
+        groupBy: {
+          args: Prisma.RcIngredientMasterGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RcIngredientMasterGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RcIngredientMasterCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RcIngredientMasterCountAggregateOutputType> | number
+        }
+      }
+    }
+    RcRecipe: {
+      payload: Prisma.$RcRecipePayload<ExtArgs>
+      fields: Prisma.RcRecipeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RcRecipeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RcRecipeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipePayload>
+        }
+        findFirst: {
+          args: Prisma.RcRecipeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RcRecipeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipePayload>
+        }
+        findMany: {
+          args: Prisma.RcRecipeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipePayload>[]
+        }
+        create: {
+          args: Prisma.RcRecipeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipePayload>
+        }
+        createMany: {
+          args: Prisma.RcRecipeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RcRecipeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipePayload>[]
+        }
+        delete: {
+          args: Prisma.RcRecipeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipePayload>
+        }
+        update: {
+          args: Prisma.RcRecipeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipePayload>
+        }
+        deleteMany: {
+          args: Prisma.RcRecipeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RcRecipeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RcRecipeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipePayload>[]
+        }
+        upsert: {
+          args: Prisma.RcRecipeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipePayload>
+        }
+        aggregate: {
+          args: Prisma.RcRecipeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRcRecipe>
+        }
+        groupBy: {
+          args: Prisma.RcRecipeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RcRecipeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RcRecipeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RcRecipeCountAggregateOutputType> | number
+        }
+      }
+    }
+    RcRecipeIngredient: {
+      payload: Prisma.$RcRecipeIngredientPayload<ExtArgs>
+      fields: Prisma.RcRecipeIngredientFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RcRecipeIngredientFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipeIngredientPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RcRecipeIngredientFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipeIngredientPayload>
+        }
+        findFirst: {
+          args: Prisma.RcRecipeIngredientFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipeIngredientPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RcRecipeIngredientFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipeIngredientPayload>
+        }
+        findMany: {
+          args: Prisma.RcRecipeIngredientFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipeIngredientPayload>[]
+        }
+        create: {
+          args: Prisma.RcRecipeIngredientCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipeIngredientPayload>
+        }
+        createMany: {
+          args: Prisma.RcRecipeIngredientCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RcRecipeIngredientCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipeIngredientPayload>[]
+        }
+        delete: {
+          args: Prisma.RcRecipeIngredientDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipeIngredientPayload>
+        }
+        update: {
+          args: Prisma.RcRecipeIngredientUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipeIngredientPayload>
+        }
+        deleteMany: {
+          args: Prisma.RcRecipeIngredientDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RcRecipeIngredientUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RcRecipeIngredientUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipeIngredientPayload>[]
+        }
+        upsert: {
+          args: Prisma.RcRecipeIngredientUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcRecipeIngredientPayload>
+        }
+        aggregate: {
+          args: Prisma.RcRecipeIngredientAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRcRecipeIngredient>
+        }
+        groupBy: {
+          args: Prisma.RcRecipeIngredientGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RcRecipeIngredientGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RcRecipeIngredientCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RcRecipeIngredientCountAggregateOutputType> | number
+        }
+      }
+    }
     SbmCustomer: {
       payload: Prisma.$SbmCustomerPayload<ExtArgs>
       fields: Prisma.SbmCustomerFieldRefs
@@ -5308,6 +5534,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CalendarCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CalendarCountAggregateOutputType> | number
+        }
+      }
+    }
+    CronExecutionLog: {
+      payload: Prisma.$CronExecutionLogPayload<ExtArgs>
+      fields: Prisma.CronExecutionLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CronExecutionLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CronExecutionLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CronExecutionLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CronExecutionLogPayload>
+        }
+        findFirst: {
+          args: Prisma.CronExecutionLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CronExecutionLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CronExecutionLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CronExecutionLogPayload>
+        }
+        findMany: {
+          args: Prisma.CronExecutionLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CronExecutionLogPayload>[]
+        }
+        create: {
+          args: Prisma.CronExecutionLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CronExecutionLogPayload>
+        }
+        createMany: {
+          args: Prisma.CronExecutionLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CronExecutionLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CronExecutionLogPayload>[]
+        }
+        delete: {
+          args: Prisma.CronExecutionLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CronExecutionLogPayload>
+        }
+        update: {
+          args: Prisma.CronExecutionLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CronExecutionLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.CronExecutionLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CronExecutionLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CronExecutionLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CronExecutionLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.CronExecutionLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CronExecutionLogPayload>
+        }
+        aggregate: {
+          args: Prisma.CronExecutionLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCronExecutionLog>
+        }
+        groupBy: {
+          args: Prisma.CronExecutionLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CronExecutionLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CronExecutionLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CronExecutionLogCountAggregateOutputType> | number
         }
       }
     }
@@ -8457,6 +8757,77 @@ export const DailyStaffAssignmentScalarFieldEnum = {
 export type DailyStaffAssignmentScalarFieldEnum = (typeof DailyStaffAssignmentScalarFieldEnum)[keyof typeof DailyStaffAssignmentScalarFieldEnum]
 
 
+export const RcIngredientMasterScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  price: 'price',
+  yield: 'yield',
+  category: 'category',
+  supplier: 'supplier'
+} as const
+
+export type RcIngredientMasterScalarFieldEnum = (typeof RcIngredientMasterScalarFieldEnum)[keyof typeof RcIngredientMasterScalarFieldEnum]
+
+
+export const RcRecipeScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  status: 'status',
+  lossRate: 'lossRate',
+  packWeightG: 'packWeightG',
+  packagingCost: 'packagingCost',
+  processingCost: 'processingCost',
+  profitMargin: 'profitMargin',
+  totalMaterialCost: 'totalMaterialCost',
+  totalWeightKg: 'totalWeightKg',
+  productionWeightKg: 'productionWeightKg',
+  packCount: 'packCount',
+  materialCostPerPack: 'materialCostPerPack',
+  totalCostPerPack: 'totalCostPerPack',
+  sellingPrice: 'sellingPrice',
+  sourceType: 'sourceType',
+  sourceFileName: 'sourceFileName',
+  sourceFileUrl: 'sourceFileUrl'
+} as const
+
+export type RcRecipeScalarFieldEnum = (typeof RcRecipeScalarFieldEnum)[keyof typeof RcRecipeScalarFieldEnum]
+
+
+export const RcRecipeIngredientScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  recipeId: 'recipeId',
+  ingredientMasterId: 'ingredientMasterId',
+  name: 'name',
+  originalName: 'originalName',
+  amount: 'amount',
+  unit: 'unit',
+  weightKg: 'weightKg',
+  pricePerKg: 'pricePerKg',
+  yieldRate: 'yieldRate',
+  cost: 'cost',
+  isExternal: 'isExternal',
+  source: 'source',
+  status: 'status',
+  matchReason: 'matchReason',
+  externalProductName: 'externalProductName',
+  externalProductId: 'externalProductId',
+  externalPrice: 'externalPrice',
+  externalWeight: 'externalWeight',
+  externalWeightText: 'externalWeightText'
+} as const
+
+export type RcRecipeIngredientScalarFieldEnum = (typeof RcRecipeIngredientScalarFieldEnum)[keyof typeof RcRecipeIngredientScalarFieldEnum]
+
+
 export const SbmCustomerScalarFieldEnum = {
   id: 'id',
   companyName: 'companyName',
@@ -8832,6 +9203,22 @@ export const CalendarScalarFieldEnum = {
 } as const
 
 export type CalendarScalarFieldEnum = (typeof CalendarScalarFieldEnum)[keyof typeof CalendarScalarFieldEnum]
+
+
+export const CronExecutionLogScalarFieldEnum = {
+  id: 'id',
+  batchId: 'batchId',
+  batchName: 'batchName',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  duration: 'duration',
+  status: 'status',
+  errorMessage: 'errorMessage',
+  result: 'result',
+  createdAt: 'createdAt'
+} as const
+
+export type CronExecutionLogScalarFieldEnum = (typeof CronExecutionLogScalarFieldEnum)[keyof typeof CronExecutionLogScalarFieldEnum]
 
 
 export const StockConfigScalarFieldEnum = {
@@ -9747,6 +10134,9 @@ export type GlobalOmitConfig = {
   stockAdjustment?: Prisma.StockAdjustmentOmit
   companyHoliday?: Prisma.CompanyHolidayOmit
   dailyStaffAssignment?: Prisma.DailyStaffAssignmentOmit
+  rcIngredientMaster?: Prisma.RcIngredientMasterOmit
+  rcRecipe?: Prisma.RcRecipeOmit
+  rcRecipeIngredient?: Prisma.RcRecipeIngredientOmit
   sbmCustomer?: Prisma.SbmCustomerOmit
   sbmCustomerPhone?: Prisma.SbmCustomerPhoneOmit
   sbmProduct?: Prisma.SbmProductOmit
@@ -9770,6 +10160,7 @@ export type GlobalOmitConfig = {
   userRole?: Prisma.UserRoleOmit
   chainMethodLock?: Prisma.ChainMethodLockOmit
   calendar?: Prisma.CalendarOmit
+  cronExecutionLog?: Prisma.CronExecutionLogOmit
   stockConfig?: Prisma.StockConfigOmit
   stock?: Prisma.StockOmit
   stockHistory?: Prisma.StockHistoryOmit

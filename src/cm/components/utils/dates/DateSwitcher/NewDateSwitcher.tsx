@@ -1,11 +1,16 @@
 'use client'
 
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
-import { useEffect, useMemo, useCallback } from 'react'
+import { useEffect, useMemo } from 'react'
 import useDateSwitcherFunc from '@cm/components/utils/dates/DateSwitcher/useDateSwitcherFunc'
 import { colType } from '@cm/types/col-types'
 import { FitMargin } from '@cm/components/styles/common-components/common-components'
 import useWindowSize from '@cm/hooks/useWindowSize'
+
+// 定数
+const MOBILE_BREAKPOINT = 600
+const CONTROL_WIDTH = { desktop: 190, mobile: 145 } as const
+const CONTROL_FONT_SIZE = 14
 
 interface NewDateSwitcherProps {
   yearOnly?: boolean
@@ -26,36 +31,28 @@ const NewDateSwitcher = (props: NewDateSwitcherProps) => {
   } = useDateSwitcherFunc(props)
 
   // レスポンシブ対応のControlOptionsをメモ化
-  const controlOptions = useMemo(() => {
-    const baseOptions = {
+  const controlOptions = useMemo(
+    () => ({
       ControlStyle: {
-        width: width > 600 ? 190 : 145,
-        fontSize: 14,
+        width: width > MOBILE_BREAKPOINT ? CONTROL_WIDTH.desktop : CONTROL_WIDTH.mobile,
+        fontSize: CONTROL_FONT_SIZE,
       },
-    }
+    }),
+    [width]
+  )
 
-    if (width <= 600) {
-      baseOptions.ControlStyle.fontSize = 14
-    }
-
-    return baseOptions
-  }, [width])
-
-  // setValue操作をメモ化してパフォーマンス向上
-  const updateFormValues = useCallback(() => {
+  // queryの変更時にフォーム値を更新し、ローダーを終了
+  useEffect(() => {
     if (from && ReactHookForm.getValues('from') !== from) {
       ReactHookForm.setValue('from', from)
     }
     if (to && ReactHookForm.getValues('to') !== to) {
       ReactHookForm.setValue('to', to)
     }
-  }, [from, to, ReactHookForm])
 
-  // queryの変更時にフォーム値を更新し、ローダーを終了
-  useEffect(() => {
-    updateFormValues()
-    setglobalLoaderAtom(false)
-  }, [query])
+
+
+  }, [query]) // from, to, ReactHookForm, setglobalLoaderAtomは意図的に除外（query変更時のみ実行）
 
   return (
     <FitMargin>

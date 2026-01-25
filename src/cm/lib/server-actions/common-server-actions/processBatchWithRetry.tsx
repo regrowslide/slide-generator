@@ -1,7 +1,7 @@
 'use server'
 
-import {requestResultType} from '@cm/types/types'
-import {sleep} from '@cm/lib/methods/common'
+import { requestResultType } from '@cm/types/types'
+import { sleep } from '@cm/lib/methods/common'
 
 type processBatchWithRetryType = (props: {
   soruceList: any[]
@@ -14,10 +14,10 @@ type processBatchWithRetryType = (props: {
 export const processBatchWithRetry: processBatchWithRetryType = async ({
   soruceList,
   mainProcess,
-  options = {batchSize: 500, retries: 1},
+  options,
 }) => {
   try {
-    const {batchSize, retries} = options
+    const { batchSize = 500, retries = 1, } = options ?? {}
 
     const chunks: any[] = []
     for (let i = 0; i < retries; i++) {
@@ -29,6 +29,7 @@ export const processBatchWithRetry: processBatchWithRetryType = async ({
           chunks.push(chunk)
 
           const res = await mainProcess(chunk)
+
           if (res?.message) {
             console.debug(res.message)
           }
@@ -63,3 +64,7 @@ export const processBatchWithRetry: processBatchWithRetryType = async ({
     }
   }
 }
+
+
+
+

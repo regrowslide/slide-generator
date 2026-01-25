@@ -7,10 +7,12 @@ import {doStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doS
 import {RoleMaster, User} from '@prisma/generated/prisma/client'
 import React from 'react'
 import useSWR from 'swr'
+import {UseRecordsReturn} from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/useRecords/useRecords'
 
 export default function useRoleGMF() {
   type useRoleGMFType = {
     user: User & {UserRole: {RoleMaster: RoleMaster}[]}
+    UseRecordsReturn?: UseRecordsReturn
   }
   return useGlobalModalForm<useRoleGMFType | null>('useRoleGMF' as atomKey, null, {
     mainJsx: ({GMF_OPEN}) => {
@@ -54,6 +56,10 @@ export default function useRoleGMF() {
                               }
 
                               mutate()
+
+                              GMF_OPEN?.UseRecordsReturn?.refreshSingleRecord({
+                                findUniqueWhereArgs: {id: GMF_OPEN?.user?.id ?? 0},
+                              })
                             },
                           }}
                         >
@@ -64,7 +70,7 @@ export default function useRoleGMF() {
                   ],
                 }
               }),
-            }).WithWrapper({})}
+            }).WithWrapper({className: 'max-h-[70vh]'})}
           </>
         )
       }

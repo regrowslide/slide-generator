@@ -11,7 +11,7 @@ export const Button = (
     size?: 'xs' | 'sm' | 'md' | 'lg'
   }
 ) => {
-  const { className, style, color, active, size = 'md', ...rest } = props
+  const { className, style, color = 'gray', active, size = 'md', ...rest } = props
 
   const buttonVariants = tv({
     base: cn(
@@ -29,7 +29,7 @@ export const Button = (
         lg: 'text-[18px] py-[6px] px-[18px] ',
       },
       active: {
-        false: 'opacity-40 ',
+        false: 'opacity-40!',
         true: 'cursor-pointer',
       },
     },
@@ -56,12 +56,12 @@ export const Button = (
 }
 
 export const btnColorVariants = {
-  gray: 'bg-gray-main text-white hover:bg-gray-700 ring-gray-400',
-  red: 'bg-error-main text-white hover:bg-red-600 ring-red-400',
-  blue: 'bg-blue-main text-white hover:bg-blue-600 ring-blue-400',
-  green: 'bg-green-main text-white hover:bg-green-600 ring-green-400',
-  orange: 'bg-orange-main text-white hover:bg-orange-600 ring-orange-400',
-  yellow: 'bg-yellow-main text-white hover:bg-yellow-500 ring-yellow-400',
-  sub: 'bg-sub-main text-white hover:bg-sub-600 ',
-  primary: 'bg-primary-main text-white hover:bg-primary-600 ring-primary-main',
+  gray: 'bg-gray-main text-white  ring-gray-400 ',
+  red: 'bg-error-main text-white  ring-red-400 ',
+  blue: 'bg-blue-main text-white  ring-blue-400 ',
+  green: 'bg-green-main text-white  ring-green-400 ',
+  orange: 'bg-orange-main text-white  ring-orange-400 ',
+  yellow: 'bg-yellow-main text-white  ring-yellow-400 ',
+  sub: 'bg-sub-main text-white   ',
+  primary: 'bg-primary-main text-white  ring-primary-main ',
 }

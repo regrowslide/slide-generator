@@ -11,7 +11,7 @@ export default function MyRadio(props) {
   return (
     <R_Stack className={`  justify-start gap-1.5 pb-1`}>
       {MySelectContextValue.options.map((op, i) => {
-        const isActive = op.id === controlContextValue.currentValue
+        const isActive = op.value === controlContextValue.currentValue
 
         return (
           <div key={i}>
@@ -19,7 +19,7 @@ export default function MyRadio(props) {
               type={`button`}
               className={`rounded-sm text-[14px]`}
               onClick={() => {
-                controlContextValue.ReactHookForm.setValue(controlContextValue.col.id, op.id)
+                controlContextValue.ReactHookForm.setValue(controlContextValue.col.id, op.value)
                 controlContextValue.field.onBlur()
               }}
               active={isActive}

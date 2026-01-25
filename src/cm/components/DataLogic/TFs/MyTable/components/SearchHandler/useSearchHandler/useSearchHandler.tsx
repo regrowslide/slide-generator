@@ -1,26 +1,26 @@
-import React, {useMemo} from 'react'
-import {colType} from '@cm/types/col-types'
-import {useGlobalPropType} from 'src/cm/hooks/globalHooks/useGlobal'
+import React, { useMemo } from 'react'
+import { colType } from '@cm/types/col-types'
+import { useGlobalPropType } from 'src/cm/hooks/globalHooks/useGlobal'
 
-import {R_Stack} from 'src/cm/components/styles/common-components/common-components'
+import { R_Stack } from 'src/cm/components/styles/common-components/common-components'
 
-import {SearchQuery, searchQueryKey, Sub} from '@cm/components/DataLogic/TFs/MyTable/components/SearchHandler/search-methods'
+import { SearchQuery, searchQueryKey, Sub } from '@cm/components/DataLogic/TFs/MyTable/components/SearchHandler/search-methods'
 
 import useBasicFormProps from 'src/cm/hooks/useBasicForm/useBasicFormProps'
 
 import SearchedItemList from '@cm/components/DataLogic/TFs/MyTable/components/SearchHandler/useSearchHandler/SearchedItemList'
 import BasicModal from 'src/cm/components/utils/modal/BasicModal'
 
-import {myFormDefault} from 'src/cm/constants/defaults'
-import {cl} from 'src/cm/lib/methods/common'
+import { myFormDefault } from 'src/cm/constants/defaults'
+import { cl } from 'src/cm/lib/methods/common'
 
-import {confirmSearch} from '@cm/components/DataLogic/TFs/MyTable/components/SearchHandler/SearchHandler'
-import {Padding} from '@cm/components/styles/common-components/common-components'
+import { confirmSearch } from '@cm/components/DataLogic/TFs/MyTable/components/SearchHandler/SearchHandler'
+import { Padding } from '@cm/components/styles/common-components/common-components'
 
-import {IconBtn} from '@cm/components/styles/common-components/IconBtn'
+import { IconBtn } from '@cm/components/styles/common-components/IconBtn'
 import useWindowSize from '@cm/hooks/useWindowSize'
-import {useJotaiByKey} from '@cm/hooks/useJotai'
-import {Button} from '@cm/components/styles/common-components/Button'
+import { useJotaiByKey } from '@cm/hooks/useJotai'
+import { Button } from '@cm/components/styles/common-components/Button'
 
 type SearchHandler = {
   columns: colType[][]
@@ -28,22 +28,22 @@ type SearchHandler = {
   useGlobalProps: useGlobalPropType
 }
 export const useSearchHandler = (props: SearchHandler) => {
-  const {dataModelName, useGlobalProps} = props
+  const { dataModelName, useGlobalProps } = props
   const SearchCols = props.columns.flat().filter((col: colType) => col.search)
-  const {toggleLoad, query, shallowAddQuery} = useGlobalProps
-  const {SP} = useWindowSize()
+  const { toggleLoad, query, shallowAddQuery } = useGlobalProps
+  const { SP } = useWindowSize()
 
   const [modalOpen, setmodalOpen] = useJotaiByKey<boolean>(`searchHandlerModalOpen`, false)
 
   const addQuery = shallowAddQuery
 
-  const columns = Sub.makeSearchColumns({columns: props.columns, dataModelName, SP})
+  const columns = Sub.makeSearchColumns({ columns: props.columns, dataModelName, SP })
 
-  const currentSearchedQuerys = SearchQuery.getSearchDefaultObject({dataModelName, query})
+  const currentSearchedQuerys = SearchQuery.getSearchDefaultObject({ dataModelName, query })
 
   /**search form 関係 */
 
-  const {MainColObject, SearchColObject} = Sub.makeMainColsAndSearchCols({columns})
+  const { MainColObject, SearchColObject } = Sub.makeMainColsAndSearchCols({ columns })
 
   const {
     BasicForm: SearchBasicForm,
@@ -53,11 +53,11 @@ export const useSearchHandler = (props: SearchHandler) => {
   } = useBasicFormProps({
     columns,
     formData: currentSearchedQuerys,
-    autoApplyProps: {form: {}},
+    autoApplyProps: { form: {} },
   })
 
   /**全ての入力データ */
-  const allData = {...latestFormData}
+  const allData = { ...latestFormData }
 
   //confirm
   const ResetBtnMemo = useMemo(() => {
@@ -66,9 +66,11 @@ export const useSearchHandler = (props: SearchHandler) => {
         {...{
           rounded: false,
           color: `red`,
-          onClick: () => {
-            addQuery({[searchQueryKey]: ``})
-            setmodalOpen(false)
+          onClick: async () => {
+            await toggleLoad(async () => {
+              addQuery({ [searchQueryKey]: `` })
+              setmodalOpen(false)
+            })
           },
         }}
       >
@@ -121,7 +123,7 @@ export const useSearchHandler = (props: SearchHandler) => {
                       wrapperClass: cl('col-stack gap-3'),
 
                       ControlOptions: {
-                        controlWrapperClassBuilder: ({col}) => {
+                        controlWrapperClassBuilder: ({ col }) => {
                           const searchTypeCol = SearchColObject[col.id]
                           let className = ``
                           if (SP && searchTypeCol) {
@@ -171,5 +173,5 @@ export const useSearchHandler = (props: SearchHandler) => {
     }
   }, [query, ResetBtnMemo, currentSearchedQuerys])
 
-  return {SearchedItemListMemo, SearchModalMemo}
+  return { SearchedItemListMemo, SearchModalMemo }
 }

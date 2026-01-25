@@ -1,14 +1,14 @@
-import {FileHandler} from 'src/cm/class/FileHandler'
-import {SquarePen} from 'lucide-react'
+import { FileHandler } from 'src/cm/class/FileHandler/FileHandler'
+import { SquarePen } from 'lucide-react'
 
-import {cl} from 'src/cm/lib/methods/common'
-import {HREF} from 'src/cm/lib/methods/urls'
-import {useGlobalPropType} from '@cm/hooks/globalHooks/useGlobalOrigin'
-import {T_LINK} from '@cm/components/styles/common-components/links'
-import {useCallback} from 'react'
-import {toastByResult} from '@cm/lib/ui/notifications'
-import {generalDoStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
-import {C_Stack} from '@cm/components/styles/common-components/common-components'
+import { cl } from 'src/cm/lib/methods/common'
+import { HREF } from 'src/cm/lib/methods/urls'
+import { useGlobalPropType } from '@cm/hooks/globalHooks/useGlobalOrigin'
+import { T_LINK } from '@cm/components/styles/common-components/links'
+import { useCallback } from 'react'
+import { toastByResult } from '@cm/lib/ui/notifications'
+import { generalDoStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
+import { C_Stack } from '@cm/components/styles/common-components/common-components'
 
 export const TrActionIconClassName = `onHover`
 
@@ -27,16 +27,16 @@ const useTrActions = props => {
   } = props
 
   if (editType?.type === 'page') {
-    const {pathnameBuilder} = editType ?? {}
+    const { pathnameBuilder } = editType ?? {}
     if (!pathnameBuilder) {
       throw new Error('pathnameBuilder is required')
     }
   }
 
-  const {toggleLoad, query, pathname, rootPath, addQuery} = useGlobalProps as useGlobalPropType
+  const { toggleLoad, query, pathname, rootPath, addQuery } = useGlobalProps as useGlobalPropType
 
   const handleTrashItem = useCallback(
-    async ({record, columns}) => {
+    async ({ record, columns }) => {
       let deleteConfirmed = false
 
       if (props?.myTable?.delete?.requiredUserConfirmation === false) {
@@ -57,15 +57,15 @@ const useTrActions = props => {
           .flat()
           .filter(col => col?.type === 'file')
           .map(col => {
-            const {id} = col
+            const { id } = col
             const backetKey = col?.form?.file?.backetKey
 
-            return {id, backetKey, deleteImageUrl: record[col.id]}
+            return { id, backetKey, deleteImageUrl: record[col.id] }
           })
 
         await Promise.all(
           deleteImageUrls.map(async obj => {
-            const {id, deleteImageUrl, backetKey} = obj
+            const { id, deleteImageUrl, backetKey } = obj
             await FileHandler.sendFileToS3({
               file: null,
               formDataObj: {
@@ -76,10 +76,10 @@ const useTrActions = props => {
           })
         )
 
-        const res = await generalDoStandardPrisma(dataModelName, 'delete', {where: {id: record?.id}})
+        const res = await generalDoStandardPrisma(dataModelName, 'delete', { where: { id: record?.id } })
         toastByResult(res)
         if (res.success) {
-          deleteRecord({record})
+          deleteRecord({ record })
         }
         // })
       } else {
@@ -90,15 +90,15 @@ const useTrActions = props => {
   )
 
   let ActionButtonObject = {}
-  ActionButtonObject = {...ActionButtonObject, ...myTable.AdditionalActionButtonObject}
+  ActionButtonObject = { ...ActionButtonObject, ...myTable.AdditionalActionButtonObject }
 
   if (myTable?.update !== false && editType?.type) {
-    ActionButtonObject['edit'] = ({record}) => {
-      const {pathnameBuilder} = editType ?? {}
-      const redirectPath = pathnameBuilder?.({rootPath, record, pathname})
+    ActionButtonObject['edit'] = ({ record }) => {
+      const { pathnameBuilder } = editType ?? {}
+      const redirectPath = pathnameBuilder?.({ rootPath, record, pathname })
       const className = cl('text-primary-main', TrActionIconClassName, `w-5`)
       if (editType.type === `modal`) {
-        const handleOnClickRow = async ({record}) => {
+        const handleOnClickRow = async ({ record }) => {
           if (editType?.type === 'page') {
             return
           } else if (editType?.type === 'pageOnSame') {
@@ -112,7 +112,7 @@ const useTrActions = props => {
           <div
             {...{
               className,
-              onClick: () => handleOnClickRow({record}),
+              onClick: () => handleOnClickRow({ record }),
             }}
           >
             <SquarePen className={`w-5`} />
@@ -122,7 +122,7 @@ const useTrActions = props => {
         const href = editType?.type === 'page' ? redirectPath : HREF(`${pathname}/${record.id}`, {}, query)
 
         return (
-          <T_LINK {...{className, href}}>
+          <T_LINK {...{ className, href }}>
             <SquarePen className={`w-5`} />
           </T_LINK>
         )
@@ -145,13 +145,13 @@ const useTrActions = props => {
   // }
 
   const RowActionButtonComponent = useCallback(
-    ({record, myTable}) => {
+    ({ record, myTable }) => {
       if (Object?.keys(ActionButtonObject)?.length === 0) return null
 
       return (
         <C_Stack className={`gap-2 justify-stretch`}>
           {Object?.keys(ActionButtonObject)?.map(key => {
-            return <div key={key}>{ActionButtonObject[key]({record})}</div>
+            return <div key={key}>{ActionButtonObject[key]({ record })}</div>
           })}
         </C_Stack>
       )

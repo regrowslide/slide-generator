@@ -1,15 +1,15 @@
-import {Sub} from '@cm/components/DataLogic/TFs/MyTable/components/SearchHandler/search-methods'
-import {R_Stack} from 'src/cm/components/styles/common-components/common-components'
+import { Sub } from '@cm/components/DataLogic/TFs/MyTable/components/SearchHandler/search-methods'
+import { R_Stack } from 'src/cm/components/styles/common-components/common-components'
 
-import {SearchedItem} from 'src/cm/components/styles/common-components/SearchedItem'
-import React, {useEffect, useState} from 'react'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
+import { SearchedItem } from 'src/cm/components/styles/common-components/SearchedItem'
+import React, { useEffect, useState } from 'react'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
 
-import {judgeColType} from '@cm/class/Fields/lib/methods'
+import { judgeColType } from '@cm/class/Fields/lib/methods'
 
-import {PrismaModelNames} from '@cm/types/prisma-types'
-import {generalDoStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
-import {IconBtn} from '@cm/components/styles/common-components/IconBtn'
+import { PrismaModelNames } from '@cm/types/prisma-types'
+import { generalDoStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
+import { IconBtn } from '@cm/components/styles/common-components/IconBtn'
 
 export default function SearchedItemList(props: {
   Cached_Option_Props
@@ -20,8 +20,8 @@ export default function SearchedItemList(props: {
   ResetBtnMemo
   query
 }) {
-  const {Cached_Option_Props, columns, SearchQuery, searchQueryKey, dataModelName, query} = props
-  const AND = SearchQuery.createWhere({dataModelName, query})
+  const { Cached_Option_Props, columns, SearchQuery, searchQueryKey, dataModelName, query } = props
+  const AND = SearchQuery.createWhere({ dataModelName, query })
   if (Object.keys(AND).length === 0) return null
 
   const [SearchedItems, setSearchedItems] = useState<any[]>([])
@@ -36,8 +36,8 @@ export default function SearchedItemList(props: {
             Object.keys(value).map(async (colKey, i) => {
               const colObj = columns.flat().find(col => col.id === colKey)
               const colLabel = colObj?.label
-              const searchFormats = Sub.getSearchFormats({col: colObj}).map(format => {
-                const {label: searchTypeLabel, searchType} = format
+              const searchFormats = Sub.getSearchFormats({ col: colObj }).map(format => {
+                const { label: searchTypeLabel, searchType } = format
                 return {
                   searchType,
                   colLabel,
@@ -57,8 +57,8 @@ export default function SearchedItemList(props: {
                       } else if (judgeColType(colObj) === `selectId`) {
                         const model = String(colObj?.id)?.split(`Id`)[0] as PrismaModelNames
 
-                        const {result: theOption} = await generalDoStandardPrisma(model, `findUnique`, {
-                          where: {id: searchedValue},
+                        const { result: theOption } = await generalDoStandardPrisma(model, `findUnique`, {
+                          where: { id: searchedValue },
                         })
                         searchedValueforDisplay = (
                           <IconBtn color={theOption?.color ?? ``} rounded={true}>
@@ -99,7 +99,7 @@ export default function SearchedItemList(props: {
       {query[searchQueryKey] && (
         <R_Stack>
           {SearchedItems.map((d, i) => {
-            const {colLabel, searchTypeLabel, searchedValue} = d
+            const { colLabel, searchTypeLabel, searchedValue } = d
 
             return (
               <div key={i}>

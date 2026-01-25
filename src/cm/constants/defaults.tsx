@@ -1,7 +1,7 @@
-import {GetDevice, getWindow} from 'src/cm/hooks/useWindowSize'
-import {CSSProperties} from 'react'
-import {MyTableType} from '@cm/types/types'
-import {MyFormType} from '@cm/types/form-types'
+import { GetDevice, getWindow } from 'src/cm/hooks/useWindowSize'
+import { CSSProperties } from 'react'
+import { MyTableType } from '@cm/types/types'
+import { MyFormType } from '@cm/types/form-types'
 export const getTableStickyStyles = (props: any) => {
   const commons = {
     background: '#f4f4f4',
@@ -47,7 +47,7 @@ type StylesByDevice = {
 export const stylesByDevice: StylesByDevice = {
   SP: {
     Modal: {},
-    Form: {maxWidth: '90vw', maxHeight: '70vh'},
+    Form: { maxWidth: '90vw', maxHeight: '70vh' },
     Table: {
       maxWidth: '85vw',
       maxHeight: '70vh',
@@ -56,7 +56,7 @@ export const stylesByDevice: StylesByDevice = {
 
   TB: {
     Modal: {},
-    Form: {maxWidth: '90vw', maxHeight: '75vh'},
+    Form: { maxWidth: '90vw', maxHeight: '75vh' },
     Table: {
       maxWidth: '85vw',
       maxHeight: '70vh',
@@ -65,7 +65,7 @@ export const stylesByDevice: StylesByDevice = {
 
   PC: {
     Modal: {},
-    Form: {maxWidth: '90vw', maxHeight: '70vh'},
+    Form: { maxWidth: '90vw', maxHeight: '70vh' },
     Table: {
       maxWidth: '85vw',
       maxHeight: '70vh',
@@ -106,10 +106,10 @@ export const myFormDefault: MyFormType = {
 
 /**モーダルでoverflowはせずに、中のコンポーネントで制御する */
 
-export const limitEditting = (props: {exclusiveTo?: boolean; myTable?: MyTableType; myForm?: MyFormType}) => {
+export const limitEditting = (props: { exclusiveTo?: boolean; myTable?: MyTableType; myForm?: MyFormType }) => {
   const {
     exclusiveTo,
-    myTable = {update: false, delete: false},
+    myTable = { update: false, delete: false },
     myForm = {
       update: false,
       delete: false,

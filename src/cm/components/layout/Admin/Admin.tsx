@@ -10,7 +10,6 @@ import {obj__cleanObject} from '@cm/class/ObjHandler/transformers'
 
 // 分離したフックとコンポーネント
 import {useAdminContext} from './hooks/useAdminContext'
-import {useAccessValidation} from './hooks/useAccessValidation'
 import {AdminLayout} from './components/AdminLayout'
 
 import {adminProps} from '@cm/components/layout/Admin/type'
@@ -24,18 +23,18 @@ const Admin = React.memo((props: adminProps) => {
   // カスタムフックを使用してロジックを
   const {adminContext, menuContext} = useAdminContext(props, useGlobalProps)
 
-  const {isValid, redirectPath, needsRedirect} = useAccessValidation(useGlobalProps)
-
   // 不要なクエリパラメータのクリーンアップ
   const cleanedQuery = useMemo(() => obj__cleanObject({...query}), [query])
   const shouldRedirectForQuery = useMemo(() => {
     return Object.keys(query).some(key => !cleanedQuery[key])
   }, [query, cleanedQuery])
 
+  // const {isValid, redirectPath, needsRedirect} = useAccessValidation(useGlobalProps)
+
   // アクセス検証によるリダイレクト
-  if (!isValid && needsRedirect && redirectPath) {
-    return <Redirector redirectPath={redirectPath} />
-  }
+  // if (!isValid && needsRedirect && redirectPath) {
+  //   return <Redirector redirectPath={redirectPath} />
+  // }
 
   if (shouldRedirectForQuery) {
     console.warn('Redirected because of undefined query parameter')

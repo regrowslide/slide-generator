@@ -1,16 +1,16 @@
-import { useMemo } from 'react'
-import { identifyPathItem, PAGES } from 'src/non-common/path-title-constsnts'
-import { rootPaths } from 'src/middleware'
-import { useGlobalPropType } from 'src/cm/hooks/globalHooks/useGlobalOrigin'
-import { AccessValidationResult, CheckValidAccessProps } from '@cm/components/layout/Admin/type'
-import { addQuerySentence } from '@cm/lib/methods/urls'
+import {useMemo} from 'react'
+import {identifyPathItem, PAGES} from 'src/non-common/path-title-constsnts'
+import {rootPaths} from 'src/proxy'
+import {useGlobalPropType} from 'src/cm/hooks/globalHooks/useGlobalOrigin'
+import {AccessValidationResult, CheckValidAccessProps} from '@cm/components/layout/Admin/type'
+import {addQuerySentence} from '@cm/lib/methods/urls'
 
-const checkValidAccess = (props: CheckValidAccessProps): { valid: boolean; path: string } => {
-  const { allPathsPatterns, pathname, origin = '', redirectUrl } = props
-  const matchedPathItem = identifyPathItem({ allPathsPattenrs: allPathsPatterns, pathname })
+const checkValidAccess = (props: CheckValidAccessProps): {valid: boolean; path: string} => {
+  const {allPathsPatterns, pathname, origin = '', redirectUrl} = props
+  const matchedPathItem = identifyPathItem({allPathsPattenrs: allPathsPatterns, pathname})
 
   if (!matchedPathItem) {
-    return { valid: true, path: '' }
+    return {valid: true, path: ''}
   }
 
   if (matchedPathItem.exclusiveTo === false) {
@@ -18,19 +18,19 @@ const checkValidAccess = (props: CheckValidAccessProps): { valid: boolean; path:
     const encodedRedirectUrl = encodeURIComponent(redirectUrl)
     const path = `${origin}/not-found?rootPath=${encodedRedirectUrl ?? rootPath}`
 
-    return { valid: false, path }
+    return {valid: false, path}
   }
 
-  return { valid: true, path: '' }
+  return {valid: true, path: ''}
 }
 
 export const useAccessValidation = (useGlobalProps: useGlobalPropType): AccessValidationResult => {
-  const { session, rootPath, pathname, query, roles, waitRendering } = useGlobalProps
+  const {session, rootPath, pathname, query, roles, waitRendering} = useGlobalProps
 
   const validationResult = useMemo(() => {
     // レンダリング待機中またはロール未定義の場合はスキップ
     if (waitRendering || roles === undefined) {
-      return { isValid: true, needsRedirect: false }
+      return {isValid: true, needsRedirect: false}
     }
 
     // パスチェック
@@ -42,10 +42,10 @@ export const useAccessValidation = (useGlobalProps: useGlobalPropType): AccessVa
         const PAGE_GETTER = PAGES[GET_PAGE_METHOD_NAME]
 
         if (!PAGE_GETTER) {
-          return { valid: true, path: '' }
+          return {valid: true, path: ''}
         }
 
-        const allPathsPatterns = PAGE_GETTER({ session, rootPath, pathname, query, roles }).allPathsPattenrs
+        const allPathsPatterns = PAGE_GETTER({session, rootPath, pathname, query, roles}).allPathsPattenrs
 
         return checkValidAccess({
           allPathsPatterns,
@@ -65,7 +65,7 @@ export const useAccessValidation = (useGlobalProps: useGlobalPropType): AccessVa
       }
     }
 
-    return { isValid: true, needsRedirect: false }
+    return {isValid: true, needsRedirect: false}
   }, [session, rootPath, pathname, query, roles, waitRendering])
 
   return validationResult

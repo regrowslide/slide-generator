@@ -19,7 +19,7 @@ import BasicTabs from '@cm/components/utils/tabs/BasicTabs'
 export default async function Page(props) {
   const query = await props.searchParams
   const { session, scopes } = await initServerComopnent({ query })
-  const { tbmBaseId } = scopes.getTbmScopes()
+
   const { redirectPath, whereQuery } = await dateSwitcherTemplate({ query })
 
 
@@ -47,7 +47,7 @@ export default async function Page(props) {
 
   })
 
-  console.log(whereQuery)  //log
+
 
   // 重複を除去して顧客リストを作成
   const customers = customersFromRoutes
@@ -176,59 +176,54 @@ export default async function Page(props) {
     throw new Error('運行スケジュールデータの取得に失敗しました')
   }
 
-  try {
-    // 取得済みのdriveScheduleListを再利用
-    const invoiceData = await getInvoiceData({
-      whereQuery: { gte: whereQuery.gte, lte: whereQuery.lte },
-      customerId,
-      driveScheduleList,
-    })
 
-    const meisaiData = await getMeisaiData({
-      whereQuery: { gte: whereQuery.gte, lte: whereQuery.lte },
-      customerId,
-      driveScheduleList,
-    })
+  // 取得済みのdriveScheduleListを再利用
+  const invoiceData = await getInvoiceData({
+    whereQuery: { gte: whereQuery.gte, lte: whereQuery.lte },
+    customerId,
+    driveScheduleList,
+  })
 
-    return (
-      <FitMargin className="pt-4">
-        <div className="mb-4">
-          <NewDateSwitcher monthOnly={true} />
-        </div>
 
-        <CustomerSelector customers={customersWithCount} currentCustomerId={customerId} />
 
-        <BasicTabs
-          id="seikyuTabs"
-          showAll={false}
-          TabComponentArray={[
-            {
-              label: '請求書',
-              component: <InvoiceViewer invoiceData={invoiceData} customerId={customerId} />,
-            },
-            {
-              label: '請求書用明細',
-              component: <MeisaiViewer meisaiData={meisaiData} />,
-            },
-          ]}
-        />
-      </FitMargin>
-    )
-  } catch (error) {
-    console.error('請求書データの取得に失敗しました:', error)
-    return (
-      <FitMargin className="pt-4">
-        <div className="mb-4">
-          <NewDateSwitcher monthOnly={true} />
-        </div>
-        <CustomerSelector customers={customersWithCount} currentCustomerId={customerId} />
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-          <h3 className="text-red-800 font-semibold">エラーが発生しました</h3>
-          <p className="text-red-600 mt-2">
-            {error instanceof Error ? error.message : '請求書データの取得に失敗しました。データの設定を確認してください。'}
-          </p>
-        </div>
-      </FitMargin>
-    )
-  }
+  const meisaiData = await getMeisaiData({
+    whereQuery: { gte: whereQuery.gte, lte: whereQuery.lte },
+    customerId,
+    driveScheduleList,
+  })
+
+
+
+
+  return (
+    <FitMargin className="pt-4">
+      <div className="mb-4">
+        <NewDateSwitcher monthOnly={true} />
+      </div>
+
+      <CustomerSelector customers={customersWithCount} currentCustomerId={customerId} />
+
+      <BasicTabs
+        id="seikyuTabs"
+        showAll={false}
+        TabComponentArray={[
+          {
+            label: '請求書',
+            component: (
+              <InvoiceViewer
+                key={`invoice-${customerId}-${whereQuery.gte?.getTime()}`}
+                invoiceData={invoiceData}
+                customerId={customerId}
+              />
+            ),
+          },
+          {
+            label: '請求書用明細',
+            component: <MeisaiViewer key={`meisai-${customerId}-${whereQuery.gte?.getTime()}`} meisaiData={meisaiData} />,
+          },
+        ]}
+      />
+    </FitMargin>
+  )
+
 }

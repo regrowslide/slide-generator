@@ -9,6 +9,7 @@ import {T_LINK} from '@cm/components/styles/common-components/links'
 
 const TopPage = React.memo(() => {
   const {session, rootPath, pathname, query, roles} = useGlobal()
+
   const [navItems, setNavItems] = useState<any[]>([])
 
   useEffect(() => {
@@ -55,7 +56,7 @@ const TopPage = React.memo(() => {
                     key={i}
                     href={HREF(href, {}, query)}
                     simple
-                    className="cursor-pointer flex-col items-center rounded-lg bg-white p-4 py-6 shadow-md transition-transform duration-200 hover:scale-105 hover:shadow-lg"
+                    className="cursor-pointer flex-col items-center rounded-lg bg-gray-50 shadow ring ring-primary-main  p-4 py-6 transition-transform duration-200 hover:scale-105 hover:shadow-lg"
                   >
                     <div className="flex items-center justify-center text-xl font-bold text-blue-600">{label}</div>
                   </T_LINK>

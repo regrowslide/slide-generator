@@ -9,6 +9,10 @@ import { getMidnight, toUtc } from '@cm/class/Days/date-utils/calculations'
 import { ChevronsLeft, ChevronsRight } from 'lucide-react'
 import { colType } from '@cm/types/col-types'
 
+// 定数
+const MONTHS_IN_YEAR = 12
+const MONTH_INPUT_WIDTH = 155
+
 interface DateSwitcherProps {
   additionalCols?: colType[]
   selectPeriod?: boolean
@@ -37,7 +41,7 @@ export default function useDateSwitcherFunc(props: DateSwitcherProps) {
   const { query, addQuery, setglobalLoaderAtom } = useGlobal()
 
   // FormHookの参照を保持するためのref
-  const formHookRef = useRef<any>(null)
+  const formHookRef = useRef<ReturnType<typeof useBasicFormProps> | null>(null)
 
   // additionalColsから追加のペイロードを取得する関数をメモ化
   const getAdditionalPayload = useCallback(
@@ -116,25 +120,29 @@ export default function useDateSwitcherFunc(props: DateSwitcherProps) {
   // 月の加算/減算関数をメモ化
   const addMinusMonth = useCallback(
     (plus = 1) => {
+      // 先にローディングを開始して視覚的なフィードバックを即座に提供
+      setglobalLoaderAtom(true)
       const currentMonth = new Date(formHookRef.current?.latestFormData?.from || new Date())
       const month = Days.month.add(currentMonth, plus)
       if (Days.validate.isDate(month)) {
         switchMonth({ month, ...additionalDefaultValue })
       }
     },
-    [switchMonth, additionalDefaultValue]
+    [switchMonth, additionalDefaultValue, setglobalLoaderAtom]
   )
 
   // 日付の加算/減算関数をメモ化
   const addMinusDate = useCallback(
     (plus = 1) => {
+      // 先にローディングを開始して視覚的なフィードバックを即座に提供
+      setglobalLoaderAtom(true)
       const currentDate = new Date(formHookRef.current?.latestFormData?.from || new Date())
       const date = Days.day.add(currentDate, plus)
       if (Days.validate.isDate(date)) {
         switchDate({ date, ...additionalDefaultValue })
       }
     },
-    [switchDate, additionalDefaultValue]
+    [switchDate, additionalDefaultValue, setglobalLoaderAtom]
   )
 
   // カラムをメモ化（循環依存を避けるため）
@@ -193,7 +201,7 @@ const getColumnBase = ({
   monthOnly = false,
   yearOnly = false,
 }: ColumnBaseParams) => {
-  const columnsBase: any = {
+  const columnsBase: Record<string, colType> = {
     from: {
       id: 'from',
       label: selectPeriod ? 'から' : monthOnly || yearOnly ? '' : '',
@@ -204,7 +212,7 @@ const getColumnBase = ({
         },
         reverseLabelTitle: true,
         showResetBtn: monthOnly || yearOnly ? false : undefined,
-        style: monthOnly || yearOnly ? { width: 155 } : undefined,
+        style: monthOnly || yearOnly ? { width: MONTH_INPUT_WIDTH } : undefined,
       },
     },
   }
@@ -257,8 +265,8 @@ const getColumnBase = ({
 
     if (yearOnly) {
       return {
-        left: <ChevronsLeft className="text-primary-main w-7" onClick={() => addMinusMonth(-12)} />,
-        right: <ChevronsRight className="text-primary-main w-7" onClick={() => addMinusMonth(12)} />,
+        left: <ChevronsLeft className="text-primary-main w-7" onClick={() => addMinusMonth(-MONTHS_IN_YEAR)} />,
+        right: <ChevronsRight className="text-primary-main w-7" onClick={() => addMinusMonth(MONTHS_IN_YEAR)} />,
       }
     }
 

@@ -1,9 +1,10 @@
-import {anyObject} from '@cm/types/utility-types'
-import {CSSProperties} from 'react'
-import {toast} from 'react-toastify'
-import {memoize} from 'lodash'
+import { anyObject } from '@cm/types/utility-types'
+import { CSSProperties } from 'react'
+import { toast } from 'react-toastify'
+import { memoize } from 'lodash'
 
 export const basePath = typeof window === `undefined` ? (process.env.NEXT_PUBLIC_BASEPATH ?? '') : window.location.origin
+
 export const isDev = process.env.NODE_ENV === 'development'
 export const apiPath = `${basePath}/api`
 export const systemEmailTo = String(process.env.SYSTEM_EMAIL_TO ?? '').split(',')
@@ -15,6 +16,7 @@ export const routeEndpoint = {
 }
 
 export const isServer = typeof window === 'undefined'
+
 
 export const handleDB = async callback => {
   try {
@@ -230,8 +232,8 @@ export const funcOrVar = (value, ...args) => {
   return typeof value === 'function' ? value(...args) : value
 }
 
-export const absSize = (props: {width?: any; height?: any}) => {
-  const {width, height} = props
+export const absSize = (props: { width?: any; height?: any }) => {
+  const { width, height } = props
   return {
     minWidth: width ? width : undefined,
     maxWidth: width ? width : undefined,

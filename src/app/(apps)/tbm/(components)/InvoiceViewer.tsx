@@ -1,29 +1,30 @@
 'use client'
 
-import React, {useRef, useState} from 'react'
-import {useReactToPrint} from 'react-to-print'
-import {InvoiceDocument, InvoiceDocumentRef} from './InvoiceDocument'
-import {InvoiceData, CategoryDetail} from '@app/(apps)/tbm/(server-actions)/getInvoiceData'
-import {Button} from '@cm/components/styles/common-components/Button'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
-import {toast} from 'react-toastify'
-import {resetInvoiceManualEdit, saveInvoiceManualEdit} from '@app/(apps)/tbm/(server-actions)/invoiceManualEdit'
-import {useRouter} from 'next/navigation'
-import {getInvoiceData} from '@app/(apps)/tbm/(server-actions)/getInvoiceData'
+import React, { useRef, useState, useMemo } from 'react'
+import { useReactToPrint } from 'react-to-print'
+import { InvoiceDocument, InvoiceDocumentRef } from './InvoiceDocument'
+import { InvoiceData, CategoryDetail } from '@app/(apps)/tbm/(server-actions)/getInvoiceData'
+import { Button } from '@cm/components/styles/common-components/Button'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
+import { toast } from 'react-toastify'
+import { resetInvoiceManualEdit, saveInvoiceManualEdit } from '@app/(apps)/tbm/(server-actions)/invoiceManualEdit'
+import { useRouter } from 'next/navigation'
+import { getInvoiceData } from '@app/(apps)/tbm/(server-actions)/getInvoiceData'
 import useTbmRouteGroupDetailGMF from '@app/(apps)/tbm/(globalHooks)/useTbmRouteGroupDetailGMF'
+import useLogOnRender from '@cm/hooks/useLogOnRender'
 
 interface InvoiceViewerProps {
   invoiceData: InvoiceData
   customerId: number
 }
 
-export default function InvoiceViewer({invoiceData, customerId}: InvoiceViewerProps) {
+export default function InvoiceViewer({ invoiceData, customerId }: InvoiceViewerProps) {
   const componentRef = useRef<HTMLDivElement>(null)
   const invoiceDocumentRef = useRef<InvoiceDocumentRef>(null)
   const [isResetting, setIsResetting] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const router = useRouter()
-  const {setGMF_OPEN, Modal: RouteGroupDetailModal} = useTbmRouteGroupDetailGMF()
+  const { setGMF_OPEN, Modal: RouteGroupDetailModal } = useTbmRouteGroupDetailGMF()
 
   const handlePrint = useReactToPrint({
     contentRef: componentRef,
@@ -97,7 +98,7 @@ export default function InvoiceViewer({invoiceData, customerId}: InvoiceViewerPr
 
       // 最新の配車連動データを取得
       const freshInvoiceData = await getInvoiceData({
-        whereQuery: {gte, lte},
+        whereQuery: { gte, lte },
         customerId,
       })
 
@@ -131,6 +132,19 @@ export default function InvoiceViewer({invoiceData, customerId}: InvoiceViewerPr
     })
   }
 
+  const InvoiceDocumentMemo = useMemo(() => {
+
+    return (
+      <InvoiceDocument
+        ref={invoiceDocumentRef}
+        invoiceData={invoiceData}
+        onSave={handleSave}
+        onResetDetail={handleResetDetail}
+        onEditRouteGroup={handleEditRouteGroup}
+      />
+    )
+  }, [invoiceData, handleSave, handleResetDetail, handleEditRouteGroup])
+
   return (
     <div className="space-y-4">
       {/* 操作ボタン */}
@@ -161,13 +175,7 @@ export default function InvoiceViewer({invoiceData, customerId}: InvoiceViewerPr
 
       {/* プレビュー */}
       <div ref={componentRef} className="border border-gray-300 rounded-lg overflow-hidden shadow-lg ">
-        <InvoiceDocument
-          ref={invoiceDocumentRef}
-          invoiceData={invoiceData}
-          onSave={handleSave}
-          onResetDetail={handleResetDetail}
-          onEditRouteGroup={handleEditRouteGroup}
-        />
+        {InvoiceDocumentMemo}
       </div>
 
       {/* 便編集Modal */}

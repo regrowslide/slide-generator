@@ -93,6 +93,9 @@ export const ModelName = {
   StockAdjustment: 'StockAdjustment',
   CompanyHoliday: 'CompanyHoliday',
   DailyStaffAssignment: 'DailyStaffAssignment',
+  RcIngredientMaster: 'RcIngredientMaster',
+  RcRecipe: 'RcRecipe',
+  RcRecipeIngredient: 'RcRecipeIngredient',
   SbmCustomer: 'SbmCustomer',
   SbmCustomerPhone: 'SbmCustomerPhone',
   SbmProduct: 'SbmProduct',
@@ -116,6 +119,7 @@ export const ModelName = {
   UserRole: 'UserRole',
   ChainMethodLock: 'ChainMethodLock',
   Calendar: 'Calendar',
+  CronExecutionLog: 'CronExecutionLog',
   StockConfig: 'StockConfig',
   Stock: 'Stock',
   StockHistory: 'StockHistory',
@@ -157,12 +161,12 @@ export type ModelName = (typeof ModelName)[keyof typeof ModelName]
  * Enums
  */
 
-export const TransactionIsolationLevel = {
+export const TransactionIsolationLevel = runtime.makeStrictEnum({
   ReadUncommitted: 'ReadUncommitted',
   ReadCommitted: 'ReadCommitted',
   RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
-} as const
+} as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
@@ -832,6 +836,77 @@ export const DailyStaffAssignmentScalarFieldEnum = {
 export type DailyStaffAssignmentScalarFieldEnum = (typeof DailyStaffAssignmentScalarFieldEnum)[keyof typeof DailyStaffAssignmentScalarFieldEnum]
 
 
+export const RcIngredientMasterScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  price: 'price',
+  yield: 'yield',
+  category: 'category',
+  supplier: 'supplier'
+} as const
+
+export type RcIngredientMasterScalarFieldEnum = (typeof RcIngredientMasterScalarFieldEnum)[keyof typeof RcIngredientMasterScalarFieldEnum]
+
+
+export const RcRecipeScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  status: 'status',
+  lossRate: 'lossRate',
+  packWeightG: 'packWeightG',
+  packagingCost: 'packagingCost',
+  processingCost: 'processingCost',
+  profitMargin: 'profitMargin',
+  totalMaterialCost: 'totalMaterialCost',
+  totalWeightKg: 'totalWeightKg',
+  productionWeightKg: 'productionWeightKg',
+  packCount: 'packCount',
+  materialCostPerPack: 'materialCostPerPack',
+  totalCostPerPack: 'totalCostPerPack',
+  sellingPrice: 'sellingPrice',
+  sourceType: 'sourceType',
+  sourceFileName: 'sourceFileName',
+  sourceFileUrl: 'sourceFileUrl'
+} as const
+
+export type RcRecipeScalarFieldEnum = (typeof RcRecipeScalarFieldEnum)[keyof typeof RcRecipeScalarFieldEnum]
+
+
+export const RcRecipeIngredientScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  recipeId: 'recipeId',
+  ingredientMasterId: 'ingredientMasterId',
+  name: 'name',
+  originalName: 'originalName',
+  amount: 'amount',
+  unit: 'unit',
+  weightKg: 'weightKg',
+  pricePerKg: 'pricePerKg',
+  yieldRate: 'yieldRate',
+  cost: 'cost',
+  isExternal: 'isExternal',
+  source: 'source',
+  status: 'status',
+  matchReason: 'matchReason',
+  externalProductName: 'externalProductName',
+  externalProductId: 'externalProductId',
+  externalPrice: 'externalPrice',
+  externalWeight: 'externalWeight',
+  externalWeightText: 'externalWeightText'
+} as const
+
+export type RcRecipeIngredientScalarFieldEnum = (typeof RcRecipeIngredientScalarFieldEnum)[keyof typeof RcRecipeIngredientScalarFieldEnum]
+
+
 export const SbmCustomerScalarFieldEnum = {
   id: 'id',
   companyName: 'companyName',
@@ -1207,6 +1282,22 @@ export const CalendarScalarFieldEnum = {
 } as const
 
 export type CalendarScalarFieldEnum = (typeof CalendarScalarFieldEnum)[keyof typeof CalendarScalarFieldEnum]
+
+
+export const CronExecutionLogScalarFieldEnum = {
+  id: 'id',
+  batchId: 'batchId',
+  batchName: 'batchName',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  duration: 'duration',
+  status: 'status',
+  errorMessage: 'errorMessage',
+  result: 'result',
+  createdAt: 'createdAt'
+} as const
+
+export type CronExecutionLogScalarFieldEnum = (typeof CronExecutionLogScalarFieldEnum)[keyof typeof CronExecutionLogScalarFieldEnum]
 
 
 export const StockConfigScalarFieldEnum = {
@@ -1857,15 +1948,15 @@ export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
 export const NullableJsonNullValueInput = {
-  DbNull: 'DbNull',
-  JsonNull: 'JsonNull'
+  DbNull: DbNull,
+  JsonNull: JsonNull
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const JsonNullValueInput = {
-  JsonNull: 'JsonNull'
+  JsonNull: JsonNull
 } as const
 
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
@@ -1888,9 +1979,9 @@ export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 export const JsonNullValueFilter = {
-  DbNull: 'DbNull',
-  JsonNull: 'JsonNull',
-  AnyNull: 'AnyNull'
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
