@@ -1,7 +1,7 @@
 'use client'
 
 import { Kaizen } from '@app/(apps)/KM/class/Kaizen'
-import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
+import { R_Stack } from '@cm/components/styles/common-components/common-components'
 import { T_LINK } from '@cm/components/styles/common-components/links'
 import Image from 'next/image'
 

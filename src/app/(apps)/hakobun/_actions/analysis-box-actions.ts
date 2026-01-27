@@ -442,7 +442,7 @@ export const getSessionRecordsForExport = async (sessionId: number) => {
   try {
     const records = await prisma.hakobunAnalysisRecord.findMany({
       where: { sessionId },
-      orderBy: { createdAt: 'asc' },
+      orderBy: { sortOrder: 'asc' }, // 画面表示と同じ順序
     })
 
     return { success: true, data: records }
@@ -472,7 +472,7 @@ export const getBoxRecordsForExport = async (boxId: number) => {
           },
         },
       },
-      orderBy: { createdAt: 'asc' },
+      orderBy: { sortOrder: 'asc' }, // 画面表示と同じ順序
     })
 
     return { success: true, data: records }

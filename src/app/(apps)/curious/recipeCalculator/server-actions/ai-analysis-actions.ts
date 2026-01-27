@@ -1,13 +1,8 @@
 'use server'
 
 import {findIngredientByFuzzyName} from './ingredient-master-actions'
-import {
-  createRecipe,
-  addRecipeIngredient,
-  updateRecipe,
-  recalculateRecipeCosts,
-  type RecipeWithIngredients,
-} from './recipe-actions'
+import {createRecipe, addRecipeIngredient, updateRecipe, recalculateRecipeCosts} from './recipe-actions'
+import type {RecipeWithIngredients} from '../types'
 
 // AI解析結果の型
 export interface ParsedIngredient {

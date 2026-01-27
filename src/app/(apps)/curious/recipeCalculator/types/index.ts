@@ -53,23 +53,3 @@ export interface MenuItem {
   href: string
   icon: 'calculator' | 'database'
 }
-
-// 原材料マスタ入力（後方互換用）
-export interface MasterIngredient {
-  id: number
-  name: string
-  price: number
-  yield: number
-  category: string
-  supplier: string
-}
-
-// Prisma型からMasterIngredient型への変換
-export const toMasterIngredient = (m: RcIngredientMaster): MasterIngredient => ({
-  id: m.id,
-  name: m.name,
-  price: m.price,
-  yield: m.yield,
-  category: m.category,
-  supplier: m.supplier,
-})

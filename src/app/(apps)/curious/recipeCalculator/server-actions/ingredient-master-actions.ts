@@ -130,10 +130,6 @@ ${masterList}
 
     const data = await response.json()
     const content = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
-    if (!isNaN(Number(content))) {
-      console.log({targetName, content}) //logs
-    }
-
     if (!content || content.toLowerCase() === 'null') return null
 
     const matchId = parseInt(content.replace(/[^0-9]/g, ''), 10)

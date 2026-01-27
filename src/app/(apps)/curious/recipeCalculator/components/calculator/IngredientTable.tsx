@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { Trash2, Loader2, Database, Globe, Search, ChevronDown, ExternalLink, Package } from 'lucide-react'
 import { Button } from '@shadcn/ui/button'
 import type { RcRecipeIngredient, IngredientMaster } from '../../types'
@@ -25,8 +24,6 @@ export const IngredientTable = ({
   onMasterSelect,
   searchingIndex,
 }: IngredientTableProps) => {
-  const [searchTerms, setSearchTerms] = useState<Record<number, string>>({})
-
   // マスタをカテゴリ別にグループ化
   const mastersByCategory = ingredientMasters.reduce((acc, master) => {
     const category = master.category || 'その他'
@@ -34,16 +31,6 @@ export const IngredientTable = ({
     acc[category].push(master)
     return acc
   }, {} as Record<string, IngredientMaster[]>)
-
-  // 検索フィルタ適用
-  const getFilteredMasters = (idx: number) => {
-    const term = searchTerms[idx]?.toLowerCase() || ''
-    if (!term) return ingredientMasters
-    return ingredientMasters.filter(m =>
-      m.name.toLowerCase().includes(term) ||
-      m.category?.toLowerCase().includes(term)
-    )
-  }
 
   return (
     <section className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">

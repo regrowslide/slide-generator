@@ -1,12 +1,9 @@
 'use server'
 
-import type {RcRecipe, RcRecipeIngredient} from '@prisma/generated/prisma/client'
+import type {RcRecipeIngredient} from '@prisma/generated/prisma/client'
+import type {RecipeWithIngredients} from '../types'
 import {convertToKg} from '../lib/unit-converter'
 import prisma from 'src/lib/prisma'
-
-export type RecipeWithIngredients = RcRecipe & {
-  RcRecipeIngredient: RcRecipeIngredient[]
-}
 
 export type RecipeInput = {
   name: string
@@ -105,8 +102,28 @@ export const addRecipeIngredient = async (data: RecipeIngredientInput): Promise<
   const cost = adjustedPricePerKg * weightKg
 
   // Prismaリレーション形式でデータを構築
-
-  const createData: any = {
+  const createData: {
+    RcRecipe: {connect: {id: number}}
+    name: string
+    originalName?: string
+    amount: number
+    unit: string
+    weightKg: number
+    pricePerKg: number
+    yieldRate: number
+    cost: number
+    isExternal: boolean
+    source: string
+    status: string
+    matchReason?: string | null
+    externalProductName?: string | null
+    externalProductId?: string | null
+    externalProductUrl?: string | null
+    externalPrice?: number | null
+    externalWeight?: number | null
+    externalWeightText?: string | null
+    RcIngredientMaster?: {connect: {id: number}}
+  } = {
     RcRecipe: {connect: {id: data.recipeId}},
     name: data.name,
     originalName: data.originalName,

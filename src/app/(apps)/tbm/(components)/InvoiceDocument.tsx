@@ -7,7 +7,6 @@ import { Button } from '@cm/components/styles/common-components/Button'
 import { cn } from '@cm/shadcn/lib/utils'
 import { Trash2, RotateCcw, Edit } from 'lucide-react'
 import Image from 'next/image'
-import useLogOnRender from '@cm/hooks/useLogOnRender'
 
 const showUnitPrice = false
 
