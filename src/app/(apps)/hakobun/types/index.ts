@@ -109,13 +109,12 @@ export interface HakobunVoice {
 export type GeneralCategoryType = '接客・サービス' | '店内' | '料理・ドリンク' | '備品・設備' | '値段' | '立地' | 'その他'
 
 // --- ステージタイプ ---
-export type StageType = '認知' | '興味' | '検討' | '購入' | '利用' | 'リピート' | 'その他'
 
 // --- 抽出要素（トピック単位）---
 export interface Extract {
   raw_text: string // 原文（トピック分割前の全文）
   sentence: string // トピック単位（意味が完結した形）
-  stage: StageType // カスタマージャーニーのステージ
+  stage: string // カスタマージャーニーのステージ
   general_category: GeneralCategoryType // 一般カテゴリ（抽象度の高い区分）
   category: string // カテゴリ（詳細なカテゴリ名）
   sentiment: SentimentType // 感情
@@ -353,6 +352,8 @@ export interface HakobunAnalysisSession {
   status: AnalysisSessionStatus
   analyzedAt?: Date | null
   errorMessage?: string | null
+  isConfirmed: boolean  // 確定フラグ
+  confirmedAt?: Date | null  // 確定日時
   analysisBoxId: number
   records?: HakobunAnalysisRecord[]
 }
@@ -370,6 +371,10 @@ export interface HakobunAnalysisRecord {
   analysisGeneralCategory?: string | null
   analysisCategory?: string | null
   analysisTopic?: string | null
+  // AIの新規提案フラグ
+  isProposedGeneralCategory: boolean
+  isProposedCategory: boolean
+  proposalApproved?: boolean | null // null=未処理、true=承認、false=却下
   // 修正結果
   feedbackStage?: string | null
   feedbackSentiment?: string | null
@@ -403,6 +408,8 @@ export interface CreateAnalysisRecordInput {
   analysisGeneralCategory?: string
   analysisCategory?: string
   analysisTopic?: string
+  isProposedGeneralCategory?: boolean
+  isProposedCategory?: boolean
   sessionId: number
 }
 
@@ -415,4 +422,31 @@ export interface UpdateAnalysisRecordFeedbackInput {
   feedbackTopic?: string
   reviewerComment?: string
   isModified: boolean
+}
+
+// ============================================
+// ルール自動生成用型定義
+// ============================================
+
+// --- AIが生成したルール ---
+export interface GeneratedRule {
+  targetCategory: string  // 対象カテゴリ
+  ruleDescription: string  // ルール内容
+  priority: 'High' | 'Medium' | 'Low'  // 優先度
+  isNew: boolean  // 新規ルールか既存マージか
+  mergedWithRuleId?: number  // マージ先の既存ルールID（既存マージの場合）
+}
+
+// --- ルール生成APIリクエスト ---
+export interface GenerateRuleFromSessionRequest {
+  sessionId: number
+  hakobunClientId: number
+}
+
+// --- ルール生成APIレスポンス ---
+export interface GenerateRuleFromSessionResponse {
+  success: boolean
+  generatedRules?: GeneratedRule[]
+  savedCount?: number
+  error?: string
 }

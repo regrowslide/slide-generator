@@ -1,11 +1,11 @@
 'use client'
 
 import useWindowSize from 'src/cm/hooks/useWindowSize'
-import {cl} from 'src/cm/lib/methods/common'
+import { cl } from 'src/cm/lib/methods/common'
 
-import React, {CSSProperties} from 'react'
+import React, { CSSProperties } from 'react'
 export const FitMargin = (props: htmlProps) => {
-  const {className, style, ...rest} = props
+  const { className, style, ...rest } = props
   return (
     <div className={`mx-auto w-fit ${className}`} {...rest}>
       {props.children}
@@ -18,7 +18,7 @@ export const MyContainer = (
     children?: React.ReactNode
   } & any
 ) => {
-  const {className, style, children, ...rest} = props
+  const { className, style, children, ...rest } = props
   return (
     <div className={cl('w-fit mx-auto', className)} {...rest}>
       {props.children}
@@ -26,12 +26,12 @@ export const MyContainer = (
   )
 }
 export const R_Stack = (props: htmlProps) => {
-  const {className, ...rest} = props
+  const { className, ...rest } = props
   return <div className={cl(`row-stack`, className)} {...rest} />
 }
 
 export const C_Stack = (props: htmlProps) => {
-  const {className, ...rest} = props
+  const { className, ...rest } = props
   return <div className={cl(`col-stack`, className)} {...rest} />
 }
 
@@ -43,13 +43,13 @@ export const Absolute = (
     left?: number
   }
 ) => {
-  const {className, style, top, bottom, right, left, ...rest} = props
+  const { className, style, top, bottom, right, left, ...rest } = props
 
   return (
     <div
       {...{
         className: cl(`absolute-center`, className),
-        style: {top, bottom, right, left, ...style},
+        style: { top, bottom, right, left, ...style },
         ...rest,
       }}
     />
@@ -57,8 +57,8 @@ export const Absolute = (
 }
 
 export const CenterScreen = (props: htmlProps) => {
-  const {bodyHeight} = useWindowSize()
-  const {className, style = {height: bodyHeight, width: '95vw', margin: 'auto', overflow: 'auto'}, children, ...rest} = props
+  const { bodyHeight } = useWindowSize()
+  const { className, style = { height: bodyHeight - 80, width: '95vw', margin: 'auto', overflow: 'auto' }, children, ...rest } = props
 
   return (
     <div
@@ -74,7 +74,7 @@ export const CenterScreen = (props: htmlProps) => {
 }
 
 export const Center = (props: htmlProps) => {
-  const {className, style, children, ...rest} = props
+  const { className, style, children, ...rest } = props
   return (
     <div
       {...{
@@ -88,10 +88,10 @@ export const Center = (props: htmlProps) => {
   )
 }
 
-export const NoData = (props: {style?: React.CSSProperties; children?: React.ReactNode}) => {
-  const {style, children} = props
+export const NoData = (props: { style?: React.CSSProperties; children?: React.ReactNode }) => {
+  const { style, children } = props
   return (
-    <Center className={`   bg-sub-light  h-full w-full  rounded-md `} style={{...style}}>
+    <Center className={`   bg-sub-light  h-full w-full  rounded-md `} style={{ ...style }}>
       <span className="">{children ?? 'データがありません'}</span>
     </Center>
   )
@@ -102,7 +102,7 @@ export const Divider = () => {
 }
 
 export const KeyValuePair = props => {
-  const {children, label, wrapperClass = `row-stack`, labelClass = ' font-bold w-[9.375rem] '} = props
+  const { children, label, wrapperClass = `row-stack`, labelClass = ' font-bold w-[9.375rem] ' } = props
 
   return (
     <div className={wrapperClass}>
@@ -121,15 +121,15 @@ export const Circle = (
     inline?: boolean
   }
 ) => {
-  const {className, style: originalStyle, size = 24, inline = true, color = 'gray', children, ...rest} = props
+  const { className, style: originalStyle, size = 24, inline = true, color = 'gray', children, ...rest } = props
 
-  let {width, height} = props
+  let { width, height } = props
   if (size) {
     width = width ?? size
     height = height ?? size
   }
 
-  const style = {width: width, height: height ?? width, ...props.style}
+  const style = { width: width, height: height ?? width, ...props.style }
 
   return (
     <>
@@ -150,18 +150,18 @@ export const Circle = (
 
 import JsonFormatter from 'react-json-formatter'
 
-import {CssString} from 'src/cm/components/styles/cssString'
-import {Z_INDEX} from '@cm/lib/constants/constants'
-import {colorVariants} from '@cm/lib/methods/colorVariants'
-import {iconBtnColorVariants} from '@cm/components/styles/common-components/IconBtn'
-import {cn} from '@shadcn/lib/utils'
-import {htmlProps} from '@cm/types/utility-types'
+import { CssString } from 'src/cm/components/styles/cssString'
+import { Z_INDEX } from '@cm/lib/constants/constants'
+import { colorVariants } from '@cm/lib/methods/colorVariants'
+import { iconBtnColorVariants } from '@cm/components/styles/common-components/IconBtn'
+import { cn } from '@shadcn/lib/utils'
+import { htmlProps } from '@cm/types/utility-types'
 
-export const ParseJSON = ({json}) => {
+export const ParseJSON = ({ json }) => {
   const jsonStyle = {
-    propertyStyle: {color: 'red'},
-    stringStyle: {color: 'green'},
-    numberStyle: {color: 'darkorange'},
+    propertyStyle: { color: 'red' },
+    stringStyle: { color: 'green' },
+    numberStyle: { color: 'darkorange' },
   }
 
   return (
@@ -171,8 +171,8 @@ export const ParseJSON = ({json}) => {
   )
 }
 
-export const Padding = (props: htmlProps & {paddingClass?: string}) => {
-  const {className, style, ...rest} = props
+export const Padding = (props: htmlProps & { paddingClass?: string }) => {
+  const { className, style, ...rest } = props
   return (
     <div
       {...{
@@ -273,9 +273,9 @@ export const Padding = (props: htmlProps & {paddingClass?: string}) => {
 // )
 
 export const Vr = (props: htmlProps) => {
-  const {className, style, children, ...rest} = props
+  const { className, style, children, ...rest } = props
   const wrapperClass = cl(` w-[0rem] border-r-[.0625rem]  `, className)
-  const wrapperStyle: CssString = {...style, writingMode: 'vertical-lr', textAlign: `center`}
+  const wrapperStyle: CssString = { ...style, writingMode: 'vertical-lr', textAlign: `center` }
 
   if (children) {
     return (
@@ -313,13 +313,13 @@ export const Box = (
     style?: CSSProperties
   }
 ) => {
-  const {margin = `auto`, width, height, maxWidth = `80vw`, maxHeight, style, ...rest} = props
+  const { margin = `auto`, width, height, maxWidth = `80vw`, maxHeight, style, ...rest } = props
 
   return (
     <div
       {...rest}
       {...{
-        style: {margin, width, height, maxHeight, maxWidth, overflow: `auto`, ...style},
+        style: { margin, width, height, maxHeight, maxWidth, overflow: `auto`, ...style },
       }}
     >
       {props.children}
@@ -331,10 +331,10 @@ export const NodataPlaceHolder = () => {
   return <small className={`opacity-30`}>-</small>
 }
 
-export const FloatingDataChecker = ({json}) => {
+export const FloatingDataChecker = ({ json }) => {
   return (
     <div
-      style={{zIndex: Z_INDEX.modal}}
+      style={{ zIndex: Z_INDEX.modal }}
       className={`fixed left-4 top-4  max-h-[300px] max-w-[300px] overflow-auto rounded-sm  bg-white p-2 shadow-sm`}
     >
       <JsonFormatter json={json} />

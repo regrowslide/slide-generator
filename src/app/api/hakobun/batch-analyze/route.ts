@@ -19,14 +19,14 @@ export async function POST(request: NextRequest) {
   const requestId = Math.random().toString(36).substring(7)
   const totalStartTime = Date.now()
 
-  log('START', `Request started`, { requestId })
+  log('START', `Request started`, {requestId})
 
   try {
     const body: BatchAnalyzeRequest = await request.json()
     const {client_id, texts, allow_category_generation = true} = body
 
     if (!client_id || !texts || !Array.isArray(texts) || texts.length === 0) {
-      log('ERROR', 'Validation failed: missing required fields', { requestId })
+      log('ERROR', 'Validation failed: missing required fields', {requestId})
       return NextResponse.json(
         {
           success: false,
@@ -47,9 +47,15 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // クライアント存在確認
+    // クライアント存在確認（ステージも含めて取得）
     const client = await prisma.hakobunClient.findUnique({
       where: {clientId: client_id},
+      include: {
+        HakobunClientStage: {
+          where: {enabled: true},
+          orderBy: {sortOrder: 'asc'},
+        },
+      },
     })
 
     if (!client) {
@@ -70,7 +76,7 @@ export async function POST(request: NextRequest) {
 
     // ===== Phase 1: コンテキスト取得 (Retrieval) =====
     const phase1Start = Date.now()
-    log('PHASE1', 'Starting context retrieval', { requestId })
+    log('PHASE1', 'Starting context retrieval', {requestId})
 
     // クライアントに業種が紐づいていない場合はエラー
     if (!client.industryId) {
@@ -138,13 +144,20 @@ export async function POST(request: NextRequest) {
 
     // ===== Phase 2: 動的プロンプト構築 =====
     const phase2Start = Date.now()
-    log('PHASE2', 'Building dynamic prompt', { requestId })
+    log('PHASE2', 'Building dynamic prompt', {requestId})
+    // クライアントのステージ一覧を取得（未設定の場合はデフォルト）
+    const clientStages =
+      client.HakobunClientStage && client.HakobunClientStage.length > 0
+        ? client.HakobunClientStage.map(s => ({name: s.name, description: s.description}))
+        : []
+
     const systemPrompt = buildSystemPrompt(
       industryGeneralCategories,
       corrections,
       rules,
       allow_category_generation,
-      client.inputDataExplain
+      client.inputDataExplain,
+      clientStages
     )
 
     log('PHASE2', `Prompt built`, {
@@ -180,12 +193,12 @@ export async function POST(request: NextRequest) {
             const fullPrompt = `${systemPrompt}\n\n【分析対象テキスト】\n${text}`
 
             const geminiResponse = await callGeminiForJson<Omit<Extract, 'raw_text'>[]>(fullPrompt, HAKOBUN_ANALYSIS_SCHEMA, {
-              model: 'gemini-2.0-flash',
-              maxRetries: 2,
+              model: 'gemini-2.5-flash-lite',
+              maxRetries: 1,
               generationConfig: {
-                temperature: 0.2,
-                topK: 40,
-                topP: 0.95,
+                temperature: 0.1,
+                topK: 1,
+                topP: 0.1,
                 maxOutputTokens: 4096,
               },
             })
@@ -330,7 +343,8 @@ function buildSystemPrompt(
   corrections: {rawSegment: string; correctCategory: string; correctSentiment: string}[],
   rules: {targetCategory: string; ruleDescription: string; priority: string}[],
   allowCategoryGeneration: boolean = true,
-  inputDataExplain?: string | null
+  inputDataExplain?: string | null,
+  clientStages?: {name: string; description: string | null}[]
 ): string {
   // マスタカテゴリ一覧（一般カテゴリごとにグループ化）
   const fixedCategories =
@@ -381,18 +395,51 @@ ${inputDataExplain}
 `
     : ''
 
-  return `あなたは、顧客の声を「一般カテゴリ」「カテゴリ」別に分類し、経営改善に役立つインサイトを抽出するアシスタントです。
+  // ステージ一覧（クライアント設定またはデフォルト）
+  const stages = clientStages && clientStages.length > 0 ? clientStages : []
+
+  // ステージ名リスト（禁止事項・出力フィールド用）
+  const stageNames = stages.map(s => `「${s.name}」`).join('、')
+
+  // ステージ定義（プロンプト用）- 番号付きで明確化
+  const stageDefinitions = stages.map((s, i) => `${i + 1}. **${s.name}** ${s.description ? `：${s.description}` : ''}`).join('\n')
+
+  // ステージ名の配列（出力例用）
+  const stageNameArray = stages.map(s => s.name)
+  // 出力例用のステージ
+  const exampleStage1 = stageNameArray[Math.min(4, stageNameArray.length - 1)] || stageNameArray[0]
+
+  return `あなたは、顧客の声を「ステージ」「感情」「一般カテゴリ」「カテゴリ」別に分類し、経営改善に役立つインサイトを抽出するアシスタントです。
+
+# ══════════════════════════════════════════════════════════════
+# 【最重要】ステージ(stage)の制約 - 必ず最初に確認すること
+# ══════════════════════════════════════════════════════════════
+
+## 許可されたステージ一覧（これ以外は使用禁止）
+${stageDefinitions}
+
+### 【絶対厳守】ステージ出力ルール
+
+1. **stageフィールドには、上記一覧に記載された名前のみ出力可能**
+2. **上記一覧にない名前を出力することは厳禁**
+3. **迷った場合は、上記一覧の中から最も意味が近いものを選択すること**
+
+
+### ステージ判定の手順
+1. 顧客の発言内容を確認
+2. 上記の許可されたステージ一覧を参照
+3. 最も適切なステージを一覧から選択
+4. **一覧にない名前は絶対に出力しない**
+
+# ══════════════════════════════════════════════════════════════
 
 【重要：業界・業種による違い】
-このプロンプト内で示される例（カテゴリ名、ステージ名など）は**飲食店を想定した一例**です。
-実際の一般カテゴリ・カテゴリは、クライアントの**業界・業種によって大きく異なります**。
-必ず「一般カテゴリ一覧」と「カテゴリマスター一覧」に記載されたものを優先して使用してください。
-例に出てくるカテゴリ名（「接客が丁寧」「パンが美味しい」等）はあくまで参考であり、
-実際には「一般カテゴリ一覧」「カテゴリマスター一覧」に記載のものを使ってください。
+このプロンプト内で示される例（カテゴリ名など）は参考例です。
+実際の一般カテゴリ・カテゴリは、「一般カテゴリ一覧」と「カテゴリマスター一覧」に記載されたものを使用してください。
 
-${inputDataExplainSection}## ★最重要：分析の目的と粒度
+${inputDataExplainSection}## ★分析の目的と粒度
 
-**目的：「一般カテゴリ」×「カテゴリ」×「感情」の組み合わせで顧客の声を集計し、経営判断に活かすこと**
+**目的：「ステージ」×「感情」×「一般カテゴリ」×「カテゴリ」の組み合わせで顧客の声を集計し、経営判断に活かすこと**
 
 この目的のため、以下の粒度で抽出してください：
 - **分割基準**：「一般カテゴリ」または「感情」が変わるときのみ分割
@@ -413,25 +460,9 @@ ${inputDataExplainSection}## ★最重要：分析の目的と粒度
 4. **比較・補足・理由説明** → メインの意見と**統合**
 5. **「〜が良い。だから〜」のような因果関係** → **統合**
 
-【統合の例1】不満→改善要望のパターン
-- 入力：「カフェのサービスが遅く、待ち時間が長かったです。改善を期待します。」
-- → **1つに統合**：「カフェのサービスが遅く、待ち時間が長かったです。改善を期待します。」（接客・サービス × **不満**）
-- ※「改善を期待します」は前の不満に対する付随的コメントなので分割しない。感情は主たるトーンである「不満」を選択
-
-【統合の例2】同一トピックへの一連のコメント
-- 入力：「店内が寒い。エアコンの温度を上げてほしい。ブランケットがあると嬉しいです。」
-- → 1つに統合：「店内が寒い。エアコンの温度を上げてほしい。ブランケットがあると嬉しいです。」（環境・設備 × リクエスト）
-
 ### 分割すべきケース（別々の抽出にする）
 - **異なる一般カテゴリで、かつ独立したトピック** → 分割
 - **明確に異なる感情で、かつ独立したトピック**（好意的 vs 不満 など） → 分割
-
-【分割の例】異なる一般カテゴリ・異なるトピック
-- 入力：「パンはとても美味しかったです。ただ、店員さんの態度が少し気になりました。」
-- → 2つに分割：
-  - 「パンはとても美味しかったです。」（商品・メニュー × 好意的）
-  - 「ただ、店員さんの態度が少し気になりました。」（接客・サービス × 不満）
-- ※「パン」と「店員の態度」は別々のトピックなので分割
 
 ### 分割NGの判断基準（迷ったら統合）
 - 「改善を期待します」「〜してほしいです」「〜だと嬉しいです」→ 前の文と**統合**
@@ -466,26 +497,7 @@ ${fixedCategories}
 - **英字・数字は半角**（例：Wi-Fi、BGM）
 - **感情の方向性を含める**（何がどう良い/悪い/要望か一読で分かるように）
 
-### 良いカテゴリ名の例
-- 「接客が丁寧・気配りがある」（好意的な接客）
-- 「接客や対応が雑・私語が多い」（不満な接客）
-- 「メニューへのリクエスト」（要望）
-- 「パンが美味しい・満足」（好意的な商品評価）
-- 「お店への感謝・応援の声」（ロイヤルティ）
-
 ${additionalRules ? `### 追加ルール（厳守）\n${additionalRules}\n` : ''}
----
-
-## 出力前チェックリスト
-
-1. **「不満→改善要望」のパターンを分割していないか？** → 該当する場合は必ず統合し、感情は「不満」
-2. **同じトピックについての一連の感想を分割していないか？** → 該当する場合は必ず統合
-3. **同じ一般カテゴリ × 同じ感情の文を分割していないか？** → 該当する場合は必ず統合
-4. **カテゴリ名に感情の方向性が含まれているか？**
-5. **抽出文が意味的に完結しているか？**（「〜と」「〜も」で終わっていないか）
-6. **一般カテゴリがマスター一覧から選択されているか？**
-7. **過剰に分割していないか？** → 迷ったら統合すること
-
 ---
 
 ## 感情判定のルール
@@ -495,18 +507,6 @@ ${additionalRules ? `### 追加ルール（厳守）\n${additionalRules}\n` : ''
 - 好意的な評価の中に含まれる軽い要望・期待は「好意的」に分類
 - **不満を述べた後の「改善を期待」「〜してほしい」は「不満」に分類**（リクエストではない）
 
-【判定例】
-- 「すごく気に入りました。また開催してほしい！」→ **好意的**（主たるトーンがポジティブ）
-- 「良いのですが、〜してほしい」→ **リクエスト**（改善要望が主眼）
-- 「〜が残念でした」→ **不満**
-- 「サービスが遅い。改善を期待します」→ **不満**（不満が主、期待は付随）
-- 「待ち時間が長かったです。改善してほしい」→ **不満**（不満→改善要望のパターン）
-
-【重要】「不満→改善要望」パターンの感情判定
-- 不満を述べた直後の「改善を期待」「〜してほしい」「〜してください」は、**独立したリクエストではなく不満の一部**
-- このパターンでは感情を**「不満」**とすること（「リクエスト」ではない）
-- 例：「接客が雑でした。もっと丁寧にしてほしいです」→ **不満**（全体として）
-
 ---
 
 ## 感情(sentiment)の定義
@@ -514,41 +514,14 @@ ${additionalRules ? `### 追加ルール（厳守）\n${additionalRules}\n` : ''
 - **好意的**：肯定的・賞賛的な評価語が含まれる
 - **不満**：否定的・批判的な評価語が含まれる
 - **リクエスト**：改善要望や提案語句が含まれる
-- **その他**：上記3つのいずれにも明確に分類できない場合のみ使用。
-  【重要】「その他」は最後の手段です。安易に使用しないでください。
-  必ず「好意的」「不満」「リクエスト」での分類を試み、
-  本当に分類不可能な場合のみ「その他」を選択すること。
+- **その他**：上記3つのいずれにも明確に分類できない場合のみ使用
 
 ## 熱量スコア(magnitude)の定義（0–100）
 
-- 0–5：ほぼ感情表現なし（レビューではほとんど使用しない）
-- 6–25：軽度の感情表現（短いポジ／ネガ語句）
-- 26–50：中程度の感情表現（感嘆符１つ、強調詞を含む）
-- 51–75：強い感情表現（複数の感嘆符や絵文字、強い語気）
-- 76–100：非常に強い情熱的表現（長文での熱意、複数絵文字）
-- レビュー文全体の熱量分布を考慮し、低めに偏りすぎないよう割り当てる
-
----
-
-## ステージ(stage)の定義 - カスタマージャーニー
-
-顧客がどの段階で発言しているかを判定してください。
-
-- **認知**：商品・サービスの存在を初めて知った段階での感想
-  - 例：「SNSで見て気になった」「広告で知った」「友人に教えてもらった」
-- **興味**：興味を持ち、情報収集している段階
-  - 例：「メニューを見て気になった」「口コミを調べた」「どんな感じか知りたかった」
-- **検討**：購入・利用を具体的に検討している段階
-  - 例：「他店と比較した」「予算内か確認した」「予約しようか迷った」
-- **購入**：購入・契約・予約の瞬間に関する感想
-  - 例：「注文がスムーズだった」「決済が簡単だった」「予約が取りやすかった」
-- **利用**：実際に商品・サービスを利用している段階での感想（最も多い）
-  - 例：「美味しかった」「接客が良かった」「居心地が良い」「店内が寒い」
-- **リピート**：再利用・継続利用に関する意向
-  - 例：「また来たい」「定期的に利用している」「次も買いたい」「友人にも勧めたい」
-- **その他**：上記に該当しない場合のみ使用
-
-【重要】多くの顧客の声は「利用」段階に該当します。迷った場合は「利用」を選択してください。
+- 0–25：軽度の感情表現
+- 26–50：中程度の感情表現
+- 51–75：強い感情表現
+- 76–100：非常に強い情熱的表現
 
 ${correctionExamples ? `## 直近の正解事例（Few-Shot）\n${correctionExamples}\n\n` : ''}---
 
@@ -556,107 +529,52 @@ ${correctionExamples ? `## 直近の正解事例（Few-Shot）\n${correctionExam
 
 - **「一般カテゴリ」×「感情」が変わるときのみ分割**して、配列形式で出力
 - 必ずJSON形式で出力すること
-- **sentenceには意味が完結した原文を入れること**
 
 ### 出力フィールド（必須）
 
-| フィールド | 説明 |
-|-----------|------|
-| sentence | 抽出した原文（意味が完結した形、統合時は連結） |
-| stage | ステージ（「認知」「興味」「検討」「購入」「利用」「リピート」「その他」） |
-| general_category | 一般カテゴリ（マスター一覧から選択） |
-| category | カテゴリ（詳細分類、原則13文字以内） |
-| sentiment | 感情（「好意的」「不満」「リクエスト」「その他」） |
-| posi_nega | ポジネガ判定（「positive」「negative」「neutral」） |
-| magnitude | 熱量スコア（0-100） |
-| is_new_generated | 新規生成カテゴリの場合のみtrue |
+| フィールド | 説明 | 制約 |
+|-----------|------|------|
+| sentence | 抽出した原文 | 意味が完結した形 |
+| stage | ステージ | **${stageNames}のいずれか（これ以外禁止）** |
+| general_category | 一般カテゴリ | マスター一覧から選択 |
+| category | カテゴリ | 原則13文字以内 |
+| sentiment | 感情 | 「好意的」「不満」「リクエスト」「その他」 |
+| posi_nega | ポジネガ判定 | 「positive」「negative」「neutral」 |
+| magnitude | 熱量スコア | 0-100 |
+| is_new_generated | 新規生成フラグ | 新規カテゴリの場合のみtrue |
 
-**※以下の出力例は飲食店を想定した一例です。実際の一般カテゴリ・カテゴリは「一般カテゴリ一覧」「カテゴリマスター一覧」に従ってください。**
+### 出力例（※stageは必ず許可リストから選択）
 
-### 出力例1（複数の一般カテゴリがある場合 → 分割）
-
-入力: 「朝早めに駅に着いた時に利用してます。店員さんの対応が早くてささっとカフェオレなど出してくれて嬉しいです。」
+入力: 「サービスが良くて満足しています。また利用したいです。」
 
 \`\`\`json
 [
-  {"sentence": "朝早めに駅に着いた時に利用してます。", "stage": "リピート", "general_category": "店舗・立地", "category": "来店のルーティンがある", "sentiment": "好意的", "posi_nega": "positive", "magnitude": 30},
-  {"sentence": "店員さんの対応が早くてささっとカフェオレなど出してくれて嬉しいです。", "stage": "利用", "general_category": "接客・サービス", "category": "接客が丁寧・気配りがある", "sentiment": "好意的", "posi_nega": "positive", "magnitude": 55}
+  {"sentence": "サービスが良くて満足しています。また利用したいです。", "stage": "${exampleStage1}", "general_category": "（該当する一般カテゴリ）", "category": "サービスに満足", "sentiment": "好意的", "posi_nega": "positive", "magnitude": 50}
 ]
 \`\`\`
 
-### 出力例2（同じ一般カテゴリ×同じ感情 → 統合）
-
-入力: 「店内が寒い。エアコンの温度を上げてほしい。ブランケットがあると嬉しいです。」
-
-\`\`\`json
-[
-  {"sentence": "店内が寒い。エアコンの温度を上げてほしい。ブランケットがあると嬉しいです。", "stage": "利用", "general_category": "運営・設備", "category": "店内温度への不満・改善要望", "sentiment": "リクエスト", "posi_nega": "negative", "magnitude": 45}
-]
-\`\`\`
-※ 3文とも「運営・設備」×「リクエスト」なので1つに統合
-
-### 出力例3（同じ一般カテゴリでも感情が異なる → 分割）
-
-入力: 「パンはとても美味しいので気に入っています。ただ、メニューが店舗によって少ないので少し残念です。」
-
-\`\`\`json
-[
-  {"sentence": "パンはとても美味しいので気に入っています。", "stage": "利用", "general_category": "商品・メニュー", "category": "パンが美味しい・満足", "sentiment": "好意的", "posi_nega": "positive", "magnitude": 50},
-  {"sentence": "ただ、メニューが店舗によって少ないので少し残念です。", "stage": "利用", "general_category": "商品・メニュー", "category": "メニューへのリクエスト", "sentiment": "リクエスト", "posi_nega": "negative", "magnitude": 35}
-]
-\`\`\`
-※ 同じ「商品・メニュー」でも感情が「好意的」と「リクエスト」で異なるので分割
-
-### 出力例4（★重要：不満→改善要望パターン → 統合）
-
-入力: 「カフェのサービスが遅く、待ち時間が長かったです。改善を期待します。」
-
-\`\`\`json
-[
-  {"sentence": "カフェのサービスが遅く、待ち時間が長かったです。改善を期待します。", "stage": "利用", "general_category": "接客・サービス", "category": "提供スピードが遅い・待ち時間が長い", "sentiment": "不満", "posi_nega": "negative", "magnitude": 45}
-]
-\`\`\`
-※ 「改善を期待します」は前の不満に対する付随的コメント。**分割せず1つに統合**し、感情は主たるトーンの「不満」
-※ ❌NG例：「カフェのサービスが遅く…」と「改善を期待します」を2つに分割するのは間違い
-
-### 出力例5（事実+改善要望 → 統合）
-
-入力: 「店内のWi-Fiが繋がりにくいです。改善していただけると嬉しいです。」
-
-\`\`\`json
-[
-  {"sentence": "店内のWi-Fiが繋がりにくいです。改善していただけると嬉しいです。", "stage": "利用", "general_category": "運営・設備", "category": "Wi-Fi・電源への不満", "sentiment": "不満", "posi_nega": "negative", "magnitude": 40}
-]
-\`\`\`
-※ Wi-Fiの問題という同一トピックについての一連のコメントなので統合
+※ stageは必ず「${stageNames}」のいずれかを使用すること
 
 ### カテゴリ選択ルール
 
 1. マスタカテゴリ一覧を最優先で使用
 2. ${
     allowCategoryGeneration
-      ? `マスターに該当するカテゴリがない場合のみ、is_new_generated: true として新しいカテゴリを提案してください。
-
-**新規カテゴリ提案時の粒度ルール（重要）**:
-- 既存のカテゴリマスター一覧の粒度（抽象度・詳細度）を必ず参考にすること
-- 既存カテゴリと同じレベルの抽象化を行うこと（抽象的すぎず、細かすぎない）
-- 既存カテゴリの命名規則（13文字以内、全角ナカグロ使用、方向性を含む）に従うこと
-- 既存カテゴリの表現スタイル（例：「Xが美味しい」「Xが早い」「清潔感がある・綺麗」など）を参考にすること
-- 既存カテゴリと同程度の粒度で、一貫性のあるカテゴリ名を提案すること`
-      : 'マスターカテゴリ一覧から必ず選択してください。新規カテゴリの生成は禁止です。'
+      ? `マスターに該当するカテゴリがない場合のみ、is_new_generated: true として新しいカテゴリを提案`
+      : 'マスターカテゴリ一覧から必ず選択。新規カテゴリの生成は禁止'
   }
 3. 一般カテゴリは必ず${generalCategoryNames}から選択
-4. ${allowCategoryGeneration ? '新規一般カテゴリを提案する場合も、既存の一般カテゴリの粒度と抽象度を参考にすること' : ''}
 
-### 禁止事項
+# ══════════════════════════════════════════════════════════════
+# 【禁止事項】出力前に必ず確認すること
+# ══════════════════════════════════════════════════════════════
 
-- 応答にJSON以外の文字列を含めないこと。余計な説明や補足は禁止。
-- 番号の附番
-- 余計な文字の追加
-- 感情(sentiment)の値を"好意的"、"不満"、"リクエスト"、"その他"以外にしないこと
-- posi_negaの値を"positive"、"negative"、"neutral"以外にしないこと
-- stageの値を"認知"、"興味"、"検討"、"購入"、"利用"、"リピート"、"その他"以外にしないこと
-- general_categoryの値を${generalCategoryNames}以外にしないこと
+1. **stageの値は${stageNames}以外を絶対に出力しないこと**
+   - 新しいステージ名を生成・提案することは禁止
+2. sentimentは「好意的」「不満」「リクエスト」「その他」のみ
+3. posi_negaは「positive」「negative」「neutral」のみ
+4. general_categoryは${generalCategoryNames}のみ
+5. JSON以外の文字列を含めないこと
 
 ---`
 }

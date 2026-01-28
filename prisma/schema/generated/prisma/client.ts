@@ -340,6 +340,11 @@ export type SbmProductIngredient = Prisma.SbmProductIngredientModel
  */
 export type Department = Prisma.DepartmentModel
 /**
+ * Model Store
+ * 
+ */
+export type Store = Prisma.StoreModel
+/**
  * Model User
  * 
  */

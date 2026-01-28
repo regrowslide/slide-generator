@@ -111,6 +111,7 @@ export const ModelName = {
   SbmIngredient: 'SbmIngredient',
   SbmProductIngredient: 'SbmProductIngredient',
   Department: 'Department',
+  Store: 'Store',
   User: 'User',
   ReleaseNotes: 'ReleaseNotes',
   Tokens: 'Tokens',
@@ -605,6 +606,8 @@ export const HakobunAnalysisSessionScalarFieldEnum = {
   status: 'status',
   analyzedAt: 'analyzedAt',
   errorMessage: 'errorMessage',
+  isConfirmed: 'isConfirmed',
+  confirmedAt: 'confirmedAt',
   analysisBoxId: 'analysisBoxId'
 } as const
 
@@ -622,6 +625,9 @@ export const HakobunAnalysisRecordScalarFieldEnum = {
   analysisGeneralCategory: 'analysisGeneralCategory',
   analysisCategory: 'analysisCategory',
   analysisTopic: 'analysisTopic',
+  isProposedGeneralCategory: 'isProposedGeneralCategory',
+  isProposedCategory: 'isProposedCategory',
+  proposalApproved: 'proposalApproved',
   feedbackStage: 'feedbackStage',
   feedbackSentiment: 'feedbackSentiment',
   feedbackGeneralCategory: 'feedbackGeneralCategory',
@@ -1148,6 +1154,22 @@ export const DepartmentScalarFieldEnum = {
 export type DepartmentScalarFieldEnum = (typeof DepartmentScalarFieldEnum)[keyof typeof DepartmentScalarFieldEnum]
 
 
+export const StoreScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  createdAt: 'createdAt',
+  active: 'active',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  updatedAt: 'updatedAt',
+  tel: 'tel',
+  fax: 'fax',
+  address: 'address'
+} as const
+
+export type StoreScalarFieldEnum = (typeof StoreScalarFieldEnum)[keyof typeof StoreScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   code: 'code',
@@ -1167,7 +1189,6 @@ export const UserScalarFieldEnum = {
   role: 'role',
   tempResetCode: 'tempResetCode',
   tempResetCodeExpired: 'tempResetCodeExpired',
-  storeId: 'storeId',
   schoolId: 'schoolId',
   rentaStoreId: 'rentaStoreId',
   type2: 'type2',
@@ -1185,7 +1206,8 @@ export const UserScalarFieldEnum = {
   departmentId: 'departmentId',
   tbmVehicleId: 'tbmVehicleId',
   counselingStoreId: 'counselingStoreId',
-  aidocumentCompanyId: 'aidocumentCompanyId'
+  aidocumentCompanyId: 'aidocumentCompanyId',
+  storeId: 'storeId'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]

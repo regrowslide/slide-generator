@@ -1,9 +1,9 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
 import { HakobunIndustry, HakobunIndustryGeneralCategory, HakobunIndustryCategory } from '../../../types'
-import { Plus, Edit2, Trash2, Save, X, ArrowUp, ArrowDown, ChevronDown, ChevronRight, ToggleLeft, ToggleRight } from 'lucide-react'
+import { Plus, Edit2, Trash2, Save, X, ArrowUp, ArrowDown, ChevronDown, ChevronRight, ToggleLeft, ToggleRight, Search, ChevronLeft } from 'lucide-react'
 
 interface GeneralCategoryFormData {
   name: string
@@ -29,6 +29,9 @@ const initialDetailFormData: DetailCategoryFormData = {
   sortOrder: 0,
 }
 
+// ページサイズ
+const PAGE_SIZE = 20
+
 export default function GeneralCategoriesManagementPage() {
   const [industries, setIndustries] = useState<HakobunIndustry[]>([])
   const [selectedIndustryId, setSelectedIndustryId] = useState<number | null>(null)
@@ -37,6 +40,10 @@ export default function GeneralCategoriesManagementPage() {
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState<number | null>(null)
   const [formData, setFormData] = useState<GeneralCategoryFormData>(initialFormData)
+
+  // 検索・ページネーション
+  const [searchQuery, setSearchQuery] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
 
   // 展開中の一般カテゴリID（Setで管理し、全て展開状態にする）
   const [expandedCategoryIds, setExpandedCategoryIds] = useState<Set<number>>(new Set())
@@ -90,6 +97,29 @@ export default function GeneralCategoriesManagementPage() {
       fetchGeneralCategories(selectedIndustryId)
     }
   }, [selectedIndustryId, fetchGeneralCategories])
+
+  // フィルタリングとページネーション
+  const filteredCategories = useMemo(() => {
+    if (!searchQuery.trim()) return generalCategories
+    const query = searchQuery.toLowerCase()
+    return generalCategories.filter(
+      cat =>
+        cat.name.toLowerCase().includes(query) ||
+        (cat.description && cat.description.toLowerCase().includes(query)) ||
+        (cat.categories && cat.categories.some(detail => detail.name.toLowerCase().includes(query)))
+    )
+  }, [generalCategories, searchQuery])
+
+  const totalPages = Math.ceil(filteredCategories.length / PAGE_SIZE)
+  const paginatedCategories = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE
+    return filteredCategories.slice(start, start + PAGE_SIZE)
+  }, [filteredCategories, currentPage])
+
+  // 検索時はページをリセット
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchQuery])
 
   // 一般カテゴリ保存
   const handleSave = async () => {
@@ -543,16 +573,31 @@ export default function GeneralCategoriesManagementPage() {
 
               {/* カテゴリ一覧 */}
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-lg font-bold mb-4">
-                  {selectedIndustry.name} のカテゴリ一覧 ({generalCategories.length}件)
-                </h2>
+                <R_Stack className="justify-between items-center mb-4">
+                  <h2 className="text-lg font-bold">
+                    {selectedIndustry.name} のカテゴリ一覧 ({filteredCategories.length}件{searchQuery && ` / 全${generalCategories.length}件`})
+                  </h2>
+                  {/* 検索フィールド */}
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={e => setSearchQuery(e.target.value)}
+                      placeholder="カテゴリ名で検索..."
+                      className="pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-64"
+                    />
+                  </div>
+                </R_Stack>
                 {isLoading ? (
                   <p className="text-gray-500 text-center py-8">読み込み中...</p>
                 ) : generalCategories.length === 0 ? (
                   <p className="text-gray-500 text-center py-8">一般カテゴリがまだ登録されていません</p>
+                ) : filteredCategories.length === 0 ? (
+                  <p className="text-gray-500 text-center py-8">検索結果がありません</p>
                 ) : (
                   <div className="space-y-2">
-                    {generalCategories.map((cat, index) => (
+                    {paginatedCategories.map((cat, index) => (
                       <div key={cat.id} className="border border-gray-200 rounded-lg overflow-hidden">
                         {/* 一般カテゴリ行 */}
                         <div className="bg-gray-50 px-4 py-3">
@@ -712,6 +757,29 @@ export default function GeneralCategoriesManagementPage() {
                       </div>
                     ))}
                   </div>
+                )}
+
+                {/* ページネーション */}
+                {totalPages > 1 && (
+                  <R_Stack className="justify-center items-center gap-2 mt-4 pt-4 border-t border-gray-200">
+                    <button
+                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                      className="p-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <span className="text-sm text-gray-600">
+                      {currentPage} / {totalPages} ページ
+                    </span>
+                    <button
+                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                      disabled={currentPage === totalPages}
+                      className="p-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </R_Stack>
                 )}
               </div>
             </>

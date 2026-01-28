@@ -1,8 +1,8 @@
 'use client'
 
-import React, {useState, useEffect, useCallback} from 'react'
+import React, {useState, useEffect, useCallback, useMemo} from 'react'
 import {C_Stack, R_Stack} from '@cm/components/styles/common-components/common-components'
-import {Plus, Edit2, Trash2, Save, X, Factory, Copy, ChevronDown, ChevronRight} from 'lucide-react'
+import {Plus, Edit2, Trash2, Save, X, Factory, Copy, ChevronDown, ChevronRight, Search, ChevronLeft} from 'lucide-react'
 import Link from 'next/link'
 import useMyNavigation from '@cm/hooks/globalHooks/useMyNavigation'
 import useModal from '@cm/components/utils/modal/useModal'
@@ -37,11 +37,18 @@ const initialFormData: IndustryFormData = {
   copyFromIndustryId: null,
 }
 
+// ページサイズ
+const PAGE_SIZE = 20
+
 export default function IndustriesManagementPage() {
   const {getHref} = useMyNavigation()
   const [industries, setIndustries] = useState<Industry[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [expandedIds, setExpandedIds] = useState<Set<number>>(new Set())
+
+  // 検索・ページネーション
+  const [searchQuery, setSearchQuery] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
 
   // モーダル用
   const formModal = useModal<{editingId: number | null; isCopy?: boolean}>()
@@ -64,6 +71,28 @@ export default function IndustriesManagementPage() {
   useEffect(() => {
     fetchIndustries()
   }, [fetchIndustries])
+
+  // フィルタリングとページネーション
+  const filteredIndustries = useMemo(() => {
+    if (!searchQuery.trim()) return industries
+    const query = searchQuery.toLowerCase()
+    return industries.filter(
+      industry =>
+        industry.name.toLowerCase().includes(query) ||
+        industry.code.toLowerCase().includes(query)
+    )
+  }, [industries, searchQuery])
+
+  const totalPages = Math.ceil(filteredIndustries.length / PAGE_SIZE)
+  const paginatedIndustries = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE
+    return filteredIndustries.slice(start, start + PAGE_SIZE)
+  }, [filteredIndustries, currentPage])
+
+  // 検索時はページをリセット
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchQuery])
 
   // 新規追加モーダルを開く
   const openAddModal = () => {
@@ -194,7 +223,22 @@ export default function IndustriesManagementPage() {
 
         {/* 業種一覧 */}
         <div className="bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-lg font-bold mb-4">業種一覧 ({industries.length}件)</h2>
+          <R_Stack className="justify-between items-center mb-4">
+            <h2 className="text-lg font-bold">
+              業種一覧 ({filteredIndustries.length}件{searchQuery && ` / 全${industries.length}件`})
+            </h2>
+            {/* 検索フィールド */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="名称・コードで検索..."
+                className="pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-64"
+              />
+            </div>
+          </R_Stack>
           {isLoading ? (
             <p className="text-gray-500 text-center py-8">読み込み中...</p>
           ) : industries.length === 0 ? (
@@ -203,9 +247,11 @@ export default function IndustriesManagementPage() {
               <p className="text-gray-500">業種がまだ登録されていません</p>
               <p className="text-gray-400 text-sm mt-1">「新規業種」ボタンから追加してください</p>
             </div>
+          ) : filteredIndustries.length === 0 ? (
+            <p className="text-gray-500 text-center py-8">検索結果がありません</p>
           ) : (
             <div className="space-y-3">
-              {industries.map(industry => (
+              {paginatedIndustries.map(industry => (
                 <div key={industry.id} className="border border-gray-200 rounded-lg overflow-hidden">
                   {/* 業種ヘッダー */}
                   <div className="bg-gray-50 px-4 py-3">
@@ -311,6 +357,29 @@ export default function IndustriesManagementPage() {
                 </div>
               ))}
             </div>
+          )}
+
+          {/* ページネーション */}
+          {totalPages > 1 && (
+            <R_Stack className="justify-center items-center gap-2 mt-4 pt-4 border-t border-gray-200">
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="p-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <span className="text-sm text-gray-600">
+                {currentPage} / {totalPages} ページ
+              </span>
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="p-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </R_Stack>
           )}
         </div>
       </C_Stack>

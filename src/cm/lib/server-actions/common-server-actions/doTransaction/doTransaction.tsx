@@ -18,14 +18,7 @@ export type transactionQuery<T extends PrismaModelNames = PrismaModelNames, M ex
 type mode = 'transaction' | 'parallel' | 'sequential'
 export const doTransaction = async (props: { transactionQueryList: transactionQuery[]; mode?: mode; uniqueKey?: string }) => {
   // 認証チェック
-  const isAllowed = await isServerActionAccessAllowed()
-  if (!isAllowed) {
-    return {
-      success: false,
-      message: 'アクセスが禁止されています',
-      result: null,
-    } as requestResultType
-  }
+
 
   if (props.transactionQueryList.length === 0) {
     return { success: false, result: [], message: '更新するデータがありません。' }

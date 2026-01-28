@@ -173,6 +173,10 @@ model HakobunAnalysisSession {
   analyzedAt    DateTime? // 分析完了日時
   errorMessage  String?  // エラー時のメッセージ
 
+  // 確定機能
+  isConfirmed   Boolean   @default(false)  // 確定フラグ
+  confirmedAt   DateTime?                   // 確定日時
+
   // 分析BOX紐づけ
   analysisBox   HakobunAnalysisBox @relation(fields: [analysisBoxId], references: [id], onDelete: Cascade)
   analysisBoxId Int
@@ -197,6 +201,11 @@ model HakobunAnalysisRecord {
   analysisGeneralCategory String?  // 一般カテゴリ
   analysisCategory        String?  // カテゴリ
   analysisTopic           String?  // トピック単位（意味が完結した文節）
+
+  // === AIの新規提案フラグ ===
+  isProposedGeneralCategory Boolean @default(false) // 一般カテゴリがAI新規提案か
+  isProposedCategory        Boolean @default(false) // カテゴリがAI新規提案か
+  proposalApproved          Boolean? // 承認状態（null=未処理、true=承認、false=却下）
 
   // === 修正結果フィールド ===
   feedbackStage           String?  // 修正後ステージ

@@ -36,6 +36,9 @@ model RcRecipe {
   packagingCost  Float @default(30) // 包材費（円/パック）
   processingCost Float @default(50) // 加工費（円/パック）
   profitMargin   Float @default(200) // 目標粗利額（円/パック）
+  otherCost          Float  @default(0) // その他費用（円/パック）
+  productionWeightG  Float? // 製造可能重量（g）- 手動入力
+  inputMode          String @default("fillAmount") // 入力モード（fillAmount or packCount）
 
   // 計算結果キャッシュ
   totalMaterialCost   Float? // 原材料費合計

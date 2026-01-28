@@ -12,11 +12,27 @@ export default function useSelectedClient() {
   }, [query])
 
   const { data: client } = useDoStandardPrisma('hakobunClient', 'findUnique', {
-    where: { id: selectedClientId, },
+    where: { id: selectedClientId },
+    include: {
+      HakobunClientStage: {
+        where: { enabled: true },
+        orderBy: { sortOrder: 'asc' },
+      },
+    },
   })
+
+  // 有効なステージ名の配列を取得
+  const stageOptions = useMemo(() => {
+    if (!client?.HakobunClientStage || client.HakobunClientStage.length === 0) {
+      // ステージ未設定の場合はデフォルト値を返す
+      return []
+    }
+    return client.HakobunClientStage.map((stage: { name: string }) => stage.name)
+  }, [client])
 
   return {
     selectedClient: client,
     selectedClientId,
+    stageOptions,
   }
 }

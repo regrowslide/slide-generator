@@ -1,6 +1,6 @@
-import {prismaMethodType, PrismaModelNames} from '@cm/types/prisma-types'
+import { prismaMethodType, PrismaModelNames } from '@cm/types/prisma-types'
 
-import {isDev} from '@cm/lib/methods/common'
+import { isDev } from '@cm/lib/methods/common'
 
 /**
  * Prismaエラーコードの型定義
@@ -73,7 +73,7 @@ const FIELD_DISPLAY_NAMES: Record<string, string> = {
  * @param method - Prismaメソッド名
  * @returns 成功メッセージ
  */
-export const createSuccessMessage = ({model, method}: {model: PrismaModelNames; method: prismaMethodType}): string => {
+export const createSuccessMessage = ({ model, method }: { model: PrismaModelNames; method: prismaMethodType }): string => {
   // モデル名を小文字に変換
   const normalizedModel = (model?.charAt(0).toLowerCase() + model?.slice(1)) as PrismaModelNames
 
@@ -162,6 +162,8 @@ const parseValidationError = (
     return `${displayName}は必ず入力してください`
   }
 
+
+
   return 'データの形式が正しくありません'
 }
 
@@ -178,7 +180,8 @@ export const handlePrismaError = (
     queryObject: any
   }
 ): string => {
-  const {code, meta, message} = error
+  const { code, meta, message } = error
+
 
   // エラーコードが存在する場合の処理
   if (code) {
@@ -233,6 +236,8 @@ export const handlePrismaError = (
       }
     }
   }
+
+
 
   // エラーコードがない場合のバリデーションエラー処理
   return parseValidationError(message, args)

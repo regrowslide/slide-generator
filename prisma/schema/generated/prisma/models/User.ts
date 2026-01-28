@@ -29,7 +29,6 @@ export type AggregateUser = {
 export type UserAvgAggregateOutputType = {
   id: number | null
   sortOrder: number | null
-  storeId: number | null
   schoolId: number | null
   rentaStoreId: number | null
   shopId: number | null
@@ -39,12 +38,12 @@ export type UserAvgAggregateOutputType = {
   tbmVehicleId: number | null
   counselingStoreId: number | null
   aidocumentCompanyId: number | null
+  storeId: number | null
 }
 
 export type UserSumAggregateOutputType = {
   id: number | null
   sortOrder: number | null
-  storeId: number | null
   schoolId: number | null
   rentaStoreId: number | null
   shopId: number | null
@@ -54,6 +53,7 @@ export type UserSumAggregateOutputType = {
   tbmVehicleId: number | null
   counselingStoreId: number | null
   aidocumentCompanyId: number | null
+  storeId: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -75,7 +75,6 @@ export type UserMinAggregateOutputType = {
   role: string | null
   tempResetCode: string | null
   tempResetCodeExpired: Date | null
-  storeId: number | null
   schoolId: number | null
   rentaStoreId: number | null
   type2: string | null
@@ -93,6 +92,7 @@ export type UserMinAggregateOutputType = {
   tbmVehicleId: number | null
   counselingStoreId: number | null
   aidocumentCompanyId: number | null
+  storeId: number | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -114,7 +114,6 @@ export type UserMaxAggregateOutputType = {
   role: string | null
   tempResetCode: string | null
   tempResetCodeExpired: Date | null
-  storeId: number | null
   schoolId: number | null
   rentaStoreId: number | null
   type2: string | null
@@ -132,6 +131,7 @@ export type UserMaxAggregateOutputType = {
   tbmVehicleId: number | null
   counselingStoreId: number | null
   aidocumentCompanyId: number | null
+  storeId: number | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -153,7 +153,6 @@ export type UserCountAggregateOutputType = {
   role: number
   tempResetCode: number
   tempResetCodeExpired: number
-  storeId: number
   schoolId: number
   rentaStoreId: number
   type2: number
@@ -172,6 +171,7 @@ export type UserCountAggregateOutputType = {
   tbmVehicleId: number
   counselingStoreId: number
   aidocumentCompanyId: number
+  storeId: number
   _all: number
 }
 
@@ -179,7 +179,6 @@ export type UserCountAggregateOutputType = {
 export type UserAvgAggregateInputType = {
   id?: true
   sortOrder?: true
-  storeId?: true
   schoolId?: true
   rentaStoreId?: true
   shopId?: true
@@ -189,12 +188,12 @@ export type UserAvgAggregateInputType = {
   tbmVehicleId?: true
   counselingStoreId?: true
   aidocumentCompanyId?: true
+  storeId?: true
 }
 
 export type UserSumAggregateInputType = {
   id?: true
   sortOrder?: true
-  storeId?: true
   schoolId?: true
   rentaStoreId?: true
   shopId?: true
@@ -204,6 +203,7 @@ export type UserSumAggregateInputType = {
   tbmVehicleId?: true
   counselingStoreId?: true
   aidocumentCompanyId?: true
+  storeId?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -225,7 +225,6 @@ export type UserMinAggregateInputType = {
   role?: true
   tempResetCode?: true
   tempResetCodeExpired?: true
-  storeId?: true
   schoolId?: true
   rentaStoreId?: true
   type2?: true
@@ -243,6 +242,7 @@ export type UserMinAggregateInputType = {
   tbmVehicleId?: true
   counselingStoreId?: true
   aidocumentCompanyId?: true
+  storeId?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -264,7 +264,6 @@ export type UserMaxAggregateInputType = {
   role?: true
   tempResetCode?: true
   tempResetCodeExpired?: true
-  storeId?: true
   schoolId?: true
   rentaStoreId?: true
   type2?: true
@@ -282,6 +281,7 @@ export type UserMaxAggregateInputType = {
   tbmVehicleId?: true
   counselingStoreId?: true
   aidocumentCompanyId?: true
+  storeId?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -303,7 +303,6 @@ export type UserCountAggregateInputType = {
   role?: true
   tempResetCode?: true
   tempResetCodeExpired?: true
-  storeId?: true
   schoolId?: true
   rentaStoreId?: true
   type2?: true
@@ -322,6 +321,7 @@ export type UserCountAggregateInputType = {
   tbmVehicleId?: true
   counselingStoreId?: true
   aidocumentCompanyId?: true
+  storeId?: true
   _all?: true
 }
 
@@ -430,7 +430,6 @@ export type UserGroupByOutputType = {
   role: string
   tempResetCode: string | null
   tempResetCodeExpired: Date | null
-  storeId: number | null
   schoolId: number | null
   rentaStoreId: number | null
   type2: string | null
@@ -449,6 +448,7 @@ export type UserGroupByOutputType = {
   tbmVehicleId: number | null
   counselingStoreId: number | null
   aidocumentCompanyId: number | null
+  storeId: number | null
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -493,7 +493,6 @@ export type UserWhereInput = {
   role?: Prisma.StringFilter<"User"> | string
   tempResetCode?: Prisma.StringNullableFilter<"User"> | string | null
   tempResetCodeExpired?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  storeId?: Prisma.IntNullableFilter<"User"> | number | null
   schoolId?: Prisma.IntNullableFilter<"User"> | number | null
   rentaStoreId?: Prisma.IntNullableFilter<"User"> | number | null
   type2?: Prisma.StringNullableFilter<"User"> | string | null
@@ -512,6 +511,7 @@ export type UserWhereInput = {
   tbmVehicleId?: Prisma.IntNullableFilter<"User"> | number | null
   counselingStoreId?: Prisma.IntNullableFilter<"User"> | number | null
   aidocumentCompanyId?: Prisma.IntNullableFilter<"User"> | number | null
+  storeId?: Prisma.IntNullableFilter<"User"> | number | null
   UserRole?: Prisma.UserRoleListRelationFilter
   TbmBase?: Prisma.XOR<Prisma.TbmBaseNullableScalarRelationFilter, Prisma.TbmBaseWhereInput> | null
   TbmDriveSchedule?: Prisma.TbmDriveScheduleListRelationFilter
@@ -530,6 +530,7 @@ export type UserWhereInput = {
   CounselingStore?: Prisma.XOR<Prisma.CounselingStoreNullableScalarRelationFilter, Prisma.CounselingStoreWhereInput> | null
   CounselingSlot?: Prisma.CounselingSlotListRelationFilter
   AidocumentCompany?: Prisma.XOR<Prisma.AidocumentCompanyNullableScalarRelationFilter, Prisma.AidocumentCompanyWhereInput> | null
+  Store?: Prisma.XOR<Prisma.StoreNullableScalarRelationFilter, Prisma.StoreWhereInput> | null
 }
 
 export type UserOrderByWithRelationInput = {
@@ -551,7 +552,6 @@ export type UserOrderByWithRelationInput = {
   role?: Prisma.SortOrder
   tempResetCode?: Prisma.SortOrderInput | Prisma.SortOrder
   tempResetCodeExpired?: Prisma.SortOrderInput | Prisma.SortOrder
-  storeId?: Prisma.SortOrderInput | Prisma.SortOrder
   schoolId?: Prisma.SortOrderInput | Prisma.SortOrder
   rentaStoreId?: Prisma.SortOrderInput | Prisma.SortOrder
   type2?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -570,6 +570,7 @@ export type UserOrderByWithRelationInput = {
   tbmVehicleId?: Prisma.SortOrderInput | Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrderInput | Prisma.SortOrder
   aidocumentCompanyId?: Prisma.SortOrderInput | Prisma.SortOrder
+  storeId?: Prisma.SortOrderInput | Prisma.SortOrder
   UserRole?: Prisma.UserRoleOrderByRelationAggregateInput
   TbmBase?: Prisma.TbmBaseOrderByWithRelationInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleOrderByRelationAggregateInput
@@ -588,6 +589,7 @@ export type UserOrderByWithRelationInput = {
   CounselingStore?: Prisma.CounselingStoreOrderByWithRelationInput
   CounselingSlot?: Prisma.CounselingSlotOrderByRelationAggregateInput
   AidocumentCompany?: Prisma.AidocumentCompanyOrderByWithRelationInput
+  Store?: Prisma.StoreOrderByWithRelationInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -613,7 +615,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   role?: Prisma.StringFilter<"User"> | string
   tempResetCode?: Prisma.StringNullableFilter<"User"> | string | null
   tempResetCodeExpired?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  storeId?: Prisma.IntNullableFilter<"User"> | number | null
   schoolId?: Prisma.IntNullableFilter<"User"> | number | null
   rentaStoreId?: Prisma.IntNullableFilter<"User"> | number | null
   type2?: Prisma.StringNullableFilter<"User"> | string | null
@@ -631,6 +632,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   tbmVehicleId?: Prisma.IntNullableFilter<"User"> | number | null
   counselingStoreId?: Prisma.IntNullableFilter<"User"> | number | null
   aidocumentCompanyId?: Prisma.IntNullableFilter<"User"> | number | null
+  storeId?: Prisma.IntNullableFilter<"User"> | number | null
   UserRole?: Prisma.UserRoleListRelationFilter
   TbmBase?: Prisma.XOR<Prisma.TbmBaseNullableScalarRelationFilter, Prisma.TbmBaseWhereInput> | null
   TbmDriveSchedule?: Prisma.TbmDriveScheduleListRelationFilter
@@ -649,6 +651,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   CounselingStore?: Prisma.XOR<Prisma.CounselingStoreNullableScalarRelationFilter, Prisma.CounselingStoreWhereInput> | null
   CounselingSlot?: Prisma.CounselingSlotListRelationFilter
   AidocumentCompany?: Prisma.XOR<Prisma.AidocumentCompanyNullableScalarRelationFilter, Prisma.AidocumentCompanyWhereInput> | null
+  Store?: Prisma.XOR<Prisma.StoreNullableScalarRelationFilter, Prisma.StoreWhereInput> | null
 }, "id" | "code" | "email" | "employeeCode">
 
 export type UserOrderByWithAggregationInput = {
@@ -670,7 +673,6 @@ export type UserOrderByWithAggregationInput = {
   role?: Prisma.SortOrder
   tempResetCode?: Prisma.SortOrderInput | Prisma.SortOrder
   tempResetCodeExpired?: Prisma.SortOrderInput | Prisma.SortOrder
-  storeId?: Prisma.SortOrderInput | Prisma.SortOrder
   schoolId?: Prisma.SortOrderInput | Prisma.SortOrder
   rentaStoreId?: Prisma.SortOrderInput | Prisma.SortOrder
   type2?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -689,6 +691,7 @@ export type UserOrderByWithAggregationInput = {
   tbmVehicleId?: Prisma.SortOrderInput | Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrderInput | Prisma.SortOrder
   aidocumentCompanyId?: Prisma.SortOrderInput | Prisma.SortOrder
+  storeId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -718,7 +721,6 @@ export type UserScalarWhereWithAggregatesInput = {
   role?: Prisma.StringWithAggregatesFilter<"User"> | string
   tempResetCode?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   tempResetCodeExpired?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
-  storeId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
   schoolId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
   rentaStoreId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
   type2?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -737,6 +739,7 @@ export type UserScalarWhereWithAggregatesInput = {
   tbmVehicleId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
   counselingStoreId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
   aidocumentCompanyId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
+  storeId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
 }
 
 export type UserCreateInput = {
@@ -757,7 +760,6 @@ export type UserCreateInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -789,6 +791,7 @@ export type UserCreateInput = {
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -810,7 +813,6 @@ export type UserUncheckedCreateInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -829,6 +831,7 @@ export type UserUncheckedCreateInput = {
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
@@ -862,7 +865,6 @@ export type UserUpdateInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -894,6 +896,7 @@ export type UserUpdateInput = {
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -915,7 +918,6 @@ export type UserUncheckedUpdateInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -934,6 +936,7 @@ export type UserUncheckedUpdateInput = {
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -968,7 +971,6 @@ export type UserCreateManyInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -987,6 +989,7 @@ export type UserCreateManyInput = {
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
 }
 
 export type UserUpdateManyMutationInput = {
@@ -1007,7 +1010,6 @@ export type UserUpdateManyMutationInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1042,7 +1044,6 @@ export type UserUncheckedUpdateManyInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1061,6 +1062,7 @@ export type UserUncheckedUpdateManyInput = {
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type UserListRelationFilter = {
@@ -1097,7 +1099,6 @@ export type UserCountOrderByAggregateInput = {
   role?: Prisma.SortOrder
   tempResetCode?: Prisma.SortOrder
   tempResetCodeExpired?: Prisma.SortOrder
-  storeId?: Prisma.SortOrder
   schoolId?: Prisma.SortOrder
   rentaStoreId?: Prisma.SortOrder
   type2?: Prisma.SortOrder
@@ -1116,12 +1117,12 @@ export type UserCountOrderByAggregateInput = {
   tbmVehicleId?: Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrder
   aidocumentCompanyId?: Prisma.SortOrder
+  storeId?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
-  storeId?: Prisma.SortOrder
   schoolId?: Prisma.SortOrder
   rentaStoreId?: Prisma.SortOrder
   shopId?: Prisma.SortOrder
@@ -1131,6 +1132,7 @@ export type UserAvgOrderByAggregateInput = {
   tbmVehicleId?: Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrder
   aidocumentCompanyId?: Prisma.SortOrder
+  storeId?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -1152,7 +1154,6 @@ export type UserMaxOrderByAggregateInput = {
   role?: Prisma.SortOrder
   tempResetCode?: Prisma.SortOrder
   tempResetCodeExpired?: Prisma.SortOrder
-  storeId?: Prisma.SortOrder
   schoolId?: Prisma.SortOrder
   rentaStoreId?: Prisma.SortOrder
   type2?: Prisma.SortOrder
@@ -1170,6 +1171,7 @@ export type UserMaxOrderByAggregateInput = {
   tbmVehicleId?: Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrder
   aidocumentCompanyId?: Prisma.SortOrder
+  storeId?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -1191,7 +1193,6 @@ export type UserMinOrderByAggregateInput = {
   role?: Prisma.SortOrder
   tempResetCode?: Prisma.SortOrder
   tempResetCodeExpired?: Prisma.SortOrder
-  storeId?: Prisma.SortOrder
   schoolId?: Prisma.SortOrder
   rentaStoreId?: Prisma.SortOrder
   type2?: Prisma.SortOrder
@@ -1209,12 +1210,12 @@ export type UserMinOrderByAggregateInput = {
   tbmVehicleId?: Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrder
   aidocumentCompanyId?: Prisma.SortOrder
+  storeId?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
-  storeId?: Prisma.SortOrder
   schoolId?: Prisma.SortOrder
   rentaStoreId?: Prisma.SortOrder
   shopId?: Prisma.SortOrder
@@ -1224,6 +1225,7 @@ export type UserSumOrderByAggregateInput = {
   tbmVehicleId?: Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrder
   aidocumentCompanyId?: Prisma.SortOrder
+  storeId?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -1418,6 +1420,48 @@ export type UserUncheckedUpdateManyWithoutDepartmentNestedInput = {
   connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
   update?: Prisma.UserUpdateWithWhereUniqueWithoutDepartmentInput | Prisma.UserUpdateWithWhereUniqueWithoutDepartmentInput[]
   updateMany?: Prisma.UserUpdateManyWithWhereWithoutDepartmentInput | Prisma.UserUpdateManyWithWhereWithoutDepartmentInput[]
+  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+}
+
+export type UserCreateNestedManyWithoutStoreInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStoreInput, Prisma.UserUncheckedCreateWithoutStoreInput> | Prisma.UserCreateWithoutStoreInput[] | Prisma.UserUncheckedCreateWithoutStoreInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStoreInput | Prisma.UserCreateOrConnectWithoutStoreInput[]
+  createMany?: Prisma.UserCreateManyStoreInputEnvelope
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+}
+
+export type UserUncheckedCreateNestedManyWithoutStoreInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStoreInput, Prisma.UserUncheckedCreateWithoutStoreInput> | Prisma.UserCreateWithoutStoreInput[] | Prisma.UserUncheckedCreateWithoutStoreInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStoreInput | Prisma.UserCreateOrConnectWithoutStoreInput[]
+  createMany?: Prisma.UserCreateManyStoreInputEnvelope
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+}
+
+export type UserUpdateManyWithoutStoreNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStoreInput, Prisma.UserUncheckedCreateWithoutStoreInput> | Prisma.UserCreateWithoutStoreInput[] | Prisma.UserUncheckedCreateWithoutStoreInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStoreInput | Prisma.UserCreateOrConnectWithoutStoreInput[]
+  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutStoreInput | Prisma.UserUpsertWithWhereUniqueWithoutStoreInput[]
+  createMany?: Prisma.UserCreateManyStoreInputEnvelope
+  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  update?: Prisma.UserUpdateWithWhereUniqueWithoutStoreInput | Prisma.UserUpdateWithWhereUniqueWithoutStoreInput[]
+  updateMany?: Prisma.UserUpdateManyWithWhereWithoutStoreInput | Prisma.UserUpdateManyWithWhereWithoutStoreInput[]
+  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+}
+
+export type UserUncheckedUpdateManyWithoutStoreNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStoreInput, Prisma.UserUncheckedCreateWithoutStoreInput> | Prisma.UserCreateWithoutStoreInput[] | Prisma.UserUncheckedCreateWithoutStoreInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStoreInput | Prisma.UserCreateOrConnectWithoutStoreInput[]
+  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutStoreInput | Prisma.UserUpsertWithWhereUniqueWithoutStoreInput[]
+  createMany?: Prisma.UserCreateManyStoreInputEnvelope
+  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  update?: Prisma.UserUpdateWithWhereUniqueWithoutStoreInput | Prisma.UserUpdateWithWhereUniqueWithoutStoreInput[]
+  updateMany?: Prisma.UserUpdateManyWithWhereWithoutStoreInput | Prisma.UserUpdateManyWithWhereWithoutStoreInput[]
   deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
 }
 
@@ -1660,7 +1704,6 @@ export type UserCreateWithoutAidocumentCompanyInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -1691,6 +1734,7 @@ export type UserCreateWithoutAidocumentCompanyInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAidocumentCompanyInput = {
@@ -1712,7 +1756,6 @@ export type UserUncheckedCreateWithoutAidocumentCompanyInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -1730,6 +1773,7 @@ export type UserUncheckedCreateWithoutAidocumentCompanyInput = {
   departmentId?: number | null
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
+  storeId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
@@ -1793,7 +1837,6 @@ export type UserScalarWhereInput = {
   role?: Prisma.StringFilter<"User"> | string
   tempResetCode?: Prisma.StringNullableFilter<"User"> | string | null
   tempResetCodeExpired?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  storeId?: Prisma.IntNullableFilter<"User"> | number | null
   schoolId?: Prisma.IntNullableFilter<"User"> | number | null
   rentaStoreId?: Prisma.IntNullableFilter<"User"> | number | null
   type2?: Prisma.StringNullableFilter<"User"> | string | null
@@ -1812,6 +1855,7 @@ export type UserScalarWhereInput = {
   tbmVehicleId?: Prisma.IntNullableFilter<"User"> | number | null
   counselingStoreId?: Prisma.IntNullableFilter<"User"> | number | null
   aidocumentCompanyId?: Prisma.IntNullableFilter<"User"> | number | null
+  storeId?: Prisma.IntNullableFilter<"User"> | number | null
 }
 
 export type UserCreateWithoutCounselingStoreInput = {
@@ -1832,7 +1876,6 @@ export type UserCreateWithoutCounselingStoreInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -1863,6 +1906,7 @@ export type UserCreateWithoutCounselingStoreInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCounselingStoreInput = {
@@ -1884,7 +1928,6 @@ export type UserUncheckedCreateWithoutCounselingStoreInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -1902,6 +1945,7 @@ export type UserUncheckedCreateWithoutCounselingStoreInput = {
   departmentId?: number | null
   tbmVehicleId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
@@ -1961,7 +2005,6 @@ export type UserCreateWithoutCounselingSlotInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -1992,6 +2035,7 @@ export type UserCreateWithoutCounselingSlotInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCounselingSlotInput = {
@@ -2013,7 +2057,6 @@ export type UserUncheckedCreateWithoutCounselingSlotInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -2032,6 +2075,7 @@ export type UserUncheckedCreateWithoutCounselingSlotInput = {
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
@@ -2080,7 +2124,6 @@ export type UserUpdateWithoutCounselingSlotInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2111,6 +2154,7 @@ export type UserUpdateWithoutCounselingSlotInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCounselingSlotInput = {
@@ -2132,7 +2176,6 @@ export type UserUncheckedUpdateWithoutCounselingSlotInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2151,6 +2194,7 @@ export type UserUncheckedUpdateWithoutCounselingSlotInput = {
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -2183,7 +2227,6 @@ export type UserCreateWithoutSbmReservationInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -2214,6 +2257,7 @@ export type UserCreateWithoutSbmReservationInput = {
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSbmReservationInput = {
@@ -2235,7 +2279,6 @@ export type UserUncheckedCreateWithoutSbmReservationInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -2254,6 +2297,7 @@ export type UserUncheckedCreateWithoutSbmReservationInput = {
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
@@ -2302,7 +2346,6 @@ export type UserUpdateWithoutSbmReservationInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2333,6 +2376,7 @@ export type UserUpdateWithoutSbmReservationInput = {
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSbmReservationInput = {
@@ -2354,7 +2398,6 @@ export type UserUncheckedUpdateWithoutSbmReservationInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2373,6 +2416,7 @@ export type UserUncheckedUpdateWithoutSbmReservationInput = {
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -2405,7 +2449,6 @@ export type UserCreateWithoutSbmReservationChangeHistoryInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -2436,6 +2479,7 @@ export type UserCreateWithoutSbmReservationChangeHistoryInput = {
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSbmReservationChangeHistoryInput = {
@@ -2457,7 +2501,6 @@ export type UserUncheckedCreateWithoutSbmReservationChangeHistoryInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -2476,6 +2519,7 @@ export type UserUncheckedCreateWithoutSbmReservationChangeHistoryInput = {
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
@@ -2524,7 +2568,6 @@ export type UserUpdateWithoutSbmReservationChangeHistoryInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2555,6 +2598,7 @@ export type UserUpdateWithoutSbmReservationChangeHistoryInput = {
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSbmReservationChangeHistoryInput = {
@@ -2576,7 +2620,6 @@ export type UserUncheckedUpdateWithoutSbmReservationChangeHistoryInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2595,6 +2638,7 @@ export type UserUncheckedUpdateWithoutSbmReservationChangeHistoryInput = {
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -2627,7 +2671,6 @@ export type UserCreateWithoutSbmDeliveryAssignmentInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -2658,6 +2701,7 @@ export type UserCreateWithoutSbmDeliveryAssignmentInput = {
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSbmDeliveryAssignmentInput = {
@@ -2679,7 +2723,6 @@ export type UserUncheckedCreateWithoutSbmDeliveryAssignmentInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -2698,6 +2741,7 @@ export type UserUncheckedCreateWithoutSbmDeliveryAssignmentInput = {
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
@@ -2746,7 +2790,6 @@ export type UserUpdateWithoutSbmDeliveryAssignmentInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2777,6 +2820,7 @@ export type UserUpdateWithoutSbmDeliveryAssignmentInput = {
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSbmDeliveryAssignmentInput = {
@@ -2798,7 +2842,6 @@ export type UserUncheckedUpdateWithoutSbmDeliveryAssignmentInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2817,6 +2860,7 @@ export type UserUncheckedUpdateWithoutSbmDeliveryAssignmentInput = {
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -2849,7 +2893,6 @@ export type UserCreateWithoutDepartmentInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -2880,6 +2923,7 @@ export type UserCreateWithoutDepartmentInput = {
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDepartmentInput = {
@@ -2901,7 +2945,6 @@ export type UserUncheckedCreateWithoutDepartmentInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -2919,6 +2962,7 @@ export type UserUncheckedCreateWithoutDepartmentInput = {
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
@@ -2960,6 +3004,135 @@ export type UserUpdateManyWithWhereWithoutDepartmentInput = {
   data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutDepartmentInput>
 }
 
+export type UserCreateWithoutStoreInput = {
+  code?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  active?: boolean
+  hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
+  yukyuCategory?: string | null
+  name: string
+  kana?: string | null
+  email?: string | null
+  password?: string | null
+  type?: string | null
+  role?: string
+  tempResetCode?: string | null
+  tempResetCodeExpired?: Date | string | null
+  schoolId?: number | null
+  rentaStoreId?: number | null
+  type2?: string | null
+  shopId?: number | null
+  membershipName?: string | null
+  damageNameMasterId?: number | null
+  color?: string | null
+  app?: string | null
+  apps?: Prisma.UserCreateappsInput | string[]
+  employeeCode?: string | null
+  phone?: string | null
+  avatar?: string | null
+  bcc?: string | null
+  UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
+  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
+  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
+  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
+  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
+  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
+  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
+  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
+  SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
+  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
+  ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
+  WorkoutLog?: Prisma.WorkoutLogCreateNestedManyWithoutUserInput
+  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
+  CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
+  CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
+  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+}
+
+export type UserUncheckedCreateWithoutStoreInput = {
+  id?: number
+  code?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  active?: boolean
+  hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
+  yukyuCategory?: string | null
+  name: string
+  kana?: string | null
+  email?: string | null
+  password?: string | null
+  type?: string | null
+  role?: string
+  tempResetCode?: string | null
+  tempResetCodeExpired?: Date | string | null
+  schoolId?: number | null
+  rentaStoreId?: number | null
+  type2?: string | null
+  shopId?: number | null
+  membershipName?: string | null
+  damageNameMasterId?: number | null
+  color?: string | null
+  app?: string | null
+  apps?: Prisma.UserCreateappsInput | string[]
+  employeeCode?: string | null
+  phone?: string | null
+  avatar?: string | null
+  bcc?: string | null
+  tbmBaseId?: number | null
+  departmentId?: number | null
+  tbmVehicleId?: number | null
+  counselingStoreId?: number | null
+  aidocumentCompanyId?: number | null
+  UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
+  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
+  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
+  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
+  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
+  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
+  SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
+  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
+  ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
+  WorkoutLog?: Prisma.WorkoutLogUncheckedCreateNestedManyWithoutUserInput
+  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedCreateNestedManyWithoutUserInput
+  CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutStoreInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutStoreInput, Prisma.UserUncheckedCreateWithoutStoreInput>
+}
+
+export type UserCreateManyStoreInputEnvelope = {
+  data: Prisma.UserCreateManyStoreInput | Prisma.UserCreateManyStoreInput[]
+  skipDuplicates?: boolean
+}
+
+export type UserUpsertWithWhereUniqueWithoutStoreInput = {
+  where: Prisma.UserWhereUniqueInput
+  update: Prisma.XOR<Prisma.UserUpdateWithoutStoreInput, Prisma.UserUncheckedUpdateWithoutStoreInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutStoreInput, Prisma.UserUncheckedCreateWithoutStoreInput>
+}
+
+export type UserUpdateWithWhereUniqueWithoutStoreInput = {
+  where: Prisma.UserWhereUniqueInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutStoreInput, Prisma.UserUncheckedUpdateWithoutStoreInput>
+}
+
+export type UserUpdateManyWithWhereWithoutStoreInput = {
+  where: Prisma.UserScalarWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutStoreInput>
+}
+
 export type UserCreateWithoutUserRoleInput = {
   code?: string | null
   createdAt?: Date | string
@@ -2978,7 +3151,6 @@ export type UserCreateWithoutUserRoleInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -3009,6 +3181,7 @@ export type UserCreateWithoutUserRoleInput = {
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUserRoleInput = {
@@ -3030,7 +3203,6 @@ export type UserUncheckedCreateWithoutUserRoleInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -3049,6 +3221,7 @@ export type UserUncheckedCreateWithoutUserRoleInput = {
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
   OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
@@ -3097,7 +3270,6 @@ export type UserUpdateWithoutUserRoleInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3128,6 +3300,7 @@ export type UserUpdateWithoutUserRoleInput = {
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUserRoleInput = {
@@ -3149,7 +3322,6 @@ export type UserUncheckedUpdateWithoutUserRoleInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3168,6 +3340,7 @@ export type UserUncheckedUpdateWithoutUserRoleInput = {
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
   OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
@@ -3200,7 +3373,6 @@ export type UserCreateWithoutTbmBaseInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -3231,6 +3403,7 @@ export type UserCreateWithoutTbmBaseInput = {
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTbmBaseInput = {
@@ -3252,7 +3425,6 @@ export type UserUncheckedCreateWithoutTbmBaseInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -3270,6 +3442,7 @@ export type UserUncheckedCreateWithoutTbmBaseInput = {
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
@@ -3329,7 +3502,6 @@ export type UserCreateWithoutTbmVehicleInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -3360,6 +3532,7 @@ export type UserCreateWithoutTbmVehicleInput = {
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTbmVehicleInput = {
@@ -3381,7 +3554,6 @@ export type UserUncheckedCreateWithoutTbmVehicleInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -3399,6 +3571,7 @@ export type UserUncheckedCreateWithoutTbmVehicleInput = {
   departmentId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
@@ -3458,7 +3631,6 @@ export type UserCreateWithoutTbmRefuelHistoryInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -3489,6 +3661,7 @@ export type UserCreateWithoutTbmRefuelHistoryInput = {
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTbmRefuelHistoryInput = {
@@ -3510,7 +3683,6 @@ export type UserUncheckedCreateWithoutTbmRefuelHistoryInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -3529,6 +3701,7 @@ export type UserUncheckedCreateWithoutTbmRefuelHistoryInput = {
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
@@ -3577,7 +3750,6 @@ export type UserUpdateWithoutTbmRefuelHistoryInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3608,6 +3780,7 @@ export type UserUpdateWithoutTbmRefuelHistoryInput = {
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTbmRefuelHistoryInput = {
@@ -3629,7 +3802,6 @@ export type UserUncheckedUpdateWithoutTbmRefuelHistoryInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3648,6 +3820,7 @@ export type UserUncheckedUpdateWithoutTbmRefuelHistoryInput = {
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -3680,7 +3853,6 @@ export type UserCreateWithoutTbmCarWashHistoryInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -3711,6 +3883,7 @@ export type UserCreateWithoutTbmCarWashHistoryInput = {
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTbmCarWashHistoryInput = {
@@ -3732,7 +3905,6 @@ export type UserUncheckedCreateWithoutTbmCarWashHistoryInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -3751,6 +3923,7 @@ export type UserUncheckedCreateWithoutTbmCarWashHistoryInput = {
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
@@ -3799,7 +3972,6 @@ export type UserUpdateWithoutTbmCarWashHistoryInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3830,6 +4002,7 @@ export type UserUpdateWithoutTbmCarWashHistoryInput = {
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTbmCarWashHistoryInput = {
@@ -3851,7 +4024,6 @@ export type UserUncheckedUpdateWithoutTbmCarWashHistoryInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3870,6 +4042,7 @@ export type UserUncheckedUpdateWithoutTbmCarWashHistoryInput = {
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -3902,7 +4075,6 @@ export type UserCreateWithoutTbmDriveScheduleInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -3933,6 +4105,7 @@ export type UserCreateWithoutTbmDriveScheduleInput = {
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTbmDriveScheduleInput = {
@@ -3954,7 +4127,6 @@ export type UserUncheckedCreateWithoutTbmDriveScheduleInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -3973,6 +4145,7 @@ export type UserUncheckedCreateWithoutTbmDriveScheduleInput = {
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
   OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
@@ -4021,7 +4194,6 @@ export type UserUpdateWithoutTbmDriveScheduleInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4052,6 +4224,7 @@ export type UserUpdateWithoutTbmDriveScheduleInput = {
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTbmDriveScheduleInput = {
@@ -4073,7 +4246,6 @@ export type UserUncheckedUpdateWithoutTbmDriveScheduleInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4092,6 +4264,7 @@ export type UserUncheckedUpdateWithoutTbmDriveScheduleInput = {
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
   OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
@@ -4124,7 +4297,6 @@ export type UserCreateWithoutOdometerInputInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -4155,6 +4327,7 @@ export type UserCreateWithoutOdometerInputInput = {
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOdometerInputInput = {
@@ -4176,7 +4349,6 @@ export type UserUncheckedCreateWithoutOdometerInputInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -4195,6 +4367,7 @@ export type UserUncheckedCreateWithoutOdometerInputInput = {
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
@@ -4243,7 +4416,6 @@ export type UserUpdateWithoutOdometerInputInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4274,6 +4446,7 @@ export type UserUpdateWithoutOdometerInputInput = {
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOdometerInputInput = {
@@ -4295,7 +4468,6 @@ export type UserUncheckedUpdateWithoutOdometerInputInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4314,6 +4486,7 @@ export type UserUncheckedUpdateWithoutOdometerInputInput = {
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -4346,7 +4519,6 @@ export type UserCreateWithoutUserWorkStatusInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -4377,6 +4549,7 @@ export type UserCreateWithoutUserWorkStatusInput = {
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUserWorkStatusInput = {
@@ -4398,7 +4571,6 @@ export type UserUncheckedCreateWithoutUserWorkStatusInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -4417,6 +4589,7 @@ export type UserUncheckedCreateWithoutUserWorkStatusInput = {
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
   OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
@@ -4465,7 +4638,6 @@ export type UserUpdateWithoutUserWorkStatusInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4496,6 +4668,7 @@ export type UserUpdateWithoutUserWorkStatusInput = {
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUserWorkStatusInput = {
@@ -4517,7 +4690,6 @@ export type UserUncheckedUpdateWithoutUserWorkStatusInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4536,6 +4708,7 @@ export type UserUncheckedUpdateWithoutUserWorkStatusInput = {
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
   OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
@@ -4568,7 +4741,6 @@ export type UserCreateWithoutKyuyoTableRecordInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -4599,6 +4771,7 @@ export type UserCreateWithoutKyuyoTableRecordInput = {
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutKyuyoTableRecordInput = {
@@ -4620,7 +4793,6 @@ export type UserUncheckedCreateWithoutKyuyoTableRecordInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -4639,6 +4811,7 @@ export type UserUncheckedCreateWithoutKyuyoTableRecordInput = {
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
@@ -4687,7 +4860,6 @@ export type UserUpdateWithoutKyuyoTableRecordInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4718,6 +4890,7 @@ export type UserUpdateWithoutKyuyoTableRecordInput = {
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutKyuyoTableRecordInput = {
@@ -4739,7 +4912,6 @@ export type UserUncheckedUpdateWithoutKyuyoTableRecordInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4758,6 +4930,7 @@ export type UserUncheckedUpdateWithoutKyuyoTableRecordInput = {
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -4790,7 +4963,6 @@ export type UserCreateWithoutExerciseMasterInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -4821,6 +4993,7 @@ export type UserCreateWithoutExerciseMasterInput = {
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutExerciseMasterInput = {
@@ -4842,7 +5015,6 @@ export type UserUncheckedCreateWithoutExerciseMasterInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -4861,6 +5033,7 @@ export type UserUncheckedCreateWithoutExerciseMasterInput = {
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
@@ -4909,7 +5082,6 @@ export type UserUpdateWithoutExerciseMasterInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4940,6 +5112,7 @@ export type UserUpdateWithoutExerciseMasterInput = {
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExerciseMasterInput = {
@@ -4961,7 +5134,6 @@ export type UserUncheckedUpdateWithoutExerciseMasterInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4980,6 +5152,7 @@ export type UserUncheckedUpdateWithoutExerciseMasterInput = {
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -5012,7 +5185,6 @@ export type UserCreateWithoutWorkoutLogInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -5043,6 +5215,7 @@ export type UserCreateWithoutWorkoutLogInput = {
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWorkoutLogInput = {
@@ -5064,7 +5237,6 @@ export type UserUncheckedCreateWithoutWorkoutLogInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -5083,6 +5255,7 @@ export type UserUncheckedCreateWithoutWorkoutLogInput = {
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
@@ -5131,7 +5304,6 @@ export type UserUpdateWithoutWorkoutLogInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5162,6 +5334,7 @@ export type UserUpdateWithoutWorkoutLogInput = {
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWorkoutLogInput = {
@@ -5183,7 +5356,6 @@ export type UserUncheckedUpdateWithoutWorkoutLogInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5202,6 +5374,7 @@ export type UserUncheckedUpdateWithoutWorkoutLogInput = {
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -5235,7 +5408,6 @@ export type UserCreateManyAidocumentCompanyInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -5253,6 +5425,7 @@ export type UserCreateManyAidocumentCompanyInput = {
   departmentId?: number | null
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
+  storeId?: number | null
 }
 
 export type UserUpdateWithoutAidocumentCompanyInput = {
@@ -5273,7 +5446,6 @@ export type UserUpdateWithoutAidocumentCompanyInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5304,6 +5476,7 @@ export type UserUpdateWithoutAidocumentCompanyInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAidocumentCompanyInput = {
@@ -5325,7 +5498,6 @@ export type UserUncheckedUpdateWithoutAidocumentCompanyInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5343,6 +5515,7 @@ export type UserUncheckedUpdateWithoutAidocumentCompanyInput = {
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -5377,7 +5550,6 @@ export type UserUncheckedUpdateManyWithoutAidocumentCompanyInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5395,6 +5567,7 @@ export type UserUncheckedUpdateManyWithoutAidocumentCompanyInput = {
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type UserCreateManyCounselingStoreInput = {
@@ -5416,7 +5589,6 @@ export type UserCreateManyCounselingStoreInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -5434,6 +5606,7 @@ export type UserCreateManyCounselingStoreInput = {
   departmentId?: number | null
   tbmVehicleId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
 }
 
 export type UserUpdateWithoutCounselingStoreInput = {
@@ -5454,7 +5627,6 @@ export type UserUpdateWithoutCounselingStoreInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5485,6 +5657,7 @@ export type UserUpdateWithoutCounselingStoreInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCounselingStoreInput = {
@@ -5506,7 +5679,6 @@ export type UserUncheckedUpdateWithoutCounselingStoreInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5524,6 +5696,7 @@ export type UserUncheckedUpdateWithoutCounselingStoreInput = {
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -5558,7 +5731,6 @@ export type UserUncheckedUpdateManyWithoutCounselingStoreInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5576,6 +5748,7 @@ export type UserUncheckedUpdateManyWithoutCounselingStoreInput = {
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type UserCreateManyDepartmentInput = {
@@ -5597,7 +5770,6 @@ export type UserCreateManyDepartmentInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -5615,6 +5787,7 @@ export type UserCreateManyDepartmentInput = {
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
 }
 
 export type UserUpdateWithoutDepartmentInput = {
@@ -5635,7 +5808,6 @@ export type UserUpdateWithoutDepartmentInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5666,6 +5838,7 @@ export type UserUpdateWithoutDepartmentInput = {
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDepartmentInput = {
@@ -5687,7 +5860,6 @@ export type UserUncheckedUpdateWithoutDepartmentInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5705,6 +5877,7 @@ export type UserUncheckedUpdateWithoutDepartmentInput = {
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -5739,7 +5912,6 @@ export type UserUncheckedUpdateManyWithoutDepartmentInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5754,6 +5926,188 @@ export type UserUncheckedUpdateManyWithoutDepartmentInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type UserCreateManyStoreInput = {
+  id?: number
+  code?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  active?: boolean
+  hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
+  yukyuCategory?: string | null
+  name: string
+  kana?: string | null
+  email?: string | null
+  password?: string | null
+  type?: string | null
+  role?: string
+  tempResetCode?: string | null
+  tempResetCodeExpired?: Date | string | null
+  schoolId?: number | null
+  rentaStoreId?: number | null
+  type2?: string | null
+  shopId?: number | null
+  membershipName?: string | null
+  damageNameMasterId?: number | null
+  color?: string | null
+  app?: string | null
+  apps?: Prisma.UserCreateappsInput | string[]
+  employeeCode?: string | null
+  phone?: string | null
+  avatar?: string | null
+  bcc?: string | null
+  tbmBaseId?: number | null
+  departmentId?: number | null
+  tbmVehicleId?: number | null
+  counselingStoreId?: number | null
+  aidocumentCompanyId?: number | null
+}
+
+export type UserUpdateWithoutStoreInput = {
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apps?: Prisma.UserUpdateappsInput | string[]
+  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
+  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
+  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
+  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
+  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
+  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
+  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
+  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
+  SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
+  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
+  ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
+  WorkoutLog?: Prisma.WorkoutLogUpdateManyWithoutUserNestedInput
+  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
+  CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
+  CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
+  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+}
+
+export type UserUncheckedUpdateWithoutStoreInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apps?: Prisma.UserUpdateappsInput | string[]
+  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
+  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
+  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
+  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
+  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
+  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
+  SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
+  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
+  WorkoutLog?: Prisma.WorkoutLogUncheckedUpdateManyWithoutUserNestedInput
+  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedUpdateManyWithoutUserNestedInput
+  CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateManyWithoutStoreInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apps?: Prisma.UserUpdateappsInput | string[]
+  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -5778,7 +6132,6 @@ export type UserCreateManyTbmBaseInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -5796,6 +6149,7 @@ export type UserCreateManyTbmBaseInput = {
   tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
 }
 
 export type UserUpdateWithoutTbmBaseInput = {
@@ -5816,7 +6170,6 @@ export type UserUpdateWithoutTbmBaseInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5847,6 +6200,7 @@ export type UserUpdateWithoutTbmBaseInput = {
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTbmBaseInput = {
@@ -5868,7 +6222,6 @@ export type UserUncheckedUpdateWithoutTbmBaseInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5886,6 +6239,7 @@ export type UserUncheckedUpdateWithoutTbmBaseInput = {
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -5920,7 +6274,6 @@ export type UserUncheckedUpdateManyWithoutTbmBaseInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5938,6 +6291,7 @@ export type UserUncheckedUpdateManyWithoutTbmBaseInput = {
   tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type UserCreateManyTbmVehicleInput = {
@@ -5959,7 +6313,6 @@ export type UserCreateManyTbmVehicleInput = {
   role?: string
   tempResetCode?: string | null
   tempResetCodeExpired?: Date | string | null
-  storeId?: number | null
   schoolId?: number | null
   rentaStoreId?: number | null
   type2?: string | null
@@ -5977,6 +6330,7 @@ export type UserCreateManyTbmVehicleInput = {
   departmentId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  storeId?: number | null
 }
 
 export type UserUpdateWithoutTbmVehicleInput = {
@@ -5997,7 +6351,6 @@ export type UserUpdateWithoutTbmVehicleInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6028,6 +6381,7 @@ export type UserUpdateWithoutTbmVehicleInput = {
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTbmVehicleInput = {
@@ -6049,7 +6403,6 @@ export type UserUncheckedUpdateWithoutTbmVehicleInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6067,6 +6420,7 @@ export type UserUncheckedUpdateWithoutTbmVehicleInput = {
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
   UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -6101,7 +6455,6 @@ export type UserUncheckedUpdateManyWithoutTbmVehicleInput = {
   role?: Prisma.StringFieldUpdateOperationsInput | string
   tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6119,6 +6472,7 @@ export type UserUncheckedUpdateManyWithoutTbmVehicleInput = {
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 
@@ -6279,7 +6633,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   role?: boolean
   tempResetCode?: boolean
   tempResetCodeExpired?: boolean
-  storeId?: boolean
   schoolId?: boolean
   rentaStoreId?: boolean
   type2?: boolean
@@ -6298,6 +6651,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   tbmVehicleId?: boolean
   counselingStoreId?: boolean
   aidocumentCompanyId?: boolean
+  storeId?: boolean
   UserRole?: boolean | Prisma.User$UserRoleArgs<ExtArgs>
   TbmBase?: boolean | Prisma.User$TbmBaseArgs<ExtArgs>
   TbmDriveSchedule?: boolean | Prisma.User$TbmDriveScheduleArgs<ExtArgs>
@@ -6316,6 +6670,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   CounselingStore?: boolean | Prisma.User$CounselingStoreArgs<ExtArgs>
   CounselingSlot?: boolean | Prisma.User$CounselingSlotArgs<ExtArgs>
   AidocumentCompany?: boolean | Prisma.User$AidocumentCompanyArgs<ExtArgs>
+  Store?: boolean | Prisma.User$StoreArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -6338,7 +6693,6 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   role?: boolean
   tempResetCode?: boolean
   tempResetCodeExpired?: boolean
-  storeId?: boolean
   schoolId?: boolean
   rentaStoreId?: boolean
   type2?: boolean
@@ -6357,11 +6711,13 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   tbmVehicleId?: boolean
   counselingStoreId?: boolean
   aidocumentCompanyId?: boolean
+  storeId?: boolean
   TbmBase?: boolean | Prisma.User$TbmBaseArgs<ExtArgs>
   Department?: boolean | Prisma.User$DepartmentArgs<ExtArgs>
   TbmVehicle?: boolean | Prisma.User$TbmVehicleArgs<ExtArgs>
   CounselingStore?: boolean | Prisma.User$CounselingStoreArgs<ExtArgs>
   AidocumentCompany?: boolean | Prisma.User$AidocumentCompanyArgs<ExtArgs>
+  Store?: boolean | Prisma.User$StoreArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -6383,7 +6739,6 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   role?: boolean
   tempResetCode?: boolean
   tempResetCodeExpired?: boolean
-  storeId?: boolean
   schoolId?: boolean
   rentaStoreId?: boolean
   type2?: boolean
@@ -6402,11 +6757,13 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   tbmVehicleId?: boolean
   counselingStoreId?: boolean
   aidocumentCompanyId?: boolean
+  storeId?: boolean
   TbmBase?: boolean | Prisma.User$TbmBaseArgs<ExtArgs>
   Department?: boolean | Prisma.User$DepartmentArgs<ExtArgs>
   TbmVehicle?: boolean | Prisma.User$TbmVehicleArgs<ExtArgs>
   CounselingStore?: boolean | Prisma.User$CounselingStoreArgs<ExtArgs>
   AidocumentCompany?: boolean | Prisma.User$AidocumentCompanyArgs<ExtArgs>
+  Store?: boolean | Prisma.User$StoreArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -6428,7 +6785,6 @@ export type UserSelectScalar = {
   role?: boolean
   tempResetCode?: boolean
   tempResetCodeExpired?: boolean
-  storeId?: boolean
   schoolId?: boolean
   rentaStoreId?: boolean
   type2?: boolean
@@ -6447,9 +6803,10 @@ export type UserSelectScalar = {
   tbmVehicleId?: boolean
   counselingStoreId?: boolean
   aidocumentCompanyId?: boolean
+  storeId?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "createdAt" | "updatedAt" | "sortOrder" | "active" | "hiredAt" | "retiredAt" | "transferredAt" | "yukyuCategory" | "name" | "kana" | "email" | "password" | "type" | "role" | "tempResetCode" | "tempResetCodeExpired" | "storeId" | "schoolId" | "rentaStoreId" | "type2" | "shopId" | "membershipName" | "damageNameMasterId" | "color" | "app" | "apps" | "employeeCode" | "phone" | "avatar" | "bcc" | "tbmBaseId" | "departmentId" | "tbmVehicleId" | "counselingStoreId" | "aidocumentCompanyId", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "createdAt" | "updatedAt" | "sortOrder" | "active" | "hiredAt" | "retiredAt" | "transferredAt" | "yukyuCategory" | "name" | "kana" | "email" | "password" | "type" | "role" | "tempResetCode" | "tempResetCodeExpired" | "schoolId" | "rentaStoreId" | "type2" | "shopId" | "membershipName" | "damageNameMasterId" | "color" | "app" | "apps" | "employeeCode" | "phone" | "avatar" | "bcc" | "tbmBaseId" | "departmentId" | "tbmVehicleId" | "counselingStoreId" | "aidocumentCompanyId" | "storeId", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   UserRole?: boolean | Prisma.User$UserRoleArgs<ExtArgs>
   TbmBase?: boolean | Prisma.User$TbmBaseArgs<ExtArgs>
@@ -6469,6 +6826,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   CounselingStore?: boolean | Prisma.User$CounselingStoreArgs<ExtArgs>
   CounselingSlot?: boolean | Prisma.User$CounselingSlotArgs<ExtArgs>
   AidocumentCompany?: boolean | Prisma.User$AidocumentCompanyArgs<ExtArgs>
+  Store?: boolean | Prisma.User$StoreArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -6477,6 +6835,7 @@ export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   TbmVehicle?: boolean | Prisma.User$TbmVehicleArgs<ExtArgs>
   CounselingStore?: boolean | Prisma.User$CounselingStoreArgs<ExtArgs>
   AidocumentCompany?: boolean | Prisma.User$AidocumentCompanyArgs<ExtArgs>
+  Store?: boolean | Prisma.User$StoreArgs<ExtArgs>
 }
 export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   TbmBase?: boolean | Prisma.User$TbmBaseArgs<ExtArgs>
@@ -6484,6 +6843,7 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   TbmVehicle?: boolean | Prisma.User$TbmVehicleArgs<ExtArgs>
   CounselingStore?: boolean | Prisma.User$CounselingStoreArgs<ExtArgs>
   AidocumentCompany?: boolean | Prisma.User$AidocumentCompanyArgs<ExtArgs>
+  Store?: boolean | Prisma.User$StoreArgs<ExtArgs>
 }
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -6507,6 +6867,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     CounselingStore: Prisma.$CounselingStorePayload<ExtArgs> | null
     CounselingSlot: Prisma.$CounselingSlotPayload<ExtArgs>[]
     AidocumentCompany: Prisma.$AidocumentCompanyPayload<ExtArgs> | null
+    Store: Prisma.$StorePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -6527,7 +6888,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     role: string
     tempResetCode: string | null
     tempResetCodeExpired: Date | null
-    storeId: number | null
     schoolId: number | null
     rentaStoreId: number | null
     type2: string | null
@@ -6546,6 +6906,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     tbmVehicleId: number | null
     counselingStoreId: number | null
     aidocumentCompanyId: number | null
+    storeId: number | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -6958,6 +7319,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   CounselingStore<T extends Prisma.User$CounselingStoreArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$CounselingStoreArgs<ExtArgs>>): Prisma.Prisma__CounselingStoreClient<runtime.Types.Result.GetResult<Prisma.$CounselingStorePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   CounselingSlot<T extends Prisma.User$CounselingSlotArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$CounselingSlotArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CounselingSlotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   AidocumentCompany<T extends Prisma.User$AidocumentCompanyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$AidocumentCompanyArgs<ExtArgs>>): Prisma.Prisma__AidocumentCompanyClient<runtime.Types.Result.GetResult<Prisma.$AidocumentCompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  Store<T extends Prisma.User$StoreArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$StoreArgs<ExtArgs>>): Prisma.Prisma__StoreClient<runtime.Types.Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7005,7 +7367,6 @@ export interface UserFieldRefs {
   readonly role: Prisma.FieldRef<"User", 'String'>
   readonly tempResetCode: Prisma.FieldRef<"User", 'String'>
   readonly tempResetCodeExpired: Prisma.FieldRef<"User", 'DateTime'>
-  readonly storeId: Prisma.FieldRef<"User", 'Int'>
   readonly schoolId: Prisma.FieldRef<"User", 'Int'>
   readonly rentaStoreId: Prisma.FieldRef<"User", 'Int'>
   readonly type2: Prisma.FieldRef<"User", 'String'>
@@ -7024,6 +7385,7 @@ export interface UserFieldRefs {
   readonly tbmVehicleId: Prisma.FieldRef<"User", 'Int'>
   readonly counselingStoreId: Prisma.FieldRef<"User", 'Int'>
   readonly aidocumentCompanyId: Prisma.FieldRef<"User", 'Int'>
+  readonly storeId: Prisma.FieldRef<"User", 'Int'>
 }
     
 
@@ -7824,6 +8186,25 @@ export type User$AidocumentCompanyArgs<ExtArgs extends runtime.Types.Extensions.
    */
   include?: Prisma.AidocumentCompanyInclude<ExtArgs> | null
   where?: Prisma.AidocumentCompanyWhereInput
+}
+
+/**
+ * User.Store
+ */
+export type User$StoreArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Store
+   */
+  select?: Prisma.StoreSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Store
+   */
+  omit?: Prisma.StoreOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoreInclude<ExtArgs> | null
+  where?: Prisma.StoreWhereInput
 }
 
 /**

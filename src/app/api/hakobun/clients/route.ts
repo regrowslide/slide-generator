@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     })
 
     // デフォルトステージを作成
-    const defaultStages = ['認知', '興味', '検討', '購入', '利用', 'リピート', 'その他']
+    const defaultStages = []
     for (let i = 0; i < defaultStages.length; i++) {
       await prisma.hakobunClientStage.create({
         data: {
@@ -87,14 +87,7 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()
-    const {
-      id,
-      name,
-      inputDataExplain,
-      analysisStartDate,
-      analysisEndDate,
-      industryId,
-    } = body
+    const {id, name, inputDataExplain, analysisStartDate, analysisEndDate, industryId} = body
 
     if (!id) {
       return NextResponse.json(
@@ -109,10 +102,8 @@ export async function PUT(request: NextRequest) {
     const updateData: any = {}
     if (name !== undefined) updateData.name = name
     if (inputDataExplain !== undefined) updateData.inputDataExplain = inputDataExplain || null
-    if (analysisStartDate !== undefined)
-      updateData.analysisStartDate = analysisStartDate ? new Date(analysisStartDate) : null
-    if (analysisEndDate !== undefined)
-      updateData.analysisEndDate = analysisEndDate ? new Date(analysisEndDate) : null
+    if (analysisStartDate !== undefined) updateData.analysisStartDate = analysisStartDate ? new Date(analysisStartDate) : null
+    if (analysisEndDate !== undefined) updateData.analysisEndDate = analysisEndDate ? new Date(analysisEndDate) : null
     if (industryId !== undefined) updateData.industryId = industryId || null
 
     const client = await prisma.hakobunClient.update({

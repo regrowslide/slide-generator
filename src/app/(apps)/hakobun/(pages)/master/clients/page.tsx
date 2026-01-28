@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useState, useEffect, useCallback} from 'react'
+import React, {useState, useEffect, useCallback, useMemo} from 'react'
 import {C_Stack, R_Stack} from '@cm/components/styles/common-components/common-components'
 import {
   Plus,
@@ -14,8 +14,13 @@ import {
   ToggleLeft,
   ToggleRight,
   Factory,
+  Search,
+  ChevronLeft,
 } from 'lucide-react'
 import useModal from '@cm/components/utils/modal/useModal'
+
+// ページサイズ
+const PAGE_SIZE = 20
 
 interface Industry {
   id: number
@@ -69,6 +74,10 @@ export default function ClientsManagementPage() {
   const [formData, setFormData] = useState<ClientFormData>(initialFormData)
   const [expandedIds, setExpandedIds] = useState<Set<number>>(new Set())
 
+  // 検索・ページネーション
+  const [searchQuery, setSearchQuery] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
+
   // クライアント追加/編集モーダル用
   const clientModal = useModal<{editingId: number | null}>()
 
@@ -104,6 +113,28 @@ export default function ClientsManagementPage() {
   useEffect(() => {
     fetchClients()
   }, [fetchClients])
+
+  // フィルタリングとページネーション
+  const filteredClients = useMemo(() => {
+    if (!searchQuery.trim()) return clients
+    const query = searchQuery.toLowerCase()
+    return clients.filter(
+      client =>
+        client.name.toLowerCase().includes(query) ||
+        client.clientId.toLowerCase().includes(query)
+    )
+  }, [clients, searchQuery])
+
+  const totalPages = Math.ceil(filteredClients.length / PAGE_SIZE)
+  const paginatedClients = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE
+    return filteredClients.slice(start, start + PAGE_SIZE)
+  }, [filteredClients, currentPage])
+
+  // 検索時はページをリセット
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchQuery])
 
   // 新規追加モーダルを開く
   const openAddModal = () => {
@@ -328,7 +359,22 @@ export default function ClientsManagementPage() {
 
         {/* クライアント一覧 */}
         <div className="bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-lg font-bold mb-4">クライアント一覧 ({clients.length}件)</h2>
+          <R_Stack className="justify-between items-center mb-4">
+            <h2 className="text-lg font-bold">
+              クライアント一覧 ({filteredClients.length}件{searchQuery && ` / 全${clients.length}件`})
+            </h2>
+            {/* 検索フィールド */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="名称・IDで検索..."
+                className="pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-64"
+              />
+            </div>
+          </R_Stack>
           {isLoading ? (
             <p className="text-gray-500 text-center py-8">読み込み中...</p>
           ) : clients.length === 0 ? (
@@ -337,9 +383,11 @@ export default function ClientsManagementPage() {
               <p className="text-gray-500">クライアントがまだ登録されていません</p>
               <p className="text-gray-400 text-sm mt-1">「新規クライアント」ボタンから追加してください</p>
             </div>
+          ) : filteredClients.length === 0 ? (
+            <p className="text-gray-500 text-center py-8">検索結果がありません</p>
           ) : (
             <div className="space-y-3">
-              {clients.map(client => (
+              {paginatedClients.map(client => (
                 <div key={client.id} className="border border-gray-200 rounded-lg overflow-hidden">
                   {/* クライアントヘッダー */}
                   <div className="bg-gray-50 px-4 py-3">
@@ -468,6 +516,29 @@ export default function ClientsManagementPage() {
                 </div>
               ))}
             </div>
+          )}
+
+          {/* ページネーション */}
+          {totalPages > 1 && (
+            <R_Stack className="justify-center items-center gap-2 mt-4 pt-4 border-t border-gray-200">
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="p-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <span className="text-sm text-gray-600">
+                {currentPage} / {totalPages} ページ
+              </span>
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="p-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </R_Stack>
           )}
         </div>
       </C_Stack>

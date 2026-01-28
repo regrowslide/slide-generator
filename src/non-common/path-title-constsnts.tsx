@@ -142,12 +142,12 @@ export const PAGES: Record<string, PageGetterFunction> = {
           { tabId: 'master/settings', label: 'AI分析設定' },
         ],
       },
-      {
-        tabId: 'batch',
-        label: '一括分析（旧）',
-        ROOT: [rootPath],
-        // exclusiveTo: !!login,
-      },
+      // {
+      //   tabId: 'batch',
+      //   label: '一括分析（旧）',
+      //   ROOT: [rootPath],
+      //   // exclusiveTo: !!login,
+      // },
     ]
 
     const adminPaths = []

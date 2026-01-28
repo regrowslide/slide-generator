@@ -15,6 +15,8 @@ export type GeminiModel =
   | 'gemini-2.0-flash'
   | 'gemini-1.5-flash'
   | 'gemini-1.5-pro'
+  | 'gemini-3-flash-preview'
+  | 'gemini-2.5-flash-lite'
 
 export interface GeminiGenerationConfig {
   temperature?: number
@@ -128,21 +130,21 @@ export function repairJson(jsonString: string): string {
 /**
  * JSONを安全にパースする（修復試行付き）
  */
-export function safeJsonParse<T>(jsonString: string): {success: boolean; data?: T; error?: string} {
+export function safeJsonParse<T>(jsonString: string): { success: boolean; data?: T; error?: string } {
   if (!jsonString) {
-    return {success: false, error: 'Empty JSON string'}
+    return { success: false, error: 'Empty JSON string' }
   }
 
   // 1回目: そのままパース
   try {
     const data = JSON.parse(jsonString) as T
-    return {success: true, data}
+    return { success: true, data }
   } catch (firstError) {
     // 2回目: 修復してパース
     try {
       const repaired = repairJson(jsonString)
       const data = JSON.parse(repaired) as T
-      return {success: true, data}
+      return { success: true, data }
     } catch (secondError) {
       return {
         success: false,
@@ -389,16 +391,17 @@ export const HAKOBUN_ANALYSIS_SCHEMA: GeminiResponseSchema = {
   items: {
     type: 'object',
     properties: {
-      sentence: {type: 'string', description: 'トピック単位（意味が完結した原文）'},
-      stage: {type: 'string', enum: ['認知', '興味', '検討', '購入', '利用', 'リピート', 'その他'], description: 'カスタマージャーニーのステージ'},
-      general_category: {type: 'string', description: '一般カテゴリ'},
-      category: {type: 'string', description: 'カテゴリ（詳細な分類名）'},
-      sentiment: {type: 'string', enum: ['好意的', '不満', 'リクエスト', 'その他']},
-      posi_nega: {type: 'string', enum: ['positive', 'negative', 'neutral']},
-      magnitude: {type: 'number', description: '熱量スコア（0-100）'},
-      is_new_generated: {type: 'boolean', description: '新規生成カテゴリの場合true'},
+      sentence: { type: 'string', description: 'トピック単位（意味が完結した原文）' },
+      stage: { type: 'string', enum: [], description: 'カスタマージャーニーのステージ' },
+      general_category: { type: 'string', description: '一般カテゴリ' },
+      category: { type: 'string', description: 'カテゴリ（詳細な分類名）' },
+      sentiment: { type: 'string', enum: ['好意的', '不満', 'リクエスト', 'その他'] },
+      posi_nega: { type: 'string', enum: ['positive', 'negative', 'neutral'] },
+      magnitude: { type: 'number', description: '熱量スコア（0-100）' },
+      is_new_generated: { type: 'boolean', description: '新規生成カテゴリの場合true' },
     },
     required: ['sentence', 'stage', 'general_category', 'category', 'sentiment', 'posi_nega', 'magnitude'],
   },
 }
+
 

@@ -20,6 +20,22 @@ model Department {
   User User[]
 }
 
+model Store {
+  id        Int       @id @default(autoincrement())
+  code      Int       @unique
+  createdAt DateTime  @default(now())
+  active    Boolean   @default(true)
+  sortOrder Float     @default(0)
+  name      String
+  updatedAt DateTime? @updatedAt
+
+  tel     String?
+  fax     String?
+  address String?
+
+  User User[]
+}
+
 model User {
   id            Int       @id @default(autoincrement())
   code          String?   @unique
@@ -43,7 +59,6 @@ model User {
 
   tempResetCode        String?
   tempResetCodeExpired DateTime?
-  storeId              Int?
   schoolId             Int?
   rentaStoreId         Int?
   type2                String?
@@ -98,6 +113,8 @@ model User {
   // aidocument
   aidocumentCompanyId Int?
   AidocumentCompany   AidocumentCompany? @relation(fields: [aidocumentCompanyId], references: [id], onDelete: SetNull)
+  Store               Store?             @relation(fields: [storeId], references: [id])
+  storeId             Int?
 }
 
 model ReleaseNotes {

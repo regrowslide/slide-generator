@@ -1,6 +1,6 @@
 'use client'
 
-import {useDeviceContext} from '@cm/providers/DeviceContextProvider'
+import { useDeviceContext } from '@cm/providers/DeviceContextProvider'
 
 export const appbarHeight = 40
 export const footerHeight = 40
@@ -9,8 +9,8 @@ export default function useWindowSize() {
   return useDeviceContext()
 }
 
-export const getWindow: () => {width: number; height: number} = () => {
-  const result = typeof window === 'undefined' ? {width: 0, height: 0} : {width: window.innerWidth, height: window.innerHeight}
+export const getWindow: () => { width: number; height: number } = () => {
+  const result = typeof window === 'undefined' ? { width: 0, height: 0 } : { width: window.innerWidth, height: window.innerHeight }
   return result
 }
 

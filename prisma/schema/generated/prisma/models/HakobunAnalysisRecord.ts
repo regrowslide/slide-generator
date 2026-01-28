@@ -49,6 +49,9 @@ export type HakobunAnalysisRecordMinAggregateOutputType = {
   analysisGeneralCategory: string | null
   analysisCategory: string | null
   analysisTopic: string | null
+  isProposedGeneralCategory: boolean | null
+  isProposedCategory: boolean | null
+  proposalApproved: boolean | null
   feedbackStage: string | null
   feedbackSentiment: string | null
   feedbackGeneralCategory: string | null
@@ -70,6 +73,9 @@ export type HakobunAnalysisRecordMaxAggregateOutputType = {
   analysisGeneralCategory: string | null
   analysisCategory: string | null
   analysisTopic: string | null
+  isProposedGeneralCategory: boolean | null
+  isProposedCategory: boolean | null
+  proposalApproved: boolean | null
   feedbackStage: string | null
   feedbackSentiment: string | null
   feedbackGeneralCategory: string | null
@@ -91,6 +97,9 @@ export type HakobunAnalysisRecordCountAggregateOutputType = {
   analysisGeneralCategory: number
   analysisCategory: number
   analysisTopic: number
+  isProposedGeneralCategory: number
+  isProposedCategory: number
+  proposalApproved: number
   feedbackStage: number
   feedbackSentiment: number
   feedbackGeneralCategory: number
@@ -126,6 +135,9 @@ export type HakobunAnalysisRecordMinAggregateInputType = {
   analysisGeneralCategory?: true
   analysisCategory?: true
   analysisTopic?: true
+  isProposedGeneralCategory?: true
+  isProposedCategory?: true
+  proposalApproved?: true
   feedbackStage?: true
   feedbackSentiment?: true
   feedbackGeneralCategory?: true
@@ -147,6 +159,9 @@ export type HakobunAnalysisRecordMaxAggregateInputType = {
   analysisGeneralCategory?: true
   analysisCategory?: true
   analysisTopic?: true
+  isProposedGeneralCategory?: true
+  isProposedCategory?: true
+  proposalApproved?: true
   feedbackStage?: true
   feedbackSentiment?: true
   feedbackGeneralCategory?: true
@@ -168,6 +183,9 @@ export type HakobunAnalysisRecordCountAggregateInputType = {
   analysisGeneralCategory?: true
   analysisCategory?: true
   analysisTopic?: true
+  isProposedGeneralCategory?: true
+  isProposedCategory?: true
+  proposalApproved?: true
   feedbackStage?: true
   feedbackSentiment?: true
   feedbackGeneralCategory?: true
@@ -276,6 +294,9 @@ export type HakobunAnalysisRecordGroupByOutputType = {
   analysisGeneralCategory: string | null
   analysisCategory: string | null
   analysisTopic: string | null
+  isProposedGeneralCategory: boolean
+  isProposedCategory: boolean
+  proposalApproved: boolean | null
   feedbackStage: string | null
   feedbackSentiment: string | null
   feedbackGeneralCategory: string | null
@@ -320,6 +341,9 @@ export type HakobunAnalysisRecordWhereInput = {
   analysisGeneralCategory?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   analysisCategory?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   analysisTopic?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
+  isProposedGeneralCategory?: Prisma.BoolFilter<"HakobunAnalysisRecord"> | boolean
+  isProposedCategory?: Prisma.BoolFilter<"HakobunAnalysisRecord"> | boolean
+  proposalApproved?: Prisma.BoolNullableFilter<"HakobunAnalysisRecord"> | boolean | null
   feedbackStage?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   feedbackSentiment?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   feedbackGeneralCategory?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
@@ -342,6 +366,9 @@ export type HakobunAnalysisRecordOrderByWithRelationInput = {
   analysisGeneralCategory?: Prisma.SortOrderInput | Prisma.SortOrder
   analysisCategory?: Prisma.SortOrderInput | Prisma.SortOrder
   analysisTopic?: Prisma.SortOrderInput | Prisma.SortOrder
+  isProposedGeneralCategory?: Prisma.SortOrder
+  isProposedCategory?: Prisma.SortOrder
+  proposalApproved?: Prisma.SortOrderInput | Prisma.SortOrder
   feedbackStage?: Prisma.SortOrderInput | Prisma.SortOrder
   feedbackSentiment?: Prisma.SortOrderInput | Prisma.SortOrder
   feedbackGeneralCategory?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -367,6 +394,9 @@ export type HakobunAnalysisRecordWhereUniqueInput = Prisma.AtLeast<{
   analysisGeneralCategory?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   analysisCategory?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   analysisTopic?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
+  isProposedGeneralCategory?: Prisma.BoolFilter<"HakobunAnalysisRecord"> | boolean
+  isProposedCategory?: Prisma.BoolFilter<"HakobunAnalysisRecord"> | boolean
+  proposalApproved?: Prisma.BoolNullableFilter<"HakobunAnalysisRecord"> | boolean | null
   feedbackStage?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   feedbackSentiment?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   feedbackGeneralCategory?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
@@ -389,6 +419,9 @@ export type HakobunAnalysisRecordOrderByWithAggregationInput = {
   analysisGeneralCategory?: Prisma.SortOrderInput | Prisma.SortOrder
   analysisCategory?: Prisma.SortOrderInput | Prisma.SortOrder
   analysisTopic?: Prisma.SortOrderInput | Prisma.SortOrder
+  isProposedGeneralCategory?: Prisma.SortOrder
+  isProposedCategory?: Prisma.SortOrder
+  proposalApproved?: Prisma.SortOrderInput | Prisma.SortOrder
   feedbackStage?: Prisma.SortOrderInput | Prisma.SortOrder
   feedbackSentiment?: Prisma.SortOrderInput | Prisma.SortOrder
   feedbackGeneralCategory?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -418,6 +451,9 @@ export type HakobunAnalysisRecordScalarWhereWithAggregatesInput = {
   analysisGeneralCategory?: Prisma.StringNullableWithAggregatesFilter<"HakobunAnalysisRecord"> | string | null
   analysisCategory?: Prisma.StringNullableWithAggregatesFilter<"HakobunAnalysisRecord"> | string | null
   analysisTopic?: Prisma.StringNullableWithAggregatesFilter<"HakobunAnalysisRecord"> | string | null
+  isProposedGeneralCategory?: Prisma.BoolWithAggregatesFilter<"HakobunAnalysisRecord"> | boolean
+  isProposedCategory?: Prisma.BoolWithAggregatesFilter<"HakobunAnalysisRecord"> | boolean
+  proposalApproved?: Prisma.BoolNullableWithAggregatesFilter<"HakobunAnalysisRecord"> | boolean | null
   feedbackStage?: Prisma.StringNullableWithAggregatesFilter<"HakobunAnalysisRecord"> | string | null
   feedbackSentiment?: Prisma.StringNullableWithAggregatesFilter<"HakobunAnalysisRecord"> | string | null
   feedbackGeneralCategory?: Prisma.StringNullableWithAggregatesFilter<"HakobunAnalysisRecord"> | string | null
@@ -438,6 +474,9 @@ export type HakobunAnalysisRecordCreateInput = {
   analysisGeneralCategory?: string | null
   analysisCategory?: string | null
   analysisTopic?: string | null
+  isProposedGeneralCategory?: boolean
+  isProposedCategory?: boolean
+  proposalApproved?: boolean | null
   feedbackStage?: string | null
   feedbackSentiment?: string | null
   feedbackGeneralCategory?: string | null
@@ -459,6 +498,9 @@ export type HakobunAnalysisRecordUncheckedCreateInput = {
   analysisGeneralCategory?: string | null
   analysisCategory?: string | null
   analysisTopic?: string | null
+  isProposedGeneralCategory?: boolean
+  isProposedCategory?: boolean
+  proposalApproved?: boolean | null
   feedbackStage?: string | null
   feedbackSentiment?: string | null
   feedbackGeneralCategory?: string | null
@@ -479,6 +521,9 @@ export type HakobunAnalysisRecordUpdateInput = {
   analysisGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isProposedGeneralCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isProposedCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proposalApproved?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   feedbackStage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   feedbackSentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   feedbackGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -500,6 +545,9 @@ export type HakobunAnalysisRecordUncheckedUpdateInput = {
   analysisGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isProposedGeneralCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isProposedCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proposalApproved?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   feedbackStage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   feedbackSentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   feedbackGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -521,6 +569,9 @@ export type HakobunAnalysisRecordCreateManyInput = {
   analysisGeneralCategory?: string | null
   analysisCategory?: string | null
   analysisTopic?: string | null
+  isProposedGeneralCategory?: boolean
+  isProposedCategory?: boolean
+  proposalApproved?: boolean | null
   feedbackStage?: string | null
   feedbackSentiment?: string | null
   feedbackGeneralCategory?: string | null
@@ -541,6 +592,9 @@ export type HakobunAnalysisRecordUpdateManyMutationInput = {
   analysisGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isProposedGeneralCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isProposedCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proposalApproved?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   feedbackStage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   feedbackSentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   feedbackGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -561,6 +615,9 @@ export type HakobunAnalysisRecordUncheckedUpdateManyInput = {
   analysisGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isProposedGeneralCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isProposedCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proposalApproved?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   feedbackStage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   feedbackSentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   feedbackGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -592,6 +649,9 @@ export type HakobunAnalysisRecordCountOrderByAggregateInput = {
   analysisGeneralCategory?: Prisma.SortOrder
   analysisCategory?: Prisma.SortOrder
   analysisTopic?: Prisma.SortOrder
+  isProposedGeneralCategory?: Prisma.SortOrder
+  isProposedCategory?: Prisma.SortOrder
+  proposalApproved?: Prisma.SortOrder
   feedbackStage?: Prisma.SortOrder
   feedbackSentiment?: Prisma.SortOrder
   feedbackGeneralCategory?: Prisma.SortOrder
@@ -619,6 +679,9 @@ export type HakobunAnalysisRecordMaxOrderByAggregateInput = {
   analysisGeneralCategory?: Prisma.SortOrder
   analysisCategory?: Prisma.SortOrder
   analysisTopic?: Prisma.SortOrder
+  isProposedGeneralCategory?: Prisma.SortOrder
+  isProposedCategory?: Prisma.SortOrder
+  proposalApproved?: Prisma.SortOrder
   feedbackStage?: Prisma.SortOrder
   feedbackSentiment?: Prisma.SortOrder
   feedbackGeneralCategory?: Prisma.SortOrder
@@ -640,6 +703,9 @@ export type HakobunAnalysisRecordMinOrderByAggregateInput = {
   analysisGeneralCategory?: Prisma.SortOrder
   analysisCategory?: Prisma.SortOrder
   analysisTopic?: Prisma.SortOrder
+  isProposedGeneralCategory?: Prisma.SortOrder
+  isProposedCategory?: Prisma.SortOrder
+  proposalApproved?: Prisma.SortOrder
   feedbackStage?: Prisma.SortOrder
   feedbackSentiment?: Prisma.SortOrder
   feedbackGeneralCategory?: Prisma.SortOrder
@@ -708,6 +774,9 @@ export type HakobunAnalysisRecordCreateWithoutSessionInput = {
   analysisGeneralCategory?: string | null
   analysisCategory?: string | null
   analysisTopic?: string | null
+  isProposedGeneralCategory?: boolean
+  isProposedCategory?: boolean
+  proposalApproved?: boolean | null
   feedbackStage?: string | null
   feedbackSentiment?: string | null
   feedbackGeneralCategory?: string | null
@@ -728,6 +797,9 @@ export type HakobunAnalysisRecordUncheckedCreateWithoutSessionInput = {
   analysisGeneralCategory?: string | null
   analysisCategory?: string | null
   analysisTopic?: string | null
+  isProposedGeneralCategory?: boolean
+  isProposedCategory?: boolean
+  proposalApproved?: boolean | null
   feedbackStage?: string | null
   feedbackSentiment?: string | null
   feedbackGeneralCategory?: string | null
@@ -777,6 +849,9 @@ export type HakobunAnalysisRecordScalarWhereInput = {
   analysisGeneralCategory?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   analysisCategory?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   analysisTopic?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
+  isProposedGeneralCategory?: Prisma.BoolFilter<"HakobunAnalysisRecord"> | boolean
+  isProposedCategory?: Prisma.BoolFilter<"HakobunAnalysisRecord"> | boolean
+  proposalApproved?: Prisma.BoolNullableFilter<"HakobunAnalysisRecord"> | boolean | null
   feedbackStage?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   feedbackSentiment?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   feedbackGeneralCategory?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
@@ -798,6 +873,9 @@ export type HakobunAnalysisRecordCreateManySessionInput = {
   analysisGeneralCategory?: string | null
   analysisCategory?: string | null
   analysisTopic?: string | null
+  isProposedGeneralCategory?: boolean
+  isProposedCategory?: boolean
+  proposalApproved?: boolean | null
   feedbackStage?: string | null
   feedbackSentiment?: string | null
   feedbackGeneralCategory?: string | null
@@ -817,6 +895,9 @@ export type HakobunAnalysisRecordUpdateWithoutSessionInput = {
   analysisGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isProposedGeneralCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isProposedCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proposalApproved?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   feedbackStage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   feedbackSentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   feedbackGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -837,6 +918,9 @@ export type HakobunAnalysisRecordUncheckedUpdateWithoutSessionInput = {
   analysisGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isProposedGeneralCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isProposedCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proposalApproved?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   feedbackStage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   feedbackSentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   feedbackGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -857,6 +941,9 @@ export type HakobunAnalysisRecordUncheckedUpdateManyWithoutSessionInput = {
   analysisGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   analysisTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isProposedGeneralCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isProposedCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proposalApproved?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   feedbackStage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   feedbackSentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   feedbackGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -879,6 +966,9 @@ export type HakobunAnalysisRecordSelect<ExtArgs extends runtime.Types.Extensions
   analysisGeneralCategory?: boolean
   analysisCategory?: boolean
   analysisTopic?: boolean
+  isProposedGeneralCategory?: boolean
+  isProposedCategory?: boolean
+  proposalApproved?: boolean
   feedbackStage?: boolean
   feedbackSentiment?: boolean
   feedbackGeneralCategory?: boolean
@@ -901,6 +991,9 @@ export type HakobunAnalysisRecordSelectCreateManyAndReturn<ExtArgs extends runti
   analysisGeneralCategory?: boolean
   analysisCategory?: boolean
   analysisTopic?: boolean
+  isProposedGeneralCategory?: boolean
+  isProposedCategory?: boolean
+  proposalApproved?: boolean
   feedbackStage?: boolean
   feedbackSentiment?: boolean
   feedbackGeneralCategory?: boolean
@@ -923,6 +1016,9 @@ export type HakobunAnalysisRecordSelectUpdateManyAndReturn<ExtArgs extends runti
   analysisGeneralCategory?: boolean
   analysisCategory?: boolean
   analysisTopic?: boolean
+  isProposedGeneralCategory?: boolean
+  isProposedCategory?: boolean
+  proposalApproved?: boolean
   feedbackStage?: boolean
   feedbackSentiment?: boolean
   feedbackGeneralCategory?: boolean
@@ -945,6 +1041,9 @@ export type HakobunAnalysisRecordSelectScalar = {
   analysisGeneralCategory?: boolean
   analysisCategory?: boolean
   analysisTopic?: boolean
+  isProposedGeneralCategory?: boolean
+  isProposedCategory?: boolean
+  proposalApproved?: boolean
   feedbackStage?: boolean
   feedbackSentiment?: boolean
   feedbackGeneralCategory?: boolean
@@ -955,7 +1054,7 @@ export type HakobunAnalysisRecordSelectScalar = {
   sessionId?: boolean
 }
 
-export type HakobunAnalysisRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "rawText" | "analysisStage" | "analysisSentiment" | "analysisGeneralCategory" | "analysisCategory" | "analysisTopic" | "feedbackStage" | "feedbackSentiment" | "feedbackGeneralCategory" | "feedbackCategory" | "feedbackTopic" | "isModified" | "reviewerComment" | "sessionId", ExtArgs["result"]["hakobunAnalysisRecord"]>
+export type HakobunAnalysisRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "rawText" | "analysisStage" | "analysisSentiment" | "analysisGeneralCategory" | "analysisCategory" | "analysisTopic" | "isProposedGeneralCategory" | "isProposedCategory" | "proposalApproved" | "feedbackStage" | "feedbackSentiment" | "feedbackGeneralCategory" | "feedbackCategory" | "feedbackTopic" | "isModified" | "reviewerComment" | "sessionId", ExtArgs["result"]["hakobunAnalysisRecord"]>
 export type HakobunAnalysisRecordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   session?: boolean | Prisma.HakobunAnalysisSessionDefaultArgs<ExtArgs>
 }
@@ -982,6 +1081,9 @@ export type $HakobunAnalysisRecordPayload<ExtArgs extends runtime.Types.Extensio
     analysisGeneralCategory: string | null
     analysisCategory: string | null
     analysisTopic: string | null
+    isProposedGeneralCategory: boolean
+    isProposedCategory: boolean
+    proposalApproved: boolean | null
     feedbackStage: string | null
     feedbackSentiment: string | null
     feedbackGeneralCategory: string | null
@@ -1424,6 +1526,9 @@ export interface HakobunAnalysisRecordFieldRefs {
   readonly analysisGeneralCategory: Prisma.FieldRef<"HakobunAnalysisRecord", 'String'>
   readonly analysisCategory: Prisma.FieldRef<"HakobunAnalysisRecord", 'String'>
   readonly analysisTopic: Prisma.FieldRef<"HakobunAnalysisRecord", 'String'>
+  readonly isProposedGeneralCategory: Prisma.FieldRef<"HakobunAnalysisRecord", 'Boolean'>
+  readonly isProposedCategory: Prisma.FieldRef<"HakobunAnalysisRecord", 'Boolean'>
+  readonly proposalApproved: Prisma.FieldRef<"HakobunAnalysisRecord", 'Boolean'>
   readonly feedbackStage: Prisma.FieldRef<"HakobunAnalysisRecord", 'String'>
   readonly feedbackSentiment: Prisma.FieldRef<"HakobunAnalysisRecord", 'String'>
   readonly feedbackGeneralCategory: Prisma.FieldRef<"HakobunAnalysisRecord", 'String'>

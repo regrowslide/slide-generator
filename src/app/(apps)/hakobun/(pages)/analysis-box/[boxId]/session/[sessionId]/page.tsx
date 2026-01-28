@@ -16,6 +16,11 @@ import {
   Eye,
   Download,
   Clock,
+  Check,
+  Sparkles,
+  Lock,
+  CheckCircle2,
+  FileCheck,
 } from 'lucide-react'
 import Link from 'next/link'
 import {
@@ -25,6 +30,10 @@ import {
   createAnalysisRecords,
   updateAnalysisRecordsFeedback,
   getSessionRecordsForExport,
+  getConfirmedSessionRecordsForExport,
+  approveProposedCategory,
+  rejectProposedCategory,
+  confirmAnalysisSession,
 } from '../../../../../_actions/analysis-box-actions'
 import type {
   HakobunAnalysisSession,
@@ -39,8 +48,7 @@ import useMyNavigation from '@cm/hooks/globalHooks/useMyNavigation'
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/ui/popover'
 import { BarChart3, Info } from 'lucide-react'
 
-// ステージ選択肢
-const STAGE_OPTIONS = ['認知', '興味', '検討', '購入', '利用', 'リピート', 'その他']
+// デフォルトのステージ選択肢（クライアント未設定時のフォールバック）
 
 // 感情選択肢
 const SENTIMENT_OPTIONS: SentimentType[] = ['好意的', '不満', 'リクエスト', 'その他']
@@ -48,14 +56,19 @@ const SENTIMENT_OPTIONS: SentimentType[] = ['好意的', '不満', 'リクエス
 // ページネーション
 const RECORD_PAGE_SIZE = 100
 
-// CSV生成ユーティリティ
-const generateCsvContent = (records: HakobunAnalysisRecord[]): string => {
+// CSV生成ユーティリティ（createdAt順・全体通し連番対応）
+const generateCsvContent = (records: HakobunAnalysisRecord[], useCreatedAtOrder = false): string => {
   // ヘッダー
   const headers = ['通し番号', '枝番', 'ステージ', '感情', '一般カテゴリ', 'カテゴリ', 'トピック', '原文']
 
+  // createdAt順でソートする場合
+  const sortedRecords = useCreatedAtOrder
+    ? [...records].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+    : records
+
   // 原文ごとにグループ化して通し番号を付与
   const rawTextGroups = new Map<string, HakobunAnalysisRecord[]>()
-  records.forEach(record => {
+  sortedRecords.forEach(record => {
     const key = record.rawText
     const existing = rawTextGroups.get(key) || []
     existing.push(record)
@@ -149,11 +162,14 @@ export default function AnalysisSessionDetailPage() {
   const sessionId = Number(params?.sessionId)
   const { getHref } = useMyNavigation()
 
-  const { selectedClient } = useSelectedClient()
+  const { selectedClient, stageOptions } = useSelectedClient()
   const {
     mergedGeneralCategories,
     createGeneralCategory,
     createCategory,
+    isPendingGeneralCategory,
+    industryId,
+    refreshCategories,
   } = useCategoryManager({ selectedClient })
 
   // カテゴリ追加モーダル
@@ -192,6 +208,8 @@ export default function AnalysisSessionDetailPage() {
 
   // フィードバック編集
   const [editStates, setEditStates] = useState<Map<number, RecordEditState>>(new Map())
+  // editStatesの最新値を保持するref（setTimeout内で参照するため）
+  const editStatesRef = useRef<Map<number, RecordEditState>>(editStates)
 
   // 集計統計（useMemo）- 全レコードで計算
   const statistics = useMemo(() => {
@@ -217,6 +235,42 @@ export default function AnalysisSessionDetailPage() {
         .map(([name, count]) => ({ name, count }))
     }
 
+    // 一般カテゴリの統計（マスタ登録済み数と提案データ）
+    const generalCategoryStats = {
+      total: new Set(allRecordsForStats.map(r => getValue(r, 'feedbackGeneralCategory', 'analysisGeneralCategory')).filter(Boolean)).size,
+      registered: 0,
+      proposed: {
+        total: 0,
+        approved: 0,
+        rejected: 0,
+        pending: 0,
+      },
+    }
+    const gcProposedRecords = allRecordsForStats.filter(r => r.isProposedGeneralCategory)
+    generalCategoryStats.proposed.total = gcProposedRecords.length
+    generalCategoryStats.proposed.approved = gcProposedRecords.filter(r => r.proposalApproved === true).length
+    generalCategoryStats.proposed.rejected = gcProposedRecords.filter(r => r.proposalApproved === false).length
+    generalCategoryStats.proposed.pending = gcProposedRecords.filter(r => r.proposalApproved === null || r.proposalApproved === undefined).length
+    generalCategoryStats.registered = generalCategoryStats.total - new Set(gcProposedRecords.filter(r => r.proposalApproved !== true).map(r => r.analysisGeneralCategory).filter(Boolean)).size
+
+    // カテゴリの統計（マスタ登録済み数と提案データ）
+    const categoryStats = {
+      total: new Set(allRecordsForStats.map(r => getValue(r, 'feedbackCategory', 'analysisCategory')).filter(Boolean)).size,
+      registered: 0,
+      proposed: {
+        total: 0,
+        approved: 0,
+        rejected: 0,
+        pending: 0,
+      },
+    }
+    const cProposedRecords = allRecordsForStats.filter(r => r.isProposedCategory)
+    categoryStats.proposed.total = cProposedRecords.length
+    categoryStats.proposed.approved = cProposedRecords.filter(r => r.proposalApproved === true).length
+    categoryStats.proposed.rejected = cProposedRecords.filter(r => r.proposalApproved === false).length
+    categoryStats.proposed.pending = cProposedRecords.filter(r => r.proposalApproved === null || r.proposalApproved === undefined).length
+    categoryStats.registered = categoryStats.total - new Set(cProposedRecords.filter(r => r.proposalApproved !== true).map(r => r.analysisCategory).filter(Boolean)).size
+
     return {
       rawTextCount: uniqueRawTexts.size,
       topicCount: allRecordsForStats.length,
@@ -224,6 +278,8 @@ export default function AnalysisSessionDetailPage() {
       sentiments: countByField(r => getValue(r, 'feedbackSentiment', 'analysisSentiment')),
       generalCategories: countByField(r => getValue(r, 'feedbackGeneralCategory', 'analysisGeneralCategory')),
       categories: countByField(r => getValue(r, 'feedbackCategory', 'analysisCategory')),
+      generalCategoryStats,
+      categoryStats,
     }
   }, [allRecordsForStats])
 
@@ -269,7 +325,7 @@ export default function AnalysisSessionDetailPage() {
 
         // 編集状態を初期化
         const initialEditStates = new Map<number, RecordEditState>()
-        result.data.records.forEach((record: HakobunAnalysisRecord) => {
+        ;(result.data.records as HakobunAnalysisRecord[]).forEach((record) => {
           initialEditStates.set(record.id, {
             feedbackStage: record.feedbackStage || record.analysisStage || '',
             feedbackSentiment: record.feedbackSentiment || record.analysisSentiment || '',
@@ -281,6 +337,7 @@ export default function AnalysisSessionDetailPage() {
           })
         })
         setEditStates(initialEditStates)
+        editStatesRef.current = initialEditStates
       }
     } finally {
       setIsLoading(false)
@@ -440,17 +497,36 @@ export default function AnalysisSessionDetailPage() {
       const data = await response.json()
 
       if (data.success && data.results) {
+        // マスタの一般カテゴリ名一覧を取得
+        const masterGeneralCategoryNames = new Set(mergedGeneralCategories.map(gc => gc.name))
+        // マスタのカテゴリ名一覧を取得
+        const masterCategoryNames = new Set(
+          mergedGeneralCategories.flatMap(gc => gc.categories?.map(c => c.name) || [])
+        )
+
         // 分析結果をレコードとして保存
         const recordInputs = data.results.flatMap((result: any, resultIndex: number) =>
-          result.extracts.map((extract: any) => ({
-            rawText: extract.raw_text || csvTexts[resultIndex] || '',
-            analysisStage: extract.stage || '',
-            analysisSentiment: extract.sentiment || '',
-            analysisGeneralCategory: extract.general_category || '',
-            analysisCategory: extract.category || '',
-            analysisTopic: extract.sentence || '',
-            sessionId,
-          }))
+          result.extracts.map((extract: any) => {
+            const generalCategoryName = extract.general_category || ''
+            const categoryName = extract.category || ''
+
+            // 一般カテゴリがマスタに存在しない場合、新規提案とみなす
+            const isProposedGeneralCategory = generalCategoryName && !masterGeneralCategoryNames.has(generalCategoryName)
+            // カテゴリがマスタに存在しない場合、新規提案とみなす（AIのis_new_generatedフラグも参照）
+            const isProposedCategory = (categoryName && !masterCategoryNames.has(categoryName)) || (extract.is_new_generated === true)
+
+            return {
+              rawText: extract.raw_text || csvTexts[resultIndex] || '',
+              analysisStage: extract.stage || '',
+              analysisSentiment: extract.sentiment || '',
+              analysisGeneralCategory: generalCategoryName,
+              analysisCategory: categoryName,
+              analysisTopic: extract.sentence || '',
+              isProposedGeneralCategory,
+              isProposedCategory,
+              sessionId,
+            }
+          })
         )
 
         await createAnalysisRecords(recordInputs)
@@ -472,7 +548,12 @@ export default function AnalysisSessionDetailPage() {
       setIsAnalyzing(false)
       setAnalysisProgress(prev => ({ ...prev, startTime: null }))
     }
-  }, [selectedClient?.clientId, csvTexts, sessionId, fetchSession, fetchRecords, fetchAllRecordsForStats, allowCategoryGeneration])
+  }, [selectedClient?.clientId, csvTexts, sessionId, fetchSession, fetchRecords, fetchAllRecordsForStats, allowCategoryGeneration, mergedGeneralCategories])
+
+  // editStatesの最新値をrefに同期
+  useEffect(() => {
+    editStatesRef.current = editStates
+  }, [editStates])
 
   // 編集状態更新
   const updateEditState = useCallback((recordId: number, updates: Partial<RecordEditState>) => {
@@ -483,13 +564,16 @@ export default function AnalysisSessionDetailPage() {
         const updated = { ...current, ...updates, isModified: true }
         newMap.set(recordId, updated)
       }
+      // refも同期的に更新（setTimeoutで呼ばれるhandleAutoSaveで最新値を参照するため）
+      editStatesRef.current = newMap
       return newMap
     })
   }, [])
 
-  // 単一レコードの自動保存（onBlur用）
+  // 単一レコードの自動保存（onBlur用・onChange用）
   const handleAutoSave = useCallback(async (recordId: number) => {
-    const state = editStates.get(recordId)
+    // refから最新のstateを取得（setTimeoutで呼ばれた場合でも最新値を参照）
+    const state = editStatesRef.current.get(recordId)
     if (!state?.isModified) return
 
     try {
@@ -520,7 +604,7 @@ export default function AnalysisSessionDetailPage() {
     } catch (error) {
       console.error('Auto-save error:', error)
     }
-  }, [editStates])
+  }, []) // refを使うので依存配列は空でOK
 
   // // 一括保存
   // const handleSaveAll = useCallback(async () => {
@@ -626,23 +710,208 @@ export default function AnalysisSessionDetailPage() {
     categoryModal.handleOpen({ type, recordId, initialName })
   }, [categoryModal])
 
-  // 新規一般カテゴリを追加
-  const handleCreateGeneralCategory = useCallback(() => {
+  // 承認処理中のレコードID
+  const [processingRecordId, setProcessingRecordId] = useState<number | null>(null)
+
+  // 確定処理中フラグ
+  const [isConfirming, setIsConfirming] = useState(false)
+  // ルール生成処理中フラグ
+  const [isGeneratingRules, setIsGeneratingRules] = useState(false)
+
+  // 新規提案カテゴリを承認
+  const handleApproveProposal = useCallback(async (recordId: number) => {
+    if (!industryId) {
+      alert('業種が設定されていないため、承認できません。')
+      return
+    }
+
+    setProcessingRecordId(recordId)
+    try {
+      const result = await approveProposedCategory(recordId, industryId)
+      if (result.success) {
+        // データを再取得
+        await fetchRecords()
+        await fetchAllRecordsForStats()
+        await refreshCategories()
+      } else {
+        alert(`承認に失敗しました: ${result.error}`)
+      }
+    } catch (error) {
+      alert('承認処理でエラーが発生しました')
+    } finally {
+      setProcessingRecordId(null)
+    }
+  }, [industryId, fetchRecords, fetchAllRecordsForStats, refreshCategories])
+
+  // 新規提案カテゴリを却下
+  const handleRejectProposal = useCallback(async (recordId: number) => {
+    if (!window.confirm('この提案を却下しますか？\n却下すると、該当するカテゴリ/一般カテゴリはnullに設定されます。')) {
+      return
+    }
+
+    setProcessingRecordId(recordId)
+    try {
+      const result = await rejectProposedCategory(recordId)
+      if (result.success) {
+        // データを再取得
+        await fetchRecords()
+        await fetchAllRecordsForStats()
+      } else {
+        alert(`却下に失敗しました: ${result.error}`)
+      }
+    } catch (error) {
+      alert('却下処理でエラーが発生しました')
+    } finally {
+      setProcessingRecordId(null)
+    }
+  }, [fetchRecords, fetchAllRecordsForStats])
+
+  // セッション確定処理
+  const handleConfirmSession = useCallback(async () => {
+    if (!session || !selectedClient) return
+
+    if (!window.confirm(
+      '分析結果を確定しますか？\n\n確定すると：\n' +
+      '・CSVエクスポートが可能になります\n' +
+      '・フィードバックデータから分析ルールが自動生成されます\n\n' +
+      '※確定後も編集は可能ですが、再確定はできません'
+    )) {
+      return
+    }
+
+    setIsConfirming(true)
+    try {
+      // セッションを確定
+      const confirmResult = await confirmAnalysisSession(sessionId, selectedClient.id)
+      if (!confirmResult.success) {
+        alert(`確定に失敗しました: ${confirmResult.error}`)
+        return
+      }
+
+      // フィードバックデータからルール自動生成
+      if (confirmResult.data?.modifiedRecordsCount && confirmResult.data.modifiedRecordsCount > 0) {
+        setIsGeneratingRules(true)
+        try {
+          const ruleResponse = await fetch('/api/hakobun/rules/generate-from-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              sessionId,
+              hakobunClientId: selectedClient.id,
+            }),
+          })
+          const ruleData = await ruleResponse.json()
+
+          if (ruleData.success) {
+            alert(
+              `セッションを確定しました。\n\n` +
+              `修正レコード: ${confirmResult.data.modifiedRecordsCount}件\n` +
+              `生成ルール: ${ruleData.savedCount || 0}件`
+            )
+          } else {
+            alert(
+              `セッションは確定しましたが、ルール生成に失敗しました。\n${ruleData.error || ''}`
+            )
+          }
+        } catch (ruleError) {
+          console.error('ルール生成エラー:', ruleError)
+          alert('セッションは確定しましたが、ルール生成中にエラーが発生しました。')
+        } finally {
+          setIsGeneratingRules(false)
+        }
+      } else {
+        alert('セッションを確定しました。')
+      }
+
+      // セッション情報を再取得
+      await fetchSession()
+    } catch (error) {
+      console.error('確定処理エラー:', error)
+      alert('確定処理でエラーが発生しました')
+    } finally {
+      setIsConfirming(false)
+    }
+  }, [session, selectedClient, sessionId, fetchSession])
+
+  // 確定済みセッションのCSVダウンロード
+  const handleDownloadConfirmedCsv = useCallback(async () => {
+    try {
+      const result = await getConfirmedSessionRecordsForExport(sessionId)
+      if (!result.success || !result.data) {
+        alert(result.error || 'データ取得に失敗しました')
+        return
+      }
+
+      // createdAt順でCSV生成
+      const csvContent = generateCsvContent(result.data as HakobunAnalysisRecord[], true)
+      const filename = `分析結果_確定_${session?.name || 'session'}_${new Date().toISOString().split('T')[0]}.csv`
+      downloadCsv(csvContent, filename)
+    } catch (error) {
+      console.error('CSVダウンロードエラー:', error)
+      alert('CSVダウンロードに失敗しました')
+    }
+  }, [sessionId, session?.name])
+
+  // 新規一般カテゴリを追加（マスタ登録あり）
+  const handleCreateGeneralCategory = useCallback(async () => {
     if (!newCategoryName.trim()) {
       alert('カテゴリ名を入力してください')
       return
     }
-    const success = createGeneralCategory(newCategoryName, newCategoryDescription)
-    if (success && categoryModal.open) {
-      updateEditState(categoryModal.open.recordId, { feedbackGeneralCategory: newCategoryName })
+
+    // マスタに登録するか確認
+    const shouldSaveToMaster = window.confirm(
+      `「${newCategoryName}」を一般カテゴリマスタに登録しますか？\n\n登録すると、今後の分析でも選択肢として表示されます。`
+    )
+
+    if (shouldSaveToMaster) {
+      // industryIdがない場合はエラー
+      if (!industryId) {
+        alert('業種が設定されていないため、マスタに登録できません。クライアント設定で業種を設定してください。')
+        return
+      }
+
+      // 直接APIを呼び出してマスタに保存
+      try {
+        const res = await fetch(`/api/hakobun/industries/${industryId}/general-categories`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: newCategoryName,
+            description: newCategoryDescription || null,
+            sortOrder: mergedGeneralCategories.length + 1,
+          }),
+        })
+        const data = await res.json()
+        if (!data.success) {
+          alert('マスタへの登録に失敗しました: ' + (data.error || '不明なエラー'))
+          return
+        }
+        // カテゴリリストを再取得
+        await refreshCategories()
+      } catch (err) {
+        alert('マスタへの登録に失敗しました: ' + (err instanceof Error ? err.message : '不明なエラー'))
+        return
+      }
+    } else {
+      // マスタに登録せず、一時的にpendingに追加するだけ
+      const success = createGeneralCategory(newCategoryName, newCategoryDescription)
+      if (!success) return
+    }
+
+    if (categoryModal.open) {
+      const recordId = categoryModal.open.recordId
+      updateEditState(recordId, { feedbackGeneralCategory: newCategoryName })
+      // フィードバックデータとしてDBに保存
+      setTimeout(() => handleAutoSave(recordId), 100)
       categoryModal.handleClose()
       setNewCategoryName('')
       setNewCategoryDescription('')
     }
-  }, [newCategoryName, newCategoryDescription, createGeneralCategory, categoryModal, updateEditState])
+  }, [newCategoryName, newCategoryDescription, createGeneralCategory, categoryModal, updateEditState, industryId, mergedGeneralCategories, refreshCategories, handleAutoSave])
 
-  // 新規詳細カテゴリを追加
-  const handleCreateCategory = useCallback(() => {
+  // 新規詳細カテゴリを追加（マスタ登録あり）
+  const handleCreateCategory = useCallback(async () => {
     if (!newCategoryName.trim()) {
       alert('カテゴリ名を入力してください')
       return
@@ -653,14 +922,94 @@ export default function AnalysisSessionDetailPage() {
       alert('先に一般カテゴリを選択してください')
       return
     }
-    const success = createCategory(state.feedbackGeneralCategory, newCategoryName, newCategoryDescription)
-    if (success) {
-      updateEditState(categoryModal.open.recordId, { feedbackCategory: newCategoryName })
+
+    // 親の一般カテゴリがpending状態（まだマスタ未保存）かチェック
+    const isParentPending = isPendingGeneralCategory(state.feedbackGeneralCategory)
+
+    // マスタに登録するか確認
+    let confirmMessage = `「${newCategoryName}」をカテゴリマスタに登録しますか？\n（親カテゴリ: ${state.feedbackGeneralCategory}）`
+    if (isParentPending) {
+      confirmMessage += `\n\n※ 親の一般カテゴリ「${state.feedbackGeneralCategory}」も同時にマスタ登録されます。`
+    }
+    confirmMessage += '\n\n登録すると、今後の分析でも選択肢として表示されます。'
+
+    const shouldSaveToMaster = window.confirm(confirmMessage)
+
+    if (shouldSaveToMaster) {
+      // industryIdがない場合はエラー
+      if (!industryId) {
+        alert('業種が設定されていないため、マスタに登録できません。クライアント設定で業種を設定してください。')
+        return
+      }
+
+      try {
+        let parentGeneralCategoryId: number | null = null
+
+        // 親の一般カテゴリがpendingの場合は先に保存
+        if (isParentPending) {
+          const gcRes = await fetch(`/api/hakobun/industries/${industryId}/general-categories`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: state.feedbackGeneralCategory,
+              description: null,
+              sortOrder: mergedGeneralCategories.length + 1,
+            }),
+          })
+          const gcData = await gcRes.json()
+          if (!gcData.success) {
+            alert('親カテゴリのマスタ登録に失敗しました: ' + (gcData.error || '不明なエラー'))
+            return
+          }
+          parentGeneralCategoryId = gcData.generalCategory.id
+        } else {
+          // 既存の一般カテゴリからIDを取得
+          const existingGc = mergedGeneralCategories.find(gc => gc.name === state.feedbackGeneralCategory)
+          if (!existingGc || existingGc.id < 0) {
+            alert('親カテゴリが見つかりません')
+            return
+          }
+          parentGeneralCategoryId = existingGc.id
+        }
+
+        // カテゴリを保存
+        const cRes = await fetch(`/api/hakobun/industries/${industryId}/general-categories/${parentGeneralCategoryId}/categories`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: newCategoryName,
+            description: newCategoryDescription || null,
+            sortOrder: 1,
+          }),
+        })
+        const cData = await cRes.json()
+        if (!cData.success) {
+          alert('カテゴリのマスタ登録に失敗しました: ' + (cData.error || '不明なエラー'))
+          return
+        }
+
+        // カテゴリリストを再取得
+        await refreshCategories()
+      } catch (err) {
+        alert('マスタへの登録に失敗しました: ' + (err instanceof Error ? err.message : '不明なエラー'))
+        return
+      }
+    } else {
+      // マスタに登録せず、一時的にpendingに追加するだけ
+      const success = createCategory(state.feedbackGeneralCategory, newCategoryName, newCategoryDescription)
+      if (!success) return
+    }
+
+    if (categoryModal.open) {
+      const recordId = categoryModal.open.recordId
+      updateEditState(recordId, { feedbackCategory: newCategoryName })
+      // フィードバックデータとしてDBに保存
+      setTimeout(() => handleAutoSave(recordId), 100)
       categoryModal.handleClose()
       setNewCategoryName('')
       setNewCategoryDescription('')
     }
-  }, [newCategoryName, newCategoryDescription, createCategory, categoryModal, editStates, updateEditState])
+  }, [newCategoryName, newCategoryDescription, createCategory, categoryModal, editStates, updateEditState, isPendingGeneralCategory, industryId, mergedGeneralCategories, refreshCategories, handleAutoSave])
 
   if (isLoading) {
     return (
@@ -703,40 +1052,90 @@ export default function AnalysisSessionDetailPage() {
         {/* ヘッダー */}
         <R_Stack className="justify-between items-start">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{session.name}</h1>
+            <R_Stack className="items-center gap-3">
+              <h1 className="text-2xl font-bold text-gray-900">{session.name}</h1>
+              {/* 確定状態バッジ */}
+              {session.isConfirmed ? (
+                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-green-100 text-green-700">
+                  <CheckCircle2 className="w-4 h-4" />
+                  確定済み
+                </span>
+              ) : (
+                session.status === 'completed' && (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-amber-100 text-amber-700">
+                    <Clock className="w-4 h-4" />
+                    未確定
+                  </span>
+                )
+              )}
+            </R_Stack>
             <p className="text-sm text-gray-500 mt-1">
               レコード: {totalCount}件
               {session.analyzedAt && (
                 <> / 分析完了: {new Date(session.analyzedAt).toLocaleString('ja-JP')}</>
               )}
+              {session.isConfirmed && session.confirmedAt && (
+                <> / 確定: {new Date(session.confirmedAt).toLocaleString('ja-JP')}</>
+              )}
             </p>
           </div>
           <R_Stack className="gap-2">
-            {hasRecords && (
+            {/* 確定ボタン（未確定かつ完了済みの場合のみ表示） */}
+            {hasRecords && session.status === 'completed' && !session.isConfirmed && (
               <button
-                onClick={handleDownloadCsv}
-                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                CSV出力
-              </button>
-            )}
-            {/* {hasRecords && hasModifiedRecords && (
-              <button
-                onClick={handleSaveAll}
-                disabled={isSaving}
+                onClick={handleConfirmSession}
+                disabled={isConfirming || isGeneratingRules}
                 className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 disabled:bg-gray-400"
               >
-                {isSaving ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                {isConfirming || isGeneratingRules ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    {isGeneratingRules ? 'ルール生成中...' : '確定中...'}
+                  </>
                 ) : (
-                  <Save className="w-4 h-4" />
+                  <>
+                    <FileCheck className="w-4 h-4" />
+                    確定
+                  </>
                 )}
-                フィードバック一括保存
               </button>
-            )} */}
+            )}
+            {/* CSVエクスポートボタン */}
+            {hasRecords && (
+              session.isConfirmed ? (
+                <button
+                  onClick={handleDownloadConfirmedCsv}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                >
+                  <Download className="w-4 h-4" />
+                  CSV出力（確定版）
+                </button>
+              ) : (
+                <button
+                  onClick={handleDownloadCsv}
+                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2"
+                  title="未確定のため、プレビュー版のCSVがダウンロードされます"
+                >
+                  <Download className="w-4 h-4" />
+                  CSV出力（プレビュー）
+                </button>
+              )
+            )}
           </R_Stack>
         </R_Stack>
+
+        {/* 確定済み警告メッセージ */}
+        {session.isConfirmed && (
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+            <R_Stack className="items-center gap-2 text-green-700">
+              <Lock className="w-5 h-5" />
+              <span className="font-medium">このセッションは確定済みです</span>
+            </R_Stack>
+            <p className="text-sm text-green-600 mt-1">
+              編集は可能ですが、変更内容は確定版CSVには反映されません。必要に応じて新しいセッションを作成してください。
+            </p>
+          </div>
+        )}
 
         {/* CSVアップロード（レコードがない場合） */}
         {!hasRecords && (
@@ -952,7 +1351,15 @@ export default function AnalysisSessionDetailPage() {
                       <span className="text-xs text-purple-600">一般カテゴリ</span>
                       <Info className="w-3 h-3 text-purple-400" />
                     </R_Stack>
-                    <p className="text-lg font-bold text-purple-800">{statistics.generalCategories.length}種</p>
+                    <p className="text-lg font-bold text-purple-800">
+                      {statistics.generalCategoryStats.registered}/{statistics.generalCategoryStats.total}種
+                    </p>
+                    {statistics.generalCategoryStats.proposed.total > 0 && (
+                      <p className="text-xs text-amber-600">
+                        <Sparkles className="w-3 h-3 inline mr-1" />
+                        提案: {statistics.generalCategoryStats.proposed.approved}/{statistics.generalCategoryStats.proposed.total}
+                      </p>
+                    )}
                   </button>
                 </PopoverTrigger>
                 <PopoverContent className="w-72 p-2">
@@ -965,6 +1372,16 @@ export default function AnalysisSessionDetailPage() {
                       </R_Stack>
                     ))}
                   </div>
+                  {statistics.generalCategoryStats.proposed.total > 0 && (
+                    <div className="mt-2 pt-2 border-t border-gray-200">
+                      <p className="text-xs font-medium text-amber-600 mb-1">AI新規提案</p>
+                      <p className="text-xs text-gray-600">
+                        承認: {statistics.generalCategoryStats.proposed.approved} /
+                        却下: {statistics.generalCategoryStats.proposed.rejected} /
+                        未処理: {statistics.generalCategoryStats.proposed.pending}
+                      </p>
+                    </div>
+                  )}
                 </PopoverContent>
               </Popover>
               {/* カテゴリ */}
@@ -975,7 +1392,15 @@ export default function AnalysisSessionDetailPage() {
                       <span className="text-xs text-amber-600">カテゴリ</span>
                       <Info className="w-3 h-3 text-amber-400" />
                     </R_Stack>
-                    <p className="text-lg font-bold text-amber-800">{statistics.categories.length}種</p>
+                    <p className="text-lg font-bold text-amber-800">
+                      {statistics.categoryStats.registered}/{statistics.categoryStats.total}種
+                    </p>
+                    {statistics.categoryStats.proposed.total > 0 && (
+                      <p className="text-xs text-amber-600">
+                        <Sparkles className="w-3 h-3 inline mr-1" />
+                        提案: {statistics.categoryStats.proposed.approved}/{statistics.categoryStats.proposed.total}
+                      </p>
+                    )}
                   </button>
                 </PopoverTrigger>
                 <PopoverContent className="w-72 p-2">
@@ -988,6 +1413,16 @@ export default function AnalysisSessionDetailPage() {
                       </R_Stack>
                     ))}
                   </div>
+                  {statistics.categoryStats.proposed.total > 0 && (
+                    <div className="mt-2 pt-2 border-t border-gray-200">
+                      <p className="text-xs font-medium text-amber-600 mb-1">AI新規提案</p>
+                      <p className="text-xs text-gray-600">
+                        承認: {statistics.categoryStats.proposed.approved} /
+                        却下: {statistics.categoryStats.proposed.rejected} /
+                        未処理: {statistics.categoryStats.proposed.pending}
+                      </p>
+                    </div>
+                  )}
                 </PopoverContent>
               </Popover>
             </div>
@@ -1055,17 +1490,84 @@ export default function AnalysisSessionDetailPage() {
                             </span>
                           </td>
                           <td className="px-3 py-1">
-                            <span className="text-gray-600 text-xs">{record.analysisGeneralCategory || '-'}</span>
+                            {record.isProposedGeneralCategory ? (
+                              <R_Stack className="items-center gap-1">
+                                <span className={`text-xs px-1.5 py-0.5 rounded ${
+                                  record.proposalApproved === true
+                                    ? 'bg-green-100 text-green-800'
+                                    : record.proposalApproved === false
+                                    ? 'bg-red-100 text-red-400 line-through'
+                                    : 'bg-amber-100 text-amber-800 animate-pulse'
+                                }`}>
+                                  <Sparkles className="w-3 h-3 inline mr-0.5" />
+                                  {record.analysisGeneralCategory || '-'}
+                                </span>
+                              </R_Stack>
+                            ) : (
+                              <span className="text-gray-600 text-xs">{record.analysisGeneralCategory || '-'}</span>
+                            )}
                           </td>
                           <td className="px-3 py-1">
-                            <span className="text-gray-600 text-xs">{record.analysisCategory || '-'}</span>
+                            {record.isProposedCategory ? (
+                              <R_Stack className="items-center gap-1">
+                                <span className={`text-xs px-1.5 py-0.5 rounded ${
+                                  record.proposalApproved === true
+                                    ? 'bg-green-100 text-green-800'
+                                    : record.proposalApproved === false
+                                    ? 'bg-red-100 text-red-400 line-through'
+                                    : 'bg-amber-100 text-amber-800 animate-pulse'
+                                }`}>
+                                  <Sparkles className="w-3 h-3 inline mr-0.5" />
+                                  {record.analysisCategory || '-'}
+                                </span>
+                              </R_Stack>
+                            ) : (
+                              <span className="text-gray-600 text-xs">{record.analysisCategory || '-'}</span>
+                            )}
                           </td>
                           <td rowSpan={3} className="px-3 py-2 align-middle border-b">
-                            {state.isModified && (
-                              <span title="保存中..." className="animate-pulse">
-                                <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
-                              </span>
-                            )}
+                            <C_Stack className="gap-1 items-center">
+                              {state.isModified && (
+                                <span title="保存中..." className="animate-pulse">
+                                  <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
+                                </span>
+                              )}
+                              {/* 新規提案の承認/却下ボタン */}
+                              {(record.isProposedGeneralCategory || record.isProposedCategory) && record.proposalApproved === null && (
+                                <R_Stack className="gap-1">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleApproveProposal(record.id)}
+                                    disabled={processingRecordId === record.id}
+                                    className="p-1 text-green-600 hover:bg-green-50 rounded disabled:opacity-50"
+                                    title="承認（マスタに登録）"
+                                  >
+                                    {processingRecordId === record.id ? (
+                                      <Loader2 className="w-4 h-4 animate-spin" />
+                                    ) : (
+                                      <Check className="w-4 h-4" />
+                                    )}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRejectProposal(record.id)}
+                                    disabled={processingRecordId === record.id}
+                                    className="p-1 text-red-600 hover:bg-red-50 rounded disabled:opacity-50"
+                                    title="却下（カテゴリをnullに）"
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </button>
+                                </R_Stack>
+                              )}
+                              {/* 承認済み表示 */}
+                              {(record.isProposedGeneralCategory || record.isProposedCategory) && record.proposalApproved === true && (
+                                <span className="text-xs text-green-600">承認済</span>
+                              )}
+                              {/* 却下済み表示 */}
+                              {(record.isProposedGeneralCategory || record.isProposedCategory) && record.proposalApproved === false && (
+                                <span className="text-xs text-red-400">却下</span>
+                              )}
+                            </C_Stack>
                           </td>
                         </tr>
                         {/* フィードバック行 */}
@@ -1093,7 +1595,7 @@ export default function AnalysisSessionDetailPage() {
                               className="w-full p-1 border border-gray-200 rounded text-xs bg-white"
                             >
                               <option value="">選択...</option>
-                              {STAGE_OPTIONS.map((opt) => (
+                              {stageOptions.map((opt: string) => (
                                 <option key={opt} value={opt}>
                                   {opt}
                                 </option>
