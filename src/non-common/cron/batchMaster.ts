@@ -1,4 +1,12 @@
 /**
+ * Prisma件数取得用の引数型定義
+ */
+export type BatchCountArgs = {
+  model: string // Prismaモデル名
+  where?: Record<string, any> // where条件（オプション）
+}
+
+/**
  * バッチ設定の型定義
  */
 export type BatchConfig = {
@@ -7,7 +15,7 @@ export type BatchConfig = {
   schedule?: string // Cronスケジュール（vercel.jsonと同期、effectOnが'batch'の場合必須）
   description?: string // 説明
   purpose?: string // 用途
-  app: 'common' | 'ucar' | 'newCar' | 'qrbp' // アプリ識別
+  app: string
   effectOn: 'batch' | 'click' // 実行種別
   handler?: () => Promise<any> // 実行関数（effectOnが'batch'の場合必須）
   onClick?: {name: string; main: () => Promise<any>} // クリック実行関数（UI用）
@@ -20,7 +28,7 @@ export type BatchConfig = {
  * vercel.jsonのcrons設定と同期
  */
 export const BATCH_MASTER: Record<string, BatchConfig> = {
-  // ============ newCar アプリ ============
+  //
 }
 
 /**

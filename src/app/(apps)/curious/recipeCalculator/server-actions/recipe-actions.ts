@@ -13,6 +13,9 @@ export type RecipeInput = {
   packagingCost?: number
   processingCost?: number
   profitMargin?: number
+  otherCost?: number
+  productionWeightG?: number | null
+  inputMode?: string
   sourceType?: string
   sourceFileName?: string
   sourceFileUrl?: string
@@ -69,6 +72,9 @@ export const createRecipe = async (data: RecipeInput): Promise<RecipeWithIngredi
       packagingCost: data.packagingCost ?? 30,
       processingCost: data.processingCost ?? 50,
       profitMargin: data.profitMargin ?? 200,
+      otherCost: data.otherCost ?? 0,
+      productionWeightG: data.productionWeightG,
+      inputMode: data.inputMode ?? 'fillAmount',
       sourceType: data.sourceType,
       sourceFileName: data.sourceFileName,
       sourceFileUrl: data.sourceFileUrl,
@@ -236,12 +242,34 @@ export const recalculateRecipeCosts = async (recipeId: number): Promise<RecipeWi
     totalWeightKg += weightKg
   }
 
-  // 製造パラメータから計算
-  const productionWeightKg = totalWeightKg * (1 - recipe.lossRate / 100)
-  const packWeightKg = recipe.packWeightG / 1000
-  const packCount = packWeightKg > 0 ? Math.floor(productionWeightKg / packWeightKg) : 0
+  // 製造可能重量の決定
+  // 手動入力値(productionWeightG)があればそれを使用、なければ自動計算
+  let productionWeightKg: number
+  if (recipe.productionWeightG !== null && recipe.productionWeightG > 0) {
+    productionWeightKg = recipe.productionWeightG / 1000
+  } else {
+    productionWeightKg = totalWeightKg * (1 - recipe.lossRate / 100)
+  }
+
+  // 入力モードに応じてパック数と充填量を計算
+  let packCount: number
+  let packWeightG = recipe.packWeightG
+
+  if (recipe.inputMode === 'packCount') {
+    // パック数入力モード: パック数は固定、充填量を計算
+    packCount = recipe.packCount ?? 0
+    if (packCount > 0) {
+      packWeightG = (productionWeightKg * 1000) / packCount
+    }
+  } else {
+    // 充填量入力モード（デフォルト）: 充填量からパック数を計算
+    const packWeightKg = recipe.packWeightG / 1000
+    packCount = packWeightKg > 0 ? Math.floor(productionWeightKg / packWeightKg) : 0
+  }
+
   const materialCostPerPack = packCount > 0 ? totalMaterialCost / packCount : 0
-  const totalCostPerPack = materialCostPerPack + recipe.packagingCost + recipe.processingCost
+  // その他費用(otherCost)を原価に追加
+  const totalCostPerPack = materialCostPerPack + recipe.packagingCost + recipe.processingCost + recipe.otherCost
   const sellingPrice = totalCostPerPack + recipe.profitMargin
 
   // レシピの計算結果を更新
@@ -252,6 +280,7 @@ export const recalculateRecipeCosts = async (recipeId: number): Promise<RecipeWi
       totalWeightKg,
       productionWeightKg,
       packCount,
+      packWeightG, // 計算された充填量も保存
       materialCostPerPack,
       totalCostPerPack,
       sellingPrice,

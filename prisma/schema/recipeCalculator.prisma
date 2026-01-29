@@ -16,8 +16,18 @@ model RcIngredientMaster {
   category String // 分類（野菜、肉類、調味料等）
   supplier String // 仕入れ先
 
+  // 介護食システム用フィールド
+  standardCode    String?  // 食品標準成分表コード（例: "12004"）
+  energyPer100g   Float?   // エネルギー(kcal/100g)
+  proteinPer100g  Float?   // たんぱく質(g/100g)
+  fatPer100g      Float?   // 脂質(g/100g)
+  carbPer100g     Float?   // 炭水化物(g/100g)
+  sodiumPer100g   Float?   // ナトリウム(mg/100g)
+
   // リレーション
-  RcRecipeIngredient RcRecipeIngredient[]
+  RcRecipeIngredient   RcRecipeIngredient[]
+  KgRecipeIngredient   KgRecipeIngredient[]
+  KgRequiredIngredient KgRequiredIngredient[]
 }
 
 // レシピ
@@ -100,4 +110,17 @@ model RcRecipeIngredient {
   externalPrice       Float?  // 外部検索の販売価格（円）
   externalWeight      Float?  // 外部検索の重量（g）
   externalWeightText  String? // 外部検索の重量表示テキスト
+}
+
+// 粗利基準マスタ
+model RcProfitMarginStandard {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  minPackCount    Int    // 食数下限
+  maxPackCount    Int?   // 食数上限（nullは上限なし）
+  minProfitAmount Float  // 最低粗利額（円）
+  minProfitRate   Float  // 最低粗利率（%）
 }

@@ -1,6 +1,7 @@
+'use server'
 import { basePath } from '@cm/lib/methods/common'
 import { NextRequest } from 'next/server'
-import { anyObject } from '@cm/types/utility-types'
+
 import { headers } from 'next/headers'
 
 /**
@@ -33,8 +34,3 @@ export const isServerActionAccessAllowed = async (): Promise<boolean> => {
   return checkAccess(host, authorization)
 }
 
-export const logObject = (obj: anyObject) => {
-  let stringified = JSON.stringify(obj)
-  stringified = stringified.replace(/\s+/g, ' ')
-  return stringified
-}

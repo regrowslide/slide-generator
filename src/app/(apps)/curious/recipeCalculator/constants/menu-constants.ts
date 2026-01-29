@@ -15,5 +15,13 @@ export const MENU_ITEMS: MenuItem[] = [
     label: '原材料マスタ',
     href: '/curious/recipeCalculator/master',
     icon: 'database',
+    adminOnly: true,
+  },
+  {
+    id: 'profit-margin',
+    label: '粗利基準マスタ',
+    href: '/curious/recipeCalculator/profit-margin-master',
+    icon: 'settings',
+    adminOnly: true,
   },
 ]

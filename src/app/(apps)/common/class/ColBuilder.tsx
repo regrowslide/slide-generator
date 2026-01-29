@@ -3,10 +3,6 @@
 import { columnGetterType } from '@cm/types/types'
 import { colType } from '@cm/types/col-types'
 import { Fields } from '@cm/class/Fields/Fields'
-import { R_Stack } from '@cm/components/styles/common-components/common-components'
-import { PencilSquareIcon } from '@heroicons/react/20/solid'
-import useRoleGMF from '@cm/hooks/useRoleGMF'
-import { getScopes } from 'src/non-common/scope-lib/getScopes'
 
 
 export class ColBuilder {

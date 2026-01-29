@@ -2,13 +2,14 @@
  * 食品製造原価計算システム 型定義
  */
 
-import type {RcIngredientMaster, RcRecipe, RcRecipeIngredient} from '@prisma/generated/prisma/client'
+import type {RcIngredientMaster, RcRecipe, RcRecipeIngredient, RcProfitMarginStandard} from '@prisma/generated/prisma/client'
 
 // Prisma型のre-export
-export type {RcIngredientMaster, RcRecipe, RcRecipeIngredient}
+export type {RcIngredientMaster, RcRecipe, RcRecipeIngredient, RcProfitMarginStandard}
 
 // エイリアス
 export type IngredientMaster = RcIngredientMaster
+export type ProfitMarginStandard = RcProfitMarginStandard
 
 // 解析ステータス
 export type AnalysisStatus = 'pending' | 'searching' | 'done' | 'error'
@@ -23,12 +24,16 @@ export interface CostCalculationResult {
   detailedIngredients: RcRecipeIngredient[]
   totalMaterialCost: number
   totalWeightKg: number
+  totalRecipeWeightG: number // レシピ合計量（g）- 参考値
   productionWeightKg: number
   packCount: number
   materialCostPerPack: number
   totalCostPerPack: number
   sellingPrice: number
 }
+
+// 入力モード
+export type InputMode = 'fillAmount' | 'packCount'
 
 // レシピ設定（フロントエンド用）
 export interface RecipeSettings {
@@ -37,6 +42,10 @@ export interface RecipeSettings {
   packagingCost: number
   processingCost: number
   profitMargin: number
+  // 新規フィールド
+  otherCost: number
+  productionWeightG: number | null
+  inputMode: InputMode
 }
 
 // AI解析進捗
@@ -46,10 +55,20 @@ export interface AnalysisProgress {
   progress: number
 }
 
+// 粗利アラート
+export interface ProfitMarginAlert {
+  isWarning: boolean
+  currentProfitRate: number
+  minProfitAmount: number
+  minProfitRate: number
+  message: string
+}
+
 // メニュー項目
 export interface MenuItem {
   id: string
   label: string
   href: string
-  icon: 'calculator' | 'database'
+  icon: 'calculator' | 'database' | 'settings'
+  adminOnly?: boolean
 }

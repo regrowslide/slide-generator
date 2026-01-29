@@ -1,7 +1,7 @@
 'use client'
 
 import {useCallback, useTransition} from 'react'
-import type {RecipeWithIngredients, IngredientMaster} from '../types'
+import type {RecipeWithIngredients, IngredientMaster, InputMode} from '../types'
 import {
   updateRecipe,
   updateRecipeIngredient,
@@ -123,13 +123,27 @@ export const useRecipeEditor = ({recipe, ingredientMasters, setRecipe}: UseRecip
     [recipe, setRecipe]
   )
 
-  // 設定変更ハンドラ
+  // 設定変更ハンドラ（数値用）
   const handleSettingChange = useCallback(
-    (key: string, value: number) => {
+    (key: string, value: number | null) => {
       if (!recipe) return
 
       startTransition(async () => {
         await updateRecipe(recipe.id, {[key]: value})
+        const updated = await recalculateRecipeCosts(recipe.id)
+        if (updated) setRecipe(updated)
+      })
+    },
+    [recipe, setRecipe]
+  )
+
+  // 入力モード切替ハンドラ
+  const handleInputModeChange = useCallback(
+    (mode: InputMode) => {
+      if (!recipe) return
+
+      startTransition(async () => {
+        await updateRecipe(recipe.id, {inputMode: mode})
         const updated = await recalculateRecipeCosts(recipe.id)
         if (updated) setRecipe(updated)
       })
@@ -144,5 +158,6 @@ export const useRecipeEditor = ({recipe, ingredientMasters, setRecipe}: UseRecip
     handleIngredientChange,
     handleDeleteIngredient,
     handleSettingChange,
+    handleInputModeChange,
   }
 }

@@ -3,7 +3,7 @@
 import {useState, useEffect} from 'react'
 import {Save, Loader2, FileImage, Plus} from 'lucide-react'
 import {Button} from '@shadcn/ui/button'
-import type {RecipeWithIngredients, CostCalculationResult, IngredientMaster} from '../../types'
+import type {RecipeWithIngredients, CostCalculationResult, IngredientMaster, RecipeSettings} from '../../types'
 import {getRecipes} from '../../server-actions/recipe-actions'
 import {getIngredientMasters} from '../../server-actions/ingredient-master-actions'
 import {IngredientTable} from './IngredientTable'
@@ -13,7 +13,7 @@ import {AiAnalysisStatus} from './AiAnalysisStatus'
 import {RecipeSelectView} from './RecipeSelectView'
 import {RecipeInputPanel} from './RecipeInputPanel'
 import {convertToKg} from '../../lib/unit-converter'
-import {useRecipeAnalysis, useRecipeEditor, type ViewMode} from '../../hooks'
+import {useRecipeAnalysis, useRecipeEditor, useProfitMarginAlert, type ViewMode} from '../../hooks'
 
 export const RecipeManager = () => {
   const [recipe, setRecipe] = useState<RecipeWithIngredients | null>(null)
@@ -51,6 +51,11 @@ export const RecipeManager = () => {
     loadData()
   }, [])
 
+  // レシピ合計量を計算（参考値）
+  const totalRecipeWeightG = recipe
+    ? recipe.RcRecipeIngredient.reduce((sum, ing) => sum + convertToKg(ing.amount, ing.unit) * 1000, 0)
+    : 0
+
   // 原価計算結果を生成
   const calculatedData: CostCalculationResult | null = recipe
     ? {
@@ -61,6 +66,7 @@ export const RecipeManager = () => {
         })),
         totalMaterialCost: recipe.totalMaterialCost ?? 0,
         totalWeightKg: recipe.totalWeightKg ?? 0,
+        totalRecipeWeightG,
         productionWeightKg: recipe.productionWeightKg ?? 0,
         packCount: recipe.packCount ?? 0,
         materialCostPerPack: recipe.materialCostPerPack ?? 0,
@@ -68,6 +74,27 @@ export const RecipeManager = () => {
         sellingPrice: recipe.sellingPrice ?? 0,
       }
     : null
+
+  // レシピ設定を生成
+  const settings: RecipeSettings | null = recipe
+    ? {
+        lossRate: recipe.lossRate,
+        packWeightG: recipe.packWeightG,
+        packagingCost: recipe.packagingCost,
+        processingCost: recipe.processingCost,
+        profitMargin: recipe.profitMargin,
+        otherCost: recipe.otherCost,
+        productionWeightG: recipe.productionWeightG,
+        inputMode: (recipe.inputMode as 'fillAmount' | 'packCount') ?? 'fillAmount',
+      }
+    : null
+
+  // 粗利アラート
+  const {alert: profitAlert} = useProfitMarginAlert({
+    packCount: recipe?.packCount ?? 0,
+    profitMargin: recipe?.profitMargin ?? 0,
+    sellingPrice: recipe?.sellingPrice ?? 0,
+  })
 
   // 選択画面に戻る
   const handleBackToSelect = () => {
@@ -182,28 +209,18 @@ export const RecipeManager = () => {
           />
 
           {/* 計算結果パネル */}
-          {recipe.RcRecipeIngredient.length > 0 && (
+          {recipe.RcRecipeIngredient.length > 0 && settings && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <ManufacturingParams
-                settings={{
-                  lossRate: recipe.lossRate,
-                  packWeightG: recipe.packWeightG,
-                  packagingCost: recipe.packagingCost,
-                  processingCost: recipe.processingCost,
-                  profitMargin: recipe.profitMargin,
-                }}
+                settings={settings}
                 calculatedData={calculatedData}
                 onSettingChange={editor.handleSettingChange}
+                onInputModeChange={editor.handleInputModeChange}
               />
               <CostSummaryPanel
-                settings={{
-                  lossRate: recipe.lossRate,
-                  packWeightG: recipe.packWeightG,
-                  packagingCost: recipe.packagingCost,
-                  processingCost: recipe.processingCost,
-                  profitMargin: recipe.profitMargin,
-                }}
+                settings={settings}
                 calculatedData={calculatedData}
+                profitAlert={profitAlert}
                 onSettingChange={editor.handleSettingChange}
               />
             </div>

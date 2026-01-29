@@ -72,6 +72,7 @@
     "src/app/(apps)/generated/**/*",
     "src/app/(apps)/hakobun/**/*",
     "src/app/(apps)/image-captioner/**/*",
+    "src/app/(apps)/kaigoshoku/**/*",
     "src/app/(apps)/keihi/**/*",
     "src/app/(apps)/kickswrap/**/*",
     "src/app/(apps)/migrations/**/*",

@@ -1,7 +1,7 @@
 'use client'
 
 import {useState, useCallback, useRef} from 'react'
-import type {RecipeWithIngredients, AnalysisProgress, IngredientMaster} from '../types'
+import type {RecipeWithIngredients, AnalysisProgress} from '../types'
 import {
   updateRecipe,
   updateRecipeIngredient,

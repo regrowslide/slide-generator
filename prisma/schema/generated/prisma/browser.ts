@@ -163,6 +163,61 @@ export type HakobunAnalysisSession = Prisma.HakobunAnalysisSessionModel
  */
 export type HakobunAnalysisRecord = Prisma.HakobunAnalysisRecordModel
 /**
+ * Model KgFacilityMaster
+ * 
+ */
+export type KgFacilityMaster = Prisma.KgFacilityMasterModel
+/**
+ * Model KgDietTypeMaster
+ * 
+ */
+export type KgDietTypeMaster = Prisma.KgDietTypeMasterModel
+/**
+ * Model KgDailyMenu
+ * 
+ */
+export type KgDailyMenu = Prisma.KgDailyMenuModel
+/**
+ * Model KgMealSlot
+ * 
+ */
+export type KgMealSlot = Prisma.KgMealSlotModel
+/**
+ * Model KgMenuRecipe
+ * 
+ */
+export type KgMenuRecipe = Prisma.KgMenuRecipeModel
+/**
+ * Model KgRecipeIngredient
+ * 
+ */
+export type KgRecipeIngredient = Prisma.KgRecipeIngredientModel
+/**
+ * Model KgOrder
+ * 
+ */
+export type KgOrder = Prisma.KgOrderModel
+/**
+ * Model KgOrderLine
+ * 
+ */
+export type KgOrderLine = Prisma.KgOrderLineModel
+/**
+ * Model KgProductionBatch
+ * 
+ */
+export type KgProductionBatch = Prisma.KgProductionBatchModel
+/**
+ * Model KgProductionItem
+ * 
+ */
+export type KgProductionItem = Prisma.KgProductionItemModel
+/**
+ * Model KgRequiredIngredient
+ * 
+ */
+export type KgRequiredIngredient = Prisma.KgRequiredIngredientModel
+/**
  * Model KeihiExpense
  * 
  */
@@ -242,6 +297,11 @@ export type RcRecipe = Prisma.RcRecipeModel
  * 
  */
 export type RcRecipeIngredient = Prisma.RcRecipeIngredientModel
+/**
+ * Model RcProfitMarginStandard
+ * 
+ */
+export type RcProfitMarginStandard = Prisma.RcProfitMarginStandardModel
 /**
  * Model SbmCustomer
  * 

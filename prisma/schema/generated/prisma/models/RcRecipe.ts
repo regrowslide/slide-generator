@@ -34,6 +34,8 @@ export type RcRecipeAvgAggregateOutputType = {
   packagingCost: number | null
   processingCost: number | null
   profitMargin: number | null
+  otherCost: number | null
+  productionWeightG: number | null
   totalMaterialCost: number | null
   totalWeightKg: number | null
   productionWeightKg: number | null
@@ -51,6 +53,8 @@ export type RcRecipeSumAggregateOutputType = {
   packagingCost: number | null
   processingCost: number | null
   profitMargin: number | null
+  otherCost: number | null
+  productionWeightG: number | null
   totalMaterialCost: number | null
   totalWeightKg: number | null
   productionWeightKg: number | null
@@ -72,6 +76,9 @@ export type RcRecipeMinAggregateOutputType = {
   packagingCost: number | null
   processingCost: number | null
   profitMargin: number | null
+  otherCost: number | null
+  productionWeightG: number | null
+  inputMode: string | null
   totalMaterialCost: number | null
   totalWeightKg: number | null
   productionWeightKg: number | null
@@ -96,6 +103,9 @@ export type RcRecipeMaxAggregateOutputType = {
   packagingCost: number | null
   processingCost: number | null
   profitMargin: number | null
+  otherCost: number | null
+  productionWeightG: number | null
+  inputMode: string | null
   totalMaterialCost: number | null
   totalWeightKg: number | null
   productionWeightKg: number | null
@@ -120,6 +130,9 @@ export type RcRecipeCountAggregateOutputType = {
   packagingCost: number
   processingCost: number
   profitMargin: number
+  otherCost: number
+  productionWeightG: number
+  inputMode: number
   totalMaterialCost: number
   totalWeightKg: number
   productionWeightKg: number
@@ -142,6 +155,8 @@ export type RcRecipeAvgAggregateInputType = {
   packagingCost?: true
   processingCost?: true
   profitMargin?: true
+  otherCost?: true
+  productionWeightG?: true
   totalMaterialCost?: true
   totalWeightKg?: true
   productionWeightKg?: true
@@ -159,6 +174,8 @@ export type RcRecipeSumAggregateInputType = {
   packagingCost?: true
   processingCost?: true
   profitMargin?: true
+  otherCost?: true
+  productionWeightG?: true
   totalMaterialCost?: true
   totalWeightKg?: true
   productionWeightKg?: true
@@ -180,6 +197,9 @@ export type RcRecipeMinAggregateInputType = {
   packagingCost?: true
   processingCost?: true
   profitMargin?: true
+  otherCost?: true
+  productionWeightG?: true
+  inputMode?: true
   totalMaterialCost?: true
   totalWeightKg?: true
   productionWeightKg?: true
@@ -204,6 +224,9 @@ export type RcRecipeMaxAggregateInputType = {
   packagingCost?: true
   processingCost?: true
   profitMargin?: true
+  otherCost?: true
+  productionWeightG?: true
+  inputMode?: true
   totalMaterialCost?: true
   totalWeightKg?: true
   productionWeightKg?: true
@@ -228,6 +251,9 @@ export type RcRecipeCountAggregateInputType = {
   packagingCost?: true
   processingCost?: true
   profitMargin?: true
+  otherCost?: true
+  productionWeightG?: true
+  inputMode?: true
   totalMaterialCost?: true
   totalWeightKg?: true
   productionWeightKg?: true
@@ -339,6 +365,9 @@ export type RcRecipeGroupByOutputType = {
   packagingCost: number
   processingCost: number
   profitMargin: number
+  otherCost: number
+  productionWeightG: number | null
+  inputMode: string
   totalMaterialCost: number | null
   totalWeightKg: number | null
   productionWeightKg: number | null
@@ -386,6 +415,9 @@ export type RcRecipeWhereInput = {
   packagingCost?: Prisma.FloatFilter<"RcRecipe"> | number
   processingCost?: Prisma.FloatFilter<"RcRecipe"> | number
   profitMargin?: Prisma.FloatFilter<"RcRecipe"> | number
+  otherCost?: Prisma.FloatFilter<"RcRecipe"> | number
+  productionWeightG?: Prisma.FloatNullableFilter<"RcRecipe"> | number | null
+  inputMode?: Prisma.StringFilter<"RcRecipe"> | string
   totalMaterialCost?: Prisma.FloatNullableFilter<"RcRecipe"> | number | null
   totalWeightKg?: Prisma.FloatNullableFilter<"RcRecipe"> | number | null
   productionWeightKg?: Prisma.FloatNullableFilter<"RcRecipe"> | number | null
@@ -411,6 +443,9 @@ export type RcRecipeOrderByWithRelationInput = {
   packagingCost?: Prisma.SortOrder
   processingCost?: Prisma.SortOrder
   profitMargin?: Prisma.SortOrder
+  otherCost?: Prisma.SortOrder
+  productionWeightG?: Prisma.SortOrderInput | Prisma.SortOrder
+  inputMode?: Prisma.SortOrder
   totalMaterialCost?: Prisma.SortOrderInput | Prisma.SortOrder
   totalWeightKg?: Prisma.SortOrderInput | Prisma.SortOrder
   productionWeightKg?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -439,6 +474,9 @@ export type RcRecipeWhereUniqueInput = Prisma.AtLeast<{
   packagingCost?: Prisma.FloatFilter<"RcRecipe"> | number
   processingCost?: Prisma.FloatFilter<"RcRecipe"> | number
   profitMargin?: Prisma.FloatFilter<"RcRecipe"> | number
+  otherCost?: Prisma.FloatFilter<"RcRecipe"> | number
+  productionWeightG?: Prisma.FloatNullableFilter<"RcRecipe"> | number | null
+  inputMode?: Prisma.StringFilter<"RcRecipe"> | string
   totalMaterialCost?: Prisma.FloatNullableFilter<"RcRecipe"> | number | null
   totalWeightKg?: Prisma.FloatNullableFilter<"RcRecipe"> | number | null
   productionWeightKg?: Prisma.FloatNullableFilter<"RcRecipe"> | number | null
@@ -464,6 +502,9 @@ export type RcRecipeOrderByWithAggregationInput = {
   packagingCost?: Prisma.SortOrder
   processingCost?: Prisma.SortOrder
   profitMargin?: Prisma.SortOrder
+  otherCost?: Prisma.SortOrder
+  productionWeightG?: Prisma.SortOrderInput | Prisma.SortOrder
+  inputMode?: Prisma.SortOrder
   totalMaterialCost?: Prisma.SortOrderInput | Prisma.SortOrder
   totalWeightKg?: Prisma.SortOrderInput | Prisma.SortOrder
   productionWeightKg?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -496,6 +537,9 @@ export type RcRecipeScalarWhereWithAggregatesInput = {
   packagingCost?: Prisma.FloatWithAggregatesFilter<"RcRecipe"> | number
   processingCost?: Prisma.FloatWithAggregatesFilter<"RcRecipe"> | number
   profitMargin?: Prisma.FloatWithAggregatesFilter<"RcRecipe"> | number
+  otherCost?: Prisma.FloatWithAggregatesFilter<"RcRecipe"> | number
+  productionWeightG?: Prisma.FloatNullableWithAggregatesFilter<"RcRecipe"> | number | null
+  inputMode?: Prisma.StringWithAggregatesFilter<"RcRecipe"> | string
   totalMaterialCost?: Prisma.FloatNullableWithAggregatesFilter<"RcRecipe"> | number | null
   totalWeightKg?: Prisma.FloatNullableWithAggregatesFilter<"RcRecipe"> | number | null
   productionWeightKg?: Prisma.FloatNullableWithAggregatesFilter<"RcRecipe"> | number | null
@@ -519,6 +563,9 @@ export type RcRecipeCreateInput = {
   packagingCost?: number
   processingCost?: number
   profitMargin?: number
+  otherCost?: number
+  productionWeightG?: number | null
+  inputMode?: string
   totalMaterialCost?: number | null
   totalWeightKg?: number | null
   productionWeightKg?: number | null
@@ -544,6 +591,9 @@ export type RcRecipeUncheckedCreateInput = {
   packagingCost?: number
   processingCost?: number
   profitMargin?: number
+  otherCost?: number
+  productionWeightG?: number | null
+  inputMode?: string
   totalMaterialCost?: number | null
   totalWeightKg?: number | null
   productionWeightKg?: number | null
@@ -568,6 +618,9 @@ export type RcRecipeUpdateInput = {
   packagingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   processingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   profitMargin?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  productionWeightG?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  inputMode?: Prisma.StringFieldUpdateOperationsInput | string
   totalMaterialCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalWeightKg?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   productionWeightKg?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -593,6 +646,9 @@ export type RcRecipeUncheckedUpdateInput = {
   packagingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   processingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   profitMargin?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  productionWeightG?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  inputMode?: Prisma.StringFieldUpdateOperationsInput | string
   totalMaterialCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalWeightKg?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   productionWeightKg?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -618,6 +674,9 @@ export type RcRecipeCreateManyInput = {
   packagingCost?: number
   processingCost?: number
   profitMargin?: number
+  otherCost?: number
+  productionWeightG?: number | null
+  inputMode?: string
   totalMaterialCost?: number | null
   totalWeightKg?: number | null
   productionWeightKg?: number | null
@@ -641,6 +700,9 @@ export type RcRecipeUpdateManyMutationInput = {
   packagingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   processingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   profitMargin?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  productionWeightG?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  inputMode?: Prisma.StringFieldUpdateOperationsInput | string
   totalMaterialCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalWeightKg?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   productionWeightKg?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -665,6 +727,9 @@ export type RcRecipeUncheckedUpdateManyInput = {
   packagingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   processingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   profitMargin?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  productionWeightG?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  inputMode?: Prisma.StringFieldUpdateOperationsInput | string
   totalMaterialCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalWeightKg?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   productionWeightKg?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -689,6 +754,9 @@ export type RcRecipeCountOrderByAggregateInput = {
   packagingCost?: Prisma.SortOrder
   processingCost?: Prisma.SortOrder
   profitMargin?: Prisma.SortOrder
+  otherCost?: Prisma.SortOrder
+  productionWeightG?: Prisma.SortOrder
+  inputMode?: Prisma.SortOrder
   totalMaterialCost?: Prisma.SortOrder
   totalWeightKg?: Prisma.SortOrder
   productionWeightKg?: Prisma.SortOrder
@@ -709,6 +777,8 @@ export type RcRecipeAvgOrderByAggregateInput = {
   packagingCost?: Prisma.SortOrder
   processingCost?: Prisma.SortOrder
   profitMargin?: Prisma.SortOrder
+  otherCost?: Prisma.SortOrder
+  productionWeightG?: Prisma.SortOrder
   totalMaterialCost?: Prisma.SortOrder
   totalWeightKg?: Prisma.SortOrder
   productionWeightKg?: Prisma.SortOrder
@@ -730,6 +800,9 @@ export type RcRecipeMaxOrderByAggregateInput = {
   packagingCost?: Prisma.SortOrder
   processingCost?: Prisma.SortOrder
   profitMargin?: Prisma.SortOrder
+  otherCost?: Prisma.SortOrder
+  productionWeightG?: Prisma.SortOrder
+  inputMode?: Prisma.SortOrder
   totalMaterialCost?: Prisma.SortOrder
   totalWeightKg?: Prisma.SortOrder
   productionWeightKg?: Prisma.SortOrder
@@ -754,6 +827,9 @@ export type RcRecipeMinOrderByAggregateInput = {
   packagingCost?: Prisma.SortOrder
   processingCost?: Prisma.SortOrder
   profitMargin?: Prisma.SortOrder
+  otherCost?: Prisma.SortOrder
+  productionWeightG?: Prisma.SortOrder
+  inputMode?: Prisma.SortOrder
   totalMaterialCost?: Prisma.SortOrder
   totalWeightKg?: Prisma.SortOrder
   productionWeightKg?: Prisma.SortOrder
@@ -774,6 +850,8 @@ export type RcRecipeSumOrderByAggregateInput = {
   packagingCost?: Prisma.SortOrder
   processingCost?: Prisma.SortOrder
   profitMargin?: Prisma.SortOrder
+  otherCost?: Prisma.SortOrder
+  productionWeightG?: Prisma.SortOrder
   totalMaterialCost?: Prisma.SortOrder
   totalWeightKg?: Prisma.SortOrder
   productionWeightKg?: Prisma.SortOrder
@@ -813,6 +891,9 @@ export type RcRecipeCreateWithoutRcRecipeIngredientInput = {
   packagingCost?: number
   processingCost?: number
   profitMargin?: number
+  otherCost?: number
+  productionWeightG?: number | null
+  inputMode?: string
   totalMaterialCost?: number | null
   totalWeightKg?: number | null
   productionWeightKg?: number | null
@@ -837,6 +918,9 @@ export type RcRecipeUncheckedCreateWithoutRcRecipeIngredientInput = {
   packagingCost?: number
   processingCost?: number
   profitMargin?: number
+  otherCost?: number
+  productionWeightG?: number | null
+  inputMode?: string
   totalMaterialCost?: number | null
   totalWeightKg?: number | null
   productionWeightKg?: number | null
@@ -876,6 +960,9 @@ export type RcRecipeUpdateWithoutRcRecipeIngredientInput = {
   packagingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   processingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   profitMargin?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  productionWeightG?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  inputMode?: Prisma.StringFieldUpdateOperationsInput | string
   totalMaterialCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalWeightKg?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   productionWeightKg?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -900,6 +987,9 @@ export type RcRecipeUncheckedUpdateWithoutRcRecipeIngredientInput = {
   packagingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   processingCost?: Prisma.FloatFieldUpdateOperationsInput | number
   profitMargin?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  productionWeightG?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  inputMode?: Prisma.StringFieldUpdateOperationsInput | string
   totalMaterialCost?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   totalWeightKg?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   productionWeightKg?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -955,6 +1045,9 @@ export type RcRecipeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   packagingCost?: boolean
   processingCost?: boolean
   profitMargin?: boolean
+  otherCost?: boolean
+  productionWeightG?: boolean
+  inputMode?: boolean
   totalMaterialCost?: boolean
   totalWeightKg?: boolean
   productionWeightKg?: boolean
@@ -981,6 +1074,9 @@ export type RcRecipeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   packagingCost?: boolean
   processingCost?: boolean
   profitMargin?: boolean
+  otherCost?: boolean
+  productionWeightG?: boolean
+  inputMode?: boolean
   totalMaterialCost?: boolean
   totalWeightKg?: boolean
   productionWeightKg?: boolean
@@ -1005,6 +1101,9 @@ export type RcRecipeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   packagingCost?: boolean
   processingCost?: boolean
   profitMargin?: boolean
+  otherCost?: boolean
+  productionWeightG?: boolean
+  inputMode?: boolean
   totalMaterialCost?: boolean
   totalWeightKg?: boolean
   productionWeightKg?: boolean
@@ -1029,6 +1128,9 @@ export type RcRecipeSelectScalar = {
   packagingCost?: boolean
   processingCost?: boolean
   profitMargin?: boolean
+  otherCost?: boolean
+  productionWeightG?: boolean
+  inputMode?: boolean
   totalMaterialCost?: boolean
   totalWeightKg?: boolean
   productionWeightKg?: boolean
@@ -1041,7 +1143,7 @@ export type RcRecipeSelectScalar = {
   sourceFileUrl?: boolean
 }
 
-export type RcRecipeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "name" | "status" | "lossRate" | "packWeightG" | "packagingCost" | "processingCost" | "profitMargin" | "totalMaterialCost" | "totalWeightKg" | "productionWeightKg" | "packCount" | "materialCostPerPack" | "totalCostPerPack" | "sellingPrice" | "sourceType" | "sourceFileName" | "sourceFileUrl", ExtArgs["result"]["rcRecipe"]>
+export type RcRecipeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "name" | "status" | "lossRate" | "packWeightG" | "packagingCost" | "processingCost" | "profitMargin" | "otherCost" | "productionWeightG" | "inputMode" | "totalMaterialCost" | "totalWeightKg" | "productionWeightKg" | "packCount" | "materialCostPerPack" | "totalCostPerPack" | "sellingPrice" | "sourceType" | "sourceFileName" | "sourceFileUrl", ExtArgs["result"]["rcRecipe"]>
 export type RcRecipeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   RcRecipeIngredient?: boolean | Prisma.RcRecipe$RcRecipeIngredientArgs<ExtArgs>
   _count?: boolean | Prisma.RcRecipeCountOutputTypeDefaultArgs<ExtArgs>
@@ -1066,6 +1168,9 @@ export type $RcRecipePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     packagingCost: number
     processingCost: number
     profitMargin: number
+    otherCost: number
+    productionWeightG: number | null
+    inputMode: string
     totalMaterialCost: number | null
     totalWeightKg: number | null
     productionWeightKg: number | null
@@ -1511,6 +1616,9 @@ export interface RcRecipeFieldRefs {
   readonly packagingCost: Prisma.FieldRef<"RcRecipe", 'Float'>
   readonly processingCost: Prisma.FieldRef<"RcRecipe", 'Float'>
   readonly profitMargin: Prisma.FieldRef<"RcRecipe", 'Float'>
+  readonly otherCost: Prisma.FieldRef<"RcRecipe", 'Float'>
+  readonly productionWeightG: Prisma.FieldRef<"RcRecipe", 'Float'>
+  readonly inputMode: Prisma.FieldRef<"RcRecipe", 'String'>
   readonly totalMaterialCost: Prisma.FieldRef<"RcRecipe", 'Float'>
   readonly totalWeightKg: Prisma.FieldRef<"RcRecipe", 'Float'>
   readonly productionWeightKg: Prisma.FieldRef<"RcRecipe", 'Float'>

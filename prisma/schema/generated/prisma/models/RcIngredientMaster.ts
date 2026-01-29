@@ -31,6 +31,11 @@ export type RcIngredientMasterAvgAggregateOutputType = {
   sortOrder: number | null
   price: number | null
   yield: number | null
+  energyPer100g: number | null
+  proteinPer100g: number | null
+  fatPer100g: number | null
+  carbPer100g: number | null
+  sodiumPer100g: number | null
 }
 
 export type RcIngredientMasterSumAggregateOutputType = {
@@ -38,6 +43,11 @@ export type RcIngredientMasterSumAggregateOutputType = {
   sortOrder: number | null
   price: number | null
   yield: number | null
+  energyPer100g: number | null
+  proteinPer100g: number | null
+  fatPer100g: number | null
+  carbPer100g: number | null
+  sodiumPer100g: number | null
 }
 
 export type RcIngredientMasterMinAggregateOutputType = {
@@ -50,6 +60,12 @@ export type RcIngredientMasterMinAggregateOutputType = {
   yield: number | null
   category: string | null
   supplier: string | null
+  standardCode: string | null
+  energyPer100g: number | null
+  proteinPer100g: number | null
+  fatPer100g: number | null
+  carbPer100g: number | null
+  sodiumPer100g: number | null
 }
 
 export type RcIngredientMasterMaxAggregateOutputType = {
@@ -62,6 +78,12 @@ export type RcIngredientMasterMaxAggregateOutputType = {
   yield: number | null
   category: string | null
   supplier: string | null
+  standardCode: string | null
+  energyPer100g: number | null
+  proteinPer100g: number | null
+  fatPer100g: number | null
+  carbPer100g: number | null
+  sodiumPer100g: number | null
 }
 
 export type RcIngredientMasterCountAggregateOutputType = {
@@ -74,6 +96,12 @@ export type RcIngredientMasterCountAggregateOutputType = {
   yield: number
   category: number
   supplier: number
+  standardCode: number
+  energyPer100g: number
+  proteinPer100g: number
+  fatPer100g: number
+  carbPer100g: number
+  sodiumPer100g: number
   _all: number
 }
 
@@ -83,6 +111,11 @@ export type RcIngredientMasterAvgAggregateInputType = {
   sortOrder?: true
   price?: true
   yield?: true
+  energyPer100g?: true
+  proteinPer100g?: true
+  fatPer100g?: true
+  carbPer100g?: true
+  sodiumPer100g?: true
 }
 
 export type RcIngredientMasterSumAggregateInputType = {
@@ -90,6 +123,11 @@ export type RcIngredientMasterSumAggregateInputType = {
   sortOrder?: true
   price?: true
   yield?: true
+  energyPer100g?: true
+  proteinPer100g?: true
+  fatPer100g?: true
+  carbPer100g?: true
+  sodiumPer100g?: true
 }
 
 export type RcIngredientMasterMinAggregateInputType = {
@@ -102,6 +140,12 @@ export type RcIngredientMasterMinAggregateInputType = {
   yield?: true
   category?: true
   supplier?: true
+  standardCode?: true
+  energyPer100g?: true
+  proteinPer100g?: true
+  fatPer100g?: true
+  carbPer100g?: true
+  sodiumPer100g?: true
 }
 
 export type RcIngredientMasterMaxAggregateInputType = {
@@ -114,6 +158,12 @@ export type RcIngredientMasterMaxAggregateInputType = {
   yield?: true
   category?: true
   supplier?: true
+  standardCode?: true
+  energyPer100g?: true
+  proteinPer100g?: true
+  fatPer100g?: true
+  carbPer100g?: true
+  sodiumPer100g?: true
 }
 
 export type RcIngredientMasterCountAggregateInputType = {
@@ -126,6 +176,12 @@ export type RcIngredientMasterCountAggregateInputType = {
   yield?: true
   category?: true
   supplier?: true
+  standardCode?: true
+  energyPer100g?: true
+  proteinPer100g?: true
+  fatPer100g?: true
+  carbPer100g?: true
+  sodiumPer100g?: true
   _all?: true
 }
 
@@ -225,6 +281,12 @@ export type RcIngredientMasterGroupByOutputType = {
   yield: number
   category: string
   supplier: string
+  standardCode: string | null
+  energyPer100g: number | null
+  proteinPer100g: number | null
+  fatPer100g: number | null
+  carbPer100g: number | null
+  sodiumPer100g: number | null
   _count: RcIngredientMasterCountAggregateOutputType | null
   _avg: RcIngredientMasterAvgAggregateOutputType | null
   _sum: RcIngredientMasterSumAggregateOutputType | null
@@ -260,7 +322,15 @@ export type RcIngredientMasterWhereInput = {
   yield?: Prisma.FloatFilter<"RcIngredientMaster"> | number
   category?: Prisma.StringFilter<"RcIngredientMaster"> | string
   supplier?: Prisma.StringFilter<"RcIngredientMaster"> | string
+  standardCode?: Prisma.StringNullableFilter<"RcIngredientMaster"> | string | null
+  energyPer100g?: Prisma.FloatNullableFilter<"RcIngredientMaster"> | number | null
+  proteinPer100g?: Prisma.FloatNullableFilter<"RcIngredientMaster"> | number | null
+  fatPer100g?: Prisma.FloatNullableFilter<"RcIngredientMaster"> | number | null
+  carbPer100g?: Prisma.FloatNullableFilter<"RcIngredientMaster"> | number | null
+  sodiumPer100g?: Prisma.FloatNullableFilter<"RcIngredientMaster"> | number | null
   RcRecipeIngredient?: Prisma.RcRecipeIngredientListRelationFilter
+  KgRecipeIngredient?: Prisma.KgRecipeIngredientListRelationFilter
+  KgRequiredIngredient?: Prisma.KgRequiredIngredientListRelationFilter
 }
 
 export type RcIngredientMasterOrderByWithRelationInput = {
@@ -273,7 +343,15 @@ export type RcIngredientMasterOrderByWithRelationInput = {
   yield?: Prisma.SortOrder
   category?: Prisma.SortOrder
   supplier?: Prisma.SortOrder
+  standardCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  energyPer100g?: Prisma.SortOrderInput | Prisma.SortOrder
+  proteinPer100g?: Prisma.SortOrderInput | Prisma.SortOrder
+  fatPer100g?: Prisma.SortOrderInput | Prisma.SortOrder
+  carbPer100g?: Prisma.SortOrderInput | Prisma.SortOrder
+  sodiumPer100g?: Prisma.SortOrderInput | Prisma.SortOrder
   RcRecipeIngredient?: Prisma.RcRecipeIngredientOrderByRelationAggregateInput
+  KgRecipeIngredient?: Prisma.KgRecipeIngredientOrderByRelationAggregateInput
+  KgRequiredIngredient?: Prisma.KgRequiredIngredientOrderByRelationAggregateInput
 }
 
 export type RcIngredientMasterWhereUniqueInput = Prisma.AtLeast<{
@@ -289,7 +367,15 @@ export type RcIngredientMasterWhereUniqueInput = Prisma.AtLeast<{
   yield?: Prisma.FloatFilter<"RcIngredientMaster"> | number
   category?: Prisma.StringFilter<"RcIngredientMaster"> | string
   supplier?: Prisma.StringFilter<"RcIngredientMaster"> | string
+  standardCode?: Prisma.StringNullableFilter<"RcIngredientMaster"> | string | null
+  energyPer100g?: Prisma.FloatNullableFilter<"RcIngredientMaster"> | number | null
+  proteinPer100g?: Prisma.FloatNullableFilter<"RcIngredientMaster"> | number | null
+  fatPer100g?: Prisma.FloatNullableFilter<"RcIngredientMaster"> | number | null
+  carbPer100g?: Prisma.FloatNullableFilter<"RcIngredientMaster"> | number | null
+  sodiumPer100g?: Prisma.FloatNullableFilter<"RcIngredientMaster"> | number | null
   RcRecipeIngredient?: Prisma.RcRecipeIngredientListRelationFilter
+  KgRecipeIngredient?: Prisma.KgRecipeIngredientListRelationFilter
+  KgRequiredIngredient?: Prisma.KgRequiredIngredientListRelationFilter
 }, "id">
 
 export type RcIngredientMasterOrderByWithAggregationInput = {
@@ -302,6 +388,12 @@ export type RcIngredientMasterOrderByWithAggregationInput = {
   yield?: Prisma.SortOrder
   category?: Prisma.SortOrder
   supplier?: Prisma.SortOrder
+  standardCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  energyPer100g?: Prisma.SortOrderInput | Prisma.SortOrder
+  proteinPer100g?: Prisma.SortOrderInput | Prisma.SortOrder
+  fatPer100g?: Prisma.SortOrderInput | Prisma.SortOrder
+  carbPer100g?: Prisma.SortOrderInput | Prisma.SortOrder
+  sodiumPer100g?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.RcIngredientMasterCountOrderByAggregateInput
   _avg?: Prisma.RcIngredientMasterAvgOrderByAggregateInput
   _max?: Prisma.RcIngredientMasterMaxOrderByAggregateInput
@@ -322,6 +414,12 @@ export type RcIngredientMasterScalarWhereWithAggregatesInput = {
   yield?: Prisma.FloatWithAggregatesFilter<"RcIngredientMaster"> | number
   category?: Prisma.StringWithAggregatesFilter<"RcIngredientMaster"> | string
   supplier?: Prisma.StringWithAggregatesFilter<"RcIngredientMaster"> | string
+  standardCode?: Prisma.StringNullableWithAggregatesFilter<"RcIngredientMaster"> | string | null
+  energyPer100g?: Prisma.FloatNullableWithAggregatesFilter<"RcIngredientMaster"> | number | null
+  proteinPer100g?: Prisma.FloatNullableWithAggregatesFilter<"RcIngredientMaster"> | number | null
+  fatPer100g?: Prisma.FloatNullableWithAggregatesFilter<"RcIngredientMaster"> | number | null
+  carbPer100g?: Prisma.FloatNullableWithAggregatesFilter<"RcIngredientMaster"> | number | null
+  sodiumPer100g?: Prisma.FloatNullableWithAggregatesFilter<"RcIngredientMaster"> | number | null
 }
 
 export type RcIngredientMasterCreateInput = {
@@ -333,7 +431,15 @@ export type RcIngredientMasterCreateInput = {
   yield: number
   category: string
   supplier: string
+  standardCode?: string | null
+  energyPer100g?: number | null
+  proteinPer100g?: number | null
+  fatPer100g?: number | null
+  carbPer100g?: number | null
+  sodiumPer100g?: number | null
   RcRecipeIngredient?: Prisma.RcRecipeIngredientCreateNestedManyWithoutRcIngredientMasterInput
+  KgRecipeIngredient?: Prisma.KgRecipeIngredientCreateNestedManyWithoutRcIngredientMasterInput
+  KgRequiredIngredient?: Prisma.KgRequiredIngredientCreateNestedManyWithoutRcIngredientMasterInput
 }
 
 export type RcIngredientMasterUncheckedCreateInput = {
@@ -346,7 +452,15 @@ export type RcIngredientMasterUncheckedCreateInput = {
   yield: number
   category: string
   supplier: string
+  standardCode?: string | null
+  energyPer100g?: number | null
+  proteinPer100g?: number | null
+  fatPer100g?: number | null
+  carbPer100g?: number | null
+  sodiumPer100g?: number | null
   RcRecipeIngredient?: Prisma.RcRecipeIngredientUncheckedCreateNestedManyWithoutRcIngredientMasterInput
+  KgRecipeIngredient?: Prisma.KgRecipeIngredientUncheckedCreateNestedManyWithoutRcIngredientMasterInput
+  KgRequiredIngredient?: Prisma.KgRequiredIngredientUncheckedCreateNestedManyWithoutRcIngredientMasterInput
 }
 
 export type RcIngredientMasterUpdateInput = {
@@ -358,7 +472,15 @@ export type RcIngredientMasterUpdateInput = {
   yield?: Prisma.FloatFieldUpdateOperationsInput | number
   category?: Prisma.StringFieldUpdateOperationsInput | string
   supplier?: Prisma.StringFieldUpdateOperationsInput | string
+  standardCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  energyPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  proteinPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fatPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sodiumPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   RcRecipeIngredient?: Prisma.RcRecipeIngredientUpdateManyWithoutRcIngredientMasterNestedInput
+  KgRecipeIngredient?: Prisma.KgRecipeIngredientUpdateManyWithoutRcIngredientMasterNestedInput
+  KgRequiredIngredient?: Prisma.KgRequiredIngredientUpdateManyWithoutRcIngredientMasterNestedInput
 }
 
 export type RcIngredientMasterUncheckedUpdateInput = {
@@ -371,7 +493,15 @@ export type RcIngredientMasterUncheckedUpdateInput = {
   yield?: Prisma.FloatFieldUpdateOperationsInput | number
   category?: Prisma.StringFieldUpdateOperationsInput | string
   supplier?: Prisma.StringFieldUpdateOperationsInput | string
+  standardCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  energyPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  proteinPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fatPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sodiumPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   RcRecipeIngredient?: Prisma.RcRecipeIngredientUncheckedUpdateManyWithoutRcIngredientMasterNestedInput
+  KgRecipeIngredient?: Prisma.KgRecipeIngredientUncheckedUpdateManyWithoutRcIngredientMasterNestedInput
+  KgRequiredIngredient?: Prisma.KgRequiredIngredientUncheckedUpdateManyWithoutRcIngredientMasterNestedInput
 }
 
 export type RcIngredientMasterCreateManyInput = {
@@ -384,6 +514,12 @@ export type RcIngredientMasterCreateManyInput = {
   yield: number
   category: string
   supplier: string
+  standardCode?: string | null
+  energyPer100g?: number | null
+  proteinPer100g?: number | null
+  fatPer100g?: number | null
+  carbPer100g?: number | null
+  sodiumPer100g?: number | null
 }
 
 export type RcIngredientMasterUpdateManyMutationInput = {
@@ -395,6 +531,12 @@ export type RcIngredientMasterUpdateManyMutationInput = {
   yield?: Prisma.FloatFieldUpdateOperationsInput | number
   category?: Prisma.StringFieldUpdateOperationsInput | string
   supplier?: Prisma.StringFieldUpdateOperationsInput | string
+  standardCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  energyPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  proteinPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fatPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sodiumPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
 }
 
 export type RcIngredientMasterUncheckedUpdateManyInput = {
@@ -407,6 +549,17 @@ export type RcIngredientMasterUncheckedUpdateManyInput = {
   yield?: Prisma.FloatFieldUpdateOperationsInput | number
   category?: Prisma.StringFieldUpdateOperationsInput | string
   supplier?: Prisma.StringFieldUpdateOperationsInput | string
+  standardCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  energyPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  proteinPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fatPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sodiumPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+}
+
+export type RcIngredientMasterNullableScalarRelationFilter = {
+  is?: Prisma.RcIngredientMasterWhereInput | null
+  isNot?: Prisma.RcIngredientMasterWhereInput | null
 }
 
 export type RcIngredientMasterCountOrderByAggregateInput = {
@@ -419,6 +572,12 @@ export type RcIngredientMasterCountOrderByAggregateInput = {
   yield?: Prisma.SortOrder
   category?: Prisma.SortOrder
   supplier?: Prisma.SortOrder
+  standardCode?: Prisma.SortOrder
+  energyPer100g?: Prisma.SortOrder
+  proteinPer100g?: Prisma.SortOrder
+  fatPer100g?: Prisma.SortOrder
+  carbPer100g?: Prisma.SortOrder
+  sodiumPer100g?: Prisma.SortOrder
 }
 
 export type RcIngredientMasterAvgOrderByAggregateInput = {
@@ -426,6 +585,11 @@ export type RcIngredientMasterAvgOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
   price?: Prisma.SortOrder
   yield?: Prisma.SortOrder
+  energyPer100g?: Prisma.SortOrder
+  proteinPer100g?: Prisma.SortOrder
+  fatPer100g?: Prisma.SortOrder
+  carbPer100g?: Prisma.SortOrder
+  sodiumPer100g?: Prisma.SortOrder
 }
 
 export type RcIngredientMasterMaxOrderByAggregateInput = {
@@ -438,6 +602,12 @@ export type RcIngredientMasterMaxOrderByAggregateInput = {
   yield?: Prisma.SortOrder
   category?: Prisma.SortOrder
   supplier?: Prisma.SortOrder
+  standardCode?: Prisma.SortOrder
+  energyPer100g?: Prisma.SortOrder
+  proteinPer100g?: Prisma.SortOrder
+  fatPer100g?: Prisma.SortOrder
+  carbPer100g?: Prisma.SortOrder
+  sodiumPer100g?: Prisma.SortOrder
 }
 
 export type RcIngredientMasterMinOrderByAggregateInput = {
@@ -450,6 +620,12 @@ export type RcIngredientMasterMinOrderByAggregateInput = {
   yield?: Prisma.SortOrder
   category?: Prisma.SortOrder
   supplier?: Prisma.SortOrder
+  standardCode?: Prisma.SortOrder
+  energyPer100g?: Prisma.SortOrder
+  proteinPer100g?: Prisma.SortOrder
+  fatPer100g?: Prisma.SortOrder
+  carbPer100g?: Prisma.SortOrder
+  sodiumPer100g?: Prisma.SortOrder
 }
 
 export type RcIngredientMasterSumOrderByAggregateInput = {
@@ -457,11 +633,43 @@ export type RcIngredientMasterSumOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
   price?: Prisma.SortOrder
   yield?: Prisma.SortOrder
+  energyPer100g?: Prisma.SortOrder
+  proteinPer100g?: Prisma.SortOrder
+  fatPer100g?: Prisma.SortOrder
+  carbPer100g?: Prisma.SortOrder
+  sodiumPer100g?: Prisma.SortOrder
 }
 
-export type RcIngredientMasterNullableScalarRelationFilter = {
-  is?: Prisma.RcIngredientMasterWhereInput | null
-  isNot?: Prisma.RcIngredientMasterWhereInput | null
+export type RcIngredientMasterCreateNestedOneWithoutKgRecipeIngredientInput = {
+  create?: Prisma.XOR<Prisma.RcIngredientMasterCreateWithoutKgRecipeIngredientInput, Prisma.RcIngredientMasterUncheckedCreateWithoutKgRecipeIngredientInput>
+  connectOrCreate?: Prisma.RcIngredientMasterCreateOrConnectWithoutKgRecipeIngredientInput
+  connect?: Prisma.RcIngredientMasterWhereUniqueInput
+}
+
+export type RcIngredientMasterUpdateOneWithoutKgRecipeIngredientNestedInput = {
+  create?: Prisma.XOR<Prisma.RcIngredientMasterCreateWithoutKgRecipeIngredientInput, Prisma.RcIngredientMasterUncheckedCreateWithoutKgRecipeIngredientInput>
+  connectOrCreate?: Prisma.RcIngredientMasterCreateOrConnectWithoutKgRecipeIngredientInput
+  upsert?: Prisma.RcIngredientMasterUpsertWithoutKgRecipeIngredientInput
+  disconnect?: Prisma.RcIngredientMasterWhereInput | boolean
+  delete?: Prisma.RcIngredientMasterWhereInput | boolean
+  connect?: Prisma.RcIngredientMasterWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RcIngredientMasterUpdateToOneWithWhereWithoutKgRecipeIngredientInput, Prisma.RcIngredientMasterUpdateWithoutKgRecipeIngredientInput>, Prisma.RcIngredientMasterUncheckedUpdateWithoutKgRecipeIngredientInput>
+}
+
+export type RcIngredientMasterCreateNestedOneWithoutKgRequiredIngredientInput = {
+  create?: Prisma.XOR<Prisma.RcIngredientMasterCreateWithoutKgRequiredIngredientInput, Prisma.RcIngredientMasterUncheckedCreateWithoutKgRequiredIngredientInput>
+  connectOrCreate?: Prisma.RcIngredientMasterCreateOrConnectWithoutKgRequiredIngredientInput
+  connect?: Prisma.RcIngredientMasterWhereUniqueInput
+}
+
+export type RcIngredientMasterUpdateOneWithoutKgRequiredIngredientNestedInput = {
+  create?: Prisma.XOR<Prisma.RcIngredientMasterCreateWithoutKgRequiredIngredientInput, Prisma.RcIngredientMasterUncheckedCreateWithoutKgRequiredIngredientInput>
+  connectOrCreate?: Prisma.RcIngredientMasterCreateOrConnectWithoutKgRequiredIngredientInput
+  upsert?: Prisma.RcIngredientMasterUpsertWithoutKgRequiredIngredientInput
+  disconnect?: Prisma.RcIngredientMasterWhereInput | boolean
+  delete?: Prisma.RcIngredientMasterWhereInput | boolean
+  connect?: Prisma.RcIngredientMasterWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RcIngredientMasterUpdateToOneWithWhereWithoutKgRequiredIngredientInput, Prisma.RcIngredientMasterUpdateWithoutKgRequiredIngredientInput>, Prisma.RcIngredientMasterUncheckedUpdateWithoutKgRequiredIngredientInput>
 }
 
 export type RcIngredientMasterCreateNestedOneWithoutRcRecipeIngredientInput = {
@@ -480,6 +688,194 @@ export type RcIngredientMasterUpdateOneWithoutRcRecipeIngredientNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.RcIngredientMasterUpdateToOneWithWhereWithoutRcRecipeIngredientInput, Prisma.RcIngredientMasterUpdateWithoutRcRecipeIngredientInput>, Prisma.RcIngredientMasterUncheckedUpdateWithoutRcRecipeIngredientInput>
 }
 
+export type RcIngredientMasterCreateWithoutKgRecipeIngredientInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  name: string
+  price: number
+  yield: number
+  category: string
+  supplier: string
+  standardCode?: string | null
+  energyPer100g?: number | null
+  proteinPer100g?: number | null
+  fatPer100g?: number | null
+  carbPer100g?: number | null
+  sodiumPer100g?: number | null
+  RcRecipeIngredient?: Prisma.RcRecipeIngredientCreateNestedManyWithoutRcIngredientMasterInput
+  KgRequiredIngredient?: Prisma.KgRequiredIngredientCreateNestedManyWithoutRcIngredientMasterInput
+}
+
+export type RcIngredientMasterUncheckedCreateWithoutKgRecipeIngredientInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  name: string
+  price: number
+  yield: number
+  category: string
+  supplier: string
+  standardCode?: string | null
+  energyPer100g?: number | null
+  proteinPer100g?: number | null
+  fatPer100g?: number | null
+  carbPer100g?: number | null
+  sodiumPer100g?: number | null
+  RcRecipeIngredient?: Prisma.RcRecipeIngredientUncheckedCreateNestedManyWithoutRcIngredientMasterInput
+  KgRequiredIngredient?: Prisma.KgRequiredIngredientUncheckedCreateNestedManyWithoutRcIngredientMasterInput
+}
+
+export type RcIngredientMasterCreateOrConnectWithoutKgRecipeIngredientInput = {
+  where: Prisma.RcIngredientMasterWhereUniqueInput
+  create: Prisma.XOR<Prisma.RcIngredientMasterCreateWithoutKgRecipeIngredientInput, Prisma.RcIngredientMasterUncheckedCreateWithoutKgRecipeIngredientInput>
+}
+
+export type RcIngredientMasterUpsertWithoutKgRecipeIngredientInput = {
+  update: Prisma.XOR<Prisma.RcIngredientMasterUpdateWithoutKgRecipeIngredientInput, Prisma.RcIngredientMasterUncheckedUpdateWithoutKgRecipeIngredientInput>
+  create: Prisma.XOR<Prisma.RcIngredientMasterCreateWithoutKgRecipeIngredientInput, Prisma.RcIngredientMasterUncheckedCreateWithoutKgRecipeIngredientInput>
+  where?: Prisma.RcIngredientMasterWhereInput
+}
+
+export type RcIngredientMasterUpdateToOneWithWhereWithoutKgRecipeIngredientInput = {
+  where?: Prisma.RcIngredientMasterWhereInput
+  data: Prisma.XOR<Prisma.RcIngredientMasterUpdateWithoutKgRecipeIngredientInput, Prisma.RcIngredientMasterUncheckedUpdateWithoutKgRecipeIngredientInput>
+}
+
+export type RcIngredientMasterUpdateWithoutKgRecipeIngredientInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  yield?: Prisma.FloatFieldUpdateOperationsInput | number
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  supplier?: Prisma.StringFieldUpdateOperationsInput | string
+  standardCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  energyPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  proteinPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fatPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sodiumPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  RcRecipeIngredient?: Prisma.RcRecipeIngredientUpdateManyWithoutRcIngredientMasterNestedInput
+  KgRequiredIngredient?: Prisma.KgRequiredIngredientUpdateManyWithoutRcIngredientMasterNestedInput
+}
+
+export type RcIngredientMasterUncheckedUpdateWithoutKgRecipeIngredientInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  yield?: Prisma.FloatFieldUpdateOperationsInput | number
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  supplier?: Prisma.StringFieldUpdateOperationsInput | string
+  standardCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  energyPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  proteinPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fatPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sodiumPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  RcRecipeIngredient?: Prisma.RcRecipeIngredientUncheckedUpdateManyWithoutRcIngredientMasterNestedInput
+  KgRequiredIngredient?: Prisma.KgRequiredIngredientUncheckedUpdateManyWithoutRcIngredientMasterNestedInput
+}
+
+export type RcIngredientMasterCreateWithoutKgRequiredIngredientInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  name: string
+  price: number
+  yield: number
+  category: string
+  supplier: string
+  standardCode?: string | null
+  energyPer100g?: number | null
+  proteinPer100g?: number | null
+  fatPer100g?: number | null
+  carbPer100g?: number | null
+  sodiumPer100g?: number | null
+  RcRecipeIngredient?: Prisma.RcRecipeIngredientCreateNestedManyWithoutRcIngredientMasterInput
+  KgRecipeIngredient?: Prisma.KgRecipeIngredientCreateNestedManyWithoutRcIngredientMasterInput
+}
+
+export type RcIngredientMasterUncheckedCreateWithoutKgRequiredIngredientInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  name: string
+  price: number
+  yield: number
+  category: string
+  supplier: string
+  standardCode?: string | null
+  energyPer100g?: number | null
+  proteinPer100g?: number | null
+  fatPer100g?: number | null
+  carbPer100g?: number | null
+  sodiumPer100g?: number | null
+  RcRecipeIngredient?: Prisma.RcRecipeIngredientUncheckedCreateNestedManyWithoutRcIngredientMasterInput
+  KgRecipeIngredient?: Prisma.KgRecipeIngredientUncheckedCreateNestedManyWithoutRcIngredientMasterInput
+}
+
+export type RcIngredientMasterCreateOrConnectWithoutKgRequiredIngredientInput = {
+  where: Prisma.RcIngredientMasterWhereUniqueInput
+  create: Prisma.XOR<Prisma.RcIngredientMasterCreateWithoutKgRequiredIngredientInput, Prisma.RcIngredientMasterUncheckedCreateWithoutKgRequiredIngredientInput>
+}
+
+export type RcIngredientMasterUpsertWithoutKgRequiredIngredientInput = {
+  update: Prisma.XOR<Prisma.RcIngredientMasterUpdateWithoutKgRequiredIngredientInput, Prisma.RcIngredientMasterUncheckedUpdateWithoutKgRequiredIngredientInput>
+  create: Prisma.XOR<Prisma.RcIngredientMasterCreateWithoutKgRequiredIngredientInput, Prisma.RcIngredientMasterUncheckedCreateWithoutKgRequiredIngredientInput>
+  where?: Prisma.RcIngredientMasterWhereInput
+}
+
+export type RcIngredientMasterUpdateToOneWithWhereWithoutKgRequiredIngredientInput = {
+  where?: Prisma.RcIngredientMasterWhereInput
+  data: Prisma.XOR<Prisma.RcIngredientMasterUpdateWithoutKgRequiredIngredientInput, Prisma.RcIngredientMasterUncheckedUpdateWithoutKgRequiredIngredientInput>
+}
+
+export type RcIngredientMasterUpdateWithoutKgRequiredIngredientInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  yield?: Prisma.FloatFieldUpdateOperationsInput | number
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  supplier?: Prisma.StringFieldUpdateOperationsInput | string
+  standardCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  energyPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  proteinPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fatPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sodiumPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  RcRecipeIngredient?: Prisma.RcRecipeIngredientUpdateManyWithoutRcIngredientMasterNestedInput
+  KgRecipeIngredient?: Prisma.KgRecipeIngredientUpdateManyWithoutRcIngredientMasterNestedInput
+}
+
+export type RcIngredientMasterUncheckedUpdateWithoutKgRequiredIngredientInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.FloatFieldUpdateOperationsInput | number
+  yield?: Prisma.FloatFieldUpdateOperationsInput | number
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  supplier?: Prisma.StringFieldUpdateOperationsInput | string
+  standardCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  energyPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  proteinPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fatPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sodiumPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  RcRecipeIngredient?: Prisma.RcRecipeIngredientUncheckedUpdateManyWithoutRcIngredientMasterNestedInput
+  KgRecipeIngredient?: Prisma.KgRecipeIngredientUncheckedUpdateManyWithoutRcIngredientMasterNestedInput
+}
+
 export type RcIngredientMasterCreateWithoutRcRecipeIngredientInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
@@ -489,6 +885,14 @@ export type RcIngredientMasterCreateWithoutRcRecipeIngredientInput = {
   yield: number
   category: string
   supplier: string
+  standardCode?: string | null
+  energyPer100g?: number | null
+  proteinPer100g?: number | null
+  fatPer100g?: number | null
+  carbPer100g?: number | null
+  sodiumPer100g?: number | null
+  KgRecipeIngredient?: Prisma.KgRecipeIngredientCreateNestedManyWithoutRcIngredientMasterInput
+  KgRequiredIngredient?: Prisma.KgRequiredIngredientCreateNestedManyWithoutRcIngredientMasterInput
 }
 
 export type RcIngredientMasterUncheckedCreateWithoutRcRecipeIngredientInput = {
@@ -501,6 +905,14 @@ export type RcIngredientMasterUncheckedCreateWithoutRcRecipeIngredientInput = {
   yield: number
   category: string
   supplier: string
+  standardCode?: string | null
+  energyPer100g?: number | null
+  proteinPer100g?: number | null
+  fatPer100g?: number | null
+  carbPer100g?: number | null
+  sodiumPer100g?: number | null
+  KgRecipeIngredient?: Prisma.KgRecipeIngredientUncheckedCreateNestedManyWithoutRcIngredientMasterInput
+  KgRequiredIngredient?: Prisma.KgRequiredIngredientUncheckedCreateNestedManyWithoutRcIngredientMasterInput
 }
 
 export type RcIngredientMasterCreateOrConnectWithoutRcRecipeIngredientInput = {
@@ -528,6 +940,14 @@ export type RcIngredientMasterUpdateWithoutRcRecipeIngredientInput = {
   yield?: Prisma.FloatFieldUpdateOperationsInput | number
   category?: Prisma.StringFieldUpdateOperationsInput | string
   supplier?: Prisma.StringFieldUpdateOperationsInput | string
+  standardCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  energyPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  proteinPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fatPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sodiumPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  KgRecipeIngredient?: Prisma.KgRecipeIngredientUpdateManyWithoutRcIngredientMasterNestedInput
+  KgRequiredIngredient?: Prisma.KgRequiredIngredientUpdateManyWithoutRcIngredientMasterNestedInput
 }
 
 export type RcIngredientMasterUncheckedUpdateWithoutRcRecipeIngredientInput = {
@@ -540,6 +960,14 @@ export type RcIngredientMasterUncheckedUpdateWithoutRcRecipeIngredientInput = {
   yield?: Prisma.FloatFieldUpdateOperationsInput | number
   category?: Prisma.StringFieldUpdateOperationsInput | string
   supplier?: Prisma.StringFieldUpdateOperationsInput | string
+  standardCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  energyPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  proteinPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fatPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  sodiumPer100g?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  KgRecipeIngredient?: Prisma.KgRecipeIngredientUncheckedUpdateManyWithoutRcIngredientMasterNestedInput
+  KgRequiredIngredient?: Prisma.KgRequiredIngredientUncheckedUpdateManyWithoutRcIngredientMasterNestedInput
 }
 
 
@@ -549,10 +977,14 @@ export type RcIngredientMasterUncheckedUpdateWithoutRcRecipeIngredientInput = {
 
 export type RcIngredientMasterCountOutputType = {
   RcRecipeIngredient: number
+  KgRecipeIngredient: number
+  KgRequiredIngredient: number
 }
 
 export type RcIngredientMasterCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   RcRecipeIngredient?: boolean | RcIngredientMasterCountOutputTypeCountRcRecipeIngredientArgs
+  KgRecipeIngredient?: boolean | RcIngredientMasterCountOutputTypeCountKgRecipeIngredientArgs
+  KgRequiredIngredient?: boolean | RcIngredientMasterCountOutputTypeCountKgRequiredIngredientArgs
 }
 
 /**
@@ -572,6 +1004,20 @@ export type RcIngredientMasterCountOutputTypeCountRcRecipeIngredientArgs<ExtArgs
   where?: Prisma.RcRecipeIngredientWhereInput
 }
 
+/**
+ * RcIngredientMasterCountOutputType without action
+ */
+export type RcIngredientMasterCountOutputTypeCountKgRecipeIngredientArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.KgRecipeIngredientWhereInput
+}
+
+/**
+ * RcIngredientMasterCountOutputType without action
+ */
+export type RcIngredientMasterCountOutputTypeCountKgRequiredIngredientArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.KgRequiredIngredientWhereInput
+}
+
 
 export type RcIngredientMasterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -583,7 +1029,15 @@ export type RcIngredientMasterSelect<ExtArgs extends runtime.Types.Extensions.In
   yield?: boolean
   category?: boolean
   supplier?: boolean
+  standardCode?: boolean
+  energyPer100g?: boolean
+  proteinPer100g?: boolean
+  fatPer100g?: boolean
+  carbPer100g?: boolean
+  sodiumPer100g?: boolean
   RcRecipeIngredient?: boolean | Prisma.RcIngredientMaster$RcRecipeIngredientArgs<ExtArgs>
+  KgRecipeIngredient?: boolean | Prisma.RcIngredientMaster$KgRecipeIngredientArgs<ExtArgs>
+  KgRequiredIngredient?: boolean | Prisma.RcIngredientMaster$KgRequiredIngredientArgs<ExtArgs>
   _count?: boolean | Prisma.RcIngredientMasterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["rcIngredientMaster"]>
 
@@ -597,6 +1051,12 @@ export type RcIngredientMasterSelectCreateManyAndReturn<ExtArgs extends runtime.
   yield?: boolean
   category?: boolean
   supplier?: boolean
+  standardCode?: boolean
+  energyPer100g?: boolean
+  proteinPer100g?: boolean
+  fatPer100g?: boolean
+  carbPer100g?: boolean
+  sodiumPer100g?: boolean
 }, ExtArgs["result"]["rcIngredientMaster"]>
 
 export type RcIngredientMasterSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -609,6 +1069,12 @@ export type RcIngredientMasterSelectUpdateManyAndReturn<ExtArgs extends runtime.
   yield?: boolean
   category?: boolean
   supplier?: boolean
+  standardCode?: boolean
+  energyPer100g?: boolean
+  proteinPer100g?: boolean
+  fatPer100g?: boolean
+  carbPer100g?: boolean
+  sodiumPer100g?: boolean
 }, ExtArgs["result"]["rcIngredientMaster"]>
 
 export type RcIngredientMasterSelectScalar = {
@@ -621,11 +1087,19 @@ export type RcIngredientMasterSelectScalar = {
   yield?: boolean
   category?: boolean
   supplier?: boolean
+  standardCode?: boolean
+  energyPer100g?: boolean
+  proteinPer100g?: boolean
+  fatPer100g?: boolean
+  carbPer100g?: boolean
+  sodiumPer100g?: boolean
 }
 
-export type RcIngredientMasterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "name" | "price" | "yield" | "category" | "supplier", ExtArgs["result"]["rcIngredientMaster"]>
+export type RcIngredientMasterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "name" | "price" | "yield" | "category" | "supplier" | "standardCode" | "energyPer100g" | "proteinPer100g" | "fatPer100g" | "carbPer100g" | "sodiumPer100g", ExtArgs["result"]["rcIngredientMaster"]>
 export type RcIngredientMasterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   RcRecipeIngredient?: boolean | Prisma.RcIngredientMaster$RcRecipeIngredientArgs<ExtArgs>
+  KgRecipeIngredient?: boolean | Prisma.RcIngredientMaster$KgRecipeIngredientArgs<ExtArgs>
+  KgRequiredIngredient?: boolean | Prisma.RcIngredientMaster$KgRequiredIngredientArgs<ExtArgs>
   _count?: boolean | Prisma.RcIngredientMasterCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type RcIngredientMasterIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -635,6 +1109,8 @@ export type $RcIngredientMasterPayload<ExtArgs extends runtime.Types.Extensions.
   name: "RcIngredientMaster"
   objects: {
     RcRecipeIngredient: Prisma.$RcRecipeIngredientPayload<ExtArgs>[]
+    KgRecipeIngredient: Prisma.$KgRecipeIngredientPayload<ExtArgs>[]
+    KgRequiredIngredient: Prisma.$KgRequiredIngredientPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -646,6 +1122,12 @@ export type $RcIngredientMasterPayload<ExtArgs extends runtime.Types.Extensions.
     yield: number
     category: string
     supplier: string
+    standardCode: string | null
+    energyPer100g: number | null
+    proteinPer100g: number | null
+    fatPer100g: number | null
+    carbPer100g: number | null
+    sodiumPer100g: number | null
   }, ExtArgs["result"]["rcIngredientMaster"]>
   composites: {}
 }
@@ -1041,6 +1523,8 @@ readonly fields: RcIngredientMasterFieldRefs;
 export interface Prisma__RcIngredientMasterClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   RcRecipeIngredient<T extends Prisma.RcIngredientMaster$RcRecipeIngredientArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RcIngredientMaster$RcRecipeIngredientArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RcRecipeIngredientPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  KgRecipeIngredient<T extends Prisma.RcIngredientMaster$KgRecipeIngredientArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RcIngredientMaster$KgRecipeIngredientArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KgRecipeIngredientPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  KgRequiredIngredient<T extends Prisma.RcIngredientMaster$KgRequiredIngredientArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RcIngredientMaster$KgRequiredIngredientArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KgRequiredIngredientPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1079,6 +1563,12 @@ export interface RcIngredientMasterFieldRefs {
   readonly yield: Prisma.FieldRef<"RcIngredientMaster", 'Float'>
   readonly category: Prisma.FieldRef<"RcIngredientMaster", 'String'>
   readonly supplier: Prisma.FieldRef<"RcIngredientMaster", 'String'>
+  readonly standardCode: Prisma.FieldRef<"RcIngredientMaster", 'String'>
+  readonly energyPer100g: Prisma.FieldRef<"RcIngredientMaster", 'Float'>
+  readonly proteinPer100g: Prisma.FieldRef<"RcIngredientMaster", 'Float'>
+  readonly fatPer100g: Prisma.FieldRef<"RcIngredientMaster", 'Float'>
+  readonly carbPer100g: Prisma.FieldRef<"RcIngredientMaster", 'Float'>
+  readonly sodiumPer100g: Prisma.FieldRef<"RcIngredientMaster", 'Float'>
 }
     
 
@@ -1488,6 +1978,54 @@ export type RcIngredientMaster$RcRecipeIngredientArgs<ExtArgs extends runtime.Ty
   take?: number
   skip?: number
   distinct?: Prisma.RcRecipeIngredientScalarFieldEnum | Prisma.RcRecipeIngredientScalarFieldEnum[]
+}
+
+/**
+ * RcIngredientMaster.KgRecipeIngredient
+ */
+export type RcIngredientMaster$KgRecipeIngredientArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the KgRecipeIngredient
+   */
+  select?: Prisma.KgRecipeIngredientSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the KgRecipeIngredient
+   */
+  omit?: Prisma.KgRecipeIngredientOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.KgRecipeIngredientInclude<ExtArgs> | null
+  where?: Prisma.KgRecipeIngredientWhereInput
+  orderBy?: Prisma.KgRecipeIngredientOrderByWithRelationInput | Prisma.KgRecipeIngredientOrderByWithRelationInput[]
+  cursor?: Prisma.KgRecipeIngredientWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.KgRecipeIngredientScalarFieldEnum | Prisma.KgRecipeIngredientScalarFieldEnum[]
+}
+
+/**
+ * RcIngredientMaster.KgRequiredIngredient
+ */
+export type RcIngredientMaster$KgRequiredIngredientArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the KgRequiredIngredient
+   */
+  select?: Prisma.KgRequiredIngredientSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the KgRequiredIngredient
+   */
+  omit?: Prisma.KgRequiredIngredientOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.KgRequiredIngredientInclude<ExtArgs> | null
+  where?: Prisma.KgRequiredIngredientWhereInput
+  orderBy?: Prisma.KgRequiredIngredientOrderByWithRelationInput | Prisma.KgRequiredIngredientOrderByWithRelationInput[]
+  cursor?: Prisma.KgRequiredIngredientWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.KgRequiredIngredientScalarFieldEnum | Prisma.KgRequiredIngredientScalarFieldEnum[]
 }
 
 /**

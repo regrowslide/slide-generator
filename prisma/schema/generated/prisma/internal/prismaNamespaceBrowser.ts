@@ -80,6 +80,17 @@ export const ModelName = {
   HakobunAnalysisBox: 'HakobunAnalysisBox',
   HakobunAnalysisSession: 'HakobunAnalysisSession',
   HakobunAnalysisRecord: 'HakobunAnalysisRecord',
+  KgFacilityMaster: 'KgFacilityMaster',
+  KgDietTypeMaster: 'KgDietTypeMaster',
+  KgDailyMenu: 'KgDailyMenu',
+  KgMealSlot: 'KgMealSlot',
+  KgMenuRecipe: 'KgMenuRecipe',
+  KgRecipeIngredient: 'KgRecipeIngredient',
+  KgOrder: 'KgOrder',
+  KgOrderLine: 'KgOrderLine',
+  KgProductionBatch: 'KgProductionBatch',
+  KgProductionItem: 'KgProductionItem',
+  KgRequiredIngredient: 'KgRequiredIngredient',
   KeihiExpense: 'KeihiExpense',
   KeihiAttachment: 'KeihiAttachment',
   KeihiAccountMaster: 'KeihiAccountMaster',
@@ -96,6 +107,7 @@ export const ModelName = {
   RcIngredientMaster: 'RcIngredientMaster',
   RcRecipe: 'RcRecipe',
   RcRecipeIngredient: 'RcRecipeIngredient',
+  RcProfitMarginStandard: 'RcProfitMarginStandard',
   SbmCustomer: 'SbmCustomer',
   SbmCustomerPhone: 'SbmCustomerPhone',
   SbmProduct: 'SbmProduct',
@@ -641,6 +653,200 @@ export const HakobunAnalysisRecordScalarFieldEnum = {
 export type HakobunAnalysisRecordScalarFieldEnum = (typeof HakobunAnalysisRecordScalarFieldEnum)[keyof typeof HakobunAnalysisRecordScalarFieldEnum]
 
 
+export const KgFacilityMasterScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  code: 'code',
+  name: 'name',
+  contactMethod: 'contactMethod',
+  address: 'address',
+  phone: 'phone',
+  email: 'email',
+  isActive: 'isActive'
+} as const
+
+export type KgFacilityMasterScalarFieldEnum = (typeof KgFacilityMasterScalarFieldEnum)[keyof typeof KgFacilityMasterScalarFieldEnum]
+
+
+export const KgDietTypeMasterScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  code: 'code',
+  name: 'name',
+  description: 'description',
+  colorClass: 'colorClass'
+} as const
+
+export type KgDietTypeMasterScalarFieldEnum = (typeof KgDietTypeMasterScalarFieldEnum)[keyof typeof KgDietTypeMasterScalarFieldEnum]
+
+
+export const KgDailyMenuScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  menuDate: 'menuDate',
+  totalVegetableG: 'totalVegetableG',
+  pfc: 'pfc',
+  note: 'note'
+} as const
+
+export type KgDailyMenuScalarFieldEnum = (typeof KgDailyMenuScalarFieldEnum)[keyof typeof KgDailyMenuScalarFieldEnum]
+
+
+export const KgMealSlotScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  dailyMenuId: 'dailyMenuId',
+  mealType: 'mealType',
+  mealTypeName: 'mealTypeName',
+  totalEnergy: 'totalEnergy',
+  totalProtein: 'totalProtein',
+  totalFat: 'totalFat',
+  totalCarb: 'totalCarb',
+  totalSodium: 'totalSodium',
+  totalSalt: 'totalSalt',
+  totalVegetableG: 'totalVegetableG'
+} as const
+
+export type KgMealSlotScalarFieldEnum = (typeof KgMealSlotScalarFieldEnum)[keyof typeof KgMealSlotScalarFieldEnum]
+
+
+export const KgMenuRecipeScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  mealSlotId: 'mealSlotId',
+  parentRecipeId: 'parentRecipeId',
+  code: 'code',
+  name: 'name',
+  category: 'category',
+  unitWeight: 'unitWeight',
+  unit: 'unit',
+  totalEnergy: 'totalEnergy',
+  totalProtein: 'totalProtein',
+  totalFat: 'totalFat',
+  totalCarb: 'totalCarb',
+  totalSodium: 'totalSodium',
+  totalSalt: 'totalSalt',
+  totalVegetableG: 'totalVegetableG'
+} as const
+
+export type KgMenuRecipeScalarFieldEnum = (typeof KgMenuRecipeScalarFieldEnum)[keyof typeof KgMenuRecipeScalarFieldEnum]
+
+
+export const KgRecipeIngredientScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  menuRecipeId: 'menuRecipeId',
+  ingredientMasterId: 'ingredientMasterId',
+  ingredientCode: 'ingredientCode',
+  ingredientName: 'ingredientName',
+  amountPerServing: 'amountPerServing',
+  unit: 'unit',
+  energy: 'energy',
+  protein: 'protein',
+  fat: 'fat',
+  carb: 'carb',
+  sodium: 'sodium',
+  salt: 'salt',
+  vegetableG: 'vegetableG'
+} as const
+
+export type KgRecipeIngredientScalarFieldEnum = (typeof KgRecipeIngredientScalarFieldEnum)[keyof typeof KgRecipeIngredientScalarFieldEnum]
+
+
+export const KgOrderScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  facilityId: 'facilityId',
+  orderDate: 'orderDate',
+  deliveryDate: 'deliveryDate',
+  status: 'status',
+  sourceType: 'sourceType',
+  ocrImageUrl: 'ocrImageUrl',
+  note: 'note'
+} as const
+
+export type KgOrderScalarFieldEnum = (typeof KgOrderScalarFieldEnum)[keyof typeof KgOrderScalarFieldEnum]
+
+
+export const KgOrderLineScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  orderId: 'orderId',
+  mealType: 'mealType',
+  dietTypeId: 'dietTypeId',
+  menuRecipeId: 'menuRecipeId',
+  rawName: 'rawName',
+  quantity: 'quantity',
+  alert: 'alert',
+  status: 'status',
+  confirmedAt: 'confirmedAt'
+} as const
+
+export type KgOrderLineScalarFieldEnum = (typeof KgOrderLineScalarFieldEnum)[keyof typeof KgOrderLineScalarFieldEnum]
+
+
+export const KgProductionBatchScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  productionDate: 'productionDate',
+  mealType: 'mealType',
+  status: 'status'
+} as const
+
+export type KgProductionBatchScalarFieldEnum = (typeof KgProductionBatchScalarFieldEnum)[keyof typeof KgProductionBatchScalarFieldEnum]
+
+
+export const KgProductionItemScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  productionBatchId: 'productionBatchId',
+  menuRecipeId: 'menuRecipeId',
+  dietTypeId: 'dietTypeId',
+  totalQuantity: 'totalQuantity',
+  completedQuantity: 'completedQuantity',
+  status: 'status'
+} as const
+
+export type KgProductionItemScalarFieldEnum = (typeof KgProductionItemScalarFieldEnum)[keyof typeof KgProductionItemScalarFieldEnum]
+
+
+export const KgRequiredIngredientScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  productionBatchId: 'productionBatchId',
+  ingredientMasterId: 'ingredientMasterId',
+  ingredientCode: 'ingredientCode',
+  ingredientName: 'ingredientName',
+  totalAmount: 'totalAmount',
+  unit: 'unit',
+  estimatedCost: 'estimatedCost'
+} as const
+
+export type KgRequiredIngredientScalarFieldEnum = (typeof KgRequiredIngredientScalarFieldEnum)[keyof typeof KgRequiredIngredientScalarFieldEnum]
+
+
 export const KeihiExpenseScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -851,7 +1057,13 @@ export const RcIngredientMasterScalarFieldEnum = {
   price: 'price',
   yield: 'yield',
   category: 'category',
-  supplier: 'supplier'
+  supplier: 'supplier',
+  standardCode: 'standardCode',
+  energyPer100g: 'energyPer100g',
+  proteinPer100g: 'proteinPer100g',
+  fatPer100g: 'fatPer100g',
+  carbPer100g: 'carbPer100g',
+  sodiumPer100g: 'sodiumPer100g'
 } as const
 
 export type RcIngredientMasterScalarFieldEnum = (typeof RcIngredientMasterScalarFieldEnum)[keyof typeof RcIngredientMasterScalarFieldEnum]
@@ -869,6 +1081,9 @@ export const RcRecipeScalarFieldEnum = {
   packagingCost: 'packagingCost',
   processingCost: 'processingCost',
   profitMargin: 'profitMargin',
+  otherCost: 'otherCost',
+  productionWeightG: 'productionWeightG',
+  inputMode: 'inputMode',
   totalMaterialCost: 'totalMaterialCost',
   totalWeightKg: 'totalWeightKg',
   productionWeightKg: 'productionWeightKg',
@@ -912,6 +1127,20 @@ export const RcRecipeIngredientScalarFieldEnum = {
 } as const
 
 export type RcRecipeIngredientScalarFieldEnum = (typeof RcRecipeIngredientScalarFieldEnum)[keyof typeof RcRecipeIngredientScalarFieldEnum]
+
+
+export const RcProfitMarginStandardScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  minPackCount: 'minPackCount',
+  maxPackCount: 'maxPackCount',
+  minProfitAmount: 'minProfitAmount',
+  minProfitRate: 'minProfitRate'
+} as const
+
+export type RcProfitMarginStandardScalarFieldEnum = (typeof RcProfitMarginStandardScalarFieldEnum)[keyof typeof RcProfitMarginStandardScalarFieldEnum]
 
 
 export const SbmCustomerScalarFieldEnum = {

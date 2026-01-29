@@ -8,7 +8,7 @@ import { CSSProperties, useEffect } from 'react'
 
 import { anyObject } from '@cm/types/utility-types'
 
-import { useJotaiByKey, atomTypes } from '@cm/hooks/useJotai'
+import { useJotaiByKey } from '@cm/hooks/useJotai'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@cm/shadcn/ui/tabs'
 import { cn } from '@shadcn/lib/utils'
 
@@ -40,7 +40,7 @@ export default function BasicTabs({
 }: BasicTabsType) {
   const { width } = useWindowSize()
 
-  const [value, setValue] = useJotaiByKey<atomTypes[`globalCurrentTabIdx`]>(`globalCurrentTabIdx`, {})
+  const [value, setValue] = useJotaiByKey<{ [key: string]: number }>(`globalCurrentTabIdx`, {})
 
   const currentTabIdx = value[id] ?? 0
 

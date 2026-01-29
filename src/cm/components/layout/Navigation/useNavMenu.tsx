@@ -1,6 +1,6 @@
 'use client'
-import {atomTypes, useJotaiByKey} from '@cm/hooks/useJotai'
-import {useCallback, useMemo} from 'react'
+import { atomTypes, useJotaiByKey } from '@cm/hooks/useJotai'
+import { useCallback, useMemo } from 'react'
 
 type HandleOpenMenuParams = {
   navWrapperIdx: number
@@ -8,7 +8,7 @@ type HandleOpenMenuParams = {
 }
 
 const useNavMenu = () => {
-  const [activeNavWrapper, setactiveNavWrapper] = useJotaiByKey<atomTypes['activeNavWrapper']>('activeNavWrapper', [])
+  const [activeNavWrapper, setactiveNavWrapper] = useJotaiByKey<number[]>('activeNavWrapper', [])
 
   // メニューが開いているかチェック
   const menuIsOpen = useCallback(
@@ -20,7 +20,7 @@ const useNavMenu = () => {
 
   // メニューを開く
   const handleOpenMenu = useCallback(
-    ({navWrapperIdx, hideOthers}: HandleOpenMenuParams) => {
+    ({ navWrapperIdx, hideOthers }: HandleOpenMenuParams) => {
       if (menuIsOpen(navWrapperIdx)) return
 
       if (hideOthers === true) {
@@ -48,7 +48,7 @@ const useNavMenu = () => {
       if (open) {
         handleCloseMenu([navWrapperIdx])
       } else {
-        handleOpenMenu({navWrapperIdx, hideOthers: false})
+        handleOpenMenu({ navWrapperIdx, hideOthers: false })
       }
     },
     [menuIsOpen, handleCloseMenu, handleOpenMenu]

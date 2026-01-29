@@ -413,6 +413,17 @@ export const ModelName = {
   HakobunAnalysisBox: 'HakobunAnalysisBox',
   HakobunAnalysisSession: 'HakobunAnalysisSession',
   HakobunAnalysisRecord: 'HakobunAnalysisRecord',
+  KgFacilityMaster: 'KgFacilityMaster',
+  KgDietTypeMaster: 'KgDietTypeMaster',
+  KgDailyMenu: 'KgDailyMenu',
+  KgMealSlot: 'KgMealSlot',
+  KgMenuRecipe: 'KgMenuRecipe',
+  KgRecipeIngredient: 'KgRecipeIngredient',
+  KgOrder: 'KgOrder',
+  KgOrderLine: 'KgOrderLine',
+  KgProductionBatch: 'KgProductionBatch',
+  KgProductionItem: 'KgProductionItem',
+  KgRequiredIngredient: 'KgRequiredIngredient',
   KeihiExpense: 'KeihiExpense',
   KeihiAttachment: 'KeihiAttachment',
   KeihiAccountMaster: 'KeihiAccountMaster',
@@ -429,6 +440,7 @@ export const ModelName = {
   RcIngredientMaster: 'RcIngredientMaster',
   RcRecipe: 'RcRecipe',
   RcRecipeIngredient: 'RcRecipeIngredient',
+  RcProfitMarginStandard: 'RcProfitMarginStandard',
   SbmCustomer: 'SbmCustomer',
   SbmCustomerPhone: 'SbmCustomerPhone',
   SbmProduct: 'SbmProduct',
@@ -502,7 +514,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "hakobunIndustry" | "hakobunIndustryGeneralCategory" | "hakobunIndustryCategory" | "hakobunClient" | "hakobunClientStage" | "hakobunCorrection" | "hakobunRule" | "hakobunVoice" | "hakobunAnalysisBox" | "hakobunAnalysisSession" | "hakobunAnalysisRecord" | "keihiExpense" | "keihiAttachment" | "keihiAccountMaster" | "keihiOptionMaster" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "rcIngredientMaster" | "rcRecipe" | "rcRecipeIngredient" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "store" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "cronExecutionLog" | "stockConfig" | "stock" | "stockHistory" | "tbmBase" | "tbmRouteGroupCalendar" | "tbmKeihi" | "tbmDriveScheduleImage" | "tbmBase_MonthConfig" | "tbmVehicle" | "tbmFuelCard" | "tbmVehicleMaintenanceRecord" | "tbmRouteGroup" | "tbmRouteGroupFee" | "tbmRouteGroupStandardSalary" | "tbmMonthlyConfigForRouteGroup" | "mid_TbmRouteGroup_TbmCustomer" | "tbmBillingAddress" | "tbmInvoiceDetail" | "tbmCustomer" | "tbmInvoiceManualEdit" | "tbmRefuelHistory" | "tbmCarWashHistory" | "tbmDriveSchedule" | "tbmEtcMeisai" | "etcCsvRaw" | "odometerInput" | "userWorkStatus" | "kyuyoTableRecord" | "tbmRouteGroupShare" | "tbmRelatedRouteGroup" | "teamSynapseAnalysis" | "exerciseMaster" | "workoutLog"
+    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "hakobunIndustry" | "hakobunIndustryGeneralCategory" | "hakobunIndustryCategory" | "hakobunClient" | "hakobunClientStage" | "hakobunCorrection" | "hakobunRule" | "hakobunVoice" | "hakobunAnalysisBox" | "hakobunAnalysisSession" | "hakobunAnalysisRecord" | "kgFacilityMaster" | "kgDietTypeMaster" | "kgDailyMenu" | "kgMealSlot" | "kgMenuRecipe" | "kgRecipeIngredient" | "kgOrder" | "kgOrderLine" | "kgProductionBatch" | "kgProductionItem" | "kgRequiredIngredient" | "keihiExpense" | "keihiAttachment" | "keihiAccountMaster" | "keihiOptionMaster" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "rcIngredientMaster" | "rcRecipe" | "rcRecipeIngredient" | "rcProfitMarginStandard" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "store" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "cronExecutionLog" | "stockConfig" | "stock" | "stockHistory" | "tbmBase" | "tbmRouteGroupCalendar" | "tbmKeihi" | "tbmDriveScheduleImage" | "tbmBase_MonthConfig" | "tbmVehicle" | "tbmFuelCard" | "tbmVehicleMaintenanceRecord" | "tbmRouteGroup" | "tbmRouteGroupFee" | "tbmRouteGroupStandardSalary" | "tbmMonthlyConfigForRouteGroup" | "mid_TbmRouteGroup_TbmCustomer" | "tbmBillingAddress" | "tbmInvoiceDetail" | "tbmCustomer" | "tbmInvoiceManualEdit" | "tbmRefuelHistory" | "tbmCarWashHistory" | "tbmDriveSchedule" | "tbmEtcMeisai" | "etcCsvRaw" | "odometerInput" | "userWorkStatus" | "kyuyoTableRecord" | "tbmRouteGroupShare" | "tbmRelatedRouteGroup" | "teamSynapseAnalysis" | "exerciseMaster" | "workoutLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2652,6 +2664,820 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    KgFacilityMaster: {
+      payload: Prisma.$KgFacilityMasterPayload<ExtArgs>
+      fields: Prisma.KgFacilityMasterFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KgFacilityMasterFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgFacilityMasterPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KgFacilityMasterFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgFacilityMasterPayload>
+        }
+        findFirst: {
+          args: Prisma.KgFacilityMasterFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgFacilityMasterPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KgFacilityMasterFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgFacilityMasterPayload>
+        }
+        findMany: {
+          args: Prisma.KgFacilityMasterFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgFacilityMasterPayload>[]
+        }
+        create: {
+          args: Prisma.KgFacilityMasterCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgFacilityMasterPayload>
+        }
+        createMany: {
+          args: Prisma.KgFacilityMasterCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KgFacilityMasterCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgFacilityMasterPayload>[]
+        }
+        delete: {
+          args: Prisma.KgFacilityMasterDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgFacilityMasterPayload>
+        }
+        update: {
+          args: Prisma.KgFacilityMasterUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgFacilityMasterPayload>
+        }
+        deleteMany: {
+          args: Prisma.KgFacilityMasterDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KgFacilityMasterUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KgFacilityMasterUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgFacilityMasterPayload>[]
+        }
+        upsert: {
+          args: Prisma.KgFacilityMasterUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgFacilityMasterPayload>
+        }
+        aggregate: {
+          args: Prisma.KgFacilityMasterAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKgFacilityMaster>
+        }
+        groupBy: {
+          args: Prisma.KgFacilityMasterGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgFacilityMasterGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KgFacilityMasterCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgFacilityMasterCountAggregateOutputType> | number
+        }
+      }
+    }
+    KgDietTypeMaster: {
+      payload: Prisma.$KgDietTypeMasterPayload<ExtArgs>
+      fields: Prisma.KgDietTypeMasterFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KgDietTypeMasterFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDietTypeMasterPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KgDietTypeMasterFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDietTypeMasterPayload>
+        }
+        findFirst: {
+          args: Prisma.KgDietTypeMasterFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDietTypeMasterPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KgDietTypeMasterFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDietTypeMasterPayload>
+        }
+        findMany: {
+          args: Prisma.KgDietTypeMasterFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDietTypeMasterPayload>[]
+        }
+        create: {
+          args: Prisma.KgDietTypeMasterCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDietTypeMasterPayload>
+        }
+        createMany: {
+          args: Prisma.KgDietTypeMasterCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KgDietTypeMasterCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDietTypeMasterPayload>[]
+        }
+        delete: {
+          args: Prisma.KgDietTypeMasterDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDietTypeMasterPayload>
+        }
+        update: {
+          args: Prisma.KgDietTypeMasterUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDietTypeMasterPayload>
+        }
+        deleteMany: {
+          args: Prisma.KgDietTypeMasterDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KgDietTypeMasterUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KgDietTypeMasterUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDietTypeMasterPayload>[]
+        }
+        upsert: {
+          args: Prisma.KgDietTypeMasterUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDietTypeMasterPayload>
+        }
+        aggregate: {
+          args: Prisma.KgDietTypeMasterAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKgDietTypeMaster>
+        }
+        groupBy: {
+          args: Prisma.KgDietTypeMasterGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgDietTypeMasterGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KgDietTypeMasterCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgDietTypeMasterCountAggregateOutputType> | number
+        }
+      }
+    }
+    KgDailyMenu: {
+      payload: Prisma.$KgDailyMenuPayload<ExtArgs>
+      fields: Prisma.KgDailyMenuFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KgDailyMenuFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDailyMenuPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KgDailyMenuFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDailyMenuPayload>
+        }
+        findFirst: {
+          args: Prisma.KgDailyMenuFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDailyMenuPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KgDailyMenuFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDailyMenuPayload>
+        }
+        findMany: {
+          args: Prisma.KgDailyMenuFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDailyMenuPayload>[]
+        }
+        create: {
+          args: Prisma.KgDailyMenuCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDailyMenuPayload>
+        }
+        createMany: {
+          args: Prisma.KgDailyMenuCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KgDailyMenuCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDailyMenuPayload>[]
+        }
+        delete: {
+          args: Prisma.KgDailyMenuDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDailyMenuPayload>
+        }
+        update: {
+          args: Prisma.KgDailyMenuUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDailyMenuPayload>
+        }
+        deleteMany: {
+          args: Prisma.KgDailyMenuDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KgDailyMenuUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KgDailyMenuUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDailyMenuPayload>[]
+        }
+        upsert: {
+          args: Prisma.KgDailyMenuUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgDailyMenuPayload>
+        }
+        aggregate: {
+          args: Prisma.KgDailyMenuAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKgDailyMenu>
+        }
+        groupBy: {
+          args: Prisma.KgDailyMenuGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgDailyMenuGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KgDailyMenuCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgDailyMenuCountAggregateOutputType> | number
+        }
+      }
+    }
+    KgMealSlot: {
+      payload: Prisma.$KgMealSlotPayload<ExtArgs>
+      fields: Prisma.KgMealSlotFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KgMealSlotFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMealSlotPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KgMealSlotFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMealSlotPayload>
+        }
+        findFirst: {
+          args: Prisma.KgMealSlotFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMealSlotPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KgMealSlotFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMealSlotPayload>
+        }
+        findMany: {
+          args: Prisma.KgMealSlotFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMealSlotPayload>[]
+        }
+        create: {
+          args: Prisma.KgMealSlotCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMealSlotPayload>
+        }
+        createMany: {
+          args: Prisma.KgMealSlotCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KgMealSlotCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMealSlotPayload>[]
+        }
+        delete: {
+          args: Prisma.KgMealSlotDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMealSlotPayload>
+        }
+        update: {
+          args: Prisma.KgMealSlotUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMealSlotPayload>
+        }
+        deleteMany: {
+          args: Prisma.KgMealSlotDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KgMealSlotUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KgMealSlotUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMealSlotPayload>[]
+        }
+        upsert: {
+          args: Prisma.KgMealSlotUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMealSlotPayload>
+        }
+        aggregate: {
+          args: Prisma.KgMealSlotAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKgMealSlot>
+        }
+        groupBy: {
+          args: Prisma.KgMealSlotGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgMealSlotGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KgMealSlotCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgMealSlotCountAggregateOutputType> | number
+        }
+      }
+    }
+    KgMenuRecipe: {
+      payload: Prisma.$KgMenuRecipePayload<ExtArgs>
+      fields: Prisma.KgMenuRecipeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KgMenuRecipeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMenuRecipePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KgMenuRecipeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMenuRecipePayload>
+        }
+        findFirst: {
+          args: Prisma.KgMenuRecipeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMenuRecipePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KgMenuRecipeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMenuRecipePayload>
+        }
+        findMany: {
+          args: Prisma.KgMenuRecipeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMenuRecipePayload>[]
+        }
+        create: {
+          args: Prisma.KgMenuRecipeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMenuRecipePayload>
+        }
+        createMany: {
+          args: Prisma.KgMenuRecipeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KgMenuRecipeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMenuRecipePayload>[]
+        }
+        delete: {
+          args: Prisma.KgMenuRecipeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMenuRecipePayload>
+        }
+        update: {
+          args: Prisma.KgMenuRecipeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMenuRecipePayload>
+        }
+        deleteMany: {
+          args: Prisma.KgMenuRecipeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KgMenuRecipeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KgMenuRecipeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMenuRecipePayload>[]
+        }
+        upsert: {
+          args: Prisma.KgMenuRecipeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgMenuRecipePayload>
+        }
+        aggregate: {
+          args: Prisma.KgMenuRecipeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKgMenuRecipe>
+        }
+        groupBy: {
+          args: Prisma.KgMenuRecipeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgMenuRecipeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KgMenuRecipeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgMenuRecipeCountAggregateOutputType> | number
+        }
+      }
+    }
+    KgRecipeIngredient: {
+      payload: Prisma.$KgRecipeIngredientPayload<ExtArgs>
+      fields: Prisma.KgRecipeIngredientFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KgRecipeIngredientFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRecipeIngredientPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KgRecipeIngredientFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRecipeIngredientPayload>
+        }
+        findFirst: {
+          args: Prisma.KgRecipeIngredientFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRecipeIngredientPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KgRecipeIngredientFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRecipeIngredientPayload>
+        }
+        findMany: {
+          args: Prisma.KgRecipeIngredientFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRecipeIngredientPayload>[]
+        }
+        create: {
+          args: Prisma.KgRecipeIngredientCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRecipeIngredientPayload>
+        }
+        createMany: {
+          args: Prisma.KgRecipeIngredientCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KgRecipeIngredientCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRecipeIngredientPayload>[]
+        }
+        delete: {
+          args: Prisma.KgRecipeIngredientDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRecipeIngredientPayload>
+        }
+        update: {
+          args: Prisma.KgRecipeIngredientUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRecipeIngredientPayload>
+        }
+        deleteMany: {
+          args: Prisma.KgRecipeIngredientDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KgRecipeIngredientUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KgRecipeIngredientUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRecipeIngredientPayload>[]
+        }
+        upsert: {
+          args: Prisma.KgRecipeIngredientUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRecipeIngredientPayload>
+        }
+        aggregate: {
+          args: Prisma.KgRecipeIngredientAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKgRecipeIngredient>
+        }
+        groupBy: {
+          args: Prisma.KgRecipeIngredientGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgRecipeIngredientGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KgRecipeIngredientCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgRecipeIngredientCountAggregateOutputType> | number
+        }
+      }
+    }
+    KgOrder: {
+      payload: Prisma.$KgOrderPayload<ExtArgs>
+      fields: Prisma.KgOrderFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KgOrderFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KgOrderFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderPayload>
+        }
+        findFirst: {
+          args: Prisma.KgOrderFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KgOrderFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderPayload>
+        }
+        findMany: {
+          args: Prisma.KgOrderFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderPayload>[]
+        }
+        create: {
+          args: Prisma.KgOrderCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderPayload>
+        }
+        createMany: {
+          args: Prisma.KgOrderCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KgOrderCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderPayload>[]
+        }
+        delete: {
+          args: Prisma.KgOrderDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderPayload>
+        }
+        update: {
+          args: Prisma.KgOrderUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderPayload>
+        }
+        deleteMany: {
+          args: Prisma.KgOrderDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KgOrderUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KgOrderUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderPayload>[]
+        }
+        upsert: {
+          args: Prisma.KgOrderUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderPayload>
+        }
+        aggregate: {
+          args: Prisma.KgOrderAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKgOrder>
+        }
+        groupBy: {
+          args: Prisma.KgOrderGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgOrderGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KgOrderCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgOrderCountAggregateOutputType> | number
+        }
+      }
+    }
+    KgOrderLine: {
+      payload: Prisma.$KgOrderLinePayload<ExtArgs>
+      fields: Prisma.KgOrderLineFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KgOrderLineFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderLinePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KgOrderLineFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderLinePayload>
+        }
+        findFirst: {
+          args: Prisma.KgOrderLineFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderLinePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KgOrderLineFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderLinePayload>
+        }
+        findMany: {
+          args: Prisma.KgOrderLineFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderLinePayload>[]
+        }
+        create: {
+          args: Prisma.KgOrderLineCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderLinePayload>
+        }
+        createMany: {
+          args: Prisma.KgOrderLineCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KgOrderLineCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderLinePayload>[]
+        }
+        delete: {
+          args: Prisma.KgOrderLineDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderLinePayload>
+        }
+        update: {
+          args: Prisma.KgOrderLineUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderLinePayload>
+        }
+        deleteMany: {
+          args: Prisma.KgOrderLineDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KgOrderLineUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KgOrderLineUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderLinePayload>[]
+        }
+        upsert: {
+          args: Prisma.KgOrderLineUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgOrderLinePayload>
+        }
+        aggregate: {
+          args: Prisma.KgOrderLineAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKgOrderLine>
+        }
+        groupBy: {
+          args: Prisma.KgOrderLineGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgOrderLineGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KgOrderLineCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgOrderLineCountAggregateOutputType> | number
+        }
+      }
+    }
+    KgProductionBatch: {
+      payload: Prisma.$KgProductionBatchPayload<ExtArgs>
+      fields: Prisma.KgProductionBatchFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KgProductionBatchFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionBatchPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KgProductionBatchFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionBatchPayload>
+        }
+        findFirst: {
+          args: Prisma.KgProductionBatchFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionBatchPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KgProductionBatchFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionBatchPayload>
+        }
+        findMany: {
+          args: Prisma.KgProductionBatchFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionBatchPayload>[]
+        }
+        create: {
+          args: Prisma.KgProductionBatchCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionBatchPayload>
+        }
+        createMany: {
+          args: Prisma.KgProductionBatchCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KgProductionBatchCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionBatchPayload>[]
+        }
+        delete: {
+          args: Prisma.KgProductionBatchDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionBatchPayload>
+        }
+        update: {
+          args: Prisma.KgProductionBatchUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionBatchPayload>
+        }
+        deleteMany: {
+          args: Prisma.KgProductionBatchDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KgProductionBatchUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KgProductionBatchUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionBatchPayload>[]
+        }
+        upsert: {
+          args: Prisma.KgProductionBatchUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionBatchPayload>
+        }
+        aggregate: {
+          args: Prisma.KgProductionBatchAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKgProductionBatch>
+        }
+        groupBy: {
+          args: Prisma.KgProductionBatchGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgProductionBatchGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KgProductionBatchCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgProductionBatchCountAggregateOutputType> | number
+        }
+      }
+    }
+    KgProductionItem: {
+      payload: Prisma.$KgProductionItemPayload<ExtArgs>
+      fields: Prisma.KgProductionItemFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KgProductionItemFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionItemPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KgProductionItemFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionItemPayload>
+        }
+        findFirst: {
+          args: Prisma.KgProductionItemFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionItemPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KgProductionItemFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionItemPayload>
+        }
+        findMany: {
+          args: Prisma.KgProductionItemFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionItemPayload>[]
+        }
+        create: {
+          args: Prisma.KgProductionItemCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionItemPayload>
+        }
+        createMany: {
+          args: Prisma.KgProductionItemCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KgProductionItemCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionItemPayload>[]
+        }
+        delete: {
+          args: Prisma.KgProductionItemDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionItemPayload>
+        }
+        update: {
+          args: Prisma.KgProductionItemUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionItemPayload>
+        }
+        deleteMany: {
+          args: Prisma.KgProductionItemDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KgProductionItemUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KgProductionItemUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionItemPayload>[]
+        }
+        upsert: {
+          args: Prisma.KgProductionItemUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgProductionItemPayload>
+        }
+        aggregate: {
+          args: Prisma.KgProductionItemAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKgProductionItem>
+        }
+        groupBy: {
+          args: Prisma.KgProductionItemGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgProductionItemGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KgProductionItemCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgProductionItemCountAggregateOutputType> | number
+        }
+      }
+    }
+    KgRequiredIngredient: {
+      payload: Prisma.$KgRequiredIngredientPayload<ExtArgs>
+      fields: Prisma.KgRequiredIngredientFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KgRequiredIngredientFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRequiredIngredientPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KgRequiredIngredientFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRequiredIngredientPayload>
+        }
+        findFirst: {
+          args: Prisma.KgRequiredIngredientFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRequiredIngredientPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KgRequiredIngredientFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRequiredIngredientPayload>
+        }
+        findMany: {
+          args: Prisma.KgRequiredIngredientFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRequiredIngredientPayload>[]
+        }
+        create: {
+          args: Prisma.KgRequiredIngredientCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRequiredIngredientPayload>
+        }
+        createMany: {
+          args: Prisma.KgRequiredIngredientCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KgRequiredIngredientCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRequiredIngredientPayload>[]
+        }
+        delete: {
+          args: Prisma.KgRequiredIngredientDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRequiredIngredientPayload>
+        }
+        update: {
+          args: Prisma.KgRequiredIngredientUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRequiredIngredientPayload>
+        }
+        deleteMany: {
+          args: Prisma.KgRequiredIngredientDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KgRequiredIngredientUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KgRequiredIngredientUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRequiredIngredientPayload>[]
+        }
+        upsert: {
+          args: Prisma.KgRequiredIngredientUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KgRequiredIngredientPayload>
+        }
+        aggregate: {
+          args: Prisma.KgRequiredIngredientAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKgRequiredIngredient>
+        }
+        groupBy: {
+          args: Prisma.KgRequiredIngredientGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgRequiredIngredientGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KgRequiredIngredientCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KgRequiredIngredientCountAggregateOutputType> | number
+        }
+      }
+    }
     KeihiExpense: {
       payload: Prisma.$KeihiExpensePayload<ExtArgs>
       fields: Prisma.KeihiExpenseFieldRefs
@@ -3833,6 +4659,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.RcRecipeIngredientCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.RcRecipeIngredientCountAggregateOutputType> | number
+        }
+      }
+    }
+    RcProfitMarginStandard: {
+      payload: Prisma.$RcProfitMarginStandardPayload<ExtArgs>
+      fields: Prisma.RcProfitMarginStandardFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RcProfitMarginStandardFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcProfitMarginStandardPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RcProfitMarginStandardFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcProfitMarginStandardPayload>
+        }
+        findFirst: {
+          args: Prisma.RcProfitMarginStandardFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcProfitMarginStandardPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RcProfitMarginStandardFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcProfitMarginStandardPayload>
+        }
+        findMany: {
+          args: Prisma.RcProfitMarginStandardFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcProfitMarginStandardPayload>[]
+        }
+        create: {
+          args: Prisma.RcProfitMarginStandardCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcProfitMarginStandardPayload>
+        }
+        createMany: {
+          args: Prisma.RcProfitMarginStandardCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RcProfitMarginStandardCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcProfitMarginStandardPayload>[]
+        }
+        delete: {
+          args: Prisma.RcProfitMarginStandardDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcProfitMarginStandardPayload>
+        }
+        update: {
+          args: Prisma.RcProfitMarginStandardUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcProfitMarginStandardPayload>
+        }
+        deleteMany: {
+          args: Prisma.RcProfitMarginStandardDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RcProfitMarginStandardUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RcProfitMarginStandardUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcProfitMarginStandardPayload>[]
+        }
+        upsert: {
+          args: Prisma.RcProfitMarginStandardUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcProfitMarginStandardPayload>
+        }
+        aggregate: {
+          args: Prisma.RcProfitMarginStandardAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRcProfitMarginStandard>
+        }
+        groupBy: {
+          args: Prisma.RcProfitMarginStandardGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RcProfitMarginStandardGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RcProfitMarginStandardCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RcProfitMarginStandardCountAggregateOutputType> | number
         }
       }
     }
@@ -8636,6 +9536,200 @@ export const HakobunAnalysisRecordScalarFieldEnum = {
 export type HakobunAnalysisRecordScalarFieldEnum = (typeof HakobunAnalysisRecordScalarFieldEnum)[keyof typeof HakobunAnalysisRecordScalarFieldEnum]
 
 
+export const KgFacilityMasterScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  code: 'code',
+  name: 'name',
+  contactMethod: 'contactMethod',
+  address: 'address',
+  phone: 'phone',
+  email: 'email',
+  isActive: 'isActive'
+} as const
+
+export type KgFacilityMasterScalarFieldEnum = (typeof KgFacilityMasterScalarFieldEnum)[keyof typeof KgFacilityMasterScalarFieldEnum]
+
+
+export const KgDietTypeMasterScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  code: 'code',
+  name: 'name',
+  description: 'description',
+  colorClass: 'colorClass'
+} as const
+
+export type KgDietTypeMasterScalarFieldEnum = (typeof KgDietTypeMasterScalarFieldEnum)[keyof typeof KgDietTypeMasterScalarFieldEnum]
+
+
+export const KgDailyMenuScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  menuDate: 'menuDate',
+  totalVegetableG: 'totalVegetableG',
+  pfc: 'pfc',
+  note: 'note'
+} as const
+
+export type KgDailyMenuScalarFieldEnum = (typeof KgDailyMenuScalarFieldEnum)[keyof typeof KgDailyMenuScalarFieldEnum]
+
+
+export const KgMealSlotScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  dailyMenuId: 'dailyMenuId',
+  mealType: 'mealType',
+  mealTypeName: 'mealTypeName',
+  totalEnergy: 'totalEnergy',
+  totalProtein: 'totalProtein',
+  totalFat: 'totalFat',
+  totalCarb: 'totalCarb',
+  totalSodium: 'totalSodium',
+  totalSalt: 'totalSalt',
+  totalVegetableG: 'totalVegetableG'
+} as const
+
+export type KgMealSlotScalarFieldEnum = (typeof KgMealSlotScalarFieldEnum)[keyof typeof KgMealSlotScalarFieldEnum]
+
+
+export const KgMenuRecipeScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  mealSlotId: 'mealSlotId',
+  parentRecipeId: 'parentRecipeId',
+  code: 'code',
+  name: 'name',
+  category: 'category',
+  unitWeight: 'unitWeight',
+  unit: 'unit',
+  totalEnergy: 'totalEnergy',
+  totalProtein: 'totalProtein',
+  totalFat: 'totalFat',
+  totalCarb: 'totalCarb',
+  totalSodium: 'totalSodium',
+  totalSalt: 'totalSalt',
+  totalVegetableG: 'totalVegetableG'
+} as const
+
+export type KgMenuRecipeScalarFieldEnum = (typeof KgMenuRecipeScalarFieldEnum)[keyof typeof KgMenuRecipeScalarFieldEnum]
+
+
+export const KgRecipeIngredientScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  menuRecipeId: 'menuRecipeId',
+  ingredientMasterId: 'ingredientMasterId',
+  ingredientCode: 'ingredientCode',
+  ingredientName: 'ingredientName',
+  amountPerServing: 'amountPerServing',
+  unit: 'unit',
+  energy: 'energy',
+  protein: 'protein',
+  fat: 'fat',
+  carb: 'carb',
+  sodium: 'sodium',
+  salt: 'salt',
+  vegetableG: 'vegetableG'
+} as const
+
+export type KgRecipeIngredientScalarFieldEnum = (typeof KgRecipeIngredientScalarFieldEnum)[keyof typeof KgRecipeIngredientScalarFieldEnum]
+
+
+export const KgOrderScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  facilityId: 'facilityId',
+  orderDate: 'orderDate',
+  deliveryDate: 'deliveryDate',
+  status: 'status',
+  sourceType: 'sourceType',
+  ocrImageUrl: 'ocrImageUrl',
+  note: 'note'
+} as const
+
+export type KgOrderScalarFieldEnum = (typeof KgOrderScalarFieldEnum)[keyof typeof KgOrderScalarFieldEnum]
+
+
+export const KgOrderLineScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  orderId: 'orderId',
+  mealType: 'mealType',
+  dietTypeId: 'dietTypeId',
+  menuRecipeId: 'menuRecipeId',
+  rawName: 'rawName',
+  quantity: 'quantity',
+  alert: 'alert',
+  status: 'status',
+  confirmedAt: 'confirmedAt'
+} as const
+
+export type KgOrderLineScalarFieldEnum = (typeof KgOrderLineScalarFieldEnum)[keyof typeof KgOrderLineScalarFieldEnum]
+
+
+export const KgProductionBatchScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  productionDate: 'productionDate',
+  mealType: 'mealType',
+  status: 'status'
+} as const
+
+export type KgProductionBatchScalarFieldEnum = (typeof KgProductionBatchScalarFieldEnum)[keyof typeof KgProductionBatchScalarFieldEnum]
+
+
+export const KgProductionItemScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  productionBatchId: 'productionBatchId',
+  menuRecipeId: 'menuRecipeId',
+  dietTypeId: 'dietTypeId',
+  totalQuantity: 'totalQuantity',
+  completedQuantity: 'completedQuantity',
+  status: 'status'
+} as const
+
+export type KgProductionItemScalarFieldEnum = (typeof KgProductionItemScalarFieldEnum)[keyof typeof KgProductionItemScalarFieldEnum]
+
+
+export const KgRequiredIngredientScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  productionBatchId: 'productionBatchId',
+  ingredientMasterId: 'ingredientMasterId',
+  ingredientCode: 'ingredientCode',
+  ingredientName: 'ingredientName',
+  totalAmount: 'totalAmount',
+  unit: 'unit',
+  estimatedCost: 'estimatedCost'
+} as const
+
+export type KgRequiredIngredientScalarFieldEnum = (typeof KgRequiredIngredientScalarFieldEnum)[keyof typeof KgRequiredIngredientScalarFieldEnum]
+
+
 export const KeihiExpenseScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -8846,7 +9940,13 @@ export const RcIngredientMasterScalarFieldEnum = {
   price: 'price',
   yield: 'yield',
   category: 'category',
-  supplier: 'supplier'
+  supplier: 'supplier',
+  standardCode: 'standardCode',
+  energyPer100g: 'energyPer100g',
+  proteinPer100g: 'proteinPer100g',
+  fatPer100g: 'fatPer100g',
+  carbPer100g: 'carbPer100g',
+  sodiumPer100g: 'sodiumPer100g'
 } as const
 
 export type RcIngredientMasterScalarFieldEnum = (typeof RcIngredientMasterScalarFieldEnum)[keyof typeof RcIngredientMasterScalarFieldEnum]
@@ -8864,6 +9964,9 @@ export const RcRecipeScalarFieldEnum = {
   packagingCost: 'packagingCost',
   processingCost: 'processingCost',
   profitMargin: 'profitMargin',
+  otherCost: 'otherCost',
+  productionWeightG: 'productionWeightG',
+  inputMode: 'inputMode',
   totalMaterialCost: 'totalMaterialCost',
   totalWeightKg: 'totalWeightKg',
   productionWeightKg: 'productionWeightKg',
@@ -8907,6 +10010,20 @@ export const RcRecipeIngredientScalarFieldEnum = {
 } as const
 
 export type RcRecipeIngredientScalarFieldEnum = (typeof RcRecipeIngredientScalarFieldEnum)[keyof typeof RcRecipeIngredientScalarFieldEnum]
+
+
+export const RcProfitMarginStandardScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  minPackCount: 'minPackCount',
+  maxPackCount: 'maxPackCount',
+  minProfitAmount: 'minProfitAmount',
+  minProfitRate: 'minProfitRate'
+} as const
+
+export type RcProfitMarginStandardScalarFieldEnum = (typeof RcProfitMarginStandardScalarFieldEnum)[keyof typeof RcProfitMarginStandardScalarFieldEnum]
 
 
 export const SbmCustomerScalarFieldEnum = {
@@ -10218,6 +11335,17 @@ export type GlobalOmitConfig = {
   hakobunAnalysisBox?: Prisma.HakobunAnalysisBoxOmit
   hakobunAnalysisSession?: Prisma.HakobunAnalysisSessionOmit
   hakobunAnalysisRecord?: Prisma.HakobunAnalysisRecordOmit
+  kgFacilityMaster?: Prisma.KgFacilityMasterOmit
+  kgDietTypeMaster?: Prisma.KgDietTypeMasterOmit
+  kgDailyMenu?: Prisma.KgDailyMenuOmit
+  kgMealSlot?: Prisma.KgMealSlotOmit
+  kgMenuRecipe?: Prisma.KgMenuRecipeOmit
+  kgRecipeIngredient?: Prisma.KgRecipeIngredientOmit
+  kgOrder?: Prisma.KgOrderOmit
+  kgOrderLine?: Prisma.KgOrderLineOmit
+  kgProductionBatch?: Prisma.KgProductionBatchOmit
+  kgProductionItem?: Prisma.KgProductionItemOmit
+  kgRequiredIngredient?: Prisma.KgRequiredIngredientOmit
   keihiExpense?: Prisma.KeihiExpenseOmit
   keihiAttachment?: Prisma.KeihiAttachmentOmit
   keihiAccountMaster?: Prisma.KeihiAccountMasterOmit
@@ -10234,6 +11362,7 @@ export type GlobalOmitConfig = {
   rcIngredientMaster?: Prisma.RcIngredientMasterOmit
   rcRecipe?: Prisma.RcRecipeOmit
   rcRecipeIngredient?: Prisma.RcRecipeIngredientOmit
+  rcProfitMarginStandard?: Prisma.RcProfitMarginStandardOmit
   sbmCustomer?: Prisma.SbmCustomerOmit
   sbmCustomerPhone?: Prisma.SbmCustomerPhoneOmit
   sbmProduct?: Prisma.SbmProductOmit

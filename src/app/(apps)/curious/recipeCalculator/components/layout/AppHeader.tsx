@@ -3,17 +3,19 @@
 import {useState} from 'react'
 import Link from 'next/link'
 import {usePathname} from 'next/navigation'
-import {Bot, Calculator, Database, Menu} from 'lucide-react'
+import {Bot, Calculator, Database, Menu, Settings} from 'lucide-react'
 import {Button} from '@shadcn/ui/button'
 import {Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger} from '@shadcn/ui/drawer'
 import {useIsMobile} from '@shadcn/hooks/use-mobile'
 import {MENU_ITEMS} from '../../constants/menu-constants'
 import type {MenuItem} from '../../types'
+import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 
 // アイコンマッピング
 const IconMap = {
   calculator: Calculator,
   database: Database,
+  settings: Settings,
 }
 
 const NavItem = ({item, isActive, onClick}: {item: MenuItem; isActive: boolean; onClick?: () => void}) => {
@@ -37,6 +39,13 @@ export const AppHeader = () => {
   const pathname = usePathname()
   const isMobile = useIsMobile()
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const {session} = useGlobal()
+
+  // 管理者かどうかを判定
+  const isAdmin = session?.role === 'admin'
+
+  // ユーザー権限に基づいてメニューをフィルタリング
+  const filteredMenuItems = MENU_ITEMS.filter((item) => !item.adminOnly || isAdmin)
 
   // 現在のパスに基づいてアクティブなメニュー項目を判定
   const isActive = (href: string) => (pathname || '').includes(href.split('/').pop() || '')
@@ -59,7 +68,7 @@ export const AppHeader = () => {
           {/* デスクトップナビゲーション */}
           {!isMobile && (
             <nav className="flex items-center gap-2">
-              {MENU_ITEMS.map((item) => (
+              {filteredMenuItems.map((item) => (
                 <NavItem key={item.id} item={item} isActive={isActive(item.href)} />
               ))}
             </nav>
@@ -78,7 +87,7 @@ export const AppHeader = () => {
                   <DrawerTitle>メニュー</DrawerTitle>
                 </DrawerHeader>
                 <nav className="flex flex-col gap-2 p-4">
-                  {MENU_ITEMS.map((item) => (
+                  {filteredMenuItems.map((item) => (
                     <NavItem key={item.id} item={item} isActive={isActive(item.href)} onClick={() => setDrawerOpen(false)} />
                   ))}
                 </nav>

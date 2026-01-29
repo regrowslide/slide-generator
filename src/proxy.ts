@@ -148,19 +148,4 @@ export async function proxy(req: NextRequest): Promise<NextResponse> {
   }
 }
 
-/**
- * Proxy設定
- * マッチャーで対象となるパスを指定
- * Next.jsのproxyでは、config.matcherは静的な値である必要があります
- */
-// const config = {
-//   matcher: [
-//     '/ucar(.*)',
-//     '/newCar(.*)',
-//     '/QRBP(.*)',
-//     '/shinren(.*)',/g
-//     '/((?!api|_next/static|favicon.ico|manifest|next-js-icon).*)',
-//   ],
-// } as const
-
 export default proxy

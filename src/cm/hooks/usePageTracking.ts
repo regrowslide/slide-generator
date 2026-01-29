@@ -4,14 +4,14 @@ import {GoogleSheet_Append} from '@app/api/google/actions/sheetAPI'
 
 import {formatDate} from '@cm/class/Days/date-utils/formatters'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
-import {atomTypes, useJotaiByKey} from '@cm/hooks/useJotai'
+import { useJotaiByKey} from '@cm/hooks/useJotai'
 import {isDev} from '@cm/lib/methods/common'
 
 import {useEffect} from 'react'
 
 export const usePageTracking = () => {
   const waitSec = 1.5
-  const [lastLoggedTime, setLastLoggedTime] = useJotaiByKey<atomTypes[`lastLoggedTime`]>(`lastLoggedTime`, null)
+  const [lastLoggedTime, setLastLoggedTime] = useJotaiByKey<Date | null>(`lastLoggedTime`, null)
 
   const {pathname, query, asPath, session, rootPath} = useGlobal()
 

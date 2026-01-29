@@ -1,5 +1,5 @@
-import {Prisma} from '@prisma/generated/prisma/client'
-import {includeProps} from '@cm/class/builders/QueryBuilderVariables'
+import { Prisma } from '@prisma/generated/prisma/client'
+import { includeProps } from '@cm/class/builders/QueryBuilderVariables'
 
 export class QueryBuilder {
   static getInclude = (includeProps: includeProps) => {
@@ -12,12 +12,7 @@ export class QueryBuilder {
             code: true,
           },
         },
-        DamageNameMaster: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
+
       },
     }
 
