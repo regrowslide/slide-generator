@@ -19,6 +19,7 @@ import { getOrders, updateOrderStatus } from '../_actions/order-actions'
 import { ORDER_STATUS, MEAL_TYPES, type OrderStatusCode } from '../lib/constants'
 import type { KgOrderWithRelations, KgFacilityMaster } from '../types'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
+import useModal from '@cm/components/utils/modal/useModal'
 
 type Props = {
   initialOrders: KgOrderWithRelations[]
@@ -32,14 +33,17 @@ export const OrderDashboardClient = ({ initialOrders, facilities }: Props) => {
     new Date().toISOString().split('T')[0]
   )
 
+  // インポートログモーダル
+  const logModal = useModal<string[]>()
+
   // 日付でフィルタリング
   const filteredOrders = orders.filter((order) => {
     const orderDate = new Date(order.deliveryDate).toISOString().split('T')[0]
     return orderDate === selectedDate
   })
 
-  // CSVアップロード処理
-  const handleCsvUpload = useCallback(
+  // 受注CSVアップロード処理
+  const handleOrderCsvUpload = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0]
       if (!file) return
@@ -48,8 +52,10 @@ export const OrderDashboardClient = ({ initialOrders, facilities }: Props) => {
         const text = await file.text()
         const result = await importOrderCsv(text)
 
+        // ログを表示
+        logModal.handleOpen(result.logs)
+
         if (result.success) {
-          window.alert(result.message)
           // 再取得
           const today = new Date()
           today.setHours(0, 0, 0, 0)
@@ -59,15 +65,13 @@ export const OrderDashboardClient = ({ initialOrders, facilities }: Props) => {
             take: 50,
           })
           setOrders(newOrders)
-        } else {
-          window.alert(`エラー: ${result.message}`)
         }
       })
 
       // input をリセット
       event.target.value = ''
     },
-    [toggleLoad]
+    [toggleLoad, logModal]
   )
 
   // ステータス更新処理
@@ -120,17 +124,18 @@ export const OrderDashboardClient = ({ initialOrders, facilities }: Props) => {
           <p className="text-slate-500 text-sm">受注データの取込・確認</p>
         </div>
         <div className="flex items-center gap-3">
+          {/* 受注CSV取込 */}
           <label className="cursor-pointer">
             <input
               type="file"
               accept=".csv"
-              onChange={handleCsvUpload}
+              onChange={handleOrderCsvUpload}
               className="hidden"
             />
             <Button variant="outline" asChild>
               <span>
                 <Upload className="w-4 h-4 mr-2" />
-                CSV取込
+                受注取込
               </span>
             </Button>
           </label>
@@ -154,7 +159,7 @@ export const OrderDashboardClient = ({ initialOrders, facilities }: Props) => {
             return isToday ? '（今日）' : `（${dayOfWeek}曜日）`
           })()}
         </span>
-        <Badge variant="outline">
+        <Badge color="gray">
           {filteredOrders.length}件
         </Badge>
       </div>
@@ -206,7 +211,7 @@ export const OrderDashboardClient = ({ initialOrders, facilities }: Props) => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredOrders.map((order) => {
+                {filteredOrders.map((order, i) => {
                   const breakfastTotal = order.KgOrderLine.filter(
                     (l) => l.mealType === 'breakfast'
                   ).reduce((s, l) => s + l.quantity, 0)
@@ -218,7 +223,7 @@ export const OrderDashboardClient = ({ initialOrders, facilities }: Props) => {
                   ).reduce((s, l) => s + l.quantity, 0)
 
                   return (
-                    <TableRow key={order.id}>
+                    <TableRow key={i}>
                       <TableCell className="font-mono text-sm">#{order.id}</TableCell>
                       <TableCell>
                         {order.KgFacilityMaster?.name ?? (
@@ -267,6 +272,29 @@ export const OrderDashboardClient = ({ initialOrders, facilities }: Props) => {
           )}
         </CardContent>
       </Card>
+
+      {/* インポートログモーダル */}
+      <logModal.Modal
+        title={
+          <span className="flex items-center gap-2">
+            <Upload className="w-5 h-5" />
+            インポート結果
+          </span>
+        }
+        style={{ maxWidth: '42rem' }}
+      >
+        <div className="bg-slate-900 rounded-lg p-4 font-mono text-sm text-slate-100 overflow-x-auto">
+          {logModal.open &&
+            logModal.open.map((log, index) => (
+              <div key={index} className="py-0.5 whitespace-nowrap">
+                {log}
+              </div>
+            ))}
+        </div>
+        <div className="mt-4 flex justify-end">
+          <Button onClick={() => logModal.handleClose()}>閉じる</Button>
+        </div>
+      </logModal.Modal>
     </div>
   )
 }

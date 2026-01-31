@@ -684,6 +684,23 @@ export const confirmAnalysisSession = async (sessionId: number, hakobunClientId:
   }
 }
 
+// レコードの有効/無効を切り替える
+export const toggleAnalysisRecordEnabled = async (recordId: number, isEnabled: boolean) => {
+  try {
+    const record = await prisma.hakobunAnalysisRecord.update({
+      where: { id: recordId },
+      data: { isEnabled },
+    })
+    return { success: true, data: record }
+  } catch (error) {
+    console.error('レコード有効/無効切り替えエラー:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'レコードの更新に失敗しました',
+    }
+  }
+}
+
 // 確定済みセッションのレコード取得（CSV出力用・createdAt順）
 export const getConfirmedSessionRecordsForExport = async (sessionId: number) => {
   try {

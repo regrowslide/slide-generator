@@ -1,5 +1,3 @@
-'use server'
-
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from 'src/lib/prisma'
 import { callGeminiForJson, type GeminiResponseSchema } from '@app/api/google/actions/geminiAPI'
@@ -31,7 +29,7 @@ interface GeneratedRule {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { sessionId, hakobunClientId } = body
+    const { sessionId, hakobunClientId, saveRules = false } = body
 
     if (!sessionId || !hakobunClientId) {
       return NextResponse.json(
@@ -172,12 +170,25 @@ JSON配列で出力してください。各要素は以下の形式：
         success: true,
         generatedRules: [],
         savedCount: 0,
+        modifiedRecordsCount: modifiedRecords.length,
         message: '有意義なルールを抽出できませんでした',
+      })
+    }
+
+    // プレビューモードの場合は保存せずに返す
+    if (!saveRules) {
+      return NextResponse.json({
+        success: true,
+        generatedRules,
+        savedCount: 0,
+        modifiedRecordsCount: modifiedRecords.length,
+        isPreview: true,
       })
     }
 
     // ルールをDBに保存
     let savedCount = 0
+    let mergedCount = 0
     for (const rule of generatedRules) {
       try {
         if (rule.isNew) {
@@ -200,7 +211,7 @@ JSON配列で出力してください。各要素は以下の形式：
               priority: rule.priority,
             },
           })
-          savedCount++
+          mergedCount++
         }
       } catch (saveError) {
         console.error('ルール保存エラー:', saveError, rule)
@@ -211,6 +222,8 @@ JSON配列で出力してください。各要素は以下の形式：
       success: true,
       generatedRules,
       savedCount,
+      mergedCount,
+      modifiedRecordsCount: modifiedRecords.length,
     })
   } catch (error) {
     console.error('ルール生成APIエラー:', error)

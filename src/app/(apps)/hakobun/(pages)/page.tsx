@@ -5,7 +5,7 @@ import Redirector from '@cm/components/utils/Redirector'
 
 export default function HakobunAnalysisDashboard() {
 
-  return <Redirector redirectPath="/hakobun/batch" />
+  return <Redirector redirectPath="/hakobun/analysis-box" />
   // const {
   //   state,
   //   clients,

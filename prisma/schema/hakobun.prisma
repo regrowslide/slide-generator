@@ -218,6 +218,9 @@ model HakobunAnalysisRecord {
   isModified      Boolean  @default(false) // 修正があったかどうか
   reviewerComment String?  // レビュアーコメント
 
+  // 有効/無効フラグ（CSV出力時に無効は除外、ルール生成時は含める）
+  isEnabled       Boolean  @default(true)
+
   // 分析SESSION紐づけ
   session   HakobunAnalysisSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   sessionId Int

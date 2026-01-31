@@ -14,13 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from '@shadcn/ui/table'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@shadcn/ui/dialog'
 import { Input } from '@shadcn/ui/input'
 import { Label } from '@shadcn/ui/label'
 import {
@@ -40,6 +33,7 @@ import {
 import { CONTACT_METHODS } from '../../../lib/constants'
 import type { KgFacilityMaster, KgFacilityFormData } from '../../../types'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
+import useModal from '@cm/components/utils/modal/useModal'
 
 type Props = {
   initialFacilities: KgFacilityMaster[]
@@ -58,34 +52,39 @@ const defaultFormData: KgFacilityFormData = {
 export const FacilityMasterClient = ({ initialFacilities }: Props) => {
   const { toggleLoad } = useGlobal()
   const [facilities, setFacilities] = useState(initialFacilities)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingId, setEditingId] = useState<number | null>(null)
   const [formData, setFormData] = useState<KgFacilityFormData>(defaultFormData)
   const [formError, setFormError] = useState<string | null>(null)
+
+  // 編集モーダル
+  const formModal = useModal()
 
   // フォームを開く（新規）
   const handleOpenNew = useCallback(() => {
     setEditingId(null)
     setFormData(defaultFormData)
     setFormError(null)
-    setIsDialogOpen(true)
-  }, [])
+    formModal.handleOpen()
+  }, [formModal])
 
   // フォームを開く（編集）
-  const handleOpenEdit = useCallback((facility: KgFacilityMaster) => {
-    setEditingId(facility.id)
-    setFormData({
-      code: facility.code,
-      name: facility.name,
-      contactMethod: facility.contactMethod,
-      address: facility.address ?? '',
-      phone: facility.phone ?? '',
-      email: facility.email ?? '',
-      isActive: facility.isActive,
-    })
-    setFormError(null)
-    setIsDialogOpen(true)
-  }, [])
+  const handleOpenEdit = useCallback(
+    (facility: KgFacilityMaster) => {
+      setEditingId(facility.id)
+      setFormData({
+        code: facility.code,
+        name: facility.name,
+        contactMethod: facility.contactMethod,
+        address: facility.address ?? '',
+        phone: facility.phone ?? '',
+        email: facility.email ?? '',
+        isActive: facility.isActive,
+      })
+      setFormError(null)
+      formModal.handleOpen()
+    },
+    [formModal]
+  )
 
   // フォーム保存
   const handleSave = useCallback(async () => {
@@ -109,9 +108,9 @@ export const FacilityMasterClient = ({ initialFacilities }: Props) => {
         const created = await createFacility(formData)
         setFacilities((prev) => [...prev, created])
       }
-      setIsDialogOpen(false)
+      formModal.handleClose()
     })
-  }, [editingId, formData, toggleLoad])
+  }, [editingId, formData, toggleLoad, formModal])
 
   // 削除
   const handleDelete = useCallback(
@@ -218,98 +217,93 @@ export const FacilityMasterClient = ({ initialFacilities }: Props) => {
         </CardContent>
       </Card>
 
-      {/* 編集ダイアログ */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{editingId ? '施設を編集' : '施設を追加'}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            {formError && (
-              <div className="text-sm text-red-500 bg-red-50 p-2 rounded">{formError}</div>
-            )}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="code">コード *</Label>
-                <Input
-                  id="code"
-                  value={formData.code}
-                  onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-                  placeholder="F001"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="name">施設名 *</Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="〇〇介護施設"
-                />
-              </div>
-            </div>
+      {/* 編集モーダル */}
+      <formModal.Modal title={editingId ? '施設を編集' : '施設を追加'}>
+        <div className="space-y-4">
+          {formError && (
+            <div className="text-sm text-red-500 bg-red-50 p-2 rounded">{formError}</div>
+          )}
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="contactMethod">連絡方法</Label>
-              <Select
-                value={formData.contactMethod}
-                onValueChange={(value) => setFormData({ ...formData, contactMethod: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.entries(CONTACT_METHODS).map(([code, data]) => (
-                    <SelectItem key={code} value={code}>
-                      {data.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="address">住所</Label>
+              <Label htmlFor="code">コード *</Label>
               <Input
-                id="address"
-                value={formData.address}
-                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                id="code"
+                value={formData.code}
+                onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                placeholder="F001"
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="phone">電話番号</Label>
-                <Input
-                  id="phone"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">メールアドレス</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                />
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Switch
-                id="isActive"
-                checked={formData.isActive}
-                onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
+            <div className="space-y-2">
+              <Label htmlFor="name">施設名 *</Label>
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="〇〇介護施設"
               />
-              <Label htmlFor="isActive">有効</Label>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-              キャンセル
-            </Button>
-            <Button onClick={handleSave}>{editingId ? '更新' : '追加'}</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          <div className="space-y-2">
+            <Label htmlFor="contactMethod">連絡方法</Label>
+            <Select
+              value={formData.contactMethod}
+              onValueChange={(value) => setFormData({ ...formData, contactMethod: value })}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(CONTACT_METHODS).map(([code, data]) => (
+                  <SelectItem key={code} value={code}>
+                    {data.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="address">住所</Label>
+            <Input
+              id="address"
+              value={formData.address}
+              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="phone">電話番号</Label>
+              <Input
+                id="phone"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">メールアドレス</Label>
+              <Input
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Switch
+              id="isActive"
+              checked={formData.isActive}
+              onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
+            />
+            <Label htmlFor="isActive">有効</Label>
+          </div>
+        </div>
+        <div className="flex justify-end gap-2 mt-4">
+          <Button variant="outline" onClick={() => formModal.handleClose()}>
+            キャンセル
+          </Button>
+          <Button onClick={handleSave}>{editingId ? '更新' : '追加'}</Button>
+        </div>
+      </formModal.Modal>
     </div>
   )
 }

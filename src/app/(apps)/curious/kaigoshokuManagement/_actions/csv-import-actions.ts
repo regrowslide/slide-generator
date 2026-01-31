@@ -3,34 +3,81 @@
 import prisma from 'src/lib/prisma'
 import { MEAL_TYPES, DIET_TYPES, type MealTypeCode } from '../lib/constants'
 
+/**
+ * 献立CSVの階層構造:
+ *
+ * 日付 (3行目: 2026年1月31日)
+ * └─ Category (B列: 朝食、昼食、昼間食、夕食)
+ *    └─ Menu (C列コード + D列名前: 11929 スクランブルエッグ【朝】)
+ *       └─ Dish (D列コード + E列名前: 40224 ぶどうパン)
+ *          └─ Ingredient (E列コード + F列名前 + G列重量: 41007 ぶどうパン 60g)
+ *
+ * CSV列マッピング（0-indexed）:
+ * - A(0): 空
+ * - B(1): Category（朝食、昼食、昼間食、夕食）
+ * - C(2): Menu コード
+ * - D(3): Menu 名前 または Dish コード
+ * - E(4): Dish コード または Ingredient コード または Dish 名前
+ * - F(5): Ingredient 名前
+ * - G(6): 1人分可食量(g)
+ * - H(7): エネルギー(kcal)
+ * - I(8): たんぱく質(g)
+ * - J(9): 脂質(g)
+ * - K(10): 炭水化物(g)
+ * - L(11): ナトリウム(mg)
+ * - M(12): 食塩(g)
+ * - N(13): 野菜量(g)
+ */
+
+// 材料データ
+type IngredientData = {
+  code: string
+  name: string
+  amount: number
+  unit: string
+  energy: number
+  protein: number
+  fat: number
+  carb: number
+  sodium: number
+  salt: number
+  vegetable: number
+}
+
+// 料理データ（Dish）
+type DishData = {
+  code: string
+  name: string
+  ingredients: IngredientData[]
+}
+
+// メニューデータ（Menu）
+type MenuData = {
+  code: string
+  name: string
+  dishes: DishData[]
+}
+
+// カテゴリデータ（Category: 朝食、昼食等）
+type CategoryData = {
+  mealType: MealTypeCode
+  mealTypeName: string
+  menus: MenuData[]
+}
+
 // 献立CSV解析結果
 type ParsedKondateData = {
   date: Date
-  meals: {
-    mealType: MealTypeCode
-    mealTypeName: string
-    recipes: {
-      code: string
-      name: string
-      subRecipes: {
-        code: string
-        name: string
-        ingredients: {
-          code: string
-          name: string
-          amount: number
-          unit: string
-          energy: number
-          protein: number
-          fat: number
-          carb: number
-          sodium: number
-          salt: number
-          vegetable: number
-        }[]
-      }[]
-    }[]
-  }[]
+  categories: CategoryData[]
+}
+
+// インポート結果の型
+export type ImportResult = {
+  success: boolean
+  message: string
+  logs: string[]
+  importedDates?: string[]
+  importedCount?: number
 }
 
 // CSVテキストを行に分割
@@ -94,90 +141,148 @@ const getMealTypeCode = (mealTypeName: string): MealTypeCode => {
   return 'lunch'
 }
 
-// 献立CSVをインポート
+/**
+ * 献立CSVをインポート
+ *
+ * 階層構造:
+ * - 日付 has many Category（朝食、昼食、昼間食、夕食）
+ * - Category has many Menu（献立: C列コード + D列名前）
+ * - Menu has many Dish（料理: D列コード + E列名前）
+ * - Dish has many Ingredient（材料: E列コード + F列名前）
+ *
+ * @param csvText CSVテキスト
+ * @param targetDate 取り込み対象の日付（指定しない場合はCSVから読み取る）
+ */
 export const importKondateCsv = async (
-  csvText: string
-): Promise<{ success: boolean; message: string; importedDates: string[] }> => {
+  csvText: string,
+  targetDate?: Date
+): Promise<ImportResult & { importedDates: string[] }> => {
+  const logs: string[] = []
+  const addLog = (message: string) => {
+    const timestamp = new Date().toLocaleTimeString('ja-JP')
+    logs.push(`[${timestamp}] ${message}`)
+    console.log(`[献立CSV] ${message}`)
+  }
+
   try {
+    addLog('📂 CSVファイルの読み込みを開始')
     const lines = parseCsvLines(csvText)
-    if (lines.length < 2) {
-      return { success: false, message: 'CSVデータが不足しています', importedDates: [] }
+    addLog(`📊 ${lines.length}行のデータを検出`)
+
+    if (lines.length < 8) {
+      addLog('❌ CSVデータが不足しています（8行未満）')
+      return { success: false, message: 'CSVデータが不足しています', logs, importedDates: [] }
     }
 
-    // ヘッダーをスキップして解析
-    const dataLines = lines.slice(1)
+    // 日付の決定: 引数で指定された場合はそれを使用、なければCSVから読み取る
+    let date: Date
+    if (targetDate) {
+      date = targetDate
+      addLog(`📅 指定された日付を使用: ${date.toLocaleDateString('ja-JP')}`)
+    } else {
+      // 3行目（index 2）から日付を取得 "2026年1月31日"
+      const dateLine = lines[2]
+      const dateStr = dateLine[1]
+      if (!dateStr) {
+        addLog('❌ CSVから日付が見つかりません')
+        return { success: false, message: '日付が見つかりません', logs, importedDates: [] }
+      }
+      date = parseDate(dateStr)
+      addLog(`📅 CSVから日付を検出: ${dateStr}`)
+    }
+    const dateKey = date.toISOString().split('T')[0]
 
-    // 日付ごとにグループ化
-    const dateGroups = new Map<string, ParsedKondateData>()
+    addLog('🔍 データ解析を開始')
 
-    for (const row of dataLines) {
-      if (row.length < 17) continue
+    // データ解析
+    const parsed: ParsedKondateData = {
+      date,
+      categories: [],
+    }
 
-      const dateStr = row[0]
-      if (!dateStr) continue
+    let currentCategory: CategoryData | null = null
+    let currentMenu: MenuData | null = null
+    let currentDish: DishData | null = null
 
-      const date = parseDate(dateStr)
-      const dateKey = date.toISOString().split('T')[0]
+    // 8行目（index 7）からデータ開始
+    for (let i = 7; i < lines.length; i++) {
+      const row = lines[i]
+      if (row.length < 7) continue
 
-      if (!dateGroups.has(dateKey)) {
-        dateGroups.set(dateKey, {
-          date,
-          meals: [],
-        })
+      const colB = row[1]?.trim() // Category（朝食、昼食等）
+      const colC = row[2]?.trim() // Menu コード
+      const colD = row[3]?.trim() // Menu 名前 or Dish コード
+      const colE = row[4]?.trim() // Dish コード/名前 or Ingredient コード
+      const colF = row[5]?.trim() // Ingredient 名前
+      const colG = row[6]?.trim() // 重量(g)
+
+      // 合計行はスキップ
+      if (colD?.includes('合計') || colF?.includes('合計')) {
+        continue
       }
 
-      const parsed = dateGroups.get(dateKey)!
-      const mealTypeName = row[1]
-      const mealTypeCode = getMealTypeCode(mealTypeName)
-
-      // 食事区分を取得または作成
-      let meal = parsed.meals.find((m) => m.mealType === mealTypeCode)
-      if (!meal) {
-        meal = {
-          mealType: mealTypeCode,
-          mealTypeName: MEAL_TYPES[mealTypeCode].name,
-          recipes: [],
+      // Category の検出（B列: 朝食、昼食、昼間食、夕食）
+      if (colB && ['朝食', '昼食', '昼間食', '夕食'].includes(colB)) {
+        const mealType = getMealTypeCode(colB)
+        currentCategory = {
+          mealType,
+          mealTypeName: MEAL_TYPES[mealType].name,
+          menus: [],
         }
-        parsed.meals.push(meal)
+        parsed.categories.push(currentCategory)
+        currentMenu = null
+        currentDish = null
+        addLog(`  🍽️ Category検出: ${colB}`)
+
+        // 同じ行に Menu がある場合（C列にコード、D列に名前）
+        if (colC && /^\d+$/.test(colC) && colD) {
+          currentMenu = { code: colC, name: colD, dishes: [] }
+          currentCategory.menus.push(currentMenu)
+          addLog(`    📋 Menu検出: [${colC}] ${colD}`)
+        }
+        continue
       }
 
-      const recipeCode = row[2]
-      const recipeName = row[3]
-      const subRecipeCode = row[4]
-      const subRecipeName = row[5]
-      const ingredientCode = row[6]
-      const ingredientName = row[7]
-      const amount = parseFloat(row[8]) || 0
-      const unit = row[9] || 'g'
-      const energy = parseFloat(row[10]) || 0
-      const protein = parseFloat(row[11]) || 0
-      const fat = parseFloat(row[12]) || 0
-      const carb = parseFloat(row[13]) || 0
-      const sodium = parseFloat(row[14]) || 0
-      const salt = parseFloat(row[15]) || 0
-      const vegetable = parseFloat(row[16]) || 0
-
-      // レシピを取得または作成
-      let recipe = meal.recipes.find((r) => r.code === recipeCode)
-      if (!recipe) {
-        recipe = { code: recipeCode, name: recipeName, subRecipes: [] }
-        meal.recipes.push(recipe)
+      // Menu の検出（C列にコード、D列に名前）
+      // B列が空で、C列に数値コードがあり、D列に名前がある
+      if (!colB && colC && /^\d+$/.test(colC) && colD && !colE) {
+        if (currentCategory) {
+          currentMenu = { code: colC, name: colD, dishes: [] }
+          currentCategory.menus.push(currentMenu)
+          currentDish = null
+          addLog(`    📋 Menu検出: [${colC}] ${colD}`)
+        }
+        continue
       }
 
-      // サブレシピを取得または作成
-      let subRecipe = recipe.subRecipes.find((s) => s.code === subRecipeCode)
-      if (!subRecipe) {
-        subRecipe = { code: subRecipeCode, name: subRecipeName, ingredients: [] }
-        recipe.subRecipes.push(subRecipe)
+      // Dish の検出（D列にコード、E列に名前）
+      // C列が空で、D列に数値コードがあり、E列に名前があり、G列（重量）が空
+      if (!colC && colD && /^\d+$/.test(colD) && colE && !colG) {
+        if (currentMenu) {
+          currentDish = { code: colD, name: colE, ingredients: [] }
+          currentMenu.dishes.push(currentDish)
+          addLog(`      🍳 Dish検出: [${colD}] ${colE}`)
+        }
+        continue
       }
 
-      // 食材を追加
-      if (ingredientCode) {
-        subRecipe.ingredients.push({
-          code: ingredientCode,
-          name: ingredientName,
+      // Ingredient の検出（E列にコード、F列に名前、G列に重量）
+      // D列が空で、E列に数値コードがあり、F列に名前があり、G列に重量がある
+      if (!colD && colE && /^\d+$/.test(colE) && colF && colG) {
+        const amount = parseFloat(colG.replace(/,/g, '')) || 0
+        const energy = parseFloat(row[7]?.replace(/,/g, '').replace(/\s/g, '')) || 0
+        const protein = parseFloat(row[8]?.replace(/,/g, '')) || 0
+        const fat = parseFloat(row[9]?.replace(/,/g, '')) || 0
+        const carb = parseFloat(row[10]?.replace(/,/g, '')) || 0
+        const sodium = parseFloat(row[11]?.replace(/,/g, '').replace(/\s/g, '')) || 0
+        const salt = parseFloat(row[12]?.replace(/,/g, '')) || 0
+        const vegetable = parseFloat(row[13]?.replace(/,/g, '')) || 0
+
+        const ingredient: IngredientData = {
+          code: colE,
+          name: colF,
           amount,
-          unit,
+          unit: 'g',
           energy,
           protein,
           fat,
@@ -185,120 +290,230 @@ export const importKondateCsv = async (
           sodium,
           salt,
           vegetable,
-        })
+        }
+
+        // Dish がない場合は、Menu に直接 Dish を作成
+        if (!currentDish && currentMenu) {
+          currentDish = { code: '', name: currentMenu.name, ingredients: [] }
+          currentMenu.dishes.push(currentDish)
+        }
+
+        if (currentDish) {
+          currentDish.ingredients.push(ingredient)
+        }
+        continue
+      }
+
+      // Dish がないまま Ingredient が来た場合のフォールバック
+      // E列にコード、F列に名前、G列に重量がある（D列にコードがある場合）
+      if (colD && /^\d+$/.test(colD) && colE && colF && parseFloat(colF.replace(/,/g, ''))) {
+        // D列がコード、E列が名前、F列が重量のパターン
+        const amount = parseFloat(colF.replace(/,/g, '')) || 0
+        const energy = parseFloat(row[7]?.replace(/,/g, '').replace(/\s/g, '')) || 0
+        const protein = parseFloat(row[8]?.replace(/,/g, '')) || 0
+        const fat = parseFloat(row[9]?.replace(/,/g, '')) || 0
+        const carb = parseFloat(row[10]?.replace(/,/g, '')) || 0
+        const sodium = parseFloat(row[11]?.replace(/,/g, '').replace(/\s/g, '')) || 0
+        const salt = parseFloat(row[12]?.replace(/,/g, '')) || 0
+        const vegetable = parseFloat(row[13]?.replace(/,/g, '')) || 0
+
+        const ingredient: IngredientData = {
+          code: colD,
+          name: colE,
+          amount,
+          unit: 'g',
+          energy,
+          protein,
+          fat,
+          carb,
+          sodium,
+          salt,
+          vegetable,
+        }
+
+        if (!currentDish && currentMenu) {
+          currentDish = { code: '', name: currentMenu.name, ingredients: [] }
+          currentMenu.dishes.push(currentDish)
+        }
+
+        if (currentDish) {
+          currentDish.ingredients.push(ingredient)
+        }
       }
     }
+
+    // 解析結果のサマリー
+    const totalMenus = parsed.categories.reduce((sum, c) => sum + c.menus.length, 0)
+    const totalDishes = parsed.categories.reduce(
+      (sum, c) => sum + c.menus.reduce((s, m) => s + m.dishes.length, 0),
+      0
+    )
+    const totalIngredients = parsed.categories.reduce(
+      (sum, c) =>
+        sum + c.menus.reduce((s, m) => s + m.dishes.reduce((ss, d) => ss + d.ingredients.length, 0), 0),
+      0
+    )
+    addLog(`📊 解析完了: ${parsed.categories.length}カテゴリ, ${totalMenus}メニュー, ${totalDishes}料理, ${totalIngredients}材料`)
 
     const importedDates: string[] = []
 
     // データベースに保存
-    for (const [dateKey, data] of dateGroups) {
-      // 既存の献立を削除
-      await prisma.kgDailyMenu.deleteMany({
-        where: { menuDate: data.date },
-      })
+    addLog('💾 データベース保存を開始')
 
-      // 新しい献立を作成
-      const dailyMenu = await prisma.kgDailyMenu.create({
-        data: { menuDate: data.date },
-      })
+    // 既存の献立を削除（カスケードで関連データも削除）
+    addLog(`🗑️ 既存データを削除: ${dateKey}`)
+    await prisma.kgDailyMenu.deleteMany({
+      where: { menuDate: date },
+    })
 
-      for (const meal of data.meals) {
-        // 食事区分を作成
-        const mealSlot = await prisma.kgMealSlot.create({
+    // 新しい献立を作成
+    addLog('📝 日付献立を作成')
+    const dailyMenu = await prisma.kgDailyMenu.create({
+      data: { menuDate: date },
+    })
+
+    let savedCategories = 0
+    let savedMenus = 0
+    let savedDishes = 0
+    let savedIngredients = 0
+
+    for (const category of parsed.categories) {
+      // Category（MealSlot）を作成
+      const mealSlot = await prisma.kgMealSlot.create({
+        data: {
+          dailyMenuId: dailyMenu.id,
+          mealType: category.mealType,
+          mealTypeName: category.mealTypeName,
+          sortOrder: MEAL_TYPES[category.mealType].sortOrder,
+        },
+      })
+      savedCategories++
+      addLog(`  ✅ Category保存: ${category.mealTypeName}`)
+
+      let menuOrder = 0
+      for (const menu of category.menus) {
+        // Menu（KgMenuRecipe: parentRecipeId = null）を作成
+        const menuRecipe = await prisma.kgMenuRecipe.create({
           data: {
-            dailyMenuId: dailyMenu.id,
-            mealType: meal.mealType,
-            mealTypeName: meal.mealTypeName,
-            sortOrder: MEAL_TYPES[meal.mealType].sortOrder,
+            mealSlotId: mealSlot.id,
+            code: menu.code,
+            name: menu.name,
+            sortOrder: menuOrder++,
           },
         })
+        savedMenus++
 
-        let recipeOrder = 0
-        for (const recipe of meal.recipes) {
-          // レシピを作成
-          const menuRecipe = await prisma.kgMenuRecipe.create({
+        let dishOrder = 0
+        for (const dish of menu.dishes) {
+          // Dish（KgMenuRecipe: parentRecipeId = menuRecipe.id）を作成
+          const dishRecipe = await prisma.kgMenuRecipe.create({
             data: {
               mealSlotId: mealSlot.id,
-              code: recipe.code,
-              name: recipe.name,
-              sortOrder: recipeOrder++,
+              parentRecipeId: menuRecipe.id,
+              code: dish.code,
+              name: dish.name,
+              sortOrder: dishOrder++,
             },
           })
+          savedDishes++
 
-          let subRecipeOrder = 0
-          for (const subRecipe of recipe.subRecipes) {
-            // サブレシピを作成
-            const subMenuRecipe = await prisma.kgMenuRecipe.create({
-              data: {
-                mealSlotId: mealSlot.id,
-                parentRecipeId: menuRecipe.id,
-                code: subRecipe.code,
-                name: subRecipe.name,
-                sortOrder: subRecipeOrder++,
-              },
+          // Ingredient（KgRecipeIngredient）を作成
+          let ingredientOrder = 0
+          let linkedCount = 0
+          for (const ing of dish.ingredients) {
+            // RcIngredientMasterからstandardCodeで検索してリレーション
+            const masterIngredient = await prisma.rcIngredientMaster.findFirst({
+              where: { standardCode: ing.code },
             })
 
-            // 食材を作成
-            let ingredientOrder = 0
-            for (const ing of subRecipe.ingredients) {
-              await prisma.kgRecipeIngredient.create({
-                data: {
-                  menuRecipeId: subMenuRecipe.id,
-                  ingredientCode: ing.code,
-                  ingredientName: ing.name,
-                  amountPerServing: ing.amount,
-                  unit: ing.unit,
-                  energy: ing.energy,
-                  protein: ing.protein,
-                  fat: ing.fat,
-                  carb: ing.carb,
-                  sodium: ing.sodium,
-                  salt: ing.salt,
-                  vegetableG: ing.vegetable,
-                  sortOrder: ingredientOrder++,
-                },
-              })
-            }
+            await prisma.kgRecipeIngredient.create({
+              data: {
+                menuRecipeId: dishRecipe.id,
+                ingredientMasterId: masterIngredient?.id ?? null,
+                ingredientCode: ing.code,
+                ingredientName: ing.name,
+                amountPerServing: ing.amount,
+                unit: ing.unit,
+                energy: ing.energy,
+                protein: ing.protein,
+                fat: ing.fat,
+                carb: ing.carb,
+                sodium: ing.sodium,
+                salt: ing.salt,
+                vegetableG: ing.vegetable,
+                sortOrder: ingredientOrder++,
+              },
+            })
+            savedIngredients++
+            if (masterIngredient) linkedCount++
+          }
+          if (dish.ingredients.length > 0 && linkedCount < dish.ingredients.length) {
+            addLog(`        ⚠️ 未リンク材料: ${dish.ingredients.length - linkedCount}件`)
           }
         }
       }
-
-      importedDates.push(dateKey)
     }
+
+    importedDates.push(dateKey)
+
+    addLog(`✅ 保存完了: ${savedCategories}カテゴリ, ${savedMenus}メニュー, ${savedDishes}料理, ${savedIngredients}材料`)
+    addLog(`🎉 インポート完了: ${dateKey}`)
 
     return {
       success: true,
       message: `${importedDates.length}日分の献立をインポートしました`,
+      logs,
       importedDates,
     }
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'インポートに失敗しました'
+    logs.push(`[${new Date().toLocaleTimeString('ja-JP')}] ❌ エラー発生: ${errorMessage}`)
     console.error('献立CSVインポートエラー:', error)
     return {
       success: false,
-      message: error instanceof Error ? error.message : 'インポートに失敗しました',
+      message: errorMessage,
+      logs,
       importedDates: [],
     }
   }
 }
 
 // 受注CSVをインポート
+// 形式: 日付,単位,（常食）朝,（常食）昼,（常食）夜,（刻み食）朝,...
 export const importOrderCsv = async (
   csvText: string,
   facilityId?: number
-): Promise<{ success: boolean; message: string; importedCount: number }> => {
+): Promise<ImportResult & { importedCount: number }> => {
+  const logs: string[] = []
+  const addLog = (message: string) => {
+    const timestamp = new Date().toLocaleTimeString('ja-JP')
+    logs.push(`[${timestamp}] ${message}`)
+    console.log(`[受注CSV] ${message}`)
+  }
+
   try {
+    addLog('📂 CSVファイルの読み込みを開始')
     const lines = parseCsvLines(csvText)
+    addLog(`📊 ${lines.length}行のデータを検出`)
+
     if (lines.length < 2) {
-      return { success: false, message: 'CSVデータが不足しています', importedCount: 0 }
+      addLog('❌ CSVデータが不足しています（2行未満）')
+      return { success: false, message: 'CSVデータが不足しています', logs, importedCount: 0 }
     }
 
     // ヘッダー解析
+    addLog('🔍 ヘッダー解析を開始')
     const header = lines[0]
     // "日付", "単位", "（常食）朝", "（常食）昼", "（常食）夜", "（刻み食）朝", ...
 
-    // 食事形態マスタを取得
-    const dietTypes = await prisma.kgDietTypeMaster.findMany()
+    // 食事形態マスタを取得（なければ初期データ投入）
+    let dietTypes = await prisma.kgDietTypeMaster.findMany()
+    if (dietTypes.length === 0) {
+      addLog('📝 食事形態マスタを初期化')
+      await seedDietTypeMaster()
+      dietTypes = await prisma.kgDietTypeMaster.findMany()
+    }
+    addLog(`  ✅ 食事形態マスタ: ${dietTypes.length}件読み込み`)
     const dietTypeMap = new Map(dietTypes.map((dt) => [dt.name, dt]))
 
     // カラムインデックスを解析
@@ -325,14 +540,57 @@ export const importOrderCsv = async (
       }
     }
 
+    if (columnMap.size === 0) {
+      addLog('❌ CSVヘッダーの形式が正しくありません')
+      return { success: false, message: 'CSVヘッダーの形式が正しくありません', logs, importedCount: 0 }
+    }
+    addLog(`  ✅ ${columnMap.size}列のデータ列を検出`)
+
     const dataLines = lines.slice(1)
     let importedCount = 0
+    let skippedCount = 0
 
+    addLog('💾 データベース保存を開始')
     for (const row of dataLines) {
       const dateStr = row[0]
       if (!dateStr) continue
 
-      const date = parseDate(dateStr)
+      // 合計行をスキップ
+      if (dateStr === '合計' || dateStr.includes('合計')) {
+        skippedCount++
+        continue
+      }
+
+      let date: Date
+      try {
+        date = parseDate(dateStr)
+      } catch {
+        skippedCount++
+        continue // 日付として解析できない行はスキップ
+      }
+
+      // 全てのカラムが0の場合はスキップ
+      let hasData = false
+      for (const [colIndex] of columnMap) {
+        const quantity = parseInt(row[colIndex]) || 0
+        if (quantity > 0) {
+          hasData = true
+          break
+        }
+      }
+      if (!hasData) {
+        skippedCount++
+        continue
+      }
+
+      // 同じ日付の既存受注を削除
+      await prisma.kgOrder.deleteMany({
+        where: {
+          deliveryDate: date,
+          facilityId: facilityId ?? null,
+          sourceType: 'CSV',
+        },
+      })
 
       // 受注を作成
       const order = await prisma.kgOrder.create({
@@ -346,6 +604,7 @@ export const importOrderCsv = async (
       })
 
       let lineOrder = 0
+      let totalQuantity = 0
       for (const [colIndex, info] of columnMap) {
         const quantity = parseInt(row[colIndex]) || 0
         if (quantity > 0) {
@@ -358,22 +617,31 @@ export const importOrderCsv = async (
               sortOrder: lineOrder++,
             },
           })
+          totalQuantity += quantity
         }
       }
 
+      addLog(`  📅 ${date.toLocaleDateString('ja-JP')}: ${totalQuantity}食`)
       importedCount++
     }
+
+    addLog(`✅ 保存完了: ${importedCount}件の受注 (${skippedCount}行スキップ)`)
+    addLog('🎉 インポート完了')
 
     return {
       success: true,
       message: `${importedCount}件の受注をインポートしました`,
+      logs,
       importedCount,
     }
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'インポートに失敗しました'
+    logs.push(`[${new Date().toLocaleTimeString('ja-JP')}] ❌ エラー発生: ${errorMessage}`)
     console.error('受注CSVインポートエラー:', error)
     return {
       success: false,
-      message: error instanceof Error ? error.message : 'インポートに失敗しました',
+      message: errorMessage,
+      logs,
       importedCount: 0,
     }
   }

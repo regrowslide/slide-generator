@@ -384,6 +384,8 @@ export interface HakobunAnalysisRecord {
   // フラグ・コメント
   isModified: boolean
   reviewerComment?: string | null
+  // 有効/無効フラグ
+  isEnabled: boolean
   sessionId: number
 }
 

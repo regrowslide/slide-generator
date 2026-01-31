@@ -2,6 +2,19 @@
 // 介護食管理システム用スキーマ
 // プレフィックス: Kg (Kaigo-shoku)
 // ======================================
+//
+// 献立の階層構造:
+// ┌─────────────────────────────────────────────────┐
+// │ KgDailyMenu (日付)                              │
+// │   └─ KgMealSlot (Category: 朝食、昼食、夕食等)  │
+// │       └─ KgMenuRecipe (Menu: 献立)              │
+// │           └─ KgMenuRecipe (Dish: 料理)          │
+// │               └─ KgRecipeIngredient (材料)      │
+// └─────────────────────────────────────────────────┘
+//
+// - Menu: parentRecipeId = null
+// - Dish: parentRecipeId = Menu の ID
+//
 
 // 施設/取引先マスタ
 model KgFacilityMaster {
@@ -78,7 +91,9 @@ model KgMealSlot {
   @@unique([dailyMenuId, mealType])
 }
 
-// 献立レシピ（自己参照で階層管理: レシピ → サブレシピ → 食材）
+// 献立レシピ（自己参照で階層管理: Menu → Dish）
+// - parentRecipeId = null: Menu（献立）
+// - parentRecipeId = Menu ID: Dish（料理）
 model KgMenuRecipe {
   id        Int       @id @default(autoincrement())
   createdAt DateTime  @default(now())

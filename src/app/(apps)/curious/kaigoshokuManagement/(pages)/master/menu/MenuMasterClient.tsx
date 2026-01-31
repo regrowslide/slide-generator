@@ -14,12 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from '@shadcn/ui/table'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@shadcn/ui/dialog'
 import { importKondateCsv } from '../../../_actions/csv-import-actions'
 import {
   getDailyMenus,
@@ -28,6 +22,7 @@ import {
 } from '../../../_actions/daily-menu-actions'
 import type { KgDailyMenu, KgDailyMenuWithRelations } from '../../../types'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
+import useModal from '@cm/components/utils/modal/useModal'
 
 type Props = {
   initialMenus: KgDailyMenu[]
@@ -36,8 +31,9 @@ type Props = {
 export const MenuMasterClient = ({ initialMenus }: Props) => {
   const { toggleLoad } = useGlobal()
   const [menus, setMenus] = useState(initialMenus)
-  const [selectedMenu, setSelectedMenu] = useState<KgDailyMenuWithRelations | null>(null)
-  const [isDetailOpen, setIsDetailOpen] = useState(false)
+
+  // 詳細モーダル（開くときに選択されたメニューを渡す）
+  const detailModal = useModal<KgDailyMenuWithRelations | null>()
 
   // CSVアップロード処理
   const handleCsvUpload = useCallback(
@@ -76,12 +72,11 @@ export const MenuMasterClient = ({ initialMenus }: Props) => {
       toggleLoad(async () => {
         const detail = await getDailyMenuWithRelations(menu.id)
         if (detail) {
-          setSelectedMenu(detail)
-          setIsDetailOpen(true)
+          detailModal.handleOpen(detail)
         }
       })
     },
-    [toggleLoad]
+    [toggleLoad, detailModal]
   )
 
   // 削除
@@ -205,72 +200,68 @@ export const MenuMasterClient = ({ initialMenus }: Props) => {
         </CardContent>
       </Card>
 
-      {/* 詳細ダイアログ */}
-      <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>
-              {selectedMenu && formatDate(selectedMenu.menuDate)} の献立
-            </DialogTitle>
-          </DialogHeader>
-          {selectedMenu && (
-            <div className="space-y-6">
-              {selectedMenu.KgMealSlot.map((slot) => (
-                <Card key={slot.id}>
-                  <CardHeader className="py-3">
-                    <CardTitle className="text-base flex items-center gap-2">
-                      <Badge>{slot.mealTypeName}</Badge>
-                      {slot.totalEnergy && (
-                        <span className="text-sm font-normal text-slate-500">
-                          {slot.totalEnergy}kcal
-                        </span>
-                      )}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="py-2">
-                    {slot.KgMenuRecipe.length === 0 ? (
-                      <p className="text-slate-400 text-sm">レシピなし</p>
-                    ) : (
-                      <div className="space-y-3">
-                        {slot.KgMenuRecipe.map((recipe) => (
-                          <div key={recipe.id} className="border-l-2 border-emerald-200 pl-3">
-                            <div className="font-medium text-sm">
-                              {recipe.code} {recipe.name}
-                            </div>
-                            {recipe.ChildRecipes && recipe.ChildRecipes.length > 0 && (
-                              <div className="ml-4 mt-2 space-y-2">
-                                {recipe.ChildRecipes.map((subRecipe) => (
-                                  <div key={subRecipe.id} className="text-sm">
-                                    <div className="text-slate-600">
-                                      └ {subRecipe.code} {subRecipe.name}
-                                    </div>
-                                    {subRecipe.KgRecipeIngredient &&
-                                      subRecipe.KgRecipeIngredient.length > 0 && (
-                                        <div className="ml-4 text-xs text-slate-400">
-                                          {subRecipe.KgRecipeIngredient.map((ing) => (
-                                            <span key={ing.id} className="mr-2">
-                                              {ing.ingredientName}
-                                              {ing.amountPerServing}
-                                              {ing.unit}
-                                            </span>
-                                          ))}
-                                        </div>
-                                      )}
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
+      {/* 詳細モーダル */}
+      <detailModal.Modal
+        title={detailModal.open ? `${formatDate(detailModal.open.menuDate)} の献立` : ''}
+        style={{ maxWidth: '56rem' }}
+      >
+        {detailModal.open && (
+          <div className="space-y-6">
+            {detailModal.open.KgMealSlot.map((slot) => (
+              <Card key={slot.id}>
+                <CardHeader className="py-3">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Badge>{slot.mealTypeName}</Badge>
+                    {slot.totalEnergy && (
+                      <span className="text-sm font-normal text-slate-500">
+                        {slot.totalEnergy}kcal
+                      </span>
                     )}
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="py-2">
+                  {slot.KgMenuRecipe.length === 0 ? (
+                    <p className="text-slate-400 text-sm">レシピなし</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {slot.KgMenuRecipe.map((recipe) => (
+                        <div key={recipe.id} className="border-l-2 border-emerald-200 pl-3">
+                          <div className="font-medium text-sm">
+                            {recipe.code} {recipe.name}
+                          </div>
+                          {recipe.ChildRecipes && recipe.ChildRecipes.length > 0 && (
+                            <div className="ml-4 mt-2 space-y-2">
+                              {recipe.ChildRecipes.map((subRecipe) => (
+                                <div key={subRecipe.id} className="text-sm">
+                                  <div className="text-slate-600">
+                                    └ {subRecipe.code} {subRecipe.name}
+                                  </div>
+                                  {subRecipe.KgRecipeIngredient &&
+                                    subRecipe.KgRecipeIngredient.length > 0 && (
+                                      <div className="ml-4 text-xs text-slate-400">
+                                        {subRecipe.KgRecipeIngredient.map((ing) => (
+                                          <span key={ing.id} className="mr-2">
+                                            {ing.ingredientName}
+                                            {ing.amountPerServing}
+                                            {ing.unit}
+                                          </span>
+                                        ))}
+                                      </div>
+                                    )}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </detailModal.Modal>
     </div>
   )
 }

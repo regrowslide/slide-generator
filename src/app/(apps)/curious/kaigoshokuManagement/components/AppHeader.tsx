@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Utensils, ClipboardList, Factory, Package, Database, Menu } from 'lucide-react'
+import { Utensils, ClipboardList, Factory, Package, Database, Menu, CalendarDays } from 'lucide-react'
 import { Button } from '@shadcn/ui/button'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@shadcn/ui/drawer'
 import { useIsMobile } from '@shadcn/hooks/use-mobile'
@@ -17,6 +17,7 @@ const IconMap = {
   package: Package,
   database: Database,
   settings: Database,
+  calendar: CalendarDays,
 }
 
 const NavItem = ({

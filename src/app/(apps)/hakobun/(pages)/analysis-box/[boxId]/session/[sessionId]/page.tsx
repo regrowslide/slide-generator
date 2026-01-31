@@ -18,9 +18,8 @@ import {
   Clock,
   Check,
   Sparkles,
-  Lock,
-  CheckCircle2,
-  FileCheck,
+  Wand2,
+  Save,
 } from 'lucide-react'
 import Link from 'next/link'
 import {
@@ -30,10 +29,9 @@ import {
   createAnalysisRecords,
   updateAnalysisRecordsFeedback,
   getSessionRecordsForExport,
-  getConfirmedSessionRecordsForExport,
   approveProposedCategory,
   rejectProposedCategory,
-  confirmAnalysisSession,
+  toggleAnalysisRecordEnabled,
 } from '../../../../../_actions/analysis-box-actions'
 import type {
   HakobunAnalysisSession,
@@ -54,17 +52,16 @@ import { BarChart3, Info } from 'lucide-react'
 const SENTIMENT_OPTIONS: SentimentType[] = ['好意的', '不満', 'リクエスト', 'その他']
 
 // ページネーション
-const RECORD_PAGE_SIZE = 100
+const RECORD_PAGE_SIZE = 50
 
-// CSV生成ユーティリティ（createdAt順・全体通し連番対応）
-const generateCsvContent = (records: HakobunAnalysisRecord[], useCreatedAtOrder = false): string => {
+// CSV生成ユーティリティ（createdAt順・全体通し連番対応・無効レコード除外）
+const generateCsvContent = (records: HakobunAnalysisRecord[]): string => {
   // ヘッダー
   const headers = ['通し番号', '枝番', 'ステージ', '感情', '一般カテゴリ', 'カテゴリ', 'トピック', '原文']
 
-  // createdAt順でソートする場合
-  const sortedRecords = useCreatedAtOrder
-    ? [...records].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
-    : records
+  // 有効なレコードのみフィルタリングし、createdAt順でソート
+  const enabledRecords = records.filter(r => r.isEnabled !== false) // isEnabledがundefinedの場合も有効とみなす
+  const sortedRecords = [...enabledRecords].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
 
   // 原文ごとにグループ化して通し番号を付与
   const rawTextGroups = new Map<string, HakobunAnalysisRecord[]>()
@@ -325,17 +322,17 @@ export default function AnalysisSessionDetailPage() {
 
         // 編集状態を初期化
         const initialEditStates = new Map<number, RecordEditState>()
-        ;(result.data.records as HakobunAnalysisRecord[]).forEach((record) => {
-          initialEditStates.set(record.id, {
-            feedbackStage: record.feedbackStage || record.analysisStage || '',
-            feedbackSentiment: record.feedbackSentiment || record.analysisSentiment || '',
-            feedbackGeneralCategory: record.feedbackGeneralCategory || record.analysisGeneralCategory || '',
-            feedbackCategory: record.feedbackCategory || record.analysisCategory || '',
-            feedbackTopic: record.feedbackTopic || record.analysisTopic || '',
-            reviewerComment: record.reviewerComment || '',
-            isModified: record.isModified,
+          ; (result.data.records as HakobunAnalysisRecord[]).forEach((record) => {
+            initialEditStates.set(record.id, {
+              feedbackStage: record.feedbackStage || record.analysisStage || '',
+              feedbackSentiment: record.feedbackSentiment || record.analysisSentiment || '',
+              feedbackGeneralCategory: record.feedbackGeneralCategory || record.analysisGeneralCategory || '',
+              feedbackCategory: record.feedbackCategory || record.analysisCategory || '',
+              feedbackTopic: record.feedbackTopic || record.analysisTopic || '',
+              reviewerComment: record.reviewerComment || '',
+              isModified: record.isModified,
+            })
           })
-        })
         setEditStates(initialEditStates)
         editStatesRef.current = initialEditStates
       }
@@ -713,10 +710,11 @@ export default function AnalysisSessionDetailPage() {
   // 承認処理中のレコードID
   const [processingRecordId, setProcessingRecordId] = useState<number | null>(null)
 
-  // 確定処理中フラグ
-  const [isConfirming, setIsConfirming] = useState(false)
-  // ルール生成処理中フラグ
+  // ルール生成関連
   const [isGeneratingRules, setIsGeneratingRules] = useState(false)
+  const [ruleDrafts, setRuleDrafts] = useState<any[]>([])
+  const [isSavingRules, setIsSavingRules] = useState(false)
+  const rulePreviewModal = useModal<{ modifiedRecordsCount: number }>()
 
   // 新規提案カテゴリを承認
   const handleApproveProposal = useCallback(async (recordId: number) => {
@@ -766,91 +764,98 @@ export default function AnalysisSessionDetailPage() {
     }
   }, [fetchRecords, fetchAllRecordsForStats])
 
-  // セッション確定処理
-  const handleConfirmSession = useCallback(async () => {
-    if (!session || !selectedClient) return
+  // レコードの有効/無効切り替え
+  const handleToggleEnabled = useCallback(async (recordId: number, currentIsEnabled: boolean) => {
+    try {
+      const newIsEnabled = !currentIsEnabled
+      const result = await toggleAnalysisRecordEnabled(recordId, newIsEnabled)
+      if (result.success) {
+        // ローカルのrecordsを更新
+        setRecords(prev => prev.map(r => r.id === recordId ? { ...r, isEnabled: newIsEnabled } : r))
+        // 統計用レコードも更新
+        setAllRecordsForStats(prev => prev.map(r => r.id === recordId ? { ...r, isEnabled: newIsEnabled } : r))
+      } else {
+        alert(`切り替えに失敗しました: ${result.error}`)
+      }
+    } catch (error) {
+      alert('有効/無効の切り替えでエラーが発生しました')
+    }
+  }, [])
 
-    if (!window.confirm(
-      '分析結果を確定しますか？\n\n確定すると：\n' +
-      '・CSVエクスポートが可能になります\n' +
-      '・フィードバックデータから分析ルールが自動生成されます\n\n' +
-      '※確定後も編集は可能ですが、再確定はできません'
-    )) {
+  // 分析ルール生成（プレビュー）
+  const handleGenerateRulesPreview = useCallback(async () => {
+    if (!selectedClient) {
+      alert('クライアントが選択されていません')
       return
     }
 
-    setIsConfirming(true)
+    setIsGeneratingRules(true)
+    setRuleDrafts([])
     try {
-      // セッションを確定
-      const confirmResult = await confirmAnalysisSession(sessionId, selectedClient.id)
-      if (!confirmResult.success) {
-        alert(`確定に失敗しました: ${confirmResult.error}`)
-        return
-      }
+      const response = await fetch('/api/hakobun/rules/generate-from-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId,
+          hakobunClientId: selectedClient.id,
+          saveRules: false, // プレビューモード
+        }),
+      })
+      const data = await response.json()
 
-      // フィードバックデータからルール自動生成
-      if (confirmResult.data?.modifiedRecordsCount && confirmResult.data.modifiedRecordsCount > 0) {
-        setIsGeneratingRules(true)
-        try {
-          const ruleResponse = await fetch('/api/hakobun/rules/generate-from-session', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              sessionId,
-              hakobunClientId: selectedClient.id,
-            }),
-          })
-          const ruleData = await ruleResponse.json()
-
-          if (ruleData.success) {
-            alert(
-              `セッションを確定しました。\n\n` +
-              `修正レコード: ${confirmResult.data.modifiedRecordsCount}件\n` +
-              `生成ルール: ${ruleData.savedCount || 0}件`
-            )
-          } else {
-            alert(
-              `セッションは確定しましたが、ルール生成に失敗しました。\n${ruleData.error || ''}`
-            )
-          }
-        } catch (ruleError) {
-          console.error('ルール生成エラー:', ruleError)
-          alert('セッションは確定しましたが、ルール生成中にエラーが発生しました。')
-        } finally {
-          setIsGeneratingRules(false)
+      if (data.success) {
+        if (data.generatedRules && data.generatedRules.length > 0) {
+          setRuleDrafts(data.generatedRules)
+          rulePreviewModal.handleOpen({ modifiedRecordsCount: data.modifiedRecordsCount || 0 })
+        } else {
+          alert(data.message || 'ルールを生成できませんでした。修正されたレコードがないか、有意義なパターンが抽出できませんでした。')
         }
       } else {
-        alert('セッションを確定しました。')
+        alert(`ルール生成に失敗しました: ${data.error || ''}`)
       }
-
-      // セッション情報を再取得
-      await fetchSession()
     } catch (error) {
-      console.error('確定処理エラー:', error)
-      alert('確定処理でエラーが発生しました')
+      console.error('ルール生成エラー:', error)
+      alert('ルール生成中にエラーが発生しました')
     } finally {
-      setIsConfirming(false)
+      setIsGeneratingRules(false)
     }
-  }, [session, selectedClient, sessionId, fetchSession])
+  }, [selectedClient, sessionId, rulePreviewModal])
 
-  // 確定済みセッションのCSVダウンロード
-  const handleDownloadConfirmedCsv = useCallback(async () => {
+  // 分析ルール保存
+  const handleSaveRules = useCallback(async () => {
+    if (!selectedClient || ruleDrafts.length === 0) return
+
+    setIsSavingRules(true)
     try {
-      const result = await getConfirmedSessionRecordsForExport(sessionId)
-      if (!result.success || !result.data) {
-        alert(result.error || 'データ取得に失敗しました')
-        return
-      }
+      const response = await fetch('/api/hakobun/rules/generate-from-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId,
+          hakobunClientId: selectedClient.id,
+          saveRules: true, // 保存モード
+        }),
+      })
+      const data = await response.json()
 
-      // createdAt順でCSV生成
-      const csvContent = generateCsvContent(result.data as HakobunAnalysisRecord[], true)
-      const filename = `分析結果_確定_${session?.name || 'session'}_${new Date().toISOString().split('T')[0]}.csv`
-      downloadCsv(csvContent, filename)
+      if (data.success) {
+        alert(
+          `ルールを保存しました。\n\n` +
+          `新規: ${data.savedCount || 0}件\n` +
+          `更新: ${data.mergedCount || 0}件`
+        )
+        rulePreviewModal.handleClose()
+        setRuleDrafts([])
+      } else {
+        alert(`ルール保存に失敗しました: ${data.error || ''}`)
+      }
     } catch (error) {
-      console.error('CSVダウンロードエラー:', error)
-      alert('CSVダウンロードに失敗しました')
+      console.error('ルール保存エラー:', error)
+      alert('ルール保存中にエラーが発生しました')
+    } finally {
+      setIsSavingRules(false)
     }
-  }, [sessionId, session?.name])
+  }, [selectedClient, sessionId, ruleDrafts, rulePreviewModal])
 
   // 新規一般カテゴリを追加（マスタ登録あり）
   const handleCreateGeneralCategory = useCallback(async () => {
@@ -1052,90 +1057,47 @@ export default function AnalysisSessionDetailPage() {
         {/* ヘッダー */}
         <R_Stack className="justify-between items-start">
           <div>
-            <R_Stack className="items-center gap-3">
-              <h1 className="text-2xl font-bold text-gray-900">{session.name}</h1>
-              {/* 確定状態バッジ */}
-              {session.isConfirmed ? (
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-green-100 text-green-700">
-                  <CheckCircle2 className="w-4 h-4" />
-                  確定済み
-                </span>
-              ) : (
-                session.status === 'completed' && (
-                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-amber-100 text-amber-700">
-                    <Clock className="w-4 h-4" />
-                    未確定
-                  </span>
-                )
-              )}
-            </R_Stack>
+            <h1 className="text-2xl font-bold text-gray-900">{session.name}</h1>
             <p className="text-sm text-gray-500 mt-1">
               レコード: {totalCount}件
               {session.analyzedAt && (
                 <> / 分析完了: {new Date(session.analyzedAt).toLocaleString('ja-JP')}</>
               )}
-              {session.isConfirmed && session.confirmedAt && (
-                <> / 確定: {new Date(session.confirmedAt).toLocaleString('ja-JP')}</>
-              )}
             </p>
           </div>
           <R_Stack className="gap-2">
-            {/* 確定ボタン（未確定かつ完了済みの場合のみ表示） */}
-            {hasRecords && session.status === 'completed' && !session.isConfirmed && (
+            {/* 分析ルール作成ボタン */}
+            {hasRecords && (
               <button
-                onClick={handleConfirmSession}
-                disabled={isConfirming || isGeneratingRules}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 disabled:bg-gray-400"
+                onClick={handleGenerateRulesPreview}
+                disabled={isGeneratingRules}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2 disabled:bg-gray-400"
               >
-                {isConfirming || isGeneratingRules ? (
+                {isGeneratingRules ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    {isGeneratingRules ? 'ルール生成中...' : '確定中...'}
+                    ルール生成中...
                   </>
                 ) : (
                   <>
-                    <FileCheck className="w-4 h-4" />
-                    確定
+
+                    分析ルール作成
                   </>
                 )}
               </button>
             )}
             {/* CSVエクスポートボタン */}
             {hasRecords && (
-              session.isConfirmed ? (
-                <button
-                  onClick={handleDownloadConfirmedCsv}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
-                >
-                  <Download className="w-4 h-4" />
-                  CSV出力（確定版）
-                </button>
-              ) : (
-                <button
-                  onClick={handleDownloadCsv}
-                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2"
-                  title="未確定のため、プレビュー版のCSVがダウンロードされます"
-                >
-                  <Download className="w-4 h-4" />
-                  CSV出力（プレビュー）
-                </button>
-              )
+              <button
+                onClick={handleDownloadCsv}
+                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                CSV出力
+              </button>
             )}
           </R_Stack>
         </R_Stack>
-
-        {/* 確定済み警告メッセージ */}
-        {session.isConfirmed && (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-            <R_Stack className="items-center gap-2 text-green-700">
-              <Lock className="w-5 h-5" />
-              <span className="font-medium">このセッションは確定済みです</span>
-            </R_Stack>
-            <p className="text-sm text-green-600 mt-1">
-              編集は可能ですが、変更内容は確定版CSVには反映されません。必要に応じて新しいセッションを作成してください。
-            </p>
-          </div>
-        )}
 
         {/* CSVアップロード（レコードがない場合） */}
         {!hasRecords && (
@@ -1453,12 +1415,32 @@ export default function AnalysisSessionDetailPage() {
                     const state = editStates.get(record.id)
                     if (!state) return null
 
+                    const isEnabled = record.isEnabled !== false // undefinedの場合も有効とみなす
+                    const disabledClass = isEnabled ? '' : 'opacity-40'
+
                     return (
                       <React.Fragment key={record.id}>
                         {/* AI分析結果行 */}
-                        <tr className="bg-blue-50/50">
+                        <tr className={`bg-blue-50/50 ${disabledClass}`}>
                           <td rowSpan={3} className="px-3 py-2 text-gray-500 align-top border-b">
-                            {(currentPage - 1) * RECORD_PAGE_SIZE + index + 1}
+                            <div className="flex flex-col items-center gap-1">
+                              <span>{(currentPage - 1) * RECORD_PAGE_SIZE + index + 1}</span>
+                              {/* 有効/無効トグル */}
+                              <button
+                                type="button"
+                                onClick={() => handleToggleEnabled(record.id, isEnabled)}
+                                className={`w-8 h-4 rounded-full relative transition-colors ${
+                                  isEnabled ? 'bg-green-500' : 'bg-gray-300'
+                                }`}
+                                title={isEnabled ? 'クリックで無効化（CSVから除外）' : 'クリックで有効化（CSVに含める）'}
+                              >
+                                <span
+                                  className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-all ${
+                                    isEnabled ? 'right-0.5' : 'left-0.5'
+                                  }`}
+                                />
+                              </button>
+                            </div>
                           </td>
 
                           <td rowSpan={3} className="px-3 py-2  align-top border-b max-w-[300px]">
@@ -1492,13 +1474,12 @@ export default function AnalysisSessionDetailPage() {
                           <td className="px-3 py-1">
                             {record.isProposedGeneralCategory ? (
                               <R_Stack className="items-center gap-1">
-                                <span className={`text-xs px-1.5 py-0.5 rounded ${
-                                  record.proposalApproved === true
-                                    ? 'bg-green-100 text-green-800'
-                                    : record.proposalApproved === false
+                                <span className={`text-xs px-1.5 py-0.5 rounded ${record.proposalApproved === true
+                                  ? 'bg-green-100 text-green-800'
+                                  : record.proposalApproved === false
                                     ? 'bg-red-100 text-red-400 line-through'
                                     : 'bg-amber-100 text-amber-800 animate-pulse'
-                                }`}>
+                                  }`}>
                                   <Sparkles className="w-3 h-3 inline mr-0.5" />
                                   {record.analysisGeneralCategory || '-'}
                                 </span>
@@ -1510,13 +1491,12 @@ export default function AnalysisSessionDetailPage() {
                           <td className="px-3 py-1">
                             {record.isProposedCategory ? (
                               <R_Stack className="items-center gap-1">
-                                <span className={`text-xs px-1.5 py-0.5 rounded ${
-                                  record.proposalApproved === true
-                                    ? 'bg-green-100 text-green-800'
-                                    : record.proposalApproved === false
+                                <span className={`text-xs px-1.5 py-0.5 rounded ${record.proposalApproved === true
+                                  ? 'bg-green-100 text-green-800'
+                                  : record.proposalApproved === false
                                     ? 'bg-red-100 text-red-400 line-through'
                                     : 'bg-amber-100 text-amber-800 animate-pulse'
-                                }`}>
+                                  }`}>
                                   <Sparkles className="w-3 h-3 inline mr-0.5" />
                                   {record.analysisCategory || '-'}
                                 </span>
@@ -1571,7 +1551,7 @@ export default function AnalysisSessionDetailPage() {
                           </td>
                         </tr>
                         {/* フィードバック行 */}
-                        <tr className="border-b">
+                        <tr className={`border-b ${disabledClass}`}>
 
                           <td className={`px-3 py-1 ${getFeedbackCellStyle(state.feedbackTopic, record.analysisTopic)}`}>
                             <textarea
@@ -1678,7 +1658,7 @@ export default function AnalysisSessionDetailPage() {
                           </td>
                         </tr>
                         {/* 分析考え方行 */}
-                        <tr className="border-b bg-amber-50/30">
+                        <tr className={`border-b bg-amber-50/30 ${disabledClass}`}>
                           <td colSpan={6} className="px-3 py-1">
                             <div className="flex items-start gap-2">
                               <span className="text-xs text-amber-700 font-medium whitespace-nowrap pt-1">分析考え方:</span>
@@ -1792,6 +1772,90 @@ export default function AnalysisSessionDetailPage() {
           </p>
         </div>
       </rawTextModal.Modal>
+
+      {/* ルールプレビューモーダル */}
+      <rulePreviewModal.Modal
+        open={!!rulePreviewModal.open}
+        setopen={rulePreviewModal.setopen}
+        title="分析ルールのプレビュー"
+      >
+        <div className="p-4">
+          <p className="text-sm text-gray-600 mb-4">
+            修正レコード {rulePreviewModal.open?.modifiedRecordsCount || 0}件から、以下のルールが生成されます。
+          </p>
+
+          {ruleDrafts.length === 0 ? (
+            <p className="text-gray-500 text-center py-8">ルールがありません</p>
+          ) : (
+            <div className="space-y-4 max-h-[400px] overflow-y-auto">
+              {ruleDrafts.map((rule, index) => (
+                <div
+                  key={index}
+                  className={`border rounded-lg p-4 ${rule.isNew ? 'border-green-200 bg-green-50' : 'border-blue-200 bg-blue-50'
+                    }`}
+                >
+                  <R_Stack className="justify-between items-start mb-2">
+                    <R_Stack className="items-center gap-2">
+                      <span className="font-medium text-gray-800">{rule.targetCategory}</span>
+                      <span
+                        className={`text-xs px-2 py-0.5 rounded ${rule.priority === 'High'
+                          ? 'bg-red-100 text-red-700'
+                          : rule.priority === 'Medium'
+                            ? 'bg-yellow-100 text-yellow-700'
+                            : 'bg-gray-100 text-gray-700'
+                          }`}
+                      >
+                        {rule.priority}
+                      </span>
+                    </R_Stack>
+                    <span
+                      className={`text-xs px-2 py-1 rounded ${rule.isNew ? 'bg-green-200 text-green-800' : 'bg-blue-200 text-blue-800'
+                        }`}
+                    >
+                      {rule.isNew ? '新規' : `既存ルール更新 (ID: ${rule.mergedWithRuleId})`}
+                    </span>
+                  </R_Stack>
+                  <p className="text-sm text-gray-700 mb-2">{rule.ruleDescription}</p>
+                  {rule.reasoning && (
+                    <p className="text-xs text-gray-500 border-t pt-2 mt-2">
+                      理由: {rule.reasoning}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          <R_Stack className="justify-end gap-2 mt-6 pt-4 border-t">
+            <button
+              onClick={() => {
+                rulePreviewModal.handleClose()
+                setRuleDrafts([])
+              }}
+              className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+            >
+              キャンセル
+            </button>
+            <button
+              onClick={handleSaveRules}
+              disabled={isSavingRules || ruleDrafts.length === 0}
+              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-400 flex items-center gap-2"
+            >
+              {isSavingRules ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  保存中...
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4" />
+                  ルールを保存 ({ruleDrafts.length}件)
+                </>
+              )}
+            </button>
+          </R_Stack>
+        </div>
+      </rulePreviewModal.Modal>
     </div>
   )
 }

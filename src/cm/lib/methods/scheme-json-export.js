@@ -5924,6 +5924,21 @@
           "isUpdatedAt": false
         },
         {
+          "name": "isEnabled",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Boolean",
+          "nativeType": null,
+          "default": true,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
           "name": "session",
           "kind": "object",
           "isList": false,

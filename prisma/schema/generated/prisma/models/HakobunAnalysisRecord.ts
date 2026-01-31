@@ -59,6 +59,7 @@ export type HakobunAnalysisRecordMinAggregateOutputType = {
   feedbackTopic: string | null
   isModified: boolean | null
   reviewerComment: string | null
+  isEnabled: boolean | null
   sessionId: number | null
 }
 
@@ -83,6 +84,7 @@ export type HakobunAnalysisRecordMaxAggregateOutputType = {
   feedbackTopic: string | null
   isModified: boolean | null
   reviewerComment: string | null
+  isEnabled: boolean | null
   sessionId: number | null
 }
 
@@ -107,6 +109,7 @@ export type HakobunAnalysisRecordCountAggregateOutputType = {
   feedbackTopic: number
   isModified: number
   reviewerComment: number
+  isEnabled: number
   sessionId: number
   _all: number
 }
@@ -145,6 +148,7 @@ export type HakobunAnalysisRecordMinAggregateInputType = {
   feedbackTopic?: true
   isModified?: true
   reviewerComment?: true
+  isEnabled?: true
   sessionId?: true
 }
 
@@ -169,6 +173,7 @@ export type HakobunAnalysisRecordMaxAggregateInputType = {
   feedbackTopic?: true
   isModified?: true
   reviewerComment?: true
+  isEnabled?: true
   sessionId?: true
 }
 
@@ -193,6 +198,7 @@ export type HakobunAnalysisRecordCountAggregateInputType = {
   feedbackTopic?: true
   isModified?: true
   reviewerComment?: true
+  isEnabled?: true
   sessionId?: true
   _all?: true
 }
@@ -304,6 +310,7 @@ export type HakobunAnalysisRecordGroupByOutputType = {
   feedbackTopic: string | null
   isModified: boolean
   reviewerComment: string | null
+  isEnabled: boolean
   sessionId: number
   _count: HakobunAnalysisRecordCountAggregateOutputType | null
   _avg: HakobunAnalysisRecordAvgAggregateOutputType | null
@@ -351,6 +358,7 @@ export type HakobunAnalysisRecordWhereInput = {
   feedbackTopic?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   isModified?: Prisma.BoolFilter<"HakobunAnalysisRecord"> | boolean
   reviewerComment?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
+  isEnabled?: Prisma.BoolFilter<"HakobunAnalysisRecord"> | boolean
   sessionId?: Prisma.IntFilter<"HakobunAnalysisRecord"> | number
   session?: Prisma.XOR<Prisma.HakobunAnalysisSessionScalarRelationFilter, Prisma.HakobunAnalysisSessionWhereInput>
 }
@@ -376,6 +384,7 @@ export type HakobunAnalysisRecordOrderByWithRelationInput = {
   feedbackTopic?: Prisma.SortOrderInput | Prisma.SortOrder
   isModified?: Prisma.SortOrder
   reviewerComment?: Prisma.SortOrderInput | Prisma.SortOrder
+  isEnabled?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
   session?: Prisma.HakobunAnalysisSessionOrderByWithRelationInput
 }
@@ -404,6 +413,7 @@ export type HakobunAnalysisRecordWhereUniqueInput = Prisma.AtLeast<{
   feedbackTopic?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   isModified?: Prisma.BoolFilter<"HakobunAnalysisRecord"> | boolean
   reviewerComment?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
+  isEnabled?: Prisma.BoolFilter<"HakobunAnalysisRecord"> | boolean
   sessionId?: Prisma.IntFilter<"HakobunAnalysisRecord"> | number
   session?: Prisma.XOR<Prisma.HakobunAnalysisSessionScalarRelationFilter, Prisma.HakobunAnalysisSessionWhereInput>
 }, "id">
@@ -429,6 +439,7 @@ export type HakobunAnalysisRecordOrderByWithAggregationInput = {
   feedbackTopic?: Prisma.SortOrderInput | Prisma.SortOrder
   isModified?: Prisma.SortOrder
   reviewerComment?: Prisma.SortOrderInput | Prisma.SortOrder
+  isEnabled?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
   _count?: Prisma.HakobunAnalysisRecordCountOrderByAggregateInput
   _avg?: Prisma.HakobunAnalysisRecordAvgOrderByAggregateInput
@@ -461,6 +472,7 @@ export type HakobunAnalysisRecordScalarWhereWithAggregatesInput = {
   feedbackTopic?: Prisma.StringNullableWithAggregatesFilter<"HakobunAnalysisRecord"> | string | null
   isModified?: Prisma.BoolWithAggregatesFilter<"HakobunAnalysisRecord"> | boolean
   reviewerComment?: Prisma.StringNullableWithAggregatesFilter<"HakobunAnalysisRecord"> | string | null
+  isEnabled?: Prisma.BoolWithAggregatesFilter<"HakobunAnalysisRecord"> | boolean
   sessionId?: Prisma.IntWithAggregatesFilter<"HakobunAnalysisRecord"> | number
 }
 
@@ -484,6 +496,7 @@ export type HakobunAnalysisRecordCreateInput = {
   feedbackTopic?: string | null
   isModified?: boolean
   reviewerComment?: string | null
+  isEnabled?: boolean
   session: Prisma.HakobunAnalysisSessionCreateNestedOneWithoutRecordsInput
 }
 
@@ -508,6 +521,7 @@ export type HakobunAnalysisRecordUncheckedCreateInput = {
   feedbackTopic?: string | null
   isModified?: boolean
   reviewerComment?: string | null
+  isEnabled?: boolean
   sessionId: number
 }
 
@@ -531,6 +545,7 @@ export type HakobunAnalysisRecordUpdateInput = {
   feedbackTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isModified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   session?: Prisma.HakobunAnalysisSessionUpdateOneRequiredWithoutRecordsNestedInput
 }
 
@@ -555,6 +570,7 @@ export type HakobunAnalysisRecordUncheckedUpdateInput = {
   feedbackTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isModified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sessionId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -579,6 +595,7 @@ export type HakobunAnalysisRecordCreateManyInput = {
   feedbackTopic?: string | null
   isModified?: boolean
   reviewerComment?: string | null
+  isEnabled?: boolean
   sessionId: number
 }
 
@@ -602,6 +619,7 @@ export type HakobunAnalysisRecordUpdateManyMutationInput = {
   feedbackTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isModified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type HakobunAnalysisRecordUncheckedUpdateManyInput = {
@@ -625,6 +643,7 @@ export type HakobunAnalysisRecordUncheckedUpdateManyInput = {
   feedbackTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isModified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sessionId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -659,6 +678,7 @@ export type HakobunAnalysisRecordCountOrderByAggregateInput = {
   feedbackTopic?: Prisma.SortOrder
   isModified?: Prisma.SortOrder
   reviewerComment?: Prisma.SortOrder
+  isEnabled?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
 }
 
@@ -689,6 +709,7 @@ export type HakobunAnalysisRecordMaxOrderByAggregateInput = {
   feedbackTopic?: Prisma.SortOrder
   isModified?: Prisma.SortOrder
   reviewerComment?: Prisma.SortOrder
+  isEnabled?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
 }
 
@@ -713,6 +734,7 @@ export type HakobunAnalysisRecordMinOrderByAggregateInput = {
   feedbackTopic?: Prisma.SortOrder
   isModified?: Prisma.SortOrder
   reviewerComment?: Prisma.SortOrder
+  isEnabled?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
 }
 
@@ -784,6 +806,7 @@ export type HakobunAnalysisRecordCreateWithoutSessionInput = {
   feedbackTopic?: string | null
   isModified?: boolean
   reviewerComment?: string | null
+  isEnabled?: boolean
 }
 
 export type HakobunAnalysisRecordUncheckedCreateWithoutSessionInput = {
@@ -807,6 +830,7 @@ export type HakobunAnalysisRecordUncheckedCreateWithoutSessionInput = {
   feedbackTopic?: string | null
   isModified?: boolean
   reviewerComment?: string | null
+  isEnabled?: boolean
 }
 
 export type HakobunAnalysisRecordCreateOrConnectWithoutSessionInput = {
@@ -859,6 +883,7 @@ export type HakobunAnalysisRecordScalarWhereInput = {
   feedbackTopic?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   isModified?: Prisma.BoolFilter<"HakobunAnalysisRecord"> | boolean
   reviewerComment?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
+  isEnabled?: Prisma.BoolFilter<"HakobunAnalysisRecord"> | boolean
   sessionId?: Prisma.IntFilter<"HakobunAnalysisRecord"> | number
 }
 
@@ -883,6 +908,7 @@ export type HakobunAnalysisRecordCreateManySessionInput = {
   feedbackTopic?: string | null
   isModified?: boolean
   reviewerComment?: string | null
+  isEnabled?: boolean
 }
 
 export type HakobunAnalysisRecordUpdateWithoutSessionInput = {
@@ -905,6 +931,7 @@ export type HakobunAnalysisRecordUpdateWithoutSessionInput = {
   feedbackTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isModified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type HakobunAnalysisRecordUncheckedUpdateWithoutSessionInput = {
@@ -928,6 +955,7 @@ export type HakobunAnalysisRecordUncheckedUpdateWithoutSessionInput = {
   feedbackTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isModified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type HakobunAnalysisRecordUncheckedUpdateManyWithoutSessionInput = {
@@ -951,6 +979,7 @@ export type HakobunAnalysisRecordUncheckedUpdateManyWithoutSessionInput = {
   feedbackTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isModified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -976,6 +1005,7 @@ export type HakobunAnalysisRecordSelect<ExtArgs extends runtime.Types.Extensions
   feedbackTopic?: boolean
   isModified?: boolean
   reviewerComment?: boolean
+  isEnabled?: boolean
   sessionId?: boolean
   session?: boolean | Prisma.HakobunAnalysisSessionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["hakobunAnalysisRecord"]>
@@ -1001,6 +1031,7 @@ export type HakobunAnalysisRecordSelectCreateManyAndReturn<ExtArgs extends runti
   feedbackTopic?: boolean
   isModified?: boolean
   reviewerComment?: boolean
+  isEnabled?: boolean
   sessionId?: boolean
   session?: boolean | Prisma.HakobunAnalysisSessionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["hakobunAnalysisRecord"]>
@@ -1026,6 +1057,7 @@ export type HakobunAnalysisRecordSelectUpdateManyAndReturn<ExtArgs extends runti
   feedbackTopic?: boolean
   isModified?: boolean
   reviewerComment?: boolean
+  isEnabled?: boolean
   sessionId?: boolean
   session?: boolean | Prisma.HakobunAnalysisSessionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["hakobunAnalysisRecord"]>
@@ -1051,10 +1083,11 @@ export type HakobunAnalysisRecordSelectScalar = {
   feedbackTopic?: boolean
   isModified?: boolean
   reviewerComment?: boolean
+  isEnabled?: boolean
   sessionId?: boolean
 }
 
-export type HakobunAnalysisRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "rawText" | "analysisStage" | "analysisSentiment" | "analysisGeneralCategory" | "analysisCategory" | "analysisTopic" | "isProposedGeneralCategory" | "isProposedCategory" | "proposalApproved" | "feedbackStage" | "feedbackSentiment" | "feedbackGeneralCategory" | "feedbackCategory" | "feedbackTopic" | "isModified" | "reviewerComment" | "sessionId", ExtArgs["result"]["hakobunAnalysisRecord"]>
+export type HakobunAnalysisRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "rawText" | "analysisStage" | "analysisSentiment" | "analysisGeneralCategory" | "analysisCategory" | "analysisTopic" | "isProposedGeneralCategory" | "isProposedCategory" | "proposalApproved" | "feedbackStage" | "feedbackSentiment" | "feedbackGeneralCategory" | "feedbackCategory" | "feedbackTopic" | "isModified" | "reviewerComment" | "isEnabled" | "sessionId", ExtArgs["result"]["hakobunAnalysisRecord"]>
 export type HakobunAnalysisRecordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   session?: boolean | Prisma.HakobunAnalysisSessionDefaultArgs<ExtArgs>
 }
@@ -1091,6 +1124,7 @@ export type $HakobunAnalysisRecordPayload<ExtArgs extends runtime.Types.Extensio
     feedbackTopic: string | null
     isModified: boolean
     reviewerComment: string | null
+    isEnabled: boolean
     sessionId: number
   }, ExtArgs["result"]["hakobunAnalysisRecord"]>
   composites: {}
@@ -1536,6 +1570,7 @@ export interface HakobunAnalysisRecordFieldRefs {
   readonly feedbackTopic: Prisma.FieldRef<"HakobunAnalysisRecord", 'String'>
   readonly isModified: Prisma.FieldRef<"HakobunAnalysisRecord", 'Boolean'>
   readonly reviewerComment: Prisma.FieldRef<"HakobunAnalysisRecord", 'String'>
+  readonly isEnabled: Prisma.FieldRef<"HakobunAnalysisRecord", 'Boolean'>
   readonly sessionId: Prisma.FieldRef<"HakobunAnalysisRecord", 'Int'>
 }
     

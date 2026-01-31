@@ -647,6 +647,7 @@ export const HakobunAnalysisRecordScalarFieldEnum = {
   feedbackTopic: 'feedbackTopic',
   isModified: 'isModified',
   reviewerComment: 'reviewerComment',
+  isEnabled: 'isEnabled',
   sessionId: 'sessionId'
 } as const
 

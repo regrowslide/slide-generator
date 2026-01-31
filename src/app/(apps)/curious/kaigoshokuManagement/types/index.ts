@@ -31,19 +31,26 @@ export type {
 // リレーション付きの拡張型
 
 // 献立関連
+// 階層構造: 日付 → Category → Menu → Dish → Ingredient
 export type KgDailyMenuWithRelations = KgDailyMenu & {
   KgMealSlot: KgMealSlotWithRelations[]
 }
 
+// Category（朝食、昼食、昼間食、夕食）
 export type KgMealSlotWithRelations = KgMealSlot & {
   KgMenuRecipe: KgMenuRecipeWithRelations[]
 }
 
+// Menu（献立）/ Dish（料理） - parentRecipeId で階層化
+// parentRecipeId = null → Menu
+// parentRecipeId = menuId → Dish
 export type KgMenuRecipeWithRelations = KgMenuRecipe & {
-  ChildRecipes: KgMenuRecipeWithRelations[]
-  KgRecipeIngredient: KgRecipeIngredientWithMaster[]
+  ParentRecipe?: KgMenuRecipe | null // 親Menu（Dishの場合）
+  ChildRecipes: KgMenuRecipeWithRelations[] // Dishes
+  KgRecipeIngredient: KgRecipeIngredientWithMaster[] // Ingredients
 }
 
+// Ingredient（材料）
 export type KgRecipeIngredientWithMaster = KgRecipeIngredient & {
   RcIngredientMaster: RcIngredientMaster | null
 }
