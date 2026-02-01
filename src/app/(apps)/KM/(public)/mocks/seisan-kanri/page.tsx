@@ -24,7 +24,6 @@ import {
   Package,
   PanelRightOpen,
   Info,
-  LucideIcon,
 } from 'lucide-react'
 import { SplashScreen, InfoSidebar, Feature, TimeEfficiencyItem } from '../_components'
 
@@ -371,7 +370,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({title, actions}) => (
 
 // --- Data Management Custom Hooks --------------------------------
 function useCrudManager<T extends { id: string }>(initialData: T[]) {
-  const [items, setItems] = useState<T[]>(initialData)
+  const [items, setItems] = useState(initialData)
   const addItem = (item: Partial<T>) => setItems(prev => [...prev, {...item, id: `NEW_${Date.now()}`} as T])
   const updateItem = (updatedItem: T) => setItems(prev => prev.map(item => (item.id === updatedItem.id ? updatedItem : item)))
   const deleteItem = (id: string) => {

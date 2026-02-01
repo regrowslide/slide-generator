@@ -4,7 +4,6 @@ import { requestResultType } from '@cm/types/types'
 import prisma from 'src/lib/prisma'
 import { prismaMethodType, PrismaModelNames } from '@cm/types/prisma-types'
 import { PrismaClient } from '@prisma/generated/prisma/client'
-import { isServerActionAccessAllowed } from '@app/api/prisma/isAllowed'
 
 export type transactionQuery<T extends PrismaModelNames = PrismaModelNames, M extends prismaMethodType = prismaMethodType> = {
   model: T

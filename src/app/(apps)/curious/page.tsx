@@ -1,4 +1,4 @@
-import { Absolute, CenterScreen } from '@cm/components/styles/common-components/common-components'
+import { CenterScreen } from '@cm/components/styles/common-components/common-components'
 import Link from 'next/link'
 import React from 'react'
 

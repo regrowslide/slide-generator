@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion'
 import { SCROLL_DOWN_ANIMATION } from '../../constants/animationConstants'
-import { KM } from '../../class/Kaizen'
 
 interface IntroductionMessageProps {
   isVisible: boolean
@@ -32,7 +31,10 @@ export const IntroductionMessage: React.FC<IntroductionMessageProps> = ({ isVisi
   return (
     <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 py-8 sm:px-6 sm:py-12 ">
       {/* メインコンテンツ */}
-      <div className="w-full max-w-6xl ">
+      <div
+        className="w-full max-w-6xl"
+        style={{ filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.5)) drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3))' }}
+      >
         {/* スプリットスクリーン - 左右対比 */}
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-0 ">
           {/* 左側 - 課題（青系） */}

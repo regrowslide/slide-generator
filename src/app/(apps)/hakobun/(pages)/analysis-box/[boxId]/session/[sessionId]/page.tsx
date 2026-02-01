@@ -17,8 +17,7 @@ import {
   Download,
   Clock,
   Check,
-  Sparkles,
-  Wand2,
+
   Save,
 } from 'lucide-react'
 import Link from 'next/link'
@@ -61,7 +60,14 @@ const generateCsvContent = (records: HakobunAnalysisRecord[]): string => {
   const headers = ['通し番号', '枝番', 'ステージ', '感情', '一般カテゴリ', 'カテゴリ', 'トピック', '原文']
 
   // 有効なレコードのみフィルタリングし、createdAt順でソート
-  const enabledRecords = records.filter(r => r.isEnabled !== false) // isEnabledがundefinedの場合も有効とみなす
+  // - isEnabledがfalseのレコードは除外
+  // - 提案レコード（isProposedGeneralCategory || isProposedCategory）で未承認（proposalApproved !== true）のレコードも除外
+  const enabledRecords = records.filter(r => {
+    if (r.isEnabled === false) return false
+    // 提案レコードは承認済みのみ有効
+    if ((r.isProposedGeneralCategory || r.isProposedCategory) && r.proposalApproved !== true) return false
+    return true
+  })
   const sortedRecords = [...enabledRecords].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
 
   // 原文ごとにグループ化して通し番号を付与
@@ -512,11 +518,11 @@ export default function AnalysisSessionDetailPage() {
             // 一般カテゴリがマスタに存在しない場合、新規提案とみなす（APIのis_new_general_categoryフラグも参照）
             const isProposedGeneralCategory = allowCategoryGeneration &&
               ((generalCategoryName && !masterGeneralCategoryNames.has(generalCategoryName)) ||
-               (extract.is_new_general_category === true))
+                (extract.is_new_general_category === true))
             // カテゴリがマスタに存在しない場合、新規提案とみなす（AIのis_new_generatedフラグも参照）
             const isProposedCategory = allowCategoryGeneration &&
               ((categoryName && !masterCategoryNames.has(categoryName)) ||
-               (extract.is_new_generated === true))
+                (extract.is_new_generated === true))
 
             return {
               rawText: extract.raw_text || csvTexts[resultIndex] || '',
@@ -1345,7 +1351,7 @@ export default function AnalysisSessionDetailPage() {
                     </p>
                     {statistics.generalCategoryStats.proposed.total > 0 && (
                       <p className="text-xs text-amber-600">
-                        <Sparkles className="w-3 h-3 inline mr-1" />
+
                         提案: {statistics.generalCategoryStats.proposed.approved}/{statistics.generalCategoryStats.proposed.total}
                       </p>
                     )}
@@ -1386,7 +1392,7 @@ export default function AnalysisSessionDetailPage() {
                     </p>
                     {statistics.categoryStats.proposed.total > 0 && (
                       <p className="text-xs text-amber-600">
-                        <Sparkles className="w-3 h-3 inline mr-1" />
+
                         提案: {statistics.categoryStats.proposed.approved}/{statistics.categoryStats.proposed.total}
                       </p>
                     )}
@@ -1442,7 +1448,10 @@ export default function AnalysisSessionDetailPage() {
                     const state = editStates.get(record.id)
                     if (!state) return null
 
-                    const isEnabled = record.isEnabled !== false // undefinedの場合も有効とみなす
+                    // 有効判定: isEnabledがfalse、または提案レコードで未承認の場合は無効
+                    const isProposal = record.isProposedGeneralCategory || record.isProposedCategory
+                    const isApproved = record.proposalApproved === true
+                    const isEnabled = record.isEnabled !== false && (!isProposal || isApproved)
                     const disabledClass = isEnabled ? '' : 'opacity-40'
 
                     return (
@@ -1456,15 +1465,13 @@ export default function AnalysisSessionDetailPage() {
                               <button
                                 type="button"
                                 onClick={() => handleToggleEnabled(record.id, isEnabled)}
-                                className={`w-8 h-4 rounded-full relative transition-colors ${
-                                  isEnabled ? 'bg-green-500' : 'bg-gray-300'
-                                }`}
+                                className={`w-8 h-4 rounded-full relative transition-colors ${isEnabled ? 'bg-green-500' : 'bg-gray-300'
+                                  }`}
                                 title={isEnabled ? 'クリックで無効化（CSVから除外）' : 'クリックで有効化（CSVに含める）'}
                               >
                                 <span
-                                  className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-all ${
-                                    isEnabled ? 'right-0.5' : 'left-0.5'
-                                  }`}
+                                  className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-all ${isEnabled ? 'right-0.5' : 'left-0.5'
+                                    }`}
                                 />
                               </button>
                             </div>
@@ -1507,7 +1514,7 @@ export default function AnalysisSessionDetailPage() {
                                     ? 'bg-red-100 text-red-400 line-through'
                                     : 'bg-amber-100 text-amber-800 animate-pulse'
                                   }`}>
-                                  <Sparkles className="w-3 h-3 inline mr-0.5" />
+
                                   {record.analysisGeneralCategory || '-'}
                                 </span>
                               </R_Stack>
@@ -1524,7 +1531,7 @@ export default function AnalysisSessionDetailPage() {
                                     ? 'bg-red-100 text-red-400 line-through'
                                     : 'bg-amber-100 text-amber-800 animate-pulse'
                                   }`}>
-                                  <Sparkles className="w-3 h-3 inline mr-0.5" />
+
                                   {record.analysisCategory || '-'}
                                 </span>
                               </R_Stack>
@@ -1534,11 +1541,7 @@ export default function AnalysisSessionDetailPage() {
                           </td>
                           <td rowSpan={3} className="px-3 py-2 align-middle border-b">
                             <C_Stack className="gap-1 items-center">
-                              {state.isModified && (
-                                <span title="保存中..." className="animate-pulse">
-                                  <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
-                                </span>
-                              )}
+
                               {/* 新規提案の承認/却下ボタン */}
                               {(record.isProposedGeneralCategory || record.isProposedCategory) && record.proposalApproved === null && (
                                 <R_Stack className="gap-1">
@@ -1549,11 +1552,7 @@ export default function AnalysisSessionDetailPage() {
                                     className="p-1 text-green-600 hover:bg-green-50 rounded disabled:opacity-50"
                                     title="承認（マスタに登録）"
                                   >
-                                    {processingRecordId === record.id ? (
-                                      <Loader2 className="w-4 h-4 animate-spin" />
-                                    ) : (
-                                      <Check className="w-4 h-4" />
-                                    )}
+                                    <Check className="w-4 h-4" />
                                   </button>
                                   <button
                                     type="button"
@@ -1566,28 +1565,31 @@ export default function AnalysisSessionDetailPage() {
                                   </button>
                                 </R_Stack>
                               )}
-                              {/* 承認済み表示 + 却下ボタン */}
-                              {(record.isProposedGeneralCategory || record.isProposedCategory) && record.proposalApproved === true && (
-                                <R_Stack className="gap-1">
-                                  <span className="text-xs text-green-600">承認済</span>
-                                  <button
-                                    type="button"
-                                    onClick={() => handleRejectProposal(record.id)}
-                                    disabled={processingRecordId === record.id}
-                                    className="p-1 text-red-400 hover:bg-red-50 rounded disabled:opacity-50"
-                                    title="却下に変更（カテゴリをクリア）"
-                                  >
-                                    {processingRecordId === record.id ? (
-                                      <Loader2 className="w-3 h-3 animate-spin" />
-                                    ) : (
-                                      <X className="w-3 h-3" />
+
+
+                              {/* トグル形式で承認/却下切り替え */}
+                              {(record.isProposedGeneralCategory || record.isProposedCategory) && record.proposalApproved !== null && (
+                                <R_Stack className="gap-1 items-center">
+                                  <label className="flex items-center gap-1 cursor-pointer">
+
+                                    <span
+                                      onClick={() =>
+                                        record.proposalApproved === true
+                                          ? handleRejectProposal(record.id)
+                                          : handleApproveProposal(record.id)
+                                      }
+                                      className={`text-xs ${record.proposalApproved === true
+                                        ? 'text-green-600'
+                                        : 'text-red-400 line-through'
+                                        }`}
+                                    >
+                                      {record.proposalApproved === true ? '承認' : '却下'}
+                                    </span>
+                                    {processingRecordId === record.id && (
+                                      <Loader2 className="w-3 h-3 animate-spin ml-1" />
                                     )}
-                                  </button>
+                                  </label>
                                 </R_Stack>
-                              )}
-                              {/* 却下済み表示 */}
-                              {(record.isProposedGeneralCategory || record.isProposedCategory) && record.proposalApproved === false && (
-                                <span className="text-xs text-red-400">却下</span>
                               )}
                             </C_Stack>
                           </td>

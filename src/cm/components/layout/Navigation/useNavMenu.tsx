@@ -1,5 +1,5 @@
 'use client'
-import { atomTypes, useJotaiByKey } from '@cm/hooks/useJotai'
+import { useJotaiByKey } from '@cm/hooks/useJotai'
 import { useCallback, useMemo } from 'react'
 
 type HandleOpenMenuParams = {

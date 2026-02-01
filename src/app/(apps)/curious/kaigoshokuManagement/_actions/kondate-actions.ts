@@ -1,11 +1,8 @@
 'use server'
 
 import prisma from 'src/lib/prisma'
-import type { Prisma } from '@prisma/generated/prisma/client'
 import type {
-  KgMealSlotWithRelations,
   KgMenuRecipeWithRelations,
-  KgRecipeIngredientWithMaster,
 } from '../types'
 
 /**

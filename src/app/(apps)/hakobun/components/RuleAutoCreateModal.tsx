@@ -192,9 +192,7 @@ export default function RuleAutoCreateModal({ clientId, onRuleSaved }: RuleAutoC
     <C_Stack className="gap-6  overflow-y-auto">
       {/* ヘッダー */}
       <R_Stack className="items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
-          <Sparkles className="w-5 h-5 text-purple-600" />
-        </div>
+
         <div>
           <h1 className="text-xl font-bold text-gray-900">ルール自動作成</h1>
           <p className="text-sm text-gray-500">過去の修正事例からルールを自動生成します</p>
@@ -282,7 +280,7 @@ export default function RuleAutoCreateModal({ clientId, onRuleSaved }: RuleAutoC
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4" />
+
                   ルール草案作成 ({selectedCorrections.size}件)
                 </>
               )}

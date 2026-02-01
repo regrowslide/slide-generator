@@ -19,13 +19,15 @@ async function generateSchemaExports() {
 
   // Prisma 7対応: datasource dbブロックにURLを動的に追加
   // prisma.config.tsではなく@prisma/internalsを直接使うため、URLが必要
-  combinedSchema = combinedSchema.replace(/datasource\s+db\s*\{([^}]*)\}/, (match, content) => {
-    // 既にurlがある場合はそのまま
-    if (content.includes('url')) return match
-    // urlを追加
-    const url = process.env.DATABASE_URL || 'postgresql://dummy:dummy@localhost:5432/dummy'
-    return `datasource db {${content}  url = "${url}"\n}`
-  })
+  // if (process.env.NODE_ENV === 'production') {
+  //   combinedSchema = combinedSchema.replace(/datasource\s+db\s*\{([^}]*)\}/, (match, content) => {
+  //     // 既にurlがある場合はそのまま
+  //     if (content.includes('url')) return match
+  //     // urlを追加
+  //     const url = process.env.DATABASE_URL || 'postgresql://dummy:dummy@localhost:5432/dummy'
+  //     return `datasource db {${content}  url = "${url}"\n}`
+  //   })
+  // }
 
   // DMMFを取得
   const dmmf = await getDMMF({

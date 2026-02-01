@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MessageCircle, Sparkles, X } from 'lucide-react'
+import { MessageCircle, X } from 'lucide-react'
 import { useFloatingCTA } from '../../hooks/useFloatingCTA'
 import { DemoDrivenDevelopment } from '../DemoDrivenDevelopment'
 

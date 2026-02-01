@@ -103,9 +103,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
   return (
     <div className={`min-h-screen bg-gradient-to-br ${colors.gradientLight} flex items-center justify-center`}>
       <div className="text-center animate-in fade-in zoom-in duration-500">
-        <div className={`inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r ${colors.gradient} rounded-2xl shadow-2xl ${colors.shadow} mb-6`}>
-          <Sparkles className="w-10 h-10 text-white" />
-        </div>
+
         <h1 className={`text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${colors.text} mb-2`}>
           {systemName}
         </h1>
@@ -142,17 +140,15 @@ export const InfoSidebar: React.FC<InfoSidebarProps> = ({
     <>
       {/* オーバーレイ */}
       <div
-        className={`fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity duration-300 ${
-          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
+        className={`fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
         onClick={onClose}
       />
 
       {/* サイドバー */}
       <aside
-        className={`fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-out overflow-y-auto ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-out overflow-y-auto ${isOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
       >
         {/* ヘッダー */}
         <div className={`sticky top-0 bg-gradient-to-r ${colors.gradient} px-6 py-4 flex items-center justify-between`}>

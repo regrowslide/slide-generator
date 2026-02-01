@@ -2,7 +2,7 @@
  "framework": "nextjs",
  "installCommand": "npm install",
  "devCommand": "next dev",
- "buildCommand": "npx prisma generate && next build --no-lint",
+ "buildCommand": "npx prisma generate && next build",
  "cleanUrls": true,
  "regions": [
   "sin1"

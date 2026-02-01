@@ -10,7 +10,7 @@
     "dev": " npm run convert &&  next dev --turbo",
     "dev-mini": "NODE_OPTIONS='--max-old-space-size=1769 --expose-gc' npm run convert && NODE_OPTIONS='--max-old-space-size=1769 --expose-gc' npm run generateType && NODE_OPTIONS='--max-old-space-size=1769 --expose-gc' next dev --turbo",
     "prebuild": "npm run generate:vercel",
-    "build": "next build",
+    "build": "rm -rf .next && rm -rf node_modules/.cache && next build ",
     "start": "next start",
     "local-start": "next start",
     "lint": "eslint './**/*.{ts,tsx}'",
@@ -21,8 +21,8 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
-    "@aws-sdk/client-s3": "^3.971.0",
-    "@aws-sdk/s3-request-presigner": "^3.971.0",
+    "@aws-sdk/client-s3": "^3.893.0",
+    "@aws-sdk/s3-request-presigner": "^3.893.0",
     "@dnd-kit/core": "^6.0.7",
     "@dnd-kit/sortable": "^10.0.0",
     "@faker-js/faker": "^9.7.0",
@@ -32,9 +32,9 @@
     "@mapbox/node-pre-gyp": "^2.0.3",
     "@next/bundle-analyzer": "^15.3.1",
     "@pdf-lib/fontkit": "^1.1.1",
-    "@prisma/adapter-pg": "^6.11.1",
+    "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
-    "@prisma/internals": "^6.17.1",
+    "@prisma/internals": "^7.3.0",
     "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-checkbox": "^1.3.3",
     "@radix-ui/react-dialog": "^1.1.14",
@@ -50,7 +50,6 @@
     "@types/react-dom": "^19.2.3",
     "axios": "^1.7.9",
     "bcrypt": "^6.0.0",
-    "canvas": "^3.2.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
@@ -58,7 +57,6 @@
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.7",
     "event-stream": "^4.0.1",
-    "fabric": "^7.1.0",
     "fetch-ponyfill": "^7.1.0",
     "file-saver": "^2.0.5",
     "file-type": "^20.4.1",
@@ -140,7 +138,7 @@
     "postcss-import": "^16.1.0",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "prisma": "^7.3.0",
+    "prisma": "7.3.0",
     "tailwindcss": "^4.1.4",
     "tw-animate-css": "^1.3.0",
     "typescript": "^5.7.3",
@@ -152,7 +150,8 @@
   "overrides": {
     "next-auth": {
       "next": "$next"
-    }
+    },
+    "fast-xml-parser": "5.3.4"
   },
   "main": "next.config.js",
   "keywords": [],
