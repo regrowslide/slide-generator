@@ -173,10 +173,6 @@ model HakobunAnalysisSession {
   analyzedAt    DateTime? // 分析完了日時
   errorMessage  String?  // エラー時のメッセージ
 
-  // 確定機能
-  isConfirmed   Boolean   @default(false)  // 確定フラグ
-  confirmedAt   DateTime?                   // 確定日時
-
   // 分析BOX紐づけ
   analysisBox   HakobunAnalysisBox @relation(fields: [analysisBoxId], references: [id], onDelete: Cascade)
   analysisBoxId Int

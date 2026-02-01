@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
-import { Plus, Trash2, Save, X, FileText, ChevronRight, ChevronLeft, ArrowLeft, CheckCircle, Clock, AlertCircle, Loader2, Search, Download, CheckCircle2, Square, CheckSquare } from 'lucide-react'
+import { Plus, Trash2, Save, X, FileText, ChevronRight, ChevronLeft, ArrowLeft, CheckCircle, Clock, AlertCircle, Loader2, Search, Download } from 'lucide-react'
 import useMyNavigation from '@cm/hooks/globalHooks/useMyNavigation'
 import Link from 'next/link'
 import useModal from '@cm/components/utils/modal/useModal'
@@ -13,7 +13,6 @@ import {
   createAnalysisSession,
   deleteAnalysisSession,
   getBoxRecordsForExport,
-  getMultiSessionRecordsForExport,
 } from '../../../_actions/analysis-box-actions'
 import type { HakobunAnalysisBox, HakobunAnalysisSession, HakobunAnalysisRecord, AnalysisSessionStatus } from '../../../types'
 
@@ -145,7 +144,7 @@ export default function AnalysisBoxDetailPage() {
   const { getHref } = useMyNavigation()
 
   const [box, setBox] = useState<HakobunAnalysisBox | null>(null)
-  const [sessions, setSessions] = useState<(HakobunAnalysisSession & { _count?: { records: number }; isConfirmed?: boolean; confirmedAt?: Date | null })[]>([])
+  const [sessions, setSessions] = useState<(HakobunAnalysisSession & { _count?: { records: number } })[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [formData, setFormData] = useState<SessionFormData>(initialFormData)
   const [searchInput, setSearchInput] = useState('')
@@ -156,15 +155,7 @@ export default function AnalysisBoxDetailPage() {
   // モーダル用
   const formModal = useModal()
 
-  // セッション選択（複数選択CSV出力用）
-  const [selectedSessionIds, setSelectedSessionIds] = useState<Set<number>>(new Set())
-  const [isExportingMulti, setIsExportingMulti] = useState(false)
-
   const totalPages = Math.ceil(totalCount / PAGE_SIZE)
-
-  // 確定済みセッションの数
-  const confirmedSessions = sessions.filter(s => s.isConfirmed)
-  const hasConfirmedSessions = confirmedSessions.length > 0
 
   // 分析BOX詳細取得
   const fetchBox = useCallback(async () => {
@@ -274,67 +265,6 @@ export default function AnalysisBoxDetailPage() {
     }
   }, [boxId, box?.name])
 
-  // セッション選択トグル
-  const handleToggleSessionSelect = useCallback((sessionId: number) => {
-    setSelectedSessionIds(prev => {
-      const newSet = new Set(prev)
-      if (newSet.has(sessionId)) {
-        newSet.delete(sessionId)
-      } else {
-        newSet.add(sessionId)
-      }
-      return newSet
-    })
-  }, [])
-
-  // 全確定済みセッションを選択
-  const handleSelectAllConfirmed = useCallback(() => {
-    const confirmedIds = sessions.filter(s => s.isConfirmed).map(s => s.id)
-    setSelectedSessionIds(new Set(confirmedIds))
-  }, [sessions])
-
-  // 選択解除
-  const handleDeselectAll = useCallback(() => {
-    setSelectedSessionIds(new Set())
-  }, [])
-
-  // 選択したセッションのCSVエクスポート
-  const handleExportSelectedSessions = useCallback(async () => {
-    if (selectedSessionIds.size === 0) {
-      alert('セッションを選択してください')
-      return
-    }
-
-    setIsExportingMulti(true)
-    try {
-      const sessionIds = Array.from(selectedSessionIds)
-      const result = await getMultiSessionRecordsForExport(sessionIds)
-
-      if (!result.success || !result.data) {
-        alert(result.error || 'データ取得に失敗しました')
-        return
-      }
-
-      if (result.data.length === 0) {
-        alert('出力するデータがありません')
-        return
-      }
-
-      // createdAt順でCSV生成
-      const csvContent = generateCsvContent(result.data as HakobunAnalysisRecord[], true)
-      const filename = `分析結果_確定_${box?.name || 'box'}_${selectedSessionIds.size}SESSION_${new Date().toISOString().split('T')[0]}.csv`
-      downloadCsv(csvContent, filename)
-
-      // 選択をクリア
-      setSelectedSessionIds(new Set())
-    } catch (error) {
-      console.error('CSVダウンロードエラー:', error)
-      alert('CSVダウンロードに失敗しました')
-    } finally {
-      setIsExportingMulti(false)
-    }
-  }, [selectedSessionIds, box?.name])
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
@@ -372,17 +302,17 @@ export default function AnalysisBoxDetailPage() {
               <p className="text-sm text-gray-500 mt-1">{box.description}</p>
             )}
             <p className="text-xs text-gray-400 mt-1">
-              確定済み: {confirmedSessions.length}件 / 全{sessions.length}件
+              SESSION: {sessions.length}件
             </p>
           </div>
           <R_Stack className="gap-2">
             <button
               onClick={handleDownloadCsv}
               className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2"
-              title="未確定を含む全セッションのプレビュー版CSVをダウンロード"
+              title="全セッションのCSVをダウンロード"
             >
               <Download className="w-4 h-4" />
-              CSV（全・プレビュー）
+              CSV出力
             </button>
             <button
               onClick={openAddModal}
@@ -393,53 +323,6 @@ export default function AnalysisBoxDetailPage() {
             </button>
           </R_Stack>
         </R_Stack>
-
-        {/* 選択したセッションのエクスポート（確定済みセッションがある場合のみ表示） */}
-        {hasConfirmedSessions && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <R_Stack className="justify-between items-center">
-              <div>
-                <R_Stack className="items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-blue-600" />
-                  <span className="font-medium text-blue-800">確定済みセッションのCSVエクスポート</span>
-                </R_Stack>
-                <p className="text-sm text-blue-600 mt-1">
-                  選択中: {selectedSessionIds.size}件
-                  {selectedSessionIds.size > 0 && ` (${Array.from(selectedSessionIds).map(id => sessions.find(s => s.id === id)?.name).filter(Boolean).join(', ')})`}
-                </p>
-              </div>
-              <R_Stack className="gap-2">
-                {selectedSessionIds.size === 0 ? (
-                  <button
-                    onClick={handleSelectAllConfirmed}
-                    className="px-3 py-1.5 text-sm bg-white border border-blue-300 text-blue-700 rounded-lg hover:bg-blue-50"
-                  >
-                    全て選択
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleDeselectAll}
-                    className="px-3 py-1.5 text-sm bg-white border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50"
-                  >
-                    選択解除
-                  </button>
-                )}
-                <button
-                  onClick={handleExportSelectedSessions}
-                  disabled={selectedSessionIds.size === 0 || isExportingMulti}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:bg-gray-400"
-                >
-                  {isExportingMulti ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Download className="w-4 h-4" />
-                  )}
-                  CSV出力（確定版）
-                </button>
-              </R_Stack>
-            </R_Stack>
-          </div>
-        )}
 
         {/* 検索 */}
         <R_Stack className="gap-2">
@@ -473,99 +356,55 @@ export default function AnalysisBoxDetailPage() {
             <div className="grid gap-4">
               {sessions.map(session => {
                 const recordCount = session._count?.records || 0
-                const isSelected = selectedSessionIds.has(session.id)
-                const isConfirmed = session.isConfirmed
 
                 return (
                   <div
                     key={session.id}
-                    className={`border rounded-lg p-4 transition-colors ${
-                      isSelected
-                        ? 'border-blue-400 bg-blue-50'
-                        : 'border-gray-200 hover:bg-gray-50'
-                    }`}
+                    className="border rounded-lg p-4 transition-colors border-gray-200 hover:bg-gray-50"
                   >
-                    <R_Stack className="justify-between items-center">
-                      <R_Stack className="items-center gap-4">
-                        {/* 確定済みの場合のみチェックボックス表示 */}
-                        {isConfirmed && (
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.preventDefault()
-                              e.stopPropagation()
-                              handleToggleSessionSelect(session.id)
-                            }}
-                            className="p-1 text-blue-600 hover:bg-blue-100 rounded"
-                          >
-                            {isSelected ? (
-                              <CheckSquare className="w-5 h-5" />
-                            ) : (
-                              <Square className="w-5 h-5" />
-                            )}
-                          </button>
-                        )}
-                        <Link
-                          href={getHref(`/hakobun/analysis-box/${boxId}/session/${session.id}`)}
-                          className="flex items-center gap-4 flex-1"
-                        >
-                          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                            isConfirmed ? 'bg-green-100' : 'bg-purple-100'
-                          }`}>
-                            {isConfirmed ? (
-                              <CheckCircle2 className="w-5 h-5 text-green-600" />
-                            ) : (
-                              <FileText className="w-5 h-5 text-purple-600" />
-                            )}
+                    <Link
+                      href={getHref(`/hakobun/analysis-box/${boxId}/session/${session.id}`)}
+                      className="flex items-center gap-4 flex-1"
+                    >
+                      <R_Stack className="justify-between items-center w-full">
+                        <R_Stack className="items-center gap-4">
+                          <div className="w-10 h-10 rounded-full flex items-center justify-center bg-purple-100">
+                            <FileText className="w-5 h-5 text-purple-600" />
                           </div>
                           <div>
                             <R_Stack className="items-center gap-2">
                               <p className="font-medium text-gray-900">{session.name}</p>
                               {getStatusBadge(session.status as AnalysisSessionStatus)}
-                              {/* 確定状態バッジ */}
-                              {isConfirmed ? (
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-green-100 text-green-700">
-                                  確定済み
-                                </span>
-                              ) : (
-                                session.status === 'completed' && (
-                                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-amber-100 text-amber-700">
-                                    未確定
-                                  </span>
-                                )
-                              )}
                             </R_Stack>
                             <p className="text-xs text-gray-400 mt-1">
                               レコード: {recordCount}件
                               {session.analyzedAt && (
                                 <> / 分析完了: {new Date(session.analyzedAt).toLocaleString('ja-JP')}</>
                               )}
-                              {isConfirmed && session.confirmedAt && (
-                                <> / 確定: {new Date(session.confirmedAt).toLocaleString('ja-JP')}</>
-                              )}
                             </p>
                             {session.errorMessage && (
                               <p className="text-xs text-red-500 mt-1">{session.errorMessage}</p>
                             )}
                           </div>
-                        </Link>
-                      </R_Stack>
-                      <R_Stack className="gap-2 items-center">
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
-                            handleDelete(session.id)
-                          }}
-                          className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                        <Link href={getHref(`/hakobun/analysis-box/${boxId}/session/${session.id}`)}>
+
+                        </R_Stack>
+                        <R_Stack className="gap-2 items-center">
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              handleDelete(session.id)
+                            }}
+                            className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                          {/* <Link href={getHref(`/hakobun/analysis-box/${boxId}/session/${session.id}`)}> */}
                           <ChevronRight className="w-5 h-5 text-gray-400" />
-                        </Link>
+                          {/* </Link> */}
+                        </R_Stack>
                       </R_Stack>
-                    </R_Stack>
+                    </Link>
                   </div>
                 )
               })}

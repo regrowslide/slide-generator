@@ -618,8 +618,6 @@ export const HakobunAnalysisSessionScalarFieldEnum = {
   status: 'status',
   analyzedAt: 'analyzedAt',
   errorMessage: 'errorMessage',
-  isConfirmed: 'isConfirmed',
-  confirmedAt: 'confirmedAt',
   analysisBoxId: 'analysisBoxId'
 } as const
 

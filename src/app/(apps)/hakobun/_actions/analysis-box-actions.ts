@@ -203,16 +203,9 @@ export const getAnalysisSessions = async (params: {
       skip: params.skip,
     })
 
-    // isConfirmed, confirmedAt を含む形式で返す
-    const sessionsWithConfirmed = sessions.map(session => ({
-      ...session,
-      isConfirmed: session.isConfirmed,
-      confirmedAt: session.confirmedAt,
-    }))
-
     const totalCount = await prisma.hakobunAnalysisSession.count({ where })
 
-    return { success: true, data: { sessions: sessionsWithConfirmed, totalCount } }
+    return { success: true, data: { sessions, totalCount } }
   } catch (error) {
     console.error('分析SESSION一覧取得エラー:', error)
     return {
@@ -548,7 +541,37 @@ export const approveProposedCategory = async (
   }
 }
 
+// 新規提案カテゴリを承認のみ（マスタ登録なし、一時的な使用）
+export const approveProposalOnly = async (recordId: number) => {
+  try {
+    const record = await prisma.hakobunAnalysisRecord.findUnique({
+      where: { id: recordId },
+    })
+
+    if (!record) {
+      return { success: false, error: 'レコードが見つかりません' }
+    }
+
+    // proposalApprovedをtrueに更新するのみ（マスタへの登録は行わない）
+    const updatedRecord = await prisma.hakobunAnalysisRecord.update({
+      where: { id: recordId },
+      data: {
+        proposalApproved: true,
+      },
+    })
+
+    return { success: true, data: updatedRecord }
+  } catch (error) {
+    console.error('新規提案カテゴリ承認（一時）エラー:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : '承認処理に失敗しました',
+    }
+  }
+}
+
 // 新規提案カテゴリを却下（該当フィールドをnullに）
+// 承認済み（proposalApproved === true）からの却下も許可
 export const rejectProposedCategory = async (recordId: number) => {
   try {
     const record = await prisma.hakobunAnalysisRecord.findUnique({
@@ -560,6 +583,7 @@ export const rejectProposedCategory = async (recordId: number) => {
     }
 
     // 却下時は該当フィールドをnullにする
+    // 承認済みからの却下も許可（マスタからの削除は行わない）
     const updateData: {
       proposalApproved: boolean
       analysisGeneralCategory?: null
@@ -643,47 +667,6 @@ export const getBoxRecordsForExport = async (boxId: number) => {
   }
 }
 
-// ============================================
-// セッション確定機能
-// ============================================
-
-// セッションを確定する
-export const confirmAnalysisSession = async (sessionId: number, hakobunClientId: number) => {
-  try {
-    // SESSIONを確定状態に更新
-    const session = await prisma.hakobunAnalysisSession.update({
-      where: { id: sessionId },
-      data: {
-        isConfirmed: true,
-        confirmedAt: new Date(),
-      },
-    })
-
-    // フィードバックが修正されたレコードを取得（ルール自動生成用）
-    const modifiedRecords = await prisma.hakobunAnalysisRecord.findMany({
-      where: {
-        sessionId,
-        isModified: true,
-      },
-      orderBy: { createdAt: 'asc' },
-    })
-
-    return {
-      success: true,
-      data: {
-        session,
-        modifiedRecordsCount: modifiedRecords.length,
-      },
-    }
-  } catch (error) {
-    console.error('セッション確定エラー:', error)
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'セッションの確定に失敗しました',
-    }
-  }
-}
-
 // レコードの有効/無効を切り替える
 export const toggleAnalysisRecordEnabled = async (recordId: number, isEnabled: boolean) => {
   try {
@@ -701,55 +684,9 @@ export const toggleAnalysisRecordEnabled = async (recordId: number, isEnabled: b
   }
 }
 
-// 確定済みセッションのレコード取得（CSV出力用・createdAt順）
-export const getConfirmedSessionRecordsForExport = async (sessionId: number) => {
-  try {
-    // セッションが確定済みかチェック
-    const session = await prisma.hakobunAnalysisSession.findUnique({
-      where: { id: sessionId },
-      select: { isConfirmed: true },
-    })
-
-    if (!session?.isConfirmed) {
-      return {
-        success: false,
-        error: '未確定のセッションはエクスポートできません',
-      }
-    }
-
-    // createdAt順でレコード取得
-    const records = await prisma.hakobunAnalysisRecord.findMany({
-      where: { sessionId },
-      orderBy: { createdAt: 'asc' },
-    })
-
-    return { success: true, data: records }
-  } catch (error) {
-    console.error('確定済みレコード取得エラー:', error)
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'レコード取得に失敗しました',
-    }
-  }
-}
-
 // 複数セッションのレコード取得（セッション横断CSV出力用・createdAt順・全体通し連番）
 export const getMultiSessionRecordsForExport = async (sessionIds: number[]) => {
   try {
-    // 全セッションが確定済みかチェック
-    const sessions = await prisma.hakobunAnalysisSession.findMany({
-      where: { id: { in: sessionIds } },
-      select: { id: true, isConfirmed: true, name: true },
-    })
-
-    const unconfirmedSessions = sessions.filter(s => !s.isConfirmed)
-    if (unconfirmedSessions.length > 0) {
-      return {
-        success: false,
-        error: `未確定のセッションが含まれています: ${unconfirmedSessions.map(s => s.name).join(', ')}`,
-      }
-    }
-
     // createdAt順でレコード取得（全セッション横断）
     const records = await prisma.hakobunAnalysisRecord.findMany({
       where: { sessionId: { in: sessionIds } },

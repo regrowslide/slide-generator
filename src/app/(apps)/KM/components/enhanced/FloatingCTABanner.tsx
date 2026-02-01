@@ -35,14 +35,14 @@ export const FloatingCTABanner = () => {
                 <div className="flex flex-wrap gap-3">
                   <button
                     onClick={() => setIsModalOpen(true)}
-                    className="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-2 py-1 text-white font-bold shadow-lg transition-all hover:bg-amber-600 hover:scale-105"
+                    className="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-3 py-2 text-white font-bold shadow-lg transition-all hover:bg-amber-600 hover:scale-105"
                   >
-                    <Sparkles className="h-4 w-4" />
+
                     デモ先行開発とは？
                   </button>
                   <button
                     onClick={() => scrollToSection('contact')}
-                    className="inline-flex items-center gap-2 rounded-lg bg-white px-2 py-1 text-blue-900 font-bold shadow-lg transition-all hover:bg-gray-100 hover:scale-105"
+                    className="inline-flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-blue-900 font-bold shadow-lg transition-all hover:bg-gray-100 hover:scale-105"
                   >
                     <MessageCircle className="h-4 w-4" />
                     お問い合わせ

@@ -5535,35 +5535,6 @@
           "isUpdatedAt": false
         },
         {
-          "name": "isConfirmed",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Boolean",
-          "nativeType": null,
-          "default": false,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "confirmedAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "DateTime",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
           "name": "analysisBox",
           "kind": "object",
           "isList": false,

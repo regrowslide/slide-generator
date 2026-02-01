@@ -47,8 +47,6 @@ export type HakobunAnalysisSessionMinAggregateOutputType = {
   status: string | null
   analyzedAt: Date | null
   errorMessage: string | null
-  isConfirmed: boolean | null
-  confirmedAt: Date | null
   analysisBoxId: number | null
 }
 
@@ -61,8 +59,6 @@ export type HakobunAnalysisSessionMaxAggregateOutputType = {
   status: string | null
   analyzedAt: Date | null
   errorMessage: string | null
-  isConfirmed: boolean | null
-  confirmedAt: Date | null
   analysisBoxId: number | null
 }
 
@@ -75,8 +71,6 @@ export type HakobunAnalysisSessionCountAggregateOutputType = {
   status: number
   analyzedAt: number
   errorMessage: number
-  isConfirmed: number
-  confirmedAt: number
   analysisBoxId: number
   _all: number
 }
@@ -103,8 +97,6 @@ export type HakobunAnalysisSessionMinAggregateInputType = {
   status?: true
   analyzedAt?: true
   errorMessage?: true
-  isConfirmed?: true
-  confirmedAt?: true
   analysisBoxId?: true
 }
 
@@ -117,8 +109,6 @@ export type HakobunAnalysisSessionMaxAggregateInputType = {
   status?: true
   analyzedAt?: true
   errorMessage?: true
-  isConfirmed?: true
-  confirmedAt?: true
   analysisBoxId?: true
 }
 
@@ -131,8 +121,6 @@ export type HakobunAnalysisSessionCountAggregateInputType = {
   status?: true
   analyzedAt?: true
   errorMessage?: true
-  isConfirmed?: true
-  confirmedAt?: true
   analysisBoxId?: true
   _all?: true
 }
@@ -232,8 +220,6 @@ export type HakobunAnalysisSessionGroupByOutputType = {
   status: string
   analyzedAt: Date | null
   errorMessage: string | null
-  isConfirmed: boolean
-  confirmedAt: Date | null
   analysisBoxId: number
   _count: HakobunAnalysisSessionCountAggregateOutputType | null
   _avg: HakobunAnalysisSessionAvgAggregateOutputType | null
@@ -269,8 +255,6 @@ export type HakobunAnalysisSessionWhereInput = {
   status?: Prisma.StringFilter<"HakobunAnalysisSession"> | string
   analyzedAt?: Prisma.DateTimeNullableFilter<"HakobunAnalysisSession"> | Date | string | null
   errorMessage?: Prisma.StringNullableFilter<"HakobunAnalysisSession"> | string | null
-  isConfirmed?: Prisma.BoolFilter<"HakobunAnalysisSession"> | boolean
-  confirmedAt?: Prisma.DateTimeNullableFilter<"HakobunAnalysisSession"> | Date | string | null
   analysisBoxId?: Prisma.IntFilter<"HakobunAnalysisSession"> | number
   analysisBox?: Prisma.XOR<Prisma.HakobunAnalysisBoxScalarRelationFilter, Prisma.HakobunAnalysisBoxWhereInput>
   records?: Prisma.HakobunAnalysisRecordListRelationFilter
@@ -285,8 +269,6 @@ export type HakobunAnalysisSessionOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   analyzedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
-  isConfirmed?: Prisma.SortOrder
-  confirmedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   analysisBoxId?: Prisma.SortOrder
   analysisBox?: Prisma.HakobunAnalysisBoxOrderByWithRelationInput
   records?: Prisma.HakobunAnalysisRecordOrderByRelationAggregateInput
@@ -304,8 +286,6 @@ export type HakobunAnalysisSessionWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.StringFilter<"HakobunAnalysisSession"> | string
   analyzedAt?: Prisma.DateTimeNullableFilter<"HakobunAnalysisSession"> | Date | string | null
   errorMessage?: Prisma.StringNullableFilter<"HakobunAnalysisSession"> | string | null
-  isConfirmed?: Prisma.BoolFilter<"HakobunAnalysisSession"> | boolean
-  confirmedAt?: Prisma.DateTimeNullableFilter<"HakobunAnalysisSession"> | Date | string | null
   analysisBoxId?: Prisma.IntFilter<"HakobunAnalysisSession"> | number
   analysisBox?: Prisma.XOR<Prisma.HakobunAnalysisBoxScalarRelationFilter, Prisma.HakobunAnalysisBoxWhereInput>
   records?: Prisma.HakobunAnalysisRecordListRelationFilter
@@ -320,8 +300,6 @@ export type HakobunAnalysisSessionOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   analyzedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
-  isConfirmed?: Prisma.SortOrder
-  confirmedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   analysisBoxId?: Prisma.SortOrder
   _count?: Prisma.HakobunAnalysisSessionCountOrderByAggregateInput
   _avg?: Prisma.HakobunAnalysisSessionAvgOrderByAggregateInput
@@ -342,8 +320,6 @@ export type HakobunAnalysisSessionScalarWhereWithAggregatesInput = {
   status?: Prisma.StringWithAggregatesFilter<"HakobunAnalysisSession"> | string
   analyzedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"HakobunAnalysisSession"> | Date | string | null
   errorMessage?: Prisma.StringNullableWithAggregatesFilter<"HakobunAnalysisSession"> | string | null
-  isConfirmed?: Prisma.BoolWithAggregatesFilter<"HakobunAnalysisSession"> | boolean
-  confirmedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"HakobunAnalysisSession"> | Date | string | null
   analysisBoxId?: Prisma.IntWithAggregatesFilter<"HakobunAnalysisSession"> | number
 }
 
@@ -355,8 +331,6 @@ export type HakobunAnalysisSessionCreateInput = {
   status?: string
   analyzedAt?: Date | string | null
   errorMessage?: string | null
-  isConfirmed?: boolean
-  confirmedAt?: Date | string | null
   analysisBox: Prisma.HakobunAnalysisBoxCreateNestedOneWithoutSessionsInput
   records?: Prisma.HakobunAnalysisRecordCreateNestedManyWithoutSessionInput
 }
@@ -370,8 +344,6 @@ export type HakobunAnalysisSessionUncheckedCreateInput = {
   status?: string
   analyzedAt?: Date | string | null
   errorMessage?: string | null
-  isConfirmed?: boolean
-  confirmedAt?: Date | string | null
   analysisBoxId: number
   records?: Prisma.HakobunAnalysisRecordUncheckedCreateNestedManyWithoutSessionInput
 }
@@ -384,8 +356,6 @@ export type HakobunAnalysisSessionUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   analyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   analysisBox?: Prisma.HakobunAnalysisBoxUpdateOneRequiredWithoutSessionsNestedInput
   records?: Prisma.HakobunAnalysisRecordUpdateManyWithoutSessionNestedInput
 }
@@ -399,8 +369,6 @@ export type HakobunAnalysisSessionUncheckedUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   analyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   analysisBoxId?: Prisma.IntFieldUpdateOperationsInput | number
   records?: Prisma.HakobunAnalysisRecordUncheckedUpdateManyWithoutSessionNestedInput
 }
@@ -414,8 +382,6 @@ export type HakobunAnalysisSessionCreateManyInput = {
   status?: string
   analyzedAt?: Date | string | null
   errorMessage?: string | null
-  isConfirmed?: boolean
-  confirmedAt?: Date | string | null
   analysisBoxId: number
 }
 
@@ -427,8 +393,6 @@ export type HakobunAnalysisSessionUpdateManyMutationInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   analyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type HakobunAnalysisSessionUncheckedUpdateManyInput = {
@@ -440,8 +404,6 @@ export type HakobunAnalysisSessionUncheckedUpdateManyInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   analyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   analysisBoxId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -464,8 +426,6 @@ export type HakobunAnalysisSessionCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   analyzedAt?: Prisma.SortOrder
   errorMessage?: Prisma.SortOrder
-  isConfirmed?: Prisma.SortOrder
-  confirmedAt?: Prisma.SortOrder
   analysisBoxId?: Prisma.SortOrder
 }
 
@@ -484,8 +444,6 @@ export type HakobunAnalysisSessionMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   analyzedAt?: Prisma.SortOrder
   errorMessage?: Prisma.SortOrder
-  isConfirmed?: Prisma.SortOrder
-  confirmedAt?: Prisma.SortOrder
   analysisBoxId?: Prisma.SortOrder
 }
 
@@ -498,8 +456,6 @@ export type HakobunAnalysisSessionMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   analyzedAt?: Prisma.SortOrder
   errorMessage?: Prisma.SortOrder
-  isConfirmed?: Prisma.SortOrder
-  confirmedAt?: Prisma.SortOrder
   analysisBoxId?: Prisma.SortOrder
 }
 
@@ -578,8 +534,6 @@ export type HakobunAnalysisSessionCreateWithoutAnalysisBoxInput = {
   status?: string
   analyzedAt?: Date | string | null
   errorMessage?: string | null
-  isConfirmed?: boolean
-  confirmedAt?: Date | string | null
   records?: Prisma.HakobunAnalysisRecordCreateNestedManyWithoutSessionInput
 }
 
@@ -592,8 +546,6 @@ export type HakobunAnalysisSessionUncheckedCreateWithoutAnalysisBoxInput = {
   status?: string
   analyzedAt?: Date | string | null
   errorMessage?: string | null
-  isConfirmed?: boolean
-  confirmedAt?: Date | string | null
   records?: Prisma.HakobunAnalysisRecordUncheckedCreateNestedManyWithoutSessionInput
 }
 
@@ -635,8 +587,6 @@ export type HakobunAnalysisSessionScalarWhereInput = {
   status?: Prisma.StringFilter<"HakobunAnalysisSession"> | string
   analyzedAt?: Prisma.DateTimeNullableFilter<"HakobunAnalysisSession"> | Date | string | null
   errorMessage?: Prisma.StringNullableFilter<"HakobunAnalysisSession"> | string | null
-  isConfirmed?: Prisma.BoolFilter<"HakobunAnalysisSession"> | boolean
-  confirmedAt?: Prisma.DateTimeNullableFilter<"HakobunAnalysisSession"> | Date | string | null
   analysisBoxId?: Prisma.IntFilter<"HakobunAnalysisSession"> | number
 }
 
@@ -648,8 +598,6 @@ export type HakobunAnalysisSessionCreateWithoutRecordsInput = {
   status?: string
   analyzedAt?: Date | string | null
   errorMessage?: string | null
-  isConfirmed?: boolean
-  confirmedAt?: Date | string | null
   analysisBox: Prisma.HakobunAnalysisBoxCreateNestedOneWithoutSessionsInput
 }
 
@@ -662,8 +610,6 @@ export type HakobunAnalysisSessionUncheckedCreateWithoutRecordsInput = {
   status?: string
   analyzedAt?: Date | string | null
   errorMessage?: string | null
-  isConfirmed?: boolean
-  confirmedAt?: Date | string | null
   analysisBoxId: number
 }
 
@@ -691,8 +637,6 @@ export type HakobunAnalysisSessionUpdateWithoutRecordsInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   analyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   analysisBox?: Prisma.HakobunAnalysisBoxUpdateOneRequiredWithoutSessionsNestedInput
 }
 
@@ -705,8 +649,6 @@ export type HakobunAnalysisSessionUncheckedUpdateWithoutRecordsInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   analyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   analysisBoxId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -719,8 +661,6 @@ export type HakobunAnalysisSessionCreateManyAnalysisBoxInput = {
   status?: string
   analyzedAt?: Date | string | null
   errorMessage?: string | null
-  isConfirmed?: boolean
-  confirmedAt?: Date | string | null
 }
 
 export type HakobunAnalysisSessionUpdateWithoutAnalysisBoxInput = {
@@ -731,8 +671,6 @@ export type HakobunAnalysisSessionUpdateWithoutAnalysisBoxInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   analyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   records?: Prisma.HakobunAnalysisRecordUpdateManyWithoutSessionNestedInput
 }
 
@@ -745,8 +683,6 @@ export type HakobunAnalysisSessionUncheckedUpdateWithoutAnalysisBoxInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   analyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   records?: Prisma.HakobunAnalysisRecordUncheckedUpdateManyWithoutSessionNestedInput
 }
 
@@ -759,8 +695,6 @@ export type HakobunAnalysisSessionUncheckedUpdateManyWithoutAnalysisBoxInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   analyzedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -803,8 +737,6 @@ export type HakobunAnalysisSessionSelect<ExtArgs extends runtime.Types.Extension
   status?: boolean
   analyzedAt?: boolean
   errorMessage?: boolean
-  isConfirmed?: boolean
-  confirmedAt?: boolean
   analysisBoxId?: boolean
   analysisBox?: boolean | Prisma.HakobunAnalysisBoxDefaultArgs<ExtArgs>
   records?: boolean | Prisma.HakobunAnalysisSession$recordsArgs<ExtArgs>
@@ -820,8 +752,6 @@ export type HakobunAnalysisSessionSelectCreateManyAndReturn<ExtArgs extends runt
   status?: boolean
   analyzedAt?: boolean
   errorMessage?: boolean
-  isConfirmed?: boolean
-  confirmedAt?: boolean
   analysisBoxId?: boolean
   analysisBox?: boolean | Prisma.HakobunAnalysisBoxDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["hakobunAnalysisSession"]>
@@ -835,8 +765,6 @@ export type HakobunAnalysisSessionSelectUpdateManyAndReturn<ExtArgs extends runt
   status?: boolean
   analyzedAt?: boolean
   errorMessage?: boolean
-  isConfirmed?: boolean
-  confirmedAt?: boolean
   analysisBoxId?: boolean
   analysisBox?: boolean | Prisma.HakobunAnalysisBoxDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["hakobunAnalysisSession"]>
@@ -850,12 +778,10 @@ export type HakobunAnalysisSessionSelectScalar = {
   status?: boolean
   analyzedAt?: boolean
   errorMessage?: boolean
-  isConfirmed?: boolean
-  confirmedAt?: boolean
   analysisBoxId?: boolean
 }
 
-export type HakobunAnalysisSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "name" | "status" | "analyzedAt" | "errorMessage" | "isConfirmed" | "confirmedAt" | "analysisBoxId", ExtArgs["result"]["hakobunAnalysisSession"]>
+export type HakobunAnalysisSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "name" | "status" | "analyzedAt" | "errorMessage" | "analysisBoxId", ExtArgs["result"]["hakobunAnalysisSession"]>
 export type HakobunAnalysisSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   analysisBox?: boolean | Prisma.HakobunAnalysisBoxDefaultArgs<ExtArgs>
   records?: boolean | Prisma.HakobunAnalysisSession$recordsArgs<ExtArgs>
@@ -883,8 +809,6 @@ export type $HakobunAnalysisSessionPayload<ExtArgs extends runtime.Types.Extensi
     status: string
     analyzedAt: Date | null
     errorMessage: string | null
-    isConfirmed: boolean
-    confirmedAt: Date | null
     analysisBoxId: number
   }, ExtArgs["result"]["hakobunAnalysisSession"]>
   composites: {}
@@ -1319,8 +1243,6 @@ export interface HakobunAnalysisSessionFieldRefs {
   readonly status: Prisma.FieldRef<"HakobunAnalysisSession", 'String'>
   readonly analyzedAt: Prisma.FieldRef<"HakobunAnalysisSession", 'DateTime'>
   readonly errorMessage: Prisma.FieldRef<"HakobunAnalysisSession", 'String'>
-  readonly isConfirmed: Prisma.FieldRef<"HakobunAnalysisSession", 'Boolean'>
-  readonly confirmedAt: Prisma.FieldRef<"HakobunAnalysisSession", 'DateTime'>
   readonly analysisBoxId: Prisma.FieldRef<"HakobunAnalysisSession", 'Int'>
 }
     

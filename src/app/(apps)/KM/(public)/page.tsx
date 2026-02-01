@@ -148,7 +148,7 @@ const KM_ENHANCED_PAGE = async () => {
       <div className="min-h-screen">
         {/* <EnhancedHeader menuItems={menuItems} /> */}
 
-        <div className={`max-w-screen-2xl mx-auto bg-gray-100 lg:p-8`}>
+        <div className={`max-w-screen-2xl mx-auto  lg:p-8`}>
           <main role="main">
             <div>
               <EnhancedIntroduction />

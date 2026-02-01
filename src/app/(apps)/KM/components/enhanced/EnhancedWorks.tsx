@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useMemo, useCallback } from 'react'
-import { Search, Filter, X } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { Search, Filter, X, ChevronDown } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { Padding } from '@cm/components/styles/common-components/common-components'
 import { CompactWorkCard } from './works/CompactWorkCard'
@@ -11,6 +11,9 @@ import { useWorksFilter } from '../../hooks/useWorksFilter'
 import { getUniqueValues, isPopularCategory } from '../../utils/worksUtils'
 import { INTERSECTION_OBSERVER_CONFIG } from '../../constants/worksConstants'
 import type { CategoryType } from '../../types/works'
+
+// 初期表示件数
+const INITIAL_DISPLAY_COUNT = 6
 
 export const EnhancedWorks = ({ works }: { works: any[] }) => {
   const { ref, inView } = useInView({
@@ -21,6 +24,7 @@ export const EnhancedWorks = ({ works }: { works: any[] }) => {
   const publicWorks = useMemo(() => works.filter((row) => row.isPublic && row.description), [works])
   const [selectedWork, setSelectedWork] = useState<any | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
 
   const {
     filteredWorks,
@@ -45,9 +49,31 @@ export const EnhancedWorks = ({ works }: { works: any[] }) => {
     setSelectedWork(null)
   }, [])
 
+  // 表示するworks（展開状態によって変わる）
+  const displayedWorks = useMemo(() => {
+    if (isExpanded) {
+      return filteredWorks
+    }
+    return filteredWorks.slice(0, INITIAL_DISPLAY_COUNT)
+  }, [filteredWorks, isExpanded])
 
+  // 残り件数
+  const remainingCount = filteredWorks.length - INITIAL_DISPLAY_COUNT
 
+  // フィルターが変わったら折りたたむ
+  const handleResetFilters = useCallback(() => {
+    resetFilters()
+    setIsExpanded(false)
+  }, [resetFilters])
 
+  // カテゴリークリック時も折りたたむ
+  const handleCategoryClickWithCollapse = useCallback(
+    (category: string, type: CategoryType) => {
+      handleCategoryClick(category, type)
+      setIsExpanded(false)
+    },
+    [handleCategoryClick]
+  )
 
   return (
     <div className="w-full">
@@ -69,13 +95,19 @@ export const EnhancedWorks = ({ works }: { works: any[] }) => {
               <input
                 type="text"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value)
+                  setIsExpanded(false)
+                }}
                 placeholder="キーワードで検索（タイトル、説明など）"
                 className="w-full rounded-xl border-2 border-gray-200 bg-white py-3 pl-12 pr-4 text-gray-900 placeholder-gray-400 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               />
               {searchQuery && (
                 <button
-                  onClick={() => setSearchQuery('')}
+                  onClick={() => {
+                    setSearchQuery('')
+                    setIsExpanded(false)
+                  }}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
                   <X className="h-5 w-5" />
@@ -83,8 +115,6 @@ export const EnhancedWorks = ({ works }: { works: any[] }) => {
               )}
             </div>
           </div>
-
-
 
           {/* カテゴリータブ */}
           <div className="mb-6">
@@ -102,11 +132,12 @@ export const EnhancedWorks = ({ works }: { works: any[] }) => {
                     return (
                       <button
                         key={`job-${category}`}
-                        onClick={() => handleCategoryClick(category, 'jobCategory' as CategoryType)}
-                        className={`group relative inline-flex items-center gap-2  cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold transition-all ${isSelected
-                          ? 'bg-blue-600 text-white shadow-lg'
-                          : 'bg-blue-100 text-blue-700 hover:bg-blue-200 opacity-50'
-                          }`}
+                        onClick={() => handleCategoryClickWithCollapse(category, 'jobCategory' as CategoryType)}
+                        className={`group relative inline-flex items-center gap-2 cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold transition-all ${
+                          isSelected
+                            ? 'bg-blue-600 text-white shadow-lg'
+                            : 'bg-blue-100 text-blue-700 hover:bg-blue-200 opacity-50'
+                        }`}
                       >
                         <span>{category}</span>
                         {isPopular && (
@@ -129,11 +160,12 @@ export const EnhancedWorks = ({ works }: { works: any[] }) => {
                     return (
                       <button
                         key={`system-${category}`}
-                        onClick={() => handleCategoryClick(category, 'systemCategory' as CategoryType)}
-                        className={`group relative inline-flex items-center gap-2  cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold transition-all ${isSelected
-                          ? 'bg-emerald-600 text-white shadow-lg'
-                          : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200 opacity-50'
-                          }`}
+                        onClick={() => handleCategoryClickWithCollapse(category, 'systemCategory' as CategoryType)}
+                        className={`group relative inline-flex items-center gap-2 cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold transition-all ${
+                          isSelected
+                            ? 'bg-emerald-600 text-white shadow-lg'
+                            : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200 opacity-50'
+                        }`}
                       >
                         <span>{category}</span>
                         {isPopular && (
@@ -146,8 +178,6 @@ export const EnhancedWorks = ({ works }: { works: any[] }) => {
                   })}
                 </div>
               )}
-
-
             </div>
           </div>
 
@@ -155,15 +185,13 @@ export const EnhancedWorks = ({ works }: { works: any[] }) => {
           {(searchQuery || selectedCategory) && (
             <div className="mb-6 flex items-center gap-2">
               <button
-                onClick={resetFilters}
+                onClick={handleResetFilters}
                 className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-all hover:bg-gray-50"
               >
                 <X className="h-4 w-4" />
                 フィルターをリセット
               </button>
-              <span className="text-sm text-gray-600">
-                {filteredWorks.length}件の実績が見つかりました
-              </span>
+              <span className="text-sm text-gray-600">{filteredWorks.length}件の実績が見つかりました</span>
             </div>
           )}
 
@@ -171,40 +199,53 @@ export const EnhancedWorks = ({ works }: { works: any[] }) => {
           <div className="w-full">
             {filteredWorks.length > 0 ? (
               <>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {filteredWorks.map((work, index) => (
-                    <CompactWorkCard
-                      key={work.id || index}
-                      work={work}
-                      onClick={() => handleWorkClick(work)}
-                    />
-                  ))}
-                </div>
+                <motion.div layout className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  <AnimatePresence mode="popLayout">
+                    {displayedWorks.map((work, index) => (
+                      <motion.div
+                        key={work.id || index}
+                        layout
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ duration: 0.3, delay: index >= INITIAL_DISPLAY_COUNT ? (index - INITIAL_DISPLAY_COUNT) * 0.05 : 0 }}
+                      >
+                        <CompactWorkCard work={work} onClick={() => handleWorkClick(work)} />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </motion.div>
 
-                {/* 表示件数 */}
-                {filteredWorks.length > 0 && (
-                  <div className="mt-8 text-center">
+                {/* 続きを見るボタン / 表示件数 */}
+                <div className="mt-8 text-center">
+                  {!isExpanded && remainingCount > 0 ? (
+                    <motion.button
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      onClick={() => setIsExpanded(true)}
+                      className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-4 text-base font-bold text-white shadow-lg transition-all hover:from-blue-700 hover:to-blue-800 hover:shadow-xl active:scale-95"
+                    >
+                      <span>続きを見る（残り {remainingCount} 件）</span>
+                      <ChevronDown className="h-5 w-5 transition-transform group-hover:translate-y-0.5" />
+                    </motion.button>
+                  ) : (
                     <div className="inline-block rounded-full bg-blue-100 px-6 py-3">
                       <span className="text-base font-semibold text-blue-700">
                         {filteredWorks.length}件の実績を表示中
                       </span>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </>
             ) : (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="rounded-2xl bg-gray-50 p-12 text-center"
-              >
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="rounded-2xl bg-gray-50 p-12 text-center">
                 <Search className="mx-auto mb-4 h-12 w-12 text-gray-400" />
                 <p className="text-lg text-gray-600">該当する実績が見つかりませんでした</p>
                 <p className="mt-2 text-sm text-gray-500">別の条件で検索してみてください</p>
                 {(searchQuery || selectedCategory) && (
                   <button
-                    onClick={resetFilters}
-                    className="mt-4 rounded-lg bg-blue-600 px-6 py-2 text-white font-semibold transition-all hover:bg-blue-700"
+                    onClick={handleResetFilters}
+                    className="mt-4 rounded-lg bg-blue-600 px-6 py-2 font-semibold text-white transition-all hover:bg-blue-700"
                   >
                     フィルターをリセット
                   </button>
@@ -216,11 +257,7 @@ export const EnhancedWorks = ({ works }: { works: any[] }) => {
       </Padding>
 
       {/* 実績詳細モーダル */}
-      <WorkDetailModal
-        work={selectedWork}
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-      />
+      <WorkDetailModal work={selectedWork} isOpen={isModalOpen} onClose={handleCloseModal} />
     </div>
   )
 }

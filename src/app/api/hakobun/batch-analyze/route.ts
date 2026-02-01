@@ -214,10 +214,14 @@ export async function POST(request: NextRequest) {
               return null
             }
 
-            // 各extractに原文（raw_text）を追加
+            // 各extractに原文（raw_text）を追加し、一般カテゴリの新規生成フラグを判定
             const parsedExtracts: Extract[] = geminiResponse.data.map((extract: Omit<Extract, 'raw_text'>) => ({
               ...extract,
               raw_text: text,
+              // 一般カテゴリがマスタに存在しない場合、新規生成フラグをセット
+              is_new_general_category: allow_category_generation &&
+                extract.general_category &&
+                !validGeneralCategoryNames.has(extract.general_category),
             }))
 
             // 結果オブジェクトを構築

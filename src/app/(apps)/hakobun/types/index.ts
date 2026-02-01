@@ -121,6 +121,7 @@ export interface Extract {
   posi_nega: PosiNegaType // ポジネガ判定
   magnitude: number // 熱量スコア（0-100）
   is_new_generated?: boolean // 新規生成カテゴリかどうか
+  is_new_general_category?: boolean // 新規生成一般カテゴリかどうか（API側で判定）
 }
 
 // --- 分析結果 ---
@@ -352,8 +353,6 @@ export interface HakobunAnalysisSession {
   status: AnalysisSessionStatus
   analyzedAt?: Date | null
   errorMessage?: string | null
-  isConfirmed: boolean  // 確定フラグ
-  confirmedAt?: Date | null  // 確定日時
   analysisBoxId: number
   records?: HakobunAnalysisRecord[]
 }
@@ -452,3 +451,14 @@ export interface GenerateRuleFromSessionResponse {
   savedCount?: number
   error?: string
 }
+
+// ============================================
+// デバッグビューア用型定義
+// ============================================
+
+// Server Actionsからエクスポート
+export type {
+  ClientOption,
+  DataCounts,
+  ClientFullData,
+} from '../_actions/debug-viewer-actions'

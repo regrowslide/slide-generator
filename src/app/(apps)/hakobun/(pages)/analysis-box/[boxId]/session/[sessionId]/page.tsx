@@ -30,6 +30,7 @@ import {
   updateAnalysisRecordsFeedback,
   getSessionRecordsForExport,
   approveProposedCategory,
+  approveProposalOnly,
   rejectProposedCategory,
   toggleAnalysisRecordEnabled,
 } from '../../../../../_actions/analysis-box-actions'
@@ -507,10 +508,15 @@ export default function AnalysisSessionDetailPage() {
             const generalCategoryName = extract.general_category || ''
             const categoryName = extract.category || ''
 
-            // 一般カテゴリがマスタに存在しない場合、新規提案とみなす
-            const isProposedGeneralCategory = generalCategoryName && !masterGeneralCategoryNames.has(generalCategoryName)
+            // allowCategoryGenerationがONの場合のみ新規提案フラグをセット
+            // 一般カテゴリがマスタに存在しない場合、新規提案とみなす（APIのis_new_general_categoryフラグも参照）
+            const isProposedGeneralCategory = allowCategoryGeneration &&
+              ((generalCategoryName && !masterGeneralCategoryNames.has(generalCategoryName)) ||
+               (extract.is_new_general_category === true))
             // カテゴリがマスタに存在しない場合、新規提案とみなす（AIのis_new_generatedフラグも参照）
-            const isProposedCategory = (categoryName && !masterCategoryNames.has(categoryName)) || (extract.is_new_generated === true)
+            const isProposedCategory = allowCategoryGeneration &&
+              ((categoryName && !masterCategoryNames.has(categoryName)) ||
+               (extract.is_new_generated === true))
 
             return {
               rawText: extract.raw_text || csvTexts[resultIndex] || '',
@@ -718,19 +724,36 @@ export default function AnalysisSessionDetailPage() {
 
   // 新規提案カテゴリを承認
   const handleApproveProposal = useCallback(async (recordId: number) => {
-    if (!industryId) {
-      alert('業種が設定されていないため、承認できません。')
-      return
-    }
+    // マスタに登録するか確認
+    const shouldRegisterToMaster = window.confirm(
+      '提案されたカテゴリをマスタに登録しますか？\n\n' +
+      '「OK」: マスタに登録して承認（今後の分析でも使用可能）\n' +
+      '「キャンセル」: 承認のみ（このセッションのみで一時的に使用）'
+    )
 
     setProcessingRecordId(recordId)
     try {
-      const result = await approveProposedCategory(recordId, industryId)
+      let result
+      if (shouldRegisterToMaster) {
+        // マスタに登録して承認
+        if (!industryId) {
+          alert('業種が設定されていないため、マスタに登録できません。承認のみ実行します。')
+          result = await approveProposalOnly(recordId)
+        } else {
+          result = await approveProposedCategory(recordId, industryId)
+        }
+      } else {
+        // 承認のみ（マスタ登録なし）
+        result = await approveProposalOnly(recordId)
+      }
+
       if (result.success) {
         // データを再取得
         await fetchRecords()
         await fetchAllRecordsForStats()
-        await refreshCategories()
+        if (shouldRegisterToMaster && industryId) {
+          await refreshCategories()
+        }
       } else {
         alert(`承認に失敗しました: ${result.error}`)
       }
@@ -741,9 +764,13 @@ export default function AnalysisSessionDetailPage() {
     }
   }, [industryId, fetchRecords, fetchAllRecordsForStats, refreshCategories])
 
-  // 新規提案カテゴリを却下
+  // 新規提案カテゴリを却下（承認済みからの却下も可能）
   const handleRejectProposal = useCallback(async (recordId: number) => {
-    if (!window.confirm('この提案を却下しますか？\n却下すると、該当するカテゴリ/一般カテゴリはnullに設定されます。')) {
+    if (!window.confirm(
+      'この提案を却下しますか？\n\n' +
+      '却下すると、該当するカテゴリ/一般カテゴリはクリアされます。\n' +
+      '（既にマスタに登録されているカテゴリは削除されません）'
+    )) {
       return
     }
 
@@ -1270,7 +1297,7 @@ export default function AnalysisSessionDetailPage() {
                     <p className="text-lg font-bold text-blue-800">{statistics.stages.length}種</p>
                   </button>
                 </PopoverTrigger>
-                <PopoverContent className="w-64 p-2">
+                <PopoverContent className="w-64 p-2 bg-white">
                   <p className="text-xs font-medium text-gray-600 mb-2">ステージ別件数</p>
                   <div className="space-y-1 max-h-48 overflow-y-auto">
                     {statistics.stages.map(({ name, count }) => (
@@ -1293,7 +1320,7 @@ export default function AnalysisSessionDetailPage() {
                     <p className="text-lg font-bold text-green-800">{statistics.sentiments.length}種</p>
                   </button>
                 </PopoverTrigger>
-                <PopoverContent className="w-64 p-2">
+                <PopoverContent className="w-64 p-2 bg-white">
                   <p className="text-xs font-medium text-gray-600 mb-2">感情別件数</p>
                   <div className="space-y-1 max-h-48 overflow-y-auto">
                     {statistics.sentiments.map(({ name, count }) => (
@@ -1324,7 +1351,7 @@ export default function AnalysisSessionDetailPage() {
                     )}
                   </button>
                 </PopoverTrigger>
-                <PopoverContent className="w-72 p-2">
+                <PopoverContent className="w-72 p-2 bg-white">
                   <p className="text-xs font-medium text-gray-600 mb-2">一般カテゴリ別件数</p>
                   <div className="space-y-1 max-h-48 overflow-y-auto">
                     {statistics.generalCategories.map(({ name, count }) => (
@@ -1365,7 +1392,7 @@ export default function AnalysisSessionDetailPage() {
                     )}
                   </button>
                 </PopoverTrigger>
-                <PopoverContent className="w-72 p-2">
+                <PopoverContent className="w-72 p-2 bg-white">
                   <p className="text-xs font-medium text-gray-600 mb-2">カテゴリ別件数</p>
                   <div className="space-y-1 max-h-48 overflow-y-auto">
                     {statistics.categories.map(({ name, count }) => (
@@ -1539,9 +1566,24 @@ export default function AnalysisSessionDetailPage() {
                                   </button>
                                 </R_Stack>
                               )}
-                              {/* 承認済み表示 */}
+                              {/* 承認済み表示 + 却下ボタン */}
                               {(record.isProposedGeneralCategory || record.isProposedCategory) && record.proposalApproved === true && (
-                                <span className="text-xs text-green-600">承認済</span>
+                                <R_Stack className="gap-1">
+                                  <span className="text-xs text-green-600">承認済</span>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRejectProposal(record.id)}
+                                    disabled={processingRecordId === record.id}
+                                    className="p-1 text-red-400 hover:bg-red-50 rounded disabled:opacity-50"
+                                    title="却下に変更（カテゴリをクリア）"
+                                  >
+                                    {processingRecordId === record.id ? (
+                                      <Loader2 className="w-3 h-3 animate-spin" />
+                                    ) : (
+                                      <X className="w-3 h-3" />
+                                    )}
+                                  </button>
+                                </R_Stack>
                               )}
                               {/* 却下済み表示 */}
                               {(record.isProposedGeneralCategory || record.isProposedCategory) && record.proposalApproved === false && (
