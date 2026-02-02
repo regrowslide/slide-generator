@@ -13,10 +13,9 @@ export default function PublicLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="min-h-screen ">
-
+    <div className="h-screen  overflow-y-auto">
       <KMHeader />
-      <main className={`pt-8`} >{children}</main>
+      <main>{children}</main>
     </div>
   )
 }
