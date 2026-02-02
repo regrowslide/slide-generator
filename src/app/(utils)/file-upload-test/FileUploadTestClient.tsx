@@ -15,14 +15,14 @@ type TestSection = 'single' | 'multiple' | 'validation' | 'resize' | 'delete'
 
 export function FileUploadTestClient() {
   const [activeSection, setActiveSection] = useState<TestSection>('single')
-  const [logs, setLogs] = useState<string[]>([])
+  const [logList, setLogList] = useState<string[]>([])
 
   const addLog = (message: string) => {
     const timestamp = new Date().toLocaleTimeString()
-    setLogs(prev => [`[${timestamp}] ${message}`, ...prev].slice(0, 100))
+    setLogList(prev => [`[${timestamp}] ${message}`, ...prev].slice(0, 100))
   }
 
-  const clearLogs = () => setLogs([])
+  const clearLogList = () => setLogList([])
 
   return (
     <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
@@ -80,9 +80,9 @@ export function FileUploadTestClient() {
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-            <strong>Logs</strong>
+            <strong>LogList</strong>
             <button
-              onClick={clearLogs}
+              onClick={clearLogList}
               style={{
                 padding: '3px 10px',
                 backgroundColor: '#ff4444',
@@ -96,10 +96,10 @@ export function FileUploadTestClient() {
               Clear
             </button>
           </div>
-          {logs.length === 0 ? (
-            <div style={{ color: '#666' }}>No logs yet...</div>
+          {logList.length === 0 ? (
+            <div style={{ color: '#666' }}>No logList yet...</div>
           ) : (
-            logs.map((log, i) => (
+            logList.map((log, i) => (
               <div key={i} style={{ marginBottom: '5px', wordBreak: 'break-all' }}>
                 {log}
               </div>

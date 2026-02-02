@@ -53,7 +53,7 @@ export const OrderDashboardClient = ({ initialOrders, facilities }: Props) => {
         const result = await importOrderCsv(text)
 
         // ログを表示
-        logModal.handleOpen(result.logs)
+        logModal.handleOpen(result.logList)
 
         if (result.success) {
           // 再取得

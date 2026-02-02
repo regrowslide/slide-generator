@@ -30,6 +30,8 @@ export const generalDoStandardPrisma = async (model: any, method: any, queryObje
 export const doStandardPrisma: doStandardPrismaType = async (model, method, queryObject, transactionPrisma) => {
   // 認証チェック
   const isAllowed = await isServerActionAccessAllowed()
+
+
   if (!isAllowed) {
     return {
       success: false,

@@ -122,7 +122,7 @@ export const KondateClient = ({
         const result = await importKondateCsv(text, targetDate)
 
         // ログを表示
-        logModal.handleOpen(result.logs)
+        logModal.handleOpen(result.logList)
 
         if (result.success) {
           // データを再取得

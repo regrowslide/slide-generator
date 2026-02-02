@@ -236,7 +236,7 @@ export interface AppState {
   rawText: string
   analysisResult: AnalysisResult | null
   status: AnalysisStatus
-  logs: LogEntry[]
+  logList: LogEntry[]
   rules: HakobunRule[]
   corrections: HakobunCorrection[]
 }
@@ -431,11 +431,11 @@ export interface UpdateAnalysisRecordFeedbackInput {
 
 // --- AIが生成したルール ---
 export interface GeneratedRule {
-  targetCategory: string  // 対象カテゴリ
-  ruleDescription: string  // ルール内容
-  priority: 'High' | 'Medium' | 'Low'  // 優先度
-  isNew: boolean  // 新規ルールか既存マージか
-  mergedWithRuleId?: number  // マージ先の既存ルールID（既存マージの場合）
+  targetCategory: string // 対象カテゴリ
+  ruleDescription: string // ルール内容
+  priority: 'High' | 'Medium' | 'Low' // 優先度
+  isNew: boolean // 新規ルールか既存マージか
+  mergedWithRuleId?: number // マージ先の既存ルールID（既存マージの場合）
 }
 
 // --- ルール生成APIリクエスト ---
@@ -457,8 +457,4 @@ export interface GenerateRuleFromSessionResponse {
 // ============================================
 
 // Server Actionsからエクスポート
-export type {
-  ClientOption,
-  DataCounts,
-  ClientFullData,
-} from '../_actions/debug-viewer-actions'
+export type {ClientOption, DataCounts, ClientFullData} from '../_actions/debug-viewer-actions'

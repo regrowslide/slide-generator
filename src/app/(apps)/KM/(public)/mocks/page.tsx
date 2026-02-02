@@ -52,7 +52,7 @@ const MockCard = ({ mockup, isVisible }) => {
   const IconComponent = mockup.icon
 
   return (
-    <Link href={`/KM/mocks/${mockup.id}`} className="block group">
+    <Link href={`/KM/mocks/${mockup.id}`} className="block group" target="_blank">
       <div
         className={`
           relative overflow-hidden rounded-2xl border border-slate-200

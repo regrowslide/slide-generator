@@ -10,7 +10,7 @@ const initialState: AppState = {
   rawText: '',
   analysisResult: null,
   status: 'idle',
-  logs: [],
+  logList: [],
 
   rules: [],
   corrections: [],
@@ -33,7 +33,7 @@ export const useHakobunAnalysis = () => {
     }
     setState(prev => ({
       ...prev,
-      logs: [...prev.logs, log],
+      logList: [...prev.logList, log],
     }))
   }, [])
 
@@ -235,14 +235,14 @@ export const useHakobunAnalysis = () => {
       rawText: '',
       analysisResult: null,
       status: 'idle',
-      logs: [],
+      logList: [],
     }))
     setEditedExtracts([])
   }, [])
 
   // ログクリア
-  const clearLogs = useCallback(() => {
-    setState(prev => ({...prev, logs: []}))
+  const clearLogList = useCallback(() => {
+    setState(prev => ({...prev, logList: []}))
   }, [])
 
   return {
@@ -257,6 +257,6 @@ export const useHakobunAnalysis = () => {
     submitFeedback,
     reset,
     addLog,
-    clearLogs,
+    clearLogList,
   }
 }

@@ -1,7 +1,7 @@
-import {NextRequest, NextResponse} from 'next/server'
-import {executeCronBatch, executeCronBatchWithProgress} from 'src/non-common/cron/cronExecutor'
-import {BATCH_MASTER} from 'src/non-common/cron/batchMaster'
-import {isCron} from 'src/non-common/serverSideFunction'
+import { NextRequest, NextResponse } from 'next/server'
+import { executeCronBatch, executeCronBatchWithProgress } from 'src/non-common/cron/cronExecutor'
+import { BATCH_MASTER } from 'src/non-common/cron/batchMaster'
+import { isCron } from 'src/app/api/prisma/isAllowed'
 
 /**
  * Cronバッチ実行エンドポイント
@@ -12,12 +12,12 @@ import {isCron} from 'src/non-common/serverSideFunction'
  * - GET /api/cron/execute/tenpoTsuikoUpsert
  * - ...
  */
-export const GET = async (req: NextRequest, {params}: {params: Promise<{batchId: string}>}) => {
-  const {batchId} = await params
+export const GET = async (req: NextRequest, { params }: { params: Promise<{ batchId: string }> }) => {
+  const { batchId } = await params
 
-  if ((await isCron({req})) === false) {
-    const res = {success: false, message: `Unauthorized`, result: null}
-    const status = {status: 401, statusText: `Unauthorized`}
+  if ((await isCron({ req })) === false) {
+    const res = { success: false, message: `Unauthorized`, result: null }
+    const status = { status: 401, statusText: `Unauthorized` }
     return NextResponse.json(res, status)
   }
 
@@ -32,7 +32,7 @@ export const GET = async (req: NextRequest, {params}: {params: Promise<{batchId:
         message: `Unknown batch: ${batchId}`,
         availableBatches: Object.keys(BATCH_MASTER),
       },
-      {status: 404}
+      { status: 404 }
     )
   }
 
@@ -44,7 +44,7 @@ export const GET = async (req: NextRequest, {params}: {params: Promise<{batchId:
         success: false,
         message: `Handler not found for batch: ${batchId}. This batch may be a click action.`,
       },
-      {status: 400}
+      { status: 400 }
     )
   }
 

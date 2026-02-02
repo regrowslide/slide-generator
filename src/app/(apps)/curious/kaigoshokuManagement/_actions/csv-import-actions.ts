@@ -1,7 +1,7 @@
 'use server'
 
 import prisma from 'src/lib/prisma'
-import { MEAL_TYPES, DIET_TYPES, type MealTypeCode } from '../lib/constants'
+import {MEAL_TYPES, DIET_TYPES, type MealTypeCode} from '../lib/constants'
 
 /**
  * 献立CSVの階層構造:
@@ -75,15 +75,15 @@ type ParsedKondateData = {
 export type ImportResult = {
   success: boolean
   message: string
-  logs: string[]
+  logList: string[]
   importedDates?: string[]
   importedCount?: number
 }
 
 // CSVテキストを行に分割
 const parseCsvLines = (csvText: string): string[][] => {
-  const lines = csvText.split('\n').filter((line) => line.trim())
-  return lines.map((line) => {
+  const lines = csvText.split('\n').filter(line => line.trim())
+  return lines.map(line => {
     // CSVの各フィールドを解析（ダブルクォート対応）
     const result: string[] = []
     let current = ''
@@ -110,20 +110,12 @@ const parseDate = (dateStr: string): Date => {
   // "2026年1月31日" または "2026/01/31" 形式に対応
   const match1 = dateStr.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/)
   if (match1) {
-    return new Date(
-      parseInt(match1[1]),
-      parseInt(match1[2]) - 1,
-      parseInt(match1[3])
-    )
+    return new Date(parseInt(match1[1]), parseInt(match1[2]) - 1, parseInt(match1[3]))
   }
 
   const match2 = dateStr.match(/(\d{4})\/(\d{1,2})\/(\d{1,2})/)
   if (match2) {
-    return new Date(
-      parseInt(match2[1]),
-      parseInt(match2[2]) - 1,
-      parseInt(match2[3])
-    )
+    return new Date(parseInt(match2[1]), parseInt(match2[2]) - 1, parseInt(match2[3]))
   }
 
   throw new Error(`日付の解析に失敗: ${dateStr}`)
@@ -153,14 +145,11 @@ const getMealTypeCode = (mealTypeName: string): MealTypeCode => {
  * @param csvText CSVテキスト
  * @param targetDate 取り込み対象の日付（指定しない場合はCSVから読み取る）
  */
-export const importKondateCsv = async (
-  csvText: string,
-  targetDate?: Date
-): Promise<ImportResult & { importedDates: string[] }> => {
-  const logs: string[] = []
+export const importKondateCsv = async (csvText: string, targetDate?: Date): Promise<ImportResult & {importedDates: string[]}> => {
+  const logList: string[] = []
   const addLog = (message: string) => {
     const timestamp = new Date().toLocaleTimeString('ja-JP')
-    logs.push(`[${timestamp}] ${message}`)
+    logList.push(`[${timestamp}] ${message}`)
     console.log(`[献立CSV] ${message}`)
   }
 
@@ -171,7 +160,7 @@ export const importKondateCsv = async (
 
     if (lines.length < 8) {
       addLog('❌ CSVデータが不足しています（8行未満）')
-      return { success: false, message: 'CSVデータが不足しています', logs, importedDates: [] }
+      return {success: false, message: 'CSVデータが不足しています', logList, importedDates: []}
     }
 
     // 日付の決定: 引数で指定された場合はそれを使用、なければCSVから読み取る
@@ -185,7 +174,7 @@ export const importKondateCsv = async (
       const dateStr = dateLine[1]
       if (!dateStr) {
         addLog('❌ CSVから日付が見つかりません')
-        return { success: false, message: '日付が見つかりません', logs, importedDates: [] }
+        return {success: false, message: '日付が見つかりません', logList, importedDates: []}
       }
       date = parseDate(dateStr)
       addLog(`📅 CSVから日付を検出: ${dateStr}`)
@@ -236,7 +225,7 @@ export const importKondateCsv = async (
 
         // 同じ行に Menu がある場合（C列にコード、D列に名前）
         if (colC && /^\d+$/.test(colC) && colD) {
-          currentMenu = { code: colC, name: colD, dishes: [] }
+          currentMenu = {code: colC, name: colD, dishes: []}
           currentCategory.menus.push(currentMenu)
           addLog(`    📋 Menu検出: [${colC}] ${colD}`)
         }
@@ -247,7 +236,7 @@ export const importKondateCsv = async (
       // B列が空で、C列に数値コードがあり、D列に名前がある
       if (!colB && colC && /^\d+$/.test(colC) && colD && !colE) {
         if (currentCategory) {
-          currentMenu = { code: colC, name: colD, dishes: [] }
+          currentMenu = {code: colC, name: colD, dishes: []}
           currentCategory.menus.push(currentMenu)
           currentDish = null
           addLog(`    📋 Menu検出: [${colC}] ${colD}`)
@@ -259,7 +248,7 @@ export const importKondateCsv = async (
       // C列が空で、D列に数値コードがあり、E列に名前があり、G列（重量）が空
       if (!colC && colD && /^\d+$/.test(colD) && colE && !colG) {
         if (currentMenu) {
-          currentDish = { code: colD, name: colE, ingredients: [] }
+          currentDish = {code: colD, name: colE, ingredients: []}
           currentMenu.dishes.push(currentDish)
           addLog(`      🍳 Dish検出: [${colD}] ${colE}`)
         }
@@ -294,7 +283,7 @@ export const importKondateCsv = async (
 
         // Dish がない場合は、Menu に直接 Dish を作成
         if (!currentDish && currentMenu) {
-          currentDish = { code: '', name: currentMenu.name, ingredients: [] }
+          currentDish = {code: '', name: currentMenu.name, ingredients: []}
           currentMenu.dishes.push(currentDish)
         }
 
@@ -332,7 +321,7 @@ export const importKondateCsv = async (
         }
 
         if (!currentDish && currentMenu) {
-          currentDish = { code: '', name: currentMenu.name, ingredients: [] }
+          currentDish = {code: '', name: currentMenu.name, ingredients: []}
           currentMenu.dishes.push(currentDish)
         }
 
@@ -344,13 +333,9 @@ export const importKondateCsv = async (
 
     // 解析結果のサマリー
     const totalMenus = parsed.categories.reduce((sum, c) => sum + c.menus.length, 0)
-    const totalDishes = parsed.categories.reduce(
-      (sum, c) => sum + c.menus.reduce((s, m) => s + m.dishes.length, 0),
-      0
-    )
+    const totalDishes = parsed.categories.reduce((sum, c) => sum + c.menus.reduce((s, m) => s + m.dishes.length, 0), 0)
     const totalIngredients = parsed.categories.reduce(
-      (sum, c) =>
-        sum + c.menus.reduce((s, m) => s + m.dishes.reduce((ss, d) => ss + d.ingredients.length, 0), 0),
+      (sum, c) => sum + c.menus.reduce((s, m) => s + m.dishes.reduce((ss, d) => ss + d.ingredients.length, 0), 0),
       0
     )
     addLog(`📊 解析完了: ${parsed.categories.length}カテゴリ, ${totalMenus}メニュー, ${totalDishes}料理, ${totalIngredients}材料`)
@@ -363,13 +348,13 @@ export const importKondateCsv = async (
     // 既存の献立を削除（カスケードで関連データも削除）
     addLog(`🗑️ 既存データを削除: ${dateKey}`)
     await prisma.kgDailyMenu.deleteMany({
-      where: { menuDate: date },
+      where: {menuDate: date},
     })
 
     // 新しい献立を作成
     addLog('📝 日付献立を作成')
     const dailyMenu = await prisma.kgDailyMenu.create({
-      data: { menuDate: date },
+      data: {menuDate: date},
     })
 
     let savedCategories = 0
@@ -423,7 +408,7 @@ export const importKondateCsv = async (
           for (const ing of dish.ingredients) {
             // RcIngredientMasterからstandardCodeで検索してリレーション
             const masterIngredient = await prisma.rcIngredientMaster.findFirst({
-              where: { standardCode: ing.code },
+              where: {standardCode: ing.code},
             })
 
             await prisma.kgRecipeIngredient.create({
@@ -462,17 +447,17 @@ export const importKondateCsv = async (
     return {
       success: true,
       message: `${importedDates.length}日分の献立をインポートしました`,
-      logs,
+      logList,
       importedDates,
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'インポートに失敗しました'
-    logs.push(`[${new Date().toLocaleTimeString('ja-JP')}] ❌ エラー発生: ${errorMessage}`)
+    logList.push(`[${new Date().toLocaleTimeString('ja-JP')}] ❌ エラー発生: ${errorMessage}`)
     console.error('献立CSVインポートエラー:', error)
     return {
       success: false,
       message: errorMessage,
-      logs,
+      logList,
       importedDates: [],
     }
   }
@@ -480,14 +465,11 @@ export const importKondateCsv = async (
 
 // 受注CSVをインポート
 // 形式: 日付,単位,（常食）朝,（常食）昼,（常食）夜,（刻み食）朝,...
-export const importOrderCsv = async (
-  csvText: string,
-  facilityId?: number
-): Promise<ImportResult & { importedCount: number }> => {
-  const logs: string[] = []
+export const importOrderCsv = async (csvText: string, facilityId?: number): Promise<ImportResult & {importedCount: number}> => {
+  const logList: string[] = []
   const addLog = (message: string) => {
     const timestamp = new Date().toLocaleTimeString('ja-JP')
-    logs.push(`[${timestamp}] ${message}`)
+    logList.push(`[${timestamp}] ${message}`)
     console.log(`[受注CSV] ${message}`)
   }
 
@@ -498,7 +480,7 @@ export const importOrderCsv = async (
 
     if (lines.length < 2) {
       addLog('❌ CSVデータが不足しています（2行未満）')
-      return { success: false, message: 'CSVデータが不足しています', logs, importedCount: 0 }
+      return {success: false, message: 'CSVデータが不足しています', logList, importedCount: 0}
     }
 
     // ヘッダー解析
@@ -514,10 +496,10 @@ export const importOrderCsv = async (
       dietTypes = await prisma.kgDietTypeMaster.findMany()
     }
     addLog(`  ✅ 食事形態マスタ: ${dietTypes.length}件読み込み`)
-    const dietTypeMap = new Map(dietTypes.map((dt) => [dt.name, dt]))
+    const dietTypeMap = new Map(dietTypes.map(dt => [dt.name, dt]))
 
     // カラムインデックスを解析
-    type ColumnInfo = { dietTypeId: number; mealType: MealTypeCode }
+    type ColumnInfo = {dietTypeId: number; mealType: MealTypeCode}
     const columnMap = new Map<number, ColumnInfo>()
 
     for (let i = 2; i < header.length; i++) {
@@ -529,20 +511,15 @@ export const importOrderCsv = async (
         const mealName = match[2]
         const dietType = dietTypeMap.get(dietTypeName)
         if (dietType) {
-          const mealType =
-            mealName === '朝'
-              ? 'breakfast'
-              : mealName === '昼'
-                ? 'lunch'
-                : 'dinner'
-          columnMap.set(i, { dietTypeId: dietType.id, mealType })
+          const mealType = mealName === '朝' ? 'breakfast' : mealName === '昼' ? 'lunch' : 'dinner'
+          columnMap.set(i, {dietTypeId: dietType.id, mealType})
         }
       }
     }
 
     if (columnMap.size === 0) {
       addLog('❌ CSVヘッダーの形式が正しくありません')
-      return { success: false, message: 'CSVヘッダーの形式が正しくありません', logs, importedCount: 0 }
+      return {success: false, message: 'CSVヘッダーの形式が正しくありません', logList, importedCount: 0}
     }
     addLog(`  ✅ ${columnMap.size}列のデータ列を検出`)
 
@@ -631,17 +608,17 @@ export const importOrderCsv = async (
     return {
       success: true,
       message: `${importedCount}件の受注をインポートしました`,
-      logs,
+      logList,
       importedCount,
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'インポートに失敗しました'
-    logs.push(`[${new Date().toLocaleTimeString('ja-JP')}] ❌ エラー発生: ${errorMessage}`)
+    logList.push(`[${new Date().toLocaleTimeString('ja-JP')}] ❌ エラー発生: ${errorMessage}`)
     console.error('受注CSVインポートエラー:', error)
     return {
       success: false,
       message: errorMessage,
-      logs,
+      logList,
       importedCount: 0,
     }
   }
@@ -654,7 +631,7 @@ export const seedDietTypeMaster = async (): Promise<void> => {
   for (let i = 0; i < dietTypes.length; i++) {
     const dt = dietTypes[i]
     await prisma.kgDietTypeMaster.upsert({
-      where: { code: dt.code },
+      where: {code: dt.code},
       update: {
         name: dt.name,
         colorClass: dt.colorClass,

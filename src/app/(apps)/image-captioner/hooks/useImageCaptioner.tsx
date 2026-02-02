@@ -1,8 +1,8 @@
 'use client'
 
-import {useState, useCallback} from 'react'
-import {v4 as uuidv4} from 'uuid'
-import {ImageItem, AppSettings, LogEntry, AppState} from '../types'
+import { useState, useCallback } from 'react'
+import { v4 as uuidv4 } from 'uuid'
+import { ImageItem, AppSettings, LogEntry, AppState } from '../types'
 
 const defaultSettings: AppSettings = {
   aspectRatio: '16:9',
@@ -16,7 +16,7 @@ export const useImageCaptioner = () => {
     images: [],
     scenario: '',
     isProcessing: false,
-    logs: [],
+    logList: [],
   })
 
   const addLog = useCallback((type: LogEntry['type'], message: string, imageId?: string) => {
@@ -29,18 +29,18 @@ export const useImageCaptioner = () => {
     }
     setState(prev => ({
       ...prev,
-      logs: [...prev.logs, log],
+      logList: [...prev.logList, log],
     }))
   }, [])
 
   const setStep = useCallback((step: 1 | 2 | 3 | 4) => {
-    setState(prev => ({...prev, step}))
+    setState(prev => ({ ...prev, step }))
   }, [])
 
   const updateSettings = useCallback((settings: Partial<AppSettings>) => {
     setState(prev => ({
       ...prev,
-      settings: {...prev.settings, ...settings},
+      settings: { ...prev.settings, ...settings },
     }))
   }, [])
 
@@ -126,20 +126,20 @@ export const useImageCaptioner = () => {
   const updateImage = useCallback((id: string, updates: Partial<ImageItem>) => {
     setState(prev => ({
       ...prev,
-      images: prev.images.map(img => (img.id === id ? {...img, ...updates} : img)),
+      images: prev.images.map(img => (img.id === id ? { ...img, ...updates } : img)),
     }))
   }, [])
 
   const setScenario = useCallback((scenario: string) => {
-    setState(prev => ({...prev, scenario}))
+    setState(prev => ({ ...prev, scenario }))
   }, [])
 
   const setIsProcessing = useCallback((isProcessing: boolean) => {
-    setState(prev => ({...prev, isProcessing}))
+    setState(prev => ({ ...prev, isProcessing }))
   }, [])
 
-  const clearLogs = useCallback(() => {
-    setState(prev => ({...prev, logs: []}))
+  const clearLogList = useCallback(() => {
+    setState(prev => ({ ...prev, logList: [] }))
   }, [])
 
   return {
@@ -152,7 +152,7 @@ export const useImageCaptioner = () => {
     setScenario,
     setIsProcessing,
     addLog,
-    clearLogs,
+    clearLogList,
   }
 }
 

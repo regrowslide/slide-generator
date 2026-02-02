@@ -1,23 +1,23 @@
 'use client'
 
-import React, {useEffect, useRef} from 'react'
-import {LogEntry} from '../types'
-import {C_Stack} from '@cm/components/styles/common-components/common-components'
-import {CheckCircle2, XCircle, AlertCircle, Info} from 'lucide-react'
+import React, { useEffect, useRef } from 'react'
+import { LogEntry } from '../types'
+import { C_Stack } from '@cm/components/styles/common-components/common-components'
+import { CheckCircle2, XCircle, AlertCircle, Info } from 'lucide-react'
 
 interface ProcessLogProps {
-  logs: LogEntry[]
+  logList: LogEntry[]
   compact?: boolean // コンパクト表示モード（画像カード上に表示）
 }
 
-export const ProcessLog: React.FC<ProcessLogProps> = ({logs, compact = false}) => {
+export const ProcessLog: React.FC<ProcessLogProps> = ({ logList, compact = false }) => {
   const logEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!compact) {
-      logEndRef.current?.scrollIntoView({behavior: 'smooth'})
+      logEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     }
-  }, [logs, compact])
+  }, [logList, compact])
 
   const getLogIcon = (type: LogEntry['type']) => {
     switch (type) {
@@ -73,12 +73,12 @@ export const ProcessLog: React.FC<ProcessLogProps> = ({logs, compact = false}) =
 
   if (compact) {
     // コンパクト表示（画像カード上に表示）
-    const recentLogs = logs.slice(-5) // 最新5件のみ表示
-    if (recentLogs.length === 0) return null
+    const recentLogList = logList.slice(-5) // 最新5件のみ表示
+    if (recentLogList.length === 0) return null
 
     return (
       <div className="absolute top-2 left-2 right-2 z-10 space-y-1 max-h-32 overflow-y-auto">
-        {recentLogs.map(log => (
+        {recentLogList.map(log => (
           <div
             key={log.id}
             className={`${getLogBgColor(log.type)} border rounded-lg p-2 shadow-md backdrop-blur-sm bg-opacity-95`}
@@ -101,10 +101,10 @@ export const ProcessLog: React.FC<ProcessLogProps> = ({logs, compact = false}) =
   return (
     <div className="bg-white border rounded-lg p-4 max-h-96 overflow-y-auto">
       <C_Stack className="gap-2">
-        {logs.length === 0 ? (
+        {logList.length === 0 ? (
           <div className="text-center text-gray-500 py-8">処理ログがありません</div>
         ) : (
-          logs.map(log => (
+          logList.map(log => (
             <div
               key={log.id}
               className={`${getLogBgColor(log.type)} border rounded-lg p-3 transition-all`}

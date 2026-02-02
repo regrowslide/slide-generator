@@ -6,7 +6,7 @@ import { LogEntry } from '../types'
 import { Info, CheckCircle, AlertCircle, AlertTriangle, Trash2 } from 'lucide-react'
 
 interface ProcessLogProps {
-  logs: LogEntry[]
+  logList: LogEntry[]
   onClear?: () => void
   compact?: boolean
 }
@@ -24,7 +24,7 @@ const getLogStyle = (type: LogEntry['type']) => {
   }
 }
 
-export const ProcessLog: React.FC<ProcessLogProps> = ({ logs, onClear, compact = false }) => {
+export const ProcessLog: React.FC<ProcessLogProps> = ({ logList, onClear, compact = false }) => {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   // 新しいログが追加されたら自動スクロール
@@ -32,13 +32,13 @@ export const ProcessLog: React.FC<ProcessLogProps> = ({ logs, onClear, compact =
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
-  }, [logs])
+  }, [logList])
 
   if (compact) {
     return (
       <div className="absolute inset-0 bg-black/50 flex items-center justify-center p-4">
         <div className="bg-white rounded-lg p-4 max-w-md w-full">
-          {logs.slice(-3).map(log => {
+          {logList.slice(-3).map(log => {
             const style = getLogStyle(log.type)
             const Icon = style.icon
             return (
@@ -58,7 +58,7 @@ export const ProcessLog: React.FC<ProcessLogProps> = ({ logs, onClear, compact =
       {/* ヘッダー */}
       <div className="flex justify-between items-center">
         <h3 className="text-sm font-medium text-gray-700">処理ログ</h3>
-        {onClear && logs.length > 0 && (
+        {onClear && logList.length > 0 && (
           <button onClick={onClear} className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1">
             <Trash2 className="w-3 h-3" />
             クリア
@@ -68,11 +68,11 @@ export const ProcessLog: React.FC<ProcessLogProps> = ({ logs, onClear, compact =
 
       {/* ログ一覧 */}
       <div ref={scrollRef} className="max-h-[200px] overflow-y-auto border border-gray-200 rounded-lg bg-gray-50 p-2">
-        {logs.length === 0 ? (
+        {logList.length === 0 ? (
           <p className="text-xs text-gray-400 text-center py-4">ログはまだありません</p>
         ) : (
           <C_Stack className="gap-1">
-            {logs.map(log => {
+            {logList.map(log => {
               const style = getLogStyle(log.type)
               const Icon = style.icon
               return (

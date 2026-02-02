@@ -29,7 +29,7 @@ export interface AppState {
   images: ImageItem[]
   scenario: string // 画面操作の流れを説明したテキスト（シナリオ）
   isProcessing: boolean
-  logs: LogEntry[]
+  logList: LogEntry[]
 }
 
 export interface AnalyzeResponse {

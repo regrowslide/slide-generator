@@ -88,7 +88,7 @@ export const PAGES: Record<string, PageGetterFunction> = {
         exclusiveTo: !!login,
       },
       {
-        tabId: 'logs',
+        tabId: 'logList',
         label: 'ログ一覧',
         ROOT: [rootPath],
         exclusiveTo: !!login,

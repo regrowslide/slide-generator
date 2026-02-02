@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
 import { HakobunRule, HakobunClient, PriorityType } from '../../../types'
-import { Plus, Edit2, Trash2, Save, X, Sparkles, Search, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Plus, Edit2, Trash2, Save, X, Search, ChevronLeft, ChevronRight } from 'lucide-react'
 import useSelectedClient from '../../../(globalHooks)/useSelectedClient'
 import useMyNavigation from '@cm/hooks/globalHooks/useMyNavigation'
 import useModal from '@cm/components/utils/modal/useModal'

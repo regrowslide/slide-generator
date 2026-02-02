@@ -1,7 +1,8 @@
 import {NextRequest, NextResponse} from 'next/server'
 import prisma from 'src/lib/prisma'
-import {isCron} from 'src/non-common/serverSideFunction'
+
 import {BatchConfig} from './batchMaster'
+import {isCron} from '@app/api/prisma/isAllowed'
 
 /**
  * 実行ログのステータス
@@ -98,17 +99,14 @@ const encodeSSEMessage = (data: SSEMessage): Uint8Array => {
 export const executeCronBatchWithProgress = async (req: NextRequest, batchConfig: BatchConfig): Promise<Response> => {
   // 認証チェック
   if ((await isCron({req})) === false) {
-    return new Response(
-      formatSSEMessage({type: 'complete', success: false, error: 'Unauthorized'}),
-      {
-        status: 401,
-        headers: {
-          'Content-Type': 'text/event-stream',
-          'Cache-Control': 'no-cache',
-          'Connection': 'keep-alive',
-        },
-      }
-    )
+    return new Response(formatSSEMessage({type: 'complete', success: false, error: 'Unauthorized'}), {
+      status: 401,
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        Connection: 'keep-alive',
+      },
+    })
   }
 
   const startTime = Date.now()
@@ -225,7 +223,7 @@ export const executeCronBatchWithProgress = async (req: NextRequest, batchConfig
     headers: {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
-      'Connection': 'keep-alive',
+      Connection: 'keep-alive',
     },
   })
 }
@@ -237,8 +235,6 @@ export const executeCronBatchWithProgress = async (req: NextRequest, batchConfig
  * - エラーハンドリング
  */
 export const executeCronBatch = async (req: NextRequest, batchConfig: BatchConfig): Promise<NextResponse> => {
-
-
   // 認証チェック
   if ((await isCron({req})) === false) {
     return NextResponse.json({success: false, message: `Unauthorized`, result: null}, {status: 401, statusText: `Unauthorized`})
@@ -246,8 +242,6 @@ export const executeCronBatch = async (req: NextRequest, batchConfig: BatchConfi
 
   const startTime = Date.now()
   let log: {id: number} | null = null
-
-
 
   try {
     // 実行開始ログを記録

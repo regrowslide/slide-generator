@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { C_Stack, R_Stack } from '@cm/components/styles/common-components/common-components'
 import { HakobunCorrection, PriorityType } from '../types'
-import { Sparkles, Save, Calendar, FileText, AlertCircle, Loader2, CheckCircle2 } from 'lucide-react'
+import { Save, Calendar, FileText, AlertCircle, Loader2, CheckCircle2 } from 'lucide-react'
 
 interface RuleDraft {
   target_category: string

@@ -1,6 +1,6 @@
 
 import { atom, useAtom } from 'jotai'
-import { atomFamily } from 'jotai/utils'
+import { atomFamily } from 'jotai-family'
 import { useMemo } from 'react'
 
 export const useJotai = useAtom

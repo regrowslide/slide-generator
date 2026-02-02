@@ -386,7 +386,7 @@ export default function ImageCaptionerPage() {
 
       const response = await fetch('/api/image-captioner/generate-pptx', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           scenario: state.scenario,
           images: state.images
@@ -431,7 +431,7 @@ export default function ImageCaptionerPage() {
 
       const response = await fetch('/api/image-captioner/generate-pptx-claude', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           scenario: state.scenario,
           images: state.images
@@ -604,7 +604,7 @@ export default function ImageCaptionerPage() {
         {state.step === 4 && (
           <C_Stack className="gap-6">
             {/* 処理ログ（詳細表示） */}
-            {state.logs.length > 0 && (
+            {state.logList.length > 0 && (
               <div className="bg-white p-6 rounded-lg shadow-sm">
                 <R_Stack className="items-center justify-between mb-4">
                   <h2 className="text-xl font-semibold">処理ログ</h2>
@@ -618,7 +618,7 @@ export default function ImageCaptionerPage() {
                     </button>
                   )}
                 </R_Stack>
-                <ProcessLog logs={state.logs} />
+                <ProcessLog logList={state.logList} />
               </div>
             )}
 
@@ -663,7 +663,7 @@ export default function ImageCaptionerPage() {
                     <ImageCard image={image} onUpdate={updateImage} onRegenerate={handleRegenerate} />
                     {/* 進行中の画像にはログをオーバーレイ表示 */}
                     {(image.status === 'analyzing' || image.status === 'generating') && (
-                      <ProcessLog logs={state.logs.filter(log => log.imageId === image.id)} compact />
+                      <ProcessLog logList={state.logList.filter(log => log.imageId === image.id)} compact />
                     )}
                   </div>
                 ))}

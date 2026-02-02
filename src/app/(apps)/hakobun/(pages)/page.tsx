@@ -17,7 +17,7 @@ export default function HakobunAnalysisDashboard() {
   //   updateExtractEdit,
   //   submitFeedback,
   //   reset,
-  //   clearLogs,
+  //   clearLogList,
   // } = useHakobunAnalysis()
   // const { getHref } = useMyNavigation()
 
@@ -131,7 +131,7 @@ export default function HakobunAnalysisDashboard() {
   //               />
 
   //               {/* 処理ログ */}
-  //               {state.logs.length > 0 && <ProcessLog logs={state.logs} onClear={clearLogs} />}
+  //               {state.logList.length > 0 && <ProcessLog logList={state.logList} onClear={clearLogList} />}
 
   //               {/* 分析結果 */}
   //               {state.analysisResult && (

@@ -86,20 +86,20 @@ export default function Page() {
   const allBatchIds = Object.values(batch).flat().map(b => b.id)
 
   // 各バッチのログデータを取得
-  const { data: batchLogs, mutate: mutateBatchLogs } = useSWR(
-    allBatchIds.length > 0 ? `batch-logs-${allBatchIds.join(',')}` : null,
+  const { data: batchLogList, mutate: mutateBatchLogList } = useSWR(
+    allBatchIds.length > 0 ? `batch-logList-${allBatchIds.join(',')}` : null,
     async () => {
-      const logs = await Promise.all(
+      const logList = await Promise.all(
         allBatchIds.map(async batchId => {
           try {
-            const res = await fetchAlt(`${basePath}/api/cron/logs/${batchId}`, {}, { method: 'GET' })
+            const res = await fetchAlt(`${basePath}/api/cron/logList/${batchId}`, {}, { method: 'GET' })
             return { batchId, ...res }
           } catch (error) {
             return { batchId, latest: null, history: [] }
           }
         })
       )
-      return Object.fromEntries(logs.map(log => [log.batchId, log]))
+      return Object.fromEntries(logList.map(log => [log.batchId, log]))
     }
   )
 
@@ -186,7 +186,7 @@ export default function Page() {
             <tbody className={``}>
               {actions.map((action, idx) => {
                 const count = batchCounts?.[action.id]
-                const logData = batchLogs?.[action.id]
+                const logData = batchLogList?.[action.id]
                 const latestLog = logData?.latest as CronExecutionLog | null
 
                 const handleClick = async () => {
@@ -237,7 +237,7 @@ export default function Page() {
                             toast.error(`${action.name}の実行中にエラーが発生しました: ${data.error || data.message}`)
                           }
                           // ログデータを再取得
-                          mutateBatchLogs()
+                          mutateBatchLogList()
                           // データカウントを再取得
                           if (action.prismaArgs?.model) {
                             mutateBatchCounts()
@@ -254,7 +254,7 @@ export default function Page() {
                         return newState
                       })
                       // ログデータを再取得（完了したかもしれないので）
-                      mutateBatchLogs()
+                      mutateBatchLogList()
                       // データカウントを再取得
                       if (action.prismaArgs?.model) {
                         mutateBatchCounts()
@@ -417,7 +417,7 @@ export default function Page() {
     selectedBatchId ? `batch-history-${selectedBatchId}` : null,
     async () => {
       if (!selectedBatchId) return null
-      const res = await fetchAlt(`${basePath}/api/cron/logs/${selectedBatchId}?limit=50`, {}, { method: 'GET' })
+      const res = await fetchAlt(`${basePath}/api/cron/logList/${selectedBatchId}?limit=50`, {}, { method: 'GET' })
       return res
     }
   )

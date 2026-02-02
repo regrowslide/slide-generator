@@ -4,6 +4,7 @@ import { requestResultType } from '@cm/types/types'
 import prisma from 'src/lib/prisma'
 import { prismaMethodType, PrismaModelNames } from '@cm/types/prisma-types'
 import { PrismaClient } from '@prisma/generated/prisma/client'
+import { isServerActionAccessAllowed } from '@app/api/prisma/isAllowed'
 
 export type transactionQuery<T extends PrismaModelNames = PrismaModelNames, M extends prismaMethodType = prismaMethodType> = {
   model: T
@@ -17,6 +18,16 @@ export type transactionQuery<T extends PrismaModelNames = PrismaModelNames, M ex
 type mode = 'transaction' | 'parallel' | 'sequential'
 export const doTransaction = async (props: { transactionQueryList: transactionQuery[]; mode?: mode; uniqueKey?: string }) => {
   // 認証チェック
+  const isAllowed = await isServerActionAccessAllowed()
+
+  if (!isAllowed) {
+    return {
+      success: false,
+      message: 'アクセスが禁止されています',
+      error: 'Unauthorized access',
+      result: null,
+    } as requestResultType
+  }
 
 
   if (props.transactionQueryList.length === 0) {
