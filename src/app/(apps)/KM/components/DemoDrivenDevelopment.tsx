@@ -38,127 +38,275 @@ const fadeInUp: Variants = {
   },
 }
 
-// ヒーローセクション - 3セクション構成
+// ヒーローセクション - インパクト重視
 const HeroSection = ({ isVisible }: { isVisible: boolean }) => {
   return (
-    <header className="relative min-h-screen">
-      {/* Section 1: キャッチコピー */}
-      <div className="bg-slate-900 px-6 py-16 sm:px-12 lg:px-16 ">
-        <div className="mx-auto w-full max-w-7xl">
+    <header className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
+      {/* 背景の装飾円 */}
+      <div className="pointer-events-none absolute inset-0">
+        <motion.div
+          animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl"
+        />
+        <motion.div
+          animate={{ x: [0, -20, 0], y: [0, 30, 0] }}
+          transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute -right-32 top-1/2 h-80 w-80 rounded-full bg-amber-500/10 blur-3xl"
+        />
+        <motion.div
+          animate={{ x: [0, 15, 0], y: [0, 15, 0] }}
+          transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute bottom-1/4 left-1/3 h-64 w-64 rounded-full bg-emerald-500/5 blur-3xl"
+        />
+      </div>
+
+      {/* メインコンテンツ */}
+      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 py-20 sm:px-12 lg:px-16">
+        <div className="mx-auto w-full max-w-5xl text-center">
           {/* ラベル */}
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={isVisible ? { opacity: 1 } : {}}
-            transition={{ duration: 0.8 }}
-            className="mb-6 text-xs font-medium tracking-[0.2em] text-slate-500"
-          >
-            SYSTEM DEVELOPMENT
-          </motion.p>
-
-          {/* メインタイトル */}
-          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8 }}
+            className="mb-8 text-lg font-medium tracking-[0.3em] text-blue-400"
+          >
+            DEMO-DRIVEN DEVELOPMENT
+          </motion.p>
+
+          {/* メインタイトル - 巨大タイポグラフィ */}
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="text-4xl font-light tracking-tight text-white sm:text-5xl lg:text-6xl"
+            className="mb-6 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-7xl  leading-tight"
           >
             契約前に、
             <br />
-            <span className="font-medium">動くものを見る。</span>
+            <span className="relative inline-block">
+              動くものを見る。
+              {/* アクセント下線 */}
+              <motion.span
+                initial={{ scaleX: 0 }}
+                animate={isVisible ? { scaleX: 1 } : {}}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="absolute -bottom-2 left-0 h-1.5 w-full origin-left rounded-full bg-gradient-to-r from-amber-400 to-orange-500 sm:-bottom-3 sm:h-2"
+              />
+            </span>
           </motion.h1>
 
           {/* サブタイトル */}
-          <motion.div
+          <motion.p
             initial={{ opacity: 0 }}
             animate={isVisible ? { opacity: 1 } : {}}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="mt-8 border-l-2 border-slate-700 pl-6"
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="mx-auto mb-10 max-w-2xl text-lg text-slate-300 sm:text-xl"
           >
-            <p className="text-lg text-slate-300 ">
-              要件定義書だけでは伝わらない「使い勝手」を、
-              <br className="hidden sm:inline" />
-              実際に確認してから、ご契約いただけます。
-            </p>
-          </motion.div>
-        </div>
-      </div>
+            要件定義書だけでは伝わらない「使い勝手」を、
+            <br className="hidden sm:inline" />
+            実際に確認してから、ご契約いただけます。
+          </motion.p>
 
-      {/* Section 2: デモ先行開発とは */}
-      <div className="bg-slate-800 px-6 py-16 sm:px-12 lg:px-20">
-        <div className="mx-auto w-full max-w-7xl">
+          {/* CTAボタン */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="mb-8"
           >
-            <p className="mb-4 text-xs font-medium tracking-[0.15em] text-slate-300">DEMO-DRIVEN DEVELOPMENT</p>
-            <p className="mb-8 text-2xl font-medium text-white">デモ先行開発</p>
-
-            <div className="grid gap-8 lg:grid-cols-2">
-              {/* 従来のフロー */}
-              <div className="border-l-2 border-rose-400/50 pl-6">
-                <p className="mb-2 text-sm font-medium text-rose-300">従来の開発</p>
-                <p className="text-slate-400">
-                  要件定義 → 契約 → 開発 → 納品
-                  <br />
-                  <span className="text-rose-400 font-semibold">実物を見るのは納品時</span>
-                </p>
-              </div>
-
-              {/* 私たちのフロー */}
-              <div className="border-l-2 border-emerald-400 pl-6">
-                <p className="mb-2 text-sm font-medium text-emerald-300">私たちの開発</p>
-                <p className="text-slate-300">
-                  ヒアリング → <span className="text-emerald-400 font-medium">デモ作成</span> → 契約 → 開発
-                  <br />
-                  <span className="text-emerald-400 font-semibold">契約前に動くものを確認</span>
-                </p>
-              </div>
-            </div>
+            <a
+              href="/KM/contact"
+              className="inline-flex items-center gap-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-4 text-lg font-bold text-white shadow-lg shadow-amber-500/25 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-amber-500/30"
+            >
+              無料でデモを依頼する
+              <ChevronRight className="h-5 w-5" />
+            </a>
           </motion.div>
-        </div>
-      </div>
 
-      {/* Section 3: 無償訴求 */}
-      <div className="bg-slate-900 px-6 py-16 sm:px-12 lg:px-20">
-        <div className="mx-auto w-full max-w-7xl">
-          <motion.div
+          {/* 無償訴求 */}
+          <motion.p
             initial={{ opacity: 0 }}
             animate={isVisible ? { opacity: 1 } : {}}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-center"
+            className=" text-slate-400"
           >
-            <p className="mb-3 text-2xl font-medium text-white sm:text-3xl">
-              デモ開発・お見積りまで<span className="text-amber-400">無償</span>
-            </p>
-            <p className="text-slate-400">
-              ご発注確定まで費用は一切発生しません。
-              <br className="sm:hidden" />
-              安心してご相談ください。
-            </p>
-
-            {/* スクロールインジケーター */}
-            <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: isVisible ? 1 : 0 }}
-              transition={{ duration: 0.8, delay: 0.9 }}
-              onClick={() => {
-                const element = document.getElementById('concerns')
-                element?.scrollIntoView({ behavior: 'smooth' })
-              }}
-              className="mt-12 inline-flex flex-col items-center gap-2 text-slate-500 transition-colors hover:text-slate-300"
-            >
-              <span className="text-xs tracking-[0.15em]">詳しく見る</span>
-              <motion.span
-                animate={{ y: [0, 4, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                className="h-6 w-px bg-slate-600"
-              />
-            </motion.button>
-          </motion.div>
+            デモ開発・お見積りまで<span className="font-semibold text-amber-400">無償</span>
+            <span className="mx-2 text-slate-600">|</span>
+            ご発注確定まで費用は一切発生しません
+          </motion.p>
         </div>
+
+        {/* スクロールインジケーター */}
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isVisible ? 1 : 0 }}
+          transition={{ duration: 0.8, delay: 0.9 }}
+          onClick={() => {
+            const element = document.getElementById('timeline')
+            element?.scrollIntoView({ behavior: 'smooth' })
+          }}
+          className="absolute bottom-8 inline-flex flex-col items-center gap-2 text-slate-500 transition-colors hover:text-slate-300"
+        >
+          <span className="text-xs tracking-[0.15em]">SCROLL</span>
+          <motion.span
+            animate={{ y: [0, 6, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+            className="h-8 w-px bg-gradient-to-b from-slate-500 to-transparent"
+          />
+        </motion.button>
       </div>
     </header>
+  )
+}
+
+// タイムライン形式のフロー比較セクション
+const TimelineSection = () => {
+  const traditionalSteps = [
+    { label: '要件定義', num: 1 },
+    { label: '契約', num: 2 },
+    { label: '開発', num: 3 },
+    { label: '納品', num: 4, highlight: true, note: '実物を見るのはここが初めて' },
+  ]
+
+  const demoSteps = [
+    { label: 'ヒアリング', num: 1 },
+    { label: 'デモ提出', num: 2, highlight: true, note: 'ここで実物が見える' },
+    { label: 'フィードバック', num: 3 },
+    { label: 'デモ改善', num: 4, note: '納得いくまで繰り返し' },
+    { label: '契約', num: 5, highlight: true, note: '十分確認してから契約' },
+    { label: '本開発・納品', num: 6 },
+  ]
+
+  return (
+    <Section id="timeline" className="bg-slate-50">
+      <div className="mx-auto max-w-6xl px-4">
+        <motion.div variants={itemVariants} className="mb-16 text-center">
+
+          <h2 className="mb-4 text-2xl font-bold text-slate-800 lg:text-4xl">
+            開発プロセスの比較
+          </h2>
+
+        </motion.div>
+
+        {/* タイムライン比較 */}
+        <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
+          {/* 従来の開発 */}
+          <motion.div
+            variants={itemVariants}
+            className="relative rounded-2xl border border-rose-200 bg-white p-6 shadow-sm lg:p-8"
+          >
+            <div className="mb-6">
+              <h3 className="text-xl font-bold text-rose-600">従来の開発</h3>
+            </div>
+
+            <div className="relative">
+              {/* タイムライン線 */}
+              <div className="absolute left-4 top-0 h-full w-0.5 bg-rose-200" />
+
+              <div className="space-y-6">
+                {traditionalSteps.map((step, index) => (
+                  <motion.div
+                    key={index}
+                    variants={itemVariants}
+                    className="relative flex items-start gap-4"
+                  >
+                    <div
+                      className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${step.highlight
+                        ? 'bg-rose-500 text-white ring-4 ring-rose-200'
+                        : 'bg-rose-100 text-rose-600'
+                        }`}
+                    >
+                      {step.num}
+                    </div>
+                    <div className="pt-1">
+                      <p className={`font-medium ${step.highlight ? 'text-rose-600' : 'text-slate-700'}`}>
+                        {step.label}
+                      </p>
+                      {step.note && (
+                        <p className="mt-1 text-sm font-semibold text-rose-500">{step.note}</p>
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-6 rounded-xl bg-rose-50 p-4 text-center">
+              <p className="text-sm font-medium text-rose-700">
+                納品まで実物を確認できない = <span className="font-bold">リスクが高い</span>
+              </p>
+            </div>
+          </motion.div>
+
+          {/* デモ先行開発 */}
+          <motion.div
+            variants={itemVariants}
+            className="relative rounded-2xl border-2 border-emerald-300 bg-white p-6 shadow-lg lg:p-8"
+          >
+            <div className="mb-6 flex items-center gap-3">
+              <h3 className="text-xl font-bold text-emerald-600">デモ先行開発</h3>
+              <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700">
+                推奨
+              </span>
+            </div>
+
+            <div className="relative">
+              {/* タイムライン線 */}
+              <div className="absolute left-4 top-0 h-full w-0.5 bg-emerald-300" />
+
+              <div className="space-y-5">
+                {demoSteps.map((step, index) => (
+                  <motion.div
+                    key={index}
+                    variants={itemVariants}
+                    className="relative flex items-start gap-4"
+                  >
+                    <div
+                      className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${step.highlight
+                        ? 'bg-emerald-500 text-white ring-4 ring-emerald-200'
+                        : 'bg-emerald-100 text-emerald-600'
+                        }`}
+                    >
+                      {step.num}
+                    </div>
+                    <div className="pt-1">
+                      <p className={`font-medium ${step.highlight ? 'text-emerald-600' : 'text-slate-700'}`}>
+                        {step.label}
+                      </p>
+                      {step.note && (
+                        <p className="mt-1 text-sm font-semibold text-emerald-500">{step.note}</p>
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-6 rounded-xl bg-emerald-50 p-4 text-center">
+              <p className="text-sm font-medium text-emerald-700">
+                契約前に納得いくまで確認 = <span className="font-bold">安心して発注</span>
+              </p>
+            </div>
+
+            {/* 無償バッジ */}
+            <div className="absolute -right-3 -top-3 rotate-12 rounded-full bg-amber-400 px-3 py-1 text-lg font-bold text-white shadow-lg">
+              契約まで無償
+            </div>
+          </motion.div>
+        </div>
+
+        {/* CTA */}
+        <motion.div variants={itemVariants} className="mt-12 text-center">
+          <a
+            href="/KM/contact"
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-4 text-lg font-bold text-white shadow-lg shadow-amber-500/25 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-amber-500/30"
+          >
+            無料でデモを依頼する
+            <ChevronRight className="h-5 w-5" />
+          </a>
+        </motion.div>
+      </div>
+    </Section>
   )
 }
 
@@ -202,7 +350,7 @@ const ConcernsSection = () => {
   ]
 
   return (
-    <Section id="concerns" className="bg-slate-50">
+    <Section id="concerns" className="bg-white">
       <div className="mx-auto max-w-6xl px-4">
         <motion.div variants={itemVariants} className="mb-12 text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-medium text-amber-800">
@@ -612,11 +760,12 @@ export const DemoDrivenDevelopment = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* ヒーローセクション（スプリットスクリーン型） */}
+      {/* ヒーローセクション（インパクト重視） */}
       <HeroSection isVisible={isVisible} />
 
       {/* メインコンテンツ */}
       <main>
+        <TimelineSection />
         <ConcernsSection />
         <VisualizationSection />
         <TechnologySection />
