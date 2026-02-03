@@ -15,7 +15,7 @@
   --color-white: oklch(1 0 0);
   --color-blue-main: oklch(0.6 0.1117 249.3);
   --color-blue-light: oklch(0.85 0.07 250);
-  --color-green-main: oklch(0.5 0.2 125);
+  --color-green-main: oklch(0.36 0.16 136);
   --color-green-light: oklch(0.95 0.05 145);
   --color-sub-main: oklch(0.39 0.01 100);
   --color-sub-light: oklch(0.95 0.01 80);
@@ -23,7 +23,7 @@
   --color-error-light: oklch(0.85 0.1 25);
   --color-orange-main: oklch(0.65 0.2 60);
   --color-orange-light: oklch(0.9 0.07 50);
-  --color-yellow-main: oklch(0.75 0.2 90);
+  --color-yellow-main: oklch(0.68 0.22 90);
   --color-yellow-light: oklch(0.95 0.08 85);
   --color-control-bg: oklch(0.94 0 0);
   --animate-accordion-down: accordion-down 0.2s ease-out;

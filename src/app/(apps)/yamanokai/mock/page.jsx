@@ -1,2354 +1,1930 @@
-"use client";
+'use client'
 
 /**
- * 山の会（KCAC）システム モックアップ
+ * 山の会（KCAC）システム モックアップ v2
  *
- * こちらはモックであり、単一ファイルに収まるよう構築されています。
- * このページは最終的に削除するため、本番プロジェクトでは、
- * プロジェクトの設計やルールに従ってページやコンポーネントを分割してください。
+ * メニュー構造:
+ * ■ 例会（管理者）
+ *   - 例会一覧（リスト）
+ *   - 例会の新規作成・編集（CRUD）
+ *   - 出席回答の確認
+ *
+ * ■ 例会（一般会員）
+ *   - 例会スケジュール（カレンダービュー）
+ *   - 出席回答履歴
+ *   - 例会記録の閲覧・作成
+ *
+ * ※ DELETEは全てソフトデリート
  */
 
-import { useState, useMemo, useCallback } from "react";
+import {useState, useMemo} from 'react'
 
 // =============================================================================
-// 定数・サンプルデータ
+// 定数・マスターデータ
 // =============================================================================
 
 /** 部署 */
 const DEPARTMENTS = {
-  hiking: { id: "hiking", name: "ハイキング部", color: "#22c55e", bgColor: "#dcfce7" },
-  sanko: { id: "sanko", name: "山行部", color: "#3b82f6", bgColor: "#dbeafe" },
-  education: { id: "education", name: "教育部", color: "#a855f7", bgColor: "#f3e8ff" },
-  nature: { id: "nature", name: "自然保護部", color: "#eab308", bgColor: "#fef9c3" },
-  organization: { id: "organization", name: "組織部", color: "#6b7280", bgColor: "#f3f4f6" },
-};
+  hiking: {id: 'hiking', name: 'ハイキング部', color: '#22c55e', bgColor: '#dcfce7'},
+  sanko: {id: 'sanko', name: '山行部', color: '#3b82f6', bgColor: '#dbeafe'},
+  education: {id: 'education', name: '教育部', color: '#a855f7', bgColor: '#f3e8ff'},
+  nature: {id: 'nature', name: '自然保護部', color: '#eab308', bgColor: '#fef9c3'},
+  organization: {id: 'organization', name: '組織部', color: '#6b7280', bgColor: '#f3f4f6'},
+}
 
 /** 体力度グレード */
-const STAMINA_GRADES = ["(^^)", "O(-)", "O", "O(+)", "OO", "OOO", "OOOO"];
+const STAMINA_GRADES = ['(^^)', 'O(-)', 'O', 'O(+)', 'OO', 'OOO', 'OOOO']
 
 /** 技術度グレード */
-const SKILL_GRADES = ["☆", "☆☆", "☆☆☆"];
+const SKILL_GRADES = ['なし', '☆', '☆☆', '☆☆☆']
 
 /** 岩登り区分 */
-const ROCK_CATEGORIES = ["A", "B", "C"];
+const ROCK_CATEGORIES = ['なし', 'A', 'B', 'C']
 
-/** 労山基金口数条件 */
-const INSURANCE_REQUIREMENTS = {
-  hiking: { kuchi: 3, label: "ハイキング" },
-  rockA: { kuchi: 4, label: "岩A・沢入門" },
-  alpine: { kuchi: 8, label: "アルパイン・雪山・岩BC・沢" },
-};
-
-/** 装備カテゴリ */
-const EQUIPMENT_CATEGORIES = {
-  tent: "テント",
-  rope: "ロープ",
-  radio: "無線機",
-  climbing: "登攀具",
-  cooking: "調理器具",
-  other: "その他",
-};
-
-/** 装備状態 */
-const EQUIPMENT_STATUS = {
-  available: "貸出可",
-  rented: "貸出中",
-  maintenance: "メンテナンス中",
-};
-
-/** 計画書ステータス */
-const PLAN_STATUS = {
-  draft: "下書き",
-  submitted: "提出済",
-  approved: "承認済",
-  completed: "完了",
-};
+/** 出席回答ステータス */
+const ATTENDANCE_STATUS = {
+  pending: {id: 'pending', label: '未回答', color: '#6b7280', bgColor: '#f3f4f6'},
+  attending: {id: 'attending', label: '出席', color: '#22c55e', bgColor: '#dcfce7'},
+  notAttending: {id: 'notAttending', label: '欠席', color: '#ef4444', bgColor: '#fee2e2'},
+  undecided: {id: 'undecided', label: '未定', color: '#eab308', bgColor: '#fef9c3'},
+}
 
 /** 記録ステータス */
 const RECORD_STATUS = {
-  draft: "下書き",
-  submitted: "提出済",
-  published: "掲載済",
-};
+  draft: {id: 'draft', label: '下書き', color: '#6b7280'},
+  submitted: {id: 'submitted', label: '提出済', color: '#3b82f6'},
+  published: {id: 'published', label: '掲載済', color: '#22c55e'},
+}
 
-/** 初期会員データ */
+// =============================================================================
+// 初期データ
+// =============================================================================
+
+/** 会員マスター */
 const INITIAL_MEMBERS = [
+  {id: 1, name: '原田 勝次', insuranceKuchi: 8, role: '自然保護部長', isAdmin: true},
+  {id: 2, name: '大坪 豊', insuranceKuchi: 8, role: '山行部員', isAdmin: true},
+  {id: 3, name: '新井 公子', insuranceKuchi: 4, role: 'ハイキング部員', isAdmin: false},
+  {id: 4, name: '永末 康史', insuranceKuchi: 8, role: '教育部長', isAdmin: true},
+  {id: 5, name: '河尻 重和', insuranceKuchi: 8, role: '山行部員', isAdmin: false},
+  {id: 6, name: '坂東 美碧', insuranceKuchi: 4, role: '自然保護部員', isAdmin: false},
+  {id: 7, name: '毛戸 伸悟', insuranceKuchi: 8, role: '山行部員', isAdmin: false},
+  {id: 8, name: '下垣内 福世', insuranceKuchi: 4, role: 'ハイキング部員', isAdmin: false},
+]
+
+/** 例会マスター */
+const INITIAL_EVENTS = [
   {
     id: 1,
-    name: "原田 勝次",
-    nameKana: "ハラダ カツジ",
-    gender: "男",
-    birthDate: "1965-04-15",
-    phone: "090-1234-5678",
-    email: "harada@example.com",
-    address: "神戸市中央区山手通1-1-1",
-    bloodType: "A",
-    insuranceKuchi: 8,
-    emergencyContact: "原田 花子",
-    emergencyPhone: "078-123-4567",
-    emergencyRelation: "妻",
-    joinedAt: "2010-04-01",
-    completedCourses: ["初級登山教室", "岩登り講座A", "沢登り入門"],
-    medicalCondition: "特になし",
-    kokohelId: "123456",
-    role: "自然保護部長",
+    title: 'クリーンハイク',
+    mountainName: '六甲山系',
+    altitude: null,
+    departmentId: 'nature',
+    clId: 1,
+    slId: 6,
+    startDate: '2026-02-08',
+    endDate: '2026-02-08',
+    staminaGrade: 'O',
+    skillGrade: 'なし',
+    rockCategory: 'なし',
+    requiredInsurance: 3,
+    meetingPlace: 'JR新神戸駅',
+    meetingTime: '08:50',
+    course: '新神戸駅→市ヶ原→あじさい広場→森林植物園東門→桜谷→摩耶山→上野道→神戸高校',
+    deadline: '2026-02-07',
+    notes: 'お試し参加可。ゴミ袋・ゴミばさみ持参。雨天決行。',
+    isDeleted: false,
+    createdAt: '2026-01-15',
   },
   {
     id: 2,
-    name: "大坪 豊",
-    nameKana: "オオツボ ユタカ",
-    gender: "男",
-    birthDate: "1970-08-22",
-    phone: "090-2345-6789",
-    email: "otsubo@example.com",
-    address: "神戸市灘区六甲台町2-2-2",
-    bloodType: "O",
-    insuranceKuchi: 8,
-    emergencyContact: "大坪 美智子",
-    emergencyPhone: "078-234-5678",
-    emergencyRelation: "妻",
-    joinedAt: "2008-06-15",
-    completedCourses: ["中級登山教室", "岩登り講座B", "雪山ハイキング講座"],
-    medicalCondition: "特になし",
-    kokohelId: "234567",
-    role: "山行部員",
+    title: '西穂高岳',
+    mountainName: '北アルプス・西穂高岳',
+    altitude: '2908m',
+    departmentId: 'sanko',
+    clId: 2,
+    slId: 5,
+    startDate: '2026-02-14',
+    endDate: '2026-02-16',
+    staminaGrade: 'OOO',
+    skillGrade: '☆☆☆',
+    rockCategory: 'なし',
+    requiredInsurance: 8,
+    meetingPlace: 'JR三ノ宮駅北側',
+    meetingTime: '20:30',
+    course: '新穂高温泉→ロープウェイ→西穂高口→西穂山荘(幕営)→西穂高岳→下山',
+    deadline: '2026-02-01',
+    notes: '山行部アイゼントレ&保険8口以上。車の提供希望。',
+    isDeleted: false,
+    createdAt: '2026-01-10',
   },
   {
     id: 3,
-    name: "新井 公子",
-    nameKana: "アライ キミコ",
-    gender: "女",
-    birthDate: "1975-03-10",
-    phone: "090-3456-7890",
-    email: "arai@example.com",
-    address: "神戸市東灘区本山町3-3-3",
-    bloodType: "B",
-    insuranceKuchi: 4,
-    emergencyContact: "新井 太郎",
-    emergencyPhone: "078-345-6789",
-    emergencyRelation: "夫",
-    joinedAt: "2015-09-01",
-    completedCourses: ["初級登山教室"],
-    medicalCondition: "花粉症",
-    kokohelId: "345678",
-    role: "ハイキング部員",
+    title: '六甲縦走トレーニング①',
+    mountainName: '六甲山系',
+    altitude: null,
+    departmentId: 'hiking',
+    clId: 8,
+    slId: null,
+    startDate: '2026-02-22',
+    endDate: '2026-02-22',
+    staminaGrade: 'O',
+    skillGrade: 'なし',
+    rockCategory: 'なし',
+    requiredInsurance: 3,
+    meetingPlace: '山陽電鉄 須磨浦公園駅',
+    meetingTime: '09:00',
+    course: '須磨浦公園駅→旗振山→横尾山→須磨アルプス→高取山→鵯越駅',
+    deadline: '2026-02-15',
+    notes: 'お試し参加可。ヘッドランプ必携。雨天中止。',
+    isDeleted: false,
+    createdAt: '2026-01-20',
   },
   {
     id: 4,
-    name: "永末 康史",
-    nameKana: "ナガスエ ヤスシ",
-    gender: "男",
-    birthDate: "1968-11-05",
-    phone: "090-4567-8901",
-    email: "nagasue@example.com",
-    address: "神戸市須磨区離宮前町4-4-4",
-    bloodType: "AB",
-    insuranceKuchi: 8,
-    emergencyContact: "永末 由美",
-    emergencyPhone: "078-456-7890",
-    emergencyRelation: "妻",
-    joinedAt: "2005-04-01",
-    completedCourses: ["中級登山教室", "岩登り講座C", "雪山講座"],
-    medicalCondition: "特になし",
-    kokohelId: "456789",
-    role: "教育部長",
+    title: '雪山ハイキング講座 座学',
+    mountainName: null,
+    altitude: null,
+    departmentId: 'education',
+    clId: 4,
+    slId: null,
+    startDate: '2026-02-05',
+    endDate: '2026-02-05',
+    staminaGrade: '(^^)',
+    skillGrade: 'なし',
+    rockCategory: 'なし',
+    requiredInsurance: 3,
+    meetingPlace: '会事務所',
+    meetingTime: '19:00',
+    course: '講義形式',
+    deadline: '2026-02-01',
+    notes: '雪山ハイキング例会に初めて参加される方は必ず受講してください。',
+    isDeleted: false,
+    createdAt: '2026-01-05',
   },
   {
     id: 5,
-    name: "河尻 重和",
-    nameKana: "カワジリ シゲカズ",
-    gender: "男",
-    birthDate: "1960-07-20",
-    phone: "090-5678-9012",
-    email: "kawajiri@example.com",
-    address: "神戸市垂水区五色山5-5-5",
-    bloodType: "A",
-    insuranceKuchi: 8,
-    emergencyContact: "河尻 幸子",
-    emergencyPhone: "078-567-8901",
-    emergencyRelation: "妻",
-    joinedAt: "2000-04-01",
-    completedCourses: ["中級登山教室", "岩登り講座C", "アルパイン講座"],
-    medicalCondition: "高血圧（服薬中）",
-    kokohelId: "567890",
-    role: "山行部員",
-  },
-  {
-    id: 6,
-    name: "坂東 美碧",
-    nameKana: "バンドウ ミドリ",
-    gender: "女",
-    birthDate: "1980-12-03",
-    phone: "090-6789-0123",
-    email: "bando@example.com",
-    address: "神戸市北区鈴蘭台6-6-6",
-    bloodType: "O",
-    insuranceKuchi: 4,
-    emergencyContact: "坂東 健一",
-    emergencyPhone: "078-678-9012",
-    emergencyRelation: "夫",
-    joinedAt: "2018-10-01",
-    completedCourses: ["初級登山教室"],
-    medicalCondition: "特になし",
-    kokohelId: "678901",
-    role: "自然保護部員",
-  },
-  {
-    id: 7,
-    name: "毛戸 伸悟",
-    nameKana: "ケト シンゴ",
-    gender: "男",
-    birthDate: "1972-05-18",
-    phone: "090-7890-1234",
-    email: "keto@example.com",
-    address: "神戸市長田区長田町7-7-7",
-    bloodType: "B",
-    insuranceKuchi: 8,
-    emergencyContact: "毛戸 智子",
-    emergencyPhone: "078-789-0123",
-    emergencyRelation: "妻",
-    joinedAt: "2012-04-01",
-    completedCourses: ["中級登山教室", "岩登り講座B", "海外登山"],
-    medicalCondition: "特になし",
-    kokohelId: "789012",
-    role: "山行部員",
-  },
-  {
-    id: 8,
-    name: "野々脇 千紗",
-    nameKana: "ノノワキ チサ",
-    gender: "女",
-    birthDate: "1985-09-25",
-    phone: "090-8901-2345",
-    email: "nonowaki@example.com",
-    address: "神戸市西区玉津町8-8-8",
-    bloodType: "A",
-    insuranceKuchi: 4,
-    emergencyContact: "野々脇 正",
-    emergencyPhone: "078-890-1234",
-    emergencyRelation: "父",
-    joinedAt: "2020-04-01",
-    completedCourses: ["初級登山教室", "岩登り講座A"],
-    medicalCondition: "特になし",
-    kokohelId: "890123",
-    role: "山行部員",
-  },
-];
-
-/** 初期例会企画データ（2026年4月〜6月） */
-const INITIAL_EVENT_PLANS = [
-  { id: 1, date: "2026-04-01", department: "nature", title: "森守ボランティア", clId: 1, status: "confirmed" },
-  { id: 2, date: "2026-04-02", department: "education", title: "ステップアップ講座座学①", clId: 4, status: "confirmed" },
-  { id: 3, date: "2026-04-04", department: "hiking", title: "お試しハイク・太陽と緑の道②", clId: 3, status: "confirmed" },
-  { id: 4, date: "2026-04-04", department: "sanko", title: "六甲山系", clId: 2, status: "confirmed" },
-  { id: 5, date: "2026-04-05", department: "nature", title: "クリーンハイク・新人歓迎会", clId: 6, status: "confirmed" },
-  { id: 6, date: "2026-04-11", department: "hiking", title: "1日気象講座", clId: null, status: "draft" },
-  { id: 7, date: "2026-04-18", department: "education", title: "ステップアップ講座実技①", clId: 4, status: "confirmed" },
-  { id: 8, date: "2026-04-19", department: "hiking", title: "お試しハイク・1日登山教室", clId: null, status: "draft" },
-  { id: 9, date: "2026-05-03", department: "nature", title: "クリーンハイク", clId: 6, status: "confirmed" },
-  { id: 10, date: "2026-05-14", department: "education", title: "夏山登山教室座学①", clId: 4, status: "confirmed" },
-  { id: 11, date: "2026-06-07", department: "nature", title: "クリーンハイク", clId: 6, status: "confirmed" },
-  { id: 12, date: "2026-06-21", department: "organization", title: "総会", clId: null, status: "confirmed" },
-];
-
-/** 初期例会案内データ */
-const INITIAL_EVENT_GUIDES = [
-  {
-    id: 1,
-    eventPlanId: 1,
-    startDate: "2026-04-01",
-    endDate: "2026-04-01",
-    mountainName: "市ヶ原周辺",
+    title: '納山祭',
+    mountainName: '市ヶ原',
     altitude: null,
-    gradeStamina: "O(-)",
-    gradeSkill: null,
-    rockCategory: null,
-    department: "nature",
-    clId: 1,
-    slId: null,
-    meetingPlace: "JR新神戸駅",
-    meetingTime: "09:00",
-    course: "新神戸駅→市ヶ原→桜広場→市ヶ原→新神戸駅 6km 6時間",
-    deadline: "2026-03-20",
-    notes: "雨天中止",
-    requiredInsurance: 3,
-    applicantIds: [3, 6],
-  },
-  {
-    id: 2,
-    eventPlanId: 5,
-    startDate: "2026-04-05",
-    endDate: "2026-04-05",
-    mountainName: "六甲山系",
-    altitude: null,
-    gradeStamina: "O",
-    gradeSkill: null,
-    rockCategory: null,
-    department: "nature",
-    clId: 6,
-    slId: 1,
-    meetingPlace: "JR新神戸駅 1階",
-    meetingTime: "08:50",
-    course: "新神戸駅→市ヶ原→あじさい広場→森林植物園東門→桜谷→摩耶山→上野道→神戸高校",
-    deadline: "2026-04-05",
-    notes: "お試し参加可 ゴミ袋・ゴミばさみ持参 雨天決行",
-    requiredInsurance: 3,
-    applicantIds: [1, 2, 3, 6, 8],
-  },
-  {
-    id: 3,
-    eventPlanId: null,
-    startDate: "2026-04-12",
-    endDate: "2026-04-14",
-    mountainName: "西穂高岳",
-    altitude: 2908,
-    gradeStamina: "OOO",
-    gradeSkill: "☆☆☆",
-    rockCategory: null,
-    department: "sanko",
+    departmentId: 'organization',
     clId: 2,
-    slId: 5,
-    meetingPlace: "JR三ノ宮駅北側にしむら珈琲前",
-    meetingTime: "20:30",
-    course: "三ノ宮→道の駅ななもり清見（前泊）→新穂高温泉→ロープウェイ→西穂山荘（幕営）→西穂高岳→下山",
-    deadline: "2026-03-29",
-    notes: "山行部アイゼントレ＆保険8口以上 車の提供希望",
-    requiredInsurance: 8,
-    applicantIds: [2, 5, 7],
-  },
-  {
-    id: 4,
-    eventPlanId: null,
-    startDate: "2026-12-20",
-    endDate: "2027-01-04",
-    mountainName: "エベレスト街道・カラパタール",
-    altitude: 5560,
-    gradeStamina: "OOOO",
-    gradeSkill: null,
-    rockCategory: null,
-    department: "sanko",
-    clId: 7,
     slId: null,
-    meetingPlace: "関空4F出国フロア（または現地集合可）",
-    meetingTime: "未定",
-    course: "関空→カトマンズ→ルクラ→カラパタール5,560m→帰国",
-    deadline: "2026-03-31",
-    notes: "トレッキング中はロッジ泊。シュラフ持参。高山病リスクあり。飛行機代約22万〜30万円。CL含め4名まで。",
-    requiredInsurance: 8,
-    applicantIds: [7],
+    startDate: '2026-12-13',
+    endDate: '2026-12-13',
+    staminaGrade: '(^^)',
+    skillGrade: 'なし',
+    rockCategory: 'なし',
+    requiredInsurance: 3,
+    meetingPlace: 'JR新神戸駅',
+    meetingTime: '09:00',
+    course: '新神戸駅→市ヶ原→新神戸駅',
+    deadline: '2026-12-06',
+    notes: '会費2000円。食器・箸は必ず持参。',
+    isDeleted: false,
+    createdAt: '2026-11-01',
   },
-];
+]
 
-/** 初期計画書データ */
-const INITIAL_PLANS = [
-  {
-    id: 1,
-    eventGuideId: 3,
-    submittedAt: "2026-03-25",
-    mountainArea: "北アルプス",
-    mountainName: "西穂高岳",
-    purpose: "後期登山教室コラボ",
-    formationType: "自主",
-    mapReference: "山と高原の地図「槍ヶ岳・穂高岳」",
-    meetingPlace: "JR三ノ宮駅北側にしむら珈琲前",
-    transport: "マイカー",
-    policeNotification: "コンパス",
-    itinerary: [
-      { date: "2026-04-12", description: "JR三ノ宮駅にしむら珈琲前→道の駅ななもり清見(前泊)" },
-      { date: "2026-04-13", description: "道の駅→新穂高温泉→ロープウェイ→西穂高口→西穂山荘(幕営) 5k3h" },
-      { date: "2026-04-14", description: "西穂山荘→西穂独標→西穂高岳→西穂山荘→ロープウェイ→帰神21時頃 11k8h" },
-    ],
-    escapeRoute: "引き返す",
-    specialNotes: "山行部アイゼントレ＆保険8口以上",
-    participants: [
-      { memberId: 2, role: "CL" },
-      { memberId: 5, role: "SL" },
-      { memberId: 7, role: "記録" },
-    ],
-    lastReportTime: "2026-04-14 21:00",
-    status: "submitted",
-  },
-];
+/** 出席回答データ */
+const INITIAL_ATTENDANCES = [
+  {id: 1, eventId: 1, memberId: 3, status: 'attending', comment: '参加します！', updatedAt: '2026-01-20', isDeleted: false},
+  {id: 2, eventId: 1, memberId: 5, status: 'attending', comment: '', updatedAt: '2026-01-21', isDeleted: false},
+  {id: 3, eventId: 1, memberId: 6, status: 'attending', comment: '楽しみにしています', updatedAt: '2026-01-22', isDeleted: false},
+  {id: 4, eventId: 1, memberId: 7, status: 'undecided', comment: '仕事の都合次第', updatedAt: '2026-01-23', isDeleted: false},
+  {id: 5, eventId: 2, memberId: 5, status: 'attending', comment: '', updatedAt: '2026-01-15', isDeleted: false},
+  {id: 6, eventId: 2, memberId: 7, status: 'attending', comment: '車出せます', updatedAt: '2026-01-16', isDeleted: false},
+  {id: 7, eventId: 3, memberId: 3, status: 'attending', comment: '', updatedAt: '2026-02-01', isDeleted: false},
+  {id: 8, eventId: 4, memberId: 3, status: 'attending', comment: '初参加です', updatedAt: '2026-01-28', isDeleted: false},
+  {id: 9, eventId: 4, memberId: 8, status: 'attending', comment: '', updatedAt: '2026-01-29', isDeleted: false},
+]
 
-/** 初期例会記録データ */
+/** 例会記録データ（複数ファイル対応） */
 const INITIAL_RECORDS = [
   {
     id: 1,
-    planId: null,
-    title: "岩登りA・蓬莱峡 岩登りを楽しもう",
-    date: "2024-07-24",
-    weather: "晴れ",
-    participants: [
-      { memberId: 5, role: "CL・記録" },
-      { memberId: 8, role: "SL" },
-    ],
-    access: "阪急宝塚駅改札口9:00⇒9:20蓬莱峡",
-    courseTime: "蓬莱峡9:20〜14:30クライミング、15:00ロープワーク→15:45JR生瀬駅",
-    body: `平日は蓬莱峡までのバスが通っていないので、阪急宝塚駅改札口に集合してタクシーで蓬莱峡入口まで行く。（タクシー代2100円）平日なので予想通り誰もいない。今日は全員が岩B経験者なので、自分で登れそうなルートをリードで登ることにする。
+    eventId: 4,
+    title: '雪山ハイキング講座 座学',
+    date: '2026-02-05',
+    weather: '晴れ',
+    participants: 'CL 永末康史、新井公子、下垣内福世 計3名',
+    status: 'published',
+    authorId: 4,
+    isDeleted: false,
+    createdAt: '2026-02-06',
+  },
+]
 
-リードで登ればリードする人の気持ちが判るし、ビレーの時もリードの気持ちが判り、ビレーに集中するようになる。リードはリスクがありますが、難しいと思えば降りてくるのも経験です。野々脇さんは初めてのリードだと思いますが危なげなく登っていました。10月から岩登りＡのＣＬなので、経験しておくことは大事だと思っています。
-
-フィギュアエイト・オンア・バイト（8の字結び）、インラインエイトノット、ボーラインノット（もやい結び）を練習する。8の字結びは１回で綺麗に結ぶのは結構難しいです。`,
-    courseCondition: "平日なので貸し切り状態。",
-    specialNote: "ヒヤリハットなし。",
-    status: "published",
+/** 例会記録ファイルデータ（1記録に対して複数ファイルをアップロード可能） */
+const INITIAL_RECORD_FILES = [
+  {
+    id: 1,
+    recordId: 1,
+    fileUrl: 'https://docs.google.com/document/d/xxxxx/edit',
+    fileName: '2026-02-05_雪山ハイキング講座座学_記録.docx',
+    fileType: 'google', // "google" | "pdf" | "docx"
+    fileSize: null,
+    mimeType: null,
+    description: '本文',
+    sortOrder: 0,
+    isDeleted: false,
+    createdAt: '2026-02-06',
   },
   {
     id: 2,
-    planId: null,
-    title: "中央アルプスの沢登り・中御所谷西横川",
-    date: "2024-07-27",
-    weather: "曇り時々晴れ",
-    participants: [
-      { memberId: 1, role: "CL" },
-    ],
-    access: "7/26 西宮、姫路⇒駒ヶ岳SAで仮眠、7/27 駒ヶ岳SA⇒女体入口バス停⇒しらび平",
-    courseTime: "しらび平6:30→→8:20西横川→12:30長谷部新道→14:15千畳敷ロープウェイ駅",
-    body: `標高1662mしらび平駅、水に入るのが少しためらわれるくらいの涼しさの中、歩き始める。最終地点との標高差が約1000mの沢登りは、次から次へと小滝、中滝、大滝があらわれ、ひたすら登り続けた。概ね登りやすく、ロープを出してもらったのは、高度感のある西横川出合の滝だけであった。
-
-沢の両側には高山植物が咲き乱れ、高度を上がるにつれ、花の種類が変わる。振りかえると、塩見岳を正面に南アルプスの稜線が広がる絶景。花と景色に励まされて登り続けた。`,
-    courseCondition: "危険箇所なし。",
-    specialNote: "しらび平までのバスには、「女体入口」バス停から路線バスに乗るのがお勧め。",
-    status: "published",
+    recordId: 1,
+    fileUrl: 'https://example.com/uploads/photos.pdf',
+    fileName: '2026-02-05_雪山ハイキング講座座学_写真集.pdf',
+    fileType: 'pdf',
+    fileSize: 2048000,
+    mimeType: 'application/pdf',
+    description: '写真集',
+    sortOrder: 1,
+    isDeleted: false,
+    createdAt: '2026-02-06',
   },
-];
-
-/** 初期装備データ */
-const INITIAL_EQUIPMENT = [
-  { id: 1, name: "テント（2人用）#1", category: "tent", condition: "良好", status: "available", rentedBy: null, rentedAt: null, returnDue: null },
-  { id: 2, name: "テント（2人用）#2", category: "tent", condition: "良好", status: "rented", rentedBy: 2, rentedAt: "2026-04-10", returnDue: "2026-04-15" },
-  { id: 3, name: "テント（4人用）#1", category: "tent", condition: "良好", status: "available", rentedBy: null, rentedAt: null, returnDue: null },
-  { id: 4, name: "ロープ 50m #1", category: "rope", condition: "良好", status: "available", rentedBy: null, rentedAt: null, returnDue: null },
-  { id: 5, name: "ロープ 50m #2", category: "rope", condition: "良好", status: "rented", rentedBy: 5, rentedAt: "2026-04-08", returnDue: "2026-04-12" },
-  { id: 6, name: "ロープ 30m #1", category: "rope", condition: "要点検", status: "maintenance", rentedBy: null, rentedAt: null, returnDue: null },
-  { id: 7, name: "無線機 #1", category: "radio", condition: "良好", status: "available", rentedBy: null, rentedAt: null, returnDue: null },
-  { id: 8, name: "無線機 #2", category: "radio", condition: "良好", status: "available", rentedBy: null, rentedAt: null, returnDue: null },
-  { id: 9, name: "無線機 #3", category: "radio", condition: "良好", status: "rented", rentedBy: 7, rentedAt: "2026-04-05", returnDue: "2026-04-20" },
-  { id: 10, name: "ガスコンロセット #1", category: "cooking", condition: "良好", status: "available", rentedBy: null, rentedAt: null, returnDue: null },
-];
+]
 
 // =============================================================================
-// ユーティリティ関数
+// ユーティリティ
 // =============================================================================
 
-/**
- * 日付をYYYY-MM-DD形式にフォーマット
- */
-const formatDate = (date) => {
-  if (!date) return "";
-  const d = new Date(date);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-};
+/** 日付フォーマット */
+const formatDate = dateStr => {
+  if (!dateStr) return ''
+  const d = new Date(dateStr)
+  const weekdays = ['日', '月', '火', '水', '木', '金', '土']
+  return `${d.getMonth() + 1}/${d.getDate()}(${weekdays[d.getDay()]})`
+}
 
-/**
- * 日付をMM/DD(曜日)形式にフォーマット
- */
-const formatDateShort = (date) => {
-  if (!date) return "";
-  const d = new Date(date);
-  const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
-  const m = d.getMonth() + 1;
-  const day = d.getDate();
-  const weekday = weekdays[d.getDay()];
-  return `${m}/${day}(${weekday})`;
-};
+/** 日付範囲フォーマット */
+const formatDateRange = (start, end) => {
+  if (start === end) return formatDate(start)
+  return `${formatDate(start)}〜${formatDate(end)}`
+}
 
-/**
- * カレンダーの日付配列を生成
- */
-const generateCalendarDays = (year, month) => {
-  const firstDay = new Date(year, month, 1);
-  const lastDay = new Date(year, month + 1, 0);
-  const startDay = firstDay.getDay();
-  const days = [];
-
-  // 前月の日付
-  for (let i = startDay - 1; i >= 0; i--) {
-    const date = new Date(year, month, -i);
-    days.push({ date, isCurrentMonth: false });
-  }
-
-  // 当月の日付
-  for (let i = 1; i <= lastDay.getDate(); i++) {
-    const date = new Date(year, month, i);
-    days.push({ date, isCurrentMonth: true });
-  }
-
-  // 次月の日付（6週間分に揃える）
-  const remaining = 42 - days.length;
-  for (let i = 1; i <= remaining; i++) {
-    const date = new Date(year, month + 1, i);
-    days.push({ date, isCurrentMonth: false });
-  }
-
-  return days;
-};
-
-/**
- * IDで次のIDを生成
- */
-const getNextId = (items) => {
-  return Math.max(0, ...items.map((item) => item.id)) + 1;
-};
-
-// =============================================================================
-// カスタムフック
-// =============================================================================
-
-/**
- * 会員管理用カスタムフック
- */
-const useMemberManager = () => {
-  const [members, setMembers] = useState(INITIAL_MEMBERS);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const addMember = useCallback((member) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setMembers((prev) => [...prev, { ...member, id: getNextId(prev) }]);
-      setIsLoading(false);
-    }, 300);
-  }, []);
-
-  const updateMember = useCallback((id, updates) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, ...updates } : m)));
-      setIsLoading(false);
-    }, 300);
-  }, []);
-
-  const deleteMember = useCallback((id) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setMembers((prev) => prev.filter((m) => m.id !== id));
-      setIsLoading(false);
-    }, 300);
-  }, []);
-
-  const searchMembers = useCallback(
-    (query) => {
-      if (!query) return members;
-      const lowerQuery = query.toLowerCase();
-      return members.filter(
-        (m) =>
-          m.name.toLowerCase().includes(lowerQuery) ||
-          m.nameKana.toLowerCase().includes(lowerQuery) ||
-          m.email.toLowerCase().includes(lowerQuery)
-      );
-    },
-    [members]
-  );
-
-  const getMemberById = useCallback(
-    (id) => {
-      return members.find((m) => m.id === id);
-    },
-    [members]
-  );
-
-  return { members, isLoading, addMember, updateMember, deleteMember, searchMembers, getMemberById };
-};
-
-/**
- * 例会企画管理用カスタムフック
- */
-const useEventPlanManager = () => {
-  const [eventPlans, setEventPlans] = useState(INITIAL_EVENT_PLANS);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const addEventPlan = useCallback((plan) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setEventPlans((prev) => [...prev, { ...plan, id: getNextId(prev) }]);
-      setIsLoading(false);
-    }, 300);
-  }, []);
-
-  const updateEventPlan = useCallback((id, updates) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setEventPlans((prev) => prev.map((p) => (p.id === id ? { ...p, ...updates } : p)));
-      setIsLoading(false);
-    }, 300);
-  }, []);
-
-  const deleteEventPlan = useCallback((id) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setEventPlans((prev) => prev.filter((p) => p.id !== id));
-      setIsLoading(false);
-    }, 300);
-  }, []);
-
-  const getEventPlansByMonth = useCallback(
-    (year, month) => {
-      return eventPlans.filter((p) => {
-        const d = new Date(p.date);
-        return d.getFullYear() === year && d.getMonth() === month;
-      });
-    },
-    [eventPlans]
-  );
-
-  return { eventPlans, isLoading, addEventPlan, updateEventPlan, deleteEventPlan, getEventPlansByMonth };
-};
-
-/**
- * 例会案内管理用カスタムフック
- */
-const useEventGuideManager = () => {
-  const [eventGuides, setEventGuides] = useState(INITIAL_EVENT_GUIDES);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const addEventGuide = useCallback((guide) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setEventGuides((prev) => [...prev, { ...guide, id: getNextId(prev), applicantIds: [] }]);
-      setIsLoading(false);
-    }, 300);
-  }, []);
-
-  const updateEventGuide = useCallback((id, updates) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setEventGuides((prev) => prev.map((g) => (g.id === id ? { ...g, ...updates } : g)));
-      setIsLoading(false);
-    }, 300);
-  }, []);
-
-  const deleteEventGuide = useCallback((id) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setEventGuides((prev) => prev.filter((g) => g.id !== id));
-      setIsLoading(false);
-    }, 300);
-  }, []);
-
-  const applyToEvent = useCallback((guideId, memberId) => {
-    setEventGuides((prev) =>
-      prev.map((g) => {
-        if (g.id === guideId && !g.applicantIds.includes(memberId)) {
-          return { ...g, applicantIds: [...g.applicantIds, memberId] };
-        }
-        return g;
-      })
-    );
-  }, []);
-
-  const cancelApplication = useCallback((guideId, memberId) => {
-    setEventGuides((prev) =>
-      prev.map((g) => {
-        if (g.id === guideId) {
-          return { ...g, applicantIds: g.applicantIds.filter((id) => id !== memberId) };
-        }
-        return g;
-      })
-    );
-  }, []);
-
-  const filterEventGuides = useCallback(
-    ({ department, startDate, endDate }) => {
-      return eventGuides.filter((g) => {
-        if (department && g.department !== department) return false;
-        if (startDate && g.startDate < startDate) return false;
-        if (endDate && g.endDate > endDate) return false;
-        return true;
-      });
-    },
-    [eventGuides]
-  );
-
-  return { eventGuides, isLoading, addEventGuide, updateEventGuide, deleteEventGuide, applyToEvent, cancelApplication, filterEventGuides };
-};
-
-/**
- * 計画書管理用カスタムフック
- */
-const usePlanManager = () => {
-  const [plans, setPlans] = useState(INITIAL_PLANS);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const addPlan = useCallback((plan) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setPlans((prev) => [...prev, { ...plan, id: getNextId(prev) }]);
-      setIsLoading(false);
-    }, 300);
-  }, []);
-
-  const updatePlan = useCallback((id, updates) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setPlans((prev) => prev.map((p) => (p.id === id ? { ...p, ...updates } : p)));
-      setIsLoading(false);
-    }, 300);
-  }, []);
-
-  const deletePlan = useCallback((id) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setPlans((prev) => prev.filter((p) => p.id !== id));
-      setIsLoading(false);
-    }, 300);
-  }, []);
-
-  return { plans, isLoading, addPlan, updatePlan, deletePlan };
-};
-
-/**
- * 例会記録管理用カスタムフック
- */
-const useRecordManager = () => {
-  const [records, setRecords] = useState(INITIAL_RECORDS);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const addRecord = useCallback((record) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setRecords((prev) => [...prev, { ...record, id: getNextId(prev) }]);
-      setIsLoading(false);
-    }, 300);
-  }, []);
-
-  const updateRecord = useCallback((id, updates) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setRecords((prev) => prev.map((r) => (r.id === id ? { ...r, ...updates } : r)));
-      setIsLoading(false);
-    }, 300);
-  }, []);
-
-  const deleteRecord = useCallback((id) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setRecords((prev) => prev.filter((r) => r.id !== id));
-      setIsLoading(false);
-    }, 300);
-  }, []);
-
-  return { records, isLoading, addRecord, updateRecord, deleteRecord };
-};
-
-/**
- * 装備管理用カスタムフック
- */
-const useEquipmentManager = () => {
-  const [equipment, setEquipment] = useState(INITIAL_EQUIPMENT);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const addEquipment = useCallback((item) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setEquipment((prev) => [...prev, { ...item, id: getNextId(prev) }]);
-      setIsLoading(false);
-    }, 300);
-  }, []);
-
-  const updateEquipment = useCallback((id, updates) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setEquipment((prev) => prev.map((e) => (e.id === id ? { ...e, ...updates } : e)));
-      setIsLoading(false);
-    }, 300);
-  }, []);
-
-  const rentEquipment = useCallback((id, memberId, returnDue) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setEquipment((prev) =>
-        prev.map((e) =>
-          e.id === id
-            ? { ...e, status: "rented", rentedBy: memberId, rentedAt: formatDate(new Date()), returnDue }
-            : e
-        )
-      );
-      setIsLoading(false);
-    }, 300);
-  }, []);
-
-  const returnEquipment = useCallback((id) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setEquipment((prev) =>
-        prev.map((e) =>
-          e.id === id ? { ...e, status: "available", rentedBy: null, rentedAt: null, returnDue: null } : e
-        )
-      );
-      setIsLoading(false);
-    }, 300);
-  }, []);
-
-  const getEquipmentByCategory = useCallback(
-    (category) => {
-      if (!category) return equipment;
-      return equipment.filter((e) => e.category === category);
-    },
-    [equipment]
-  );
-
-  return { equipment, isLoading, addEquipment, updateEquipment, rentEquipment, returnEquipment, getEquipmentByCategory };
-};
+/** ID生成 */
+const generateId = arr => Math.max(0, ...arr.map(x => x.id)) + 1
 
 // =============================================================================
 // 共通UIコンポーネント
 // =============================================================================
 
-/** ボタンコンポーネント */
-const Button = ({ children, onClick, variant = "primary", size = "md", disabled = false, className = "" }) => {
-  const baseStyles = "rounded font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2";
-  const variants = {
-    primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
-    secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-500",
-    danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500",
-    ghost: "bg-transparent text-gray-600 hover:bg-gray-100 focus:ring-gray-500",
-  };
-  const sizes = {
-    sm: "px-2 py-1 text-sm",
-    md: "px-4 py-2",
-    lg: "px-6 py-3 text-lg",
-  };
-
+/** モーダル */
+const Modal = ({isOpen, onClose, title, children, size = 'md'}) => {
+  if (!isOpen) return null
+  const sizeClass = size === 'lg' ? 'max-w-4xl' : size === 'sm' ? 'max-w-md' : 'max-w-2xl'
   return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${disabled ? "opacity-50 cursor-not-allowed" : ""} ${className}`}
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={onClose}>
+      <div
+        className={`bg-white rounded-lg shadow-xl w-full ${sizeClass} max-h-[90vh] overflow-hidden`}
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between px-6 py-4 border-b">
+          <h2 className="text-lg font-bold">{title}</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">
+            &times;
+          </button>
+        </div>
+        <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">{children}</div>
+      </div>
+    </div>
+  )
+}
+
+/** バッジ */
+const Badge = ({children, color, bgColor}) => (
+  <span className="px-2 py-0.5 rounded text-xs font-medium" style={{color, backgroundColor: bgColor}}>
+    {children}
+  </span>
+)
+
+/** ボタン */
+const Button = ({children, variant = 'primary', size = 'md', onClick, disabled, className = ''}) => {
+  const baseClass = 'rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+  const sizeClass = size === 'sm' ? 'px-3 py-1.5 text-sm' : 'px-4 py-2'
+  const variantClass = {
+    primary: 'bg-blue-600 text-white hover:bg-blue-700',
+    secondary: 'bg-gray-100 text-gray-700 hover:bg-gray-200',
+    danger: 'bg-red-600 text-white hover:bg-red-700',
+    success: 'bg-green-600 text-white hover:bg-green-700',
+  }[variant]
+  return (
+    <button className={`${baseClass} ${sizeClass} ${variantClass} ${className}`} onClick={onClick} disabled={disabled}>
       {children}
     </button>
-  );
-};
+  )
+}
 
-/** バッジコンポーネント */
-const Badge = ({ children, color = "gray" }) => {
-  const colors = {
-    gray: "bg-gray-100 text-gray-800",
-    green: "bg-green-100 text-green-800",
-    blue: "bg-blue-100 text-blue-800",
-    purple: "bg-purple-100 text-purple-800",
-    yellow: "bg-yellow-100 text-yellow-800",
-    red: "bg-red-100 text-red-800",
-  };
+/** カード */
+const Card = ({children, className = ''}) => <div className={`bg-white rounded-lg shadow border ${className}`}>{children}</div>
 
-  return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${colors[color]}`}>
-      {children}
-    </span>
-  );
-};
-
-/** カードコンポーネント */
-const Card = ({ children, className = "", onClick }) => {
-  return (
-    <div
-      className={`bg-white rounded-lg shadow border border-gray-200 ${onClick ? "cursor-pointer hover:shadow-md transition-shadow" : ""} ${className}`}
-      onClick={onClick}
-    >
-      {children}
-    </div>
-  );
-};
-
-/** 入力フィールドコンポーネント */
-const Input = ({ label, type = "text", value, onChange, placeholder, required = false, className = "" }) => {
-  return (
-    <div className={className}>
-      {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          {label}
-          {required && <span className="text-red-500 ml-1">*</span>}
-        </label>
-      )}
-      <input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-      />
-    </div>
-  );
-};
-
-/** セレクトコンポーネント */
-const Select = ({ label, value, onChange, options, placeholder, required = false, className = "" }) => {
-  return (
-    <div className={className}>
-      {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          {label}
-          {required && <span className="text-red-500 ml-1">*</span>}
-        </label>
-      )}
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-      >
-        {placeholder && <option value="">{placeholder}</option>}
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-};
-
-/** テキストエリアコンポーネント */
-const Textarea = ({ label, value, onChange, placeholder, rows = 4, required = false, className = "" }) => {
-  return (
-    <div className={className}>
-      {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          {label}
-          {required && <span className="text-red-500 ml-1">*</span>}
-        </label>
-      )}
-      <textarea
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        rows={rows}
-        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-      />
-    </div>
-  );
-};
-
-/** モーダルコンポーネント */
-const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
-  if (!isOpen) return null;
-
-  const sizes = {
-    sm: "max-w-md",
-    md: "max-w-lg",
-    lg: "max-w-2xl",
-    xl: "max-w-4xl",
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onClick={onClose} />
-        <div className={`relative inline-block bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:w-full ${sizes[size]}`}>
-          <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-medium text-gray-900">{title}</h3>
-              <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-                ✕
-              </button>
-            </div>
-            {children}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-/** ローディングスピナー */
-const LoadingSpinner = () => (
-  <div className="flex items-center justify-center p-8">
-    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+/** 入力フィールド */
+const FormField = ({label, required, children}) => (
+  <div className="mb-4">
+    <label className="block text-sm font-medium text-gray-700 mb-1">
+      {label}
+      {required && <span className="text-red-500 ml-1">*</span>}
+    </label>
+    {children}
   </div>
-);
-
-/** 空状態表示 */
-const EmptyState = ({ message, icon = "📭" }) => (
-  <div className="flex flex-col items-center justify-center p-8 text-gray-500">
-    <span className="text-4xl mb-2">{icon}</span>
-    <p>{message}</p>
-  </div>
-);
-
-// =============================================================================
-// 各画面コンポーネント
-// =============================================================================
-
-/** ダッシュボード画面 */
-const Dashboard = ({ eventGuides, equipment, members, getMemberById }) => {
-  const today = new Date();
-  const upcomingEvents = eventGuides
-    .filter((g) => new Date(g.startDate) >= today)
-    .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
-    .slice(0, 5);
-
-  const rentedEquipment = equipment.filter((e) => e.status === "rented");
-  const overdueEquipment = rentedEquipment.filter((e) => e.returnDue && new Date(e.returnDue) < today);
-
-  return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">ダッシュボード</h1>
-
-      {/* 統計カード */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="p-4">
-          <div className="text-sm text-gray-500">会員数</div>
-          <div className="text-2xl font-bold text-gray-900">{members.length}名</div>
-        </Card>
-        <Card className="p-4">
-          <div className="text-sm text-gray-500">今月の例会</div>
-          <div className="text-2xl font-bold text-gray-900">
-            {eventGuides.filter((g) => {
-              const d = new Date(g.startDate);
-              return d.getMonth() === today.getMonth() && d.getFullYear() === today.getFullYear();
-            }).length}件
-          </div>
-        </Card>
-        <Card className="p-4">
-          <div className="text-sm text-gray-500">貸出中装備</div>
-          <div className="text-2xl font-bold text-gray-900">{rentedEquipment.length}点</div>
-        </Card>
-        <Card className="p-4">
-          <div className="text-sm text-gray-500">返却期限超過</div>
-          <div className={`text-2xl font-bold ${overdueEquipment.length > 0 ? "text-red-600" : "text-gray-900"}`}>
-            {overdueEquipment.length}点
-          </div>
-        </Card>
-      </div>
-
-      {/* 直近の例会案内 */}
-      <Card className="p-4">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">直近の例会案内</h2>
-        {upcomingEvents.length === 0 ? (
-          <EmptyState message="予定されている例会はありません" icon="🏔️" />
-        ) : (
-          <div className="space-y-3">
-            {upcomingEvents.map((event) => {
-              const dept = DEPARTMENTS[event.department];
-              const cl = getMemberById(event.clId);
-              return (
-                <div key={event.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: dept?.color }}
-                    />
-                    <div>
-                      <div className="font-medium text-gray-900">
-                        {formatDateShort(event.startDate)}
-                        {event.endDate !== event.startDate && ` 〜 ${formatDateShort(event.endDate)}`}
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        {event.mountainName} {event.altitude && `${event.altitude}m`}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <Badge color={dept?.id === "sanko" ? "blue" : dept?.id === "hiking" ? "green" : "gray"}>
-                      {dept?.name}
-                    </Badge>
-                    <div className="text-sm text-gray-500 mt-1">CL: {cl?.name || "未定"}</div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </Card>
-
-      {/* 装備状況 */}
-      {overdueEquipment.length > 0 && (
-        <Card className="p-4 border-red-200 bg-red-50">
-          <h2 className="text-lg font-semibold text-red-900 mb-4">⚠️ 返却期限超過の装備</h2>
-          <div className="space-y-2">
-            {overdueEquipment.map((eq) => {
-              const renter = getMemberById(eq.rentedBy);
-              return (
-                <div key={eq.id} className="flex items-center justify-between p-2 bg-white rounded">
-                  <div>
-                    <span className="font-medium">{eq.name}</span>
-                    <span className="text-sm text-gray-500 ml-2">（{renter?.name}）</span>
-                  </div>
-                  <div className="text-sm text-red-600">期限: {formatDateShort(eq.returnDue)}</div>
-                </div>
-              );
-            })}
-          </div>
-        </Card>
-      )}
-    </div>
-  );
-};
-
-/** 例会企画（カレンダー）画面 */
-const EventPlanCalendar = ({ eventPlans, members, addEventPlan, getMemberById }) => {
-  const [currentDate, setCurrentDate] = useState(new Date(2026, 3, 1)); // 2026年4月
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newPlan, setNewPlan] = useState({ date: "", department: "", title: "", clId: "" });
-
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth();
-  const days = generateCalendarDays(year, month);
-
-  const goToPrevMonth = () => setCurrentDate(new Date(year, month - 1, 1));
-  const goToNextMonth = () => setCurrentDate(new Date(year, month + 1, 1));
-
-  const handleAddPlan = () => {
-    if (newPlan.date && newPlan.department && newPlan.title) {
-      addEventPlan({
-        ...newPlan,
-        clId: newPlan.clId ? parseInt(newPlan.clId) : null,
-        status: "draft",
-      });
-      setNewPlan({ date: "", department: "", title: "", clId: "" });
-      setIsModalOpen(false);
-    }
-  };
-
-  const getPlansForDate = (date) => {
-    const dateStr = formatDate(date);
-    return eventPlans.filter((p) => p.date === dateStr);
-  };
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">例会企画</h1>
-        <Button onClick={() => setIsModalOpen(true)}>+ 企画追加</Button>
-      </div>
-
-      {/* カレンダーヘッダー */}
-      <Card className="p-4">
-        <div className="flex items-center justify-between mb-4">
-          <Button variant="ghost" onClick={goToPrevMonth}>← 前月</Button>
-          <h2 className="text-xl font-semibold">
-            {year}年 {month + 1}月
-          </h2>
-          <Button variant="ghost" onClick={goToNextMonth}>次月 →</Button>
-        </div>
-
-        {/* 凡例 */}
-        <div className="flex flex-wrap gap-3 mb-4 text-sm">
-          {Object.values(DEPARTMENTS).map((dept) => (
-            <div key={dept.id} className="flex items-center gap-1">
-              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: dept.color }} />
-              <span>{dept.name}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* カレンダーグリッド */}
-        <div className="grid grid-cols-7 gap-px bg-gray-200">
-          {["日", "月", "火", "水", "木", "金", "土"].map((day) => (
-            <div key={day} className="bg-gray-100 p-2 text-center text-sm font-medium text-gray-600">
-              {day}
-            </div>
-          ))}
-          {days.map((dayInfo, index) => {
-            const plans = getPlansForDate(dayInfo.date);
-            const isToday = formatDate(dayInfo.date) === formatDate(new Date());
-            return (
-              <div
-                key={index}
-                className={`bg-white min-h-24 p-1 ${!dayInfo.isCurrentMonth ? "opacity-50" : ""} ${isToday ? "ring-2 ring-blue-500" : ""}`}
-              >
-                <div className={`text-sm ${dayInfo.date.getDay() === 0 ? "text-red-500" : dayInfo.date.getDay() === 6 ? "text-blue-500" : ""}`}>
-                  {dayInfo.date.getDate()}
-                </div>
-                <div className="space-y-1 mt-1">
-                  {plans.map((plan) => {
-                    const dept = DEPARTMENTS[plan.department];
-                    return (
-                      <div
-                        key={plan.id}
-                        className="text-xs p-1 rounded truncate"
-                        style={{ backgroundColor: dept?.bgColor, color: dept?.color }}
-                        title={plan.title}
-                      >
-                        {plan.title}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </Card>
-
-      {/* 企画追加モーダル */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="例会企画を追加">
-        <div className="space-y-4">
-          <Input
-            label="日付"
-            type="date"
-            value={newPlan.date}
-            onChange={(v) => setNewPlan({ ...newPlan, date: v })}
-            required
-          />
-          <Select
-            label="担当部"
-            value={newPlan.department}
-            onChange={(v) => setNewPlan({ ...newPlan, department: v })}
-            options={Object.values(DEPARTMENTS).map((d) => ({ value: d.id, label: d.name }))}
-            placeholder="選択してください"
-            required
-          />
-          <Input
-            label="タイトル"
-            value={newPlan.title}
-            onChange={(v) => setNewPlan({ ...newPlan, title: v })}
-            placeholder="例: クリーンハイク"
-            required
-          />
-          <Select
-            label="CL"
-            value={newPlan.clId}
-            onChange={(v) => setNewPlan({ ...newPlan, clId: v })}
-            options={members.map((m) => ({ value: m.id.toString(), label: m.name }))}
-            placeholder="未定"
-          />
-          <div className="flex justify-end gap-2 mt-6">
-            <Button variant="secondary" onClick={() => setIsModalOpen(false)}>キャンセル</Button>
-            <Button onClick={handleAddPlan}>追加</Button>
-          </div>
-        </div>
-      </Modal>
-    </div>
-  );
-};
-
-/** 例会案内画面 */
-const EventGuideList = ({ eventGuides, members, getMemberById, applyToEvent, cancelApplication }) => {
-  const [filterDepartment, setFilterDepartment] = useState("");
-  const [selectedGuide, setSelectedGuide] = useState(null);
-  const [currentMemberId] = useState(3); // ログイン中の会員ID（モック）
-
-  const filteredGuides = useMemo(() => {
-    return eventGuides
-      .filter((g) => !filterDepartment || g.department === filterDepartment)
-      .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
-  }, [eventGuides, filterDepartment]);
-
-  const handleApply = (guideId) => {
-    applyToEvent(guideId, currentMemberId);
-  };
-
-  const handleCancel = (guideId) => {
-    cancelApplication(guideId, currentMemberId);
-  };
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">例会案内</h1>
-      </div>
-
-      {/* フィルター */}
-      <Card className="p-4">
-        <div className="flex flex-wrap gap-4">
-          <Select
-            label="担当部"
-            value={filterDepartment}
-            onChange={setFilterDepartment}
-            options={Object.values(DEPARTMENTS).map((d) => ({ value: d.id, label: d.name }))}
-            placeholder="すべて"
-            className="w-48"
-          />
-        </div>
-      </Card>
-
-      {/* 例会一覧 */}
-      {filteredGuides.length === 0 ? (
-        <EmptyState message="該当する例会案内はありません" icon="🏔️" />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {filteredGuides.map((guide) => {
-            const dept = DEPARTMENTS[guide.department];
-            const cl = getMemberById(guide.clId);
-            const sl = getMemberById(guide.slId);
-            const isApplied = guide.applicantIds.includes(currentMemberId);
-            const isDeadlinePassed = new Date(guide.deadline) < new Date();
-
-            return (
-              <Card key={guide.id} className="p-4" onClick={() => setSelectedGuide(guide)}>
-                <div className="flex items-start justify-between mb-2">
-                  <Badge color={dept?.id === "sanko" ? "blue" : dept?.id === "hiking" ? "green" : "gray"}>
-                    {dept?.name}
-                  </Badge>
-                  <div className="text-sm text-gray-500">
-                    申込: {guide.applicantIds.length}名
-                  </div>
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-1">
-                  {guide.mountainName} {guide.altitude && `${guide.altitude}m`}
-                </h3>
-                <div className="text-sm text-gray-600 mb-2">
-                  {formatDateShort(guide.startDate)}
-                  {guide.endDate !== guide.startDate && ` 〜 ${formatDateShort(guide.endDate)}`}
-                </div>
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {guide.gradeStamina && <Badge>{guide.gradeStamina}</Badge>}
-                  {guide.gradeSkill && <Badge color="purple">{guide.gradeSkill}</Badge>}
-                  {guide.rockCategory && <Badge color="red">岩{guide.rockCategory}</Badge>}
-                </div>
-                <div className="text-sm text-gray-500 mb-3">
-                  <div>CL: {cl?.name || "未定"} {sl && `/ SL: ${sl.name}`}</div>
-                  <div>集合: {guide.meetingPlace} {guide.meetingTime}</div>
-                  <div>申込期限: {formatDateShort(guide.deadline)}</div>
-                </div>
-                <div className="flex justify-end">
-                  {isApplied ? (
-                    <Button variant="secondary" size="sm" onClick={(e) => { e.stopPropagation(); handleCancel(guide.id); }}>
-                      申込取消
-                    </Button>
-                  ) : (
-                    <Button
-                      size="sm"
-                      onClick={(e) => { e.stopPropagation(); handleApply(guide.id); }}
-                      disabled={isDeadlinePassed}
-                    >
-                      {isDeadlinePassed ? "締切済" : "申込む"}
-                    </Button>
-                  )}
-                </div>
-              </Card>
-            );
-          })}
-        </div>
-      )}
-
-      {/* 詳細モーダル */}
-      <Modal
-        isOpen={!!selectedGuide}
-        onClose={() => setSelectedGuide(null)}
-        title="例会案内詳細"
-        size="lg"
-      >
-        {selectedGuide && (
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Badge color={DEPARTMENTS[selectedGuide.department]?.id === "sanko" ? "blue" : "green"}>
-                {DEPARTMENTS[selectedGuide.department]?.name}
-              </Badge>
-              {selectedGuide.gradeStamina && <Badge>{selectedGuide.gradeStamina}</Badge>}
-              {selectedGuide.gradeSkill && <Badge color="purple">{selectedGuide.gradeSkill}</Badge>}
-            </div>
-            <h2 className="text-xl font-bold">
-              {selectedGuide.mountainName} {selectedGuide.altitude && `${selectedGuide.altitude}m`}
-            </h2>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="text-gray-500">日程:</span>
-                <span className="ml-2">
-                  {formatDateShort(selectedGuide.startDate)}
-                  {selectedGuide.endDate !== selectedGuide.startDate && ` 〜 ${formatDateShort(selectedGuide.endDate)}`}
-                </span>
-              </div>
-              <div>
-                <span className="text-gray-500">CL:</span>
-                <span className="ml-2">{getMemberById(selectedGuide.clId)?.name || "未定"}</span>
-              </div>
-              <div>
-                <span className="text-gray-500">集合場所:</span>
-                <span className="ml-2">{selectedGuide.meetingPlace}</span>
-              </div>
-              <div>
-                <span className="text-gray-500">集合時間:</span>
-                <span className="ml-2">{selectedGuide.meetingTime}</span>
-              </div>
-              <div>
-                <span className="text-gray-500">必要保険口数:</span>
-                <span className="ml-2">{selectedGuide.requiredInsurance}口以上</span>
-              </div>
-              <div>
-                <span className="text-gray-500">申込期限:</span>
-                <span className="ml-2">{formatDateShort(selectedGuide.deadline)}</span>
-              </div>
-            </div>
-            <div>
-              <span className="text-gray-500">コース:</span>
-              <p className="mt-1">{selectedGuide.course}</p>
-            </div>
-            {selectedGuide.notes && (
-              <div>
-                <span className="text-gray-500">備考:</span>
-                <p className="mt-1">{selectedGuide.notes}</p>
-              </div>
-            )}
-            <div>
-              <span className="text-gray-500">参加者 ({selectedGuide.applicantIds.length}名):</span>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {selectedGuide.applicantIds.map((id) => (
-                  <Badge key={id}>{getMemberById(id)?.name}</Badge>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-      </Modal>
-    </div>
-  );
-};
-
-/** 計画書画面 */
-const PlanList = ({ plans, members, eventGuides, addPlan, updatePlan, getMemberById }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState(null);
-  const [newPlan, setNewPlan] = useState({
-    mountainArea: "",
-    mountainName: "",
-    purpose: "",
-    formationType: "自主",
-    meetingPlace: "",
-    transport: "",
-    policeNotification: "コンパス",
-    participants: [],
-    status: "draft",
-  });
-
-  const handleAddPlan = () => {
-    if (newPlan.mountainName && newPlan.meetingPlace) {
-      addPlan({
-        ...newPlan,
-        submittedAt: formatDate(new Date()),
-        itinerary: [],
-        escapeRoute: "",
-        specialNotes: "",
-        lastReportTime: "",
-      });
-      setNewPlan({
-        mountainArea: "",
-        mountainName: "",
-        purpose: "",
-        formationType: "自主",
-        meetingPlace: "",
-        transport: "",
-        policeNotification: "コンパス",
-        participants: [],
-        status: "draft",
-      });
-      setIsModalOpen(false);
-    }
-  };
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">計画書</h1>
-        <Button onClick={() => setIsModalOpen(true)}>+ 新規作成</Button>
-      </div>
-
-      {/* 計画書一覧 */}
-      {plans.length === 0 ? (
-        <EmptyState message="計画書はありません" icon="📝" />
-      ) : (
-        <div className="space-y-4">
-          {plans.map((plan) => {
-            const cl = plan.participants.find((p) => p.role === "CL");
-            const clMember = cl ? getMemberById(cl.memberId) : null;
-
-            return (
-              <Card key={plan.id} className="p-4" onClick={() => setSelectedPlan(plan)}>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <Badge
-                        color={
-                          plan.status === "approved" ? "green" :
-                          plan.status === "submitted" ? "blue" :
-                          plan.status === "completed" ? "gray" : "yellow"
-                        }
-                      >
-                        {PLAN_STATUS[plan.status]}
-                      </Badge>
-                      <span className="text-sm text-gray-500">{formatDateShort(plan.submittedAt)}</span>
-                    </div>
-                    <h3 className="font-semibold text-gray-900">
-                      {plan.mountainArea && `${plan.mountainArea}・`}{plan.mountainName}
-                    </h3>
-                    <div className="text-sm text-gray-600 mt-1">
-                      CL: {clMember?.name || "未定"} / 参加者: {plan.participants.length}名
-                    </div>
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    {plan.purpose}
-                  </div>
-                </div>
-              </Card>
-            );
-          })}
-        </div>
-      )}
-
-      {/* 新規作成モーダル */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="計画書を作成" size="lg">
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="山域"
-              value={newPlan.mountainArea}
-              onChange={(v) => setNewPlan({ ...newPlan, mountainArea: v })}
-              placeholder="例: 北アルプス"
-            />
-            <Input
-              label="山名"
-              value={newPlan.mountainName}
-              onChange={(v) => setNewPlan({ ...newPlan, mountainName: v })}
-              placeholder="例: 槍ヶ岳"
-              required
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="目的"
-              value={newPlan.purpose}
-              onChange={(v) => setNewPlan({ ...newPlan, purpose: v })}
-              placeholder="例: ハイキング"
-            />
-            <Select
-              label="山行形態"
-              value={newPlan.formationType}
-              onChange={(v) => setNewPlan({ ...newPlan, formationType: v })}
-              options={[
-                { value: "自主", label: "自主" },
-                { value: "例会", label: "例会" },
-                { value: "講座", label: "講座" },
-              ]}
-            />
-          </div>
-          <Input
-            label="集合場所・時間"
-            value={newPlan.meetingPlace}
-            onChange={(v) => setNewPlan({ ...newPlan, meetingPlace: v })}
-            placeholder="例: JR三ノ宮駅 8:00"
-            required
-          />
-          <Input
-            label="交通機関"
-            value={newPlan.transport}
-            onChange={(v) => setNewPlan({ ...newPlan, transport: v })}
-            placeholder="例: マイカー"
-          />
-          <div className="flex justify-end gap-2 mt-6">
-            <Button variant="secondary" onClick={() => setIsModalOpen(false)}>キャンセル</Button>
-            <Button onClick={handleAddPlan}>作成</Button>
-          </div>
-        </div>
-      </Modal>
-
-      {/* 詳細モーダル */}
-      <Modal
-        isOpen={!!selectedPlan}
-        onClose={() => setSelectedPlan(null)}
-        title="計画書詳細"
-        size="xl"
-      >
-        {selectedPlan && (
-          <div className="space-y-4 max-h-96 overflow-y-auto">
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="text-gray-500">山域・山名:</span>
-                <span className="ml-2 font-medium">
-                  {selectedPlan.mountainArea && `${selectedPlan.mountainArea}・`}{selectedPlan.mountainName}
-                </span>
-              </div>
-              <div>
-                <span className="text-gray-500">目的:</span>
-                <span className="ml-2">{selectedPlan.purpose}</span>
-              </div>
-              <div>
-                <span className="text-gray-500">山行形態:</span>
-                <span className="ml-2">{selectedPlan.formationType}</span>
-              </div>
-              <div>
-                <span className="text-gray-500">届出警察署:</span>
-                <span className="ml-2">{selectedPlan.policeNotification}</span>
-              </div>
-            </div>
-
-            <div>
-              <span className="text-gray-500">集合:</span>
-              <span className="ml-2">{selectedPlan.meetingPlace}</span>
-            </div>
-
-            <div>
-              <h4 className="font-medium text-gray-700 mb-2">行程</h4>
-              <div className="space-y-2">
-                {selectedPlan.itinerary.map((item, index) => (
-                  <div key={index} className="text-sm p-2 bg-gray-50 rounded">
-                    <span className="font-medium">{formatDateShort(item.date)}</span>
-                    <span className="ml-2">{item.description}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h4 className="font-medium text-gray-700 mb-2">参加者</h4>
-              <div className="flex flex-wrap gap-2">
-                {selectedPlan.participants.map((p) => (
-                  <Badge key={p.memberId}>
-                    {p.role}: {getMemberById(p.memberId)?.name}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-
-            {selectedPlan.escapeRoute && (
-              <div>
-                <span className="text-gray-500">エスケープルート:</span>
-                <span className="ml-2">{selectedPlan.escapeRoute}</span>
-              </div>
-            )}
-
-            {selectedPlan.specialNotes && (
-              <div>
-                <span className="text-gray-500">特記事項:</span>
-                <p className="mt-1">{selectedPlan.specialNotes}</p>
-              </div>
-            )}
-          </div>
-        )}
-      </Modal>
-    </div>
-  );
-};
-
-/** 例会記録画面 */
-const RecordList = ({ records, members, addRecord, getMemberById }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedRecord, setSelectedRecord] = useState(null);
-  const [newRecord, setNewRecord] = useState({
-    title: "",
-    date: "",
-    weather: "",
-    access: "",
-    courseTime: "",
-    body: "",
-    courseCondition: "",
-    specialNote: "",
-    status: "draft",
-  });
-
-  const handleAddRecord = () => {
-    if (newRecord.title && newRecord.date) {
-      addRecord({
-        ...newRecord,
-        participants: [],
-        planId: null,
-      });
-      setNewRecord({
-        title: "",
-        date: "",
-        weather: "",
-        access: "",
-        courseTime: "",
-        body: "",
-        courseCondition: "",
-        specialNote: "",
-        status: "draft",
-      });
-      setIsModalOpen(false);
-    }
-  };
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">例会記録</h1>
-        <Button onClick={() => setIsModalOpen(true)}>+ 新規作成</Button>
-      </div>
-
-      {/* 記録一覧 */}
-      {records.length === 0 ? (
-        <EmptyState message="例会記録はありません" icon="📖" />
-      ) : (
-        <div className="space-y-4">
-          {records.map((record) => {
-            const cl = record.participants.find((p) => p.role.includes("CL"));
-            const clMember = cl ? getMemberById(cl.memberId) : null;
-
-            return (
-              <Card key={record.id} className="p-4" onClick={() => setSelectedRecord(record)}>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <Badge
-                        color={
-                          record.status === "published" ? "green" :
-                          record.status === "submitted" ? "blue" : "yellow"
-                        }
-                      >
-                        {RECORD_STATUS[record.status]}
-                      </Badge>
-                      <span className="text-sm text-gray-500">{formatDateShort(record.date)}</span>
-                      <span className="text-sm text-gray-500">{record.weather}</span>
-                    </div>
-                    <h3 className="font-semibold text-gray-900">{record.title}</h3>
-                    <div className="text-sm text-gray-600 mt-1">
-                      {clMember && `CL: ${clMember.name} / `}参加者: {record.participants.length}名
-                    </div>
-                  </div>
-                </div>
-                <p className="text-sm text-gray-600 mt-2 line-clamp-2">{record.body}</p>
-              </Card>
-            );
-          })}
-        </div>
-      )}
-
-      {/* 新規作成モーダル */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="例会記録を作成" size="lg">
-        <div className="space-y-4">
-          <Input
-            label="タイトル"
-            value={newRecord.title}
-            onChange={(v) => setNewRecord({ ...newRecord, title: v })}
-            placeholder="例: 岩登りA・蓬莱峡 岩登りを楽しもう"
-            required
-          />
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="日程"
-              type="date"
-              value={newRecord.date}
-              onChange={(v) => setNewRecord({ ...newRecord, date: v })}
-              required
-            />
-            <Input
-              label="天候"
-              value={newRecord.weather}
-              onChange={(v) => setNewRecord({ ...newRecord, weather: v })}
-              placeholder="例: 晴れ"
-            />
-          </div>
-          <Input
-            label="アクセス"
-            value={newRecord.access}
-            onChange={(v) => setNewRecord({ ...newRecord, access: v })}
-            placeholder="例: 阪急宝塚駅9:00⇒蓬莱峡9:20"
-          />
-          <Input
-            label="コースタイム"
-            value={newRecord.courseTime}
-            onChange={(v) => setNewRecord({ ...newRecord, courseTime: v })}
-            placeholder="例: 蓬莱峡9:20〜14:30クライミング"
-          />
-          <Textarea
-            label="本文"
-            value={newRecord.body}
-            onChange={(v) => setNewRecord({ ...newRecord, body: v })}
-            placeholder="山行記録の本文を入力..."
-            rows={6}
-          />
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="コース状況"
-              value={newRecord.courseCondition}
-              onChange={(v) => setNewRecord({ ...newRecord, courseCondition: v })}
-              placeholder="例: 危険箇所なし"
-            />
-            <Input
-              label="特記事項"
-              value={newRecord.specialNote}
-              onChange={(v) => setNewRecord({ ...newRecord, specialNote: v })}
-              placeholder="例: ヒヤリハットなし"
-            />
-          </div>
-          <div className="flex justify-end gap-2 mt-6">
-            <Button variant="secondary" onClick={() => setIsModalOpen(false)}>キャンセル</Button>
-            <Button onClick={handleAddRecord}>作成</Button>
-          </div>
-        </div>
-      </Modal>
-
-      {/* 詳細モーダル */}
-      <Modal
-        isOpen={!!selectedRecord}
-        onClose={() => setSelectedRecord(null)}
-        title="例会記録詳細"
-        size="xl"
-      >
-        {selectedRecord && (
-          <div className="space-y-4 max-h-96 overflow-y-auto">
-            <h2 className="text-xl font-bold">{selectedRecord.title}</h2>
-            <div className="flex items-center gap-4 text-sm">
-              <span>{formatDateShort(selectedRecord.date)}</span>
-              <span>天候: {selectedRecord.weather}</span>
-            </div>
-            <div>
-              <span className="text-gray-500">アクセス:</span>
-              <span className="ml-2">{selectedRecord.access}</span>
-            </div>
-            <div>
-              <span className="text-gray-500">コースタイム:</span>
-              <span className="ml-2">{selectedRecord.courseTime}</span>
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-700 mb-2">参加者</h4>
-              <div className="flex flex-wrap gap-2">
-                {selectedRecord.participants.map((p) => (
-                  <Badge key={p.memberId}>
-                    {p.role}: {getMemberById(p.memberId)?.name}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-            <div>
-              <h4 className="font-medium text-gray-700 mb-2">本文</h4>
-              <div className="whitespace-pre-wrap text-sm">{selectedRecord.body}</div>
-            </div>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="text-gray-500">コース状況:</span>
-                <span className="ml-2">{selectedRecord.courseCondition}</span>
-              </div>
-              <div>
-                <span className="text-gray-500">特記事項:</span>
-                <span className="ml-2">{selectedRecord.specialNote}</span>
-              </div>
-            </div>
-          </div>
-        )}
-      </Modal>
-    </div>
-  );
-};
-
-/** 会員管理画面 */
-const MemberManagement = ({ members, addMember, updateMember, deleteMember, searchMembers }) => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedMember, setSelectedMember] = useState(null);
-  const [newMember, setNewMember] = useState({
-    name: "",
-    nameKana: "",
-    gender: "男",
-    phone: "",
-    email: "",
-    insuranceKuchi: 3,
-  });
-
-  const filteredMembers = useMemo(() => {
-    return searchMembers(searchQuery);
-  }, [searchMembers, searchQuery]);
-
-  const handleAddMember = () => {
-    if (newMember.name && newMember.email) {
-      addMember({
-        ...newMember,
-        birthDate: "",
-        address: "",
-        bloodType: "",
-        emergencyContact: "",
-        emergencyPhone: "",
-        emergencyRelation: "",
-        joinedAt: formatDate(new Date()),
-        completedCourses: [],
-        medicalCondition: "",
-        kokohelId: "",
-        role: "",
-      });
-      setNewMember({
-        name: "",
-        nameKana: "",
-        gender: "男",
-        phone: "",
-        email: "",
-        insuranceKuchi: 3,
-      });
-      setIsModalOpen(false);
-    }
-  };
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">会員管理</h1>
-        <Button onClick={() => setIsModalOpen(true)}>+ 会員追加</Button>
-      </div>
-
-      {/* 検索 */}
-      <Card className="p-4">
-        <Input
-          label="会員検索"
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder="名前・メールアドレスで検索..."
-        />
-      </Card>
-
-      {/* 会員一覧 */}
-      {filteredMembers.length === 0 ? (
-        <EmptyState message="該当する会員はいません" icon="👥" />
-      ) : (
-        <div className="space-y-2">
-          {filteredMembers.map((member) => (
-            <Card key={member.id} className="p-4" onClick={() => setSelectedMember(member)}>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 font-medium">
-                    {member.name.charAt(0)}
-                  </div>
-                  <div>
-                    <div className="font-medium text-gray-900">{member.name}</div>
-                    <div className="text-sm text-gray-500">{member.nameKana}</div>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="flex items-center gap-2">
-                    <Badge color={member.insuranceKuchi >= 8 ? "green" : member.insuranceKuchi >= 4 ? "blue" : "gray"}>
-                      保険{member.insuranceKuchi}口
-                    </Badge>
-                    {member.role && <Badge color="purple">{member.role}</Badge>}
-                  </div>
-                  <div className="text-sm text-gray-500 mt-1">{member.email}</div>
-                </div>
-              </div>
-            </Card>
-          ))}
-        </div>
-      )}
-
-      {/* 会員追加モーダル */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="会員を追加">
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="氏名"
-              value={newMember.name}
-              onChange={(v) => setNewMember({ ...newMember, name: v })}
-              placeholder="例: 山田 太郎"
-              required
-            />
-            <Input
-              label="フリガナ"
-              value={newMember.nameKana}
-              onChange={(v) => setNewMember({ ...newMember, nameKana: v })}
-              placeholder="例: ヤマダ タロウ"
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <Select
-              label="性別"
-              value={newMember.gender}
-              onChange={(v) => setNewMember({ ...newMember, gender: v })}
-              options={[
-                { value: "男", label: "男" },
-                { value: "女", label: "女" },
-              ]}
-            />
-            <Select
-              label="労山基金口数"
-              value={newMember.insuranceKuchi.toString()}
-              onChange={(v) => setNewMember({ ...newMember, insuranceKuchi: parseInt(v) })}
-              options={[
-                { value: "3", label: "3口" },
-                { value: "4", label: "4口" },
-                { value: "8", label: "8口" },
-              ]}
-            />
-          </div>
-          <Input
-            label="電話番号"
-            value={newMember.phone}
-            onChange={(v) => setNewMember({ ...newMember, phone: v })}
-            placeholder="例: 090-1234-5678"
-          />
-          <Input
-            label="メールアドレス"
-            type="email"
-            value={newMember.email}
-            onChange={(v) => setNewMember({ ...newMember, email: v })}
-            placeholder="例: yamada@example.com"
-            required
-          />
-          <div className="flex justify-end gap-2 mt-6">
-            <Button variant="secondary" onClick={() => setIsModalOpen(false)}>キャンセル</Button>
-            <Button onClick={handleAddMember}>追加</Button>
-          </div>
-        </div>
-      </Modal>
-
-      {/* 会員詳細モーダル */}
-      <Modal
-        isOpen={!!selectedMember}
-        onClose={() => setSelectedMember(null)}
-        title="会員詳細"
-        size="lg"
-      >
-        {selectedMember && (
-          <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 text-2xl font-medium">
-                {selectedMember.name.charAt(0)}
-              </div>
-              <div>
-                <h2 className="text-xl font-bold">{selectedMember.name}</h2>
-                <div className="text-gray-500">{selectedMember.nameKana}</div>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="text-gray-500">性別:</span>
-                <span className="ml-2">{selectedMember.gender}</span>
-              </div>
-              <div>
-                <span className="text-gray-500">生年月日:</span>
-                <span className="ml-2">{selectedMember.birthDate || "未登録"}</span>
-              </div>
-              <div>
-                <span className="text-gray-500">電話:</span>
-                <span className="ml-2">{selectedMember.phone}</span>
-              </div>
-              <div>
-                <span className="text-gray-500">メール:</span>
-                <span className="ml-2">{selectedMember.email}</span>
-              </div>
-              <div>
-                <span className="text-gray-500">血液型:</span>
-                <span className="ml-2">{selectedMember.bloodType || "未登録"}</span>
-              </div>
-              <div>
-                <span className="text-gray-500">労山基金:</span>
-                <span className="ml-2">{selectedMember.insuranceKuchi}口</span>
-              </div>
-              <div>
-                <span className="text-gray-500">入会日:</span>
-                <span className="ml-2">{formatDateShort(selectedMember.joinedAt)}</span>
-              </div>
-              <div>
-                <span className="text-gray-500">ココヘリID:</span>
-                <span className="ml-2">{selectedMember.kokohelId || "未登録"}</span>
-              </div>
-            </div>
-            <div>
-              <span className="text-gray-500">住所:</span>
-              <span className="ml-2">{selectedMember.address || "未登録"}</span>
-            </div>
-            <div>
-              <span className="text-gray-500">緊急連絡先:</span>
-              <span className="ml-2">
-                {selectedMember.emergencyContact
-                  ? `${selectedMember.emergencyContact}（${selectedMember.emergencyRelation}）${selectedMember.emergencyPhone}`
-                  : "未登録"}
-              </span>
-            </div>
-            <div>
-              <span className="text-gray-500">受講済講座:</span>
-              <div className="flex flex-wrap gap-2 mt-1">
-                {selectedMember.completedCourses.length > 0
-                  ? selectedMember.completedCourses.map((course, i) => (
-                      <Badge key={i}>{course}</Badge>
-                    ))
-                  : <span className="text-gray-400">なし</span>}
-              </div>
-            </div>
-            {selectedMember.medicalCondition && (
-              <div>
-                <span className="text-gray-500">持病:</span>
-                <span className="ml-2">{selectedMember.medicalCondition}</span>
-              </div>
-            )}
-          </div>
-        )}
-      </Modal>
-    </div>
-  );
-};
-
-/** 装備管理画面 */
-const EquipmentManagement = ({ equipment, members, rentEquipment, returnEquipment, getEquipmentByCategory, getMemberById }) => {
-  const [filterCategory, setFilterCategory] = useState("");
-  const [isRentModalOpen, setIsRentModalOpen] = useState(false);
-  const [selectedEquipment, setSelectedEquipment] = useState(null);
-  const [rentForm, setRentForm] = useState({ memberId: "", returnDue: "" });
-
-  const filteredEquipment = useMemo(() => {
-    return getEquipmentByCategory(filterCategory);
-  }, [getEquipmentByCategory, filterCategory]);
-
-  const handleRent = () => {
-    if (selectedEquipment && rentForm.memberId && rentForm.returnDue) {
-      rentEquipment(selectedEquipment.id, parseInt(rentForm.memberId), rentForm.returnDue);
-      setRentForm({ memberId: "", returnDue: "" });
-      setIsRentModalOpen(false);
-      setSelectedEquipment(null);
-    }
-  };
-
-  const handleReturn = (id) => {
-    returnEquipment(id);
-  };
-
-  const openRentModal = (eq) => {
-    setSelectedEquipment(eq);
-    setIsRentModalOpen(true);
-  };
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">装備管理</h1>
-      </div>
-
-      {/* フィルター */}
-      <Card className="p-4">
-        <Select
-          label="カテゴリ"
-          value={filterCategory}
-          onChange={setFilterCategory}
-          options={Object.entries(EQUIPMENT_CATEGORIES).map(([key, label]) => ({ value: key, label }))}
-          placeholder="すべて"
-          className="w-48"
-        />
-      </Card>
-
-      {/* 装備一覧 */}
-      {filteredEquipment.length === 0 ? (
-        <EmptyState message="該当する装備はありません" icon="🎒" />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredEquipment.map((eq) => {
-            const renter = eq.rentedBy ? getMemberById(eq.rentedBy) : null;
-            const isOverdue = eq.returnDue && new Date(eq.returnDue) < new Date();
-
-            return (
-              <Card key={eq.id} className={`p-4 ${isOverdue ? "border-red-300 bg-red-50" : ""}`}>
-                <div className="flex items-start justify-between mb-2">
-                  <Badge color={eq.category === "tent" ? "green" : eq.category === "rope" ? "blue" : "gray"}>
-                    {EQUIPMENT_CATEGORIES[eq.category]}
-                  </Badge>
-                  <Badge
-                    color={
-                      eq.status === "available" ? "green" :
-                      eq.status === "rented" ? "yellow" : "red"
-                    }
-                  >
-                    {EQUIPMENT_STATUS[eq.status]}
-                  </Badge>
-                </div>
-                <h3 className="font-medium text-gray-900 mb-1">{eq.name}</h3>
-                <div className="text-sm text-gray-500 mb-3">状態: {eq.condition}</div>
-
-                {eq.status === "rented" && renter && (
-                  <div className="text-sm mb-3">
-                    <div>貸出先: {renter.name}</div>
-                    <div className={isOverdue ? "text-red-600 font-medium" : ""}>
-                      返却期限: {formatDateShort(eq.returnDue)}
-                      {isOverdue && " ⚠️ 超過"}
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex justify-end">
-                  {eq.status === "available" ? (
-                    <Button size="sm" onClick={() => openRentModal(eq)}>貸出</Button>
-                  ) : eq.status === "rented" ? (
-                    <Button size="sm" variant="secondary" onClick={() => handleReturn(eq.id)}>返却</Button>
-                  ) : null}
-                </div>
-              </Card>
-            );
-          })}
-        </div>
-      )}
-
-      {/* 貸出モーダル */}
-      <Modal isOpen={isRentModalOpen} onClose={() => setIsRentModalOpen(false)} title="装備を貸出">
-        <div className="space-y-4">
-          {selectedEquipment && (
-            <div className="p-3 bg-gray-50 rounded">
-              <div className="font-medium">{selectedEquipment.name}</div>
-              <div className="text-sm text-gray-500">{EQUIPMENT_CATEGORIES[selectedEquipment.category]}</div>
-            </div>
-          )}
-          <Select
-            label="貸出先会員"
-            value={rentForm.memberId}
-            onChange={(v) => setRentForm({ ...rentForm, memberId: v })}
-            options={members.map((m) => ({ value: m.id.toString(), label: m.name }))}
-            placeholder="選択してください"
-            required
-          />
-          <Input
-            label="返却予定日"
-            type="date"
-            value={rentForm.returnDue}
-            onChange={(v) => setRentForm({ ...rentForm, returnDue: v })}
-            required
-          />
-          <div className="flex justify-end gap-2 mt-6">
-            <Button variant="secondary" onClick={() => setIsRentModalOpen(false)}>キャンセル</Button>
-            <Button onClick={handleRent}>貸出する</Button>
-          </div>
-        </div>
-      </Modal>
-    </div>
-  );
-};
+)
+
+/** テキストインプット */
+const Input = ({type = 'text', value, onChange, placeholder, className = ''}) => (
+  <input
+    type={type}
+    value={value || ''}
+    onChange={e => onChange(e.target.value)}
+    placeholder={placeholder}
+    className={`w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
+  />
+)
+
+/** セレクト */
+const Select = ({value, onChange, options, placeholder, className = ''}) => (
+  <select
+    value={value || ''}
+    onChange={e => onChange(e.target.value)}
+    className={`w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
+  >
+    {placeholder && <option value="">{placeholder}</option>}
+    {options.map(opt => (
+      <option key={opt.value} value={opt.value}>
+        {opt.label}
+      </option>
+    ))}
+  </select>
+)
+
+/** テキストエリア */
+const Textarea = ({value, onChange, placeholder, rows = 3, className = ''}) => (
+  <textarea
+    value={value || ''}
+    onChange={e => onChange(e.target.value)}
+    placeholder={placeholder}
+    rows={rows}
+    className={`w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
+  />
+)
 
 // =============================================================================
 // メインコンポーネント
 // =============================================================================
 
-const YamanokaiMockApp = () => {
-  const [currentPage, setCurrentPage] = useState("dashboard");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+export default function YamanokaiMock() {
+  // ログインユーザー（切り替え可能）
+  const [currentUserId, setCurrentUserId] = useState(3) // デフォルトは一般会員
+  const currentUser = INITIAL_MEMBERS.find(m => m.id === currentUserId)
 
-  // カスタムフックの初期化
-  const memberManager = useMemberManager();
-  const eventPlanManager = useEventPlanManager();
-  const eventGuideManager = useEventGuideManager();
-  const planManager = usePlanManager();
-  const recordManager = useRecordManager();
-  const equipmentManager = useEquipmentManager();
+  // メニュー状態
+  const [activeMenu, setActiveMenu] = useState('member-calendar')
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 
+  // データ状態
+  const [events, setEvents] = useState(INITIAL_EVENTS)
+  const [attendances, setAttendances] = useState(INITIAL_ATTENDANCES)
+  const [records, setRecords] = useState(INITIAL_RECORDS)
+  const [recordFiles, setRecordFiles] = useState(INITIAL_RECORD_FILES)
+
+  // 有効なデータのみフィルタ（ソフトデリート対応）
+  const activeEvents = useMemo(() => events.filter(e => !e.isDeleted), [events])
+  const activeAttendances = useMemo(() => attendances.filter(a => !a.isDeleted), [attendances])
+  const activeRecords = useMemo(() => records.filter(r => !r.isDeleted), [records])
+  const activeRecordFiles = useMemo(() => recordFiles.filter(f => !f.isDeleted), [recordFiles])
+
+  // メニュー定義
   const menuItems = [
-    { id: "dashboard", label: "ダッシュボード", icon: "📅" },
-    { id: "event-plan", label: "例会企画", icon: "📋" },
-    { id: "event-guide", label: "例会案内", icon: "📢" },
-    { id: "plan", label: "計画書", icon: "📝" },
-    { id: "record", label: "例会記録", icon: "📖" },
-    { id: "member", label: "会員管理", icon: "👥" },
-    { id: "equipment", label: "装備管理", icon: "🎒" },
-  ];
+    {type: 'header', label: '例会（管理者）', adminOnly: true},
+    {id: 'admin-list', label: '例会一覧', icon: '📋', adminOnly: true},
+    {id: 'admin-create', label: '例会の新規作成', icon: '➕', adminOnly: true},
+    {type: 'divider', adminOnly: true},
+    {type: 'header', label: '例会（一般会員）'},
+    {id: 'member-calendar', label: '例会スケジュール', icon: '📅'},
+    {id: 'member-attendance', label: '出席回答履歴', icon: '✋'},
+    {id: 'member-records', label: '例会記録', icon: '📖'},
+    {type: 'divider'},
+    {type: 'header', label: 'システム情報'},
+    {id: 'data-structure', label: 'データ構造図', icon: '🗂️'},
+  ]
 
-  const renderPage = () => {
-    switch (currentPage) {
-      case "dashboard":
-        return (
-          <Dashboard
-            eventGuides={eventGuideManager.eventGuides}
-            equipment={equipmentManager.equipment}
-            members={memberManager.members}
-            getMemberById={memberManager.getMemberById}
-          />
-        );
-      case "event-plan":
-        return (
-          <EventPlanCalendar
-            eventPlans={eventPlanManager.eventPlans}
-            members={memberManager.members}
-            addEventPlan={eventPlanManager.addEventPlan}
-            getMemberById={memberManager.getMemberById}
-          />
-        );
-      case "event-guide":
-        return (
-          <EventGuideList
-            eventGuides={eventGuideManager.eventGuides}
-            members={memberManager.members}
-            getMemberById={memberManager.getMemberById}
-            applyToEvent={eventGuideManager.applyToEvent}
-            cancelApplication={eventGuideManager.cancelApplication}
-          />
-        );
-      case "plan":
-        return (
-          <PlanList
-            plans={planManager.plans}
-            members={memberManager.members}
-            eventGuides={eventGuideManager.eventGuides}
-            addPlan={planManager.addPlan}
-            updatePlan={planManager.updatePlan}
-            getMemberById={memberManager.getMemberById}
-          />
-        );
-      case "record":
-        return (
-          <RecordList
-            records={recordManager.records}
-            members={memberManager.members}
-            addRecord={recordManager.addRecord}
-            getMemberById={memberManager.getMemberById}
-          />
-        );
-      case "member":
-        return (
-          <MemberManagement
-            members={memberManager.members}
-            addMember={memberManager.addMember}
-            updateMember={memberManager.updateMember}
-            deleteMember={memberManager.deleteMember}
-            searchMembers={memberManager.searchMembers}
-          />
-        );
-      case "equipment":
-        return (
-          <EquipmentManagement
-            equipment={equipmentManager.equipment}
-            members={memberManager.members}
-            rentEquipment={equipmentManager.rentEquipment}
-            returnEquipment={equipmentManager.returnEquipment}
-            getEquipmentByCategory={equipmentManager.getEquipmentByCategory}
-            getMemberById={memberManager.getMemberById}
-          />
-        );
-      default:
-        return <EmptyState message="ページが見つかりません" icon="❓" />;
-    }
-  };
+  // フィルタされたメニュー
+  const filteredMenu = menuItems.filter(item => !item.adminOnly || currentUser?.isAdmin)
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* モバイルヘッダー */}
-      <header className="md:hidden bg-white shadow-sm fixed top-0 left-0 right-0 z-40">
-        <div className="flex items-center justify-between px-4 py-3">
-          <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="p-2 rounded-md hover:bg-gray-100"
-          >
-            <span className="text-xl">☰</span>
-          </button>
-          <h1 className="text-lg font-semibold text-gray-900">山の会（KCAC）</h1>
-          <div className="w-10" />
-        </div>
-      </header>
-
-      {/* サイドバー（オーバーレイ） */}
-      {isSidebarOpen && (
-        <div
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
-
+    <div className="min-h-screen bg-gray-50 flex">
       {/* サイドバー */}
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0`}
+        className={`${isSidebarOpen ? 'w-64' : 'w-0'} bg-white border-r transition-all duration-300 overflow-hidden flex-shrink-0`}
       >
         <div className="p-4 border-b">
-          <h1 className="text-xl font-bold text-gray-900">🏔️ 山の会（KCAC）</h1>
-          <p className="text-sm text-gray-500 mt-1">神戸勤労者山岳会</p>
+          <h1 className="text-lg font-bold text-gray-800">🏔️ 山の会（KCAC）</h1>
+          <p className="text-xs text-gray-500 mt-1">例会管理システム</p>
         </div>
+
+        {/* ユーザー切り替え */}
+        <div className="p-4 border-b bg-gray-50">
+          <label className="block text-xs text-gray-500 mb-1">ログインユーザー</label>
+          <select
+            value={currentUserId}
+            onChange={e => setCurrentUserId(Number(e.target.value))}
+            className="w-full text-sm border rounded px-2 py-1"
+          >
+            {INITIAL_MEMBERS.map(m => (
+              <option key={m.id} value={m.id}>
+                {m.name} {m.isAdmin ? '👑' : ''}
+              </option>
+            ))}
+          </select>
+          <p className="text-xs text-gray-400 mt-1">{currentUser?.isAdmin ? '管理者権限あり' : '一般会員'}</p>
+        </div>
+
+        {/* メニュー */}
         <nav className="p-2">
-          {menuItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => {
-                setCurrentPage(item.id);
-                setIsSidebarOpen(false);
-              }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                currentPage === item.id
-                  ? "bg-blue-50 text-blue-700"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-            >
-              <span className="text-xl">{item.icon}</span>
-              <span className="font-medium">{item.label}</span>
-            </button>
-          ))}
+          {filteredMenu.map((item, idx) => {
+            if (item.type === 'header') {
+              return (
+                <div key={idx} className="px-3 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider mt-4 first:mt-0">
+                  {item.label}
+                </div>
+              )
+            }
+            if (item.type === 'divider') {
+              return <hr key={idx} className="my-2" />
+            }
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveMenu(item.id)}
+                className={`w-full text-left px-3 py-2 rounded text-sm flex items-center gap-2 transition-colors ${
+                  activeMenu === item.id ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                <span>{item.icon}</span>
+                <span>{item.label}</span>
+              </button>
+            )
+          })}
         </nav>
       </aside>
 
       {/* メインコンテンツ */}
-      <main className="md:ml-64 pt-16 md:pt-0 min-h-screen">
-        <div className="p-4 md:p-6">{renderPage()}</div>
+      <main className="flex-1 overflow-auto">
+        {/* ヘッダー */}
+        <header className="bg-white border-b px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+          <div className="flex items-center gap-4">
+            <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-gray-500 hover:text-gray-700">
+              {isSidebarOpen ? '◀' : '▶'}
+            </button>
+            <h2 className="text-xl font-bold">{filteredMenu.find(m => m.id === activeMenu)?.label || 'ダッシュボード'}</h2>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <span>👤 {currentUser?.name}</span>
+            {currentUser?.isAdmin && (
+              <Badge color="#3b82f6" bgColor="#dbeafe">
+                管理者
+              </Badge>
+            )}
+          </div>
+        </header>
+
+        {/* コンテンツエリア */}
+        <div className="p-6">
+          {activeMenu === 'admin-list' && (
+            <AdminEventList
+              events={activeEvents}
+              attendances={activeAttendances}
+              records={activeRecords}
+              members={INITIAL_MEMBERS}
+              onUpdate={(id, data) => setEvents(prev => prev.map(e => (e.id === id ? {...e, ...data} : e)))}
+              onDelete={id => setEvents(prev => prev.map(e => (e.id === id ? {...e, isDeleted: true} : e)))}
+            />
+          )}
+          {activeMenu === 'admin-create' && (
+            <AdminEventForm
+              members={INITIAL_MEMBERS}
+              onSave={data => {
+                const newEvent = {
+                  ...data,
+                  id: generateId(events),
+                  createdAt: new Date().toISOString().split('T')[0],
+                  isDeleted: false,
+                }
+                setEvents(prev => [...prev, newEvent])
+                setActiveMenu('admin-list')
+              }}
+            />
+          )}
+          {activeMenu === 'member-calendar' && (
+            <MemberCalendar
+              events={activeEvents}
+              attendances={activeAttendances}
+              records={activeRecords}
+              members={INITIAL_MEMBERS}
+              currentUserId={currentUserId}
+              onAttendanceUpdate={(eventId, status, comment) => {
+                const existing = attendances.find(a => a.eventId === eventId && a.memberId === currentUserId && !a.isDeleted)
+                if (existing) {
+                  setAttendances(prev =>
+                    prev.map(a =>
+                      a.id === existing.id ? {...a, status, comment, updatedAt: new Date().toISOString().split('T')[0]} : a
+                    )
+                  )
+                } else {
+                  setAttendances(prev => [
+                    ...prev,
+                    {
+                      id: generateId(prev),
+                      eventId,
+                      memberId: currentUserId,
+                      status,
+                      comment,
+                      updatedAt: new Date().toISOString().split('T')[0],
+                      isDeleted: false,
+                    },
+                  ])
+                }
+              }}
+            />
+          )}
+          {activeMenu === 'member-attendance' && (
+            <MemberAttendanceHistory
+              events={activeEvents}
+              attendances={activeAttendances}
+              currentUserId={currentUserId}
+              onUpdate={(attendanceId, status, comment) => {
+                setAttendances(prev =>
+                  prev.map(a =>
+                    a.id === attendanceId ? {...a, status, comment, updatedAt: new Date().toISOString().split('T')[0]} : a
+                  )
+                )
+              }}
+            />
+          )}
+          {activeMenu === 'member-records' && (
+            <MemberRecords
+              events={activeEvents}
+              records={activeRecords}
+              recordFiles={activeRecordFiles}
+              members={INITIAL_MEMBERS}
+              currentUserId={currentUserId}
+              onSave={(data, files) => {
+                let recordId
+                if (data.id) {
+                  setRecords(prev => prev.map(r => (r.id === data.id ? {...r, ...data} : r)))
+                  recordId = data.id
+                } else {
+                  recordId = generateId(records)
+                  setRecords(prev => [
+                    ...prev,
+                    {...data, id: recordId, createdAt: new Date().toISOString().split('T')[0], isDeleted: false},
+                  ])
+                }
+                // ファイルの保存
+                if (files && files.length > 0) {
+                  const newFiles = files.map((f, idx) => ({
+                    ...f,
+                    id: generateId(recordFiles) + idx,
+                    recordId,
+                    createdAt: new Date().toISOString().split('T')[0],
+                    isDeleted: false,
+                  }))
+                  setRecordFiles(prev => [...prev.filter(f => f.recordId !== recordId), ...newFiles])
+                }
+              }}
+              onDelete={id => setRecords(prev => prev.map(r => (r.id === id ? {...r, isDeleted: true} : r)))}
+              onDeleteFile={fileId => setRecordFiles(prev => prev.map(f => (f.id === fileId ? {...f, isDeleted: true} : f)))}
+            />
+          )}
+        </div>
       </main>
     </div>
-  );
-};
+  )
+}
 
-export default YamanokaiMockApp;
+// =============================================================================
+// 管理者: 例会一覧
+// =============================================================================
+
+function AdminEventList({events, attendances, records, members, onUpdate, onDelete}) {
+  const [selectedEvent, setSelectedEvent] = useState(null)
+  const [editingEvent, setEditingEvent] = useState(null)
+  const [filterDept, setFilterDept] = useState('')
+
+  const filteredEvents = filterDept ? events.filter(e => e.departmentId === filterDept) : events
+
+  const sortedEvents = [...filteredEvents].sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
+
+  const getAttendanceSummary = eventId => {
+    const eventAttendances = attendances.filter(a => a.eventId === eventId)
+    const responded = eventAttendances.length
+    return {
+      total: members.length,
+      responded,
+      noResponse: members.length - responded,
+      attending: eventAttendances.filter(a => a.status === 'attending').length,
+      notAttending: eventAttendances.filter(a => a.status === 'notAttending').length,
+      undecided: eventAttendances.filter(a => a.status === 'undecided').length,
+    }
+  }
+
+  const getMemberName = id => members.find(m => m.id === id)?.name || ''
+
+  return (
+    <div className="space-y-4">
+      {/* フィルター */}
+      <Card className="p-4">
+        <div className="flex items-center gap-4">
+          <label className="text-sm font-medium">部署で絞り込み:</label>
+          <Select
+            value={filterDept}
+            onChange={setFilterDept}
+            placeholder="すべて"
+            options={Object.values(DEPARTMENTS).map(d => ({value: d.id, label: d.name}))}
+            className="w-48"
+          />
+          <span className="text-sm text-gray-500">全{filteredEvents.length}件</span>
+        </div>
+      </Card>
+
+      {/* 例会リスト */}
+      <div className="space-y-2">
+        {sortedEvents.map(event => {
+          const dept = DEPARTMENTS[event.departmentId]
+          const summary = getAttendanceSummary(event.id)
+          const hasRecord = records.some(r => r.eventId === event.id)
+
+          return (
+            <Card key={event.id} className="p-4 hover:shadow-md transition-shadow">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Badge color={dept.color} bgColor={dept.bgColor}>
+                      {dept.name}
+                    </Badge>
+                    <span className="text-sm text-gray-500">{formatDateRange(event.startDate, event.endDate)}</span>
+                    {hasRecord && (
+                      <Badge color="#22c55e" bgColor="#dcfce7">
+                        記録あり
+                      </Badge>
+                    )}
+                  </div>
+                  <h3 className="font-bold text-lg">{event.title}</h3>
+                  {event.mountainName && (
+                    <p className="text-gray-600">
+                      {event.mountainName} {event.altitude}
+                    </p>
+                  )}
+                  <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                    <span>CL: {getMemberName(event.clId)}</span>
+                    {event.slId && <span>SL: {getMemberName(event.slId)}</span>}
+                    <span>
+                      グレード: {event.staminaGrade}
+                      {event.skillGrade !== 'なし' && ` ${event.skillGrade}`}
+                    </span>
+                  </div>
+                </div>
+
+                {/* 出席状況サマリー */}
+                <div className="text-center ml-4">
+                  <div className="text-2xl font-bold text-green-600">{summary.attending}</div>
+                  <div className="text-xs text-gray-500">出席</div>
+                  <div className="text-xs text-gray-400 mt-1">
+                    未回答{summary.noResponse} / 未定{summary.undecided} / 欠席{summary.notAttending}
+                  </div>
+                </div>
+
+                {/* アクション */}
+                <div className="flex flex-col gap-1 ml-4">
+                  <Button size="sm" variant="secondary" onClick={() => setSelectedEvent(event)}>
+                    詳細
+                  </Button>
+                  <Button size="sm" variant="secondary" onClick={() => setEditingEvent(event)}>
+                    編集
+                  </Button>
+                  <Button size="sm" variant="danger" onClick={() => onDelete(event.id)}>
+                    削除
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          )
+        })}
+      </div>
+
+      {/* 詳細モーダル */}
+      <Modal isOpen={!!selectedEvent} onClose={() => setSelectedEvent(null)} title="例会詳細" size="lg">
+        {selectedEvent && (
+          <AdminEventDetail
+            event={selectedEvent}
+            attendances={attendances.filter(a => a.eventId === selectedEvent.id)}
+            members={members}
+          />
+        )}
+      </Modal>
+
+      {/* 編集モーダル */}
+      <Modal isOpen={!!editingEvent} onClose={() => setEditingEvent(null)} title="例会編集" size="lg">
+        {editingEvent && (
+          <AdminEventForm
+            initialData={editingEvent}
+            members={members}
+            onSave={data => {
+              onUpdate(editingEvent.id, data)
+              setEditingEvent(null)
+            }}
+            onCancel={() => setEditingEvent(null)}
+          />
+        )}
+      </Modal>
+    </div>
+  )
+}
+
+// =============================================================================
+// 管理者: 例会詳細
+// =============================================================================
+
+function AdminEventDetail({event, attendances, members}) {
+  const dept = DEPARTMENTS[event.departmentId]
+  const getMemberName = id => members.find(m => m.id === id)?.name || ''
+
+  return (
+    <div className="space-y-6">
+      {/* 基本情報 */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <h4 className="font-bold text-sm text-gray-500">山名・タイトル</h4>
+          <p>{event.title}</p>
+          {event.mountainName && (
+            <p className="text-gray-600">
+              {event.mountainName} {event.altitude}
+            </p>
+          )}
+        </div>
+        <div>
+          <h4 className="font-bold text-sm text-gray-500">担当部</h4>
+          <Badge color={dept.color} bgColor={dept.bgColor}>
+            {dept.name}
+          </Badge>
+        </div>
+        <div>
+          <h4 className="font-bold text-sm text-gray-500">日程</h4>
+          <p>{formatDateRange(event.startDate, event.endDate)}</p>
+        </div>
+        <div>
+          <h4 className="font-bold text-sm text-gray-500">申込期限</h4>
+          <p>{formatDate(event.deadline)}</p>
+        </div>
+        <div>
+          <h4 className="font-bold text-sm text-gray-500">CL / SL</h4>
+          <p>
+            {getMemberName(event.clId)} {event.slId && `/ ${getMemberName(event.slId)}`}
+          </p>
+        </div>
+        <div>
+          <h4 className="font-bold text-sm text-gray-500">グレード</h4>
+          <p>
+            体力: {event.staminaGrade} / 技術: {event.skillGrade} / 岩: {event.rockCategory}
+          </p>
+        </div>
+        <div>
+          <h4 className="font-bold text-sm text-gray-500">集合</h4>
+          <p>
+            {event.meetingPlace} {event.meetingTime}
+          </p>
+        </div>
+        <div>
+          <h4 className="font-bold text-sm text-gray-500">必要保険口数</h4>
+          <p>{event.requiredInsurance}口以上</p>
+        </div>
+      </div>
+
+      <div>
+        <h4 className="font-bold text-sm text-gray-500">コース</h4>
+        <p className="whitespace-pre-wrap">{event.course}</p>
+      </div>
+
+      {event.notes && (
+        <div>
+          <h4 className="font-bold text-sm text-gray-500">備考</h4>
+          <p className="whitespace-pre-wrap">{event.notes}</p>
+        </div>
+      )}
+
+      {/* 出席回答一覧 */}
+      <div>
+        <h4 className="font-bold text-sm text-gray-500 mb-2">出席回答一覧 ({attendances.length}件)</h4>
+        <div className="border rounded overflow-hidden">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-4 py-2 text-left">会員名</th>
+                <th className="px-4 py-2 text-left">ステータス</th>
+                <th className="px-4 py-2 text-left">コメント</th>
+                <th className="px-4 py-2 text-left">更新日</th>
+              </tr>
+            </thead>
+            <tbody>
+              {attendances.map(att => {
+                const status = ATTENDANCE_STATUS[att.status]
+                return (
+                  <tr key={att.id} className="border-t">
+                    <td className="px-4 py-2">{getMemberName(att.memberId)}</td>
+                    <td className="px-4 py-2">
+                      <Badge color={status.color} bgColor={status.bgColor}>
+                        {status.label}
+                      </Badge>
+                    </td>
+                    <td className="px-4 py-2 text-gray-600">{att.comment || '-'}</td>
+                    <td className="px-4 py-2 text-gray-500">{att.updatedAt}</td>
+                  </tr>
+                )
+              })}
+              {attendances.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="px-4 py-8 text-center text-gray-400">
+                    まだ回答がありません
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// =============================================================================
+// 管理者: 例会フォーム（新規作成・編集共通）
+// =============================================================================
+
+function AdminEventForm({initialData, members, onSave, onCancel}) {
+  const [form, setForm] = useState(
+    initialData || {
+      title: '',
+      mountainName: '',
+      altitude: '',
+      departmentId: '',
+      clId: '',
+      slId: '',
+      startDate: '',
+      endDate: '',
+      staminaGrade: 'O',
+      skillGrade: 'なし',
+      rockCategory: 'なし',
+      requiredInsurance: 3,
+      meetingPlace: '',
+      meetingTime: '',
+      course: '',
+      deadline: '',
+      notes: '',
+    }
+  )
+
+  const updateForm = (key, value) => setForm(prev => ({...prev, [key]: value}))
+
+  const handleSubmit = e => {
+    e.preventDefault()
+    onSave({
+      ...form,
+      clId: Number(form.clId),
+      slId: form.slId ? Number(form.slId) : null,
+      requiredInsurance: Number(form.requiredInsurance),
+    })
+  }
+
+  const isValid =
+    form.title && form.departmentId && form.clId && form.startDate && form.meetingPlace && form.meetingTime && form.deadline
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="grid grid-cols-2 gap-4">
+        <FormField label="タイトル" required>
+          <Input value={form.title} onChange={v => updateForm('title', v)} placeholder="例: クリーンハイク" />
+        </FormField>
+        <FormField label="担当部" required>
+          <Select
+            value={form.departmentId}
+            onChange={v => updateForm('departmentId', v)}
+            placeholder="選択してください"
+            options={Object.values(DEPARTMENTS).map(d => ({value: d.id, label: d.name}))}
+          />
+        </FormField>
+        <FormField label="山名">
+          <Input value={form.mountainName} onChange={v => updateForm('mountainName', v)} placeholder="例: 六甲山系" />
+        </FormField>
+        <FormField label="標高">
+          <Input value={form.altitude} onChange={v => updateForm('altitude', v)} placeholder="例: 931m" />
+        </FormField>
+        <FormField label="CL（チーフリーダー）" required>
+          <Select
+            value={form.clId}
+            onChange={v => updateForm('clId', v)}
+            placeholder="選択してください"
+            options={members.map(m => ({value: m.id, label: m.name}))}
+          />
+        </FormField>
+        <FormField label="SL（サブリーダー）">
+          <Select
+            value={form.slId}
+            onChange={v => updateForm('slId', v)}
+            placeholder="なし"
+            options={[{value: '', label: 'なし'}, ...members.map(m => ({value: m.id, label: m.name}))]}
+          />
+        </FormField>
+        <FormField label="開始日" required>
+          <Input type="date" value={form.startDate} onChange={v => updateForm('startDate', v)} />
+        </FormField>
+        <FormField label="終了日">
+          <Input type="date" value={form.endDate || form.startDate} onChange={v => updateForm('endDate', v)} />
+        </FormField>
+        <FormField label="体力度グレード">
+          <Select
+            value={form.staminaGrade}
+            onChange={v => updateForm('staminaGrade', v)}
+            options={STAMINA_GRADES.map(g => ({value: g, label: g}))}
+          />
+        </FormField>
+        <FormField label="技術度グレード">
+          <Select
+            value={form.skillGrade}
+            onChange={v => updateForm('skillGrade', v)}
+            options={SKILL_GRADES.map(g => ({value: g, label: g}))}
+          />
+        </FormField>
+        <FormField label="岩登り区分">
+          <Select
+            value={form.rockCategory}
+            onChange={v => updateForm('rockCategory', v)}
+            options={ROCK_CATEGORIES.map(g => ({value: g, label: g}))}
+          />
+        </FormField>
+        <FormField label="必要保険口数">
+          <Select
+            value={form.requiredInsurance}
+            onChange={v => updateForm('requiredInsurance', v)}
+            options={[
+              {value: 3, label: '3口（ハイキング）'},
+              {value: 4, label: '4口（岩A・沢入門）'},
+              {value: 8, label: '8口（アルパイン・雪山・岩BC・沢）'},
+            ]}
+          />
+        </FormField>
+        <FormField label="集合場所" required>
+          <Input value={form.meetingPlace} onChange={v => updateForm('meetingPlace', v)} placeholder="例: JR新神戸駅" />
+        </FormField>
+        <FormField label="集合時間" required>
+          <Input type="time" value={form.meetingTime} onChange={v => updateForm('meetingTime', v)} />
+        </FormField>
+        <FormField label="申込期限" required>
+          <Input type="date" value={form.deadline} onChange={v => updateForm('deadline', v)} />
+        </FormField>
+      </div>
+
+      <FormField label="コース">
+        <Textarea value={form.course} onChange={v => updateForm('course', v)} rows={3} placeholder="行程を記入" />
+      </FormField>
+
+      <FormField label="備考">
+        <Textarea value={form.notes} onChange={v => updateForm('notes', v)} rows={3} placeholder="持ち物、注意事項など" />
+      </FormField>
+
+      <div className="flex justify-end gap-2">
+        {onCancel && (
+          <Button type="button" variant="secondary" onClick={onCancel}>
+            キャンセル
+          </Button>
+        )}
+        <Button type="submit" disabled={!isValid}>
+          {initialData ? '更新する' : '作成する'}
+        </Button>
+      </div>
+    </form>
+  )
+}
+
+// =============================================================================
+// 一般会員: 例会スケジュール（カレンダービュー）
+// =============================================================================
+
+function MemberCalendar({events, attendances, records, members, currentUserId, onAttendanceUpdate}) {
+  const [viewMonth, setViewMonth] = useState(new Date(2026, 1, 1)) // 2026年2月
+  const [selectedEvent, setSelectedEvent] = useState(null)
+  const [attendanceModal, setAttendanceModal] = useState(null)
+
+  // カレンダー生成
+  const calendarDays = useMemo(() => {
+    const year = viewMonth.getFullYear()
+    const month = viewMonth.getMonth()
+    const firstDay = new Date(year, month, 1)
+    const lastDay = new Date(year, month + 1, 0)
+    const startPadding = firstDay.getDay()
+
+    const days = []
+    // 前月のパディング
+    for (let i = 0; i < startPadding; i++) {
+      const d = new Date(year, month, -startPadding + i + 1)
+      days.push({date: d, isCurrentMonth: false})
+    }
+    // 当月
+    for (let i = 1; i <= lastDay.getDate(); i++) {
+      days.push({date: new Date(year, month, i), isCurrentMonth: true})
+    }
+    // 次月のパディング（6週分に揃える）
+    while (days.length < 42) {
+      const d = new Date(year, month + 1, days.length - lastDay.getDate() - startPadding + 1)
+      days.push({date: d, isCurrentMonth: false})
+    }
+    return days
+  }, [viewMonth])
+
+  // 日付の例会を取得
+  const getEventsForDate = date => {
+    const dateStr = date.toISOString().split('T')[0]
+    return events.filter(e => {
+      return dateStr >= e.startDate && dateStr <= (e.endDate || e.startDate)
+    })
+  }
+
+  // ユーザーの回答を取得
+  const getMyAttendance = eventId => {
+    return attendances.find(a => a.eventId === eventId && a.memberId === currentUserId)
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* 月切り替え */}
+      <Card className="p-4">
+        <div className="flex items-center justify-between">
+          <Button
+            variant="secondary"
+            onClick={() => setViewMonth(new Date(viewMonth.getFullYear(), viewMonth.getMonth() - 1, 1))}
+          >
+            ← 前月
+          </Button>
+          <h3 className="text-xl font-bold">
+            {viewMonth.getFullYear()}年{viewMonth.getMonth() + 1}月
+          </h3>
+          <Button
+            variant="secondary"
+            onClick={() => setViewMonth(new Date(viewMonth.getFullYear(), viewMonth.getMonth() + 1, 1))}
+          >
+            次月 →
+          </Button>
+        </div>
+      </Card>
+
+      {/* カレンダー */}
+      <Card className="overflow-hidden">
+        {/* 曜日ヘッダー */}
+        <div className="grid grid-cols-7 bg-gray-50 border-b">
+          {['日', '月', '火', '水', '木', '金', '土'].map((day, i) => (
+            <div
+              key={day}
+              className={`p-2 text-center text-sm font-medium ${i === 0 ? 'text-red-500' : i === 6 ? 'text-blue-500' : ''}`}
+            >
+              {day}
+            </div>
+          ))}
+        </div>
+
+        {/* カレンダー本体 */}
+        <div className="grid grid-cols-7">
+          {calendarDays.map((day, idx) => {
+            const dayEvents = getEventsForDate(day.date)
+            const isToday = day.date.toDateString() === new Date().toDateString()
+
+            return (
+              <div
+                key={idx}
+                className={`min-h-[100px] border-b border-r p-1 ${!day.isCurrentMonth ? 'bg-gray-50' : ''} ${isToday ? 'bg-blue-50' : ''}`}
+              >
+                <div className={`text-sm mb-1 ${!day.isCurrentMonth ? 'text-gray-300' : ''}`}>{day.date.getDate()}</div>
+                <div className="space-y-1">
+                  {dayEvents.slice(0, 3).map(event => {
+                    const dept = DEPARTMENTS[event.departmentId]
+                    const myAtt = getMyAttendance(event.id)
+                    const attStatus = myAtt ? ATTENDANCE_STATUS[myAtt.status] : null
+
+                    return (
+                      <div
+                        key={event.id}
+                        onClick={() => setSelectedEvent(event)}
+                        className="text-xs p-1 rounded cursor-pointer truncate hover:opacity-80"
+                        style={{backgroundColor: dept.bgColor, color: dept.color, borderLeft: `3px solid ${dept.color}`}}
+                        title={event.title}
+                      >
+                        <span className="font-medium">{event.title}</span>
+                        {attStatus && (
+                          <span className="ml-1" style={{color: attStatus.color}}>
+                            ●
+                          </span>
+                        )}
+                      </div>
+                    )
+                  })}
+                  {dayEvents.length > 3 && <div className="text-xs text-gray-400 pl-1">+{dayEvents.length - 3}件</div>}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </Card>
+
+      {/* 凡例 */}
+      <Card className="p-4">
+        <div className="flex flex-wrap gap-4 text-sm">
+          <span className="font-medium">部署:</span>
+          {Object.values(DEPARTMENTS).map(dept => (
+            <span key={dept.id} className="flex items-center gap-1">
+              <span className="w-3 h-3 rounded" style={{backgroundColor: dept.bgColor, border: `1px solid ${dept.color}`}}></span>
+              {dept.name}
+            </span>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-4 text-sm mt-2">
+          <span className="font-medium">回答状況:</span>
+          {Object.values(ATTENDANCE_STATUS).map(st => (
+            <span key={st.id} className="flex items-center gap-1">
+              <span style={{color: st.color}}>●</span>
+              {st.label}
+            </span>
+          ))}
+        </div>
+      </Card>
+
+      {/* 例会詳細モーダル */}
+      <Modal isOpen={!!selectedEvent} onClose={() => setSelectedEvent(null)} title="例会詳細" size="lg">
+        {selectedEvent && (
+          <div className="space-y-6">
+            <MemberEventDetail event={selectedEvent} members={members} />
+
+            {/* 自分の出席回答 */}
+            <div className="border-t pt-4">
+              <h4 className="font-bold mb-3">出席回答</h4>
+              {(() => {
+                const myAtt = getMyAttendance(selectedEvent.id)
+                const attStatus = myAtt ? ATTENDANCE_STATUS[myAtt.status] : ATTENDANCE_STATUS.pending
+                return (
+                  <div className="flex items-center gap-4">
+                    <span>現在の回答:</span>
+                    <Badge color={attStatus.color} bgColor={attStatus.bgColor}>
+                      {attStatus.label}
+                    </Badge>
+                    <Button size="sm" onClick={() => setAttendanceModal({event: selectedEvent, attendance: myAtt})}>
+                      {myAtt ? '回答を変更' : '回答する'}
+                    </Button>
+                  </div>
+                )
+              })()}
+            </div>
+
+            {/* 例会記録へのリンク */}
+            {records.some(r => r.eventId === selectedEvent.id) && (
+              <div className="border-t pt-4">
+                <h4 className="font-bold mb-2">例会記録</h4>
+                <p className="text-sm text-gray-600">この例会の記録があります。「例会記録」メニューから確認できます。</p>
+              </div>
+            )}
+          </div>
+        )}
+      </Modal>
+
+      {/* 出席回答モーダル */}
+      <Modal isOpen={!!attendanceModal} onClose={() => setAttendanceModal(null)} title="出席回答" size="sm">
+        {attendanceModal && (
+          <AttendanceForm
+            event={attendanceModal.event}
+            attendance={attendanceModal.attendance}
+            onSave={(status, comment) => {
+              onAttendanceUpdate(attendanceModal.event.id, status, comment)
+              setAttendanceModal(null)
+              setSelectedEvent(null)
+            }}
+            onCancel={() => setAttendanceModal(null)}
+          />
+        )}
+      </Modal>
+    </div>
+  )
+}
+
+// =============================================================================
+// 一般会員: 例会詳細表示
+// =============================================================================
+
+function MemberEventDetail({event, members}) {
+  const dept = DEPARTMENTS[event.departmentId]
+  const getMemberName = id => members.find(m => m.id === id)?.name || ''
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        <Badge color={dept.color} bgColor={dept.bgColor}>
+          {dept.name}
+        </Badge>
+        <span className="text-gray-500">{formatDateRange(event.startDate, event.endDate)}</span>
+      </div>
+
+      <h3 className="text-xl font-bold">{event.title}</h3>
+      {event.mountainName && (
+        <p className="text-gray-600">
+          {event.mountainName} {event.altitude}
+        </p>
+      )}
+
+      <div className="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <span className="text-gray-500">CL:</span> {getMemberName(event.clId)}
+        </div>
+        {event.slId && (
+          <div>
+            <span className="text-gray-500">SL:</span> {getMemberName(event.slId)}
+          </div>
+        )}
+        <div>
+          <span className="text-gray-500">集合:</span> {event.meetingPlace} {event.meetingTime}
+        </div>
+        <div>
+          <span className="text-gray-500">申込期限:</span> {formatDate(event.deadline)}
+        </div>
+        <div>
+          <span className="text-gray-500">グレード:</span> 体力{event.staminaGrade}
+          {event.skillGrade !== 'なし' && ` / 技術${event.skillGrade}`}
+          {event.rockCategory !== 'なし' && ` / 岩${event.rockCategory}`}
+        </div>
+        <div>
+          <span className="text-gray-500">必要保険:</span> {event.requiredInsurance}口以上
+        </div>
+      </div>
+
+      <div>
+        <h4 className="font-medium text-gray-500 text-sm">コース</h4>
+        <p className="whitespace-pre-wrap">{event.course}</p>
+      </div>
+
+      {event.notes && (
+        <div>
+          <h4 className="font-medium text-gray-500 text-sm">備考</h4>
+          <p className="whitespace-pre-wrap">{event.notes}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// =============================================================================
+// 出席回答フォーム
+// =============================================================================
+
+function AttendanceForm({event, attendance, onSave, onCancel}) {
+  const [status, setStatus] = useState(attendance?.status || 'pending')
+  const [comment, setComment] = useState(attendance?.comment || '')
+
+  return (
+    <div className="space-y-4">
+      <p className="text-gray-600">
+        {event.title} ({formatDateRange(event.startDate, event.endDate)})
+      </p>
+
+      <FormField label="出席">
+        <div className="flex gap-2">
+          {Object.values(ATTENDANCE_STATUS)
+            .filter(s => s.id !== 'pending')
+            .map(st => (
+              <button
+                key={st.id}
+                type="button"
+                onClick={() => setStatus(st.id)}
+                className={`flex-1 py-2 rounded border-2 transition-colors ${
+                  status === st.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
+                }`}
+                style={status === st.id ? {borderColor: st.color, backgroundColor: st.bgColor} : {}}
+              >
+                {st.label}
+              </button>
+            ))}
+        </div>
+      </FormField>
+
+      <FormField label="コメント">
+        <Textarea value={comment} onChange={setComment} placeholder="コメントがあれば入力" rows={2} />
+      </FormField>
+
+      <div className="flex justify-end gap-2">
+        <Button variant="secondary" onClick={onCancel}>
+          キャンセル
+        </Button>
+        <Button onClick={() => onSave(status, comment)} disabled={status === 'pending'}>
+          回答する
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+// =============================================================================
+// 一般会員: 出席回答履歴
+// =============================================================================
+
+function MemberAttendanceHistory({events, attendances, currentUserId, onUpdate}) {
+  const [editingId, setEditingId] = useState(null)
+  const [editStatus, setEditStatus] = useState('')
+  const [editComment, setEditComment] = useState('')
+
+  const myAttendances = attendances.filter(a => a.memberId === currentUserId)
+
+  const getEvent = eventId => events.find(e => e.id === eventId)
+
+  const handleEdit = att => {
+    setEditingId(att.id)
+    setEditStatus(att.status)
+    setEditComment(att.comment)
+  }
+
+  const handleSave = () => {
+    onUpdate(editingId, editStatus, editComment)
+    setEditingId(null)
+  }
+
+  return (
+    <div className="space-y-4">
+      <Card className="p-4">
+        <p className="text-gray-600">あなたの出席回答履歴です。回答を変更することもできます。</p>
+      </Card>
+
+      <div className="space-y-2">
+        {myAttendances.length === 0 ? (
+          <Card className="p-8 text-center text-gray-400">まだ出席回答がありません</Card>
+        ) : (
+          myAttendances.map(att => {
+            const event = getEvent(att.eventId)
+            if (!event) return null
+            const dept = DEPARTMENTS[event.departmentId]
+            const status = ATTENDANCE_STATUS[att.status]
+            const isEditing = editingId === att.id
+
+            return (
+              <Card key={att.id} className="p-4">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Badge color={dept.color} bgColor={dept.bgColor}>
+                        {dept.name}
+                      </Badge>
+                      <span className="text-sm text-gray-500">{formatDateRange(event.startDate, event.endDate)}</span>
+                    </div>
+                    <h4 className="font-bold">{event.title}</h4>
+
+                    {isEditing ? (
+                      <div className="mt-3 space-y-3">
+                        <div className="flex gap-2">
+                          {Object.values(ATTENDANCE_STATUS)
+                            .filter(s => s.id !== 'pending')
+                            .map(st => (
+                              <button
+                                key={st.id}
+                                type="button"
+                                onClick={() => setEditStatus(st.id)}
+                                className={`px-3 py-1 rounded border-2 text-sm ${
+                                  editStatus === st.id ? 'border-blue-500' : 'border-gray-200'
+                                }`}
+                                style={editStatus === st.id ? {borderColor: st.color, backgroundColor: st.bgColor} : {}}
+                              >
+                                {st.label}
+                              </button>
+                            ))}
+                        </div>
+                        <Input value={editComment} onChange={setEditComment} placeholder="コメント" />
+                        <div className="flex gap-2">
+                          <Button size="sm" onClick={handleSave}>
+                            保存
+                          </Button>
+                          <Button size="sm" variant="secondary" onClick={() => setEditingId(null)}>
+                            キャンセル
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="mt-2 flex items-center gap-4">
+                        <Badge color={status.color} bgColor={status.bgColor}>
+                          {status.label}
+                        </Badge>
+                        {att.comment && <span className="text-sm text-gray-600">{att.comment}</span>}
+                        <span className="text-xs text-gray-400">更新: {att.updatedAt}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {!isEditing && (
+                    <Button size="sm" variant="secondary" onClick={() => handleEdit(att)}>
+                      編集
+                    </Button>
+                  )}
+                </div>
+              </Card>
+            )
+          })
+        )}
+      </div>
+    </div>
+  )
+}
+
+// =============================================================================
+// 一般会員: 例会記録
+// =============================================================================
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function MemberRecords({events, records, recordFiles, members, currentUserId, onSave, onDelete, onDeleteFile}) {
+  const [selectedRecord, setSelectedRecord] = useState(null)
+  const [editingRecord, setEditingRecord] = useState(null)
+  const [isCreating, setIsCreating] = useState(false)
+
+  const getMemberName = id => members.find(m => m.id === id)?.name || ''
+  const getEvent = eventId => events.find(e => e.id === eventId)
+  const getRecordFiles = recordId => recordFiles.filter(f => f.recordId === recordId).sort((a, b) => a.sortOrder - b.sortOrder)
+
+  // 記録がない過去の例会（記録作成候補）
+  const pastEventsWithoutRecord = events.filter(e => {
+    const isPast = new Date(e.endDate || e.startDate) < new Date()
+    const hasRecord = records.some(r => r.eventId === e.id)
+    return isPast && !hasRecord
+  })
+
+  return (
+    <div className="space-y-4">
+      <Card className="p-4 flex items-center justify-between">
+        <p className="text-gray-600">例会記録の閲覧・作成ができます。</p>
+        <Button onClick={() => setIsCreating(true)}>+ 新規作成</Button>
+      </Card>
+
+      {/* 記録一覧 */}
+      <div className="space-y-2">
+        {records.length === 0 ? (
+          <Card className="p-8 text-center text-gray-400">まだ例会記録がありません</Card>
+        ) : (
+          records.map(record => {
+            const event = getEvent(record.eventId)
+            const dept = event ? DEPARTMENTS[event.departmentId] : null
+            const statusInfo = RECORD_STATUS[record.status]
+            const files = getRecordFiles(record.id)
+
+            return (
+              <Card key={record.id} className="p-4 hover:shadow-md transition-shadow">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1 cursor-pointer" onClick={() => setSelectedRecord(record)}>
+                    <div className="flex items-center gap-2 mb-1">
+                      {dept && (
+                        <Badge color={dept.color} bgColor={dept.bgColor}>
+                          {dept.name}
+                        </Badge>
+                      )}
+                      <span className="text-sm text-gray-500">{record.date}</span>
+                      <Badge color={statusInfo.color} bgColor="#f3f4f6">
+                        {statusInfo.label}
+                      </Badge>
+                      {files.length > 0 && (
+                        <Badge color="#3b82f6" bgColor="#dbeafe">
+                          📎 {files.length}件のファイル
+                        </Badge>
+                      )}
+                    </div>
+                    <h4 className="font-bold">{record.title}</h4>
+                    <div className="flex items-center gap-4 mt-1">
+                      <p className="text-sm text-gray-500">記録者: {getMemberName(record.authorId)}</p>
+                    </div>
+                    {/* ファイル一覧（サマリー） */}
+                    {files.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {files.slice(0, 3).map(file => (
+                          <span key={file.id} className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">
+                            {file.fileType === 'google' ? '📄' : file.fileType === 'pdf' ? '📕' : '📘'} {file.fileName}
+                          </span>
+                        ))}
+                        {files.length > 3 && <span className="text-xs text-gray-400">他{files.length - 3}件</span>}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex gap-1">
+                    <Button size="sm" variant="secondary" onClick={() => setEditingRecord(record)}>
+                      編集
+                    </Button>
+                    <Button size="sm" variant="danger" onClick={() => onDelete(record.id)}>
+                      削除
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            )
+          })
+        )}
+      </div>
+
+      {/* 記録詳細モーダル */}
+      <Modal isOpen={!!selectedRecord} onClose={() => setSelectedRecord(null)} title="例会記録" size="lg">
+        {selectedRecord && (
+          <RecordDetail record={selectedRecord} files={getRecordFiles(selectedRecord.id)} members={members} />
+        )}
+      </Modal>
+
+      {/* 記録作成モーダル */}
+      <Modal isOpen={isCreating} onClose={() => setIsCreating(false)} title="例会記録の新規作成" size="lg">
+        <RecordForm
+          events={pastEventsWithoutRecord}
+          members={members}
+          currentUserId={currentUserId}
+          onSave={(data, files) => {
+            onSave(data, files)
+            setIsCreating(false)
+          }}
+          onCancel={() => setIsCreating(false)}
+        />
+      </Modal>
+
+      {/* 記録編集モーダル */}
+      <Modal isOpen={!!editingRecord} onClose={() => setEditingRecord(null)} title="例会記録の編集" size="lg">
+        {editingRecord && (
+          <RecordForm
+            initialData={editingRecord}
+            initialFiles={getRecordFiles(editingRecord.id)}
+            events={events}
+            members={members}
+            currentUserId={currentUserId}
+            onSave={(data, files) => {
+              onSave(data, files)
+              setEditingRecord(null)
+            }}
+            onCancel={() => setEditingRecord(null)}
+          />
+        )}
+      </Modal>
+    </div>
+  )
+}
+
+// =============================================================================
+// 例会記録詳細
+// =============================================================================
+
+function RecordDetail({record, files, members}) {
+  const getMemberName = id => members.find(m => m.id === id)?.name || ''
+  const statusInfo = RECORD_STATUS[record.status]
+
+  const getFileIcon = fileType => {
+    switch (fileType) {
+      case 'google':
+        return '📄'
+      case 'pdf':
+        return '📕'
+      case 'docx':
+        return '📘'
+      default:
+        return '📎'
+    }
+  }
+
+  const getFileTypeName = fileType => {
+    switch (fileType) {
+      case 'google':
+        return 'Google ドキュメント'
+      case 'pdf':
+        return 'PDF'
+      case 'docx':
+        return 'Word'
+      default:
+        return 'ファイル'
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        <Badge color={statusInfo.color} bgColor="#f3f4f6">
+          {statusInfo.label}
+        </Badge>
+        <span className="text-gray-500">
+          {record.date} / {record.weather}
+        </span>
+      </div>
+
+      <h3 className="text-xl font-bold">{record.title}</h3>
+
+      <div className="grid grid-cols-1 gap-3 text-sm">
+        <div>
+          <span className="text-gray-500 font-medium">参加者:</span>
+          <p>{record.participants}</p>
+        </div>
+      </div>
+
+      {/* 記録ファイル（複数ファイル対応） */}
+      <div className="border rounded-lg p-4 bg-gray-50">
+        <h4 className="text-gray-500 font-medium text-sm mb-3">記録ファイル ({files.length}件)</h4>
+        {files.length > 0 ? (
+          <div className="space-y-2">
+            {files.map(file => (
+              <div key={file.id} className="flex items-center gap-3 bg-white rounded p-3 border">
+                <div className="w-10 h-10 bg-blue-100 rounded flex items-center justify-center">
+                  <span className="text-blue-600 text-lg">{getFileIcon(file.fileType)}</span>
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium text-sm">{file.fileName}</p>
+                  <div className="flex items-center gap-2 text-xs text-gray-400">
+                    <span>{getFileTypeName(file.fileType)}</span>
+                    {file.description && (
+                      <>
+                        <span>•</span>
+                        <span>{file.description}</span>
+                      </>
+                    )}
+                    {file.fileSize && (
+                      <>
+                        <span>•</span>
+                        <span>{(file.fileSize / 1024 / 1024).toFixed(1)} MB</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+                <a
+                  href={file.fileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+                >
+                  開く
+                </a>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-400 text-sm">ファイルが登録されていません</p>
+        )}
+      </div>
+
+      <div className="text-xs text-gray-400 pt-4 border-t">
+        記録者: {getMemberName(record.authorId)} / 作成日: {record.createdAt}
+      </div>
+    </div>
+  )
+}
+
+// =============================================================================
+// 例会記録フォーム（複数ファイル対応）
+// =============================================================================
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function RecordForm({initialData, initialFiles = [], events, members, currentUserId, onSave, onCancel}) {
+  const [form, setForm] = useState(
+    initialData || {
+      eventId: '',
+      title: '',
+      date: '',
+      weather: '',
+      participants: '',
+      status: 'draft',
+      authorId: currentUserId,
+    }
+  )
+
+  // ファイルリスト状態（複数ファイル対応）
+  const [files, setFiles] = useState(initialFiles)
+  const [newFileType, setNewFileType] = useState('google')
+  const [newFileUrl, setNewFileUrl] = useState('')
+  const [newFileName, setNewFileName] = useState('')
+  const [newFileDescription, setNewFileDescription] = useState('')
+
+  const updateForm = (key, value) => setForm(prev => ({...prev, [key]: value}))
+
+  // 例会選択時に自動入力
+  const handleEventSelect = eventId => {
+    const event = events.find(e => e.id === Number(eventId))
+    if (event) {
+      updateForm('eventId', eventId)
+      updateForm('title', event.title)
+      updateForm('date', event.startDate)
+    }
+  }
+
+  // ファイル追加
+  const handleAddFile = () => {
+    if (!newFileUrl) return
+
+    const newFile = {
+      id: Date.now(), // 一時ID
+      fileUrl: newFileUrl,
+      fileName: newFileName || newFileUrl.split('/').pop() || 'ファイル',
+      fileType: newFileType,
+      fileSize: null,
+      mimeType: newFileType === 'pdf' ? 'application/pdf' : newFileType === 'docx' ? 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' : null,
+      description: newFileDescription,
+      sortOrder: files.length,
+    }
+    setFiles(prev => [...prev, newFile])
+
+    // フォームをリセット
+    setNewFileUrl('')
+    setNewFileName('')
+    setNewFileDescription('')
+  }
+
+  // ファイル削除
+  const handleRemoveFile = fileId => {
+    setFiles(prev => prev.filter(f => f.id !== fileId))
+  }
+
+  // ファイルアップロードハンドラ（モック）
+  const handleFileUpload = e => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const fileType = file.name.endsWith('.pdf') ? 'pdf' : 'docx'
+      setNewFileName(file.name)
+      setNewFileUrl(`https://example.com/uploads/${file.name}`)
+      setNewFileType(fileType)
+    }
+  }
+
+  const handleSubmit = e => {
+    e.preventDefault()
+    onSave(
+      {
+        ...form,
+        eventId: Number(form.eventId),
+        authorId: currentUserId,
+      },
+      files
+    )
+  }
+
+  const isValid = form.eventId && form.title && form.date && files.length > 0
+
+  const getFileIcon = fileType => {
+    switch (fileType) {
+      case 'google':
+        return '📄'
+      case 'pdf':
+        return '📕'
+      case 'docx':
+        return '📘'
+      default:
+        return '📎'
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {!initialData && (
+        <FormField label="対象の例会" required>
+          <Select
+            value={form.eventId}
+            onChange={handleEventSelect}
+            placeholder="選択してください"
+            options={events.map(e => ({value: e.id, label: `${formatDate(e.startDate)} ${e.title}`}))}
+          />
+        </FormField>
+      )}
+
+      <div className="grid grid-cols-2 gap-4">
+        <FormField label="タイトル" required>
+          <Input value={form.title} onChange={v => updateForm('title', v)} />
+        </FormField>
+        <FormField label="日程" required>
+          <Input type="date" value={form.date} onChange={v => updateForm('date', v)} />
+        </FormField>
+        <FormField label="天候">
+          <Input value={form.weather} onChange={v => updateForm('weather', v)} placeholder="例: 晴れ" />
+        </FormField>
+        <FormField label="ステータス">
+          <Select
+            value={form.status}
+            onChange={v => updateForm('status', v)}
+            options={Object.values(RECORD_STATUS).map(s => ({value: s.id, label: s.label}))}
+          />
+        </FormField>
+      </div>
+
+      <FormField label="参加者">
+        <Textarea
+          value={form.participants}
+          onChange={v => updateForm('participants', v)}
+          rows={2}
+          placeholder="CL ○○、SL ○○、△△（会計）... 計○名"
+        />
+      </FormField>
+
+      {/* 記録ファイル登録（複数ファイル対応） */}
+      <div className="border rounded-lg p-4 bg-gray-50">
+        <h4 className="font-medium mb-3">
+          記録ファイル <span className="text-red-500">*</span>
+          <span className="text-sm font-normal text-gray-500 ml-2">（複数登録可）</span>
+        </h4>
+
+        {/* 登録済みファイル一覧 */}
+        {files.length > 0 && (
+          <div className="space-y-2 mb-4">
+            {files.map(file => (
+              <div key={file.id} className="flex items-center gap-3 bg-white rounded p-3 border">
+                <span className="text-lg">{getFileIcon(file.fileType)}</span>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">{file.fileName}</p>
+                  {file.description && <p className="text-xs text-gray-400">{file.description}</p>}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveFile(file.id)}
+                  className="text-red-500 hover:text-red-700 text-sm"
+                >
+                  削除
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* 新規ファイル追加フォーム */}
+        <div className="bg-white border rounded-lg p-3 space-y-3">
+          <p className="text-sm font-medium text-gray-600">ファイルを追加</p>
+
+          {/* ファイルタイプ選択 */}
+          <div className="flex gap-4">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="newFileType"
+                value="google"
+                checked={newFileType === 'google'}
+                onChange={() => setNewFileType('google')}
+                className="w-4 h-4"
+              />
+              <span className="text-sm">📄 Google Docs</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="newFileType"
+                value="pdf"
+                checked={newFileType === 'pdf'}
+                onChange={() => setNewFileType('pdf')}
+                className="w-4 h-4"
+              />
+              <span className="text-sm">📕 PDF</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="newFileType"
+                value="docx"
+                checked={newFileType === 'docx'}
+                onChange={() => setNewFileType('docx')}
+                className="w-4 h-4"
+              />
+              <span className="text-sm">📘 Word</span>
+            </label>
+          </div>
+
+          {newFileType === 'google' ? (
+            <div className="space-y-2">
+              <Input value={newFileUrl} onChange={setNewFileUrl} placeholder="Google ドキュメントのURL" />
+              <Input value={newFileName} onChange={setNewFileName} placeholder="表示名（任意）" />
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <div className="border-2 border-dashed rounded-lg p-3 text-center hover:bg-gray-50 cursor-pointer">
+                <input
+                  type="file"
+                  accept={newFileType === 'pdf' ? '.pdf' : '.docx,.doc'}
+                  onChange={handleFileUpload}
+                  className="hidden"
+                  id="file-upload-new"
+                />
+                <label htmlFor="file-upload-new" className="cursor-pointer block">
+                  {newFileUrl ? (
+                    <span className="text-sm">{newFileName}</span>
+                  ) : (
+                    <span className="text-sm text-gray-500">クリックしてファイルを選択</span>
+                  )}
+                </label>
+              </div>
+            </div>
+          )}
+
+          <Input value={newFileDescription} onChange={setNewFileDescription} placeholder="説明（例: 本文、写真集）" />
+
+          <Button type="button" variant="secondary" size="sm" onClick={handleAddFile} disabled={!newFileUrl}>
+            + ファイルを追加
+          </Button>
+        </div>
+      </div>
+
+      <div className="flex justify-end gap-2">
+        <Button type="button" variant="secondary" onClick={onCancel}>
+          キャンセル
+        </Button>
+        <Button type="submit" disabled={!isValid}>
+          {initialData ? '更新する' : '作成する'}
+        </Button>
+      </div>
+    </form>
+  )
+}

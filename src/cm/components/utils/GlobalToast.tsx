@@ -1,8 +1,8 @@
 import 'react-toastify/dist/ReactToastify.css'
-import {ToastContainer, ToastOptions} from 'react-toastify'
+import { ToastContainer, ToastOptions } from 'react-toastify'
 const options: ToastOptions = {
-  style: {zIndex: 2147483647, width: '100%', maxWidth: 700},
-  position: 'bottom-right',
+  style: { zIndex: 2147483647, width: '100%', maxWidth: 700 },
+  position: 'top-center',
   autoClose: 1000,
   hideProgressBar: false,
   closeOnClick: true,

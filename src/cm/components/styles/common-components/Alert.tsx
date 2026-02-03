@@ -1,11 +1,11 @@
-import {colorVariants} from '@cm/lib/methods/colorVariants'
-import {tv} from 'tailwind-variants'
+import { colorVariants } from '@cm/lib/methods/colorVariants'
+import { tv } from 'tailwind-variants'
 import React from 'react'
-import {htmlProps} from '@cm/types/utility-types'
-import {TextProps} from '@cm/lib/methods/Coloring'
-import {iconBtnColorVariants} from '@cm/components/styles/common-components/IconBtn'
-import {cl} from '@cm/lib/methods/common'
-import {colorClassMaster} from '@cm/lib/methods/colorVariants'
+import { htmlProps } from '@cm/types/utility-types'
+import { TextProps } from '@cm/lib/methods/Coloring'
+import { iconBtnColorVariants } from '@cm/components/styles/common-components/IconBtn'
+import { cl } from '@cm/lib/methods/common'
+import { colorClassMaster } from '@cm/lib/methods/colorVariants'
 
 export const textColorVariants: Record<colorVariants, string> = {
   gray: 'text-gray-500 ',
@@ -33,16 +33,16 @@ export const alertColorVariants: Record<colorVariants, string> = {
   '': '',
 }
 
-export const Alert = (props: htmlProps & {color?: colorVariants}) => {
-  const {className, style, color = 'sub', ...rest} = props
+export const Alert = (props: htmlProps & { color?: colorVariants }) => {
+  const { className, style, color = 'sub', ...rest } = props
 
   const alertVariants = tv({
     base: 'border p-2 rounded-md shadow',
-    variants: {color: alertColorVariants},
+    variants: { color: alertColorVariants },
   })
 
   const elementProps = {
-    className: alertVariants({color, class: className}),
+    className: alertVariants({ color, class: className }),
     style,
     role: 'alert',
     ...rest,
@@ -52,11 +52,12 @@ export const Alert = (props: htmlProps & {color?: colorVariants}) => {
 }
 
 const textVariants = tv({
-  variants: {color: textColorVariants},
+  variants: { color: textColorVariants },
 })
 
 export const Text = (props: htmlProps & TextProps) => {
-  const {className, style, color = `red`, asLink = false, ...rest} = props
+  const { className, style, color = `red`, asLink = false, ...rest } = props
+
 
   const colorUndetected = !iconBtnColorVariants[color ?? ''] && color
   const colorClass = colorUndetected ? '' : colorClassMaster.text[color]
@@ -64,11 +65,14 @@ export const Text = (props: htmlProps & TextProps) => {
   const customeStyle = {
     ...(colorUndetected
       ? {
-          color: color,
-        }
+        color: color,
+      }
       : {}),
     ...style,
   }
+
+
+
 
   const elementProps = {
     ...{

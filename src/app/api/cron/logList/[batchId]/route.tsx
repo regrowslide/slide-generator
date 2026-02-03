@@ -19,7 +19,7 @@ export const GET = async (req: NextRequest, { params }: { params: Promise<{ batc
       where: { batchId },
       orderBy: { startedAt: 'desc' },
     })
-
+    //
     // 履歴ログ（最大limit件）
     const historyLogList = await prisma.cronExecutionLog.findMany({
       where: { batchId },
@@ -33,7 +33,7 @@ export const GET = async (req: NextRequest, { params }: { params: Promise<{ batc
       history: historyLogList,
     })
   } catch (error: any) {
-    console.error(`[CRON LOGS] Error fetching logList for batch: ${batchId}`, error)
+    console.error(`[CRON LOG] Error fetching logList for batch: ${batchId}`, error)
     return NextResponse.json(
       {
         success: false,

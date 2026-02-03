@@ -34,18 +34,18 @@ const mockups = [
     bgGradient: 'from-teal-50 to-cyan-50',
     accentColor: 'teal',
   },
-  {
-    id: 'yamanokai',
-    title: '山岳会会員管理システム',
+  // {
+  //   id: 'yamanokai',
+  //   title: '山岳会会員管理システム',
 
-    description:
-      '山岳会の会員管理・例会企画・計画書・装備貸出を統合管理するシステム。カレンダーベースの例会スケジュールと装備管理機能を搭載。',
-    features: ['会員管理', '例会企画', '計画書作成', '装備貸出'],
-    icon: Mountain,
-    gradient: 'from-blue-500 to-indigo-600',
-    bgGradient: 'from-blue-50 to-indigo-50',
-    accentColor: 'blue',
-  },
+  //   description:
+  //     '山岳会の会員管理・例会企画・計画書・装備貸出を統合管理するシステム。カレンダーベースの例会スケジュールと装備管理機能を搭載。',
+  //   features: ['会員管理', '例会企画', '計画書作成', '装備貸出'],
+  //   icon: Mountain,
+  //   gradient: 'from-blue-500 to-indigo-600',
+  //   bgGradient: 'from-blue-50 to-indigo-50',
+  //   accentColor: 'blue',
+  // },
 ]
 
 const MockCard = ({ mockup, isVisible }) => {

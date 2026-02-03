@@ -31,6 +31,11 @@ export const updateOptionsOrigin = async ({ input, options, isStaticOptions, con
     console.debug(`getHitsFromOptions`, hits)
   }
 
+  if (hits.length === 0) {
+    alert('検索結果が見つかりませんでした。')
+    setFilteredOptions([])
+  }
+
   setFilteredOptions(hits)
 
   async function getHitsFromOptions() {

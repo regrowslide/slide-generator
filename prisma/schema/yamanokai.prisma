@@ -1,0 +1,491 @@
+// Yamanokai（山の会 KCAC）システム Prisma Schema
+// 山岳会の例会管理、会員管理、装備貸出管理システム
+
+// =============================================================================
+// マスターデータ
+// =============================================================================
+
+/// 部署マスター（ハイキング部、山行部、教育部、自然保護部、組織部）
+model YamanokaiDepartment {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  code    String  @unique @db.VarChar(50) // "hiking", "sanko", "education", "nature", "organization"
+  name    String  @db.VarChar(100) // "ハイキング部", "山行部", etc.
+  color   String? @db.VarChar(20) // テーマカラー: "#22c55e"
+  bgColor String? @db.VarChar(20) // 背景色: "#dcfce7"
+
+  // リレーション
+  YamanokaiMember     YamanokaiMember[]
+  YamanokaiEvent      YamanokaiEvent[]
+  YamanokaiCourse     YamanokaiCourse[]
+  YamanokaiMemberRole YamanokaiMemberRole[]
+
+  @@map("yamanokai_departments")
+}
+
+/// 役職マスター（三役、事務局、専門部長、CL、SL、一般会員）
+model YamanokaiRole {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  code        String   @unique @db.VarChar(50) // "sanyaku", "jimukyoku", "bucho", "cl", "sl", "member"
+  name        String   @db.VarChar(100) // "三役", "事務局", "専門部長", etc.
+  level       Int      @default(0) // 権限レベル: 三役=100, 事務局=90, 専門部長=70, CL=50, 一般会員=10
+  permissions String[] // 権限リスト: ["event.create", "event.approve", etc.]
+
+  // リレーション
+  YamanokaiMember     YamanokaiMember[]
+  YamanokaiMemberRole YamanokaiMemberRole[]
+
+  @@map("yamanokai_roles")
+}
+
+/// 講座マスター（岩座学、雪山ハイキング講座 etc.）
+model YamanokaiCourse {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  name            String  @db.VarChar(200) // "岩座学", "雪山ハイキング講座"
+  description     String? @db.Text
+  prerequisiteIds Int[] // 前提となる講座ID
+
+  // リレーション
+  YamanokaiDepartment     YamanokaiDepartment?      @relation(fields: [yamanokaiDepartmentId], references: [id])
+  yamanokaiDepartmentId   Int?
+  YamanokaiCourseCompletion YamanokaiCourseCompletion[]
+  YamanokaiEventRequiredCourse YamanokaiEventRequiredCourse[]
+
+  @@map("yamanokai_courses")
+}
+
+/// 装備マスター
+model YamanokaiEquipment {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  name          String  @db.VarChar(200) // "テント(4人用)", "アイゼン(12本爪)"
+  category      String  @db.VarChar(50) // "tent", "climbing", "camping"
+  totalQuantity Int     @default(0)
+  notes         String? @db.Text
+
+  // リレーション
+  YamanokaiEquipmentLoan YamanokaiEquipmentLoan[]
+
+  @@map("yamanokai_equipment")
+}
+
+/// 保険口数マスター
+model YamanokaiInsuranceGrade {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  kuchi              Int      @unique // 口数: 3, 4, 8
+  name               String   @db.VarChar(100) // "ハイキング", "岩A・沢入門", "アルパイン・雪山・岩BC・沢"
+  eligibleActivities String[] // 参加可能な活動タイプ
+
+  @@map("yamanokai_insurance_grades")
+}
+
+/// 体力度グレードマスター
+model YamanokaiStaminaGrade {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  code        String  @unique @db.VarChar(20) // "(^^)", "O(-)", "O", "O(+)", "OO", "OOO", "OOOO"
+  name        String  @db.VarChar(50)
+  description String? @db.Text
+
+  @@map("yamanokai_stamina_grades")
+}
+
+/// 技術度グレードマスター
+model YamanokaiSkillGrade {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  code        String  @unique @db.VarChar(20) // "none", "star1", "star2", "star3"
+  name        String  @db.VarChar(50) // "なし", "☆", "☆☆", "☆☆☆"
+  description String? @db.Text
+
+  @@map("yamanokai_skill_grades")
+}
+
+/// 岩登り区分マスター
+model YamanokaiRockCategory {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  code        String  @unique @db.VarChar(20) // "none", "A", "B", "C"
+  name        String  @db.VarChar(50) // "なし", "A", "B", "C"
+  description String? @db.Text
+
+  @@map("yamanokai_rock_categories")
+}
+
+// =============================================================================
+// 会員データ
+// =============================================================================
+
+/// 会員
+model YamanokaiMember {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  // 基本情報
+  name      String  @db.VarChar(100) // 氏名
+  nameKana  String? @db.VarChar(100) // フリガナ
+  email     String? @unique @db.VarChar(255)
+  phone     String? @db.VarChar(20)
+  address   String? @db.Text
+  birthday  DateTime?
+  gender    String? @db.VarChar(20) // "male", "female", "other"
+  bloodType String? @db.VarChar(10) // "A", "B", "O", "AB"
+
+  // 山岳関連
+  insuranceKuchi Int     @default(3) // 保険口数 (3, 4, 8)
+  cocoHeliId     String? @db.VarChar(50)
+  medicalHistory String? @db.Text // 持病・アレルギー等
+
+  // 緊急連絡先
+  emergencyName     String? @db.VarChar(100)
+  emergencyPhone    String? @db.VarChar(20)
+  emergencyRelation String? @db.VarChar(50) // 続柄
+
+  // 組織情報
+  joinedAt DateTime? // 入会日
+
+  // 管理フラグ
+  isAdmin   Boolean @default(false)
+  isActive  Boolean @default(true)
+  isDeleted Boolean @default(false)
+
+  // リレーション
+  YamanokaiDepartment     YamanokaiDepartment? @relation(fields: [yamanokaiDepartmentId], references: [id])
+  yamanokaiDepartmentId   Int?
+  YamanokaiRole           YamanokaiRole?       @relation(fields: [yamanokaiRoleId], references: [id])
+  yamanokaiRoleId         Int?
+  YamanokaiMemberRole     YamanokaiMemberRole[]
+  YamanokaiCourseCompletion YamanokaiCourseCompletion[]
+  YamanokaiEquipmentLoan  YamanokaiEquipmentLoan[]
+  YamanokaiAttendance     YamanokaiAttendance[]
+  YamanokaiRecord         YamanokaiRecord[] // 作成した記録
+  YamanokaiEventAsCL      YamanokaiEvent[]  @relation("EventCL")
+  YamanokaiEventAsSL      YamanokaiEvent[]  @relation("EventSL")
+  YamanokaiEventPlanApprover YamanokaiEventPlan[] @relation("EventPlanApprover")
+  YamanokaiEventPlanParticipant YamanokaiEventPlanParticipant[]
+
+  @@map("yamanokai_members")
+}
+
+/// 会員役職履歴
+model YamanokaiMemberRole {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  startAt DateTime // 就任日
+  endAt   DateTime? // 退任日（nullの場合は現在も有効）
+
+  // リレーション
+  YamanokaiMember       YamanokaiMember      @relation(fields: [yamanokaiMemberId], references: [id], onDelete: Cascade)
+  yamanokaiMemberId     Int
+  YamanokaiRole         YamanokaiRole        @relation(fields: [yamanokaiRoleId], references: [id])
+  yamanokaiRoleId       Int
+  YamanokaiDepartment   YamanokaiDepartment? @relation(fields: [yamanokaiDepartmentId], references: [id])
+  yamanokaiDepartmentId Int? // 専門部長の場合、どの部の部長か
+
+  @@map("yamanokai_member_roles")
+}
+
+/// 講座受講履歴
+model YamanokaiCourseCompletion {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  completedAt DateTime // 受講日
+  notes       String?  @db.Text
+
+  // リレーション
+  YamanokaiMember     YamanokaiMember @relation(fields: [yamanokaiMemberId], references: [id], onDelete: Cascade)
+  yamanokaiMemberId   Int
+  YamanokaiCourse     YamanokaiCourse @relation(fields: [yamanokaiCourseId], references: [id])
+  yamanokaiCourseId   Int
+  YamanokaiEvent      YamanokaiEvent? @relation(fields: [yamanokaiEventId], references: [id])
+  yamanokaiEventId    Int? // 受講した例会
+
+  @@unique([yamanokaiMemberId, yamanokaiCourseId])
+  @@map("yamanokai_course_completions")
+}
+
+// =============================================================================
+// 例会データ
+// =============================================================================
+
+/// 例会
+model YamanokaiEvent {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  // 基本情報
+  title        String  @db.VarChar(200)
+  mountainName String? @db.VarChar(200) // 山名（座学の場合null）
+  altitude     String? @db.VarChar(50) // 標高
+
+  // 日程
+  startAt  DateTime
+  endAt    DateTime
+  deadline DateTime // 申込期限
+
+  // グレード
+  staminaGrade      String @db.VarChar(20) // "(^^)", "O(-)", "O", etc.
+  skillGrade        String @db.VarChar(20) // "なし", "☆", "☆☆", "☆☆☆"
+  rockCategory      String @db.VarChar(20) // "なし", "A", "B", "C"
+  requiredInsurance Int    @default(3) // 必要保険口数
+
+  // 集合
+  meetingPlace String @db.VarChar(200)
+  meetingTime  String @db.VarChar(20)
+
+  // コース・詳細
+  course   String? @db.Text // コース概要
+  capacity Int? // 定員（null = 無制限）
+  notes    String? @db.Text
+
+  // ステータス
+  status    String  @default("draft") @db.VarChar(20) // "draft", "published", "completed", "cancelled"
+  isDeleted Boolean @default(false)
+
+  // リレーション
+  YamanokaiDepartment    YamanokaiDepartment @relation(fields: [yamanokaiDepartmentId], references: [id])
+  yamanokaiDepartmentId  Int
+  YamanokaiCL            YamanokaiMember     @relation("EventCL", fields: [clId], references: [id])
+  clId                   Int
+  YamanokaiSL            YamanokaiMember?    @relation("EventSL", fields: [slId], references: [id])
+  slId                   Int?
+  YamanokaiAttendance    YamanokaiAttendance[]
+  YamanokaiEventPlan     YamanokaiEventPlan?
+  YamanokaiRecord        YamanokaiRecord?
+  YamanokaiCourseCompletion YamanokaiCourseCompletion[]
+  YamanokaiEquipmentLoan YamanokaiEquipmentLoan[]
+  YamanokaiEventRequiredCourse YamanokaiEventRequiredCourse[]
+
+  @@map("yamanokai_events")
+}
+
+/// 例会の必須講座（中間テーブル）
+model YamanokaiEventRequiredCourse {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  YamanokaiEvent    YamanokaiEvent  @relation(fields: [yamanokaiEventId], references: [id], onDelete: Cascade)
+  yamanokaiEventId  Int
+  YamanokaiCourse   YamanokaiCourse @relation(fields: [yamanokaiCourseId], references: [id])
+  yamanokaiCourseId Int
+
+  @@unique([yamanokaiEventId, yamanokaiCourseId])
+  @@map("yamanokai_event_required_courses")
+}
+
+/// 山行計画書
+model YamanokaiEventPlan {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  // 計画書内容
+  detailedCourse String? @db.Text // 詳細行程
+  escapeRoute    String? @db.Text // エスケープルート
+  emergencyPlan  String? @db.Text // 緊急時対応
+  equipmentList  String? @db.Text // 装備表
+
+  // ファイル添付
+  fileUrl  String? @db.Text
+  fileName String? @db.VarChar(200)
+
+  // 承認フロー
+  status      String    @default("draft") @db.VarChar(20) // "draft", "submitted", "approved", "in_progress", "completed"
+  submittedAt DateTime?
+  approvedAt  DateTime?
+  isDeleted   Boolean   @default(false)
+
+  // リレーション
+  YamanokaiEvent      YamanokaiEvent   @relation(fields: [yamanokaiEventId], references: [id], onDelete: Cascade)
+  yamanokaiEventId    Int              @unique
+  YamanokaiApprover   YamanokaiMember? @relation("EventPlanApprover", fields: [approvedBy], references: [id])
+  approvedBy          Int?
+  YamanokaiEventPlanParticipant YamanokaiEventPlanParticipant[]
+
+  @@map("yamanokai_event_plans")
+}
+
+/// 計画書参加者
+model YamanokaiEventPlanParticipant {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  role String @db.VarChar(50) // "cl", "sl", "participant", "recorder"
+
+  // 計画書用のスナップショット（提出時点の情報）
+  name              String  @db.VarChar(100)
+  birthday          DateTime?
+  gender            String? @db.VarChar(20)
+  insuranceKuchi    Int
+  bloodType         String? @db.VarChar(10)
+  address           String? @db.Text
+  phone             String? @db.VarChar(20)
+  emergencyName     String? @db.VarChar(100)
+  emergencyPhone    String? @db.VarChar(20)
+  emergencyRelation String? @db.VarChar(50)
+  medicalHistory    String? @db.Text
+  cocoHeliId        String? @db.VarChar(50)
+
+  // リレーション
+  YamanokaiEventPlan    YamanokaiEventPlan @relation(fields: [yamanokaiEventPlanId], references: [id], onDelete: Cascade)
+  yamanokaiEventPlanId  Int
+  YamanokaiMember       YamanokaiMember    @relation(fields: [yamanokaiMemberId], references: [id])
+  yamanokaiMemberId     Int
+
+  @@unique([yamanokaiEventPlanId, yamanokaiMemberId])
+  @@map("yamanokai_event_plan_participants")
+}
+
+// =============================================================================
+// 出席回答データ
+// =============================================================================
+
+/// 出席回答
+model YamanokaiAttendance {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  status    String  @default("pending") @db.VarChar(20) // "pending", "attending", "notAttending", "undecided"
+  comment   String? @db.Text
+  isDeleted Boolean @default(false)
+
+  // リレーション
+  YamanokaiEvent    YamanokaiEvent  @relation(fields: [yamanokaiEventId], references: [id], onDelete: Cascade)
+  yamanokaiEventId  Int
+  YamanokaiMember   YamanokaiMember @relation(fields: [yamanokaiMemberId], references: [id], onDelete: Cascade)
+  yamanokaiMemberId Int
+
+  @@unique([yamanokaiEventId, yamanokaiMemberId])
+  @@map("yamanokai_attendances")
+}
+
+// =============================================================================
+// 例会記録データ
+// =============================================================================
+
+/// 例会記録
+model YamanokaiRecord {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  // 基本情報
+  title        String    @db.VarChar(200)
+  recordedAt   DateTime // 記録対象日
+  weather      String?   @db.VarChar(50)
+  participants String?   @db.Text // 参加者一覧テキスト
+
+  // 承認フロー
+  status      String    @default("draft") @db.VarChar(20) // "draft", "submitted", "editing", "published"
+  submittedAt DateTime?
+  publishedAt DateTime?
+  isDeleted   Boolean   @default(false)
+
+  // リレーション
+  YamanokaiEvent    YamanokaiEvent      @relation(fields: [yamanokaiEventId], references: [id], onDelete: Cascade)
+  yamanokaiEventId  Int                 @unique
+  YamanokaiAuthor   YamanokaiMember     @relation(fields: [authorId], references: [id])
+  authorId          Int
+  YamanokaiRecordFile YamanokaiRecordFile[]
+
+  @@map("yamanokai_records")
+}
+
+/// 例会記録ファイル
+/// 1つの例会記録に対して複数のファイル(PDF/Word)をアップロード可能
+model YamanokaiRecordFile {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  // ファイル情報
+  fileUrl     String  @db.Text // Google Docs URL or S3 URL
+  fileName    String  @db.VarChar(200) // 表示用ファイル名
+  fileType    String  @db.VarChar(20) // "pdf", "docx", "google"
+  fileSize    Int? // ファイルサイズ(bytes)
+  mimeType    String? @db.VarChar(100) // "application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  description String? @db.Text // ファイルの説明
+  isDeleted   Boolean @default(false)
+
+  // リレーション
+  YamanokaiRecord   YamanokaiRecord @relation(fields: [yamanokaiRecordId], references: [id], onDelete: Cascade)
+  yamanokaiRecordId Int
+
+  @@map("yamanokai_record_files")
+}
+
+// =============================================================================
+// 装備貸出データ
+// =============================================================================
+
+/// 装備貸出
+model YamanokaiEquipmentLoan {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  quantity   Int      @default(1)
+  loanAt     DateTime // 貸出日
+  dueAt      DateTime // 返却予定日
+  returnedAt DateTime? // 実際の返却日（未返却はnull）
+
+  status    String  @default("loaned") @db.VarChar(20) // "loaned", "returned", "overdue"
+  notes     String? @db.Text
+  isDeleted Boolean @default(false)
+
+  // リレーション
+  YamanokaiEquipment    YamanokaiEquipment @relation(fields: [yamanokaiEquipmentId], references: [id])
+  yamanokaiEquipmentId  Int
+  YamanokaiMember       YamanokaiMember    @relation(fields: [yamanokaiMemberId], references: [id])
+  yamanokaiMemberId     Int
+  YamanokaiEvent        YamanokaiEvent?    @relation(fields: [yamanokaiEventId], references: [id])
+  yamanokaiEventId      Int? // 例会用貸出の場合
+
+  @@map("yamanokai_equipment_loans")
+}
