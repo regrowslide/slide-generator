@@ -1139,13 +1139,13 @@ export default function AnalysisSessionDetailPage() {
     }
   }, [newCategoryName, newCategoryDescription, createCategory, categoryModal, editStates, updateEditState, isPendingGeneralCategory, industryId, mergedGeneralCategories, refreshCategories, handleAutoSave])
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
-        <p className="text-gray-500">読み込み中...</p>
-      </div>
-    )
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
+  //       <p className="text-gray-500">読み込み中...</p>
+  //     </div>
+  //   )
+  // }
 
   if (!session) {
     return (
@@ -1373,19 +1373,19 @@ export default function AnalysisSessionDetailPage() {
             </R_Stack>
             <div className="flex flex-wrap gap-3">
               {/* 原文件数 */}
-              <div className="bg-gray-50 px-3 py-2 rounded-lg">
+              <div className="bg-gray-50 py-0.5 px-1 rounded-lg">
                 <span className="text-xs text-gray-500">原文</span>
                 <p className="text-lg font-bold text-gray-800">{statistics.rawTextCount}件</p>
               </div>
               {/* トピック件数 */}
-              <div className="bg-gray-50 px-3 py-2 rounded-lg">
+              <div className="bg-gray-50 py-0.5 px-1 rounded-lg">
                 <span className="text-xs text-gray-500">トピック</span>
                 <p className="text-lg font-bold text-gray-800">{statistics.topicCount}件</p>
               </div>
               {/* ステージ */}
               <Popover>
                 <PopoverTrigger asChild>
-                  <button className="bg-blue-50 px-3 py-2 rounded-lg hover:bg-blue-100 transition-colors text-left">
+                  <button className="bg-blue-50 py-0.5 px-1 rounded-lg hover:bg-blue-100 transition-colors text-left">
                     <R_Stack className="items-center gap-1">
                       <span className="text-xs text-blue-600">ステージ</span>
                       <Info className="w-3 h-3 text-blue-400" />
@@ -1408,7 +1408,7 @@ export default function AnalysisSessionDetailPage() {
               {/* 感情 */}
               <Popover>
                 <PopoverTrigger asChild>
-                  <button className="bg-green-50 px-3 py-2 rounded-lg hover:bg-green-100 transition-colors text-left">
+                  <button className="bg-green-50 py-0.5 px-1 rounded-lg hover:bg-green-100 transition-colors text-left">
                     <R_Stack className="items-center gap-1">
                       <span className="text-xs text-green-600">感情</span>
                       <Info className="w-3 h-3 text-green-400" />
@@ -1431,7 +1431,7 @@ export default function AnalysisSessionDetailPage() {
               {/* 一般カテゴリ */}
               <Popover>
                 <PopoverTrigger asChild>
-                  <button className="bg-purple-50 px-3 py-2 rounded-lg hover:bg-purple-100 transition-colors text-left">
+                  <button className="bg-purple-50 py-0.5 px-1 rounded-lg hover:bg-purple-100 transition-colors text-left">
                     <R_Stack className="items-center gap-1">
                       <span className="text-xs text-purple-600">一般カテゴリ</span>
                       <Info className="w-3 h-3 text-purple-400" />
@@ -1472,7 +1472,7 @@ export default function AnalysisSessionDetailPage() {
               {/* カテゴリ */}
               <Popover>
                 <PopoverTrigger asChild>
-                  <button className="bg-amber-50 px-3 py-2 rounded-lg hover:bg-amber-100 transition-colors text-left">
+                  <button className="bg-amber-50 py-0.5 px-1 rounded-lg hover:bg-amber-100 transition-colors text-left">
                     <R_Stack className="items-center gap-1">
                       <span className="text-xs text-amber-600">カテゴリ</span>
                       <Info className="w-3 h-3 text-amber-400" />
@@ -1511,7 +1511,7 @@ export default function AnalysisSessionDetailPage() {
                 </PopoverContent>
               </Popover>
               {/* 評価 */}
-              <div className="bg-gray-50 px-3 py-2 rounded-lg">
+              <div className="bg-gray-50 py-0.5 px-1 rounded-lg">
                 <span className="text-xs text-gray-500">評価</span>
                 <R_Stack className="gap-2 mt-1">
                   <span className="text-xs px-1.5 py-0.5 rounded bg-green-500 text-white">A: {statistics.evaluationStats.A}</span>
@@ -1532,15 +1532,16 @@ export default function AnalysisSessionDetailPage() {
               <table className="w-full text-sm">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-3 py-2 text-left font-medium text-gray-600 w-8">#</th>
-                    <th className="px-3 py-2 text-center font-medium text-gray-600 w-20">評価</th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-600 w-[400px]">原文</th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-600 w-[320px]">トピック</th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-600 w-24">ステージ</th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-600 w-24">感情</th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-600 w-32">一般カテゴリ</th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-600 w-40">カテゴリ</th>
-                    <th className="px-3 py-2 text-left font-medium text-gray-600 w-8"></th>
+                    <th className="py-0.5 px-1 text-left font-medium text-gray-600 min-w-[32px]">#</th>
+                    <th className="py-0.5 px-1 text-center font-medium text-gray-600 min-w-[40px]">評価</th>
+                    <th className="py-0.5 px-1 text-left font-medium text-gray-600 min-w-[200px]">原文</th>
+                    <th className="py-0.5 px-1 text-left font-medium text-gray-600 min-w-[200px]">トピック</th>
+                    <th className="py-0.5 px-1 text-left font-medium text-gray-600 min-w-[80px]">ステージ</th>
+                    <th className="py-0.5 px-1 text-left font-medium text-gray-600 min-w-[80px]">感情</th>
+                    <th className="py-0.5 px-1 text-left font-medium text-gray-600 min-w-[80px]">一般カテゴリ</th>
+                    <th className="py-0.5 px-1 text-left font-medium text-gray-600 min-w-[80px]">カテゴリ</th>
+                    <th className="py-0.5 px-1 text-left font-medium text-gray-600 min-w-[32px]"></th>
+                    <th className="py-0.5 px-1 text-left font-medium text-gray-600 min-w-[180px]">メモ</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1558,6 +1559,18 @@ export default function AnalysisSessionDetailPage() {
                     const isSubRecord = !!record.mergedIntoId
                     const subRecordClass = isSubRecord ? 'bg-gray-100/80' : ''
 
+                    // 結合グループ判定
+                    const mergeGroupId = record.mergedIntoId || record.id
+                    const nextRecord = records[index + 1]
+                    const nextMergeGroupId = nextRecord ? (nextRecord.mergedIntoId || nextRecord.id) : null
+                    const isLastInMergeGroup = mergeGroupId !== nextMergeGroupId
+                    const isMainWithSubs = !isSubRecord && nextRecord?.mergedIntoId === record.id
+                    const isInMergeGroup = isSubRecord || isMainWithSubs
+                    const borderBottom = isInMergeGroup
+                      ? (isLastInMergeGroup ? 'border-b-2 border-b-orange-400' : 'border-b-0')
+                      : 'border-b'
+                    const leftBorder = isInMergeGroup ? 'border-l-4 border-l-orange-400' : ''
+
                     // 前の行のrecordId（結合先候補）
                     const prevRecord = index > 0 ? records[index - 1] : null
                     // 結合先は前のレコードのメインID（前がサブならそのmergedIntoIdを使う）
@@ -1568,8 +1581,8 @@ export default function AnalysisSessionDetailPage() {
                     return (
                       <React.Fragment key={record.id}>
                         {/* AI分析結果行 */}
-                        <tr className={`bg-blue-50/50 ${disabledClass} ${subRecordClass}`}>
-                          <td rowSpan={isSubRecord ? 2 : 3} className="px-3 py-2 text-gray-500 align-top border-b">
+                        <tr className={`bg-blue-50/50 ${disabledClass} ${subRecordClass} ${isSubRecord ? borderBottom : ''}`}>
+                          <td rowSpan={isSubRecord ? 1 : 2} className={`py-0.5 px-1 text-gray-500 align-top ${borderBottom} ${leftBorder}`}>
                             <div className="flex flex-col items-center gap-1">
                               <span className={isSubRecord ? 'text-xs text-gray-400' : ''}>
                                 {(currentPage - 1) * RECORD_PAGE_SIZE + index + 1}
@@ -1613,29 +1626,28 @@ export default function AnalysisSessionDetailPage() {
                           </td>
 
                           {/* 評価ボタン */}
-                          <td rowSpan={isSubRecord ? 2 : 3} className="px-2 py-2 align-top border-b">
+                          <td rowSpan={isSubRecord ? 1 : 2} className={`px-2 py-2 align-top  ${borderBottom}`}>
                             {!isSubRecord && (
-                              <R_Stack className="gap-0.5 justify-center">
+                              <C_Stack className="gap-0.5  justify-around items-center h-full">
                                 {(['A', 'B', 'C'] as EvaluationType[]).map((ev) => (
                                   <button
                                     key={ev}
                                     type="button"
                                     onClick={() => handleEvaluation(record.id, ev)}
-                                    className={`w-6 h-6 rounded text-xs font-bold transition-colors ${
-                                      state.evaluation === ev
-                                        ? getEvaluationStyle(ev)
-                                        : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
-                                    }`}
+                                    className={`w-6 h-6 rounded text-xs font-bold transition-colors ${state.evaluation === ev
+                                      ? getEvaluationStyle(ev)
+                                      : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
+                                      }`}
                                     title={ev === 'A' ? '問題なし' : ev === 'B' ? '要注意' : 'NG'}
                                   >
                                     {ev}
                                   </button>
                                 ))}
-                              </R_Stack>
+                              </C_Stack>
                             )}
                           </td>
 
-                          <td rowSpan={isSubRecord ? 2 : 3} className={`px-3 py-2 align-top border-b max-w-[300px] ${isSubRecord ? 'pl-6' : ''}`}>
+                          <td rowSpan={isSubRecord ? 1 : 2} className={`py-0.5 px-1 align-top ${borderBottom} max-w-[300px] ${isSubRecord ? 'pl-6' : ''}`}>
                             <div className="flex items-start gap-1">
                               {isSubRecord && (
                                 <span className="text-xs text-gray-400 mt-0.5">└</span>
@@ -1700,7 +1712,7 @@ export default function AnalysisSessionDetailPage() {
                               <span className="text-gray-600 text-xs">{record.analysisCategory || '-'}</span>
                             )}
                           </td>
-                          <td rowSpan={isSubRecord ? 2 : 3} className="px-3 py-2 align-middle border-b">
+                          <td rowSpan={isSubRecord ? 1 : 2} className={`py-0.5 px-1 align-middle ${borderBottom}`}>
                             <C_Stack className="gap-1 items-center">
 
                               {/* 新規提案の承認/却下ボタン */}
@@ -1754,137 +1766,23 @@ export default function AnalysisSessionDetailPage() {
                               )}
                             </C_Stack>
                           </td>
-                        </tr>
-                        {/* フィードバック行: サブレコードは非表示（メインのみ編集可能） */}
-                        {!isSubRecord && (
-                        <tr className={`border-b ${disabledClass}`}>
+                          {/* メモ列（分析考え方 / 結合理由） */}
+                          <td rowSpan={isSubRecord ? 1 : 2} className={`px-3 py-1 align-top ${borderBottom} ${isSubRecord ? 'bg-orange-50/30' : 'bg-amber-50/30'}`}>
+                            {isSubRecord ? (
+                              <div >
+                                <div className="text-xs text-orange-700 font-medium whitespace-nowrap pt-1">結合理由:</div>
+                                <textarea
 
-                          <td className={`px-3 py-1 ${getFeedbackCellStyle(state.feedbackTopic, record.analysisTopic)}`}>
-                            <textarea
-                              value={state.feedbackTopic}
-                              onChange={(e) =>
-                                updateEditState(record.id, { feedbackTopic: e.target.value })
-                              }
-                              onBlur={() => handleAutoSave(record.id)}
-                              className="w-full p-1 border border-gray-200 rounded text-xs bg-white"
-                              placeholder="フィードバック..."
-                            />
-                          </td>
-                          <td className={`px-3 py-1 ${getFeedbackCellStyle(state.feedbackStage, record.analysisStage)}`}>
-                            <select
-                              value={state.feedbackStage}
-                              onChange={(e) => {
-                                updateEditState(record.id, { feedbackStage: e.target.value })
-                                // selectはonChangeで即保存
-                                setTimeout(() => handleAutoSave(record.id), 0)
-                              }}
-                              className="w-full p-1 border border-gray-200 rounded text-xs bg-white"
-                            >
-                              <option value="">選択...</option>
-                              {stageOptions.map((opt: string) => (
-                                <option key={opt} value={opt}>
-                                  {opt}
-                                </option>
-                              ))}
-                            </select>
-                          </td>
-                          <td className={`px-3 py-1 ${getFeedbackCellStyle(state.feedbackSentiment, record.analysisSentiment)}`}>
-                            <select
-                              value={state.feedbackSentiment}
-                              onChange={(e) => {
-                                updateEditState(record.id, { feedbackSentiment: e.target.value })
-                                setTimeout(() => handleAutoSave(record.id), 0)
-                              }}
-                              className={`w-full p-1 border border-gray-200 rounded text-xs bg-white ${getSentimentColor(state.feedbackSentiment)}`}
-                            >
-                              <option value="">選択...</option>
-                              {SENTIMENT_OPTIONS.map((opt) => (
-                                <option key={opt} value={opt}>
-                                  {opt}
-                                </option>
-                              ))}
-                            </select>
-                          </td>
-                          <td className={`px-3 py-1 ${getFeedbackCellStyle(state.feedbackGeneralCategory, record.analysisGeneralCategory)}`}>
-                            <R_Stack className="gap-1">
-                              <select
-                                value={state.feedbackGeneralCategory}
-                                onChange={(e) => {
-                                  updateEditState(record.id, { feedbackGeneralCategory: e.target.value, feedbackCategory: '' })
-                                  setTimeout(() => handleAutoSave(record.id), 0)
-                                }}
-                                className="flex-1 p-1 border border-gray-200 rounded text-xs bg-white"
-                              >
-                                <option value="">選択...</option>
-                                {mergedGeneralCategories.map((gc) => (
-                                  <option key={gc.id} value={gc.name}>
-                                    {gc.name}
-                                  </option>
-                                ))}
-                              </select>
-                              <button
-                                type="button"
-                                onClick={() => openCategoryModal('general', record.id)}
-                                className="p-1 text-blue-600 hover:bg-blue-50 rounded"
-                                title="新規一般カテゴリを追加"
-                              >
-                                <Plus className="w-3 h-3" />
-                              </button>
-                            </R_Stack>
-                          </td>
-                          <td className={`px-3 py-1 ${getFeedbackCellStyle(state.feedbackCategory, record.analysisCategory)}`}>
-                            <R_Stack className="gap-1">
-                              <select
-                                value={state.feedbackCategory}
-                                onChange={(e) => {
-                                  updateEditState(record.id, { feedbackCategory: e.target.value })
-                                  setTimeout(() => handleAutoSave(record.id), 0)
-                                }}
-                                className="flex-1 p-1 border border-gray-200 rounded text-xs bg-white"
-                              >
-                                <option value="">選択...</option>
-                                {mergedGeneralCategories
-                                  .find((gc) => gc.name === state.feedbackGeneralCategory)
-                                  ?.categories?.map((c) => (
-                                    <option key={c.id} value={c.name}>
-                                      {c.name}
-                                    </option>
-                                  ))}
-                              </select>
-                              <button
-                                type="button"
-                                onClick={() => openCategoryModal('category', record.id)}
-                                className="p-1 text-blue-600 hover:bg-blue-50 rounded"
-                                title="新規カテゴリを追加"
-                                disabled={!state.feedbackGeneralCategory}
-                              >
-                                <Plus className="w-3 h-3" />
-                              </button>
-                            </R_Stack>
-                          </td>
-                        </tr>
-                        )}
-                        {/* 分析考え方行 / サブレコードの場合は結合コメント表示 */}
-                        {isSubRecord ? (
-                          <tr className={`border-b bg-orange-50/30 ${disabledClass}`}>
-                            <td colSpan={5} className="px-3 py-1">
-                              <div className="flex items-start gap-2">
-                                <span className="text-xs text-orange-700 font-medium whitespace-nowrap pt-1">結合理由:</span>
-                                <input
-                                  type="text"
                                   defaultValue={record.mergeComment || ''}
                                   onBlur={(e) => handleMergeCommentSave(record.id, e.target.value)}
                                   className="flex-1 p-1 border border-orange-200 rounded text-xs bg-white"
                                   placeholder="結合の理由を入力..."
+                                  rows={2}
                                 />
                               </div>
-                            </td>
-                          </tr>
-                        ) : (
-                          <tr className={`border-b bg-amber-50/30 ${disabledClass}`}>
-                            <td colSpan={5} className="px-3 py-1">
-                              <div className="flex items-start gap-2">
-                                <span className="text-xs text-amber-700 font-medium whitespace-nowrap pt-1">分析考え方:</span>
+                            ) : (
+                              <div >
+                                <div className="text-xs text-amber-700 font-medium whitespace-nowrap pt-1">考え方:</div>
                                 <textarea
                                   value={state.reviewerComment?.trim() || ''}
                                   onChange={(e) =>
@@ -1893,9 +1791,119 @@ export default function AnalysisSessionDetailPage() {
                                   onBlur={() => handleAutoSave(record.id)}
                                   className="flex-1 p-1 border border-amber-200 rounded text-xs bg-white resize-none"
                                   placeholder="この分析の考え方やメモを記録..."
-                                  rows={1}
+                                  rows={5}
                                 />
                               </div>
+                            )}
+                          </td>
+                        </tr>
+                        {/* フィードバック行: サブレコードは非表示（メインのみ編集可能） */}
+                        {!isSubRecord && (
+                          <tr className={`${borderBottom} ${disabledClass}`}>
+
+                            <td className={`px-3 py-1 ${getFeedbackCellStyle(state.feedbackTopic, record.analysisTopic)}`}>
+                              <textarea
+                                value={state.feedbackTopic}
+                                onChange={(e) =>
+                                  updateEditState(record.id, { feedbackTopic: e.target.value })
+                                }
+                                onBlur={() => handleAutoSave(record.id)}
+                                className="w-full p-1 border border-gray-200 rounded text-xs bg-white"
+                                placeholder="フィードバック..."
+
+                              />
+                            </td>
+                            <td className={`px-3 py-1 ${getFeedbackCellStyle(state.feedbackStage, record.analysisStage)}`}>
+                              <select
+                                value={state.feedbackStage}
+                                onChange={(e) => {
+                                  updateEditState(record.id, { feedbackStage: e.target.value })
+                                  // selectはonChangeで即保存
+                                  setTimeout(() => handleAutoSave(record.id), 0)
+                                }}
+                                className="w-full p-1 border border-gray-200 rounded text-xs bg-white"
+                              >
+                                <option value="">選択...</option>
+                                {stageOptions.map((opt: string) => (
+                                  <option key={opt} value={opt}>
+                                    {opt}
+                                  </option>
+                                ))}
+                              </select>
+                            </td>
+                            <td className={`px-3 py-1 ${getFeedbackCellStyle(state.feedbackSentiment, record.analysisSentiment)}`}>
+                              <select
+                                value={state.feedbackSentiment}
+                                onChange={(e) => {
+                                  updateEditState(record.id, { feedbackSentiment: e.target.value })
+                                  setTimeout(() => handleAutoSave(record.id), 0)
+                                }}
+                                className={`w-full p-1 border border-gray-200 rounded text-xs bg-white ${getSentimentColor(state.feedbackSentiment)}`}
+                              >
+                                <option value="">選択...</option>
+                                {SENTIMENT_OPTIONS.map((opt) => (
+                                  <option key={opt} value={opt}>
+                                    {opt}
+                                  </option>
+                                ))}
+                              </select>
+                            </td>
+                            <td className={`px-3 py-1 ${getFeedbackCellStyle(state.feedbackGeneralCategory, record.analysisGeneralCategory)}`}>
+                              <R_Stack className="gap-1">
+                                <select
+                                  value={state.feedbackGeneralCategory}
+                                  onChange={(e) => {
+                                    updateEditState(record.id, { feedbackGeneralCategory: e.target.value, feedbackCategory: '' })
+                                    setTimeout(() => handleAutoSave(record.id), 0)
+                                  }}
+                                  className="flex-1 p-1 border border-gray-200 rounded text-xs bg-white"
+                                >
+                                  <option value="">選択...</option>
+                                  {mergedGeneralCategories.map((gc) => (
+                                    <option key={gc.id} value={gc.name}>
+                                      {gc.name}
+                                    </option>
+                                  ))}
+                                </select>
+                                <button
+                                  type="button"
+                                  onClick={() => openCategoryModal('general', record.id)}
+                                  className="p-1 text-blue-600 hover:bg-blue-50 rounded"
+                                  title="新規一般カテゴリを追加"
+                                >
+                                  <Plus className="w-3 h-3" />
+                                </button>
+                              </R_Stack>
+                            </td>
+                            <td className={`px-3 py-1 ${getFeedbackCellStyle(state.feedbackCategory, record.analysisCategory)}`}>
+                              <R_Stack className="gap-1">
+                                <select
+                                  value={state.feedbackCategory}
+                                  onChange={(e) => {
+                                    updateEditState(record.id, { feedbackCategory: e.target.value })
+                                    setTimeout(() => handleAutoSave(record.id), 0)
+                                  }}
+                                  className="flex-1 p-1 border border-gray-200 rounded text-xs bg-white"
+                                >
+                                  <option value="">選択...</option>
+                                  {mergedGeneralCategories
+                                    .find((gc) => gc.name === state.feedbackGeneralCategory)
+                                    ?.categories?.map((c) => (
+                                      <option key={c.id} value={c.name}>
+                                        {c.name}
+                                      </option>
+                                    ))}
+                                </select>
+                                <button
+                                  type="button"
+                                  onClick={() => openCategoryModal('category', record.id)}
+                                  className="p-1 text-blue-600 hover:bg-blue-50 rounded"
+                                  title="新規カテゴリを追加"
+                                  disabled={!state.feedbackGeneralCategory}
+                                >
+                                  <Plus className="w-3 h-3" />
+                                </button>
+                              </R_Stack>
                             </td>
                           </tr>
                         )}

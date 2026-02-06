@@ -85,13 +85,15 @@ function EigyoshoCard({ data }: { data: EigyoshoHikakuData }) {
         <th className="text-right font-semibold py-2 px-2">通行料（郵便）</th>
         <th className="text-right font-semibold py-2 px-2">通行料（一般）</th>
         <th className="text-right font-semibold py-2 px-2">運賃</th>
-        <th className="text-right font-semibold py-2 px-2 bg-blue-50">請求額合計</th>
+        <th className="text-right font-semibold py-2 px-2">小計（税抜）</th>
+        <th className="text-right font-semibold py-2 px-2">消費税</th>
+        <th className="text-right font-semibold py-2 px-2 bg-blue-50">請求額合計（税込）</th>
        </tr>
       </thead>
       <tbody>
        {customerSalesRecords.length === 0 ? (
         <tr>
-         <td colSpan={6} className="text-center py-4 text-gray-500">
+         <td colSpan={8} className="text-center py-4 text-gray-500">
           データがありません
          </td>
         </tr>
@@ -109,7 +111,9 @@ function EigyoshoCard({ data }: { data: EigyoshoHikakuData }) {
         <td className="text-right py-2 px-2">{NumHandler.toPrice(grandTotal.postalFee)}</td>
         <td className="text-right py-2 px-2">{NumHandler.toPrice(grandTotal.generalFee)}</td>
         <td className="text-right py-2 px-2">{NumHandler.toPrice(grandTotal.driverFee)}</td>
-        <td className="text-right py-2 px-2 bg-blue-100">{NumHandler.toPrice(grandTotal.totalSales)}</td>
+        <td className="text-right py-2 px-2">{NumHandler.toPrice(grandTotal.totalExclTax)}</td>
+        <td className="text-right py-2 px-2">{NumHandler.toPrice(grandTotal.taxAmount)}</td>
+        <td className="text-right py-2 px-2 bg-blue-100">{NumHandler.toPrice(grandTotal.grandTotal)}</td>
        </tr>
       </tfoot>
      </table>
@@ -123,7 +127,7 @@ function EigyoshoCard({ data }: { data: EigyoshoHikakuData }) {
      <div className="text-right font-semibold">{customerSalesRecords.length}社</div>
      <div className="text-gray-600">総売上:</div>
      <div className="text-right font-bold text-blue-600">
-      ¥{NumHandler.toPrice(grandTotal.totalSales)}
+      ¥{NumHandler.toPrice(grandTotal.grandTotal)}
      </div>
     </div>
    </div>
@@ -141,8 +145,10 @@ function SalesRow({ record }: { record: CustomerSalesRecord }) {
    <td className="text-right py-1 px-2">{NumHandler.toPrice(Number(keyValue.postalFee.cellValue) || 0)}</td>
    <td className="text-right py-1 px-2">{NumHandler.toPrice(Number(keyValue.generalFee.cellValue) || 0)}</td>
    <td className="text-right py-1 px-2">{NumHandler.toPrice(Number(keyValue.driverFee.cellValue) || 0)}</td>
+   <td className="text-right py-1 px-2">{NumHandler.toPrice(Number(keyValue.totalExclTax.cellValue) || 0)}</td>
+   <td className="text-right py-1 px-2">{NumHandler.toPrice(Number(keyValue.taxAmount.cellValue) || 0)}</td>
    <td className="text-right py-1 px-2 bg-blue-50 font-medium">
-    {NumHandler.toPrice(Number(keyValue.totalSales.cellValue) || 0)}
+    {NumHandler.toPrice(Number(keyValue.grandTotal.cellValue) || 0)}
    </td>
   </tr>
  )

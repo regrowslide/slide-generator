@@ -1,13 +1,13 @@
 'use server'
 
-import { MEIAI_SUM_ORIGIN } from '@app/(apps)/tbm/(lib)/calculation'
+import { MEIAI_SUM_ORIGIN, calculateSalesBySchedules } from '@app/(apps)/tbm/(lib)/calculation'
 import { fetchUnkoMeisaiData } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
 import { tbmTableKeyValue } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
 import { TbmBase, TbmCustomer } from '@prisma/generated/prisma/client'
 import { unkoMeisaiKey } from '@app/(apps)/tbm/(class)/TbmReportCl/cols/createUnkoMeisaiRow'
 import prisma from 'src/lib/prisma'
 
-export type CustomerSalesKey = 'code' | 'customerName' | 'postalFee' | 'generalFee' | 'driverFee' | 'totalSales'
+export type CustomerSalesKey = 'code' | 'customerName' | 'postalFee' | 'generalFee' | 'driverFee' | 'totalExclTax' | 'taxAmount' | 'grandTotal'
 
 export type CustomerSalesRecord = {
   customer: TbmCustomer | null
@@ -23,7 +23,9 @@ export type EigyoshoHikakuData = {
     postalFee: number
     generalFee: number
     driverFee: number
-    totalSales: number
+    totalExclTax: number
+    taxAmount: number
+    grandTotal: number
   }
 }
 
@@ -75,10 +77,14 @@ export const fetchEigyoshoHikakuData = async ({
 
           const MEIAI_SUM = (dataKey: unkoMeisaiKey) => MEIAI_SUM_ORIGIN(schedules, dataKey)
 
+          // 参考値（従来ロジック維持）
           const postalFee = MEIAI_SUM('L_postalFee')
           const generalFee = MEIAI_SUM('N_generalFee')
           const driverFee = MEIAI_SUM('Q_driverFee') + MEIAI_SUM('Q_futaiFee')
-          const totalSales = postalFee + generalFee + driverFee
+
+          // 正式な売上計算（seikyuと同一ロジック）
+          const rawSchedules = schedules.map(s => s.schedule)
+          const sales = calculateSalesBySchedules(rawSchedules)
 
           return {
             customer,
@@ -108,9 +114,19 @@ export const fetchEigyoshoHikakuData = async ({
                 cellValue: driverFee,
                 style: { fontSize: 12, minWidth: widthBase },
               },
-              totalSales: {
-                label: '請求額合計',
-                cellValue: totalSales,
+              totalExclTax: {
+                label: '小計（税抜）',
+                cellValue: sales.totalExclTax,
+                style: { fontSize: 12, minWidth: widthBase },
+              },
+              taxAmount: {
+                label: '消費税',
+                cellValue: sales.taxAmount,
+                style: { fontSize: 12, minWidth: widthBase },
+              },
+              grandTotal: {
+                label: '請求額合計（税込）',
+                cellValue: sales.grandTotal,
                 style: { fontSize: 12, minWidth: widthBase },
               },
             },
@@ -140,10 +156,12 @@ export const fetchEigyoshoHikakuData = async ({
             postalFee: acc.postalFee + (Number(record.keyValue.postalFee.cellValue) || 0),
             generalFee: acc.generalFee + (Number(record.keyValue.generalFee.cellValue) || 0),
             driverFee: acc.driverFee + (Number(record.keyValue.driverFee.cellValue) || 0),
-            totalSales: acc.totalSales + (Number(record.keyValue.totalSales.cellValue) || 0),
+            totalExclTax: acc.totalExclTax + (Number(record.keyValue.totalExclTax.cellValue) || 0),
+            taxAmount: acc.taxAmount + (Number(record.keyValue.taxAmount.cellValue) || 0),
+            grandTotal: acc.grandTotal + (Number(record.keyValue.grandTotal.cellValue) || 0),
           }
         },
-        { postalFee: 0, generalFee: 0, driverFee: 0, totalSales: 0 }
+        { postalFee: 0, generalFee: 0, driverFee: 0, totalExclTax: 0, taxAmount: 0, grandTotal: 0 }
       )
 
       return {

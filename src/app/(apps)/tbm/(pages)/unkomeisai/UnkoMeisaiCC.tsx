@@ -9,6 +9,7 @@ import { formatDate } from '@cm/class/Days/date-utils/formatters'
 import { ImageIcon } from 'lucide-react'
 import { TbmDriveScheduleImage } from '@prisma/generated/prisma/client'
 import { CsvTable } from '@cm/components/styles/common-components/CsvTable/CsvTable'
+import { createCsvTableTotalRow } from '@cm/components/styles/common-components/CsvTable/createCsvTableTotalRow'
 import PlaceHolder from '@cm/components/utils/loader/PlaceHolder'
 import useModal from '@cm/components/utils/modal/useModal'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
@@ -302,8 +303,8 @@ export default function UnkoMeisaiCC({
 
       <div className={` relative`}>
         {filteredList.length === 0 && <PlaceHolder>表示するデータがありません</PlaceHolder>}
-        {CsvTable({
-          records: filteredList.map((row, rowIdx) => {
+        {(() => {
+          const records = filteredList.map((row, rowIdx) => {
             const { keyValue, schedule } = row
 
             const cols = Object.entries(keyValue).filter(([dataKey, item]) => !String(item.label).includes(`CD`))
@@ -388,10 +389,13 @@ export default function UnkoMeisaiCC({
                 }),
               ],
             }
-          }),
-        }).WithWrapper({
-          className: `w-[calc(95vw)] `,
-        })}
+          })
+          return CsvTable({
+            records: [...records, createCsvTableTotalRow(records)],
+          }).WithWrapper({
+            className: `w-[calc(95vw)] `,
+          })
+        })()}
       </div>
     </>
   )

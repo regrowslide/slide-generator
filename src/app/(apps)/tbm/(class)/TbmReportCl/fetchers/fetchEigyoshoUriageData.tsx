@@ -9,18 +9,25 @@ export type eigyoshoRecordKey =
   | `E_totalHighway`
   | `F_postalFee`
   | `G_generalFee`
+  | `H_totalFee`
   | `I_thirtyPercent`
   | `J_highwayMinusFee`
   | `K`
   | `L_highwayExcess`
   | `M_salaryFare`
   | `N_monthlyFare`
-  | `O_monthlySales`
+  | `O_totalExclTax`
+  | `O_taxAmount`
+  | `O_grandTotal`
   | `P_fuelUsage`
   | `Q_fuelCost`
   | `R_carWash`
+  | `S_mileage`
+  | `T`
+  | `U_mileage`
+  | `V_mileage`
 
-import { MEIAI_SUM_ORIGIN, RUISEKI_SUM_ORIGIN } from '@app/(apps)/tbm/(lib)/calculation'
+import { MEIAI_SUM_ORIGIN, RUISEKI_SUM_ORIGIN, calculateSalesBySchedules } from '@app/(apps)/tbm/(lib)/calculation'
 import { getTbmBase_MonthConfig } from '@app/(apps)/tbm/(server-actions)/getBasics'
 
 import { carHistoryKey, fetchRuisekiKyoriKichoData } from '@app/(apps)/tbm/(server-actions)/fetchRuisekiKyoriKichoData'
@@ -79,9 +86,13 @@ export const fetchEigyoshoUriageData = async ({ firstDayOfMonth, whereQuery, tbm
 
     const user = item
 
+    // 参考値（従来ロジック維持）
     const H_GOUKEI_TSUKORYO = MEIAI_SUM(`L_postalFee`) + MEIAI_SUM(`N_generalFee`)
-    const N_monthlyFare = MEIAI_SUM(`Q_driverFee`) + MEIAI_SUM(`Q_futaiFee`)
-    const O_monthlySales = H_GOUKEI_TSUKORYO + N_monthlyFare
+
+    // 正式な売上計算（seikyuと同一ロジック）
+    const rawSchedules = userSchedule.map(s => s.schedule)
+    const sales = calculateSalesBySchedules(rawSchedules)
+
     const width40 = 40
     const width80 = 80
     const widthBase = 120
@@ -136,8 +147,8 @@ export const fetchEigyoshoUriageData = async ({ firstDayOfMonth, whereQuery, tbm
           cellValue: MEIAI_SUM(`N_generalFee`),
         },
         H_totalFee: {
-          label: `合計(通行料)`,
-          cellValue: H_GOUKEI_TSUKORYO,
+          label: `通行料(税抜)`,
+          cellValue: sales.tollExclTax,
           style: { fontSize: 12, minWidth: widthBase },
         },
         I_thirtyPercent: {
@@ -167,12 +178,22 @@ export const fetchEigyoshoUriageData = async ({ firstDayOfMonth, whereQuery, tbm
         },
         N_monthlyFare: {
           label: `当月運賃（円）`,
-          cellValue: N_monthlyFare,
+          cellValue: sales.driverFeeTotal,
           style: { fontSize: 12, minWidth: widthBase },
         },
-        O_monthlySales: {
-          label: `当月売上高`,
-          cellValue: O_monthlySales,
+        O_totalExclTax: {
+          label: `小計（税抜）`,
+          cellValue: sales.totalExclTax,
+          style: { fontSize: 12, minWidth: widthBase },
+        },
+        O_taxAmount: {
+          label: `消費税`,
+          cellValue: sales.taxAmount,
+          style: { fontSize: 12, minWidth: widthBase },
+        },
+        O_grandTotal: {
+          label: `当月売上高（税込）`,
+          cellValue: sales.grandTotal,
           style: { fontSize: 12, minWidth: widthBase },
         },
 

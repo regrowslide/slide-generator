@@ -8,6 +8,7 @@ import { toUtc } from '@cm/class/Days/date-utils/calculations'
 import { formatDate } from '@cm/class/Days/date-utils/formatters'
 import { getInvoiceManualEdit } from './invoiceManualEdit'
 import { DriveScheduleData, getDriveScheduleList } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
+import { getFeeOnDate, calculateRouteGroupSales } from '@app/(apps)/tbm/(lib)/calculation'
 import { Days } from '@cm/class/Days/Days'
 
 // 単価のバリエーションを計算する関数
@@ -223,34 +224,10 @@ export const getInvoiceData = async ({
         {} as Record<number, DriveScheduleData[]>
       )
 
-      // 各スケジュールの料金計算（運賃 + 付帯料金 + 通行料（税抜））
+      // 各便グループの売上計算（共通関数使用）
       const totalAmount = Object.values(schedulesByRouteGroup).reduce((categorySum, routeSchedules) => {
-        // 便グループごとの運賃・付帯料金の合計
-        const routeGroupBaseFee = routeSchedules.reduce((sum, schedule) => {
-          const feeOnDate = schedule.TbmRouteGroup.TbmRouteGroupFee.sort(
-            (a, b) => b.startDate.getTime() - a.startDate.getTime()
-          ).find(fee => fee.startDate <= schedule.date)
-          return sum + (feeOnDate?.driverFee || 0) + (feeOnDate?.futaiFee || 0)
-        }, 0)
-
-        // 便グループごとの通行料計算（月間通行料合計額が設定されている場合はそれを使用）
-        const routeGroup = routeSchedules[0]?.TbmRouteGroup
-        const monthlyConfig = routeGroup?.TbmMonthlyConfigForRouteGroup?.[0]
-        const monthlyTollTotal = monthlyConfig?.monthlyTollTotal || 0
-        const tsukoryoSeikyuGaku = monthlyConfig?.tsukoryoSeikyuGaku || 0
-        const initialTollTotal = monthlyTollTotal + tsukoryoSeikyuGaku
-
-        // 月間通行料合計額が設定されている場合はそれを使用、なければ実績値の合計を使用
-        const totalTollFeeInclTax = initialTollTotal > 0
-          ? initialTollTotal
-          : routeSchedules.reduce((sum, schedule) => {
-            return sum + (schedule.M_postalHighwayFee || 0) + (schedule.O_generalHighwayFee || 0)
-          }, 0)
-
-        // 通行料を税抜に変換
-        const totalTollFeeExclTax = Math.round(totalTollFeeInclTax / (1 + taxRate))
-
-        return categorySum + routeGroupBaseFee + totalTollFeeExclTax
+        const result = calculateRouteGroupSales(routeSchedules)
+        return categorySum + result.totalExclTax
       }, 0)
 
       return {
@@ -309,8 +286,7 @@ export const getInvoiceData = async ({
 
         const taxRate = 0.1
         const feeInfos: FeeInfo[] = sortedSchedules.map(schedule => {
-          const feeSorted = schedule.TbmRouteGroup.TbmRouteGroupFee.sort((a, b) => b.startDate.getTime() - a.startDate.getTime())
-          const feeOnDate = feeSorted.find(fee => schedule.date.getTime() >= fee.startDate.getTime())
+          const feeOnDate = getFeeOnDate(schedule)
 
           // 通行料（税込）を税抜に変換
           const tollFeeInclTax = (schedule.M_postalHighwayFee || 0) + (schedule.O_generalHighwayFee || 0)
