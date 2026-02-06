@@ -38,11 +38,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 修正されたレコードを取得
+    // 修正されたレコードを取得（結合サブレコード含む）
     const modifiedRecords = await prisma.hakobunAnalysisRecord.findMany({
       where: {
         sessionId,
         isModified: true,
+      },
+      include: {
+        mergedRecords: {
+          orderBy: { sortOrder: 'asc' },
+        },
       },
       orderBy: { createdAt: 'asc' },
     })
@@ -62,8 +67,8 @@ export async function POST(request: NextRequest) {
       orderBy: { createdAt: 'desc' },
     })
 
-    // フィードバック事例を整形
-    const feedbackExamples = modifiedRecords.map((record, index) => {
+    // フィードバック事例を整形（結合情報・評価情報含む）
+    const feedbackExamples = modifiedRecords.map((record: any, index: number) => {
       const original = {
         stage: record.analysisStage,
         sentiment: record.analysisSentiment,
@@ -79,13 +84,31 @@ export async function POST(request: NextRequest) {
         topic: record.feedbackTopic || record.analysisTopic,
       }
 
-      return `
+      // 評価情報
+      const evaluationText = record.evaluation
+        ? `評価: ${record.evaluation}${record.evaluation === 'C' ? '（NG - 重点的に分析が必要）' : record.evaluation === 'B' ? '（要注意）' : '（問題なし）'}`
+        : '評価: 未評価'
+
+      // 結合されたサブレコードの情報
+      const mergedRecordsInfo = record.mergedRecords && record.mergedRecords.length > 0
+        ? record.mergedRecords.map((sub: any, subIdx: number) =>
+          `  結合サブ${subIdx + 1}: "${sub.rawText}"${sub.mergeComment ? `（結合理由: ${sub.mergeComment}）` : ''}`
+        ).join('\n')
+        : ''
+
+      let example = `
 【事例${index + 1}】
 原文: ${record.rawText}
+${evaluationText}
 修正前: ステージ=${original.stage}, 感情=${original.sentiment}, 一般カテゴリ=${original.generalCategory}, カテゴリ=${original.category}
 修正後: ステージ=${corrected.stage}, 感情=${corrected.sentiment}, 一般カテゴリ=${corrected.generalCategory}, カテゴリ=${corrected.category}
-レビュアーコメント: ${record.reviewerComment || '（なし）'}
-`.trim()
+レビュアーコメント: ${record.reviewerComment || '（なし）'}`.trim()
+
+      if (mergedRecordsInfo) {
+        example += `\n結合されたレコード:\n${mergedRecordsInfo}`
+      }
+
+      return example
     }).join('\n\n')
 
     // 既存ルールを整形
@@ -124,6 +147,8 @@ ${existingRulesText}
    - High: 頻繁に発生する誤分類パターン、重要なカテゴリ
    - Medium: 時々発生する誤分類パターン
    - Low: 稀なケース、補足的なルール
+6. 評価C（NG）のレコードは特に重点的に分析し、なぜ誤分類が発生したかを明確にルール化してください
+7. 結合されたレコードがある場合、AIが過度に分割しているパターンを検出し、「このような場合は分割せず1つのトピックとして扱う」というルールを生成してください
 
 ## 出力形式
 JSON配列で出力してください。各要素は以下の形式：

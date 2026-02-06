@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { LayoutDashboard, Factory, Mountain, ArrowRight, Monitor, Tablet, Smartphone } from 'lucide-react'
+import { LayoutDashboard, Factory, ArrowRight, Monitor, Tablet, Smartphone } from 'lucide-react'
 
 // ==========================================
 // モック一覧ページ

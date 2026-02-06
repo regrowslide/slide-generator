@@ -498,7 +498,26 @@ export const ModelName = {
   TbmRelatedRouteGroup: 'TbmRelatedRouteGroup',
   TeamSynapseAnalysis: 'TeamSynapseAnalysis',
   ExerciseMaster: 'ExerciseMaster',
-  WorkoutLog: 'WorkoutLog'
+  WorkoutLog: 'WorkoutLog',
+  YamanokaiDepartment: 'YamanokaiDepartment',
+  YamanokaiRole: 'YamanokaiRole',
+  YamanokaiCourse: 'YamanokaiCourse',
+  YamanokaiEquipment: 'YamanokaiEquipment',
+  YamanokaiInsuranceGrade: 'YamanokaiInsuranceGrade',
+  YamanokaiStaminaGrade: 'YamanokaiStaminaGrade',
+  YamanokaiSkillGrade: 'YamanokaiSkillGrade',
+  YamanokaiRockCategory: 'YamanokaiRockCategory',
+  YamanokaiMember: 'YamanokaiMember',
+  YamanokaiMemberRole: 'YamanokaiMemberRole',
+  YamanokaiCourseCompletion: 'YamanokaiCourseCompletion',
+  YamanokaiEvent: 'YamanokaiEvent',
+  YamanokaiEventRequiredCourse: 'YamanokaiEventRequiredCourse',
+  YamanokaiEventPlan: 'YamanokaiEventPlan',
+  YamanokaiEventPlanParticipant: 'YamanokaiEventPlanParticipant',
+  YamanokaiAttendance: 'YamanokaiAttendance',
+  YamanokaiRecord: 'YamanokaiRecord',
+  YamanokaiRecordFile: 'YamanokaiRecordFile',
+  YamanokaiEquipmentLoan: 'YamanokaiEquipmentLoan'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -514,7 +533,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "hakobunIndustry" | "hakobunIndustryGeneralCategory" | "hakobunIndustryCategory" | "hakobunClient" | "hakobunClientStage" | "hakobunCorrection" | "hakobunRule" | "hakobunVoice" | "hakobunAnalysisBox" | "hakobunAnalysisSession" | "hakobunAnalysisRecord" | "kgFacilityMaster" | "kgDietTypeMaster" | "kgDailyMenu" | "kgMealSlot" | "kgMenuRecipe" | "kgRecipeIngredient" | "kgOrder" | "kgOrderLine" | "kgProductionBatch" | "kgProductionItem" | "kgRequiredIngredient" | "keihiExpense" | "keihiAttachment" | "keihiAccountMaster" | "keihiOptionMaster" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "rcIngredientMaster" | "rcRecipe" | "rcRecipeIngredient" | "rcProfitMarginStandard" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "store" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "cronExecutionLog" | "stockConfig" | "stock" | "stockHistory" | "tbmBase" | "tbmRouteGroupCalendar" | "tbmKeihi" | "tbmDriveScheduleImage" | "tbmBase_MonthConfig" | "tbmVehicle" | "tbmFuelCard" | "tbmVehicleMaintenanceRecord" | "tbmRouteGroup" | "tbmRouteGroupFee" | "tbmRouteGroupStandardSalary" | "tbmMonthlyConfigForRouteGroup" | "mid_TbmRouteGroup_TbmCustomer" | "tbmBillingAddress" | "tbmInvoiceDetail" | "tbmCustomer" | "tbmInvoiceManualEdit" | "tbmRefuelHistory" | "tbmCarWashHistory" | "tbmDriveSchedule" | "tbmEtcMeisai" | "etcCsvRaw" | "odometerInput" | "userWorkStatus" | "kyuyoTableRecord" | "tbmRouteGroupShare" | "tbmRelatedRouteGroup" | "teamSynapseAnalysis" | "exerciseMaster" | "workoutLog"
+    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "hakobunIndustry" | "hakobunIndustryGeneralCategory" | "hakobunIndustryCategory" | "hakobunClient" | "hakobunClientStage" | "hakobunCorrection" | "hakobunRule" | "hakobunVoice" | "hakobunAnalysisBox" | "hakobunAnalysisSession" | "hakobunAnalysisRecord" | "kgFacilityMaster" | "kgDietTypeMaster" | "kgDailyMenu" | "kgMealSlot" | "kgMenuRecipe" | "kgRecipeIngredient" | "kgOrder" | "kgOrderLine" | "kgProductionBatch" | "kgProductionItem" | "kgRequiredIngredient" | "keihiExpense" | "keihiAttachment" | "keihiAccountMaster" | "keihiOptionMaster" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "rcIngredientMaster" | "rcRecipe" | "rcRecipeIngredient" | "rcProfitMarginStandard" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "store" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "cronExecutionLog" | "stockConfig" | "stock" | "stockHistory" | "tbmBase" | "tbmRouteGroupCalendar" | "tbmKeihi" | "tbmDriveScheduleImage" | "tbmBase_MonthConfig" | "tbmVehicle" | "tbmFuelCard" | "tbmVehicleMaintenanceRecord" | "tbmRouteGroup" | "tbmRouteGroupFee" | "tbmRouteGroupStandardSalary" | "tbmMonthlyConfigForRouteGroup" | "mid_TbmRouteGroup_TbmCustomer" | "tbmBillingAddress" | "tbmInvoiceDetail" | "tbmCustomer" | "tbmInvoiceManualEdit" | "tbmRefuelHistory" | "tbmCarWashHistory" | "tbmDriveSchedule" | "tbmEtcMeisai" | "etcCsvRaw" | "odometerInput" | "userWorkStatus" | "kyuyoTableRecord" | "tbmRouteGroupShare" | "tbmRelatedRouteGroup" | "teamSynapseAnalysis" | "exerciseMaster" | "workoutLog" | "yamanokaiDepartment" | "yamanokaiRole" | "yamanokaiCourse" | "yamanokaiEquipment" | "yamanokaiInsuranceGrade" | "yamanokaiStaminaGrade" | "yamanokaiSkillGrade" | "yamanokaiRockCategory" | "yamanokaiMember" | "yamanokaiMemberRole" | "yamanokaiCourseCompletion" | "yamanokaiEvent" | "yamanokaiEventRequiredCourse" | "yamanokaiEventPlan" | "yamanokaiEventPlanParticipant" | "yamanokaiAttendance" | "yamanokaiRecord" | "yamanokaiRecordFile" | "yamanokaiEquipmentLoan"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -9028,6 +9047,1412 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    YamanokaiDepartment: {
+      payload: Prisma.$YamanokaiDepartmentPayload<ExtArgs>
+      fields: Prisma.YamanokaiDepartmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YamanokaiDepartmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiDepartmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YamanokaiDepartmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiDepartmentPayload>
+        }
+        findFirst: {
+          args: Prisma.YamanokaiDepartmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiDepartmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YamanokaiDepartmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiDepartmentPayload>
+        }
+        findMany: {
+          args: Prisma.YamanokaiDepartmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiDepartmentPayload>[]
+        }
+        create: {
+          args: Prisma.YamanokaiDepartmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiDepartmentPayload>
+        }
+        createMany: {
+          args: Prisma.YamanokaiDepartmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YamanokaiDepartmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiDepartmentPayload>[]
+        }
+        delete: {
+          args: Prisma.YamanokaiDepartmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiDepartmentPayload>
+        }
+        update: {
+          args: Prisma.YamanokaiDepartmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiDepartmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.YamanokaiDepartmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YamanokaiDepartmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YamanokaiDepartmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiDepartmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.YamanokaiDepartmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiDepartmentPayload>
+        }
+        aggregate: {
+          args: Prisma.YamanokaiDepartmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYamanokaiDepartment>
+        }
+        groupBy: {
+          args: Prisma.YamanokaiDepartmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiDepartmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YamanokaiDepartmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiDepartmentCountAggregateOutputType> | number
+        }
+      }
+    }
+    YamanokaiRole: {
+      payload: Prisma.$YamanokaiRolePayload<ExtArgs>
+      fields: Prisma.YamanokaiRoleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YamanokaiRoleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRolePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YamanokaiRoleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRolePayload>
+        }
+        findFirst: {
+          args: Prisma.YamanokaiRoleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRolePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YamanokaiRoleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRolePayload>
+        }
+        findMany: {
+          args: Prisma.YamanokaiRoleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRolePayload>[]
+        }
+        create: {
+          args: Prisma.YamanokaiRoleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRolePayload>
+        }
+        createMany: {
+          args: Prisma.YamanokaiRoleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YamanokaiRoleCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRolePayload>[]
+        }
+        delete: {
+          args: Prisma.YamanokaiRoleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRolePayload>
+        }
+        update: {
+          args: Prisma.YamanokaiRoleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRolePayload>
+        }
+        deleteMany: {
+          args: Prisma.YamanokaiRoleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YamanokaiRoleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YamanokaiRoleUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRolePayload>[]
+        }
+        upsert: {
+          args: Prisma.YamanokaiRoleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRolePayload>
+        }
+        aggregate: {
+          args: Prisma.YamanokaiRoleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYamanokaiRole>
+        }
+        groupBy: {
+          args: Prisma.YamanokaiRoleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiRoleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YamanokaiRoleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiRoleCountAggregateOutputType> | number
+        }
+      }
+    }
+    YamanokaiCourse: {
+      payload: Prisma.$YamanokaiCoursePayload<ExtArgs>
+      fields: Prisma.YamanokaiCourseFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YamanokaiCourseFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCoursePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YamanokaiCourseFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCoursePayload>
+        }
+        findFirst: {
+          args: Prisma.YamanokaiCourseFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCoursePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YamanokaiCourseFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCoursePayload>
+        }
+        findMany: {
+          args: Prisma.YamanokaiCourseFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCoursePayload>[]
+        }
+        create: {
+          args: Prisma.YamanokaiCourseCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCoursePayload>
+        }
+        createMany: {
+          args: Prisma.YamanokaiCourseCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YamanokaiCourseCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCoursePayload>[]
+        }
+        delete: {
+          args: Prisma.YamanokaiCourseDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCoursePayload>
+        }
+        update: {
+          args: Prisma.YamanokaiCourseUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCoursePayload>
+        }
+        deleteMany: {
+          args: Prisma.YamanokaiCourseDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YamanokaiCourseUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YamanokaiCourseUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCoursePayload>[]
+        }
+        upsert: {
+          args: Prisma.YamanokaiCourseUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCoursePayload>
+        }
+        aggregate: {
+          args: Prisma.YamanokaiCourseAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYamanokaiCourse>
+        }
+        groupBy: {
+          args: Prisma.YamanokaiCourseGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiCourseGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YamanokaiCourseCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiCourseCountAggregateOutputType> | number
+        }
+      }
+    }
+    YamanokaiEquipment: {
+      payload: Prisma.$YamanokaiEquipmentPayload<ExtArgs>
+      fields: Prisma.YamanokaiEquipmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YamanokaiEquipmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YamanokaiEquipmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentPayload>
+        }
+        findFirst: {
+          args: Prisma.YamanokaiEquipmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YamanokaiEquipmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentPayload>
+        }
+        findMany: {
+          args: Prisma.YamanokaiEquipmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentPayload>[]
+        }
+        create: {
+          args: Prisma.YamanokaiEquipmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentPayload>
+        }
+        createMany: {
+          args: Prisma.YamanokaiEquipmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YamanokaiEquipmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentPayload>[]
+        }
+        delete: {
+          args: Prisma.YamanokaiEquipmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentPayload>
+        }
+        update: {
+          args: Prisma.YamanokaiEquipmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.YamanokaiEquipmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YamanokaiEquipmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YamanokaiEquipmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.YamanokaiEquipmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentPayload>
+        }
+        aggregate: {
+          args: Prisma.YamanokaiEquipmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYamanokaiEquipment>
+        }
+        groupBy: {
+          args: Prisma.YamanokaiEquipmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiEquipmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YamanokaiEquipmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiEquipmentCountAggregateOutputType> | number
+        }
+      }
+    }
+    YamanokaiInsuranceGrade: {
+      payload: Prisma.$YamanokaiInsuranceGradePayload<ExtArgs>
+      fields: Prisma.YamanokaiInsuranceGradeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YamanokaiInsuranceGradeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiInsuranceGradePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YamanokaiInsuranceGradeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiInsuranceGradePayload>
+        }
+        findFirst: {
+          args: Prisma.YamanokaiInsuranceGradeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiInsuranceGradePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YamanokaiInsuranceGradeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiInsuranceGradePayload>
+        }
+        findMany: {
+          args: Prisma.YamanokaiInsuranceGradeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiInsuranceGradePayload>[]
+        }
+        create: {
+          args: Prisma.YamanokaiInsuranceGradeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiInsuranceGradePayload>
+        }
+        createMany: {
+          args: Prisma.YamanokaiInsuranceGradeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YamanokaiInsuranceGradeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiInsuranceGradePayload>[]
+        }
+        delete: {
+          args: Prisma.YamanokaiInsuranceGradeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiInsuranceGradePayload>
+        }
+        update: {
+          args: Prisma.YamanokaiInsuranceGradeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiInsuranceGradePayload>
+        }
+        deleteMany: {
+          args: Prisma.YamanokaiInsuranceGradeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YamanokaiInsuranceGradeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YamanokaiInsuranceGradeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiInsuranceGradePayload>[]
+        }
+        upsert: {
+          args: Prisma.YamanokaiInsuranceGradeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiInsuranceGradePayload>
+        }
+        aggregate: {
+          args: Prisma.YamanokaiInsuranceGradeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYamanokaiInsuranceGrade>
+        }
+        groupBy: {
+          args: Prisma.YamanokaiInsuranceGradeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiInsuranceGradeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YamanokaiInsuranceGradeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiInsuranceGradeCountAggregateOutputType> | number
+        }
+      }
+    }
+    YamanokaiStaminaGrade: {
+      payload: Prisma.$YamanokaiStaminaGradePayload<ExtArgs>
+      fields: Prisma.YamanokaiStaminaGradeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YamanokaiStaminaGradeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiStaminaGradePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YamanokaiStaminaGradeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiStaminaGradePayload>
+        }
+        findFirst: {
+          args: Prisma.YamanokaiStaminaGradeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiStaminaGradePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YamanokaiStaminaGradeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiStaminaGradePayload>
+        }
+        findMany: {
+          args: Prisma.YamanokaiStaminaGradeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiStaminaGradePayload>[]
+        }
+        create: {
+          args: Prisma.YamanokaiStaminaGradeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiStaminaGradePayload>
+        }
+        createMany: {
+          args: Prisma.YamanokaiStaminaGradeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YamanokaiStaminaGradeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiStaminaGradePayload>[]
+        }
+        delete: {
+          args: Prisma.YamanokaiStaminaGradeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiStaminaGradePayload>
+        }
+        update: {
+          args: Prisma.YamanokaiStaminaGradeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiStaminaGradePayload>
+        }
+        deleteMany: {
+          args: Prisma.YamanokaiStaminaGradeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YamanokaiStaminaGradeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YamanokaiStaminaGradeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiStaminaGradePayload>[]
+        }
+        upsert: {
+          args: Prisma.YamanokaiStaminaGradeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiStaminaGradePayload>
+        }
+        aggregate: {
+          args: Prisma.YamanokaiStaminaGradeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYamanokaiStaminaGrade>
+        }
+        groupBy: {
+          args: Prisma.YamanokaiStaminaGradeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiStaminaGradeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YamanokaiStaminaGradeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiStaminaGradeCountAggregateOutputType> | number
+        }
+      }
+    }
+    YamanokaiSkillGrade: {
+      payload: Prisma.$YamanokaiSkillGradePayload<ExtArgs>
+      fields: Prisma.YamanokaiSkillGradeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YamanokaiSkillGradeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiSkillGradePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YamanokaiSkillGradeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiSkillGradePayload>
+        }
+        findFirst: {
+          args: Prisma.YamanokaiSkillGradeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiSkillGradePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YamanokaiSkillGradeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiSkillGradePayload>
+        }
+        findMany: {
+          args: Prisma.YamanokaiSkillGradeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiSkillGradePayload>[]
+        }
+        create: {
+          args: Prisma.YamanokaiSkillGradeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiSkillGradePayload>
+        }
+        createMany: {
+          args: Prisma.YamanokaiSkillGradeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YamanokaiSkillGradeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiSkillGradePayload>[]
+        }
+        delete: {
+          args: Prisma.YamanokaiSkillGradeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiSkillGradePayload>
+        }
+        update: {
+          args: Prisma.YamanokaiSkillGradeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiSkillGradePayload>
+        }
+        deleteMany: {
+          args: Prisma.YamanokaiSkillGradeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YamanokaiSkillGradeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YamanokaiSkillGradeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiSkillGradePayload>[]
+        }
+        upsert: {
+          args: Prisma.YamanokaiSkillGradeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiSkillGradePayload>
+        }
+        aggregate: {
+          args: Prisma.YamanokaiSkillGradeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYamanokaiSkillGrade>
+        }
+        groupBy: {
+          args: Prisma.YamanokaiSkillGradeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiSkillGradeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YamanokaiSkillGradeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiSkillGradeCountAggregateOutputType> | number
+        }
+      }
+    }
+    YamanokaiRockCategory: {
+      payload: Prisma.$YamanokaiRockCategoryPayload<ExtArgs>
+      fields: Prisma.YamanokaiRockCategoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YamanokaiRockCategoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRockCategoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YamanokaiRockCategoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRockCategoryPayload>
+        }
+        findFirst: {
+          args: Prisma.YamanokaiRockCategoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRockCategoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YamanokaiRockCategoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRockCategoryPayload>
+        }
+        findMany: {
+          args: Prisma.YamanokaiRockCategoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRockCategoryPayload>[]
+        }
+        create: {
+          args: Prisma.YamanokaiRockCategoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRockCategoryPayload>
+        }
+        createMany: {
+          args: Prisma.YamanokaiRockCategoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YamanokaiRockCategoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRockCategoryPayload>[]
+        }
+        delete: {
+          args: Prisma.YamanokaiRockCategoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRockCategoryPayload>
+        }
+        update: {
+          args: Prisma.YamanokaiRockCategoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRockCategoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.YamanokaiRockCategoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YamanokaiRockCategoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YamanokaiRockCategoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRockCategoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.YamanokaiRockCategoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRockCategoryPayload>
+        }
+        aggregate: {
+          args: Prisma.YamanokaiRockCategoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYamanokaiRockCategory>
+        }
+        groupBy: {
+          args: Prisma.YamanokaiRockCategoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiRockCategoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YamanokaiRockCategoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiRockCategoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    YamanokaiMember: {
+      payload: Prisma.$YamanokaiMemberPayload<ExtArgs>
+      fields: Prisma.YamanokaiMemberFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YamanokaiMemberFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YamanokaiMemberFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberPayload>
+        }
+        findFirst: {
+          args: Prisma.YamanokaiMemberFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YamanokaiMemberFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberPayload>
+        }
+        findMany: {
+          args: Prisma.YamanokaiMemberFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberPayload>[]
+        }
+        create: {
+          args: Prisma.YamanokaiMemberCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberPayload>
+        }
+        createMany: {
+          args: Prisma.YamanokaiMemberCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YamanokaiMemberCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberPayload>[]
+        }
+        delete: {
+          args: Prisma.YamanokaiMemberDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberPayload>
+        }
+        update: {
+          args: Prisma.YamanokaiMemberUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberPayload>
+        }
+        deleteMany: {
+          args: Prisma.YamanokaiMemberDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YamanokaiMemberUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YamanokaiMemberUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberPayload>[]
+        }
+        upsert: {
+          args: Prisma.YamanokaiMemberUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberPayload>
+        }
+        aggregate: {
+          args: Prisma.YamanokaiMemberAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYamanokaiMember>
+        }
+        groupBy: {
+          args: Prisma.YamanokaiMemberGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiMemberGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YamanokaiMemberCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiMemberCountAggregateOutputType> | number
+        }
+      }
+    }
+    YamanokaiMemberRole: {
+      payload: Prisma.$YamanokaiMemberRolePayload<ExtArgs>
+      fields: Prisma.YamanokaiMemberRoleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YamanokaiMemberRoleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberRolePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YamanokaiMemberRoleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberRolePayload>
+        }
+        findFirst: {
+          args: Prisma.YamanokaiMemberRoleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberRolePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YamanokaiMemberRoleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberRolePayload>
+        }
+        findMany: {
+          args: Prisma.YamanokaiMemberRoleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberRolePayload>[]
+        }
+        create: {
+          args: Prisma.YamanokaiMemberRoleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberRolePayload>
+        }
+        createMany: {
+          args: Prisma.YamanokaiMemberRoleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YamanokaiMemberRoleCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberRolePayload>[]
+        }
+        delete: {
+          args: Prisma.YamanokaiMemberRoleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberRolePayload>
+        }
+        update: {
+          args: Prisma.YamanokaiMemberRoleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberRolePayload>
+        }
+        deleteMany: {
+          args: Prisma.YamanokaiMemberRoleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YamanokaiMemberRoleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YamanokaiMemberRoleUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberRolePayload>[]
+        }
+        upsert: {
+          args: Prisma.YamanokaiMemberRoleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiMemberRolePayload>
+        }
+        aggregate: {
+          args: Prisma.YamanokaiMemberRoleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYamanokaiMemberRole>
+        }
+        groupBy: {
+          args: Prisma.YamanokaiMemberRoleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiMemberRoleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YamanokaiMemberRoleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiMemberRoleCountAggregateOutputType> | number
+        }
+      }
+    }
+    YamanokaiCourseCompletion: {
+      payload: Prisma.$YamanokaiCourseCompletionPayload<ExtArgs>
+      fields: Prisma.YamanokaiCourseCompletionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YamanokaiCourseCompletionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCourseCompletionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YamanokaiCourseCompletionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCourseCompletionPayload>
+        }
+        findFirst: {
+          args: Prisma.YamanokaiCourseCompletionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCourseCompletionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YamanokaiCourseCompletionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCourseCompletionPayload>
+        }
+        findMany: {
+          args: Prisma.YamanokaiCourseCompletionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCourseCompletionPayload>[]
+        }
+        create: {
+          args: Prisma.YamanokaiCourseCompletionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCourseCompletionPayload>
+        }
+        createMany: {
+          args: Prisma.YamanokaiCourseCompletionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YamanokaiCourseCompletionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCourseCompletionPayload>[]
+        }
+        delete: {
+          args: Prisma.YamanokaiCourseCompletionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCourseCompletionPayload>
+        }
+        update: {
+          args: Prisma.YamanokaiCourseCompletionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCourseCompletionPayload>
+        }
+        deleteMany: {
+          args: Prisma.YamanokaiCourseCompletionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YamanokaiCourseCompletionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YamanokaiCourseCompletionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCourseCompletionPayload>[]
+        }
+        upsert: {
+          args: Prisma.YamanokaiCourseCompletionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiCourseCompletionPayload>
+        }
+        aggregate: {
+          args: Prisma.YamanokaiCourseCompletionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYamanokaiCourseCompletion>
+        }
+        groupBy: {
+          args: Prisma.YamanokaiCourseCompletionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiCourseCompletionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YamanokaiCourseCompletionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiCourseCompletionCountAggregateOutputType> | number
+        }
+      }
+    }
+    YamanokaiEvent: {
+      payload: Prisma.$YamanokaiEventPayload<ExtArgs>
+      fields: Prisma.YamanokaiEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YamanokaiEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YamanokaiEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPayload>
+        }
+        findFirst: {
+          args: Prisma.YamanokaiEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YamanokaiEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPayload>
+        }
+        findMany: {
+          args: Prisma.YamanokaiEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPayload>[]
+        }
+        create: {
+          args: Prisma.YamanokaiEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPayload>
+        }
+        createMany: {
+          args: Prisma.YamanokaiEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YamanokaiEventCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPayload>[]
+        }
+        delete: {
+          args: Prisma.YamanokaiEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPayload>
+        }
+        update: {
+          args: Prisma.YamanokaiEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.YamanokaiEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YamanokaiEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YamanokaiEventUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPayload>[]
+        }
+        upsert: {
+          args: Prisma.YamanokaiEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPayload>
+        }
+        aggregate: {
+          args: Prisma.YamanokaiEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYamanokaiEvent>
+        }
+        groupBy: {
+          args: Prisma.YamanokaiEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YamanokaiEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiEventCountAggregateOutputType> | number
+        }
+      }
+    }
+    YamanokaiEventRequiredCourse: {
+      payload: Prisma.$YamanokaiEventRequiredCoursePayload<ExtArgs>
+      fields: Prisma.YamanokaiEventRequiredCourseFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YamanokaiEventRequiredCourseFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventRequiredCoursePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YamanokaiEventRequiredCourseFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventRequiredCoursePayload>
+        }
+        findFirst: {
+          args: Prisma.YamanokaiEventRequiredCourseFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventRequiredCoursePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YamanokaiEventRequiredCourseFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventRequiredCoursePayload>
+        }
+        findMany: {
+          args: Prisma.YamanokaiEventRequiredCourseFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventRequiredCoursePayload>[]
+        }
+        create: {
+          args: Prisma.YamanokaiEventRequiredCourseCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventRequiredCoursePayload>
+        }
+        createMany: {
+          args: Prisma.YamanokaiEventRequiredCourseCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YamanokaiEventRequiredCourseCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventRequiredCoursePayload>[]
+        }
+        delete: {
+          args: Prisma.YamanokaiEventRequiredCourseDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventRequiredCoursePayload>
+        }
+        update: {
+          args: Prisma.YamanokaiEventRequiredCourseUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventRequiredCoursePayload>
+        }
+        deleteMany: {
+          args: Prisma.YamanokaiEventRequiredCourseDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YamanokaiEventRequiredCourseUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YamanokaiEventRequiredCourseUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventRequiredCoursePayload>[]
+        }
+        upsert: {
+          args: Prisma.YamanokaiEventRequiredCourseUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventRequiredCoursePayload>
+        }
+        aggregate: {
+          args: Prisma.YamanokaiEventRequiredCourseAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYamanokaiEventRequiredCourse>
+        }
+        groupBy: {
+          args: Prisma.YamanokaiEventRequiredCourseGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiEventRequiredCourseGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YamanokaiEventRequiredCourseCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiEventRequiredCourseCountAggregateOutputType> | number
+        }
+      }
+    }
+    YamanokaiEventPlan: {
+      payload: Prisma.$YamanokaiEventPlanPayload<ExtArgs>
+      fields: Prisma.YamanokaiEventPlanFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YamanokaiEventPlanFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YamanokaiEventPlanFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanPayload>
+        }
+        findFirst: {
+          args: Prisma.YamanokaiEventPlanFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YamanokaiEventPlanFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanPayload>
+        }
+        findMany: {
+          args: Prisma.YamanokaiEventPlanFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanPayload>[]
+        }
+        create: {
+          args: Prisma.YamanokaiEventPlanCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanPayload>
+        }
+        createMany: {
+          args: Prisma.YamanokaiEventPlanCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YamanokaiEventPlanCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanPayload>[]
+        }
+        delete: {
+          args: Prisma.YamanokaiEventPlanDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanPayload>
+        }
+        update: {
+          args: Prisma.YamanokaiEventPlanUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanPayload>
+        }
+        deleteMany: {
+          args: Prisma.YamanokaiEventPlanDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YamanokaiEventPlanUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YamanokaiEventPlanUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanPayload>[]
+        }
+        upsert: {
+          args: Prisma.YamanokaiEventPlanUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanPayload>
+        }
+        aggregate: {
+          args: Prisma.YamanokaiEventPlanAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYamanokaiEventPlan>
+        }
+        groupBy: {
+          args: Prisma.YamanokaiEventPlanGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiEventPlanGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YamanokaiEventPlanCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiEventPlanCountAggregateOutputType> | number
+        }
+      }
+    }
+    YamanokaiEventPlanParticipant: {
+      payload: Prisma.$YamanokaiEventPlanParticipantPayload<ExtArgs>
+      fields: Prisma.YamanokaiEventPlanParticipantFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YamanokaiEventPlanParticipantFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanParticipantPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YamanokaiEventPlanParticipantFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanParticipantPayload>
+        }
+        findFirst: {
+          args: Prisma.YamanokaiEventPlanParticipantFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanParticipantPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YamanokaiEventPlanParticipantFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanParticipantPayload>
+        }
+        findMany: {
+          args: Prisma.YamanokaiEventPlanParticipantFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanParticipantPayload>[]
+        }
+        create: {
+          args: Prisma.YamanokaiEventPlanParticipantCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanParticipantPayload>
+        }
+        createMany: {
+          args: Prisma.YamanokaiEventPlanParticipantCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YamanokaiEventPlanParticipantCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanParticipantPayload>[]
+        }
+        delete: {
+          args: Prisma.YamanokaiEventPlanParticipantDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanParticipantPayload>
+        }
+        update: {
+          args: Prisma.YamanokaiEventPlanParticipantUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanParticipantPayload>
+        }
+        deleteMany: {
+          args: Prisma.YamanokaiEventPlanParticipantDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YamanokaiEventPlanParticipantUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YamanokaiEventPlanParticipantUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanParticipantPayload>[]
+        }
+        upsert: {
+          args: Prisma.YamanokaiEventPlanParticipantUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEventPlanParticipantPayload>
+        }
+        aggregate: {
+          args: Prisma.YamanokaiEventPlanParticipantAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYamanokaiEventPlanParticipant>
+        }
+        groupBy: {
+          args: Prisma.YamanokaiEventPlanParticipantGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiEventPlanParticipantGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YamanokaiEventPlanParticipantCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiEventPlanParticipantCountAggregateOutputType> | number
+        }
+      }
+    }
+    YamanokaiAttendance: {
+      payload: Prisma.$YamanokaiAttendancePayload<ExtArgs>
+      fields: Prisma.YamanokaiAttendanceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YamanokaiAttendanceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiAttendancePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YamanokaiAttendanceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiAttendancePayload>
+        }
+        findFirst: {
+          args: Prisma.YamanokaiAttendanceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiAttendancePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YamanokaiAttendanceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiAttendancePayload>
+        }
+        findMany: {
+          args: Prisma.YamanokaiAttendanceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiAttendancePayload>[]
+        }
+        create: {
+          args: Prisma.YamanokaiAttendanceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiAttendancePayload>
+        }
+        createMany: {
+          args: Prisma.YamanokaiAttendanceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YamanokaiAttendanceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiAttendancePayload>[]
+        }
+        delete: {
+          args: Prisma.YamanokaiAttendanceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiAttendancePayload>
+        }
+        update: {
+          args: Prisma.YamanokaiAttendanceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiAttendancePayload>
+        }
+        deleteMany: {
+          args: Prisma.YamanokaiAttendanceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YamanokaiAttendanceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YamanokaiAttendanceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiAttendancePayload>[]
+        }
+        upsert: {
+          args: Prisma.YamanokaiAttendanceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiAttendancePayload>
+        }
+        aggregate: {
+          args: Prisma.YamanokaiAttendanceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYamanokaiAttendance>
+        }
+        groupBy: {
+          args: Prisma.YamanokaiAttendanceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiAttendanceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YamanokaiAttendanceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiAttendanceCountAggregateOutputType> | number
+        }
+      }
+    }
+    YamanokaiRecord: {
+      payload: Prisma.$YamanokaiRecordPayload<ExtArgs>
+      fields: Prisma.YamanokaiRecordFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YamanokaiRecordFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YamanokaiRecordFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordPayload>
+        }
+        findFirst: {
+          args: Prisma.YamanokaiRecordFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YamanokaiRecordFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordPayload>
+        }
+        findMany: {
+          args: Prisma.YamanokaiRecordFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordPayload>[]
+        }
+        create: {
+          args: Prisma.YamanokaiRecordCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordPayload>
+        }
+        createMany: {
+          args: Prisma.YamanokaiRecordCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YamanokaiRecordCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordPayload>[]
+        }
+        delete: {
+          args: Prisma.YamanokaiRecordDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordPayload>
+        }
+        update: {
+          args: Prisma.YamanokaiRecordUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordPayload>
+        }
+        deleteMany: {
+          args: Prisma.YamanokaiRecordDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YamanokaiRecordUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YamanokaiRecordUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordPayload>[]
+        }
+        upsert: {
+          args: Prisma.YamanokaiRecordUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordPayload>
+        }
+        aggregate: {
+          args: Prisma.YamanokaiRecordAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYamanokaiRecord>
+        }
+        groupBy: {
+          args: Prisma.YamanokaiRecordGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiRecordGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YamanokaiRecordCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiRecordCountAggregateOutputType> | number
+        }
+      }
+    }
+    YamanokaiRecordFile: {
+      payload: Prisma.$YamanokaiRecordFilePayload<ExtArgs>
+      fields: Prisma.YamanokaiRecordFileFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YamanokaiRecordFileFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordFilePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YamanokaiRecordFileFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordFilePayload>
+        }
+        findFirst: {
+          args: Prisma.YamanokaiRecordFileFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordFilePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YamanokaiRecordFileFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordFilePayload>
+        }
+        findMany: {
+          args: Prisma.YamanokaiRecordFileFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordFilePayload>[]
+        }
+        create: {
+          args: Prisma.YamanokaiRecordFileCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordFilePayload>
+        }
+        createMany: {
+          args: Prisma.YamanokaiRecordFileCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YamanokaiRecordFileCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordFilePayload>[]
+        }
+        delete: {
+          args: Prisma.YamanokaiRecordFileDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordFilePayload>
+        }
+        update: {
+          args: Prisma.YamanokaiRecordFileUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordFilePayload>
+        }
+        deleteMany: {
+          args: Prisma.YamanokaiRecordFileDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YamanokaiRecordFileUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YamanokaiRecordFileUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordFilePayload>[]
+        }
+        upsert: {
+          args: Prisma.YamanokaiRecordFileUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiRecordFilePayload>
+        }
+        aggregate: {
+          args: Prisma.YamanokaiRecordFileAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYamanokaiRecordFile>
+        }
+        groupBy: {
+          args: Prisma.YamanokaiRecordFileGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiRecordFileGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YamanokaiRecordFileCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiRecordFileCountAggregateOutputType> | number
+        }
+      }
+    }
+    YamanokaiEquipmentLoan: {
+      payload: Prisma.$YamanokaiEquipmentLoanPayload<ExtArgs>
+      fields: Prisma.YamanokaiEquipmentLoanFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.YamanokaiEquipmentLoanFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentLoanPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.YamanokaiEquipmentLoanFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentLoanPayload>
+        }
+        findFirst: {
+          args: Prisma.YamanokaiEquipmentLoanFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentLoanPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.YamanokaiEquipmentLoanFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentLoanPayload>
+        }
+        findMany: {
+          args: Prisma.YamanokaiEquipmentLoanFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentLoanPayload>[]
+        }
+        create: {
+          args: Prisma.YamanokaiEquipmentLoanCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentLoanPayload>
+        }
+        createMany: {
+          args: Prisma.YamanokaiEquipmentLoanCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.YamanokaiEquipmentLoanCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentLoanPayload>[]
+        }
+        delete: {
+          args: Prisma.YamanokaiEquipmentLoanDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentLoanPayload>
+        }
+        update: {
+          args: Prisma.YamanokaiEquipmentLoanUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentLoanPayload>
+        }
+        deleteMany: {
+          args: Prisma.YamanokaiEquipmentLoanDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.YamanokaiEquipmentLoanUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.YamanokaiEquipmentLoanUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentLoanPayload>[]
+        }
+        upsert: {
+          args: Prisma.YamanokaiEquipmentLoanUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$YamanokaiEquipmentLoanPayload>
+        }
+        aggregate: {
+          args: Prisma.YamanokaiEquipmentLoanAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateYamanokaiEquipmentLoan>
+        }
+        groupBy: {
+          args: Prisma.YamanokaiEquipmentLoanGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiEquipmentLoanGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.YamanokaiEquipmentLoanCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.YamanokaiEquipmentLoanCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -9529,6 +10954,9 @@ export const HakobunAnalysisRecordScalarFieldEnum = {
   isModified: 'isModified',
   reviewerComment: 'reviewerComment',
   isEnabled: 'isEnabled',
+  evaluation: 'evaluation',
+  mergedIntoId: 'mergedIntoId',
+  mergeComment: 'mergeComment',
   sessionId: 'sessionId'
 } as const
 
@@ -11073,6 +12501,335 @@ export const WorkoutLogScalarFieldEnum = {
 export type WorkoutLogScalarFieldEnum = (typeof WorkoutLogScalarFieldEnum)[keyof typeof WorkoutLogScalarFieldEnum]
 
 
+export const YamanokaiDepartmentScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  code: 'code',
+  name: 'name',
+  color: 'color',
+  bgColor: 'bgColor'
+} as const
+
+export type YamanokaiDepartmentScalarFieldEnum = (typeof YamanokaiDepartmentScalarFieldEnum)[keyof typeof YamanokaiDepartmentScalarFieldEnum]
+
+
+export const YamanokaiRoleScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  code: 'code',
+  name: 'name',
+  level: 'level',
+  permissions: 'permissions'
+} as const
+
+export type YamanokaiRoleScalarFieldEnum = (typeof YamanokaiRoleScalarFieldEnum)[keyof typeof YamanokaiRoleScalarFieldEnum]
+
+
+export const YamanokaiCourseScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  description: 'description',
+  prerequisiteIds: 'prerequisiteIds',
+  yamanokaiDepartmentId: 'yamanokaiDepartmentId'
+} as const
+
+export type YamanokaiCourseScalarFieldEnum = (typeof YamanokaiCourseScalarFieldEnum)[keyof typeof YamanokaiCourseScalarFieldEnum]
+
+
+export const YamanokaiEquipmentScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  category: 'category',
+  totalQuantity: 'totalQuantity',
+  notes: 'notes'
+} as const
+
+export type YamanokaiEquipmentScalarFieldEnum = (typeof YamanokaiEquipmentScalarFieldEnum)[keyof typeof YamanokaiEquipmentScalarFieldEnum]
+
+
+export const YamanokaiInsuranceGradeScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  kuchi: 'kuchi',
+  name: 'name',
+  eligibleActivities: 'eligibleActivities'
+} as const
+
+export type YamanokaiInsuranceGradeScalarFieldEnum = (typeof YamanokaiInsuranceGradeScalarFieldEnum)[keyof typeof YamanokaiInsuranceGradeScalarFieldEnum]
+
+
+export const YamanokaiStaminaGradeScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  code: 'code',
+  name: 'name',
+  description: 'description'
+} as const
+
+export type YamanokaiStaminaGradeScalarFieldEnum = (typeof YamanokaiStaminaGradeScalarFieldEnum)[keyof typeof YamanokaiStaminaGradeScalarFieldEnum]
+
+
+export const YamanokaiSkillGradeScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  code: 'code',
+  name: 'name',
+  description: 'description'
+} as const
+
+export type YamanokaiSkillGradeScalarFieldEnum = (typeof YamanokaiSkillGradeScalarFieldEnum)[keyof typeof YamanokaiSkillGradeScalarFieldEnum]
+
+
+export const YamanokaiRockCategoryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  code: 'code',
+  name: 'name',
+  description: 'description'
+} as const
+
+export type YamanokaiRockCategoryScalarFieldEnum = (typeof YamanokaiRockCategoryScalarFieldEnum)[keyof typeof YamanokaiRockCategoryScalarFieldEnum]
+
+
+export const YamanokaiMemberScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  nameKana: 'nameKana',
+  email: 'email',
+  phone: 'phone',
+  address: 'address',
+  birthday: 'birthday',
+  gender: 'gender',
+  bloodType: 'bloodType',
+  insuranceKuchi: 'insuranceKuchi',
+  cocoHeliId: 'cocoHeliId',
+  medicalHistory: 'medicalHistory',
+  emergencyName: 'emergencyName',
+  emergencyPhone: 'emergencyPhone',
+  emergencyRelation: 'emergencyRelation',
+  joinedAt: 'joinedAt',
+  isAdmin: 'isAdmin',
+  isActive: 'isActive',
+  isDeleted: 'isDeleted',
+  yamanokaiDepartmentId: 'yamanokaiDepartmentId',
+  yamanokaiRoleId: 'yamanokaiRoleId'
+} as const
+
+export type YamanokaiMemberScalarFieldEnum = (typeof YamanokaiMemberScalarFieldEnum)[keyof typeof YamanokaiMemberScalarFieldEnum]
+
+
+export const YamanokaiMemberRoleScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  startAt: 'startAt',
+  endAt: 'endAt',
+  yamanokaiMemberId: 'yamanokaiMemberId',
+  yamanokaiRoleId: 'yamanokaiRoleId',
+  yamanokaiDepartmentId: 'yamanokaiDepartmentId'
+} as const
+
+export type YamanokaiMemberRoleScalarFieldEnum = (typeof YamanokaiMemberRoleScalarFieldEnum)[keyof typeof YamanokaiMemberRoleScalarFieldEnum]
+
+
+export const YamanokaiCourseCompletionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  completedAt: 'completedAt',
+  notes: 'notes',
+  yamanokaiMemberId: 'yamanokaiMemberId',
+  yamanokaiCourseId: 'yamanokaiCourseId',
+  yamanokaiEventId: 'yamanokaiEventId'
+} as const
+
+export type YamanokaiCourseCompletionScalarFieldEnum = (typeof YamanokaiCourseCompletionScalarFieldEnum)[keyof typeof YamanokaiCourseCompletionScalarFieldEnum]
+
+
+export const YamanokaiEventScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  title: 'title',
+  mountainName: 'mountainName',
+  altitude: 'altitude',
+  startAt: 'startAt',
+  endAt: 'endAt',
+  deadline: 'deadline',
+  staminaGrade: 'staminaGrade',
+  skillGrade: 'skillGrade',
+  rockCategory: 'rockCategory',
+  requiredInsurance: 'requiredInsurance',
+  meetingPlace: 'meetingPlace',
+  meetingTime: 'meetingTime',
+  course: 'course',
+  capacity: 'capacity',
+  notes: 'notes',
+  status: 'status',
+  isDeleted: 'isDeleted',
+  yamanokaiDepartmentId: 'yamanokaiDepartmentId',
+  clId: 'clId',
+  slId: 'slId'
+} as const
+
+export type YamanokaiEventScalarFieldEnum = (typeof YamanokaiEventScalarFieldEnum)[keyof typeof YamanokaiEventScalarFieldEnum]
+
+
+export const YamanokaiEventRequiredCourseScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  yamanokaiEventId: 'yamanokaiEventId',
+  yamanokaiCourseId: 'yamanokaiCourseId'
+} as const
+
+export type YamanokaiEventRequiredCourseScalarFieldEnum = (typeof YamanokaiEventRequiredCourseScalarFieldEnum)[keyof typeof YamanokaiEventRequiredCourseScalarFieldEnum]
+
+
+export const YamanokaiEventPlanScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  detailedCourse: 'detailedCourse',
+  escapeRoute: 'escapeRoute',
+  emergencyPlan: 'emergencyPlan',
+  equipmentList: 'equipmentList',
+  fileUrl: 'fileUrl',
+  fileName: 'fileName',
+  status: 'status',
+  submittedAt: 'submittedAt',
+  approvedAt: 'approvedAt',
+  isDeleted: 'isDeleted',
+  yamanokaiEventId: 'yamanokaiEventId',
+  approvedBy: 'approvedBy'
+} as const
+
+export type YamanokaiEventPlanScalarFieldEnum = (typeof YamanokaiEventPlanScalarFieldEnum)[keyof typeof YamanokaiEventPlanScalarFieldEnum]
+
+
+export const YamanokaiEventPlanParticipantScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  role: 'role',
+  name: 'name',
+  birthday: 'birthday',
+  gender: 'gender',
+  insuranceKuchi: 'insuranceKuchi',
+  bloodType: 'bloodType',
+  address: 'address',
+  phone: 'phone',
+  emergencyName: 'emergencyName',
+  emergencyPhone: 'emergencyPhone',
+  emergencyRelation: 'emergencyRelation',
+  medicalHistory: 'medicalHistory',
+  cocoHeliId: 'cocoHeliId',
+  yamanokaiEventPlanId: 'yamanokaiEventPlanId',
+  yamanokaiMemberId: 'yamanokaiMemberId'
+} as const
+
+export type YamanokaiEventPlanParticipantScalarFieldEnum = (typeof YamanokaiEventPlanParticipantScalarFieldEnum)[keyof typeof YamanokaiEventPlanParticipantScalarFieldEnum]
+
+
+export const YamanokaiAttendanceScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  status: 'status',
+  comment: 'comment',
+  isDeleted: 'isDeleted',
+  yamanokaiEventId: 'yamanokaiEventId',
+  yamanokaiMemberId: 'yamanokaiMemberId'
+} as const
+
+export type YamanokaiAttendanceScalarFieldEnum = (typeof YamanokaiAttendanceScalarFieldEnum)[keyof typeof YamanokaiAttendanceScalarFieldEnum]
+
+
+export const YamanokaiRecordScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  title: 'title',
+  recordedAt: 'recordedAt',
+  weather: 'weather',
+  participants: 'participants',
+  status: 'status',
+  submittedAt: 'submittedAt',
+  publishedAt: 'publishedAt',
+  isDeleted: 'isDeleted',
+  yamanokaiEventId: 'yamanokaiEventId',
+  authorId: 'authorId'
+} as const
+
+export type YamanokaiRecordScalarFieldEnum = (typeof YamanokaiRecordScalarFieldEnum)[keyof typeof YamanokaiRecordScalarFieldEnum]
+
+
+export const YamanokaiRecordFileScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  fileUrl: 'fileUrl',
+  fileName: 'fileName',
+  fileType: 'fileType',
+  fileSize: 'fileSize',
+  mimeType: 'mimeType',
+  description: 'description',
+  isDeleted: 'isDeleted',
+  yamanokaiRecordId: 'yamanokaiRecordId'
+} as const
+
+export type YamanokaiRecordFileScalarFieldEnum = (typeof YamanokaiRecordFileScalarFieldEnum)[keyof typeof YamanokaiRecordFileScalarFieldEnum]
+
+
+export const YamanokaiEquipmentLoanScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  quantity: 'quantity',
+  loanAt: 'loanAt',
+  dueAt: 'dueAt',
+  returnedAt: 'returnedAt',
+  status: 'status',
+  notes: 'notes',
+  isDeleted: 'isDeleted',
+  yamanokaiEquipmentId: 'yamanokaiEquipmentId',
+  yamanokaiMemberId: 'yamanokaiMemberId',
+  yamanokaiEventId: 'yamanokaiEventId'
+} as const
+
+export type YamanokaiEquipmentLoanScalarFieldEnum = (typeof YamanokaiEquipmentLoanScalarFieldEnum)[keyof typeof YamanokaiEquipmentLoanScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -11420,6 +13177,25 @@ export type GlobalOmitConfig = {
   teamSynapseAnalysis?: Prisma.TeamSynapseAnalysisOmit
   exerciseMaster?: Prisma.ExerciseMasterOmit
   workoutLog?: Prisma.WorkoutLogOmit
+  yamanokaiDepartment?: Prisma.YamanokaiDepartmentOmit
+  yamanokaiRole?: Prisma.YamanokaiRoleOmit
+  yamanokaiCourse?: Prisma.YamanokaiCourseOmit
+  yamanokaiEquipment?: Prisma.YamanokaiEquipmentOmit
+  yamanokaiInsuranceGrade?: Prisma.YamanokaiInsuranceGradeOmit
+  yamanokaiStaminaGrade?: Prisma.YamanokaiStaminaGradeOmit
+  yamanokaiSkillGrade?: Prisma.YamanokaiSkillGradeOmit
+  yamanokaiRockCategory?: Prisma.YamanokaiRockCategoryOmit
+  yamanokaiMember?: Prisma.YamanokaiMemberOmit
+  yamanokaiMemberRole?: Prisma.YamanokaiMemberRoleOmit
+  yamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionOmit
+  yamanokaiEvent?: Prisma.YamanokaiEventOmit
+  yamanokaiEventRequiredCourse?: Prisma.YamanokaiEventRequiredCourseOmit
+  yamanokaiEventPlan?: Prisma.YamanokaiEventPlanOmit
+  yamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantOmit
+  yamanokaiAttendance?: Prisma.YamanokaiAttendanceOmit
+  yamanokaiRecord?: Prisma.YamanokaiRecordOmit
+  yamanokaiRecordFile?: Prisma.YamanokaiRecordFileOmit
+  yamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanOmit
 }
 
 /* Types for Logging */

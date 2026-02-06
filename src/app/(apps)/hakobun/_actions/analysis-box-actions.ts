@@ -223,6 +223,11 @@ export const getAnalysisSessionById = async (id: number) => {
       include: {
         records: {
           orderBy: { sortOrder: 'asc' },
+          include: {
+            mergedRecords: {
+              orderBy: { sortOrder: 'asc' },
+            },
+          },
         },
         analysisBox: {
           include: {
@@ -341,6 +346,11 @@ export const getAnalysisRecords = async (params: {
       where: {
         sessionId: params.sessionId,
       },
+      include: {
+        mergedRecords: {
+          orderBy: { sortOrder: 'asc' },
+        },
+      },
       orderBy: { sortOrder: 'asc' },
       take: params.take,
       skip: params.skip,
@@ -376,6 +386,9 @@ export const updateAnalysisRecordFeedback = async (
         feedbackTopic: feedback.feedbackTopic,
         reviewerComment: feedback.reviewerComment,
         isModified: feedback.isModified,
+        ...(feedback.evaluation !== undefined && {
+          evaluation: feedback.evaluation,
+        }),
       },
     })
     return { success: true, data: record }
@@ -405,6 +418,9 @@ export const updateAnalysisRecordsFeedback = async (
             feedbackTopic: update.feedback.feedbackTopic,
             reviewerComment: update.feedback.reviewerComment,
             isModified: update.feedback.isModified,
+            ...(update.feedback.evaluation !== undefined && {
+              evaluation: update.feedback.evaluation,
+            }),
           },
         })
       )
@@ -620,11 +636,20 @@ export const rejectProposedCategory = async (recordId: number) => {
 // ============================================
 
 // SESSION単位のレコード全件取得（CSV出力用）
+// サブレコード（mergedIntoIdがnull以外）を除外
 export const getSessionRecordsForExport = async (sessionId: number) => {
   try {
     const records = await prisma.hakobunAnalysisRecord.findMany({
-      where: { sessionId },
-      orderBy: { sortOrder: 'asc' }, // 画面表示と同じ順序
+      where: {
+        sessionId,
+        mergedIntoId: null, // サブレコードをCSVから除外
+      },
+      include: {
+        mergedRecords: {
+          orderBy: { sortOrder: 'asc' },
+        },
+      },
+      orderBy: { sortOrder: 'asc' },
     })
 
     return { success: true, data: records }
@@ -716,6 +741,11 @@ export const getModifiedRecordsForRuleGeneration = async (sessionId: number) => 
         sessionId,
         isModified: true,
       },
+      include: {
+        mergedRecords: {
+          orderBy: { sortOrder: 'asc' },
+        },
+      },
       orderBy: { createdAt: 'asc' },
     })
 
@@ -725,6 +755,116 @@ export const getModifiedRecordsForRuleGeneration = async (sessionId: number) => 
     return {
       success: false,
       error: error instanceof Error ? error.message : 'レコード取得に失敗しました',
+    }
+  }
+}
+
+// ============================================
+// 行結合・分離
+// ============================================
+
+// レコードを結合（サブレコードをメインに紐づける）
+export const mergeAnalysisRecord = async (
+  recordId: number,
+  mergedIntoId: number,
+  mergeComment?: string
+) => {
+  try {
+    // 結合先レコードが既にサブレコードの場合、そのメインを辿る
+    let targetId = mergedIntoId
+    const targetRecord = await prisma.hakobunAnalysisRecord.findUnique({
+      where: { id: mergedIntoId },
+    })
+    if (targetRecord?.mergedIntoId) {
+      targetId = targetRecord.mergedIntoId
+    }
+
+    // 循環参照防止: 結合先が自分自身でないかチェック
+    if (recordId === targetId) {
+      return { success: false, error: '自分自身に結合することはできません' }
+    }
+
+    // 結合先のmergedRecordsに自分が含まれていないかチェック（循環参照防止）
+    const mySubRecords = await prisma.hakobunAnalysisRecord.findMany({
+      where: { mergedIntoId: recordId },
+      select: { id: true },
+    })
+    if (mySubRecords.some(r => r.id === targetId)) {
+      return { success: false, error: '循環参照になるため結合できません' }
+    }
+
+    const record = await prisma.hakobunAnalysisRecord.update({
+      where: { id: recordId },
+      data: {
+        mergedIntoId: targetId,
+        mergeComment: mergeComment || null,
+      },
+    })
+
+    return { success: true, data: record }
+  } catch (error) {
+    console.error('レコード結合エラー:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'レコードの結合に失敗しました',
+    }
+  }
+}
+
+// レコードの結合を解除
+export const unmergeAnalysisRecord = async (recordId: number) => {
+  try {
+    const record = await prisma.hakobunAnalysisRecord.update({
+      where: { id: recordId },
+      data: {
+        mergedIntoId: null,
+        mergeComment: null,
+      },
+    })
+
+    return { success: true, data: record }
+  } catch (error) {
+    console.error('レコード分離エラー:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'レコードの分離に失敗しました',
+    }
+  }
+}
+
+// ABC評価を更新
+export const updateAnalysisRecordEvaluation = async (
+  recordId: number,
+  evaluation: string | null
+) => {
+  try {
+    const record = await prisma.hakobunAnalysisRecord.update({
+      where: { id: recordId },
+      data: { evaluation },
+    })
+    return { success: true, data: record }
+  } catch (error) {
+    console.error('評価更新エラー:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : '評価の更新に失敗しました',
+    }
+  }
+}
+
+// 結合コメントを更新
+export const updateMergeComment = async (recordId: number, mergeComment: string) => {
+  try {
+    const record = await prisma.hakobunAnalysisRecord.update({
+      where: { id: recordId },
+      data: { mergeComment },
+    })
+    return { success: true, data: record }
+  } catch (error) {
+    console.error('結合コメント更新エラー:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : '結合コメントの更新に失敗しました',
     }
   }
 }

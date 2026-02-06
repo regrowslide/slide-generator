@@ -41,12 +41,19 @@ const SKILL_GRADES = ['なし', '☆', '☆☆', '☆☆☆']
 /** 岩登り区分 */
 const ROCK_CATEGORIES = ['なし', 'A', 'B', 'C']
 
+/** 例会ステータス */
+const EVENT_STATUS = {
+  draft: {id: 'draft', label: '下書き', color: '#6b7280', bgColor: '#f3f4f6'},
+  polished: {id: 'polished', label: '清書', color: '#3b82f6', bgColor: '#dbeafe'},
+  published: {id: 'published', label: '公開済み', color: '#22c55e', bgColor: '#dcfce7'},
+}
+
 /** 出席回答ステータス */
 const ATTENDANCE_STATUS = {
   pending: {id: 'pending', label: '未回答', color: '#6b7280', bgColor: '#f3f4f6'},
   attending: {id: 'attending', label: '出席', color: '#22c55e', bgColor: '#dcfce7'},
   notAttending: {id: 'notAttending', label: '欠席', color: '#ef4444', bgColor: '#fee2e2'},
-  undecided: {id: 'undecided', label: '未定', color: '#eab308', bgColor: '#fef9c3'},
+  undecided: {id: 'undecided', label: '保留', color: '#eab308', bgColor: '#fef9c3'},
 }
 
 /** 記録ステータス */
@@ -57,7 +64,7 @@ const RECORD_STATUS = {
 }
 
 /** 装備カテゴリ */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 const EQUIPMENT_CATEGORIES = {
   tent: {id: 'tent', name: 'テント', icon: '⛺', color: '#22c55e', bgColor: '#dcfce7'},
   rope: {id: 'rope', name: 'ロープ', icon: '🧵', color: '#3b82f6', bgColor: '#dbeafe'},
@@ -68,7 +75,7 @@ const EQUIPMENT_CATEGORIES = {
 }
 
 /** 装備状態 */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 const EQUIPMENT_CONDITIONS = {
   good: {id: 'good', label: '良好', color: '#22c55e', bgColor: '#dcfce7'},
   needsCheck: {id: 'needsCheck', label: '要点検', color: '#eab308', bgColor: '#fef9c3'},
@@ -76,7 +83,7 @@ const EQUIPMENT_CONDITIONS = {
 }
 
 /** 装備ステータス */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 const EQUIPMENT_STATUS = {
   available: {id: 'available', label: '貸出可', color: '#22c55e', bgColor: '#dcfce7'},
   rented: {id: 'rented', label: '貸出中', color: '#3b82f6', bgColor: '#dbeafe'},
@@ -120,6 +127,7 @@ const INITIAL_EVENTS = [
     course: '新神戸駅→市ヶ原→あじさい広場→森林植物園東門→桜谷→摩耶山→上野道→神戸高校',
     deadline: '2026-02-07',
     notes: 'お試し参加可。ゴミ袋・ゴミばさみ持参。雨天決行。',
+    status: 'published',
     isDeleted: false,
     createdAt: '2026-01-15',
   },
@@ -142,6 +150,7 @@ const INITIAL_EVENTS = [
     course: '新穂高温泉→ロープウェイ→西穂高口→西穂山荘(幕営)→西穂高岳→下山',
     deadline: '2026-02-01',
     notes: '山行部アイゼントレ&保険8口以上。車の提供希望。',
+    status: 'draft',
     isDeleted: false,
     createdAt: '2026-01-10',
   },
@@ -164,6 +173,7 @@ const INITIAL_EVENTS = [
     course: '須磨浦公園駅→旗振山→横尾山→須磨アルプス→高取山→鵯越駅',
     deadline: '2026-02-15',
     notes: 'お試し参加可。ヘッドランプ必携。雨天中止。',
+    status: 'polished',
     isDeleted: false,
     createdAt: '2026-01-20',
   },
@@ -186,6 +196,7 @@ const INITIAL_EVENTS = [
     course: '講義形式',
     deadline: '2026-02-01',
     notes: '雪山ハイキング例会に初めて参加される方は必ず受講してください。',
+    status: 'published',
     isDeleted: false,
     createdAt: '2026-01-05',
   },
@@ -208,6 +219,7 @@ const INITIAL_EVENTS = [
     course: '新神戸駅→市ヶ原→新神戸駅',
     deadline: '2026-12-06',
     notes: '会費2000円。食器・箸は必ず持参。',
+    status: 'published',
     isDeleted: false,
     createdAt: '2026-11-01',
   },
@@ -232,9 +244,15 @@ const INITIAL_RECORDS = [
     id: 1,
     eventId: 4,
     title: '雪山ハイキング講座 座学',
+    subtitle: '六甲山',
     date: '2026-02-05',
     weather: '晴れ',
     participants: 'CL 永末康史、新井公子、下垣内福世 計3名',
+    accessInfo: '集合: JR三ノ宮駅 8:30\n移動: 市バス16系統で摩耶ケーブル下まで',
+    courseTime: '8:30 出発\n9:15 摩耶ロープウェー\n10:00 掬星台到着\n10:30 六甲山頂出発\n12:00 昼食\n14:00 下山開始\n16:00 摩耶ロープウェー下駅到着',
+    content: '冬の六甲山で雪山装備の実践講座を行いました。\n\n午前中は座学で雪山の基礎知識、装備の使い方を学び、午後は実際にフィールドで練習しました。天候に恵まれ、参加者全員が安全に講座を修了できました。\n\n初心者の方も多かったですが、経験者のサポートもあり、充実した講座となりました。',
+    courseCondition: '道路状況: 市バスは通常運行\n混雑度: ロープウェーは待ち時間なし\n積雪: 山頂付近で5cm程度',
+    remarks: 'アイゼン装着時の注意点を再確認しました。次回は3月の実践編を予定しています。',
     status: 'published',
     authorId: 4,
     isDeleted: false,
@@ -247,12 +265,12 @@ const INITIAL_RECORD_FILES = [
   {
     id: 1,
     recordId: 1,
-    fileUrl: 'https://docs.google.com/document/d/xxxxx/edit',
-    fileName: '2026-02-05_雪山ハイキング講座座学_記録.docx',
-    fileType: 'google', // "google" | "pdf" | "docx"
-    fileSize: null,
-    mimeType: null,
-    description: '本文',
+    fileUrl: 'https://picsum.photos/400/300?random=1',
+    fileName: '六甲山_山頂.jpg',
+    fileType: 'image',
+    fileSize: 524288,
+    mimeType: 'image/jpeg',
+    description: '山頂からの景色',
     sortOrder: 0,
     isDeleted: false,
     createdAt: '2026-02-06',
@@ -260,13 +278,26 @@ const INITIAL_RECORD_FILES = [
   {
     id: 2,
     recordId: 1,
-    fileUrl: 'https://example.com/uploads/photos.pdf',
-    fileName: '2026-02-05_雪山ハイキング講座座学_写真集.pdf',
-    fileType: 'pdf',
-    fileSize: 2048000,
-    mimeType: 'application/pdf',
-    description: '写真集',
+    fileUrl: 'https://picsum.photos/400/300?random=2',
+    fileName: 'アイゼン装着.jpg',
+    fileType: 'image',
+    fileSize: 612352,
+    mimeType: 'image/jpeg',
+    description: 'アイゼン装着の練習',
     sortOrder: 1,
+    isDeleted: false,
+    createdAt: '2026-02-06',
+  },
+  {
+    id: 3,
+    recordId: 1,
+    fileUrl: 'https://picsum.photos/400/300?random=3',
+    fileName: '集合写真.jpg',
+    fileType: 'image',
+    fileSize: 734208,
+    mimeType: 'image/jpeg',
+    description: '参加者全員の集合写真',
+    sortOrder: 2,
     isDeleted: false,
     createdAt: '2026-02-06',
   },
@@ -447,8 +478,15 @@ export default function YamanokaiMock() {
   const [equipment, setEquipment] = useState(INITIAL_EQUIPMENT)
   const [rentals, setRentals] = useState(INITIAL_RENTALS)
 
-  // 有効なデータのみフィルタ（ソフトデリート対応）
-  const activeEvents = useMemo(() => events.filter(e => !e.isDeleted), [events])
+  // 有効なデータのみフィルタ（ソフトデリート対応 + 一般会員は公開済みのみ）
+  const activeEvents = useMemo(() => {
+    let filtered = events.filter(e => !e.isDeleted)
+    // 一般会員は公開済みのみ表示
+    if (!currentUser?.isAdmin) {
+      filtered = filtered.filter(e => e.status === 'published')
+    }
+    return filtered
+  }, [events, currentUser])
   const activeAttendances = useMemo(() => attendances.filter(a => !a.isDeleted), [attendances])
   const activeRecords = useMemo(() => records.filter(r => !r.isDeleted), [records])
   const activeRecordFiles = useMemo(() => recordFiles.filter(f => !f.isDeleted), [recordFiles])
@@ -757,8 +795,12 @@ function AdminEventList({events, attendances, records, members, onUpdate, onDele
   const [selectedEvent, setSelectedEvent] = useState(null)
   const [editingEvent, setEditingEvent] = useState(null)
   const [filterDept, setFilterDept] = useState('')
+  const [activeTab, setActiveTab] = useState('draft') // draft, polished, published
+  const [selectedForPublish, setSelectedForPublish] = useState([]) // 一括公開用の選択
 
-  const filteredEvents = filterDept ? events.filter(e => e.departmentId === filterDept) : events
+  // タブごとにフィルタ
+  const tabFilteredEvents = events.filter(e => e.status === activeTab)
+  const filteredEvents = filterDept ? tabFilteredEvents.filter(e => e.departmentId === filterDept) : tabFilteredEvents
 
   const sortedEvents = [...filteredEvents].sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
 
@@ -777,20 +819,178 @@ function AdminEventList({events, attendances, records, members, onUpdate, onDele
 
   const getMemberName = id => members.find(m => m.id === id)?.name || ''
 
+  // CSV一括ダウンロード
+  const handleDownloadCSV = () => {
+    const draftEvents = events.filter(e => e.status === 'draft')
+    const headers = [
+      'id',
+      'title',
+      'mountainName',
+      'altitude',
+      'departmentId',
+      'clId',
+      'slId',
+      'startDate',
+      'endDate',
+      'staminaGrade',
+      'skillGrade',
+      'rockCategory',
+      'requiredInsurance',
+      'meetingPlace',
+      'meetingTime',
+      'course',
+      'deadline',
+      'notes',
+      'status',
+    ]
+    const csvContent = [
+      headers.join(','),
+      ...draftEvents.map(e =>
+        headers
+          .map(h => {
+            const value = e[h] ?? ''
+            // カンマやダブルクォートを含む場合はエスケープ
+            if (String(value).includes(',') || String(value).includes('"')) {
+              return `"${String(value).replace(/"/g, '""')}"`
+            }
+            return value
+          })
+          .join(',')
+      ),
+    ].join('\n')
+
+    const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'})
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = `yamanokai_draft_${new Date().toISOString().split('T')[0]}.csv`
+    link.click()
+  }
+
+  // CSVアップロード
+  const handleUploadCSV = e => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = event => {
+      try {
+        const text = event.target.result
+        const lines = text.split('\n').filter(l => l.trim())
+        const headers = lines[0].split(',')
+
+        const updatedEvents = []
+        for (let i = 1; i < lines.length; i++) {
+          const values = lines[i].split(',')
+          const eventData = {}
+          headers.forEach((h, idx) => {
+            let value = values[idx]?.trim() || ''
+            // ダブルクォートのエスケープを解除
+            if (value.startsWith('"') && value.endsWith('"')) {
+              value = value.slice(1, -1).replace(/""/g, '"')
+            }
+            eventData[h] = value === '' ? null : value
+          })
+          // ステータスをpolishedに変更
+          eventData.status = 'polished'
+          updatedEvents.push(eventData)
+        }
+
+        // 既存データを更新
+        updatedEvents.forEach(data => {
+          if (data.id) {
+            onUpdate(Number(data.id), data)
+          }
+        })
+
+        alert(`${updatedEvents.length}件の例会を清書に更新しました`)
+        e.target.value = '' // リセット
+      } catch (error) {
+        alert('CSVの解析に失敗しました: ' + error.message)
+      }
+    }
+    reader.readAsText(file)
+  }
+
+  // 一括公開
+  const handleBulkPublish = () => {
+    if (selectedForPublish.length === 0) {
+      alert('公開する例会を選択してください')
+      return
+    }
+    if (window.confirm(`${selectedForPublish.length}件の例会を一括公開しますか？`)) {
+      selectedForPublish.forEach(eventId => {
+        onUpdate(eventId, {status: 'published'})
+      })
+      setSelectedForPublish([])
+      alert(`${selectedForPublish.length}件の例会を公開しました`)
+    }
+  }
+
+  // チェックボックストグル
+  const toggleSelect = eventId => {
+    setSelectedForPublish(prev => (prev.includes(eventId) ? prev.filter(id => id !== eventId) : [...prev, eventId]))
+  }
+
   return (
     <div className="space-y-4">
-      {/* フィルター */}
+      {/* タブUI */}
+      <Card className="p-0 overflow-hidden">
+        <div className="flex border-b">
+          {Object.values(EVENT_STATUS).map(status => (
+            <button
+              key={status.id}
+              onClick={() => {
+                setActiveTab(status.id)
+                setSelectedForPublish([])
+              }}
+              className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
+                activeTab === status.id
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-white text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              {status.label}（{events.filter(e => e.status === status.id).length}件）
+            </button>
+          ))}
+        </div>
+      </Card>
+
+      {/* フィルターとアクション */}
       <Card className="p-4">
-        <div className="flex items-center gap-4">
-          <label className="text-sm font-medium">部署で絞り込み:</label>
-          <Select
-            value={filterDept}
-            onChange={setFilterDept}
-            placeholder="すべて"
-            options={Object.values(DEPARTMENTS).map(d => ({value: d.id, label: d.name}))}
-            className="w-48"
-          />
-          <span className="text-sm text-gray-500">全{filteredEvents.length}件</span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <label className="text-sm font-medium">部署で絞り込み:</label>
+            <Select
+              value={filterDept}
+              onChange={setFilterDept}
+              placeholder="すべて"
+              options={Object.values(DEPARTMENTS).map(d => ({value: d.id, label: d.name}))}
+              className="w-48"
+            />
+            <span className="text-sm text-gray-500">全{filteredEvents.length}件</span>
+          </div>
+
+          {/* タブごとのアクションボタン */}
+          <div className="flex gap-2">
+            {activeTab === 'draft' && (
+              <>
+                <Button size="sm" variant="secondary" onClick={handleDownloadCSV}>
+                  📥 CSV一括ダウンロード
+                </Button>
+                <label className="cursor-pointer">
+                  <Button size="sm" variant="secondary" as="span">
+                    📤 CSVアップロード
+                  </Button>
+                  <input type="file" accept=".csv" onChange={handleUploadCSV} className="hidden" />
+                </label>
+              </>
+            )}
+            {activeTab === 'polished' && selectedForPublish.length > 0 && (
+              <Button size="sm" variant="success" onClick={handleBulkPublish}>
+                ✅ 選択した{selectedForPublish.length}件を一括公開
+              </Button>
+            )}
+          </div>
         </div>
       </Card>
 
@@ -800,10 +1000,23 @@ function AdminEventList({events, attendances, records, members, onUpdate, onDele
           const dept = DEPARTMENTS[event.departmentId]
           const summary = getAttendanceSummary(event.id)
           const hasRecord = records.some(r => r.eventId === event.id)
+          const isSelected = selectedForPublish.includes(event.id)
 
           return (
             <Card key={event.id} className="p-4 hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between">
+                {/* 清書タブの場合はチェックボックス表示 */}
+                {activeTab === 'polished' && (
+                  <div className="mr-3 pt-1">
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => toggleSelect(event.id)}
+                      className="w-5 h-5 cursor-pointer"
+                    />
+                  </div>
+                )}
+
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <Badge color={dept.color} bgColor={dept.bgColor}>
@@ -837,7 +1050,7 @@ function AdminEventList({events, attendances, records, members, onUpdate, onDele
                   <div className="text-2xl font-bold text-green-600">{summary.attending}</div>
                   <div className="text-xs text-gray-500">出席</div>
                   <div className="text-xs text-gray-400 mt-1">
-                    未回答{summary.noResponse} / 未定{summary.undecided} / 欠席{summary.notAttending}
+                    未回答{summary.noResponse} / 保留{summary.undecided} / 欠席{summary.notAttending}
                   </div>
                 </div>
 
@@ -858,6 +1071,12 @@ function AdminEventList({events, attendances, records, members, onUpdate, onDele
           )
         })}
       </div>
+
+      {sortedEvents.length === 0 && (
+        <Card className="p-8 text-center text-gray-500">
+          <p>該当する例会がありません</p>
+        </Card>
+      )}
 
       {/* 詳細モーダル */}
       <Modal isOpen={!!selectedEvent} onClose={() => setSelectedEvent(null)} title="例会詳細" size="lg">
@@ -1720,34 +1939,12 @@ function RecordDetail({record, files, members}) {
   const getMemberName = id => members.find(m => m.id === id)?.name || ''
   const statusInfo = RECORD_STATUS[record.status]
 
-  const getFileIcon = fileType => {
-    switch (fileType) {
-      case 'google':
-        return '📄'
-      case 'pdf':
-        return '📕'
-      case 'docx':
-        return '📘'
-      default:
-        return '📎'
-    }
-  }
-
-  const getFileTypeName = fileType => {
-    switch (fileType) {
-      case 'google':
-        return 'Google ドキュメント'
-      case 'pdf':
-        return 'PDF'
-      case 'docx':
-        return 'Word'
-      default:
-        return 'ファイル'
-    }
-  }
+  // 画像ファイルのみ抽出
+  const imageFiles = files.filter(f => f.fileType === 'image').slice(0, 4)
 
   return (
     <div className="space-y-4">
+      {/* ヘッダー: ステータス、日付、天候 */}
       <div className="flex items-center gap-2">
         <Badge color={statusInfo.color} bgColor="#f3f4f6">
           {statusInfo.label}
@@ -1757,59 +1954,81 @@ function RecordDetail({record, files, members}) {
         </span>
       </div>
 
-      <h3 className="text-xl font-bold">{record.title}</h3>
-
-      <div className="grid grid-cols-1 gap-3 text-sm">
-        <div>
-          <span className="text-gray-500 font-medium">参加者:</span>
-          <p>{record.participants}</p>
-        </div>
+      {/* タイトル・サブタイトル */}
+      <div>
+        <h3 className="text-2xl font-bold">{record.title}</h3>
+        {record.subtitle && <p className="text-lg text-gray-500 italic mt-1">{record.subtitle}</p>}
       </div>
 
-      {/* 記録ファイル（複数ファイル対応） */}
-      <div className="border rounded-lg p-4 bg-gray-50">
-        <h4 className="text-gray-500 font-medium text-sm mb-3">記録ファイル ({files.length}件)</h4>
-        {files.length > 0 ? (
-          <div className="space-y-2">
-            {files.map(file => (
-              <div key={file.id} className="flex items-center gap-3 bg-white rounded p-3 border">
-                <div className="w-10 h-10 bg-blue-100 rounded flex items-center justify-center">
-                  <span className="text-blue-600 text-lg">{getFileIcon(file.fileType)}</span>
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-sm">{file.fileName}</p>
-                  <div className="flex items-center gap-2 text-xs text-gray-400">
-                    <span>{getFileTypeName(file.fileType)}</span>
-                    {file.description && (
-                      <>
-                        <span>•</span>
-                        <span>{file.description}</span>
-                      </>
-                    )}
-                    {file.fileSize && (
-                      <>
-                        <span>•</span>
-                        <span>{(file.fileSize / 1024 / 1024).toFixed(1)} MB</span>
-                      </>
-                    )}
-                  </div>
-                </div>
-                <a
-                  href={file.fileUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-                >
-                  開く
-                </a>
+      {/* 2カラムレイアウト */}
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* 左カラム: テキスト情報（70%） */}
+        <div className="flex-1 md:w-[70%] space-y-4">
+          {/* 参加者 */}
+          {record.participants && (
+            <div>
+              <h4 className="font-bold text-gray-700 mb-2">■ 参加者</h4>
+              <p className="text-sm whitespace-pre-wrap">{record.participants}</p>
+            </div>
+          )}
+
+          {/* アクセス */}
+          {record.accessInfo && (
+            <div>
+              <h4 className="font-bold text-gray-700 mb-2">■ アクセス</h4>
+              <p className="text-sm whitespace-pre-wrap">{record.accessInfo}</p>
+            </div>
+          )}
+
+          {/* コースタイム */}
+          {record.courseTime && (
+            <div>
+              <h4 className="font-bold text-gray-700 mb-2">■ コースタイム</h4>
+              <p className="text-sm whitespace-pre-wrap">{record.courseTime}</p>
+            </div>
+          )}
+
+          {/* 本文 */}
+          {record.content && (
+            <div>
+              <h4 className="font-bold text-gray-700 mb-2">■ 本文</h4>
+              <p className="text-sm whitespace-pre-wrap">{record.content}</p>
+            </div>
+          )}
+
+          {/* コース状況 */}
+          {record.courseCondition && (
+            <div>
+              <h4 className="font-bold text-gray-700 mb-2">■ コース状況</h4>
+              <p className="text-sm whitespace-pre-wrap">{record.courseCondition}</p>
+            </div>
+          )}
+
+          {/* 特記事項 */}
+          {record.remarks && (
+            <div>
+              <h4 className="font-bold text-gray-700 mb-2">■ 特記事項</h4>
+              <p className="text-sm whitespace-pre-wrap">{record.remarks}</p>
+            </div>
+          )}
+        </div>
+
+        {/* 右カラム: 写真（30%） */}
+        {imageFiles.length > 0 && (
+          <div className="w-full md:w-[30%] space-y-4">
+            {imageFiles.map(image => (
+              <div key={image.id} className="bg-white rounded-lg border overflow-hidden">
+                <img src={image.fileUrl} alt={image.fileName} className="w-full h-48 object-cover" />
+                {image.description && (
+                  <div className="p-2 text-xs text-gray-600 text-center border-t">{image.description}</div>
+                )}
               </div>
             ))}
           </div>
-        ) : (
-          <p className="text-gray-400 text-sm">ファイルが登録されていません</p>
         )}
       </div>
 
+      {/* フッター: 記録者・作成日 */}
       <div className="text-xs text-gray-400 pt-4 border-t">
         記録者: {getMemberName(record.authorId)} / 作成日: {record.createdAt}
       </div>
@@ -1827,20 +2046,22 @@ function RecordForm({initialData, initialFiles = [], events, members, currentUse
     initialData || {
       eventId: '',
       title: '',
+      subtitle: '',
       date: '',
       weather: '',
       participants: '',
+      accessInfo: '',
+      courseTime: '',
+      content: '',
+      courseCondition: '',
+      remarks: '',
       status: 'draft',
       authorId: currentUserId,
     }
   )
 
-  // ファイルリスト状態（複数ファイル対応）
-  const [files, setFiles] = useState(initialFiles)
-  const [newFileType, setNewFileType] = useState('google')
-  const [newFileUrl, setNewFileUrl] = useState('')
-  const [newFileName, setNewFileName] = useState('')
-  const [newFileDescription, setNewFileDescription] = useState('')
+  // 画像ファイルリスト状態（最大4枚）
+  const [images, setImages] = useState(initialFiles.filter(f => f.fileType === 'image'))
 
   const updateForm = (key, value) => setForm(prev => ({...prev, [key]: value}))
 
@@ -1854,42 +2075,40 @@ function RecordForm({initialData, initialFiles = [], events, members, currentUse
     }
   }
 
-  // ファイル追加
-  const handleAddFile = () => {
-    if (!newFileUrl) return
-
-    const newFile = {
-      id: Date.now(), // 一時ID
-      fileUrl: newFileUrl,
-      fileName: newFileName || newFileUrl.split('/').pop() || 'ファイル',
-      fileType: newFileType,
-      fileSize: null,
-      mimeType: newFileType === 'pdf' ? 'application/pdf' : newFileType === 'docx' ? 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' : null,
-      description: newFileDescription,
-      sortOrder: files.length,
+  // 画像アップロードハンドラ
+  const handleImageUpload = e => {
+    const files = Array.from(e.target.files || [])
+    if (images.length + files.length > 4) {
+      alert('写真は最大4枚までアップロードできます')
+      return
     }
-    setFiles(prev => [...prev, newFile])
 
-    // フォームをリセット
-    setNewFileUrl('')
-    setNewFileName('')
-    setNewFileDescription('')
+    files.forEach(file => {
+      const reader = new FileReader()
+      reader.onload = e => {
+        const newImage = {
+          id: Date.now() + Math.random(),
+          fileName: file.name,
+          fileType: 'image',
+          fileUrl: e.target?.result,
+          preview: e.target?.result,
+          fileSize: file.size,
+          mimeType: file.type,
+          description: `写真${images.length + 1}`,
+          sortOrder: images.length,
+        }
+        setImages(prev => [...prev, newImage])
+      }
+      reader.readAsDataURL(file)
+    })
+
+    // input をリセット（同じファイルを再選択可能にする）
+    e.target.value = ''
   }
 
-  // ファイル削除
-  const handleRemoveFile = fileId => {
-    setFiles(prev => prev.filter(f => f.id !== fileId))
-  }
-
-  // ファイルアップロードハンドラ（モック）
-  const handleFileUpload = e => {
-    const file = e.target.files?.[0]
-    if (file) {
-      const fileType = file.name.endsWith('.pdf') ? 'pdf' : 'docx'
-      setNewFileName(file.name)
-      setNewFileUrl(`https://example.com/uploads/${file.name}`)
-      setNewFileType(fileType)
-    }
+  // 画像削除
+  const handleRemoveImage = id => {
+    setImages(prev => prev.filter(img => img.id !== id))
   }
 
   const handleSubmit = e => {
@@ -1900,168 +2119,185 @@ function RecordForm({initialData, initialFiles = [], events, members, currentUse
         eventId: Number(form.eventId),
         authorId: currentUserId,
       },
-      files
+      images
     )
   }
 
-  const isValid = form.eventId && form.title && form.date && files.length > 0
-
-  const getFileIcon = fileType => {
-    switch (fileType) {
-      case 'google':
-        return '📄'
-      case 'pdf':
-        return '📕'
-      case 'docx':
-        return '📘'
-      default:
-        return '📎'
-    }
-  }
+  const isValid =
+    form.eventId &&
+    form.title &&
+    form.date &&
+    form.weather &&
+    form.participants &&
+    form.accessInfo &&
+    form.courseTime &&
+    form.content
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {!initialData && (
-        <FormField label="対象の例会" required>
-          <Select
-            value={form.eventId}
-            onChange={handleEventSelect}
-            placeholder="選択してください"
-            options={events.map(e => ({value: e.id, label: `${formatDate(e.startDate)} ${e.title}`}))}
-          />
-        </FormField>
-      )}
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* 1. 基本情報 */}
+      <div className="border rounded-lg p-4 bg-gray-50">
+        <h4 className="font-medium mb-3 text-gray-700">1. 基本情報</h4>
+        <div className="space-y-4">
+          {!initialData && (
+            <FormField label="対象の例会" required>
+              <Select
+                value={form.eventId}
+                onChange={handleEventSelect}
+                placeholder="選択してください"
+                options={events.map(e => ({value: e.id, label: `${formatDate(e.startDate)} ${e.title}`}))}
+              />
+            </FormField>
+          )}
 
-      <div className="grid grid-cols-2 gap-4">
-        <FormField label="タイトル" required>
-          <Input value={form.title} onChange={v => updateForm('title', v)} />
-        </FormField>
-        <FormField label="日程" required>
-          <Input type="date" value={form.date} onChange={v => updateForm('date', v)} />
-        </FormField>
-        <FormField label="天候">
-          <Input value={form.weather} onChange={v => updateForm('weather', v)} placeholder="例: 晴れ" />
-        </FormField>
-        <FormField label="ステータス">
-          <Select
-            value={form.status}
-            onChange={v => updateForm('status', v)}
-            options={Object.values(RECORD_STATUS).map(s => ({value: s.id, label: s.label}))}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-2">
+              <FormField label="タイトル" required>
+                <Input value={form.title} onChange={v => updateForm('title', v)} placeholder="例: 六甲山ハイキング" />
+              </FormField>
+            </div>
+            <div className="col-span-2">
+              <FormField label="サブタイトル（山名など）">
+                <Input value={form.subtitle} onChange={v => updateForm('subtitle', v)} placeholder="例: 六甲山" />
+              </FormField>
+            </div>
+            <FormField label="日程" required>
+              <Input type="date" value={form.date} onChange={v => updateForm('date', v)} />
+            </FormField>
+            <FormField label="天候" required>
+              <Input value={form.weather} onChange={v => updateForm('weather', v)} placeholder="例: 晴れ" />
+            </FormField>
+            <FormField label="ステータス">
+              <Select
+                value={form.status}
+                onChange={v => updateForm('status', v)}
+                options={Object.values(RECORD_STATUS).map(s => ({value: s.id, label: s.label}))}
+              />
+            </FormField>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. 参加者 */}
+      <div className="border rounded-lg p-4 bg-gray-50">
+        <h4 className="font-medium mb-3 text-gray-700">2. 参加者</h4>
+        <FormField label="参加者" required>
+          <Textarea
+            value={form.participants}
+            onChange={v => updateForm('participants', v)}
+            rows={2}
+            placeholder="CL ○○、SL ○○、△△（会計）... 計○名"
           />
         </FormField>
       </div>
 
-      <FormField label="参加者">
-        <Textarea
-          value={form.participants}
-          onChange={v => updateForm('participants', v)}
-          rows={2}
-          placeholder="CL ○○、SL ○○、△△（会計）... 計○名"
-        />
-      </FormField>
-
-      {/* 記録ファイル登録（複数ファイル対応） */}
+      {/* 3. アクセス・行程 */}
       <div className="border rounded-lg p-4 bg-gray-50">
-        <h4 className="font-medium mb-3">
-          記録ファイル <span className="text-red-500">*</span>
-          <span className="text-sm font-normal text-gray-500 ml-2">（複数登録可）</span>
+        <h4 className="font-medium mb-3 text-gray-700">3. アクセス・行程</h4>
+        <div className="space-y-4">
+          <FormField label="アクセス" required>
+            <Textarea
+              value={form.accessInfo}
+              onChange={v => updateForm('accessInfo', v)}
+              rows={4}
+              placeholder="集合: JR三ノ宮駅 8:30&#10;移動: 市バス16系統で摩耶ケーブル下まで"
+            />
+          </FormField>
+          <FormField label="コースタイム" required>
+            <Textarea
+              value={form.courseTime}
+              onChange={v => updateForm('courseTime', v)}
+              rows={8}
+              placeholder="8:30 出発&#10;9:15 摩耶ロープウェー&#10;10:00 掬星台到着&#10;..."
+            />
+          </FormField>
+        </div>
+      </div>
+
+      {/* 4. 本文 */}
+      <div className="border rounded-lg p-4 bg-gray-50">
+        <h4 className="font-medium mb-3 text-gray-700">4. 本文</h4>
+        <FormField label="本文（山行の様子）" required>
+          <Textarea
+            value={form.content}
+            onChange={v => updateForm('content', v)}
+            rows={15}
+            placeholder="山行の様子を記述してください..."
+          />
+        </FormField>
+      </div>
+
+      {/* 5. 追加情報 */}
+      <div className="border rounded-lg p-4 bg-gray-50">
+        <h4 className="font-medium mb-3 text-gray-700">5. 追加情報</h4>
+        <div className="space-y-4">
+          <FormField label="コース状況">
+            <Textarea
+              value={form.courseCondition}
+              onChange={v => updateForm('courseCondition', v)}
+              rows={4}
+              placeholder="道路状況、混雑度、積雪状況など"
+            />
+          </FormField>
+          <FormField label="特記事項">
+            <Textarea
+              value={form.remarks}
+              onChange={v => updateForm('remarks', v)}
+              rows={4}
+              placeholder="安全情報、ヒヤリハット、次回への申し送りなど"
+            />
+          </FormField>
+        </div>
+      </div>
+
+      {/* 6. 写真アップロード */}
+      <div className="border rounded-lg p-4 bg-gray-50">
+        <h4 className="font-medium mb-3 text-gray-700">
+          6. 写真アップロード
+          <span className="text-sm font-normal text-gray-500 ml-2">（最大4枚、任意）</span>
         </h4>
 
-        {/* 登録済みファイル一覧 */}
-        {files.length > 0 && (
-          <div className="space-y-2 mb-4">
-            {files.map(file => (
-              <div key={file.id} className="flex items-center gap-3 bg-white rounded p-3 border">
-                <span className="text-lg">{getFileIcon(file.fileType)}</span>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">{file.fileName}</p>
-                  {file.description && <p className="text-xs text-gray-400">{file.description}</p>}
+        {/* 登録済み画像プレビュー */}
+        {images.length > 0 && (
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            {images.map(image => (
+              <div key={image.id} className="relative bg-white rounded-lg border overflow-hidden">
+                <img src={image.preview || image.fileUrl} alt={image.fileName} className="w-full h-48 object-cover" />
+                <div className="p-3">
+                  <p className="text-sm font-medium truncate">{image.fileName}</p>
+                  <p className="text-xs text-gray-400">{(image.fileSize / 1024).toFixed(1)} KB</p>
                 </div>
                 <button
                   type="button"
-                  onClick={() => handleRemoveFile(file.id)}
-                  className="text-red-500 hover:text-red-700 text-sm"
+                  onClick={() => handleRemoveImage(image.id)}
+                  className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600"
                 >
-                  削除
+                  ×
                 </button>
               </div>
             ))}
           </div>
         )}
 
-        {/* 新規ファイル追加フォーム */}
-        <div className="bg-white border rounded-lg p-3 space-y-3">
-          <p className="text-sm font-medium text-gray-600">ファイルを追加</p>
-
-          {/* ファイルタイプ選択 */}
-          <div className="flex gap-4">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="newFileType"
-                value="google"
-                checked={newFileType === 'google'}
-                onChange={() => setNewFileType('google')}
-                className="w-4 h-4"
-              />
-              <span className="text-sm">📄 Google Docs</span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="newFileType"
-                value="pdf"
-                checked={newFileType === 'pdf'}
-                onChange={() => setNewFileType('pdf')}
-                className="w-4 h-4"
-              />
-              <span className="text-sm">📕 PDF</span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="newFileType"
-                value="docx"
-                checked={newFileType === 'docx'}
-                onChange={() => setNewFileType('docx')}
-                className="w-4 h-4"
-              />
-              <span className="text-sm">📘 Word</span>
+        {/* 画像アップロード */}
+        {images.length < 4 && (
+          <div className="border-2 border-dashed rounded-lg p-6 text-center hover:bg-gray-50 cursor-pointer">
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleImageUpload}
+              className="hidden"
+              id="image-upload"
+            />
+            <label htmlFor="image-upload" className="cursor-pointer block">
+              <span className="text-4xl mb-2 block">📷</span>
+              <span className="text-sm text-gray-600">
+                クリックして画像を選択（{images.length}/4枚）
+              </span>
             </label>
           </div>
-
-          {newFileType === 'google' ? (
-            <div className="space-y-2">
-              <Input value={newFileUrl} onChange={setNewFileUrl} placeholder="Google ドキュメントのURL" />
-              <Input value={newFileName} onChange={setNewFileName} placeholder="表示名（任意）" />
-            </div>
-          ) : (
-            <div className="space-y-2">
-              <div className="border-2 border-dashed rounded-lg p-3 text-center hover:bg-gray-50 cursor-pointer">
-                <input
-                  type="file"
-                  accept={newFileType === 'pdf' ? '.pdf' : '.docx,.doc'}
-                  onChange={handleFileUpload}
-                  className="hidden"
-                  id="file-upload-new"
-                />
-                <label htmlFor="file-upload-new" className="cursor-pointer block">
-                  {newFileUrl ? (
-                    <span className="text-sm">{newFileName}</span>
-                  ) : (
-                    <span className="text-sm text-gray-500">クリックしてファイルを選択</span>
-                  )}
-                </label>
-              </div>
-            </div>
-          )}
-
-          <Input value={newFileDescription} onChange={setNewFileDescription} placeholder="説明（例: 本文、写真集）" />
-
-          <Button type="button" variant="secondary" size="sm" onClick={handleAddFile} disabled={!newFileUrl}>
-            + ファイルを追加
-          </Button>
-        </div>
+        )}
       </div>
 
       <div className="flex justify-end gap-2">

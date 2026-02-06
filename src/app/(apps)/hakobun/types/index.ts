@@ -11,6 +11,9 @@ export type PosiNegaType = 'positive' | 'negative' | 'neutral'
 // --- 優先度 ---
 export type PriorityType = 'High' | 'Medium' | 'Low'
 
+// --- ABC評価 ---
+export type EvaluationType = 'A' | 'B' | 'C'
+
 // --- 修正データペア ---
 export interface HakobunCorrection {
   id: number
@@ -385,6 +388,12 @@ export interface HakobunAnalysisRecord {
   reviewerComment?: string | null
   // 有効/無効フラグ
   isEnabled: boolean
+  // ABC評価
+  evaluation?: EvaluationType | null
+  // 行結合
+  mergedIntoId?: number | null
+  mergeComment?: string | null
+  mergedRecords?: HakobunAnalysisRecord[]
   sessionId: number
 }
 
@@ -423,6 +432,7 @@ export interface UpdateAnalysisRecordFeedbackInput {
   feedbackTopic?: string
   reviewerComment?: string
   isModified: boolean
+  evaluation?: EvaluationType | null
 }
 
 // ============================================

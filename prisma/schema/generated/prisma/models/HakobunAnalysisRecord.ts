@@ -29,12 +29,14 @@ export type AggregateHakobunAnalysisRecord = {
 export type HakobunAnalysisRecordAvgAggregateOutputType = {
   id: number | null
   sortOrder: number | null
+  mergedIntoId: number | null
   sessionId: number | null
 }
 
 export type HakobunAnalysisRecordSumAggregateOutputType = {
   id: number | null
   sortOrder: number | null
+  mergedIntoId: number | null
   sessionId: number | null
 }
 
@@ -60,6 +62,9 @@ export type HakobunAnalysisRecordMinAggregateOutputType = {
   isModified: boolean | null
   reviewerComment: string | null
   isEnabled: boolean | null
+  evaluation: string | null
+  mergedIntoId: number | null
+  mergeComment: string | null
   sessionId: number | null
 }
 
@@ -85,6 +90,9 @@ export type HakobunAnalysisRecordMaxAggregateOutputType = {
   isModified: boolean | null
   reviewerComment: string | null
   isEnabled: boolean | null
+  evaluation: string | null
+  mergedIntoId: number | null
+  mergeComment: string | null
   sessionId: number | null
 }
 
@@ -110,6 +118,9 @@ export type HakobunAnalysisRecordCountAggregateOutputType = {
   isModified: number
   reviewerComment: number
   isEnabled: number
+  evaluation: number
+  mergedIntoId: number
+  mergeComment: number
   sessionId: number
   _all: number
 }
@@ -118,12 +129,14 @@ export type HakobunAnalysisRecordCountAggregateOutputType = {
 export type HakobunAnalysisRecordAvgAggregateInputType = {
   id?: true
   sortOrder?: true
+  mergedIntoId?: true
   sessionId?: true
 }
 
 export type HakobunAnalysisRecordSumAggregateInputType = {
   id?: true
   sortOrder?: true
+  mergedIntoId?: true
   sessionId?: true
 }
 
@@ -149,6 +162,9 @@ export type HakobunAnalysisRecordMinAggregateInputType = {
   isModified?: true
   reviewerComment?: true
   isEnabled?: true
+  evaluation?: true
+  mergedIntoId?: true
+  mergeComment?: true
   sessionId?: true
 }
 
@@ -174,6 +190,9 @@ export type HakobunAnalysisRecordMaxAggregateInputType = {
   isModified?: true
   reviewerComment?: true
   isEnabled?: true
+  evaluation?: true
+  mergedIntoId?: true
+  mergeComment?: true
   sessionId?: true
 }
 
@@ -199,6 +218,9 @@ export type HakobunAnalysisRecordCountAggregateInputType = {
   isModified?: true
   reviewerComment?: true
   isEnabled?: true
+  evaluation?: true
+  mergedIntoId?: true
+  mergeComment?: true
   sessionId?: true
   _all?: true
 }
@@ -311,6 +333,9 @@ export type HakobunAnalysisRecordGroupByOutputType = {
   isModified: boolean
   reviewerComment: string | null
   isEnabled: boolean
+  evaluation: string | null
+  mergedIntoId: number | null
+  mergeComment: string | null
   sessionId: number
   _count: HakobunAnalysisRecordCountAggregateOutputType | null
   _avg: HakobunAnalysisRecordAvgAggregateOutputType | null
@@ -359,7 +384,12 @@ export type HakobunAnalysisRecordWhereInput = {
   isModified?: Prisma.BoolFilter<"HakobunAnalysisRecord"> | boolean
   reviewerComment?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   isEnabled?: Prisma.BoolFilter<"HakobunAnalysisRecord"> | boolean
+  evaluation?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
+  mergedIntoId?: Prisma.IntNullableFilter<"HakobunAnalysisRecord"> | number | null
+  mergeComment?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   sessionId?: Prisma.IntFilter<"HakobunAnalysisRecord"> | number
+  mergedInto?: Prisma.XOR<Prisma.HakobunAnalysisRecordNullableScalarRelationFilter, Prisma.HakobunAnalysisRecordWhereInput> | null
+  mergedRecords?: Prisma.HakobunAnalysisRecordListRelationFilter
   session?: Prisma.XOR<Prisma.HakobunAnalysisSessionScalarRelationFilter, Prisma.HakobunAnalysisSessionWhereInput>
 }
 
@@ -385,7 +415,12 @@ export type HakobunAnalysisRecordOrderByWithRelationInput = {
   isModified?: Prisma.SortOrder
   reviewerComment?: Prisma.SortOrderInput | Prisma.SortOrder
   isEnabled?: Prisma.SortOrder
+  evaluation?: Prisma.SortOrderInput | Prisma.SortOrder
+  mergedIntoId?: Prisma.SortOrderInput | Prisma.SortOrder
+  mergeComment?: Prisma.SortOrderInput | Prisma.SortOrder
   sessionId?: Prisma.SortOrder
+  mergedInto?: Prisma.HakobunAnalysisRecordOrderByWithRelationInput
+  mergedRecords?: Prisma.HakobunAnalysisRecordOrderByRelationAggregateInput
   session?: Prisma.HakobunAnalysisSessionOrderByWithRelationInput
 }
 
@@ -414,7 +449,12 @@ export type HakobunAnalysisRecordWhereUniqueInput = Prisma.AtLeast<{
   isModified?: Prisma.BoolFilter<"HakobunAnalysisRecord"> | boolean
   reviewerComment?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   isEnabled?: Prisma.BoolFilter<"HakobunAnalysisRecord"> | boolean
+  evaluation?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
+  mergedIntoId?: Prisma.IntNullableFilter<"HakobunAnalysisRecord"> | number | null
+  mergeComment?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   sessionId?: Prisma.IntFilter<"HakobunAnalysisRecord"> | number
+  mergedInto?: Prisma.XOR<Prisma.HakobunAnalysisRecordNullableScalarRelationFilter, Prisma.HakobunAnalysisRecordWhereInput> | null
+  mergedRecords?: Prisma.HakobunAnalysisRecordListRelationFilter
   session?: Prisma.XOR<Prisma.HakobunAnalysisSessionScalarRelationFilter, Prisma.HakobunAnalysisSessionWhereInput>
 }, "id">
 
@@ -440,6 +480,9 @@ export type HakobunAnalysisRecordOrderByWithAggregationInput = {
   isModified?: Prisma.SortOrder
   reviewerComment?: Prisma.SortOrderInput | Prisma.SortOrder
   isEnabled?: Prisma.SortOrder
+  evaluation?: Prisma.SortOrderInput | Prisma.SortOrder
+  mergedIntoId?: Prisma.SortOrderInput | Prisma.SortOrder
+  mergeComment?: Prisma.SortOrderInput | Prisma.SortOrder
   sessionId?: Prisma.SortOrder
   _count?: Prisma.HakobunAnalysisRecordCountOrderByAggregateInput
   _avg?: Prisma.HakobunAnalysisRecordAvgOrderByAggregateInput
@@ -473,6 +516,9 @@ export type HakobunAnalysisRecordScalarWhereWithAggregatesInput = {
   isModified?: Prisma.BoolWithAggregatesFilter<"HakobunAnalysisRecord"> | boolean
   reviewerComment?: Prisma.StringNullableWithAggregatesFilter<"HakobunAnalysisRecord"> | string | null
   isEnabled?: Prisma.BoolWithAggregatesFilter<"HakobunAnalysisRecord"> | boolean
+  evaluation?: Prisma.StringNullableWithAggregatesFilter<"HakobunAnalysisRecord"> | string | null
+  mergedIntoId?: Prisma.IntNullableWithAggregatesFilter<"HakobunAnalysisRecord"> | number | null
+  mergeComment?: Prisma.StringNullableWithAggregatesFilter<"HakobunAnalysisRecord"> | string | null
   sessionId?: Prisma.IntWithAggregatesFilter<"HakobunAnalysisRecord"> | number
 }
 
@@ -497,6 +543,10 @@ export type HakobunAnalysisRecordCreateInput = {
   isModified?: boolean
   reviewerComment?: string | null
   isEnabled?: boolean
+  evaluation?: string | null
+  mergeComment?: string | null
+  mergedInto?: Prisma.HakobunAnalysisRecordCreateNestedOneWithoutMergedRecordsInput
+  mergedRecords?: Prisma.HakobunAnalysisRecordCreateNestedManyWithoutMergedIntoInput
   session: Prisma.HakobunAnalysisSessionCreateNestedOneWithoutRecordsInput
 }
 
@@ -522,7 +572,11 @@ export type HakobunAnalysisRecordUncheckedCreateInput = {
   isModified?: boolean
   reviewerComment?: string | null
   isEnabled?: boolean
+  evaluation?: string | null
+  mergedIntoId?: number | null
+  mergeComment?: string | null
   sessionId: number
+  mergedRecords?: Prisma.HakobunAnalysisRecordUncheckedCreateNestedManyWithoutMergedIntoInput
 }
 
 export type HakobunAnalysisRecordUpdateInput = {
@@ -546,6 +600,10 @@ export type HakobunAnalysisRecordUpdateInput = {
   isModified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  evaluation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mergeComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mergedInto?: Prisma.HakobunAnalysisRecordUpdateOneWithoutMergedRecordsNestedInput
+  mergedRecords?: Prisma.HakobunAnalysisRecordUpdateManyWithoutMergedIntoNestedInput
   session?: Prisma.HakobunAnalysisSessionUpdateOneRequiredWithoutRecordsNestedInput
 }
 
@@ -571,7 +629,11 @@ export type HakobunAnalysisRecordUncheckedUpdateInput = {
   isModified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  evaluation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mergedIntoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mergeComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessionId?: Prisma.IntFieldUpdateOperationsInput | number
+  mergedRecords?: Prisma.HakobunAnalysisRecordUncheckedUpdateManyWithoutMergedIntoNestedInput
 }
 
 export type HakobunAnalysisRecordCreateManyInput = {
@@ -596,6 +658,9 @@ export type HakobunAnalysisRecordCreateManyInput = {
   isModified?: boolean
   reviewerComment?: string | null
   isEnabled?: boolean
+  evaluation?: string | null
+  mergedIntoId?: number | null
+  mergeComment?: string | null
   sessionId: number
 }
 
@@ -620,6 +685,8 @@ export type HakobunAnalysisRecordUpdateManyMutationInput = {
   isModified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  evaluation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mergeComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type HakobunAnalysisRecordUncheckedUpdateManyInput = {
@@ -644,6 +711,9 @@ export type HakobunAnalysisRecordUncheckedUpdateManyInput = {
   isModified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  evaluation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mergedIntoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mergeComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sessionId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -655,6 +725,11 @@ export type HakobunAnalysisRecordListRelationFilter = {
 
 export type HakobunAnalysisRecordOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type HakobunAnalysisRecordNullableScalarRelationFilter = {
+  is?: Prisma.HakobunAnalysisRecordWhereInput | null
+  isNot?: Prisma.HakobunAnalysisRecordWhereInput | null
 }
 
 export type HakobunAnalysisRecordCountOrderByAggregateInput = {
@@ -679,12 +754,16 @@ export type HakobunAnalysisRecordCountOrderByAggregateInput = {
   isModified?: Prisma.SortOrder
   reviewerComment?: Prisma.SortOrder
   isEnabled?: Prisma.SortOrder
+  evaluation?: Prisma.SortOrder
+  mergedIntoId?: Prisma.SortOrder
+  mergeComment?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
 }
 
 export type HakobunAnalysisRecordAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
+  mergedIntoId?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
 }
 
@@ -710,6 +789,9 @@ export type HakobunAnalysisRecordMaxOrderByAggregateInput = {
   isModified?: Prisma.SortOrder
   reviewerComment?: Prisma.SortOrder
   isEnabled?: Prisma.SortOrder
+  evaluation?: Prisma.SortOrder
+  mergedIntoId?: Prisma.SortOrder
+  mergeComment?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
 }
 
@@ -735,12 +817,16 @@ export type HakobunAnalysisRecordMinOrderByAggregateInput = {
   isModified?: Prisma.SortOrder
   reviewerComment?: Prisma.SortOrder
   isEnabled?: Prisma.SortOrder
+  evaluation?: Prisma.SortOrder
+  mergedIntoId?: Prisma.SortOrder
+  mergeComment?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
 }
 
 export type HakobunAnalysisRecordSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
+  mergedIntoId?: Prisma.SortOrder
   sessionId?: Prisma.SortOrder
 }
 
@@ -786,6 +872,64 @@ export type HakobunAnalysisRecordUncheckedUpdateManyWithoutSessionNestedInput = 
   deleteMany?: Prisma.HakobunAnalysisRecordScalarWhereInput | Prisma.HakobunAnalysisRecordScalarWhereInput[]
 }
 
+export type HakobunAnalysisRecordCreateNestedOneWithoutMergedRecordsInput = {
+  create?: Prisma.XOR<Prisma.HakobunAnalysisRecordCreateWithoutMergedRecordsInput, Prisma.HakobunAnalysisRecordUncheckedCreateWithoutMergedRecordsInput>
+  connectOrCreate?: Prisma.HakobunAnalysisRecordCreateOrConnectWithoutMergedRecordsInput
+  connect?: Prisma.HakobunAnalysisRecordWhereUniqueInput
+}
+
+export type HakobunAnalysisRecordCreateNestedManyWithoutMergedIntoInput = {
+  create?: Prisma.XOR<Prisma.HakobunAnalysisRecordCreateWithoutMergedIntoInput, Prisma.HakobunAnalysisRecordUncheckedCreateWithoutMergedIntoInput> | Prisma.HakobunAnalysisRecordCreateWithoutMergedIntoInput[] | Prisma.HakobunAnalysisRecordUncheckedCreateWithoutMergedIntoInput[]
+  connectOrCreate?: Prisma.HakobunAnalysisRecordCreateOrConnectWithoutMergedIntoInput | Prisma.HakobunAnalysisRecordCreateOrConnectWithoutMergedIntoInput[]
+  createMany?: Prisma.HakobunAnalysisRecordCreateManyMergedIntoInputEnvelope
+  connect?: Prisma.HakobunAnalysisRecordWhereUniqueInput | Prisma.HakobunAnalysisRecordWhereUniqueInput[]
+}
+
+export type HakobunAnalysisRecordUncheckedCreateNestedManyWithoutMergedIntoInput = {
+  create?: Prisma.XOR<Prisma.HakobunAnalysisRecordCreateWithoutMergedIntoInput, Prisma.HakobunAnalysisRecordUncheckedCreateWithoutMergedIntoInput> | Prisma.HakobunAnalysisRecordCreateWithoutMergedIntoInput[] | Prisma.HakobunAnalysisRecordUncheckedCreateWithoutMergedIntoInput[]
+  connectOrCreate?: Prisma.HakobunAnalysisRecordCreateOrConnectWithoutMergedIntoInput | Prisma.HakobunAnalysisRecordCreateOrConnectWithoutMergedIntoInput[]
+  createMany?: Prisma.HakobunAnalysisRecordCreateManyMergedIntoInputEnvelope
+  connect?: Prisma.HakobunAnalysisRecordWhereUniqueInput | Prisma.HakobunAnalysisRecordWhereUniqueInput[]
+}
+
+export type HakobunAnalysisRecordUpdateOneWithoutMergedRecordsNestedInput = {
+  create?: Prisma.XOR<Prisma.HakobunAnalysisRecordCreateWithoutMergedRecordsInput, Prisma.HakobunAnalysisRecordUncheckedCreateWithoutMergedRecordsInput>
+  connectOrCreate?: Prisma.HakobunAnalysisRecordCreateOrConnectWithoutMergedRecordsInput
+  upsert?: Prisma.HakobunAnalysisRecordUpsertWithoutMergedRecordsInput
+  disconnect?: Prisma.HakobunAnalysisRecordWhereInput | boolean
+  delete?: Prisma.HakobunAnalysisRecordWhereInput | boolean
+  connect?: Prisma.HakobunAnalysisRecordWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.HakobunAnalysisRecordUpdateToOneWithWhereWithoutMergedRecordsInput, Prisma.HakobunAnalysisRecordUpdateWithoutMergedRecordsInput>, Prisma.HakobunAnalysisRecordUncheckedUpdateWithoutMergedRecordsInput>
+}
+
+export type HakobunAnalysisRecordUpdateManyWithoutMergedIntoNestedInput = {
+  create?: Prisma.XOR<Prisma.HakobunAnalysisRecordCreateWithoutMergedIntoInput, Prisma.HakobunAnalysisRecordUncheckedCreateWithoutMergedIntoInput> | Prisma.HakobunAnalysisRecordCreateWithoutMergedIntoInput[] | Prisma.HakobunAnalysisRecordUncheckedCreateWithoutMergedIntoInput[]
+  connectOrCreate?: Prisma.HakobunAnalysisRecordCreateOrConnectWithoutMergedIntoInput | Prisma.HakobunAnalysisRecordCreateOrConnectWithoutMergedIntoInput[]
+  upsert?: Prisma.HakobunAnalysisRecordUpsertWithWhereUniqueWithoutMergedIntoInput | Prisma.HakobunAnalysisRecordUpsertWithWhereUniqueWithoutMergedIntoInput[]
+  createMany?: Prisma.HakobunAnalysisRecordCreateManyMergedIntoInputEnvelope
+  set?: Prisma.HakobunAnalysisRecordWhereUniqueInput | Prisma.HakobunAnalysisRecordWhereUniqueInput[]
+  disconnect?: Prisma.HakobunAnalysisRecordWhereUniqueInput | Prisma.HakobunAnalysisRecordWhereUniqueInput[]
+  delete?: Prisma.HakobunAnalysisRecordWhereUniqueInput | Prisma.HakobunAnalysisRecordWhereUniqueInput[]
+  connect?: Prisma.HakobunAnalysisRecordWhereUniqueInput | Prisma.HakobunAnalysisRecordWhereUniqueInput[]
+  update?: Prisma.HakobunAnalysisRecordUpdateWithWhereUniqueWithoutMergedIntoInput | Prisma.HakobunAnalysisRecordUpdateWithWhereUniqueWithoutMergedIntoInput[]
+  updateMany?: Prisma.HakobunAnalysisRecordUpdateManyWithWhereWithoutMergedIntoInput | Prisma.HakobunAnalysisRecordUpdateManyWithWhereWithoutMergedIntoInput[]
+  deleteMany?: Prisma.HakobunAnalysisRecordScalarWhereInput | Prisma.HakobunAnalysisRecordScalarWhereInput[]
+}
+
+export type HakobunAnalysisRecordUncheckedUpdateManyWithoutMergedIntoNestedInput = {
+  create?: Prisma.XOR<Prisma.HakobunAnalysisRecordCreateWithoutMergedIntoInput, Prisma.HakobunAnalysisRecordUncheckedCreateWithoutMergedIntoInput> | Prisma.HakobunAnalysisRecordCreateWithoutMergedIntoInput[] | Prisma.HakobunAnalysisRecordUncheckedCreateWithoutMergedIntoInput[]
+  connectOrCreate?: Prisma.HakobunAnalysisRecordCreateOrConnectWithoutMergedIntoInput | Prisma.HakobunAnalysisRecordCreateOrConnectWithoutMergedIntoInput[]
+  upsert?: Prisma.HakobunAnalysisRecordUpsertWithWhereUniqueWithoutMergedIntoInput | Prisma.HakobunAnalysisRecordUpsertWithWhereUniqueWithoutMergedIntoInput[]
+  createMany?: Prisma.HakobunAnalysisRecordCreateManyMergedIntoInputEnvelope
+  set?: Prisma.HakobunAnalysisRecordWhereUniqueInput | Prisma.HakobunAnalysisRecordWhereUniqueInput[]
+  disconnect?: Prisma.HakobunAnalysisRecordWhereUniqueInput | Prisma.HakobunAnalysisRecordWhereUniqueInput[]
+  delete?: Prisma.HakobunAnalysisRecordWhereUniqueInput | Prisma.HakobunAnalysisRecordWhereUniqueInput[]
+  connect?: Prisma.HakobunAnalysisRecordWhereUniqueInput | Prisma.HakobunAnalysisRecordWhereUniqueInput[]
+  update?: Prisma.HakobunAnalysisRecordUpdateWithWhereUniqueWithoutMergedIntoInput | Prisma.HakobunAnalysisRecordUpdateWithWhereUniqueWithoutMergedIntoInput[]
+  updateMany?: Prisma.HakobunAnalysisRecordUpdateManyWithWhereWithoutMergedIntoInput | Prisma.HakobunAnalysisRecordUpdateManyWithWhereWithoutMergedIntoInput[]
+  deleteMany?: Prisma.HakobunAnalysisRecordScalarWhereInput | Prisma.HakobunAnalysisRecordScalarWhereInput[]
+}
+
 export type HakobunAnalysisRecordCreateWithoutSessionInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
@@ -807,6 +951,10 @@ export type HakobunAnalysisRecordCreateWithoutSessionInput = {
   isModified?: boolean
   reviewerComment?: string | null
   isEnabled?: boolean
+  evaluation?: string | null
+  mergeComment?: string | null
+  mergedInto?: Prisma.HakobunAnalysisRecordCreateNestedOneWithoutMergedRecordsInput
+  mergedRecords?: Prisma.HakobunAnalysisRecordCreateNestedManyWithoutMergedIntoInput
 }
 
 export type HakobunAnalysisRecordUncheckedCreateWithoutSessionInput = {
@@ -831,6 +979,10 @@ export type HakobunAnalysisRecordUncheckedCreateWithoutSessionInput = {
   isModified?: boolean
   reviewerComment?: string | null
   isEnabled?: boolean
+  evaluation?: string | null
+  mergedIntoId?: number | null
+  mergeComment?: string | null
+  mergedRecords?: Prisma.HakobunAnalysisRecordUncheckedCreateNestedManyWithoutMergedIntoInput
 }
 
 export type HakobunAnalysisRecordCreateOrConnectWithoutSessionInput = {
@@ -884,7 +1036,217 @@ export type HakobunAnalysisRecordScalarWhereInput = {
   isModified?: Prisma.BoolFilter<"HakobunAnalysisRecord"> | boolean
   reviewerComment?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   isEnabled?: Prisma.BoolFilter<"HakobunAnalysisRecord"> | boolean
+  evaluation?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
+  mergedIntoId?: Prisma.IntNullableFilter<"HakobunAnalysisRecord"> | number | null
+  mergeComment?: Prisma.StringNullableFilter<"HakobunAnalysisRecord"> | string | null
   sessionId?: Prisma.IntFilter<"HakobunAnalysisRecord"> | number
+}
+
+export type HakobunAnalysisRecordCreateWithoutMergedRecordsInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  rawText: string
+  analysisStage?: string | null
+  analysisSentiment?: string | null
+  analysisGeneralCategory?: string | null
+  analysisCategory?: string | null
+  analysisTopic?: string | null
+  isProposedGeneralCategory?: boolean
+  isProposedCategory?: boolean
+  proposalApproved?: boolean | null
+  feedbackStage?: string | null
+  feedbackSentiment?: string | null
+  feedbackGeneralCategory?: string | null
+  feedbackCategory?: string | null
+  feedbackTopic?: string | null
+  isModified?: boolean
+  reviewerComment?: string | null
+  isEnabled?: boolean
+  evaluation?: string | null
+  mergeComment?: string | null
+  mergedInto?: Prisma.HakobunAnalysisRecordCreateNestedOneWithoutMergedRecordsInput
+  session: Prisma.HakobunAnalysisSessionCreateNestedOneWithoutRecordsInput
+}
+
+export type HakobunAnalysisRecordUncheckedCreateWithoutMergedRecordsInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  rawText: string
+  analysisStage?: string | null
+  analysisSentiment?: string | null
+  analysisGeneralCategory?: string | null
+  analysisCategory?: string | null
+  analysisTopic?: string | null
+  isProposedGeneralCategory?: boolean
+  isProposedCategory?: boolean
+  proposalApproved?: boolean | null
+  feedbackStage?: string | null
+  feedbackSentiment?: string | null
+  feedbackGeneralCategory?: string | null
+  feedbackCategory?: string | null
+  feedbackTopic?: string | null
+  isModified?: boolean
+  reviewerComment?: string | null
+  isEnabled?: boolean
+  evaluation?: string | null
+  mergedIntoId?: number | null
+  mergeComment?: string | null
+  sessionId: number
+}
+
+export type HakobunAnalysisRecordCreateOrConnectWithoutMergedRecordsInput = {
+  where: Prisma.HakobunAnalysisRecordWhereUniqueInput
+  create: Prisma.XOR<Prisma.HakobunAnalysisRecordCreateWithoutMergedRecordsInput, Prisma.HakobunAnalysisRecordUncheckedCreateWithoutMergedRecordsInput>
+}
+
+export type HakobunAnalysisRecordCreateWithoutMergedIntoInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  rawText: string
+  analysisStage?: string | null
+  analysisSentiment?: string | null
+  analysisGeneralCategory?: string | null
+  analysisCategory?: string | null
+  analysisTopic?: string | null
+  isProposedGeneralCategory?: boolean
+  isProposedCategory?: boolean
+  proposalApproved?: boolean | null
+  feedbackStage?: string | null
+  feedbackSentiment?: string | null
+  feedbackGeneralCategory?: string | null
+  feedbackCategory?: string | null
+  feedbackTopic?: string | null
+  isModified?: boolean
+  reviewerComment?: string | null
+  isEnabled?: boolean
+  evaluation?: string | null
+  mergeComment?: string | null
+  mergedRecords?: Prisma.HakobunAnalysisRecordCreateNestedManyWithoutMergedIntoInput
+  session: Prisma.HakobunAnalysisSessionCreateNestedOneWithoutRecordsInput
+}
+
+export type HakobunAnalysisRecordUncheckedCreateWithoutMergedIntoInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  rawText: string
+  analysisStage?: string | null
+  analysisSentiment?: string | null
+  analysisGeneralCategory?: string | null
+  analysisCategory?: string | null
+  analysisTopic?: string | null
+  isProposedGeneralCategory?: boolean
+  isProposedCategory?: boolean
+  proposalApproved?: boolean | null
+  feedbackStage?: string | null
+  feedbackSentiment?: string | null
+  feedbackGeneralCategory?: string | null
+  feedbackCategory?: string | null
+  feedbackTopic?: string | null
+  isModified?: boolean
+  reviewerComment?: string | null
+  isEnabled?: boolean
+  evaluation?: string | null
+  mergeComment?: string | null
+  sessionId: number
+  mergedRecords?: Prisma.HakobunAnalysisRecordUncheckedCreateNestedManyWithoutMergedIntoInput
+}
+
+export type HakobunAnalysisRecordCreateOrConnectWithoutMergedIntoInput = {
+  where: Prisma.HakobunAnalysisRecordWhereUniqueInput
+  create: Prisma.XOR<Prisma.HakobunAnalysisRecordCreateWithoutMergedIntoInput, Prisma.HakobunAnalysisRecordUncheckedCreateWithoutMergedIntoInput>
+}
+
+export type HakobunAnalysisRecordCreateManyMergedIntoInputEnvelope = {
+  data: Prisma.HakobunAnalysisRecordCreateManyMergedIntoInput | Prisma.HakobunAnalysisRecordCreateManyMergedIntoInput[]
+  skipDuplicates?: boolean
+}
+
+export type HakobunAnalysisRecordUpsertWithoutMergedRecordsInput = {
+  update: Prisma.XOR<Prisma.HakobunAnalysisRecordUpdateWithoutMergedRecordsInput, Prisma.HakobunAnalysisRecordUncheckedUpdateWithoutMergedRecordsInput>
+  create: Prisma.XOR<Prisma.HakobunAnalysisRecordCreateWithoutMergedRecordsInput, Prisma.HakobunAnalysisRecordUncheckedCreateWithoutMergedRecordsInput>
+  where?: Prisma.HakobunAnalysisRecordWhereInput
+}
+
+export type HakobunAnalysisRecordUpdateToOneWithWhereWithoutMergedRecordsInput = {
+  where?: Prisma.HakobunAnalysisRecordWhereInput
+  data: Prisma.XOR<Prisma.HakobunAnalysisRecordUpdateWithoutMergedRecordsInput, Prisma.HakobunAnalysisRecordUncheckedUpdateWithoutMergedRecordsInput>
+}
+
+export type HakobunAnalysisRecordUpdateWithoutMergedRecordsInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  rawText?: Prisma.StringFieldUpdateOperationsInput | string
+  analysisStage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisSentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isProposedGeneralCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isProposedCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proposalApproved?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  feedbackStage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feedbackSentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feedbackGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feedbackCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feedbackTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isModified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  evaluation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mergeComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mergedInto?: Prisma.HakobunAnalysisRecordUpdateOneWithoutMergedRecordsNestedInput
+  session?: Prisma.HakobunAnalysisSessionUpdateOneRequiredWithoutRecordsNestedInput
+}
+
+export type HakobunAnalysisRecordUncheckedUpdateWithoutMergedRecordsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  rawText?: Prisma.StringFieldUpdateOperationsInput | string
+  analysisStage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisSentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isProposedGeneralCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isProposedCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proposalApproved?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  feedbackStage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feedbackSentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feedbackGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feedbackCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feedbackTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isModified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  evaluation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mergedIntoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mergeComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionId?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type HakobunAnalysisRecordUpsertWithWhereUniqueWithoutMergedIntoInput = {
+  where: Prisma.HakobunAnalysisRecordWhereUniqueInput
+  update: Prisma.XOR<Prisma.HakobunAnalysisRecordUpdateWithoutMergedIntoInput, Prisma.HakobunAnalysisRecordUncheckedUpdateWithoutMergedIntoInput>
+  create: Prisma.XOR<Prisma.HakobunAnalysisRecordCreateWithoutMergedIntoInput, Prisma.HakobunAnalysisRecordUncheckedCreateWithoutMergedIntoInput>
+}
+
+export type HakobunAnalysisRecordUpdateWithWhereUniqueWithoutMergedIntoInput = {
+  where: Prisma.HakobunAnalysisRecordWhereUniqueInput
+  data: Prisma.XOR<Prisma.HakobunAnalysisRecordUpdateWithoutMergedIntoInput, Prisma.HakobunAnalysisRecordUncheckedUpdateWithoutMergedIntoInput>
+}
+
+export type HakobunAnalysisRecordUpdateManyWithWhereWithoutMergedIntoInput = {
+  where: Prisma.HakobunAnalysisRecordScalarWhereInput
+  data: Prisma.XOR<Prisma.HakobunAnalysisRecordUpdateManyMutationInput, Prisma.HakobunAnalysisRecordUncheckedUpdateManyWithoutMergedIntoInput>
 }
 
 export type HakobunAnalysisRecordCreateManySessionInput = {
@@ -909,6 +1271,9 @@ export type HakobunAnalysisRecordCreateManySessionInput = {
   isModified?: boolean
   reviewerComment?: string | null
   isEnabled?: boolean
+  evaluation?: string | null
+  mergedIntoId?: number | null
+  mergeComment?: string | null
 }
 
 export type HakobunAnalysisRecordUpdateWithoutSessionInput = {
@@ -932,6 +1297,10 @@ export type HakobunAnalysisRecordUpdateWithoutSessionInput = {
   isModified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  evaluation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mergeComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mergedInto?: Prisma.HakobunAnalysisRecordUpdateOneWithoutMergedRecordsNestedInput
+  mergedRecords?: Prisma.HakobunAnalysisRecordUpdateManyWithoutMergedIntoNestedInput
 }
 
 export type HakobunAnalysisRecordUncheckedUpdateWithoutSessionInput = {
@@ -956,6 +1325,10 @@ export type HakobunAnalysisRecordUncheckedUpdateWithoutSessionInput = {
   isModified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  evaluation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mergedIntoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mergeComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mergedRecords?: Prisma.HakobunAnalysisRecordUncheckedUpdateManyWithoutMergedIntoNestedInput
 }
 
 export type HakobunAnalysisRecordUncheckedUpdateManyWithoutSessionInput = {
@@ -980,8 +1353,149 @@ export type HakobunAnalysisRecordUncheckedUpdateManyWithoutSessionInput = {
   isModified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  evaluation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mergedIntoId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mergeComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
+export type HakobunAnalysisRecordCreateManyMergedIntoInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  rawText: string
+  analysisStage?: string | null
+  analysisSentiment?: string | null
+  analysisGeneralCategory?: string | null
+  analysisCategory?: string | null
+  analysisTopic?: string | null
+  isProposedGeneralCategory?: boolean
+  isProposedCategory?: boolean
+  proposalApproved?: boolean | null
+  feedbackStage?: string | null
+  feedbackSentiment?: string | null
+  feedbackGeneralCategory?: string | null
+  feedbackCategory?: string | null
+  feedbackTopic?: string | null
+  isModified?: boolean
+  reviewerComment?: string | null
+  isEnabled?: boolean
+  evaluation?: string | null
+  mergeComment?: string | null
+  sessionId: number
+}
+
+export type HakobunAnalysisRecordUpdateWithoutMergedIntoInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  rawText?: Prisma.StringFieldUpdateOperationsInput | string
+  analysisStage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisSentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isProposedGeneralCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isProposedCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proposalApproved?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  feedbackStage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feedbackSentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feedbackGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feedbackCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feedbackTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isModified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  evaluation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mergeComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mergedRecords?: Prisma.HakobunAnalysisRecordUpdateManyWithoutMergedIntoNestedInput
+  session?: Prisma.HakobunAnalysisSessionUpdateOneRequiredWithoutRecordsNestedInput
+}
+
+export type HakobunAnalysisRecordUncheckedUpdateWithoutMergedIntoInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  rawText?: Prisma.StringFieldUpdateOperationsInput | string
+  analysisStage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisSentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isProposedGeneralCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isProposedCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proposalApproved?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  feedbackStage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feedbackSentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feedbackGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feedbackCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feedbackTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isModified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  evaluation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mergeComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionId?: Prisma.IntFieldUpdateOperationsInput | number
+  mergedRecords?: Prisma.HakobunAnalysisRecordUncheckedUpdateManyWithoutMergedIntoNestedInput
+}
+
+export type HakobunAnalysisRecordUncheckedUpdateManyWithoutMergedIntoInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  rawText?: Prisma.StringFieldUpdateOperationsInput | string
+  analysisStage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisSentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  analysisTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isProposedGeneralCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isProposedCategory?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  proposalApproved?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  feedbackStage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feedbackSentiment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feedbackGeneralCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feedbackCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  feedbackTopic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isModified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  reviewerComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  evaluation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mergeComment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sessionId?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+
+/**
+ * Count Type HakobunAnalysisRecordCountOutputType
+ */
+
+export type HakobunAnalysisRecordCountOutputType = {
+  mergedRecords: number
+}
+
+export type HakobunAnalysisRecordCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  mergedRecords?: boolean | HakobunAnalysisRecordCountOutputTypeCountMergedRecordsArgs
+}
+
+/**
+ * HakobunAnalysisRecordCountOutputType without action
+ */
+export type HakobunAnalysisRecordCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HakobunAnalysisRecordCountOutputType
+   */
+  select?: Prisma.HakobunAnalysisRecordCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * HakobunAnalysisRecordCountOutputType without action
+ */
+export type HakobunAnalysisRecordCountOutputTypeCountMergedRecordsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HakobunAnalysisRecordWhereInput
+}
 
 
 export type HakobunAnalysisRecordSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1006,8 +1520,14 @@ export type HakobunAnalysisRecordSelect<ExtArgs extends runtime.Types.Extensions
   isModified?: boolean
   reviewerComment?: boolean
   isEnabled?: boolean
+  evaluation?: boolean
+  mergedIntoId?: boolean
+  mergeComment?: boolean
   sessionId?: boolean
+  mergedInto?: boolean | Prisma.HakobunAnalysisRecord$mergedIntoArgs<ExtArgs>
+  mergedRecords?: boolean | Prisma.HakobunAnalysisRecord$mergedRecordsArgs<ExtArgs>
   session?: boolean | Prisma.HakobunAnalysisSessionDefaultArgs<ExtArgs>
+  _count?: boolean | Prisma.HakobunAnalysisRecordCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["hakobunAnalysisRecord"]>
 
 export type HakobunAnalysisRecordSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1032,7 +1552,11 @@ export type HakobunAnalysisRecordSelectCreateManyAndReturn<ExtArgs extends runti
   isModified?: boolean
   reviewerComment?: boolean
   isEnabled?: boolean
+  evaluation?: boolean
+  mergedIntoId?: boolean
+  mergeComment?: boolean
   sessionId?: boolean
+  mergedInto?: boolean | Prisma.HakobunAnalysisRecord$mergedIntoArgs<ExtArgs>
   session?: boolean | Prisma.HakobunAnalysisSessionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["hakobunAnalysisRecord"]>
 
@@ -1058,7 +1582,11 @@ export type HakobunAnalysisRecordSelectUpdateManyAndReturn<ExtArgs extends runti
   isModified?: boolean
   reviewerComment?: boolean
   isEnabled?: boolean
+  evaluation?: boolean
+  mergedIntoId?: boolean
+  mergeComment?: boolean
   sessionId?: boolean
+  mergedInto?: boolean | Prisma.HakobunAnalysisRecord$mergedIntoArgs<ExtArgs>
   session?: boolean | Prisma.HakobunAnalysisSessionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["hakobunAnalysisRecord"]>
 
@@ -1084,23 +1612,33 @@ export type HakobunAnalysisRecordSelectScalar = {
   isModified?: boolean
   reviewerComment?: boolean
   isEnabled?: boolean
+  evaluation?: boolean
+  mergedIntoId?: boolean
+  mergeComment?: boolean
   sessionId?: boolean
 }
 
-export type HakobunAnalysisRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "rawText" | "analysisStage" | "analysisSentiment" | "analysisGeneralCategory" | "analysisCategory" | "analysisTopic" | "isProposedGeneralCategory" | "isProposedCategory" | "proposalApproved" | "feedbackStage" | "feedbackSentiment" | "feedbackGeneralCategory" | "feedbackCategory" | "feedbackTopic" | "isModified" | "reviewerComment" | "isEnabled" | "sessionId", ExtArgs["result"]["hakobunAnalysisRecord"]>
+export type HakobunAnalysisRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "rawText" | "analysisStage" | "analysisSentiment" | "analysisGeneralCategory" | "analysisCategory" | "analysisTopic" | "isProposedGeneralCategory" | "isProposedCategory" | "proposalApproved" | "feedbackStage" | "feedbackSentiment" | "feedbackGeneralCategory" | "feedbackCategory" | "feedbackTopic" | "isModified" | "reviewerComment" | "isEnabled" | "evaluation" | "mergedIntoId" | "mergeComment" | "sessionId", ExtArgs["result"]["hakobunAnalysisRecord"]>
 export type HakobunAnalysisRecordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  mergedInto?: boolean | Prisma.HakobunAnalysisRecord$mergedIntoArgs<ExtArgs>
+  mergedRecords?: boolean | Prisma.HakobunAnalysisRecord$mergedRecordsArgs<ExtArgs>
   session?: boolean | Prisma.HakobunAnalysisSessionDefaultArgs<ExtArgs>
+  _count?: boolean | Prisma.HakobunAnalysisRecordCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type HakobunAnalysisRecordIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  mergedInto?: boolean | Prisma.HakobunAnalysisRecord$mergedIntoArgs<ExtArgs>
   session?: boolean | Prisma.HakobunAnalysisSessionDefaultArgs<ExtArgs>
 }
 export type HakobunAnalysisRecordIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  mergedInto?: boolean | Prisma.HakobunAnalysisRecord$mergedIntoArgs<ExtArgs>
   session?: boolean | Prisma.HakobunAnalysisSessionDefaultArgs<ExtArgs>
 }
 
 export type $HakobunAnalysisRecordPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "HakobunAnalysisRecord"
   objects: {
+    mergedInto: Prisma.$HakobunAnalysisRecordPayload<ExtArgs> | null
+    mergedRecords: Prisma.$HakobunAnalysisRecordPayload<ExtArgs>[]
     session: Prisma.$HakobunAnalysisSessionPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1125,6 +1663,9 @@ export type $HakobunAnalysisRecordPayload<ExtArgs extends runtime.Types.Extensio
     isModified: boolean
     reviewerComment: string | null
     isEnabled: boolean
+    evaluation: string | null
+    mergedIntoId: number | null
+    mergeComment: string | null
     sessionId: number
   }, ExtArgs["result"]["hakobunAnalysisRecord"]>
   composites: {}
@@ -1520,6 +2061,8 @@ readonly fields: HakobunAnalysisRecordFieldRefs;
  */
 export interface Prisma__HakobunAnalysisRecordClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  mergedInto<T extends Prisma.HakobunAnalysisRecord$mergedIntoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HakobunAnalysisRecord$mergedIntoArgs<ExtArgs>>): Prisma.Prisma__HakobunAnalysisRecordClient<runtime.Types.Result.GetResult<Prisma.$HakobunAnalysisRecordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  mergedRecords<T extends Prisma.HakobunAnalysisRecord$mergedRecordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HakobunAnalysisRecord$mergedRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HakobunAnalysisRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   session<T extends Prisma.HakobunAnalysisSessionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HakobunAnalysisSessionDefaultArgs<ExtArgs>>): Prisma.Prisma__HakobunAnalysisSessionClient<runtime.Types.Result.GetResult<Prisma.$HakobunAnalysisSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1571,6 +2114,9 @@ export interface HakobunAnalysisRecordFieldRefs {
   readonly isModified: Prisma.FieldRef<"HakobunAnalysisRecord", 'Boolean'>
   readonly reviewerComment: Prisma.FieldRef<"HakobunAnalysisRecord", 'String'>
   readonly isEnabled: Prisma.FieldRef<"HakobunAnalysisRecord", 'Boolean'>
+  readonly evaluation: Prisma.FieldRef<"HakobunAnalysisRecord", 'String'>
+  readonly mergedIntoId: Prisma.FieldRef<"HakobunAnalysisRecord", 'Int'>
+  readonly mergeComment: Prisma.FieldRef<"HakobunAnalysisRecord", 'String'>
   readonly sessionId: Prisma.FieldRef<"HakobunAnalysisRecord", 'Int'>
 }
     
@@ -1965,6 +2511,49 @@ export type HakobunAnalysisRecordDeleteManyArgs<ExtArgs extends runtime.Types.Ex
    * Limit how many HakobunAnalysisRecords to delete.
    */
   limit?: number
+}
+
+/**
+ * HakobunAnalysisRecord.mergedInto
+ */
+export type HakobunAnalysisRecord$mergedIntoArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HakobunAnalysisRecord
+   */
+  select?: Prisma.HakobunAnalysisRecordSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HakobunAnalysisRecord
+   */
+  omit?: Prisma.HakobunAnalysisRecordOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HakobunAnalysisRecordInclude<ExtArgs> | null
+  where?: Prisma.HakobunAnalysisRecordWhereInput
+}
+
+/**
+ * HakobunAnalysisRecord.mergedRecords
+ */
+export type HakobunAnalysisRecord$mergedRecordsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HakobunAnalysisRecord
+   */
+  select?: Prisma.HakobunAnalysisRecordSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HakobunAnalysisRecord
+   */
+  omit?: Prisma.HakobunAnalysisRecordOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HakobunAnalysisRecordInclude<ExtArgs> | null
+  where?: Prisma.HakobunAnalysisRecordWhereInput
+  orderBy?: Prisma.HakobunAnalysisRecordOrderByWithRelationInput | Prisma.HakobunAnalysisRecordOrderByWithRelationInput[]
+  cursor?: Prisma.HakobunAnalysisRecordWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HakobunAnalysisRecordScalarFieldEnum | Prisma.HakobunAnalysisRecordScalarFieldEnum[]
 }
 
 /**

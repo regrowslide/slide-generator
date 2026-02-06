@@ -217,6 +217,16 @@ model HakobunAnalysisRecord {
   // 有効/無効フラグ（CSV出力時に無効は除外、ルール生成時は含める）
   isEnabled       Boolean  @default(true)
 
+  // ABC評価
+  evaluation    String?   // "A" | "B" | "C" (null=未評価)
+
+  // 行結合（自己参照）
+  mergedIntoId  Int?      // 結合先メインレコードID
+  mergeComment  String?   // 結合理由コメント
+
+  mergedInto    HakobunAnalysisRecord?  @relation("RecordMerge", fields: [mergedIntoId], references: [id], onDelete: SetNull)
+  mergedRecords HakobunAnalysisRecord[] @relation("RecordMerge")
+
   // 分析SESSION紐づけ
   session   HakobunAnalysisSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   sessionId Int

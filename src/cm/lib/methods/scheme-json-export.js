@@ -5910,6 +5910,87 @@
           "isUpdatedAt": false
         },
         {
+          "name": "evaluation",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "mergedIntoId",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": true,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "mergeComment",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "mergedInto",
+          "kind": "object",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "HakobunAnalysisRecord",
+          "nativeType": null,
+          "relationName": "RecordMerge",
+          "relationFromFields": [
+            "mergedIntoId"
+          ],
+          "relationToFields": [
+            "id"
+          ],
+          "relationOnDelete": "SetNull",
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "mergedRecords",
+          "kind": "object",
+          "isList": true,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "HakobunAnalysisRecord",
+          "nativeType": null,
+          "relationName": "RecordMerge",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
           "name": "session",
           "kind": "object",
           "isList": false,

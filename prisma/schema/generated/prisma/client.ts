@@ -614,3 +614,99 @@ export type ExerciseMaster = Prisma.ExerciseMasterModel
  * 
  */
 export type WorkoutLog = Prisma.WorkoutLogModel
+/**
+ * Model YamanokaiDepartment
+ * 部署マスター（ハイキング部、山行部、教育部、自然保護部、組織部）
+ */
+export type YamanokaiDepartment = Prisma.YamanokaiDepartmentModel
+/**
+ * Model YamanokaiRole
+ * 役職マスター（三役、事務局、専門部長、CL、SL、一般会員）
+ */
+export type YamanokaiRole = Prisma.YamanokaiRoleModel
+/**
+ * Model YamanokaiCourse
+ * 講座マスター（岩座学、雪山ハイキング講座 etc.）
+ */
+export type YamanokaiCourse = Prisma.YamanokaiCourseModel
+/**
+ * Model YamanokaiEquipment
+ * 装備マスター
+ */
+export type YamanokaiEquipment = Prisma.YamanokaiEquipmentModel
+/**
+ * Model YamanokaiInsuranceGrade
+ * 保険口数マスター
+ */
+export type YamanokaiInsuranceGrade = Prisma.YamanokaiInsuranceGradeModel
+/**
+ * Model YamanokaiStaminaGrade
+ * 体力度グレードマスター
+ */
+export type YamanokaiStaminaGrade = Prisma.YamanokaiStaminaGradeModel
+/**
+ * Model YamanokaiSkillGrade
+ * 技術度グレードマスター
+ */
+export type YamanokaiSkillGrade = Prisma.YamanokaiSkillGradeModel
+/**
+ * Model YamanokaiRockCategory
+ * 岩登り区分マスター
+ */
+export type YamanokaiRockCategory = Prisma.YamanokaiRockCategoryModel
+/**
+ * Model YamanokaiMember
+ * 会員
+ */
+export type YamanokaiMember = Prisma.YamanokaiMemberModel
+/**
+ * Model YamanokaiMemberRole
+ * 会員役職履歴
+ */
+export type YamanokaiMemberRole = Prisma.YamanokaiMemberRoleModel
+/**
+ * Model YamanokaiCourseCompletion
+ * 講座受講履歴
+ */
+export type YamanokaiCourseCompletion = Prisma.YamanokaiCourseCompletionModel
+/**
+ * Model YamanokaiEvent
+ * 例会
+ */
+export type YamanokaiEvent = Prisma.YamanokaiEventModel
+/**
+ * Model YamanokaiEventRequiredCourse
+ * 例会の必須講座（中間テーブル）
+ */
+export type YamanokaiEventRequiredCourse = Prisma.YamanokaiEventRequiredCourseModel
+/**
+ * Model YamanokaiEventPlan
+ * 山行計画書
+ */
+export type YamanokaiEventPlan = Prisma.YamanokaiEventPlanModel
+/**
+ * Model YamanokaiEventPlanParticipant
+ * 計画書参加者
+ */
+export type YamanokaiEventPlanParticipant = Prisma.YamanokaiEventPlanParticipantModel
+/**
+ * Model YamanokaiAttendance
+ * 出席回答
+ */
+export type YamanokaiAttendance = Prisma.YamanokaiAttendanceModel
+/**
+ * Model YamanokaiRecord
+ * 例会記録
+ */
+export type YamanokaiRecord = Prisma.YamanokaiRecordModel
+/**
+ * Model YamanokaiRecordFile
+ * 例会記録ファイル
+ * 1つの例会記録に対して複数のファイル(PDF/Word)をアップロード可能
+ */
+export type YamanokaiRecordFile = Prisma.YamanokaiRecordFileModel
+/**
+ * Model YamanokaiEquipmentLoan
+ * 装備貸出
+ */
+export type YamanokaiEquipmentLoan = Prisma.YamanokaiEquipmentLoanModel

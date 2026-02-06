@@ -165,7 +165,26 @@ export const ModelName = {
   TbmRelatedRouteGroup: 'TbmRelatedRouteGroup',
   TeamSynapseAnalysis: 'TeamSynapseAnalysis',
   ExerciseMaster: 'ExerciseMaster',
-  WorkoutLog: 'WorkoutLog'
+  WorkoutLog: 'WorkoutLog',
+  YamanokaiDepartment: 'YamanokaiDepartment',
+  YamanokaiRole: 'YamanokaiRole',
+  YamanokaiCourse: 'YamanokaiCourse',
+  YamanokaiEquipment: 'YamanokaiEquipment',
+  YamanokaiInsuranceGrade: 'YamanokaiInsuranceGrade',
+  YamanokaiStaminaGrade: 'YamanokaiStaminaGrade',
+  YamanokaiSkillGrade: 'YamanokaiSkillGrade',
+  YamanokaiRockCategory: 'YamanokaiRockCategory',
+  YamanokaiMember: 'YamanokaiMember',
+  YamanokaiMemberRole: 'YamanokaiMemberRole',
+  YamanokaiCourseCompletion: 'YamanokaiCourseCompletion',
+  YamanokaiEvent: 'YamanokaiEvent',
+  YamanokaiEventRequiredCourse: 'YamanokaiEventRequiredCourse',
+  YamanokaiEventPlan: 'YamanokaiEventPlan',
+  YamanokaiEventPlanParticipant: 'YamanokaiEventPlanParticipant',
+  YamanokaiAttendance: 'YamanokaiAttendance',
+  YamanokaiRecord: 'YamanokaiRecord',
+  YamanokaiRecordFile: 'YamanokaiRecordFile',
+  YamanokaiEquipmentLoan: 'YamanokaiEquipmentLoan'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -646,6 +665,9 @@ export const HakobunAnalysisRecordScalarFieldEnum = {
   isModified: 'isModified',
   reviewerComment: 'reviewerComment',
   isEnabled: 'isEnabled',
+  evaluation: 'evaluation',
+  mergedIntoId: 'mergedIntoId',
+  mergeComment: 'mergeComment',
   sessionId: 'sessionId'
 } as const
 
@@ -2188,6 +2210,335 @@ export const WorkoutLogScalarFieldEnum = {
 } as const
 
 export type WorkoutLogScalarFieldEnum = (typeof WorkoutLogScalarFieldEnum)[keyof typeof WorkoutLogScalarFieldEnum]
+
+
+export const YamanokaiDepartmentScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  code: 'code',
+  name: 'name',
+  color: 'color',
+  bgColor: 'bgColor'
+} as const
+
+export type YamanokaiDepartmentScalarFieldEnum = (typeof YamanokaiDepartmentScalarFieldEnum)[keyof typeof YamanokaiDepartmentScalarFieldEnum]
+
+
+export const YamanokaiRoleScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  code: 'code',
+  name: 'name',
+  level: 'level',
+  permissions: 'permissions'
+} as const
+
+export type YamanokaiRoleScalarFieldEnum = (typeof YamanokaiRoleScalarFieldEnum)[keyof typeof YamanokaiRoleScalarFieldEnum]
+
+
+export const YamanokaiCourseScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  description: 'description',
+  prerequisiteIds: 'prerequisiteIds',
+  yamanokaiDepartmentId: 'yamanokaiDepartmentId'
+} as const
+
+export type YamanokaiCourseScalarFieldEnum = (typeof YamanokaiCourseScalarFieldEnum)[keyof typeof YamanokaiCourseScalarFieldEnum]
+
+
+export const YamanokaiEquipmentScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  category: 'category',
+  totalQuantity: 'totalQuantity',
+  notes: 'notes'
+} as const
+
+export type YamanokaiEquipmentScalarFieldEnum = (typeof YamanokaiEquipmentScalarFieldEnum)[keyof typeof YamanokaiEquipmentScalarFieldEnum]
+
+
+export const YamanokaiInsuranceGradeScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  kuchi: 'kuchi',
+  name: 'name',
+  eligibleActivities: 'eligibleActivities'
+} as const
+
+export type YamanokaiInsuranceGradeScalarFieldEnum = (typeof YamanokaiInsuranceGradeScalarFieldEnum)[keyof typeof YamanokaiInsuranceGradeScalarFieldEnum]
+
+
+export const YamanokaiStaminaGradeScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  code: 'code',
+  name: 'name',
+  description: 'description'
+} as const
+
+export type YamanokaiStaminaGradeScalarFieldEnum = (typeof YamanokaiStaminaGradeScalarFieldEnum)[keyof typeof YamanokaiStaminaGradeScalarFieldEnum]
+
+
+export const YamanokaiSkillGradeScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  code: 'code',
+  name: 'name',
+  description: 'description'
+} as const
+
+export type YamanokaiSkillGradeScalarFieldEnum = (typeof YamanokaiSkillGradeScalarFieldEnum)[keyof typeof YamanokaiSkillGradeScalarFieldEnum]
+
+
+export const YamanokaiRockCategoryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  code: 'code',
+  name: 'name',
+  description: 'description'
+} as const
+
+export type YamanokaiRockCategoryScalarFieldEnum = (typeof YamanokaiRockCategoryScalarFieldEnum)[keyof typeof YamanokaiRockCategoryScalarFieldEnum]
+
+
+export const YamanokaiMemberScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  nameKana: 'nameKana',
+  email: 'email',
+  phone: 'phone',
+  address: 'address',
+  birthday: 'birthday',
+  gender: 'gender',
+  bloodType: 'bloodType',
+  insuranceKuchi: 'insuranceKuchi',
+  cocoHeliId: 'cocoHeliId',
+  medicalHistory: 'medicalHistory',
+  emergencyName: 'emergencyName',
+  emergencyPhone: 'emergencyPhone',
+  emergencyRelation: 'emergencyRelation',
+  joinedAt: 'joinedAt',
+  isAdmin: 'isAdmin',
+  isActive: 'isActive',
+  isDeleted: 'isDeleted',
+  yamanokaiDepartmentId: 'yamanokaiDepartmentId',
+  yamanokaiRoleId: 'yamanokaiRoleId'
+} as const
+
+export type YamanokaiMemberScalarFieldEnum = (typeof YamanokaiMemberScalarFieldEnum)[keyof typeof YamanokaiMemberScalarFieldEnum]
+
+
+export const YamanokaiMemberRoleScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  startAt: 'startAt',
+  endAt: 'endAt',
+  yamanokaiMemberId: 'yamanokaiMemberId',
+  yamanokaiRoleId: 'yamanokaiRoleId',
+  yamanokaiDepartmentId: 'yamanokaiDepartmentId'
+} as const
+
+export type YamanokaiMemberRoleScalarFieldEnum = (typeof YamanokaiMemberRoleScalarFieldEnum)[keyof typeof YamanokaiMemberRoleScalarFieldEnum]
+
+
+export const YamanokaiCourseCompletionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  completedAt: 'completedAt',
+  notes: 'notes',
+  yamanokaiMemberId: 'yamanokaiMemberId',
+  yamanokaiCourseId: 'yamanokaiCourseId',
+  yamanokaiEventId: 'yamanokaiEventId'
+} as const
+
+export type YamanokaiCourseCompletionScalarFieldEnum = (typeof YamanokaiCourseCompletionScalarFieldEnum)[keyof typeof YamanokaiCourseCompletionScalarFieldEnum]
+
+
+export const YamanokaiEventScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  title: 'title',
+  mountainName: 'mountainName',
+  altitude: 'altitude',
+  startAt: 'startAt',
+  endAt: 'endAt',
+  deadline: 'deadline',
+  staminaGrade: 'staminaGrade',
+  skillGrade: 'skillGrade',
+  rockCategory: 'rockCategory',
+  requiredInsurance: 'requiredInsurance',
+  meetingPlace: 'meetingPlace',
+  meetingTime: 'meetingTime',
+  course: 'course',
+  capacity: 'capacity',
+  notes: 'notes',
+  status: 'status',
+  isDeleted: 'isDeleted',
+  yamanokaiDepartmentId: 'yamanokaiDepartmentId',
+  clId: 'clId',
+  slId: 'slId'
+} as const
+
+export type YamanokaiEventScalarFieldEnum = (typeof YamanokaiEventScalarFieldEnum)[keyof typeof YamanokaiEventScalarFieldEnum]
+
+
+export const YamanokaiEventRequiredCourseScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  yamanokaiEventId: 'yamanokaiEventId',
+  yamanokaiCourseId: 'yamanokaiCourseId'
+} as const
+
+export type YamanokaiEventRequiredCourseScalarFieldEnum = (typeof YamanokaiEventRequiredCourseScalarFieldEnum)[keyof typeof YamanokaiEventRequiredCourseScalarFieldEnum]
+
+
+export const YamanokaiEventPlanScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  detailedCourse: 'detailedCourse',
+  escapeRoute: 'escapeRoute',
+  emergencyPlan: 'emergencyPlan',
+  equipmentList: 'equipmentList',
+  fileUrl: 'fileUrl',
+  fileName: 'fileName',
+  status: 'status',
+  submittedAt: 'submittedAt',
+  approvedAt: 'approvedAt',
+  isDeleted: 'isDeleted',
+  yamanokaiEventId: 'yamanokaiEventId',
+  approvedBy: 'approvedBy'
+} as const
+
+export type YamanokaiEventPlanScalarFieldEnum = (typeof YamanokaiEventPlanScalarFieldEnum)[keyof typeof YamanokaiEventPlanScalarFieldEnum]
+
+
+export const YamanokaiEventPlanParticipantScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  role: 'role',
+  name: 'name',
+  birthday: 'birthday',
+  gender: 'gender',
+  insuranceKuchi: 'insuranceKuchi',
+  bloodType: 'bloodType',
+  address: 'address',
+  phone: 'phone',
+  emergencyName: 'emergencyName',
+  emergencyPhone: 'emergencyPhone',
+  emergencyRelation: 'emergencyRelation',
+  medicalHistory: 'medicalHistory',
+  cocoHeliId: 'cocoHeliId',
+  yamanokaiEventPlanId: 'yamanokaiEventPlanId',
+  yamanokaiMemberId: 'yamanokaiMemberId'
+} as const
+
+export type YamanokaiEventPlanParticipantScalarFieldEnum = (typeof YamanokaiEventPlanParticipantScalarFieldEnum)[keyof typeof YamanokaiEventPlanParticipantScalarFieldEnum]
+
+
+export const YamanokaiAttendanceScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  status: 'status',
+  comment: 'comment',
+  isDeleted: 'isDeleted',
+  yamanokaiEventId: 'yamanokaiEventId',
+  yamanokaiMemberId: 'yamanokaiMemberId'
+} as const
+
+export type YamanokaiAttendanceScalarFieldEnum = (typeof YamanokaiAttendanceScalarFieldEnum)[keyof typeof YamanokaiAttendanceScalarFieldEnum]
+
+
+export const YamanokaiRecordScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  title: 'title',
+  recordedAt: 'recordedAt',
+  weather: 'weather',
+  participants: 'participants',
+  status: 'status',
+  submittedAt: 'submittedAt',
+  publishedAt: 'publishedAt',
+  isDeleted: 'isDeleted',
+  yamanokaiEventId: 'yamanokaiEventId',
+  authorId: 'authorId'
+} as const
+
+export type YamanokaiRecordScalarFieldEnum = (typeof YamanokaiRecordScalarFieldEnum)[keyof typeof YamanokaiRecordScalarFieldEnum]
+
+
+export const YamanokaiRecordFileScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  fileUrl: 'fileUrl',
+  fileName: 'fileName',
+  fileType: 'fileType',
+  fileSize: 'fileSize',
+  mimeType: 'mimeType',
+  description: 'description',
+  isDeleted: 'isDeleted',
+  yamanokaiRecordId: 'yamanokaiRecordId'
+} as const
+
+export type YamanokaiRecordFileScalarFieldEnum = (typeof YamanokaiRecordFileScalarFieldEnum)[keyof typeof YamanokaiRecordFileScalarFieldEnum]
+
+
+export const YamanokaiEquipmentLoanScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  quantity: 'quantity',
+  loanAt: 'loanAt',
+  dueAt: 'dueAt',
+  returnedAt: 'returnedAt',
+  status: 'status',
+  notes: 'notes',
+  isDeleted: 'isDeleted',
+  yamanokaiEquipmentId: 'yamanokaiEquipmentId',
+  yamanokaiMemberId: 'yamanokaiMemberId',
+  yamanokaiEventId: 'yamanokaiEventId'
+} as const
+
+export type YamanokaiEquipmentLoanScalarFieldEnum = (typeof YamanokaiEquipmentLoanScalarFieldEnum)[keyof typeof YamanokaiEquipmentLoanScalarFieldEnum]
 
 
 export const SortOrder = {

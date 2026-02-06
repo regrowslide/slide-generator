@@ -32,11 +32,16 @@ import {
   approveProposalOnly,
   rejectProposedCategory,
   toggleAnalysisRecordEnabled,
+  mergeAnalysisRecord,
+  unmergeAnalysisRecord,
+  updateAnalysisRecordEvaluation,
+  updateMergeComment,
 } from '../../../../../_actions/analysis-box-actions'
 import type {
   HakobunAnalysisSession,
   HakobunAnalysisRecord,
   SentimentType,
+  EvaluationType,
   UpdateAnalysisRecordFeedbackInput,
 } from '../../../../../types'
 import useSelectedClient from '../../../../../(globalHooks)/useSelectedClient'
@@ -44,7 +49,7 @@ import useCategoryManager from '../../../../../hooks/useCategoryManager'
 import useModal from '@cm/components/utils/modal/useModal'
 import useMyNavigation from '@cm/hooks/globalHooks/useMyNavigation'
 import { Popover, PopoverContent, PopoverTrigger } from '@shadcn/ui/popover'
-import { BarChart3, Info } from 'lucide-react'
+import { BarChart3, Info, Link2, Unlink2 } from 'lucide-react'
 
 // デフォルトのステージ選択肢（クライアント未設定時のフォールバック）
 
@@ -54,17 +59,18 @@ const SENTIMENT_OPTIONS: SentimentType[] = ['好意的', '不満', 'リクエス
 // ページネーション
 const RECORD_PAGE_SIZE = 50
 
-// CSV生成ユーティリティ（createdAt順・全体通し連番対応・無効レコード除外）
+// CSV生成ユーティリティ（createdAt順・全体通し連番対応・無効レコード除外・サブレコード除外）
 const generateCsvContent = (records: HakobunAnalysisRecord[]): string => {
   // ヘッダー
-  const headers = ['通し番号', '枝番', 'ステージ', '感情', '一般カテゴリ', 'カテゴリ', 'トピック', '原文']
+  const headers = ['通し番号', '枝番', '評価', 'ステージ', '感情', '一般カテゴリ', 'カテゴリ', 'トピック', '原文']
 
   // 有効なレコードのみフィルタリングし、createdAt順でソート
   // - isEnabledがfalseのレコードは除外
   // - 提案レコード（isProposedGeneralCategory || isProposedCategory）で未承認（proposalApproved !== true）のレコードも除外
+  // - サブレコード（mergedIntoIdがnull以外）は除外
   const enabledRecords = records.filter(r => {
     if (r.isEnabled === false) return false
-    // 提案レコードは承認済みのみ有効
+    if (r.mergedIntoId) return false
     if ((r.isProposedGeneralCategory || r.isProposedCategory) && r.proposalApproved !== true) return false
     return true
   })
@@ -92,10 +98,12 @@ const generateCsvContent = (records: HakobunAnalysisRecord[]): string => {
       const category = record.feedbackCategory || record.analysisCategory || ''
       const topic = record.feedbackTopic || record.analysisTopic || ''
       const rawText = record.rawText
+      const evaluation = record.evaluation || ''
 
       rows.push([
         String(mainIndex),
         String(subIndex + 1),
+        evaluation,
         stage,
         sentiment,
         generalCategory,
@@ -145,6 +153,7 @@ interface RecordEditState {
   feedbackTopic: string
   reviewerComment: string
   isModified: boolean
+  evaluation: EvaluationType | null
 }
 
 // カテゴリ追加モーダルの状態
@@ -275,6 +284,14 @@ export default function AnalysisSessionDetailPage() {
     categoryStats.proposed.pending = cProposedRecords.filter(r => r.proposalApproved === null || r.proposalApproved === undefined).length
     categoryStats.registered = categoryStats.total - new Set(cProposedRecords.filter(r => r.proposalApproved !== true).map(r => r.analysisCategory).filter(Boolean)).size
 
+    // 評価別統計
+    const evaluationStats = {
+      A: allRecordsForStats.filter(r => r.evaluation === 'A').length,
+      B: allRecordsForStats.filter(r => r.evaluation === 'B').length,
+      C: allRecordsForStats.filter(r => r.evaluation === 'C').length,
+      unevaluated: allRecordsForStats.filter(r => !r.evaluation).length,
+    }
+
     return {
       rawTextCount: uniqueRawTexts.size,
       topicCount: allRecordsForStats.length,
@@ -284,6 +301,7 @@ export default function AnalysisSessionDetailPage() {
       categories: countByField(r => getValue(r, 'feedbackCategory', 'analysisCategory')),
       generalCategoryStats,
       categoryStats,
+      evaluationStats,
     }
   }, [allRecordsForStats])
 
@@ -338,6 +356,7 @@ export default function AnalysisSessionDetailPage() {
               feedbackTopic: record.feedbackTopic || record.analysisTopic || '',
               reviewerComment: record.reviewerComment || '',
               isModified: record.isModified,
+              evaluation: (record.evaluation as EvaluationType | null) || null,
             })
           })
         setEditStates(initialEditStates)
@@ -596,6 +615,7 @@ export default function AnalysisSessionDetailPage() {
           feedbackTopic: state.feedbackTopic || undefined,
           reviewerComment: state.reviewerComment || undefined,
           isModified: true,
+          evaluation: state.evaluation,
         } as UpdateAnalysisRecordFeedbackInput,
       }])
 
@@ -814,6 +834,76 @@ export default function AnalysisSessionDetailPage() {
       alert('有効/無効の切り替えでエラーが発生しました')
     }
   }, [])
+
+  // ABC評価を切り替え（クリックで即保存）
+  const handleEvaluation = useCallback(async (recordId: number, evaluation: EvaluationType) => {
+    // 同じ評価をクリックしたら解除
+    const currentState = editStates.get(recordId)
+    const newEval = currentState?.evaluation === evaluation ? null : evaluation
+    updateEditState(recordId, { evaluation: newEval })
+    try {
+      await updateAnalysisRecordEvaluation(recordId, newEval)
+      // ローカルのrecordsも更新
+      setRecords(prev => prev.map(r => r.id === recordId ? { ...r, evaluation: newEval } : r))
+      setAllRecordsForStats(prev => prev.map(r => r.id === recordId ? { ...r, evaluation: newEval } : r))
+    } catch (error) {
+      console.error('評価更新エラー:', error)
+    }
+  }, [editStates, updateEditState])
+
+  // レコード結合（上の行と結合）
+  const handleMerge = useCallback(async (recordId: number, targetRecordId: number) => {
+    const comment = window.prompt('結合理由を入力してください（任意）')
+    try {
+      const result = await mergeAnalysisRecord(recordId, targetRecordId, comment || undefined)
+      if (result.success) {
+        await fetchRecords()
+        await fetchAllRecordsForStats()
+      } else {
+        alert(`結合に失敗しました: ${result.error}`)
+      }
+    } catch (error) {
+      alert('結合処理でエラーが発生しました')
+    }
+  }, [fetchRecords, fetchAllRecordsForStats])
+
+  // レコード分離
+  const handleUnmerge = useCallback(async (recordId: number) => {
+    try {
+      const result = await unmergeAnalysisRecord(recordId)
+      if (result.success) {
+        await fetchRecords()
+        await fetchAllRecordsForStats()
+      } else {
+        alert(`分離に失敗しました: ${result.error}`)
+      }
+    } catch (error) {
+      alert('分離処理でエラーが発生しました')
+    }
+  }, [fetchRecords, fetchAllRecordsForStats])
+
+  // 結合コメントの自動保存
+  const handleMergeCommentSave = useCallback(async (recordId: number, comment: string) => {
+    try {
+      await updateMergeComment(recordId, comment)
+    } catch (error) {
+      console.error('結合コメント保存エラー:', error)
+    }
+  }, [])
+
+  // 評価の色とスタイル
+  const getEvaluationStyle = (evaluation: EvaluationType | null | undefined) => {
+    switch (evaluation) {
+      case 'A':
+        return 'bg-green-500 text-white'
+      case 'B':
+        return 'bg-yellow-500 text-white'
+      case 'C':
+        return 'bg-red-500 text-white'
+      default:
+        return 'bg-gray-200 text-gray-500'
+    }
+  }
 
   // 分析ルール生成（プレビュー）
   const handleGenerateRulesPreview = useCallback(async () => {
@@ -1420,6 +1510,16 @@ export default function AnalysisSessionDetailPage() {
                   )}
                 </PopoverContent>
               </Popover>
+              {/* 評価 */}
+              <div className="bg-gray-50 px-3 py-2 rounded-lg">
+                <span className="text-xs text-gray-500">評価</span>
+                <R_Stack className="gap-2 mt-1">
+                  <span className="text-xs px-1.5 py-0.5 rounded bg-green-500 text-white">A: {statistics.evaluationStats.A}</span>
+                  <span className="text-xs px-1.5 py-0.5 rounded bg-yellow-500 text-white">B: {statistics.evaluationStats.B}</span>
+                  <span className="text-xs px-1.5 py-0.5 rounded bg-red-500 text-white">C: {statistics.evaluationStats.C}</span>
+                  <span className="text-xs text-gray-400">未: {statistics.evaluationStats.unevaluated}</span>
+                </R_Stack>
+              </div>
             </div>
           </div>
         )}
@@ -1433,7 +1533,7 @@ export default function AnalysisSessionDetailPage() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-3 py-2 text-left font-medium text-gray-600 w-8">#</th>
-
+                    <th className="px-3 py-2 text-center font-medium text-gray-600 w-20">評価</th>
                     <th className="px-3 py-2 text-left font-medium text-gray-600 w-[400px]">原文</th>
                     <th className="px-3 py-2 text-left font-medium text-gray-600 w-[320px]">トピック</th>
                     <th className="px-3 py-2 text-left font-medium text-gray-600 w-24">ステージ</th>
@@ -1454,31 +1554,92 @@ export default function AnalysisSessionDetailPage() {
                     const isEnabled = record.isEnabled !== false && (!isProposal || isApproved)
                     const disabledClass = isEnabled ? '' : 'opacity-40'
 
+                    // サブレコード判定
+                    const isSubRecord = !!record.mergedIntoId
+                    const subRecordClass = isSubRecord ? 'bg-gray-100/80' : ''
+
+                    // 前の行のrecordId（結合先候補）
+                    const prevRecord = index > 0 ? records[index - 1] : null
+                    // 結合先は前のレコードのメインID（前がサブならそのmergedIntoIdを使う）
+                    const mergeTargetId = prevRecord
+                      ? (prevRecord.mergedIntoId || prevRecord.id)
+                      : null
+
                     return (
                       <React.Fragment key={record.id}>
                         {/* AI分析結果行 */}
-                        <tr className={`bg-blue-50/50 ${disabledClass}`}>
-                          <td rowSpan={3} className="px-3 py-2 text-gray-500 align-top border-b">
+                        <tr className={`bg-blue-50/50 ${disabledClass} ${subRecordClass}`}>
+                          <td rowSpan={isSubRecord ? 2 : 3} className="px-3 py-2 text-gray-500 align-top border-b">
                             <div className="flex flex-col items-center gap-1">
-                              <span>{(currentPage - 1) * RECORD_PAGE_SIZE + index + 1}</span>
+                              <span className={isSubRecord ? 'text-xs text-gray-400' : ''}>
+                                {(currentPage - 1) * RECORD_PAGE_SIZE + index + 1}
+                              </span>
+                              {/* 結合/分離ボタン */}
+                              {isSubRecord ? (
+                                <button
+                                  type="button"
+                                  onClick={() => handleUnmerge(record.id)}
+                                  className="p-1 text-orange-500 hover:bg-orange-50 rounded"
+                                  title="結合を解除"
+                                >
+                                  <Unlink2 className="w-3.5 h-3.5" />
+                                </button>
+                              ) : index > 0 && mergeTargetId ? (
+                                <button
+                                  type="button"
+                                  onClick={() => handleMerge(record.id, mergeTargetId)}
+                                  className="p-1 text-blue-400 hover:bg-blue-50 rounded"
+                                  title="上の行と結合"
+                                >
+                                  <Link2 className="w-3.5 h-3.5" />
+                                </button>
+                              ) : null}
                               {/* 有効/無効トグル */}
-                              <button
-                                type="button"
-                                onClick={() => handleToggleEnabled(record.id, isEnabled)}
-                                className={`w-8 h-4 rounded-full relative transition-colors ${isEnabled ? 'bg-green-500' : 'bg-gray-300'
-                                  }`}
-                                title={isEnabled ? 'クリックで無効化（CSVから除外）' : 'クリックで有効化（CSVに含める）'}
-                              >
-                                <span
-                                  className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-all ${isEnabled ? 'right-0.5' : 'left-0.5'
+                              {!isSubRecord && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleToggleEnabled(record.id, isEnabled)}
+                                  className={`w-8 h-4 rounded-full relative transition-colors ${isEnabled ? 'bg-green-500' : 'bg-gray-300'
                                     }`}
-                                />
-                              </button>
+                                  title={isEnabled ? 'クリックで無効化（CSVから除外）' : 'クリックで有効化（CSVに含める）'}
+                                >
+                                  <span
+                                    className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-all ${isEnabled ? 'right-0.5' : 'left-0.5'
+                                      }`}
+                                  />
+                                </button>
+                              )}
                             </div>
                           </td>
 
-                          <td rowSpan={3} className="px-3 py-2  align-top border-b max-w-[300px]">
+                          {/* 評価ボタン */}
+                          <td rowSpan={isSubRecord ? 2 : 3} className="px-2 py-2 align-top border-b">
+                            {!isSubRecord && (
+                              <R_Stack className="gap-0.5 justify-center">
+                                {(['A', 'B', 'C'] as EvaluationType[]).map((ev) => (
+                                  <button
+                                    key={ev}
+                                    type="button"
+                                    onClick={() => handleEvaluation(record.id, ev)}
+                                    className={`w-6 h-6 rounded text-xs font-bold transition-colors ${
+                                      state.evaluation === ev
+                                        ? getEvaluationStyle(ev)
+                                        : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
+                                    }`}
+                                    title={ev === 'A' ? '問題なし' : ev === 'B' ? '要注意' : 'NG'}
+                                  >
+                                    {ev}
+                                  </button>
+                                ))}
+                              </R_Stack>
+                            )}
+                          </td>
+
+                          <td rowSpan={isSubRecord ? 2 : 3} className={`px-3 py-2 align-top border-b max-w-[300px] ${isSubRecord ? 'pl-6' : ''}`}>
                             <div className="flex items-start gap-1">
+                              {isSubRecord && (
+                                <span className="text-xs text-gray-400 mt-0.5">└</span>
+                              )}
                               <p className="text-gray-800 text-xs flex-1 break-words whitespace-pre-wrap">
                                 {truncateText(record.rawText, 80, 2)}
                               </p>
@@ -1539,7 +1700,7 @@ export default function AnalysisSessionDetailPage() {
                               <span className="text-gray-600 text-xs">{record.analysisCategory || '-'}</span>
                             )}
                           </td>
-                          <td rowSpan={3} className="px-3 py-2 align-middle border-b">
+                          <td rowSpan={isSubRecord ? 2 : 3} className="px-3 py-2 align-middle border-b">
                             <C_Stack className="gap-1 items-center">
 
                               {/* 新規提案の承認/却下ボタン */}
@@ -1594,7 +1755,8 @@ export default function AnalysisSessionDetailPage() {
                             </C_Stack>
                           </td>
                         </tr>
-                        {/* フィードバック行 */}
+                        {/* フィードバック行: サブレコードは非表示（メインのみ編集可能） */}
+                        {!isSubRecord && (
                         <tr className={`border-b ${disabledClass}`}>
 
                           <td className={`px-3 py-1 ${getFeedbackCellStyle(state.feedbackTopic, record.analysisTopic)}`}>
@@ -1701,24 +1863,42 @@ export default function AnalysisSessionDetailPage() {
                             </R_Stack>
                           </td>
                         </tr>
-                        {/* 分析考え方行 */}
-                        <tr className={`border-b bg-amber-50/30 ${disabledClass}`}>
-                          <td colSpan={6} className="px-3 py-1">
-                            <div className="flex items-start gap-2">
-                              <span className="text-xs text-amber-700 font-medium whitespace-nowrap pt-1">分析考え方:</span>
-                              <textarea
-                                value={state.reviewerComment?.trim() || ''}
-                                onChange={(e) =>
-                                  updateEditState(record.id, { reviewerComment: e.target.value })
-                                }
-                                onBlur={() => handleAutoSave(record.id)}
-                                className="flex-1 p-1 border border-amber-200 rounded text-xs bg-white resize-none"
-                                placeholder="この分析の考え方やメモを記録..."
-                                rows={1}
-                              />
-                            </div>
-                          </td>
-                        </tr>
+                        )}
+                        {/* 分析考え方行 / サブレコードの場合は結合コメント表示 */}
+                        {isSubRecord ? (
+                          <tr className={`border-b bg-orange-50/30 ${disabledClass}`}>
+                            <td colSpan={5} className="px-3 py-1">
+                              <div className="flex items-start gap-2">
+                                <span className="text-xs text-orange-700 font-medium whitespace-nowrap pt-1">結合理由:</span>
+                                <input
+                                  type="text"
+                                  defaultValue={record.mergeComment || ''}
+                                  onBlur={(e) => handleMergeCommentSave(record.id, e.target.value)}
+                                  className="flex-1 p-1 border border-orange-200 rounded text-xs bg-white"
+                                  placeholder="結合の理由を入力..."
+                                />
+                              </div>
+                            </td>
+                          </tr>
+                        ) : (
+                          <tr className={`border-b bg-amber-50/30 ${disabledClass}`}>
+                            <td colSpan={5} className="px-3 py-1">
+                              <div className="flex items-start gap-2">
+                                <span className="text-xs text-amber-700 font-medium whitespace-nowrap pt-1">分析考え方:</span>
+                                <textarea
+                                  value={state.reviewerComment?.trim() || ''}
+                                  onChange={(e) =>
+                                    updateEditState(record.id, { reviewerComment: e.target.value })
+                                  }
+                                  onBlur={() => handleAutoSave(record.id)}
+                                  className="flex-1 p-1 border border-amber-200 rounded text-xs bg-white resize-none"
+                                  placeholder="この分析の考え方やメモを記録..."
+                                  rows={1}
+                                />
+                              </div>
+                            </td>
+                          </tr>
+                        )}
                       </React.Fragment>
                     )
                   })}
