@@ -56,6 +56,33 @@ const RECORD_STATUS = {
   published: {id: 'published', label: '掲載済', color: '#22c55e'},
 }
 
+/** 装備カテゴリ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const EQUIPMENT_CATEGORIES = {
+  tent: {id: 'tent', name: 'テント', icon: '⛺', color: '#22c55e', bgColor: '#dcfce7'},
+  rope: {id: 'rope', name: 'ロープ', icon: '🧵', color: '#3b82f6', bgColor: '#dbeafe'},
+  radio: {id: 'radio', name: '無線機', icon: '📻', color: '#a855f7', bgColor: '#f3e8ff'},
+  climbing: {id: 'climbing', name: '登攀具', icon: '🧗', color: '#f97316', bgColor: '#ffedd5'},
+  cooking: {id: 'cooking', name: '調理器具', icon: '🍳', color: '#eab308', bgColor: '#fef9c3'},
+  other: {id: 'other', name: 'その他', icon: '📦', color: '#6b7280', bgColor: '#f3f4f6'},
+}
+
+/** 装備状態 */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const EQUIPMENT_CONDITIONS = {
+  good: {id: 'good', label: '良好', color: '#22c55e', bgColor: '#dcfce7'},
+  needsCheck: {id: 'needsCheck', label: '要点検', color: '#eab308', bgColor: '#fef9c3'},
+  repairing: {id: 'repairing', label: '修理中', color: '#ef4444', bgColor: '#fee2e2'},
+}
+
+/** 装備ステータス */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const EQUIPMENT_STATUS = {
+  available: {id: 'available', label: '貸出可', color: '#22c55e', bgColor: '#dcfce7'},
+  rented: {id: 'rented', label: '貸出中', color: '#3b82f6', bgColor: '#dbeafe'},
+  maintenance: {id: 'maintenance', label: 'メンテナンス中', color: '#ef4444', bgColor: '#fee2e2'},
+}
+
 // =============================================================================
 // 初期データ
 // =============================================================================
@@ -245,6 +272,37 @@ const INITIAL_RECORD_FILES = [
   },
 ]
 
+/** 装備品マスター */
+const INITIAL_EQUIPMENT = [
+  // テント
+  {id: 1, name: 'テント 3人用 #1', categoryId: 'tent', condition: 'good', status: 'available', purchaseDate: '2023-04-01', notes: 'MSR製、軽量モデル', isDeleted: false},
+  {id: 2, name: 'テント 3人用 #2', categoryId: 'tent', condition: 'needsCheck', status: 'available', purchaseDate: '2022-06-15', notes: 'ファスナー要確認', isDeleted: false},
+  {id: 3, name: 'テント 4人用', categoryId: 'tent', condition: 'good', status: 'rented', purchaseDate: '2024-01-10', notes: 'モンベル製', isDeleted: false},
+  // ロープ
+  {id: 4, name: 'ザイル 50m #1', categoryId: 'rope', condition: 'good', status: 'available', purchaseDate: '2024-03-01', notes: '直径10mm、ドライ加工', isDeleted: false},
+  {id: 5, name: 'ザイル 50m #2', categoryId: 'rope', condition: 'good', status: 'rented', purchaseDate: '2024-03-01', notes: '直径10mm、ドライ加工', isDeleted: false},
+  // 無線機
+  {id: 6, name: 'トランシーバー #1', categoryId: 'radio', condition: 'good', status: 'available', purchaseDate: '2023-08-01', notes: 'アイコム IC-R6', isDeleted: false},
+  {id: 7, name: 'トランシーバー #2', categoryId: 'radio', condition: 'repairing', status: 'maintenance', purchaseDate: '2023-08-01', notes: '電池交換中', isDeleted: false},
+  // 登攀具
+  {id: 8, name: 'ヘルメット #1', categoryId: 'climbing', condition: 'good', status: 'rented', purchaseDate: '2024-05-01', notes: 'ペツル製', isDeleted: false},
+  {id: 9, name: 'ヘルメット #2', categoryId: 'climbing', condition: 'good', status: 'available', purchaseDate: '2024-05-01', notes: 'ペツル製', isDeleted: false},
+  // 調理器具
+  {id: 10, name: 'コッヘルセット 大', categoryId: 'cooking', condition: 'good', status: 'available', purchaseDate: '2022-03-01', notes: '10人分対応', isDeleted: false},
+  {id: 11, name: 'ガスバーナー #1', categoryId: 'cooking', condition: 'good', status: 'available', purchaseDate: '2023-09-01', notes: 'プリムス製', isDeleted: false},
+  // その他
+  {id: 12, name: 'ツェルト 2人用', categoryId: 'other', condition: 'good', status: 'available', purchaseDate: '2024-02-01', notes: '緊急用', isDeleted: false},
+  {id: 13, name: 'GPS端末', categoryId: 'other', condition: 'needsCheck', status: 'available', purchaseDate: '2021-11-01', notes: 'Garmin、ファームウェア更新要', isDeleted: false},
+]
+
+/** 装備貸出履歴 */
+const INITIAL_RENTALS = [
+  {id: 1, equipmentId: 3, memberId: 2, eventId: 2, rentDate: '2026-02-12', dueDate: '2026-02-17', returnDate: null, notes: '西穂高岳で使用', isDeleted: false},
+  {id: 2, equipmentId: 5, memberId: 5, eventId: 2, rentDate: '2026-02-12', dueDate: '2026-02-17', returnDate: null, notes: '', isDeleted: false},
+  {id: 3, equipmentId: 8, memberId: 7, eventId: null, rentDate: '2026-01-20', dueDate: '2026-01-25', returnDate: null, notes: '個人練習用（期限超過中）', isDeleted: false},
+  {id: 4, equipmentId: 4, memberId: 3, eventId: 1, rentDate: '2026-02-01', dueDate: '2026-02-08', returnDate: '2026-02-08', notes: 'クリーンハイクで使用', isDeleted: false},
+]
+
 // =============================================================================
 // ユーティリティ
 // =============================================================================
@@ -386,12 +444,50 @@ export default function YamanokaiMock() {
   const [attendances, setAttendances] = useState(INITIAL_ATTENDANCES)
   const [records, setRecords] = useState(INITIAL_RECORDS)
   const [recordFiles, setRecordFiles] = useState(INITIAL_RECORD_FILES)
+  const [equipment, setEquipment] = useState(INITIAL_EQUIPMENT)
+  const [rentals, setRentals] = useState(INITIAL_RENTALS)
 
   // 有効なデータのみフィルタ（ソフトデリート対応）
   const activeEvents = useMemo(() => events.filter(e => !e.isDeleted), [events])
   const activeAttendances = useMemo(() => attendances.filter(a => !a.isDeleted), [attendances])
   const activeRecords = useMemo(() => records.filter(r => !r.isDeleted), [records])
   const activeRecordFiles = useMemo(() => recordFiles.filter(f => !f.isDeleted), [recordFiles])
+  const activeEquipment = useMemo(() => equipment.filter(e => !e.isDeleted), [equipment])
+  const activeRentals = useMemo(() => rentals.filter(r => !r.isDeleted), [rentals])
+
+  // 装備貸出処理
+  const handleRent = (equipmentId, memberId, dueDate, eventId, notes) => {
+    // 装備のステータスを貸出中に変更
+    setEquipment(prev => prev.map(e => (e.id === equipmentId ? {...e, status: 'rented'} : e)))
+    // 貸出記録を追加
+    setRentals(prev => [
+      ...prev,
+      {
+        id: generateId(prev),
+        equipmentId,
+        memberId,
+        eventId: eventId || null,
+        rentDate: new Date().toISOString().split('T')[0],
+        dueDate,
+        returnDate: null,
+        notes: notes || '',
+        isDeleted: false,
+      },
+    ])
+  }
+
+  // 装備返却処理
+  const handleReturn = rentalId => {
+    const rental = rentals.find(r => r.id === rentalId)
+    if (rental) {
+      // 装備のステータスを貸出可に変更
+      setEquipment(prev => prev.map(e => (e.id === rental.equipmentId ? {...e, status: 'available'} : e)))
+      // 返却日を記録
+      setRentals(prev =>
+        prev.map(r => (r.id === rentalId ? {...r, returnDate: new Date().toISOString().split('T')[0]} : r))
+      )
+    }
+  }
 
   // メニュー定義
   const menuItems = [
@@ -399,10 +495,18 @@ export default function YamanokaiMock() {
     {id: 'admin-list', label: '例会一覧', icon: '📋', adminOnly: true},
     {id: 'admin-create', label: '例会の新規作成', icon: '➕', adminOnly: true},
     {type: 'divider', adminOnly: true},
+    {type: 'header', label: '装備品（管理者）', adminOnly: true},
+    {id: 'admin-equipment', label: '装備一覧', icon: '🎒', adminOnly: true},
+    {id: 'admin-equipment-create', label: '装備の新規登録', icon: '➕', adminOnly: true},
+    {type: 'divider', adminOnly: true},
     {type: 'header', label: '例会（一般会員）'},
     {id: 'member-calendar', label: '例会スケジュール', icon: '📅'},
     {id: 'member-attendance', label: '出席回答履歴', icon: '✋'},
     {id: 'member-records', label: '例会記録', icon: '📖'},
+    {type: 'divider'},
+    {type: 'header', label: '装備品（一般会員）'},
+    {id: 'member-equipment', label: '装備貸出・返却', icon: '🎒'},
+    {id: 'member-my-rentals', label: '貸出履歴', icon: '📝'},
     {type: 'divider'},
     {type: 'header', label: 'システム情報'},
     {id: 'data-structure', label: 'データ構造図', icon: '🗂️'},
@@ -596,6 +700,49 @@ export default function YamanokaiMock() {
               onDeleteFile={fileId => setRecordFiles(prev => prev.map(f => (f.id === fileId ? {...f, isDeleted: true} : f)))}
             />
           )}
+          {activeMenu === 'admin-equipment' && (
+            <AdminEquipmentList
+              equipment={activeEquipment}
+              rentals={activeRentals}
+              members={INITIAL_MEMBERS}
+              events={activeEvents}
+              onUpdate={(id, data) => setEquipment(prev => prev.map(e => (e.id === id ? {...e, ...data} : e)))}
+              onDelete={id => setEquipment(prev => prev.map(e => (e.id === id ? {...e, isDeleted: true} : e)))}
+            />
+          )}
+          {activeMenu === 'admin-equipment-create' && (
+            <AdminEquipmentForm
+              onSave={data => {
+                const newEquipment = {
+                  ...data,
+                  id: generateId(equipment),
+                  isDeleted: false,
+                }
+                setEquipment(prev => [...prev, newEquipment])
+                setActiveMenu('admin-equipment')
+              }}
+            />
+          )}
+          {activeMenu === 'member-equipment' && (
+            <MemberEquipmentRental
+              equipment={activeEquipment}
+              rentals={activeRentals}
+              members={INITIAL_MEMBERS}
+              events={activeEvents}
+              currentUserId={currentUserId}
+              onRent={handleRent}
+              onReturn={handleReturn}
+            />
+          )}
+          {activeMenu === 'member-my-rentals' && (
+            <MemberMyRentals
+              equipment={activeEquipment}
+              rentals={activeRentals}
+              events={activeEvents}
+              currentUserId={currentUserId}
+            />
+          )}
+          {activeMenu === 'data-structure' && <DataStructureDiagram />}
         </div>
       </main>
     </div>
@@ -1926,5 +2073,1020 @@ function RecordForm({initialData, initialFiles = [], events, members, currentUse
         </Button>
       </div>
     </form>
+  )
+}
+
+// =============================================================================
+// 管理者: 装備一覧
+// =============================================================================
+
+function AdminEquipmentList({equipment, rentals, members, events, onUpdate, onDelete}) {
+  const [selectedEquipment, setSelectedEquipment] = useState(null)
+  const [editingEquipment, setEditingEquipment] = useState(null)
+  const [filterCategory, setFilterCategory] = useState('')
+  const [filterStatus, setFilterStatus] = useState('')
+
+  // フィルタリング
+  const filteredEquipment = equipment.filter(e => {
+    if (filterCategory && e.categoryId !== filterCategory) return false
+    if (filterStatus && e.status !== filterStatus) return false
+    return true
+  })
+
+  // 期限超過の貸出を取得
+  const getOverdueRental = equipmentId => {
+    const today = new Date().toISOString().split('T')[0]
+    return rentals.find(r => r.equipmentId === equipmentId && !r.returnDate && r.dueDate < today)
+  }
+
+  // 現在の貸出を取得
+  const getCurrentRental = equipmentId => {
+    return rentals.find(r => r.equipmentId === equipmentId && !r.returnDate)
+  }
+
+  const getMemberName = id => members.find(m => m.id === id)?.name || ''
+  const getEventTitle = id => events.find(e => e.id === id)?.title || ''
+
+  return (
+    <div className="space-y-4">
+      {/* フィルター */}
+      <Card className="p-4">
+        <div className="flex items-center gap-4 flex-wrap">
+          <label className="text-sm font-medium">カテゴリ:</label>
+          <Select
+            value={filterCategory}
+            onChange={setFilterCategory}
+            placeholder="すべて"
+            options={Object.values(EQUIPMENT_CATEGORIES).map(c => ({value: c.id, label: `${c.icon} ${c.name}`}))}
+            className="w-40"
+          />
+          <label className="text-sm font-medium">ステータス:</label>
+          <Select
+            value={filterStatus}
+            onChange={setFilterStatus}
+            placeholder="すべて"
+            options={Object.values(EQUIPMENT_STATUS).map(s => ({value: s.id, label: s.label}))}
+            className="w-40"
+          />
+          <span className="text-sm text-gray-500">全{filteredEquipment.length}件</span>
+        </div>
+      </Card>
+
+      {/* 装備リスト */}
+      <div className="space-y-2">
+        {filteredEquipment.map(eq => {
+          const category = EQUIPMENT_CATEGORIES[eq.categoryId]
+          const condition = EQUIPMENT_CONDITIONS[eq.condition]
+          const status = EQUIPMENT_STATUS[eq.status]
+          const overdue = getOverdueRental(eq.id)
+          const currentRental = getCurrentRental(eq.id)
+
+          return (
+            <Card key={eq.id} className={`p-4 hover:shadow-md transition-shadow ${overdue ? 'border-red-300 bg-red-50' : ''}`}>
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xl">{category.icon}</span>
+                    <Badge color={category.color} bgColor={category.bgColor}>
+                      {category.name}
+                    </Badge>
+                    <Badge color={status.color} bgColor={status.bgColor}>
+                      {status.label}
+                    </Badge>
+                    <Badge color={condition.color} bgColor={condition.bgColor}>
+                      {condition.label}
+                    </Badge>
+                    {overdue && (
+                      <Badge color="#ef4444" bgColor="#fee2e2">
+                        ⚠️ 期限超過
+                      </Badge>
+                    )}
+                  </div>
+                  <h3 className="font-bold text-lg">{eq.name}</h3>
+                  {eq.notes && <p className="text-sm text-gray-600">{eq.notes}</p>}
+                  {currentRental && (
+                    <div className="mt-2 text-sm text-gray-500">
+                      貸出先: {getMemberName(currentRental.memberId)}
+                      {currentRental.eventId && ` (${getEventTitle(currentRental.eventId)})`}
+                      {' '}/ 返却予定: {formatDate(currentRental.dueDate)}
+                    </div>
+                  )}
+                </div>
+
+                {/* アクション */}
+                <div className="flex flex-col gap-1 ml-4">
+                  <Button size="sm" variant="secondary" onClick={() => setSelectedEquipment(eq)}>
+                    詳細
+                  </Button>
+                  <Button size="sm" variant="secondary" onClick={() => setEditingEquipment(eq)}>
+                    編集
+                  </Button>
+                  <Button size="sm" variant="danger" onClick={() => onDelete(eq.id)}>
+                    削除
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          )
+        })}
+      </div>
+
+      {/* 詳細モーダル */}
+      <Modal isOpen={!!selectedEquipment} onClose={() => setSelectedEquipment(null)} title="装備詳細" size="lg">
+        {selectedEquipment && (
+          <AdminEquipmentDetail
+            equipment={selectedEquipment}
+            rentals={rentals.filter(r => r.equipmentId === selectedEquipment.id)}
+            members={members}
+            events={events}
+          />
+        )}
+      </Modal>
+
+      {/* 編集モーダル */}
+      <Modal isOpen={!!editingEquipment} onClose={() => setEditingEquipment(null)} title="装備編集" size="lg">
+        {editingEquipment && (
+          <AdminEquipmentForm
+            initialData={editingEquipment}
+            onSave={data => {
+              onUpdate(editingEquipment.id, data)
+              setEditingEquipment(null)
+            }}
+            onCancel={() => setEditingEquipment(null)}
+          />
+        )}
+      </Modal>
+    </div>
+  )
+}
+
+// =============================================================================
+// 管理者: 装備詳細
+// =============================================================================
+
+function AdminEquipmentDetail({equipment, rentals, members, events}) {
+  const category = EQUIPMENT_CATEGORIES[equipment.categoryId]
+  const condition = EQUIPMENT_CONDITIONS[equipment.condition]
+  const status = EQUIPMENT_STATUS[equipment.status]
+
+  const getMemberName = id => members.find(m => m.id === id)?.name || ''
+  const getEventTitle = id => events.find(e => e.id === id)?.title || '-'
+
+  // 貸出履歴をソート（新しい順）
+  const sortedRentals = [...rentals].sort((a, b) => new Date(b.rentDate) - new Date(a.rentDate))
+
+  return (
+    <div className="space-y-6">
+      {/* 基本情報 */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <h4 className="font-bold text-sm text-gray-500">装備名</h4>
+          <div className="flex items-center gap-2">
+            <span className="text-xl">{category.icon}</span>
+            <p>{equipment.name}</p>
+          </div>
+        </div>
+        <div>
+          <h4 className="font-bold text-sm text-gray-500">カテゴリ</h4>
+          <Badge color={category.color} bgColor={category.bgColor}>
+            {category.name}
+          </Badge>
+        </div>
+        <div>
+          <h4 className="font-bold text-sm text-gray-500">ステータス</h4>
+          <Badge color={status.color} bgColor={status.bgColor}>
+            {status.label}
+          </Badge>
+        </div>
+        <div>
+          <h4 className="font-bold text-sm text-gray-500">状態</h4>
+          <Badge color={condition.color} bgColor={condition.bgColor}>
+            {condition.label}
+          </Badge>
+        </div>
+        <div>
+          <h4 className="font-bold text-sm text-gray-500">購入日</h4>
+          <p>{equipment.purchaseDate || '-'}</p>
+        </div>
+        <div>
+          <h4 className="font-bold text-sm text-gray-500">備考</h4>
+          <p>{equipment.notes || '-'}</p>
+        </div>
+      </div>
+
+      {/* 貸出履歴 */}
+      <div>
+        <h4 className="font-bold text-sm text-gray-500 mb-2">貸出履歴 ({sortedRentals.length}件)</h4>
+        <div className="border rounded overflow-hidden">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-4 py-2 text-left">貸出日</th>
+                <th className="px-4 py-2 text-left">会員名</th>
+                <th className="px-4 py-2 text-left">例会</th>
+                <th className="px-4 py-2 text-left">返却予定</th>
+                <th className="px-4 py-2 text-left">返却日</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedRentals.map(rental => {
+                const isOverdue = !rental.returnDate && rental.dueDate < new Date().toISOString().split('T')[0]
+                return (
+                  <tr key={rental.id} className={`border-t ${isOverdue ? 'bg-red-50' : ''}`}>
+                    <td className="px-4 py-2">{rental.rentDate}</td>
+                    <td className="px-4 py-2">{getMemberName(rental.memberId)}</td>
+                    <td className="px-4 py-2">{getEventTitle(rental.eventId)}</td>
+                    <td className="px-4 py-2">
+                      {rental.dueDate}
+                      {isOverdue && <span className="text-red-500 ml-1">⚠️</span>}
+                    </td>
+                    <td className="px-4 py-2">{rental.returnDate || '未返却'}</td>
+                  </tr>
+                )
+              })}
+              {sortedRentals.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="px-4 py-8 text-center text-gray-400">
+                    貸出履歴がありません
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// =============================================================================
+// 管理者: 装備フォーム（新規作成・編集共通）
+// =============================================================================
+
+function AdminEquipmentForm({initialData, onSave, onCancel}) {
+  const [form, setForm] = useState(
+    initialData || {
+      name: '',
+      categoryId: '',
+      condition: 'good',
+      status: 'available',
+      purchaseDate: '',
+      notes: '',
+    }
+  )
+
+  const updateForm = (key, value) => setForm(prev => ({...prev, [key]: value}))
+
+  const handleSubmit = e => {
+    e.preventDefault()
+    onSave(form)
+  }
+
+  const isValid = form.name && form.categoryId
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="grid grid-cols-2 gap-4">
+        <FormField label="装備名" required>
+          <Input value={form.name} onChange={v => updateForm('name', v)} placeholder="例: テント 3人用 #1" />
+        </FormField>
+        <FormField label="カテゴリ" required>
+          <Select
+            value={form.categoryId}
+            onChange={v => updateForm('categoryId', v)}
+            placeholder="選択してください"
+            options={Object.values(EQUIPMENT_CATEGORIES).map(c => ({value: c.id, label: `${c.icon} ${c.name}`}))}
+          />
+        </FormField>
+        <FormField label="状態">
+          <Select
+            value={form.condition}
+            onChange={v => updateForm('condition', v)}
+            options={Object.values(EQUIPMENT_CONDITIONS).map(c => ({value: c.id, label: c.label}))}
+          />
+        </FormField>
+        <FormField label="ステータス">
+          <Select
+            value={form.status}
+            onChange={v => updateForm('status', v)}
+            options={Object.values(EQUIPMENT_STATUS).map(s => ({value: s.id, label: s.label}))}
+          />
+        </FormField>
+        <FormField label="購入日">
+          <Input type="date" value={form.purchaseDate} onChange={v => updateForm('purchaseDate', v)} />
+        </FormField>
+      </div>
+
+      <FormField label="備考">
+        <Textarea value={form.notes} onChange={v => updateForm('notes', v)} rows={3} placeholder="メーカー名、サイズ、注意事項など" />
+      </FormField>
+
+      <div className="flex justify-end gap-2">
+        {onCancel && (
+          <Button type="button" variant="secondary" onClick={onCancel}>
+            キャンセル
+          </Button>
+        )}
+        <Button type="submit" disabled={!isValid}>
+          {initialData ? '更新する' : '登録する'}
+        </Button>
+      </div>
+    </form>
+  )
+}
+
+// =============================================================================
+// 一般会員: 装備貸出・返却
+// =============================================================================
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function MemberEquipmentRental({equipment, rentals, members, events, currentUserId, onRent, onReturn}) {
+  const [filterCategory, setFilterCategory] = useState('')
+  const [rentalModal, setRentalModal] = useState(null)
+
+  // 貸出可能な装備のみ表示
+  const availableEquipment = equipment.filter(e => {
+    if (e.status !== 'available') return false
+    if (filterCategory && e.categoryId !== filterCategory) return false
+    return true
+  })
+
+  // 自分が借りている装備
+  const myCurrentRentals = rentals.filter(r => r.memberId === currentUserId && !r.returnDate)
+
+  const getEquipment = id => equipment.find(e => e.id === id)
+  const getEventTitle = id => events.find(e => e.id === id)?.title || ''
+
+  return (
+    <div className="space-y-4">
+      <Card className="p-4">
+        <p className="text-gray-600">貸出可能な装備を選んで貸出申請を行えます。返却もこちらから行えます。</p>
+      </Card>
+
+      {/* 自分の貸出中装備 */}
+      {myCurrentRentals.length > 0 && (
+        <Card className="p-4">
+          <h3 className="font-bold mb-3">現在借りている装備 ({myCurrentRentals.length}件)</h3>
+          <div className="space-y-2">
+            {myCurrentRentals.map(rental => {
+              const eq = getEquipment(rental.equipmentId)
+              if (!eq) return null
+              const category = EQUIPMENT_CATEGORIES[eq.categoryId]
+              const isOverdue = rental.dueDate < new Date().toISOString().split('T')[0]
+
+              return (
+                <div key={rental.id} className={`flex items-center justify-between p-3 rounded border ${isOverdue ? 'border-red-300 bg-red-50' : 'bg-gray-50'}`}>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span>{category.icon}</span>
+                      <span className="font-medium">{eq.name}</span>
+                      {isOverdue && <Badge color="#ef4444" bgColor="#fee2e2">期限超過</Badge>}
+                    </div>
+                    <p className="text-sm text-gray-500">
+                      返却予定: {formatDate(rental.dueDate)}
+                      {rental.eventId && ` / ${getEventTitle(rental.eventId)}`}
+                    </p>
+                  </div>
+                  <Button size="sm" variant="success" onClick={() => onReturn(rental.id)}>
+                    返却する
+                  </Button>
+                </div>
+              )
+            })}
+          </div>
+        </Card>
+      )}
+
+      {/* フィルター */}
+      <Card className="p-4">
+        <div className="flex items-center gap-4">
+          <label className="text-sm font-medium">カテゴリで絞り込み:</label>
+          <Select
+            value={filterCategory}
+            onChange={setFilterCategory}
+            placeholder="すべて"
+            options={Object.values(EQUIPMENT_CATEGORIES).map(c => ({value: c.id, label: `${c.icon} ${c.name}`}))}
+            className="w-48"
+          />
+          <span className="text-sm text-gray-500">貸出可能: {availableEquipment.length}件</span>
+        </div>
+      </Card>
+
+      {/* 貸出可能装備リスト */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {availableEquipment.map(eq => {
+          const category = EQUIPMENT_CATEGORIES[eq.categoryId]
+          const condition = EQUIPMENT_CONDITIONS[eq.condition]
+
+          return (
+            <Card key={eq.id} className="p-4">
+              <div className="flex items-start justify-between">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-2xl">{category.icon}</span>
+                    <Badge color={category.color} bgColor={category.bgColor}>
+                      {category.name}
+                    </Badge>
+                    <Badge color={condition.color} bgColor={condition.bgColor}>
+                      {condition.label}
+                    </Badge>
+                  </div>
+                  <h4 className="font-bold">{eq.name}</h4>
+                  {eq.notes && <p className="text-sm text-gray-500 mt-1">{eq.notes}</p>}
+                </div>
+                <Button size="sm" onClick={() => setRentalModal(eq)}>
+                  借りる
+                </Button>
+              </div>
+            </Card>
+          )
+        })}
+        {availableEquipment.length === 0 && (
+          <Card className="p-8 text-center text-gray-400 col-span-2">
+            貸出可能な装備がありません
+          </Card>
+        )}
+      </div>
+
+      {/* 貸出申請モーダル */}
+      <Modal isOpen={!!rentalModal} onClose={() => setRentalModal(null)} title="装備貸出申請" size="md">
+        {rentalModal && (
+          <RentalForm
+            equipment={rentalModal}
+            events={events}
+            onSave={(dueDate, eventId, notes) => {
+              onRent(rentalModal.id, currentUserId, dueDate, eventId, notes)
+              setRentalModal(null)
+            }}
+            onCancel={() => setRentalModal(null)}
+          />
+        )}
+      </Modal>
+    </div>
+  )
+}
+
+// =============================================================================
+// 貸出申請フォーム
+// =============================================================================
+
+function RentalForm({equipment, events, onSave, onCancel}) {
+  const category = EQUIPMENT_CATEGORIES[equipment.categoryId]
+  const [dueDate, setDueDate] = useState('')
+  const [eventId, setEventId] = useState('')
+  const [notes, setNotes] = useState('')
+
+  // 今後の例会のみ選択可能
+  const futureEvents = events.filter(e => new Date(e.startDate) >= new Date())
+
+  const handleSubmit = e => {
+    e.preventDefault()
+    onSave(dueDate, eventId ? Number(eventId) : null, notes)
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="flex items-center gap-3 p-3 bg-gray-50 rounded">
+        <span className="text-2xl">{category.icon}</span>
+        <div>
+          <p className="font-bold">{equipment.name}</p>
+          <p className="text-sm text-gray-500">{category.name}</p>
+        </div>
+      </div>
+
+      <FormField label="返却予定日" required>
+        <Input
+          type="date"
+          value={dueDate}
+          onChange={setDueDate}
+          min={new Date().toISOString().split('T')[0]}
+        />
+      </FormField>
+
+      <FormField label="使用する例会（任意）">
+        <Select
+          value={eventId}
+          onChange={setEventId}
+          placeholder="例会を選択（個人利用の場合は空欄）"
+          options={futureEvents.map(e => ({value: e.id, label: `${formatDate(e.startDate)} ${e.title}`}))}
+        />
+      </FormField>
+
+      <FormField label="備考">
+        <Textarea value={notes} onChange={setNotes} rows={2} placeholder="使用目的など" />
+      </FormField>
+
+      <div className="flex justify-end gap-2">
+        <Button type="button" variant="secondary" onClick={onCancel}>
+          キャンセル
+        </Button>
+        <Button type="submit" disabled={!dueDate}>
+          貸出を申請
+        </Button>
+      </div>
+    </form>
+  )
+}
+
+// =============================================================================
+// 一般会員: 貸出履歴
+// =============================================================================
+
+function MemberMyRentals({equipment, rentals, events, currentUserId}) {
+  const myRentals = rentals.filter(r => r.memberId === currentUserId)
+  const sortedRentals = [...myRentals].sort((a, b) => new Date(b.rentDate) - new Date(a.rentDate))
+
+  const getEquipment = id => equipment.find(e => e.id === id)
+  const getEventTitle = id => events.find(e => e.id === id)?.title || '-'
+
+  return (
+    <div className="space-y-4">
+      <Card className="p-4">
+        <p className="text-gray-600">あなたの装備貸出履歴です。</p>
+      </Card>
+
+      <div className="space-y-2">
+        {sortedRentals.length === 0 ? (
+          <Card className="p-8 text-center text-gray-400">貸出履歴がありません</Card>
+        ) : (
+          sortedRentals.map(rental => {
+            const eq = getEquipment(rental.equipmentId)
+            if (!eq) return null
+            const category = EQUIPMENT_CATEGORIES[eq.categoryId]
+            const isActive = !rental.returnDate
+            const isOverdue = isActive && rental.dueDate < new Date().toISOString().split('T')[0]
+
+            return (
+              <Card key={rental.id} className={`p-4 ${isOverdue ? 'border-red-300 bg-red-50' : ''}`}>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-xl">{category.icon}</span>
+                      <Badge color={category.color} bgColor={category.bgColor}>
+                        {category.name}
+                      </Badge>
+                      {isActive ? (
+                        <Badge color="#3b82f6" bgColor="#dbeafe">貸出中</Badge>
+                      ) : (
+                        <Badge color="#6b7280" bgColor="#f3f4f6">返却済</Badge>
+                      )}
+                      {isOverdue && <Badge color="#ef4444" bgColor="#fee2e2">期限超過</Badge>}
+                    </div>
+                    <h4 className="font-bold">{eq.name}</h4>
+                    <div className="mt-2 text-sm text-gray-500 space-y-1">
+                      <p>貸出日: {rental.rentDate}</p>
+                      <p>返却予定: {formatDate(rental.dueDate)}</p>
+                      {rental.returnDate && <p>返却日: {rental.returnDate}</p>}
+                      {rental.eventId && <p>例会: {getEventTitle(rental.eventId)}</p>}
+                      {rental.notes && <p>備考: {rental.notes}</p>}
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            )
+          })
+        )}
+      </div>
+    </div>
+  )
+}
+
+// =============================================================================
+// データ構造図（ER図）
+// =============================================================================
+
+function DataStructureDiagram() {
+  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [hoveredTable, setHoveredTable] = useState(null)
+
+  // テーブル定義
+  const tables = {
+    // マスターデータ
+    YamanokaiDepartment: {
+      category: 'master',
+      label: '部署',
+      color: '#22c55e',
+      fields: ['id', 'code', 'name', 'color', 'bgColor'],
+      x: 50,
+      y: 50,
+    },
+    YamanokaiRole: {
+      category: 'master',
+      label: '役職',
+      color: '#3b82f6',
+      fields: ['id', 'code', 'name', 'level', 'permissions[]'],
+      x: 250,
+      y: 50,
+    },
+    YamanokaiCourse: {
+      category: 'master',
+      label: '講座',
+      color: '#a855f7',
+      fields: ['id', 'name', 'description', 'prerequisiteIds[]', 'departmentId'],
+      x: 450,
+      y: 50,
+    },
+    YamanokaiEquipment: {
+      category: 'master',
+      label: '装備',
+      color: '#eab308',
+      fields: ['id', 'name', 'category', 'totalQuantity'],
+      x: 650,
+      y: 50,
+    },
+    YamanokaiInsuranceGrade: {
+      category: 'master',
+      label: '保険口数',
+      color: '#6b7280',
+      fields: ['id', 'kuchi', 'name', 'eligibleActivities[]'],
+      x: 850,
+      y: 50,
+    },
+
+    // 会員データ
+    YamanokaiMember: {
+      category: 'member',
+      label: '会員',
+      color: '#ef4444',
+      fields: [
+        'id',
+        'name',
+        'email',
+        'phone',
+        'insuranceKuchi',
+        'departmentId',
+        'roleId',
+        'isAdmin',
+        'isActive',
+      ],
+      x: 150,
+      y: 220,
+    },
+    YamanokaiMemberRole: {
+      category: 'member',
+      label: '役職履歴',
+      color: '#f97316',
+      fields: ['id', 'memberId', 'roleId', 'departmentId', 'startAt', 'endAt'],
+      x: 400,
+      y: 220,
+    },
+    YamanokaiCourseCompletion: {
+      category: 'member',
+      label: '受講履歴',
+      color: '#84cc16',
+      fields: ['id', 'memberId', 'courseId', 'eventId', 'completedAt'],
+      x: 650,
+      y: 220,
+    },
+
+    // 例会データ
+    YamanokaiEvent: {
+      category: 'event',
+      label: '例会',
+      color: '#0ea5e9',
+      fields: [
+        'id',
+        'title',
+        'mountainName',
+        'departmentId',
+        'clId',
+        'slId',
+        'startAt',
+        'endAt',
+        'staminaGrade',
+        'skillGrade',
+        'status',
+      ],
+      x: 150,
+      y: 400,
+    },
+    YamanokaiEventPlan: {
+      category: 'event',
+      label: '計画書',
+      color: '#06b6d4',
+      fields: ['id', 'eventId', 'detailedCourse', 'escapeRoute', 'status', 'approvedBy'],
+      x: 400,
+      y: 400,
+    },
+    YamanokaiEventPlanParticipant: {
+      category: 'event',
+      label: '計画書参加者',
+      color: '#14b8a6',
+      fields: ['id', 'eventPlanId', 'memberId', 'role', 'name(snapshot)', 'phone(snapshot)'],
+      x: 650,
+      y: 400,
+    },
+
+    // 出席・記録データ
+    YamanokaiAttendance: {
+      category: 'attendance',
+      label: '出席回答',
+      color: '#8b5cf6',
+      fields: ['id', 'eventId', 'memberId', 'status', 'comment'],
+      x: 150,
+      y: 570,
+    },
+    YamanokaiRecord: {
+      category: 'record',
+      label: '例会記録',
+      color: '#ec4899',
+      fields: ['id', 'eventId', 'title', 'recordedAt', 'weather', 'authorId', 'status'],
+      x: 400,
+      y: 570,
+    },
+    YamanokaiRecordFile: {
+      category: 'record',
+      label: '記録ファイル',
+      color: '#f43f5e',
+      fields: ['id', 'recordId', 'fileUrl', 'fileName', 'fileType', 'description'],
+      x: 650,
+      y: 570,
+    },
+
+    // 装備貸出
+    YamanokaiEquipmentLoan: {
+      category: 'equipment',
+      label: '装備貸出',
+      color: '#d97706',
+      fields: ['id', 'equipmentId', 'memberId', 'eventId', 'quantity', 'loanAt', 'returnedAt', 'status'],
+      x: 850,
+      y: 400,
+    },
+  }
+
+  // リレーション定義
+  const relations = [
+    // 部署との関係
+    {from: 'YamanokaiDepartment', to: 'YamanokaiMember', label: '1:N', type: 'one-to-many'},
+    {from: 'YamanokaiDepartment', to: 'YamanokaiEvent', label: '1:N', type: 'one-to-many'},
+    {from: 'YamanokaiDepartment', to: 'YamanokaiCourse', label: '1:N', type: 'one-to-many'},
+
+    // 役職との関係
+    {from: 'YamanokaiRole', to: 'YamanokaiMember', label: '1:N', type: 'one-to-many'},
+    {from: 'YamanokaiRole', to: 'YamanokaiMemberRole', label: '1:N', type: 'one-to-many'},
+
+    // 会員との関係
+    {from: 'YamanokaiMember', to: 'YamanokaiMemberRole', label: '1:N', type: 'one-to-many'},
+    {from: 'YamanokaiMember', to: 'YamanokaiCourseCompletion', label: '1:N', type: 'one-to-many'},
+    {from: 'YamanokaiMember', to: 'YamanokaiAttendance', label: '1:N', type: 'one-to-many'},
+    {from: 'YamanokaiMember', to: 'YamanokaiRecord', label: '1:N', type: 'one-to-many'},
+    {from: 'YamanokaiMember', to: 'YamanokaiEquipmentLoan', label: '1:N', type: 'one-to-many'},
+    {from: 'YamanokaiMember', to: 'YamanokaiEventPlanParticipant', label: '1:N', type: 'one-to-many'},
+
+    // 講座との関係
+    {from: 'YamanokaiCourse', to: 'YamanokaiCourseCompletion', label: '1:N', type: 'one-to-many'},
+
+    // 例会との関係
+    {from: 'YamanokaiEvent', to: 'YamanokaiAttendance', label: '1:N', type: 'one-to-many'},
+    {from: 'YamanokaiEvent', to: 'YamanokaiEventPlan', label: '1:1', type: 'one-to-one'},
+    {from: 'YamanokaiEvent', to: 'YamanokaiRecord', label: '1:1', type: 'one-to-one'},
+    {from: 'YamanokaiEvent', to: 'YamanokaiCourseCompletion', label: '1:N', type: 'one-to-many'},
+    {from: 'YamanokaiEvent', to: 'YamanokaiEquipmentLoan', label: '1:N', type: 'one-to-many'},
+
+    // 計画書との関係
+    {from: 'YamanokaiEventPlan', to: 'YamanokaiEventPlanParticipant', label: '1:N', type: 'one-to-many'},
+
+    // 記録との関係
+    {from: 'YamanokaiRecord', to: 'YamanokaiRecordFile', label: '1:N', type: 'one-to-many'},
+
+    // 装備との関係
+    {from: 'YamanokaiEquipment', to: 'YamanokaiEquipmentLoan', label: '1:N', type: 'one-to-many'},
+  ]
+
+  // カテゴリ定義
+  const categories = [
+    {id: 'all', label: 'すべて', color: '#6b7280'},
+    {id: 'master', label: 'マスターデータ', color: '#22c55e'},
+    {id: 'member', label: '会員データ', color: '#ef4444'},
+    {id: 'event', label: '例会データ', color: '#0ea5e9'},
+    {id: 'attendance', label: '出席データ', color: '#8b5cf6'},
+    {id: 'record', label: '記録データ', color: '#ec4899'},
+    {id: 'equipment', label: '装備データ', color: '#d97706'},
+  ]
+
+  // フィルタリング
+  const filteredTables =
+    selectedCategory === 'all'
+      ? Object.entries(tables)
+      : Object.entries(tables).filter(([, t]) => t.category === selectedCategory)
+
+  const filteredRelations =
+    selectedCategory === 'all'
+      ? relations
+      : relations.filter(r => {
+          const fromTable = tables[r.from]
+          const toTable = tables[r.to]
+          return fromTable?.category === selectedCategory || toTable?.category === selectedCategory
+        })
+
+  // テーブルの幅と高さを計算
+  const getTableDimensions = fields => {
+    const width = 160
+    const height = 30 + fields.length * 18 + 10
+    return {width, height}
+  }
+
+  // SVGパスを計算（テーブル間の線）
+  const calculatePath = (from, to) => {
+    const fromTable = tables[from]
+    const toTable = tables[to]
+    if (!fromTable || !toTable) return ''
+
+    const fromDim = getTableDimensions(fromTable.fields)
+    const toDim = getTableDimensions(toTable.fields)
+
+    const fromCenterX = fromTable.x + fromDim.width / 2
+    const fromCenterY = fromTable.y + fromDim.height / 2
+    const toCenterX = toTable.x + toDim.width / 2
+    const toCenterY = toTable.y + toDim.height / 2
+
+    // 接続点を計算
+    let fromX, fromY, toX, toY
+
+    // 水平方向の接続
+    if (Math.abs(fromCenterX - toCenterX) > Math.abs(fromCenterY - toCenterY)) {
+      if (fromCenterX < toCenterX) {
+        fromX = fromTable.x + fromDim.width
+        toX = toTable.x
+      } else {
+        fromX = fromTable.x
+        toX = toTable.x + toDim.width
+      }
+      fromY = fromCenterY
+      toY = toCenterY
+    } else {
+      // 垂直方向の接続
+      if (fromCenterY < toCenterY) {
+        fromY = fromTable.y + fromDim.height
+        toY = toTable.y
+      } else {
+        fromY = fromTable.y
+        toY = toTable.y + toDim.height
+      }
+      fromX = fromCenterX
+      toX = toCenterX
+    }
+
+    // ベジェ曲線で滑らかに接続
+    const midX = (fromX + toX) / 2
+    const midY = (fromY + toY) / 2
+    return `M ${fromX} ${fromY} Q ${midX} ${fromY}, ${midX} ${midY} Q ${midX} ${toY}, ${toX} ${toY}`
+  }
+
+  return (
+    <div className="space-y-4">
+      <Card className="p-4">
+        <h3 className="font-bold mb-3">山の会（KCAC）データ構造図</h3>
+        <p className="text-sm text-gray-600 mb-4">
+          Prismaスキーマで定義されたテーブル間の関係性を図示しています。
+        </p>
+
+        {/* カテゴリフィルター */}
+        <div className="flex flex-wrap gap-2">
+          {categories.map(cat => (
+            <button
+              key={cat.id}
+              onClick={() => setSelectedCategory(cat.id)}
+              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                selectedCategory === cat.id ? 'text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+              style={selectedCategory === cat.id ? {backgroundColor: cat.color} : {}}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+      </Card>
+
+      {/* ER図本体 */}
+      <Card className="p-4 overflow-auto">
+        <div className="min-w-[1100px] min-h-[700px] relative">
+          <svg width="1100" height="700" className="absolute inset-0">
+            {/* リレーション線 */}
+            <defs>
+              <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#9ca3af" />
+              </marker>
+            </defs>
+
+            {filteredRelations.map((rel, idx) => {
+              const path = calculatePath(rel.from, rel.to)
+              const isHighlighted = hoveredTable === rel.from || hoveredTable === rel.to
+              return (
+                <g key={idx}>
+                  <path
+                    d={path}
+                    fill="none"
+                    stroke={isHighlighted ? '#3b82f6' : '#d1d5db'}
+                    strokeWidth={isHighlighted ? 2 : 1}
+                    markerEnd={rel.type === 'one-to-many' ? 'url(#arrowhead)' : ''}
+                    className="transition-all duration-200"
+                  />
+                </g>
+              )
+            })}
+          </svg>
+
+          {/* テーブルボックス */}
+          {filteredTables.map(([name, table]) => {
+            const dim = getTableDimensions(table.fields)
+            const isHovered = hoveredTable === name
+            const isRelated =
+              hoveredTable &&
+              relations.some(
+                r => (r.from === hoveredTable && r.to === name) || (r.to === hoveredTable && r.from === name)
+              )
+
+            return (
+              <div
+                key={name}
+                className={`absolute bg-white border-2 rounded-lg shadow-sm overflow-hidden transition-all duration-200 ${
+                  isHovered ? 'shadow-lg z-10' : isRelated ? 'shadow-md z-5' : ''
+                }`}
+                style={{
+                  left: table.x,
+                  top: table.y,
+                  width: dim.width,
+                  borderColor: isHovered || isRelated ? table.color : '#e5e7eb',
+                }}
+                onMouseEnter={() => setHoveredTable(name)}
+                onMouseLeave={() => setHoveredTable(null)}
+              >
+                {/* テーブルヘッダー */}
+                <div className="px-2 py-1 text-white text-xs font-bold" style={{backgroundColor: table.color}}>
+                  {table.label}
+                </div>
+
+                {/* フィールド一覧 */}
+                <div className="px-2 py-1">
+                  {table.fields.map((field, idx) => (
+                    <div
+                      key={idx}
+                      className={`text-xs py-0.5 ${field === 'id' ? 'font-bold text-gray-800' : 'text-gray-600'} ${
+                        field.endsWith('Id') || field.endsWith('Id[]') ? 'text-blue-600' : ''
+                      }`}
+                    >
+                      {field === 'id' ? '🔑 ' : field.endsWith('Id') ? '🔗 ' : ''}
+                      {field}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </Card>
+
+      {/* 凡例 */}
+      <Card className="p-4">
+        <h4 className="font-bold text-sm mb-3">凡例</h4>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+          <div className="flex items-center gap-2">
+            <span className="text-xs">🔑</span>
+            <span>主キー (id)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs">🔗</span>
+            <span className="text-blue-600">外部キー (*Id)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <svg width="40" height="20">
+              <line x1="0" y1="10" x2="30" y2="10" stroke="#9ca3af" strokeWidth="2" />
+              <polygon points="30 5, 40 10, 30 15" fill="#9ca3af" />
+            </svg>
+            <span>1:N 関係</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <svg width="40" height="20">
+              <line x1="0" y1="10" x2="40" y2="10" stroke="#9ca3af" strokeWidth="2" />
+            </svg>
+            <span>1:1 関係</span>
+          </div>
+        </div>
+
+        <div className="mt-4 pt-4 border-t">
+          <h5 className="font-medium text-sm mb-2">リレーション一覧</h5>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 text-xs">
+            {relations.map((rel, idx) => (
+              <div
+                key={idx}
+                className={`flex items-center gap-1 p-1 rounded ${
+                  hoveredTable === rel.from || hoveredTable === rel.to ? 'bg-blue-50' : ''
+                }`}
+              >
+                <span className="font-medium" style={{color: tables[rel.from]?.color}}>
+                  {tables[rel.from]?.label}
+                </span>
+                <span className="text-gray-400">→</span>
+                <span className="font-medium" style={{color: tables[rel.to]?.color}}>
+                  {tables[rel.to]?.label}
+                </span>
+                <span className="text-gray-400 ml-1">({rel.label})</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Card>
+    </div>
   )
 }
