@@ -62,7 +62,7 @@ export default async function Page(props) {
 
     whereQuery.gte = whereQuery.gte ? Days.day.subtract(whereQuery.gte, 1) : undefined
 
-    console.log(whereQuery)  //logs
+
 
     driveScheduleList = await getDriveScheduleList({
       firstDayOfMonth: whereQuery.gte,
@@ -89,9 +89,6 @@ export default async function Page(props) {
       const filteredSchedules = scheduleList.filter(schedule => {
         const matchesCustomer = schedule.TbmRouteGroup.Mid_TbmRouteGroup_TbmCustomer?.TbmCustomer?.id === customerId
 
-        if (schedule.TbmRouteGroup.name === '下3  土・日曜運行') {
-          console.log({ date: schedule.date })  //logs
-        }
 
 
 

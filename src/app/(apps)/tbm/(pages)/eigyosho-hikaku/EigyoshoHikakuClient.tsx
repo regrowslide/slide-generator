@@ -9,7 +9,7 @@ import { cn } from '@cm/shadcn/lib/utils'
 import { getCustomerSchedules, CustomerSchedulesData } from '@app/(apps)/tbm/(server-actions)/get-customer-schedules'
 import { formatDate } from '@cm/class/Days/date-utils/formatters'
 import useModal from '@cm/components/utils/modal/useModal'
-import { calculateSalesBySchedules } from '@app/(apps)/tbm/(lib)/calculation'
+import { calculateSalesBySchedules, getFeeOnDate } from '@app/(apps)/tbm/(lib)/calculation'
 import { TBM_CODE } from '@app/(apps)/tbm/(class)/TBM_CODE'
 
 type EigyoshoHikakuClientProps = {
@@ -26,6 +26,7 @@ export default function EigyoshoHikakuClient({
   return (
     <div className={cn('border p-2 w-full items-start overflow-x-auto max-w-[95vw] mx-auto h-[85vh] grid grid-cols-2 gap-16')}>
       {eigyoshoHikakuDataList.map((data) => (
+
         <EigyoshoCard key={data.tbmBase.id} data={data} firstDayOfMonth={firstDayOfMonth} whereQuery={whereQuery} />
       ))}
     </div>
@@ -211,20 +212,18 @@ function ScheduleTable({ schedules }: { schedules: CustomerSchedulesData['schedu
         const categorySchedules = schedulesByCategory[categoryCode]
         const categoryLabel = TBM_CODE.ROUTE_KBN.byCode(categoryCode)?.label || '不明'
 
-        // 便名でグループ化（請求書ページと同じロジック）
-        // 路線名と便名の組み合わせでグループ化
-        const schedulesByRouteAndName = categorySchedules.reduce(
+        // 便グループごとにグループ化して calculateSalesBySchedules で計算（営業所比較ページと同じロジック）
+        const schedulesByRouteGroup = categorySchedules.reduce(
           (acc, schedule) => {
-            const routeName = schedule.TbmRouteGroup?.routeName || schedule.TbmRouteGroup?.name
-            const routeNameForGroup = schedule.TbmRouteGroup?.name || ''
-            const key = `${routeName}::${routeNameForGroup}`
-            if (!acc[key]) {
-              acc[key] = []
+            const routeGroupId = schedule.TbmRouteGroup?.id
+            if (!routeGroupId) return acc
+            if (!acc[routeGroupId]) {
+              acc[routeGroupId] = []
             }
-            acc[key].push(schedule)
+            acc[routeGroupId].push(schedule)
             return acc
           },
-          {} as Record<string, typeof categorySchedules>
+          {} as Record<number, typeof categorySchedules>
         )
 
         return (
@@ -235,35 +234,39 @@ function ScheduleTable({ schedules }: { schedules: CustomerSchedulesData['schedu
                 <tr className="border-b-2 border-gray-300">
                   <th className="text-left py-2 px-3 font-semibold">便名</th>
                   <th className="text-right py-2 px-3 font-semibold">便数</th>
-                  <th className="text-right py-2 px-3 font-semibold">運賃合計</th>
-                  <th className="text-right py-2 px-3 font-semibold">付帯料合計</th>
-                  <th className="text-right py-2 px-3 font-semibold">小計</th>
+                  <th className="text-right py-2 px-3 font-semibold">運賃</th>
+                  <th className="text-right py-2 px-3 font-semibold">付帯料</th>
+                  <th className="text-right py-2 px-3 font-semibold">通行料</th>
+                  <th className="text-right py-2 px-3 font-semibold">合計（税抜）</th>
                 </tr>
               </thead>
               <tbody>
-                {Object.entries(schedulesByRouteAndName).map(([key, routeSchedules]) => {
+                {Object.entries(schedulesByRouteGroup).map(([routeGroupId, routeSchedules]) => {
                   const routeName = routeSchedules[0]?.TbmRouteGroup?.name || '不明'
-                    const tripCount = routeSchedules.length
-                    const driverFeeTotal = routeSchedules.reduce((sum, s) => {
-                      const fee = getFeeOnDate(s)
-                      return sum + (fee?.driverFee || 0)
-                    }, 0)
-                    const futaiFeeTotal = routeSchedules.reduce((sum, s) => {
-                      const fee = getFeeOnDate(s)
-                      return sum + (fee?.futaiFee || 0)
-                    }, 0)
-                    const subtotal = driverFeeTotal + futaiFeeTotal
+                  const tripCount = routeSchedules.length
+                  // 運賃と付帯料を分けて計算
+                  const driverFeeTotal = routeSchedules.reduce((sum, s) => {
+                    const fee = getFeeOnDate(s)
+                    return sum + (fee?.driverFee || 0)
+                  }, 0)
+                  const futaiFeeTotal = routeSchedules.reduce((sum, s) => {
+                    const fee = getFeeOnDate(s)
+                    return sum + (fee?.futaiFee || 0)
+                  }, 0)
+                  // calculateSalesBySchedules で通行料を含めて計算（営業所比較ページと同じ）
+                  const sales = calculateSalesBySchedules(routeSchedules)
 
-                    return (
-                      <tr key={routeName} className="border-b border-gray-200 hover:bg-gray-50">
-                        <td className="py-2 px-3">{routeName}</td>
-                        <td className="text-right py-2 px-3">{tripCount}件</td>
-                        <td className="text-right py-2 px-3">{NumHandler.toPrice(driverFeeTotal)}</td>
-                        <td className="text-right py-2 px-3">{NumHandler.toPrice(futaiFeeTotal)}</td>
-                        <td className="text-right py-2 px-3 font-semibold">{NumHandler.toPrice(subtotal)}</td>
-                      </tr>
-                    )
-                  })}
+                  return (
+                    <tr key={routeGroupId} className="border-b border-gray-200 hover:bg-gray-50">
+                      <td className="py-2 px-3">{routeName}</td>
+                      <td className="text-right py-2 px-3">{tripCount}件</td>
+                      <td className="text-right py-2 px-3">{NumHandler.toPrice(driverFeeTotal)}</td>
+                      <td className="text-right py-2 px-3">{NumHandler.toPrice(futaiFeeTotal)}</td>
+                      <td className="text-right py-2 px-3">{NumHandler.toPrice(sales.tollExclTax)}</td>
+                      <td className="text-right py-2 px-3 font-semibold">{NumHandler.toPrice(sales.totalExclTax)}</td>
+                    </tr>
+                  )
+                })}
               </tbody>
               <tfoot className="bg-gray-100 font-bold">
                 <tr className="border-t-2 border-gray-400">
@@ -289,9 +292,17 @@ function ScheduleTable({ schedules }: { schedules: CustomerSchedulesData['schedu
                   </td>
                   <td className="text-right py-2 px-3">
                     {NumHandler.toPrice(
-                      categorySchedules.reduce((sum, s) => {
-                        const fee = getFeeOnDate(s)
-                        return sum + (fee?.driverFee || 0) + (fee?.futaiFee || 0)
+                      Object.values(schedulesByRouteGroup).reduce((sum, routeSchedules) => {
+                        const sales = calculateSalesBySchedules(routeSchedules)
+                        return sum + sales.tollExclTax
+                      }, 0)
+                    )}
+                  </td>
+                  <td className="text-right py-2 px-3">
+                    {NumHandler.toPrice(
+                      Object.values(schedulesByRouteGroup).reduce((sum, routeSchedules) => {
+                        const sales = calculateSalesBySchedules(routeSchedules)
+                        return sum + sales.totalExclTax
                       }, 0)
                     )}
                   </td>
@@ -304,7 +315,7 @@ function ScheduleTable({ schedules }: { schedules: CustomerSchedulesData['schedu
 
       <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded">
         <div className="text-lg font-bold">総合計</div>
-        <div className="grid grid-cols-4 gap-4 mt-2">
+        <div className="grid grid-cols-5 gap-4 mt-2">
           <div>
             <div className="text-sm text-gray-600">合計便数</div>
             <div className="text-xl font-bold">{schedules.length}件</div>
@@ -332,13 +343,18 @@ function ScheduleTable({ schedules }: { schedules: CustomerSchedulesData['schedu
             </div>
           </div>
           <div>
-            <div className="text-sm text-gray-600">総計（税抜）</div>
+            <div className="text-sm text-gray-600">通行料合計</div>
+            <div className="text-xl font-bold">
+              {NumHandler.toPrice(
+                calculateSalesBySchedules(schedules).tollExclTax
+              )}
+            </div>
+          </div>
+          <div>
+            <div className="text-sm text-gray-600">合計（税抜）</div>
             <div className="text-xl font-bold text-blue-600">
               {NumHandler.toPrice(
-                schedules.reduce((sum, s) => {
-                  const fee = getFeeOnDate(s)
-                  return sum + (fee?.driverFee || 0) + (fee?.futaiFee || 0)
-                }, 0)
+                calculateSalesBySchedules(schedules).totalExclTax
               )}
             </div>
           </div>

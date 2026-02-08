@@ -1,6 +1,6 @@
 'use server'
 
-import { calculateSalesBySchedules } from '@app/(apps)/tbm/(lib)/calculation'
+import { calculateSalesBySchedules, getFeeOnDate } from '@app/(apps)/tbm/(lib)/calculation'
 import { getDriveScheduleList } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
 import { tbmTableKeyValue } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
 import { TbmBase, TbmCustomer } from '@prisma/generated/prisma/client'
@@ -108,14 +108,7 @@ export const fetchEigyoshoHikakuData = async ({
           // 正式な売上計算（請求書ページと同一ロジック）
           const sales = calculateSalesBySchedules(schedules)
 
-          const filtered = schedules.filter(s => {
-            return s.TbmRouteGroup.name.includes('下3  土・日曜運行')
-          })
-          if (filtered.length > 0) {
-            filtered.forEach(s => {
-              console.log(s.date)  //logs
-            })
-          }
+
 
           return {
             customer,
@@ -180,20 +173,16 @@ export const fetchEigyoshoHikakuData = async ({
         return codeA.localeCompare(codeB, 'ja')
       })
 
-      // 総合計を計算
-      const grandTotal = customerSalesRecords.reduce(
-        (acc, record) => {
-          return {
-            postalFee: acc.postalFee + (Number(record.keyValue.postalFee.cellValue) || 0),
-            generalFee: acc.generalFee + (Number(record.keyValue.generalFee.cellValue) || 0),
-            driverFee: acc.driverFee + (Number(record.keyValue.driverFee.cellValue) || 0),
-            totalExclTax: acc.totalExclTax + (Number(record.keyValue.totalExclTax.cellValue) || 0),
-            taxAmount: acc.taxAmount + (Number(record.keyValue.taxAmount.cellValue) || 0),
-            grandTotal: acc.grandTotal + (Number(record.keyValue.grandTotal.cellValue) || 0),
-          }
-        },
-        { postalFee: 0, generalFee: 0, driverFee: 0, totalExclTax: 0, taxAmount: 0, grandTotal: 0 }
-      )
+      // 総合計を計算（全フィルタ済みスケジュールで calculateSalesBySchedules を使用）
+      const salesTotal = calculateSalesBySchedules(filteredSchedules)
+      const grandTotal = {
+        postalFee: 0,  // calculateSalesBySchedules では郵便/一般を分けていないため0
+        generalFee: salesTotal.tollExclTax,  // 通行料合計
+        driverFee: salesTotal.driverFeeTotal,  // 運賃合計
+        totalExclTax: salesTotal.totalExclTax,
+        taxAmount: salesTotal.taxAmount,
+        grandTotal: salesTotal.grandTotal,
+      }
 
       return {
         tbmBase,

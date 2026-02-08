@@ -43,6 +43,7 @@ export const InvoiceDocument = forwardRef<InvoiceDocumentRef, InvoiceDocumentPro
 
 
 
+
     useImperativeHandle(ref, () => ({
       getEditedData: () => ({
         summaryByCategory,
