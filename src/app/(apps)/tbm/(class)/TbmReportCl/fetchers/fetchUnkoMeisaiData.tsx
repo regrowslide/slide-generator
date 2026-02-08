@@ -81,6 +81,7 @@ export const getDriveScheduleList = async (props: {
 
 
 
+
   const tbmDriveSchedule = await prisma.tbmDriveSchedule.findMany({
     where: whereArgs,
     orderBy: [{ date: 'asc' }, { TbmRouteGroup: { departureTime: { sort: 'asc', nulls: 'last' } } }, { createdAt: 'asc' }, { userId: 'asc' }],
@@ -103,6 +104,8 @@ export const getDriveScheduleList = async (props: {
       },
     },
   })
+
+
 
   return tbmDriveSchedule
 }
@@ -142,10 +145,10 @@ export const fetchUnkoMeisaiData = async ({
   // 共通フィルタで対象月のスケジュールのみ抽出
   const filteredSchedules = firstDayOfMonth
     ? await getFilteredSchedulesByMonth({
-        targetMonth: firstDayOfMonth,
-        whereQuery,
-        providedScheduleList: rawSchedules,
-      })
+      targetMonth: firstDayOfMonth,
+      whereQuery,
+      providedScheduleList: rawSchedules,
+    })
     : rawSchedules
 
   // 対象月の年月を取得（whereQuery.gteは月初日）

@@ -23,6 +23,12 @@ export const getFilteredSchedulesByMonth = async (props: {
 }): Promise<DriveScheduleData[]> => {
   const { targetMonth, whereQuery, tbmBaseId, userId, providedScheduleList } = props
 
+
+
+
+
+
+
   // 既取得データがあればDB呼び出しをスキップ
   const rawSchedules =
     providedScheduleList ||
@@ -37,16 +43,29 @@ export const getFilteredSchedulesByMonth = async (props: {
       userId,
     }))
 
+
   // BillingHandler で対象月に属するスケジュールのみフィルタ
   const billingTargetMonth = toUtc(new Date(targetMonth.getFullYear(), targetMonth.getMonth() + 1, 1))
 
+
   const filteredSchedules = rawSchedules.filter(schedule => {
+
+
     const billingMonth = BillingHandler.getBillingMonth(
       billingTargetMonth,
       schedule.date,
       schedule.TbmRouteGroup.departureTime,
       schedule.TbmRouteGroup.id
     )
+
+    // if (schedule.TbmRouteGroup.name.includes('土・日曜運行')) {
+    //   console.log({
+    //     foo: [
+    //       formatDate(schedule.date), schedule.TbmRouteGroup.name
+    //     ]
+    //   })  //logs
+    // }
+
     return formatDate(billingMonth, 'YYYYMM') === formatDate(billingTargetMonth, 'YYYYMM')
   })
 

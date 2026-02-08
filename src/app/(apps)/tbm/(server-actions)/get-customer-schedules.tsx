@@ -23,19 +23,19 @@ export const getCustomerSchedules = async ({
   whereQuery: { gte?: Date | undefined; lte?: Date | undefined }
   tbmBaseId: number | undefined
 }): Promise<CustomerSchedulesData> => {
-  // 共通フィルタで対象月のスケジュールを取得（day-1 + BillingHandler処理は内部で実行）
+  // 共通フィルタで対象月のスケジュールを取得（営業所フィルタなし → ドライバ所属で後フィルタ）
   const billingFilteredSchedules = firstDayOfMonth
     ? await getFilteredSchedulesByMonth({
         targetMonth: firstDayOfMonth,
         whereQuery,
-        tbmBaseId,
       })
     : []
 
-  // customerId でフィルタリング
+  // ドライバの所属営業所 + customerId でフィルタリング
   const filteredSchedules = billingFilteredSchedules.filter((schedule) => {
     const scheduleCustomerId = schedule.TbmRouteGroup?.Mid_TbmRouteGroup_TbmCustomer?.tbmCustomerId
-    return scheduleCustomerId === customerId
+    const driverBaseMatch = tbmBaseId ? schedule.User?.tbmBaseId === tbmBaseId : true
+    return scheduleCustomerId === customerId && driverBaseMatch
   })
 
   // 荷主名を取得

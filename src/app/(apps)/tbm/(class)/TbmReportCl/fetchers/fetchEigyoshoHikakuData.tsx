@@ -5,8 +5,9 @@ import { tbmTableKeyValue } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/f
 import { getFilteredSchedulesByMonth } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/shared/getFilteredSchedules'
 import { TbmBase, TbmCustomer } from '@prisma/generated/prisma/client'
 import prisma from 'src/lib/prisma'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
 
-export type CustomerSalesKey = 'code' | 'customerName' | 'postalFee' | 'generalFee' | 'driverFee' | 'totalExclTax' | 'taxAmount' | 'grandTotal'
+export type CustomerSalesKey = 'code' | 'customerName' | 'postalFee' | 'generalFee' | 'driverFee' | 'futaiFee' | 'totalExclTax' | 'taxAmount' | 'grandTotal'
 
 export type CustomerSalesRecord = {
   customer: TbmCustomer | null
@@ -22,6 +23,7 @@ export type EigyoshoHikakuData = {
     postalFee: number
     generalFee: number
     driverFee: number
+    futaiFee: number
     totalExclTax: number
     taxAmount: number
     grandTotal: number
@@ -47,23 +49,30 @@ export const fetchEigyoshoHikakuData = async ({
 
 
 
-  // 各営業所ごとにデータを取得・集計
-  const eigyoshoHikakuDataList = await Promise.all(
-    allTbmBases.map(async (tbmBase) => {
-      // 共通フィルタで対象月のスケジュールを取得（day-1 + BillingHandler処理は内部で実行）
-      const filteredSchedules = firstDayOfMonth
-        ? await getFilteredSchedulesByMonth({
-            targetMonth: firstDayOfMonth,
-            whereQuery,
-            tbmBaseId: tbmBase.id,
-          })
-        : []
+  // 全スケジュールを一度だけ取得（営業所フィルタなし）
+  const allFilteredSchedules = firstDayOfMonth
+    ? await getFilteredSchedulesByMonth({
+        targetMonth: firstDayOfMonth,
+        whereQuery,
+      })
+    : []
+
+  // 各営業所ごとに、所属ドライバが走った便でフィルタ・集計
+  const eigyoshoHikakuDataList = allTbmBases.map((tbmBase) => {
+      // ドライバの所属営業所でフィルタ（便の所属ではなくドライバの所属）
+      const filteredSchedules = allFilteredSchedules.filter(
+        (schedule) => schedule.User?.tbmBaseId === tbmBase.id
+      )
 
       // 荷主ごとにグループ化
       const customerMap = new Map<number, typeof filteredSchedules>()
 
       filteredSchedules.forEach((schedule) => {
         const customerId = schedule.TbmRouteGroup?.Mid_TbmRouteGroup_TbmCustomer?.tbmCustomerId
+
+
+
+
 
         if (customerId) {
           if (!customerMap.has(customerId)) {
@@ -72,6 +81,8 @@ export const fetchEigyoshoHikakuData = async ({
           customerMap.get(customerId)!.push(schedule)
         }
       })
+
+
 
       // 荷主別に集計
       const widthBase = 120
@@ -83,6 +94,17 @@ export const fetchEigyoshoHikakuData = async ({
 
           // 正式な売上計算（請求書ページと同一ロジック）
           const sales = calculateSalesBySchedules(schedules)
+
+          const filtered = schedules.filter(s => {
+            return s.TbmRouteGroup.name.includes('土・日曜運行')
+          })
+
+
+          if (filtered.length > 0) {
+            filtered.forEach(s => {
+              // console.log(s.date, s.TbmRouteGroup.name)  //logs
+            })
+          }
 
 
 
@@ -111,7 +133,12 @@ export const fetchEigyoshoHikakuData = async ({
               },
               driverFee: {
                 label: '運賃',
-                cellValue: sales.driverFeeTotal,
+                cellValue: sales.driverFee,
+                style: { fontSize: 12, minWidth: widthBase },
+              },
+              futaiFee: {
+                label: '付帯料金',
+                cellValue: sales.futaiFee,
                 style: { fontSize: 12, minWidth: widthBase },
               },
               totalExclTax: {
@@ -154,7 +181,8 @@ export const fetchEigyoshoHikakuData = async ({
       const grandTotal = {
         postalFee: 0,  // calculateSalesBySchedules では郵便/一般を分けていないため0
         generalFee: salesTotal.tollExclTax,  // 通行料合計
-        driverFee: salesTotal.driverFeeTotal,  // 運賃合計
+        driverFee: salesTotal.driverFee,  // 運賃
+        futaiFee: salesTotal.futaiFee,  // 付帯料金
         totalExclTax: salesTotal.totalExclTax,
         taxAmount: salesTotal.taxAmount,
         grandTotal: salesTotal.grandTotal,
@@ -166,7 +194,6 @@ export const fetchEigyoshoHikakuData = async ({
         grandTotal,
       }
     })
-  )
 
   return eigyoshoHikakuDataList
 }
