@@ -42,7 +42,20 @@ function EigyoshoCard({
   firstDayOfMonth: Date | undefined
   whereQuery: { gte?: Date | undefined; lte?: Date | undefined }
 }) {
-  const { tbmBase, customerSalesRecords, grandTotal } = data
+  const { tbmBase, customerSalesRecords } = data
+
+  // 明細行の値を足し上げて合計を計算（grandTotalと明細のずれを防止）
+  const summedTotal = customerSalesRecords.reduce(
+    (acc, record) => ({
+      postalFee: acc.postalFee + (Number(record.keyValue.postalFee.cellValue) || 0),
+      generalFee: acc.generalFee + (Number(record.keyValue.generalFee.cellValue) || 0),
+      driverFee: acc.driverFee + (Number(record.keyValue.driverFee.cellValue) || 0),
+      totalExclTax: acc.totalExclTax + (Number(record.keyValue.totalExclTax.cellValue) || 0),
+      taxAmount: acc.taxAmount + (Number(record.keyValue.taxAmount.cellValue) || 0),
+      grandTotal: acc.grandTotal + (Number(record.keyValue.grandTotal.cellValue) || 0),
+    }),
+    { postalFee: 0, generalFee: 0, driverFee: 0, totalExclTax: 0, taxAmount: 0, grandTotal: 0 }
+  )
 
   const tableClassName = cn(
     '[&_th]:!text-[11px]',
@@ -98,12 +111,12 @@ function EigyoshoCard({
                 <td colSpan={2} className="py-2 px-2 text-center">
                   合計
                 </td>
-                <td className="text-right py-2 px-2">{NumHandler.toPrice(grandTotal.postalFee)}</td>
-                <td className="text-right py-2 px-2">{NumHandler.toPrice(grandTotal.generalFee)}</td>
-                <td className="text-right py-2 px-2">{NumHandler.toPrice(grandTotal.driverFee)}</td>
-                <td className="text-right py-2 px-2">{NumHandler.toPrice(grandTotal.totalExclTax)}</td>
-                <td className="text-right py-2 px-2">{NumHandler.toPrice(grandTotal.taxAmount)}</td>
-                <td className="text-right py-2 px-2 bg-blue-100">{NumHandler.toPrice(grandTotal.grandTotal)}</td>
+                <td className="text-right py-2 px-2">{NumHandler.toPrice(summedTotal.postalFee)}</td>
+                <td className="text-right py-2 px-2">{NumHandler.toPrice(summedTotal.generalFee)}</td>
+                <td className="text-right py-2 px-2">{NumHandler.toPrice(summedTotal.driverFee)}</td>
+                <td className="text-right py-2 px-2">{NumHandler.toPrice(summedTotal.totalExclTax)}</td>
+                <td className="text-right py-2 px-2">{NumHandler.toPrice(summedTotal.taxAmount)}</td>
+                <td className="text-right py-2 px-2 bg-blue-100">{NumHandler.toPrice(summedTotal.grandTotal)}</td>
               </tr>
             </tfoot>
           </table>

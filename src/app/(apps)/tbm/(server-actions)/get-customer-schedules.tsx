@@ -1,10 +1,7 @@
 'use server'
 
-import { getDriveScheduleList, DriveScheduleData } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
-import { Days } from '@cm/class/Days/Days'
-import { BillingHandler } from '@app/(apps)/tbm/(class)/TimeHandler'
-import { formatDate } from '@cm/class/Days/date-utils/formatters'
-import { toUtc } from '@cm/class/Days/date-utils/calculations'
+import { DriveScheduleData } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
+import { getFilteredSchedulesByMonth } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/shared/getFilteredSchedules'
 
 export type CustomerSchedulesData = {
   schedules: DriveScheduleData[]
@@ -13,7 +10,7 @@ export type CustomerSchedulesData = {
 
 /**
  * 荷主の運行明細データを取得
- * fetchEigyoshoHikakuData と同じロジックで getBillingMonth() でフィルタリング
+ * 共通フィルタで月別フィルタリング後、顧客でフィルタリング
  */
 export const getCustomerSchedules = async ({
   customerId,
@@ -26,33 +23,14 @@ export const getCustomerSchedules = async ({
   whereQuery: { gte?: Date | undefined; lte?: Date | undefined }
   tbmBaseId: number | undefined
 }): Promise<CustomerSchedulesData> => {
-  // 月末日跨ぎ運行対応のため、前日も含めて取得（fetchEigyoshoHikakuData と同じロジック）
-  const allSchedules = await getDriveScheduleList({
-    firstDayOfMonth,
-    whereQuery: {
-      ...whereQuery,
-      gte: whereQuery.gte ? Days.day.subtract(whereQuery.gte, 1) : undefined,
-    },
-    tbmBaseId,
-    userId: undefined,
-  })
-
-  // getBillingMonth() でフィルタリング（fetchEigyoshoHikakuData と同じロジック）
-  const targetMonth = firstDayOfMonth
-    ? toUtc(new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth() + 1, 1))
-    : null
-
-  const billingFilteredSchedules = targetMonth
-    ? allSchedules.filter((schedule) => {
-        const billingMonth = BillingHandler.getBillingMonth(
-          targetMonth,
-          schedule.date,
-          schedule.TbmRouteGroup.departureTime,
-          schedule.TbmRouteGroup.id
-        )
-        return formatDate(billingMonth, 'YYYYMM') === formatDate(targetMonth, 'YYYYMM')
+  // 共通フィルタで対象月のスケジュールを取得（day-1 + BillingHandler処理は内部で実行）
+  const billingFilteredSchedules = firstDayOfMonth
+    ? await getFilteredSchedulesByMonth({
+        targetMonth: firstDayOfMonth,
+        whereQuery,
+        tbmBaseId,
       })
-    : allSchedules
+    : []
 
   // customerId でフィルタリング
   const filteredSchedules = billingFilteredSchedules.filter((schedule) => {

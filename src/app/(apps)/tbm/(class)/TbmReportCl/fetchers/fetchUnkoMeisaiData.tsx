@@ -22,7 +22,7 @@ import { TbmReportCl } from '@app/(apps)/tbm/(class)/TbmReportCl'
 import { unkoMeisaiKeyValue } from '@app/(apps)/tbm/(class)/TbmReportCl/cols/createUnkoMeisaiRow'
 import { Days } from '@cm/class/Days/Days'
 import { formatDate } from '@cm/class/Days/date-utils/formatters'
-import { BillingHandler } from '@app/(apps)/tbm/(class)/TimeHandler'
+import { getFilteredSchedulesByMonth } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/shared/getFilteredSchedules'
 
 export type DriveScheduleData = Awaited<ReturnType<typeof getDriveScheduleList>>[number]
 export const getDriveScheduleList = async (props: {
@@ -128,7 +128,7 @@ export const fetchUnkoMeisaiData = async ({
   })
 
   // 月末日跨ぎ運行対応のため、前日も含めて取得（例：11/30の運行で出発時刻2400の場合は12月に表示）
-  const tbmDriveSchedule = await getDriveScheduleList({
+  const rawSchedules = await getDriveScheduleList({
     firstDayOfMonth,
     allowNonApprovedSchedule,
     whereQuery: {
@@ -139,35 +139,27 @@ export const fetchUnkoMeisaiData = async ({
     userId,
   })
 
+  // 共通フィルタで対象月のスケジュールのみ抽出
+  const filteredSchedules = firstDayOfMonth
+    ? await getFilteredSchedulesByMonth({
+        targetMonth: firstDayOfMonth,
+        whereQuery,
+        providedScheduleList: rawSchedules,
+      })
+    : rawSchedules
+
   // 対象月の年月を取得（whereQuery.gteは月初日）
   const targetYearMonth = firstDayOfMonth ? formatDate(firstDayOfMonth, 'YYYYMM') : null
 
-  // 便ごとの月間実働回数を計算するためのMap
-  // 月判定ロジックでフィルタリングしてからカウント
+  // 便ごとの月間実働回数を計算（フィルタ済みデータからカウント）
   const routeGroupTripCountMap = new Map<number, number>()
-  tbmDriveSchedule.forEach(schedule => {
-
-    const isBelongsToMonth = !firstDayOfMonth || BillingHandler.belongsToMonth(
-      schedule.date,
-      schedule.TbmRouteGroup.departureTime,
-      schedule.TbmRouteGroup.id,
-      firstDayOfMonth
-    )
-
-
-
-
-
-
-    // 月判定ロジックでフィルタリング
-    if (isBelongsToMonth) {
-      const routeGroupId = schedule.tbmRouteGroupId
-      const currentCount = routeGroupTripCountMap.get(routeGroupId) || 0
-      routeGroupTripCountMap.set(routeGroupId, currentCount + 1)
-    }
+  filteredSchedules.forEach(schedule => {
+    const routeGroupId = schedule.tbmRouteGroupId
+    const currentCount = routeGroupTripCountMap.get(routeGroupId) || 0
+    routeGroupTripCountMap.set(routeGroupId, currentCount + 1)
   })
 
-  const monthlyTbmDriveList = tbmDriveSchedule
+  const monthlyTbmDriveList = filteredSchedules
     .map(schedule => {
       // 便ごとの月間実働回数を取得
       const jitsudoKaisu = routeGroupTripCountMap.get(schedule.tbmRouteGroupId) || 1
@@ -214,6 +206,7 @@ export const fetchUnkoMeisaiData = async ({
 
   return {
     monthlyTbmDriveList,
+    filteredSchedules,
     ConfigForMonth,
     userList,
   }

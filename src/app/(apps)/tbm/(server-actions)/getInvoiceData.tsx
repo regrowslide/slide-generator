@@ -3,13 +3,10 @@
 import prisma from 'src/lib/prisma'
 import { TBM_CODE } from '@app/(apps)/tbm/(class)/TBM_CODE'
 
-import { BillingHandler } from '@app/(apps)/tbm/(class)/TimeHandler'
-import { toUtc } from '@cm/class/Days/date-utils/calculations'
-import { formatDate } from '@cm/class/Days/date-utils/formatters'
 import { getInvoiceManualEdit } from './invoiceManualEdit'
-import { DriveScheduleData, getDriveScheduleList } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
+import { DriveScheduleData } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
 import { getFeeOnDate, calculateRouteGroupSales } from '@app/(apps)/tbm/(lib)/calculation'
-import { Days } from '@cm/class/Days/Days'
+import { getFilteredSchedulesByMonth } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/shared/getFilteredSchedules'
 
 // 単価のバリエーションを計算する関数
 function calculatePriceVariations(
@@ -141,50 +138,17 @@ export const getInvoiceData = async ({
     throw new Error('指定された顧客が見つかりません')
   }
 
-  // 運行スケジュールデータ取得（承認済みのみ）
-  // 月末日跨ぎ運行対応のため、前日も含めて取得（11/30の運行で出発時刻2400の場合は12月請求）
-  // 既に取得済みのデータがある場合は再利用
-  const driveScheduleList = providedDriveScheduleList || await getDriveScheduleList({
-    firstDayOfMonth: whereQuery.gte,
-    whereQuery: {
-      ...whereQuery,
-      gte: Days.day.subtract(whereQuery.gte, 1),
-    },
-    tbmBaseId: undefined,
-    userId: undefined,
+  // 共通フィルタで対象月のスケジュールを取得（day-1 + BillingHandler処理は内部で実行）
+  const monthFilteredSchedules = await getFilteredSchedulesByMonth({
+    targetMonth: whereQuery.gte,
+    whereQuery,
+    providedScheduleList: providedDriveScheduleList,
   })
 
   // 指定された顧客の便のみをフィルタリング
-  // 月末日跨ぎ運行の請求月判定も含める
-  const filteredSchedules = driveScheduleList.filter(schedule => {
-    // 顧客IDの一致チェック
-    const matchesCustomer = schedule.TbmRouteGroup.Mid_TbmRouteGroup_TbmCustomer?.TbmCustomer?.id === customerId
-    if (!matchesCustomer) return false
-
-    const targetMonth = toUtc(new Date(whereQuery.gte.getFullYear(), whereQuery.gte.getMonth() + 1, 1))
-    // 請求月の判定（月末日跨ぎ運行対応）
-    const billingMonth = BillingHandler.getBillingMonth(
-      //
-      targetMonth,
-      schedule.date, schedule.TbmRouteGroup.departureTime, schedule.TbmRouteGroup.id)
-
-
-
-
-    // 指定された月と請求月が一致するかチェック
-
-
-
-
-    return formatDate(billingMonth, 'YYYYMM') === formatDate(targetMonth, 'YYYYMM')
+  const filteredSchedules = monthFilteredSchedules.filter(schedule => {
+    return schedule.TbmRouteGroup.Mid_TbmRouteGroup_TbmCustomer?.TbmCustomer?.id === customerId
   })
-
-  const test = filteredSchedules.filter(schedule => schedule.TbmRouteGroup.name === '草加10').map((item => ({
-    id: item.id,
-    routeGroupId: item.TbmRouteGroup.id,
-    date: item.date,
-
-  })))
 
 
   // 便区分ごとにグループ化

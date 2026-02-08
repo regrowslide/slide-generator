@@ -1,8 +1,7 @@
 'use server'
 
-import { MEIAI_SUM_ORIGIN } from '@app/(apps)/tbm/(lib)/calculation'
+import { calculateRouteGroupSales } from '@app/(apps)/tbm/(lib)/calculation'
 import { fetchUnkoMeisaiData, tbmTableKeyValue } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
-import { unkoMeisaiKey } from '@app/(apps)/tbm/(class)/TbmReportCl/cols/createUnkoMeisaiRow'
 import { TbmRouteGroup } from '@prisma/generated/prisma/client'
 import prisma from 'src/lib/prisma'
 
@@ -72,18 +71,15 @@ export const fetchUnkoKaisuData = async ({ firstDayOfMonth, whereQuery, tbmBaseI
    }
   })
 
-  const MEIAI_SUM = (dataKey: unkoMeisaiKey) => MEIAI_SUM_ORIGIN(schedules, dataKey)
+  // 統一計算（seikyu互換）
+  const rawSchedules = schedules.map(s => s.schedule)
+  const routeSales = calculateRouteGroupSales(rawSchedules)
 
-  const postalFee = MEIAI_SUM(`L_postalFee`)
-  const generalFee = MEIAI_SUM(`N_generalFee`)
-  const tollFee = postalFee + generalFee
-  const freightRevenue = MEIAI_SUM(`Q_driverFee`)
-  const futaiFee = MEIAI_SUM(`Q_futaiFee`)
-
-  // 税抜・税込の計算（消費税率10%と仮定）
-  const taxRate = 0.1
-  const tollFeeExclTax = Math.round(tollFee / (1 + taxRate))
-  const tollFeeInclTax = tollFee
+  const tollFee = routeSales.tollInclTax  // 通行料（税込）
+  const freightRevenue = routeSales.driverFee  // 統一計算
+  const futaiFee = routeSales.futaiFee  // 統一計算
+  const tollFeeExclTax = routeSales.tollExclTax  // 統一計算（seikyu互換）
+  const tollFeeInclTax = routeSales.tollInclTax  // 統一計算
   const tollFeeDifference = tollFeeInclTax - tollFeeExclTax
 
   const totalCount = schedules.length

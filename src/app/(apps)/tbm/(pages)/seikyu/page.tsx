@@ -9,20 +9,13 @@ import Redirector from '@cm/components/utils/Redirector'
 import { dateSwitcherTemplate } from '@cm/lib/methods/redirect-method'
 import { initServerComopnent } from 'src/non-common/serverSideFunction'
 import prisma from 'src/lib/prisma'
-import { BillingHandler } from '@app/(apps)/tbm/(class)/TimeHandler'
-import { Days } from '@cm/class/Days/Days'
-import { toUtc } from '@cm/class/Days/date-utils/calculations'
-import { formatDate } from '@cm/class/Days/date-utils/formatters'
-import { getDriveScheduleList } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
+import { getFilteredSchedulesByMonth } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/shared/getFilteredSchedules'
 import BasicTabs from '@cm/components/utils/tabs/BasicTabs'
 
 export default async function Page(props) {
   const query = await props.searchParams
-  const { session, scopes } = await initServerComopnent({ query })
 
   const { redirectPath, whereQuery } = await dateSwitcherTemplate({ query })
-
-
 
 
 
@@ -56,82 +49,23 @@ export default async function Page(props) {
     .filter(customer => customer.name) // nameが存在するもののみ
     .sort((a, b) => a.name.localeCompare(b.name))
 
-  // 運行スケジュールデータを1回だけ取得（全顧客・請求書・明細で再利用）
-  let driveScheduleList: Awaited<ReturnType<typeof getDriveScheduleList>> | null = null
+  // 運行スケジュールデータを1回だけ取得（共通フィルタで月別フィルタリング済み）
+  if (!whereQuery?.gte) return
+
+  let driveScheduleList: Awaited<ReturnType<typeof getFilteredSchedulesByMonth>> | null = null
   if (whereQuery?.gte && whereQuery?.lte) {
-
-    whereQuery.gte = whereQuery.gte ? Days.day.subtract(whereQuery.gte, 1) : undefined
-
-
-
-    driveScheduleList = await getDriveScheduleList({
-      firstDayOfMonth: whereQuery.gte,
+    driveScheduleList = await getFilteredSchedulesByMonth({
+      targetMonth: whereQuery.gte,
       whereQuery,
-      tbmBaseId: undefined,
-      userId: undefined,
     })
   }
 
-
-
-  if (!whereQuery?.gte) return
-  const firstDayOfMonth = toUtc(new Date(whereQuery.gte.getFullYear(), whereQuery.gte.getMonth() + 1, 1))
-
-
-
-  // 取引件数を計算（選択中の月の承認済み運行スケジュール数）
-  // メモリ内でフィルタリングして計算
-  const getTransactionCount = (customerId: number, scheduleList: typeof driveScheduleList): number => {
-    if (!scheduleList || !whereQuery?.gte || !whereQuery?.lte) return 0
-
-    try {
-
-      const filteredSchedules = scheduleList.filter(schedule => {
-        const matchesCustomer = schedule.TbmRouteGroup.Mid_TbmRouteGroup_TbmCustomer?.TbmCustomer?.id === customerId
-
-
-
-
-        if (!matchesCustomer) return false
-
-
-
-        const billingMonth = BillingHandler.getBillingMonth(
-          firstDayOfMonth,
-          schedule.date,
-          schedule.TbmRouteGroup.departureTime,
-          schedule
-        )
-
-
-
-        return formatDate(billingMonth, 'YYYYMM') === formatDate(firstDayOfMonth, 'YYYYMM')
-        const isBelongsToMonth = !firstDayOfMonth || BillingHandler.belongsToMonth(
-          schedule.date,
-          schedule.TbmRouteGroup.departureTime,
-          schedule.TbmRouteGroup.id,
-          firstDayOfMonth
-        )
-        return isBelongsToMonth
-      })
-
-
-
-
-
-
-
-
-      return filteredSchedules.length
-    } catch {
-      return 0
-    }
-  }
-
-  // 各顧客の取引件数を取得（メモリ内で計算）
+  // 各顧客の取引件数を取得（フィルタ済みデータから顧客別にカウント）
   const customersWithCount = customers.map(customer => ({
     ...customer,
-    transactionCount: getTransactionCount(customer.id, driveScheduleList),
+    transactionCount: driveScheduleList?.filter(s =>
+      s.TbmRouteGroup.Mid_TbmRouteGroup_TbmCustomer?.TbmCustomer?.id === customer.id
+    ).length || 0,
   }))
 
   // 顧客データが存在しない場合の処理

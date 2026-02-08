@@ -1,10 +1,8 @@
 'use server'
 
-import { DriveScheduleData, getDriveScheduleList } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
-import { BillingHandler, TimeHandler } from '@app/(apps)/tbm/(class)/TimeHandler'
-import { toUtc } from '@cm/class/Days/date-utils/calculations'
-import { formatDate } from '@cm/class/Days/date-utils/formatters'
-import { Days } from '@cm/class/Days/Days'
+import { DriveScheduleData } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
+import { TimeHandler } from '@app/(apps)/tbm/(class)/TimeHandler'
+import { getFilteredSchedulesByMonth } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/shared/getFilteredSchedules'
 
 export type MeisaiRow = {
  date: Date // 運行日
@@ -34,33 +32,16 @@ export const getMeisaiData = async ({
  customerId: number
  driveScheduleList?: DriveScheduleData[] // オプション: 既に取得済みのデータを再利用
 }): Promise<MeisaiData> => {
- // 運行スケジュールデータ取得（承認済みのみ）
- // 既に取得済みのデータがある場合は再利用
- const driveScheduleList = providedDriveScheduleList || await getDriveScheduleList({
-  firstDayOfMonth: whereQuery.gte,
-  whereQuery: {
-   ...whereQuery,
-   gte: Days.day.subtract(whereQuery.gte, 1),
-  },
-  tbmBaseId: undefined,
-  userId: undefined,
+ // 共通フィルタで対象月のスケジュールを取得（day-1 + BillingHandler処理は内部で実行）
+ const monthFilteredSchedules = await getFilteredSchedulesByMonth({
+  targetMonth: whereQuery.gte,
+  whereQuery,
+  providedScheduleList: providedDriveScheduleList,
  })
 
  // 指定された顧客の便のみをフィルタリング
- // 月末日跨ぎ運行の請求月判定も含める
- const filteredSchedules = driveScheduleList.filter(schedule => {
-  // 顧客IDの一致チェック
-  const matchesCustomer = schedule.TbmRouteGroup.Mid_TbmRouteGroup_TbmCustomer?.TbmCustomer?.id === customerId
-  if (!matchesCustomer) return false
-
-  // 請求月の判定（月末日跨ぎ運行対応）
-  // 指定された月と請求月が一致するかチェック
-  const targetMonth = toUtc(new Date(whereQuery.gte.getFullYear(), whereQuery.gte.getMonth() + 1, 1))
-
-  const billingMonth = BillingHandler.getBillingMonth(
-   targetMonth,
-   schedule.date, schedule.TbmRouteGroup.departureTime, schedule.TbmRouteGroup.id)
-  return formatDate(billingMonth, 'YYYYMM') === formatDate(targetMonth, 'YYYYMM')
+ const filteredSchedules = monthFilteredSchedules.filter(schedule => {
+  return schedule.TbmRouteGroup.Mid_TbmRouteGroup_TbmCustomer?.TbmCustomer?.id === customerId
  })
 
  // 運行日でソート

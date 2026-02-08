@@ -1,9 +1,7 @@
 'use server'
 
-import { MEIAI_SUM_ORIGIN } from '@app/(apps)/tbm/(lib)/calculation'
-import { fetchUnkoMeisaiData } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
-
-import { tbmTableKeyValue } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
+import { MEIAI_SUM_ORIGIN, calculateSalesBySchedules } from '@app/(apps)/tbm/(lib)/calculation'
+import { fetchUnkoMeisaiData, tbmTableKeyValue } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/fetchUnkoMeisaiData'
 import { TbmCustomer } from '@prisma/generated/prisma/client'
 import { unkoMeisaiKey } from '@app/(apps)/tbm/(class)/TbmReportCl/cols/createUnkoMeisaiRow'
 
@@ -45,9 +43,13 @@ export const fetchNioshuUriageData = async ({ firstDayOfMonth, whereQuery, tbmBa
 
     const MEIAI_SUM = (dataKey: unkoMeisaiKey) => MEIAI_SUM_ORIGIN(schedules, dataKey)
 
-    const postalFee = MEIAI_SUM(`L_postalFee`)
-    const generalFee = MEIAI_SUM(`N_generalFee`)
-    const driverFee = MEIAI_SUM(`Q_driverFee`) + MEIAI_SUM(`Q_futaiFee`)
+    // 統一計算（seikyu互換）
+    const rawSchedules = schedules.map(s => s.schedule)
+    const sales = calculateSalesBySchedules(rawSchedules)
+
+    const postalFee = MEIAI_SUM(`L_postalFee`)  // 分割表示維持
+    const generalFee = MEIAI_SUM(`N_generalFee`)  // 分割表示維持
+    const driverFee = sales.driverFeeTotal  // 統一計算（運賃+付帯）
 
     const widthBase = 120
 

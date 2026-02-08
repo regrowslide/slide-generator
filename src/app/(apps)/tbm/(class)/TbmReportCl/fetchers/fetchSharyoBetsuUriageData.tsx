@@ -14,7 +14,7 @@ export type sharyoBetsuUriageRecordKey =
   | `futaiFee`
   | `fuelCostPerVehicle`
 
-import { MEIAI_SUM_ORIGIN } from '@app/(apps)/tbm/(lib)/calculation'
+import { MEIAI_SUM_ORIGIN, calculateSalesBySchedules } from '@app/(apps)/tbm/(lib)/calculation'
 import { getTbmBase_MonthConfig } from '@app/(apps)/tbm/(server-actions)/getBasics'
 import { getNenpiDataByCar } from '@app/(apps)/tbm/(server-actions)/getNenpiDataByCar'
 import { getMidnight } from '@cm/class/Days/date-utils/calculations'
@@ -72,15 +72,19 @@ export const fetchSharyoBetsuUriageData = async ({ firstDayOfMonth, whereQuery, 
 
     const MEIAI_SUM = (dataKey: unkoMeisaiKey) => MEIAI_SUM_ORIGIN(vehicleSchedule, dataKey)
 
+    // 統一計算（seikyu互換）
+    const rawSchedules = vehicleSchedule.map(s => s.schedule)
+    const sales = calculateSalesBySchedules(rawSchedules)
+
     // 燃費管理データから車両別の情報を取得
     const fuelData = nenpiKanriDataListByCar.find(v => v?.vehicle?.id === vehicle.id)
 
-    const postalFee = MEIAI_SUM(`L_postalFee`)
-    const generalFee = MEIAI_SUM(`N_generalFee`)
-    const etcUsageFee = MEIAI_SUM(`M_postalHighwayFee`) + MEIAI_SUM(`O_generalHighwayFee`)
-    const tollFee = postalFee + generalFee
-    const freightRevenue = MEIAI_SUM(`Q_driverFee`)
-    const futaiFee = MEIAI_SUM(`Q_futaiFee`)
+    const postalFee = MEIAI_SUM(`L_postalFee`)  // 分割表示維持
+    const generalFee = MEIAI_SUM(`N_generalFee`)  // 分割表示維持
+    const etcUsageFee = MEIAI_SUM(`M_postalHighwayFee`) + MEIAI_SUM(`O_generalHighwayFee`)  // 分割表示維持
+    const tollFee = sales.tollExclTax  // 統一計算（税抜）
+    const freightRevenue = sales.driverFee  // 統一計算
+    const futaiFee = sales.futaiFee  // 統一計算
     const fuelCostPerVehicle = fuelData?.fuelCostInPeriod ?? 0
     const monthlyMileage = fuelData?.sokoKyoriInPeriod ?? 0
 
