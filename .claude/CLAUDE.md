@@ -9,6 +9,7 @@ Multi-tenant Next.js application with multiple sub-applications (KM, TBM, SBM, H
 ## Key Commands
 
 ### Development
+
 ```bash
 npm run dev                 # Start dev server with Turbo (auto-runs convert script)
 npm run convert             # Convert Prisma schemas to JSON (required before dev)
@@ -18,6 +19,7 @@ npm run local-start         # Start local production server
 ```
 
 ### Code Quality
+
 ```bash
 npm run lint                # Run ESLint on all TypeScript files
 npm run fix                 # Auto-fix ESLint and Prettier issues
@@ -25,6 +27,7 @@ npm run format              # Format all files with Prettier
 ```
 
 ### Database & Seeding
+
 ```bash
 prisma generate             # Generate Prisma client from schemas
 npm run seedKM              # Seed KM app data
@@ -32,6 +35,7 @@ npm run seedLifeOS          # Seed LifeOS data
 ```
 
 ### Utility Scripts
+
 ```bash
 npm run filter              # Include search directory filtering
 npm run upload              # Prepare Vercel upload
@@ -43,12 +47,14 @@ npm run generateType        # Generate TypeScript interfaces from Prisma
 ### Directory Structure
 
 **Path Aliases** (tsconfig.json):
+
 - `@prisma/*` → `prisma/schema/*`
 - `@app/*` → `src/app/*`
 - `@cm/*` → `src/cm/*` (common modules)
 - `@shadcn/*` → `src/cm/shadcn/*`
 
 **Common Resources** (`/src/cm`):
+
 - `/class` - Business logic classes (Model + "Cl" suffix, e.g., `UserCl.ts`)
 - `/components` - Shared UI components
 - `/hooks` - Custom hooks (`useGlobal`, `useModal`, `useBasicForm`)
@@ -59,6 +65,7 @@ npm run generateType        # Generate TypeScript interfaces from Prisma
 - `/shadcn` - shadcn/ui components
 
 **App-Specific Structure** (`/src/app/(apps)/[appName]/`):
+
 - `/(pages)` - Feature-based routes
 - `/components` - App-specific components
 - `/hooks` - App-specific hooks
@@ -67,6 +74,7 @@ npm run generateType        # Generate TypeScript interfaces from Prisma
 - `/_actions` - Server Actions (CRUD operations)
 
 **Available Apps**:
+
 - `KM` - Main portfolio/services site
 - `tbm` - Transport/logistics management
 - `hakobun` - Document management
@@ -79,6 +87,7 @@ npm run generateType        # Generate TypeScript interfaces from Prisma
 Prisma uses a **multi-schema architecture** where schemas are split by domain:
 
 **Schema Files** (`prisma/schema/*.prisma`):
+
 - `schema.prisma` - Core models (User, Department, RoleMaster, etc.)
 - `KM.prisma` - KM app models
 - `tbm.prisma` - Transport management models
@@ -89,18 +98,21 @@ Prisma uses a **multi-schema architecture** where schemas are split by domain:
 - Others: `stock.prisma`, `counseling.prisma`, `portal.prisma`, `aidocument.prisma`, `teamSynapse.prisma`
 
 **Build Process**:
+
 1. `npm run convert` - Combines all `.prisma` files, generates DMMF, exports to `src/cm/lib/methods/scheme-json-export.js`
 2. `prisma generate` - Generates Prisma client to `prisma/schema/generated/prisma`
 3. Generated client is imported from `@prisma/generated/prisma/client`
 
 **Standard Model Fields**:
 All models should include:
+
 - `id: Int @id @default(autoincrement())`
 - `createdAt: DateTime @default(now())`
 - `updatedAt: DateTime? @updatedAt`
 - `sortOrder: Float @default(0)`
 
 **Date Handling**:
+
 - Date fields end with `At` suffix (e.g., `publishedAt`, `hiredAt`)
 - Store dates in UTC (day-only dates at 00:00:00 UTC = 15:00:00 JST)
 - Use `toUTC` helper function for date conversions
@@ -116,6 +128,7 @@ All models should include:
 5. **Props to Client**: Pass fetched data to Client Component
 
 **Example**:
+
 ```tsx
 // app/(apps)/sbm/(pages)/reservations/page.tsx
 export default async function Page(props) {
@@ -124,7 +137,9 @@ export default async function Page(props) {
 
   const {redirectPath, whereQuery} = await dateSwitcherTemplate({
     query,
-    defaultWhere: { /* ... */ }
+    defaultWhere: {
+      /* ... */
+    },
   })
   if (redirectPath) return <Redirector redirectPath={redirectPath} />
 
@@ -140,11 +155,13 @@ export default async function Page(props) {
 **Function Order**: C → R → U → D (Create, Read, Update, Delete)
 
 **Read Functions**:
+
 - Accept `where`, `orderBy`, `take`, `skip` parameters
 - Use `include` for related data by default (only use `select` for performance optimization)
 - Base filters on URL query parameters
 
 **Write Functions**:
+
 - Implement `upsert` when create/update logic is similar
 - Split into separate `create` and `update` when complex
 
@@ -155,22 +172,25 @@ export default async function Page(props) {
 **Pattern**: `[ModelName]Cl.ts` with class `[ModelName]Cl`
 
 **Structure**:
+
 ```typescript
-export type UserClData = User & { posts: Post[] }
+export type UserClData = User & {posts: Post[]}
 
 export class UserCl {
   data: UserClData
-  static readonly MIN_AGE = 20  // Constants as static properties
+  static readonly MIN_AGE = 20 // Constants as static properties
 
   constructor(userData: UserClData) {
     this.data = userData
   }
 
-  get fullName(): string {  // Computed properties with no args
+  get fullName(): string {
+    // Computed properties with no args
     return `${this.data.firstName} ${this.data.lastName}`
   }
 
-  hasPostsAfter(date: Date): boolean {  // Methods with args
+  hasPostsAfter(date: Date): boolean {
+    // Methods with args
     return this.data.posts.some(post => post.createdAt > date)
   }
 }
@@ -179,11 +199,13 @@ export class UserCl {
 ### Common Hooks
 
 **`useGlobal`**:
+
 - `toggleLoad(callback)` - Show loading UI during async operations
 - `query, addQuery` - URL parameter get/set
 - `session` - User info (e.g., `session.id` for userId)
 
 **`useModal`**:
+
 ```tsx
 const UserEditModalReturn = useModal()
 
@@ -200,6 +222,7 @@ UserEditModalReturn.handleClose()
 ```
 
 **`useBasicForm`**:
+
 - Creates simple forms with automatic field rendering
 - `forSelect` + `id: "modelId"` auto-generates select from Prisma model
 - Use `Fields` class for column definitions
@@ -207,12 +230,14 @@ UserEditModalReturn.handleClose()
 ### UI/UX Guidelines
 
 **Display Method Selection**:
+
 - **Modal** - Simple info display/edit, maintains context
 - **Page Navigation** - Complex details, multi-step flows (needs URL)
 - **Toast** - Non-blocking result notifications
 - **`window.alert`** - Simple confirmations only
 
 **Design Principles**:
+
 - Minimize features, prioritize speed and simplicity
 - Keep UI intuitive and uncluttered
 
@@ -220,13 +245,13 @@ UserEditModalReturn.handleClose()
 
 ### Naming Conventions
 
-| Item | Convention | Example |
-|------|-----------|---------|
-| Component files | PascalCase, match component name | `UserEditModal.tsx` |
-| Server Action files | kebab-case, model prefix | `user-actions.ts` |
-| Class files | PascalCase, model + "Cl" suffix | `UserCl.ts` |
-| RSC→Client components | PascalCase, "Client" or "CC" suffix | `ReservationClient.tsx` |
-| Date fields | camelCase, "At" suffix | `publishedAt`, `hiredAt` |
+| Item                  | Convention                          | Example                  |
+| --------------------- | ----------------------------------- | ------------------------ |
+| Component files       | PascalCase, match component name    | `UserEditModal.tsx`      |
+| Server Action files   | kebab-case, model prefix            | `user-actions.ts`        |
+| Class files           | PascalCase, model + "Cl" suffix     | `UserCl.ts`              |
+| RSC→Client components | PascalCase, "Client" or "CC" suffix | `ReservationClient.tsx`  |
+| Date fields           | camelCase, "At" suffix              | `publishedAt`, `hiredAt` |
 
 ### Code Style
 
@@ -243,6 +268,7 @@ UserEditModalReturn.handleClose()
 ## Environment Variables
 
 Required variables (see `.env.example`):
+
 - `DATABASE_URL` - PostgreSQL connection string
 - `DIRECT_URL` - Direct database connection (for migrations)
 - `NEXTAUTH_URL`, `NEXTAUTH_SECRET` - NextAuth configuration
@@ -255,4 +281,5 @@ Required variables (see `.env.example`):
 ## Additional Documentation
 
 Detailed coding guidelines and architecture decisions are documented in:
+
 - `src/cm/ai-docs/ai-agent-direction.md` - Comprehensive development guide (Japanese)

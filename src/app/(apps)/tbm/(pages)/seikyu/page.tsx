@@ -39,6 +39,7 @@ export default async function Page(props) {
         select: {
           id: true,
           name: true,
+          code: true,
         },
       },
     },
@@ -58,19 +59,18 @@ export default async function Page(props) {
   // 運行スケジュールデータを1回だけ取得（全顧客・請求書・明細で再利用）
   let driveScheduleList: Awaited<ReturnType<typeof getDriveScheduleList>> | null = null
   if (whereQuery?.gte && whereQuery?.lte) {
+
+    whereQuery.gte = whereQuery.gte ? Days.day.subtract(whereQuery.gte, 1) : undefined
+
+    console.log(whereQuery)  //logs
+
     driveScheduleList = await getDriveScheduleList({
       firstDayOfMonth: whereQuery.gte,
-      whereQuery: {
-        ...whereQuery,
-        gte: whereQuery.gte ? Days.day.subtract(whereQuery.gte, 1) : undefined,
-
-      },
+      whereQuery,
       tbmBaseId: undefined,
       userId: undefined,
     })
   }
-
-
 
 
 
@@ -88,6 +88,10 @@ export default async function Page(props) {
 
       const filteredSchedules = scheduleList.filter(schedule => {
         const matchesCustomer = schedule.TbmRouteGroup.Mid_TbmRouteGroup_TbmCustomer?.TbmCustomer?.id === customerId
+
+        if (schedule.TbmRouteGroup.name === '下3  土・日曜運行') {
+          console.log({ date: schedule.date })  //logs
+        }
 
 
 
@@ -157,7 +161,7 @@ export default async function Page(props) {
         <div className="mb-4">
           <NewDateSwitcher monthOnly={true} />
         </div>
-        <CustomerSelector customers={customersWithCount} currentCustomerId={customerId} />
+        <CustomerSelector customers={customersWithCount as any} currentCustomerId={customerId} />
         <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
           <h3 className="text-blue-800 font-semibold">顧客を選択してください</h3>
           <p className="text-blue-600 mt-2">請求書を作成する顧客を上記のドロップダウンから選択してください。</p>
@@ -201,7 +205,7 @@ export default async function Page(props) {
         <NewDateSwitcher monthOnly={true} />
       </div>
 
-      <CustomerSelector customers={customersWithCount} currentCustomerId={customerId} />
+      <CustomerSelector customers={customersWithCount as any} currentCustomerId={customerId} />
 
       <BasicTabs
         id="seikyuTabs"

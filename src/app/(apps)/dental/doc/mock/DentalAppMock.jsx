@@ -65,17 +65,26 @@ const DEFAULT_ASSESSMENT = {
   swallowing: '',
   medicationSwallowing: '',
   medications: [{name: ''}, {name: ''}, {name: ''}],
+  medicationImages: [],
   hasInfoShareFee: false,
+  infoShareFeeLastDate: '',
   hasComprehensiveManagement: false,
+  comprehensiveManagementLastDate: '',
 }
+
+/** 患者名ヘルパー関数 */
+const getPatientName = p => `${p.lastName} ${p.firstName}`
+const getPatientNameKana = p => `${p.lastNameKana} ${p.firstNameKana}`
 
 /** 初期利用者データ（疾患・歯数・口腔機能情報・アセスメントを含む） */
 const INITIAL_PATIENTS = [
   {
     id: 1,
     facilityId: 1,
-    name: '山田 太郎',
-    nameKana: 'ヤマダ タロウ',
+    lastName: '山田',
+    firstName: '太郎',
+    lastNameKana: 'ヤマダ',
+    firstNameKana: 'タロウ',
     gender: 'male',
     birthDate: '1943-05-15',
     age: 82,
@@ -116,7 +125,7 @@ const INITIAL_PATIENTS = [
       choking: '液体で時々',
       oralIntake: '全て経口摂取',
       moisture: 'トロミあり',
-      mainDish: '軟飯',
+      mainDish: 'お粥',
       sideDish: '刻み食',
       swallowing: '時々むせることがある',
       medicationSwallowing: '問題なし',
@@ -125,8 +134,10 @@ const INITIAL_PATIENTS = [
   {
     id: 2,
     facilityId: 1,
-    name: '鈴木 花子',
-    nameKana: 'スズキ ハナコ',
+    lastName: '鈴木',
+    firstName: '花子',
+    lastNameKana: 'スズキ',
+    firstNameKana: 'ハナコ',
     gender: 'female',
     birthDate: '1940-11-20',
     age: 85,
@@ -168,7 +179,7 @@ const INITIAL_PATIENTS = [
       oralIntake: '一部経口摂取',
       artificialNutrition: '胃瘻',
       moisture: '経口摂取禁止',
-      mainDish: 'ペースト食',
+      mainDish: 'ミキサー食',
       sideDish: 'ミキサー食',
       swallowing: '頻繁にむせてしまう',
       medicationSwallowing: '上手く飲み込めない',
@@ -177,8 +188,10 @@ const INITIAL_PATIENTS = [
   {
     id: 3,
     facilityId: 1,
-    name: '高橋 健一',
-    nameKana: 'タカハシ ケンイチ',
+    lastName: '高橋',
+    firstName: '健一',
+    lastNameKana: 'タカハシ',
+    firstNameKana: 'ケンイチ',
     gender: 'male',
     birthDate: '1948-03-10',
     age: 77,
@@ -211,8 +224,10 @@ const INITIAL_PATIENTS = [
   {
     id: 4,
     facilityId: 1,
-    name: '田中 幸子',
-    nameKana: 'タナカ サチコ',
+    lastName: '田中',
+    firstName: '幸子',
+    lastNameKana: 'タナカ',
+    firstNameKana: 'サチコ',
     gender: 'female',
     birthDate: '1945-07-22',
     age: 80,
@@ -245,8 +260,10 @@ const INITIAL_PATIENTS = [
   {
     id: 5,
     facilityId: 1,
-    name: '伊藤 博文',
-    nameKana: 'イトウ ヒロフミ',
+    lastName: '伊藤',
+    firstName: '博文',
+    lastNameKana: 'イトウ',
+    firstNameKana: 'ヒロフミ',
     gender: 'male',
     birthDate: '1938-01-05',
     age: 88,
@@ -289,7 +306,7 @@ const INITIAL_PATIENTS = [
       choking: '頻繁にある',
       oralIntake: '一部経口摂取',
       moisture: 'トロミあり',
-      mainDish: 'ペースト食',
+      mainDish: 'ミキサー食',
       sideDish: 'ミキサー食',
       swallowing: '頻繁にむせてしまう',
       medicationSwallowing: '上手く飲み込めない',
@@ -298,8 +315,10 @@ const INITIAL_PATIENTS = [
   {
     id: 6,
     facilityId: 2,
-    name: '佐藤 美咲',
-    nameKana: 'サトウ ミサキ',
+    lastName: '佐藤',
+    firstName: '美咲',
+    lastNameKana: 'サトウ',
+    firstNameKana: 'ミサキ',
     gender: 'female',
     birthDate: '1950-09-12',
     age: 75,
@@ -332,8 +351,10 @@ const INITIAL_PATIENTS = [
   {
     id: 7,
     facilityId: 2,
-    name: '渡辺 次郎',
-    nameKana: 'ワタナベ ジロウ',
+    lastName: '渡辺',
+    firstName: '次郎',
+    lastNameKana: 'ワタナベ',
+    firstNameKana: 'ジロウ',
     gender: 'male',
     birthDate: '1942-12-01',
     age: 83,
@@ -375,7 +396,7 @@ const INITIAL_PATIENTS = [
       oralIntake: '全て経口摂取',
       moisture: 'トロミなし',
       mainDish: '常食',
-      sideDish: '一口大・軟菜',
+      sideDish: 'ひと口大',
       swallowing: '時々むせることがある',
       medicationSwallowing: '苦手',
     },
@@ -443,13 +464,13 @@ const INITIAL_EXAMINATIONS = [
   },
 ]
 
-/** 実施項目マスタ */
-const TREATMENT_ITEMS_MASTER = [
-  {id: 'zaitakukan', name: '在宅管', fullName: '在宅管（管理）', category: '管理'},
-  {id: 'houeishi', name: '訪衛指', fullName: '訪衛指（指導）', category: '指導'},
-  {id: 'koukuu', name: '口腔機能', fullName: '口腔機能（検査/訓練）', category: '検査'},
-  {id: 'shisetsu', name: '施設系', fullName: '施設系（会議等）', category: 'その他'},
-]
+/** 実施項目マスタ（一旦廃止 - MTG 0206決定） */
+// const TREATMENT_ITEMS_MASTER = [
+//   {id: 'zaitakukan', name: '在宅管', fullName: '在宅管（管理）', category: '管理'},
+//   {id: 'houeishi', name: '訪衛指', fullName: '訪衛指（指導）', category: '指導'},
+//   {id: 'koukuu', name: '口腔機能', fullName: '口腔機能（検査/訓練）', category: '検査'},
+//   {id: 'shisetsu', name: '施設系', fullName: '施設系（会議等）', category: 'その他'},
+// ]
 
 /** 医院資格マスタ（届出・施設基準） */
 const CLINIC_QUALIFICATIONS = [
@@ -508,15 +529,15 @@ const ASSESSMENT_OPTIONS = {
   oralCleaning: ['自主的に行える', '声がけのみ必要', '一部お手伝いが必要', '全介助が必要'],
   moistureRetention: ['無理なく可能', '困難', '不可能(むせる)', '飲んでしまう', '口から出てしまう'],
   gargling: ['可能', '困難', '不可能（むせる）', '飲んでしまう', '口から出てしまう'],
-  malnutritionRisk: ['なし', '少しあり', 'リスク高め'],
+  malnutritionRisk: ['なし', '少しあり', 'リスク高め', '不明'],
   choking: ['なし', '液体で時々', '頻繁にある'],
   oralIntake: ['全て経口摂取', '一部経口摂取', '経口摂取なし'],
   artificialNutrition: ['無し', '胃瘻', '経鼻', '抹消静脈', '中心静脈', 'その他'],
   moisture: ['トロミなし', 'トロミあり', '経口摂取禁止'],
-  mainDish: ['常食', '軟飯', 'ペースト食'],
-  sideDish: ['常食', '一口大・軟菜', '刻み食', 'ミキサー食'],
+  mainDish: ['常食', '柔らかめ', 'お粥', 'ミキサー食', 'その他'],
+  sideDish: ['常食', 'ひと口大', '刻み食', 'ミキサー食', 'その他'],
   swallowing: ['問題なし', '時々むせることがある', '頻繁にむせてしまう'],
-  medicationSwallowing: ['問題なし', '苦手', '上手く飲み込めない'],
+  medicationSwallowing: ['問題なく飲める', '苦手', '上手く飲み込めない'],
 }
 
 /** 実施項目マスタ（加算用） - Excel「算定項目」シートに基づく完全版 */
@@ -527,6 +548,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '歯訪',
     fullName: '歯科訪問診療料',
     infoUrl: '/dental/docs/shihou.pdf',
+    infoText: 'Drの診療ありの場合に算定。タイマー時間（20分以上/未満）と同一建物内の患者数で区分が自動判定されます。',
     requiredRole: 'doctor',
     requiredQualification: 'shihoujin',
     categories: [
@@ -551,6 +573,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '訪補助',
     fullName: '歯科訪問診療補助加算',
     infoUrl: '/dental/docs/houhojo.pdf',
+    infoText: 'DHがDrに同行した場合に算定。カルテに同行衛生士名の記載が必要です。同一建物1名のみ/2名以上で点数が異なります。',
     requiredRole: 'doctor',
     requiredQualification: 'shihoujin',
     categories: [
@@ -568,6 +591,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '歯在管',
     fullName: '歯科疾患在宅療養管理料',
     infoUrl: '/dental/docs/shizaikan.pdf',
+    infoText: '月1回算定。Drの診療時に算定を提案。歯援診の届出区分により点数が異なります。管理計画書の提供が必要。',
     requiredRole: 'doctor',
     monthlyLimit: 1,
     categories: [
@@ -585,6 +609,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '歯在管文書',
     fullName: '文書提供加算（在宅・訪問関連）',
     infoUrl: '/dental/docs/shizaikan_bunsho.pdf',
+    infoText: '歯在管を請求した時に合わせて算定。管理計画書等の文書提供が必須です。10点。',
     monthlyLimit: 1,
     defaultPoints: 10,
     categories: [],
@@ -597,6 +622,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: 'P画像',
     fullName: '歯周病患者画像活用指導料',
     infoUrl: '/dental/docs/p_gazou.pdf',
+    infoText: '1枚につき10点。口腔内写真を撮影し患者に見せながら指導した場合に算定できます。',
     categories: [{id: '1-5', name: '1～5枚', points: 10, unit: 'per_sheet'}],
     documents: [],
     note: '1枚につき10点。算定可能なタイミングを確認',
@@ -607,6 +633,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '在歯管',
     fullName: '在宅患者歯科治療総合医療管理料',
     infoUrl: '/dental/docs/zaishikan.pdf',
+    infoText: '患者マスターに疾患登録があり、かつDrが該当治療を実施した場合に算定可能。45点。',
     requiredRole: 'doctor',
     requiredQualification: 'zaishikan',
     defaultPoints: 45,
@@ -621,6 +648,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '訪衛指',
     fullName: '訪問歯科衛生指導料',
     infoUrl: '/dental/docs/houeishi.pdf',
+    infoText: 'DHが20分以上の施術を行った場合に算定。月4回まで。タイマーで20分以上を確認してください。',
     requiredRole: 'hygienist',
     monthlyLimit: 4,
     timeRequirement: 20,
@@ -639,6 +667,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '在口衛',
     fullName: '在宅等療養患者専門的口腔衛生処置',
     infoUrl: '/dental/docs/zaikouei.pdf',
+    infoText: '専門的な口腔衛生処置を実施した場合にマニュアルで判定。130点。',
     defaultPoints: 130,
     categories: [],
     documents: [],
@@ -650,6 +679,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: 'NST2',
     fullName: '在宅歯科栄養サポートチーム等連携指導料',
     infoUrl: '/dental/docs/nst2.pdf',
+    infoText: '栄養サポートチームとの連携指導を行った場合にマニュアル判定。100点。',
     defaultPoints: 100,
     categories: [],
     documents: [],
@@ -661,6 +691,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '口腔機能低下症',
     fullName: '口腔機能低下症（病名/管理対象）',
     infoUrl: '/dental/docs/koukuu_kinou.pdf',
+    infoText: '病名登録用。歯リハ3の算定条件として必要。チェックを入れると歯リハ3が算定可能になります。',
     defaultPoints: 0,
     categories: [],
     documents: [],
@@ -672,6 +703,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '舌圧',
     fullName: '舌圧検査（口腔機能検査の一部）',
     infoUrl: '/dental/docs/zetsuatsu.pdf',
+    infoText: '口腔機能検査の一部。3ヶ月に1回算定可能。140点。',
     defaultPoints: 140,
     intervalMonths: 3,
     categories: [],
@@ -684,6 +716,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '咬合圧1',
     fullName: '咬合圧検査１',
     infoUrl: '/dental/docs/kougouatsu.pdf',
+    infoText: '咬合圧を測定し口腔機能の評価を行う検査。130点。',
     defaultPoints: 130,
     categories: [],
     documents: [],
@@ -694,6 +727,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '口菌検1',
     fullName: '口腔細菌定量検査1',
     infoUrl: '/dental/docs/koukinkensa.pdf',
+    infoText: '口腔内の細菌量を測定する検査。点数は要確認。',
     defaultPoints: 0,
     categories: [],
     documents: [],
@@ -705,6 +739,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '咀嚼1',
     fullName: '咀嚼能力検査１',
     infoUrl: '/dental/docs/soshaku.pdf',
+    infoText: '咀嚼能力を測定する検査。3ヶ月に1回算定可能。140点。',
     defaultPoints: 140,
     intervalMonths: 3,
     categories: [],
@@ -717,6 +752,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '歯リハ3',
     fullName: '歯科口腔リハビリテーション料３',
     infoUrl: '/dental/docs/shiriha.pdf',
+    infoText: '口腔機能低下症の患者に対するリハビリ。月2回まで。口管強加算の届出で点数UP。',
     requiredRole: 'doctor',
     monthlyLimit: 2,
     categories: [
@@ -733,6 +769,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '歯リハ1',
     fullName: '歯科口腔リハビリテーション料１',
     infoUrl: '/dental/docs/shiriha.pdf',
+    infoText: '義歯の登録がある患者に対するリハビリ。通常104点/複雑124点。',
     categories: [
       {id: 'normal', name: '通常', points: 104},
       {id: 'complex', name: '複雑', points: 124},
@@ -746,6 +783,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: 'ベースアップ',
     fullName: '在宅ベースアップ評価料',
     infoUrl: '/dental/docs/baseup.pdf',
+    infoText: '届出が必要。訪問の都度算定可能。点数は届出区分により異なります。',
     requiredQualification: 'baseup',
     defaultPoints: 0,
     categories: [],
@@ -758,6 +796,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '在DX',
     fullName: '在宅医療DX推進体制整備加算',
     infoUrl: '/dental/docs/dx.pdf',
+    infoText: '施設基準と届出が必要。月1回算定。電子処方箋の有無で点数が異なります。',
     requiredQualification: 'dx',
     monthlyLimit: 1,
     categories: [
@@ -774,6 +813,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '情共1',
     fullName: '診療情報等連携共有料',
     infoUrl: '/dental/docs/joukyo.pdf',
+    infoText: '患者マスターに疾患が登録されている場合に算定可能。医科への情報提供が必要。120点。',
     defaultPoints: 120,
     categories: [],
     documents: [],
@@ -786,6 +826,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '総医',
     fullName: '総合医療管理加算',
     infoUrl: '/dental/docs/soui.pdf',
+    infoText: '歯在管の算定と同時に加算。患者マスターに疾患登録が必要。50点。',
     defaultPoints: 50,
     categories: [],
     documents: [],
@@ -798,6 +839,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: 'F局（根C）',
     fullName: 'フッ化物歯面塗布処置',
     infoUrl: '/dental/docs/fkyoku.pdf',
+    infoText: '3ヶ月に1回のみ算定可能。前回のF塗布から3ヶ月目に算定を提案します。80点。',
     defaultPoints: 80,
     intervalMonths: 3,
     categories: [],
@@ -810,6 +852,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '根C管',
     fullName: '根面齲蝕管理料',
     infoUrl: '/dental/docs/konc.pdf',
+    infoText: '毎月初回の診療時に提案。カルテに管理計画を記載が必要。口管強加算の届出で点数UP。',
     categories: [
       {id: 'normal', name: '通常', points: 30},
       {id: 'koukankyou', name: '口管強加算', points: 78, requiredClinicQualification: 'koukukan'},
@@ -824,6 +867,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: 'サホ塗布',
     fullName: 'う蝕薬物塗布処置',
     infoUrl: '/dental/docs/saho.pdf',
+    infoText: 'う蝕薬物塗布処置。3歯まで46点、4歯以上56点。在歯管算定可能条件の1つ。',
     categories: [
       {id: '1-3', name: '～3歯まで', points: 46},
       {id: '4+', name: '4歯以上', points: 56},
@@ -837,6 +881,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: 'P精検',
     fullName: '歯周精密検査',
     infoUrl: '/dental/docs/p_seiken.pdf',
+    infoText: '歯周精密検査。患者の歯数で点数が決まります。検査後はSC/SRP/SPT等の処置につながります。',
     categories: [
       {id: '20+', name: '20歯以上', points: 400},
       {id: '10-19', name: '10～19歯', points: 220},
@@ -852,6 +897,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: 'P基検',
     fullName: '歯周基本検査',
     infoUrl: '/dental/docs/p_kiken.pdf',
+    infoText: '歯周基本検査。歯数で点数が変わります（20歯以上200点/10-19歯110点/1-9歯50点）。',
     categories: [
       {id: '20+', name: '20歯以上', points: 200},
       {id: '10-19', name: '10～19歯', points: 110},
@@ -866,6 +912,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: 'SPT',
     fullName: '歯周安定期治療',
     infoUrl: '/dental/docs/spt.pdf',
+    infoText: '歯周安定期治療。口管強なしの場合は最初の算定から3ヶ月以降に表示。350点。',
     defaultPoints: 350,
     categories: [],
     documents: [],
@@ -878,6 +925,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '口管強加算',
     fullName: '口管強加算（SPT同時）',
     infoUrl: '/dental/docs/koukan.pdf',
+    infoText: 'SPTと同時算定。口管強の届出がある場合に自動表示されます。120点。',
     requiredQualification: 'koukukan',
     defaultPoints: 120,
     categories: [],
@@ -891,6 +939,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '糖尿病加算',
     fullName: '糖尿病加算（SPT同時）',
     infoUrl: '/dental/docs/tounyou.pdf',
+    infoText: 'SPTと同時算定。患者マスターに糖尿病登録がある場合に提案されます。80点。',
     defaultPoints: 80,
     categories: [],
     documents: [],
@@ -903,6 +952,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: 'P重防',
     fullName: '歯周重症化予防治療',
     infoUrl: '/dental/docs/p_juubou.pdf',
+    infoText: 'SPTとセットの関係。歯周重症化の予防治療。300点。',
     defaultPoints: 300,
     categories: [],
     documents: [],
@@ -914,6 +964,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '訪移行',
     fullName: '歯科訪問診療移行加算',
     infoUrl: '/dental/docs/houikou.pdf',
+    infoText: '歯科訪問診療への移行時に算定。100点。',
     defaultPoints: 100,
     categories: [],
     documents: [],
@@ -924,6 +975,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '訪問口腔リハ',
     fullName: '訪問口腔リハビリテーション',
     infoUrl: '/dental/docs/houmon_riha.pdf',
+    infoText: '訪問口腔リハビリテーション。600点。バージョンアップ時に詳細掲載予定。',
     defaultPoints: 600,
     categories: [],
     documents: [],
@@ -935,6 +987,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '訪問口腔リハ加算',
     fullName: '訪問口腔リハビリテーション加算',
     infoUrl: '/dental/docs/houmon_riha_kasan.pdf',
+    infoText: '訪問口腔リハの加算。歯援診の区分と口管強の届出により点数が変わります。',
     categories: [
       {id: 'shiensin1', name: '歯援診1', points: 145},
       {id: 'shiensin2', name: '歯援診2', points: 80},
@@ -950,6 +1003,7 @@ const PROCEDURE_ITEMS_MASTER = [
     name: '情報連携',
     fullName: '在宅歯科医療情報連携加算',
     infoUrl: '/dental/docs/johorenkei.pdf',
+    infoText: 'ICTで他職種と情報共有した月に算定。月1回。100点。届出が必要です。',
     requiredQualification: 'johorenkei',
     monthlyLimit: 1,
     defaultPoints: 100,
@@ -1681,7 +1735,6 @@ const Sidebar = ({currentPage, onNavigate}) => {
     {
       label: '患者',
       items: [
-        {id: 'patient-list', label: '患者管理', icon: '🔍'},
         {id: 'individual-input', label: '個別入力', icon: '✏️'},
       ],
     },
@@ -1695,12 +1748,16 @@ const Sidebar = ({currentPage, onNavigate}) => {
         {id: 'admin-templates', label: 'テンプレート登録', icon: '📋'},
       ],
     },
-    // { label: "レポート・参照", items: [
-    //   { id: "scoring-reference", label: "算定項目・点数一覧", icon: "📊" },
-    //   { id: "scoring-ledger", label: "算定対象台帳", icon: "📒" },
-    //   { id: "document-list", label: "提供文書一覧", icon: "📄" },
-    //   { id: "summary", label: "日次報告", icon: "📈" },
-    // ]},
+    {
+      label: 'レポート・参照',
+      items: [
+        {id: 'scoring-reference', label: '算定項目・点数一覧', icon: '📊'},
+        {id: 'scoring-ledger', label: '算定対象台帳', icon: '📒'},
+        {id: 'document-list', label: '提供文書一覧', icon: '📄'},
+        {id: 'summary', label: '日次報告', icon: '📈'},
+        {id: 'batch-print', label: '履歴・一括印刷', icon: '🖨️'},
+      ],
+    },
   ]
 
   const isActive = id => currentPage === id || currentPage.startsWith(id)
@@ -1783,6 +1840,17 @@ const FacilityForm = ({facility, onSubmit, onClose}) => {
  */
 const FacilityMasterPage = ({facilities, onAdd, onUpdate, onDelete, onReorder}) => {
   const facilityModal = useModal()
+  const [portalSettings, setPortalSettings] = useState(
+    facilities.reduce((acc, f) => {
+      acc[f.id] = {
+        enabled: false,
+        loginId: `facility_${f.id}`,
+        password: '',
+        portalUrl: `https://visitdental.example.com/portal/${f.id}`,
+      }
+      return acc
+    }, {})
+  )
 
   const handleOpenAdd = () => {
     facilityModal.handleOpen({facility: null})
@@ -1799,6 +1867,27 @@ const FacilityMasterPage = ({facilities, onAdd, onUpdate, onDelete, onReorder}) 
       onAdd(formData)
     }
     facilityModal.handleClose()
+  }
+
+  const togglePortal = facilityId => {
+    setPortalSettings(prev => {
+      const current = prev[facilityId] || {}
+      return {
+        ...prev,
+        [facilityId]: {
+          ...current,
+          enabled: !current.enabled,
+          password: !current.enabled ? `pass_${Math.random().toString(36).slice(2, 8)}` : '',
+        },
+      }
+    })
+  }
+
+  const regeneratePassword = facilityId => {
+    setPortalSettings(prev => ({
+      ...prev,
+      [facilityId]: {...prev[facilityId], password: `pass_${Math.random().toString(36).slice(2, 8)}`},
+    }))
   }
 
   return (
@@ -1822,66 +1911,92 @@ const FacilityMasterPage = ({facilities, onAdd, onUpdate, onDelete, onReorder}) 
                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">施設名</th>
                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">住所</th>
                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">施設区分</th>
+                <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">ポータル</th>
                 <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">操作</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {facilities.length === 0 ? (
                 <tr>
-                  <td colSpan={5}>
+                  <td colSpan={6}>
                     <EmptyState message="施設が登録されていません" />
                   </td>
                 </tr>
               ) : (
-                facilities.map((facility, idx) => (
-                  <tr key={facility.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-center">
-                      <div className="flex justify-center gap-0.5">
-                        <button
-                          onClick={() => onReorder?.(facility.id, 'up')}
-                          disabled={idx === 0}
-                          className="p-0.5 text-gray-400 hover:text-slate-600 disabled:opacity-30 rounded text-xs"
-                          aria-label="上へ"
-                        >
-                          ▲
-                        </button>
-                        <button
-                          onClick={() => onReorder?.(facility.id, 'down')}
-                          disabled={idx === facilities.length - 1}
-                          className="p-0.5 text-gray-400 hover:text-slate-600 disabled:opacity-30 rounded text-xs"
-                          aria-label="下へ"
-                        >
-                          ▼
-                        </button>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-sm font-medium text-gray-900">{facility.name}</td>
-                    <td className="px-4 py-3 text-sm text-gray-600">{facility.address}</td>
-                    <td className="px-4 py-3 text-sm text-gray-600">{FACILITY_TYPES[facility.facilityType] || '-'}</td>
-                    <td className="px-4 py-3 text-right">
-                      <div className="flex justify-end gap-1">
-                        <button
-                          onClick={() => handleOpenEdit(facility)}
-                          className="p-1 text-gray-400 hover:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 rounded"
-                          aria-label="編集"
-                        >
-                          <IconEdit />
-                        </button>
-                        <button
-                          onClick={() => {
-                            if (window.confirm(`「${facility.name}」を削除しますか？`)) {
-                              onDelete(facility.id)
-                            }
-                          }}
-                          className="p-1 text-gray-400 hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded"
-                          aria-label="削除"
-                        >
-                          <IconTrash />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                facilities.map((facility, idx) => {
+                  const portal = portalSettings[facility.id] || {}
+                  return (
+                    <tr key={facility.id} className="hover:bg-gray-50 align-top">
+                      <td className="px-4 py-3 text-center">
+                        <div className="flex justify-center gap-0.5">
+                          <button
+                            onClick={() => onReorder?.(facility.id, 'up')}
+                            disabled={idx === 0}
+                            className="p-0.5 text-gray-400 hover:text-slate-600 disabled:opacity-30 rounded text-xs"
+                            aria-label="上へ"
+                          >
+                            ▲
+                          </button>
+                          <button
+                            onClick={() => onReorder?.(facility.id, 'down')}
+                            disabled={idx === facilities.length - 1}
+                            className="p-0.5 text-gray-400 hover:text-slate-600 disabled:opacity-30 rounded text-xs"
+                            aria-label="下へ"
+                          >
+                            ▼
+                          </button>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-sm font-medium text-gray-900">{facility.name}</td>
+                      <td className="px-4 py-3 text-sm text-gray-600">{facility.address}</td>
+                      <td className="px-4 py-3 text-sm text-gray-600">{FACILITY_TYPES[facility.facilityType] || '-'}</td>
+                      <td className="px-4 py-3">
+                        <div className="flex flex-col items-center gap-1">
+                          <button
+                            onClick={() => togglePortal(facility.id)}
+                            className={`relative w-10 h-5 rounded-full transition-colors ${portal.enabled ? 'bg-emerald-500' : 'bg-gray-300'}`}
+                          >
+                            <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${portal.enabled ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                          </button>
+                          <span className="text-xs text-gray-500">{portal.enabled ? '有効' : '無効'}</span>
+                          {portal.enabled && (
+                            <div className="text-xs text-left mt-1 space-y-0.5">
+                              <div className="text-gray-500">ID: <span className="font-mono">{portal.loginId}</span></div>
+                              <div className="flex items-center gap-1">
+                                <span className="text-gray-500">PW:</span>
+                                <span className="font-mono text-gray-700">{portal.password}</span>
+                                <button onClick={() => regeneratePassword(facility.id)} className="text-blue-500 hover:text-blue-700 text-[10px]">再生成</button>
+                              </div>
+                              <div className="text-blue-600 break-all text-[10px]">{portal.portalUrl}</div>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <div className="flex justify-end gap-1">
+                          <button
+                            onClick={() => handleOpenEdit(facility)}
+                            className="p-1 text-gray-400 hover:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 rounded"
+                            aria-label="編集"
+                          >
+                            <IconEdit />
+                          </button>
+                          <button
+                            onClick={() => {
+                              if (window.confirm(`「${facility.name}」を削除しますか？`)) {
+                                onDelete(facility.id)
+                              }
+                            }}
+                            className="p-1 text-gray-400 hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded"
+                            aria-label="削除"
+                          >
+                            <IconTrash />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })
               )}
             </tbody>
           </table>
@@ -1900,8 +2015,10 @@ const FacilityMasterPage = ({facilities, onAdd, onUpdate, onDelete, onReorder}) 
  */
 const PatientForm = ({patient, onSubmit, onClose}) => {
   const [formData, setFormData] = useState({
-    name: patient?.name || '',
-    nameKana: patient?.nameKana || '',
+    lastName: patient?.lastName || '',
+    firstName: patient?.firstName || '',
+    lastNameKana: patient?.lastNameKana || '',
+    firstNameKana: patient?.firstNameKana || '',
     building: patient?.building || '',
     floor: patient?.floor || '',
     room: patient?.room || '',
@@ -1909,15 +2026,19 @@ const PatientForm = ({patient, onSubmit, onClose}) => {
   })
 
   const handleSubmit = () => {
-    if (!formData.name) return
+    if (!formData.lastName || !formData.firstName || !formData.lastNameKana || !formData.firstNameKana) return
     onSubmit(formData)
   }
 
   return (
     <div className="space-y-3">
       <div className="grid grid-cols-2 gap-3">
-        <Input label="氏名" value={formData.name} onChange={v => setFormData({...formData, name: v})} required />
-        <Input label="ふりがな" value={formData.nameKana} onChange={v => setFormData({...formData, nameKana: v})} />
+        <Input label="姓" value={formData.lastName} onChange={v => setFormData({...formData, lastName: v})} required />
+        <Input label="名" value={formData.firstName} onChange={v => setFormData({...formData, firstName: v})} required />
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <Input label="セイ" value={formData.lastNameKana} onChange={v => setFormData({...formData, lastNameKana: v})} required />
+        <Input label="メイ" value={formData.firstNameKana} onChange={v => setFormData({...formData, firstNameKana: v})} required />
       </div>
       <div className="grid grid-cols-3 gap-3">
         <Input
@@ -1948,28 +2069,31 @@ const PatientForm = ({patient, onSubmit, onClose}) => {
 /**
  * 利用者マスタ画面
  */
-const PatientMasterPage = ({facilities, patients, onAdd, onUpdate, onDelete}) => {
-  const [selectedFacilityId, setSelectedFacilityId] = useState(facilities[0]?.id || '')
+const PatientMasterPage = ({facilities, patients, onAdd, onUpdate, onDelete, onSelectPatient, onEditPatient}) => {
+  const [searchQuery, setSearchQuery] = useState('')
+  const [facilityFilter, setFacilityFilter] = useState('')
   const patientModal = useModal()
 
-  const filteredPatients = useMemo(
-    () => patients.filter(p => p.facilityId === Number(selectedFacilityId)),
-    [patients, selectedFacilityId]
-  )
+  const filteredPatients = useMemo(() => {
+    return patients.filter(p => {
+      const fullName = getPatientName(p)
+      const fullNameKana = getPatientNameKana(p)
+      const matchesSearch = !searchQuery || fullName.includes(searchQuery) || fullNameKana.includes(searchQuery) || p.lastName.includes(searchQuery) || p.firstName.includes(searchQuery) || p.lastNameKana.includes(searchQuery) || p.firstNameKana.includes(searchQuery)
+      const matchesFacility = !facilityFilter || p.facilityId === Number(facilityFilter)
+      return matchesSearch && matchesFacility
+    })
+  }, [patients, searchQuery, facilityFilter])
 
   const handleOpenAdd = () => {
     patientModal.handleOpen({patient: null})
-  }
-
-  const handleOpenEdit = patient => {
-    patientModal.handleOpen({patient})
   }
 
   const handleSubmit = formData => {
     if (patientModal.open?.patient) {
       onUpdate(patientModal.open.patient.id, formData)
     } else {
-      onAdd({...formData, facilityId: Number(selectedFacilityId)})
+      const targetFacilityId = facilityFilter ? Number(facilityFilter) : facilities[0]?.id
+      onAdd({...formData, facilityId: targetFacilityId})
     }
     patientModal.handleClose()
   }
@@ -1977,23 +2101,31 @@ const PatientMasterPage = ({facilities, patients, onAdd, onUpdate, onDelete}) =>
   return (
     <div className="p-4">
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-4">
-          <h2 className="text-xl font-bold text-gray-900">利用者マスタ</h2>
-          <Select
-            value={selectedFacilityId}
-            onChange={setSelectedFacilityId}
-            options={facilities.map(f => ({value: f.id, label: f.name}))}
-            placeholder="施設を選択"
-          />
-        </div>
-        <Button onClick={handleOpenAdd} disabled={!selectedFacilityId}>
+        <h2 className="text-xl font-bold text-gray-900">利用者マスタ</h2>
+        <Button onClick={handleOpenAdd}>
           <span className="flex items-center gap-1">
             <IconPlus />
-            利用者追加
+            利用者を追加
           </span>
         </Button>
       </div>
 
+      {/* フィルター行 */}
+      <div className="flex gap-3 mb-4">
+        <div className="flex-1">
+          <Input label="" value={searchQuery} onChange={setSearchQuery} placeholder="🔍 氏名・カナで検索" />
+        </div>
+        <div className="w-48">
+          <Select
+            label=""
+            value={facilityFilter}
+            onChange={setFacilityFilter}
+            options={[{value: '', label: '全施設'}, ...facilities.map(f => ({value: String(f.id), label: f.name}))]}
+          />
+        </div>
+      </div>
+
+      {/* 統合テーブル */}
       <Card>
         <div className="p-3 border-b border-gray-200 bg-gray-50">
           <span className="text-sm font-medium text-gray-700">利用者マスタ ({filteredPatients.length}名)</span>
@@ -2002,61 +2134,70 @@ const PatientMasterPage = ({facilities, patients, onAdd, onUpdate, onDelete}) =>
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">氏名</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">居場所</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">申し送り</th>
-                <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">操作</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">#</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">氏名</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">ふりがな</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">施設</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">居場所</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">年齢</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">申し送り</th>
+                <th className="px-4 py-2 text-center text-xs font-medium text-gray-500">操作</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {filteredPatients.length === 0 ? (
                 <tr>
-                  <td colSpan={4}>
-                    <EmptyState message="利用者が登録されていません" />
+                  <td colSpan={8}>
+                    <EmptyState message="該当する利用者がいません" />
                   </td>
                 </tr>
               ) : (
-                filteredPatients.map(patient => (
-                  <tr key={patient.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3">
-                      <div>
-                        <div className="text-sm font-medium text-gray-900">{patient.name}</div>
-                        <div className="text-xs text-gray-500">{patient.nameKana}</div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="inline-flex items-center gap-1">
-                        <Badge variant="primary">{patient.building}</Badge>
-                        <span className="text-sm text-gray-600">
-                          {patient.floor}-{patient.room}
-                        </span>
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-sm text-gray-600 max-w-xs truncate">{patient.notes || '-'}</td>
-                    <td className="px-4 py-3 text-right">
-                      <div className="flex justify-end gap-1">
-                        <button
-                          onClick={() => handleOpenEdit(patient)}
-                          className="p-1 text-gray-400 hover:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 rounded"
-                          aria-label="編集"
-                        >
-                          <IconEdit />
-                        </button>
-                        <button
-                          onClick={() => {
-                            if (window.confirm(`「${patient.name}」を削除しますか？`)) {
-                              onDelete(patient.id)
-                            }
-                          }}
-                          className="p-1 text-gray-400 hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded"
-                          aria-label="削除"
-                        >
-                          <IconTrash />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                filteredPatients.map((p, idx) => {
+                  const facility = facilities.find(f => f.id === p.facilityId)
+                  return (
+                    <tr key={p.id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3 text-sm text-gray-500">{idx + 1}</td>
+                      <td className="px-4 py-3 text-sm font-medium text-gray-900">{getPatientName(p)}</td>
+                      <td className="px-4 py-3 text-sm text-gray-600">{getPatientNameKana(p)}</td>
+                      <td className="px-4 py-3 text-sm text-gray-600">{facility?.name || '-'}</td>
+                      <td className="px-4 py-3 text-sm text-gray-600">
+                        {p.building && <Badge variant="primary">{p.building}</Badge>}
+                        {' '}{p.floor}-{p.room}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-600">{p.age || '-'}歳</td>
+                      <td className="px-4 py-3 text-sm text-gray-600 max-w-[120px] truncate">{p.notes || '-'}</td>
+                      <td className="px-4 py-3 text-center">
+                        <div className="flex gap-1 justify-center">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => onSelectPatient?.(p.id)}
+                          >
+                            詳細
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => onEditPatient?.(p.id)}
+                          >
+                            ✏️
+                          </Button>
+                          <button
+                            onClick={() => {
+                              if (window.confirm(`「${getPatientName(p)}」を削除しますか？`)) {
+                                onDelete(p.id)
+                              }
+                            }}
+                            className="p-1 text-gray-400 hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded"
+                            aria-label="削除"
+                          >
+                            <IconTrash />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })
               )}
             </tbody>
           </table>
@@ -2673,7 +2814,7 @@ const VisitPlanDetailPage = ({
                         }`}
                       >
                         <div>
-                          <div className="text-sm font-medium text-gray-900">{patient.name}</div>
+                          <div className="text-sm font-medium text-gray-900">{getPatientName(patient)}</div>
                           <div className="text-xs text-gray-500">{patient.room}号室</div>
                         </div>
                         {isAdded ? (
@@ -2684,7 +2825,7 @@ const VisitPlanDetailPage = ({
                           <button
                             onClick={() => handleAddPatient(patient.id)}
                             className="text-gray-400 hover:text-slate-600 p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 rounded"
-                            aria-label={`${patient.name}を追加`}
+                            aria-label={`${getPatientName(patient)}を追加`}
                           >
                             <IconPlus />
                           </button>
@@ -2766,7 +2907,7 @@ const VisitPlanDetailPage = ({
                           ×
                         </button>
                       </div>
-                      <div className="text-sm font-semibold text-gray-900 mb-1">{patient.name}</div>
+                      <div className="text-sm font-semibold text-gray-900 mb-1">{getPatientName(patient)}</div>
                       {patient.notes && <div className="text-xs text-orange-600 mb-2">⚠ {patient.notes}</div>}
                       <div className="grid grid-cols-2 gap-2">
                         <div>
@@ -2820,7 +2961,7 @@ const VisitPlanDetailPage = ({
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => onStartConsultation(exam.id, 'hygienist')}
+                              onClick={() => onStartConsultation(exam.id, 'dh')}
                               disabled={!exam.hygienistId}
                             >
                               指導(衛)
@@ -2983,14 +3124,18 @@ const VitalDisplay = ({vital, label, onEdit}) => {
 /**
  * 診療画面
  */
-const ConsultationPage = ({examination, patient, staff, clinic, hasQualification, onBack, onUpdate, onOpenDocument}) => {
+const ConsultationPage = ({examination, patient, staff, clinic, hasQualification, onBack, onUpdate, onOpenDocument, consultationMode}) => {
+  // DHモード制限: DHログイン時は訪衛指と在口衛のみ操作可能（MTG 0206決定）
+  const DH_ALLOWED_ITEMS = ['houeishi', 'zaikouei']
+  const isDhMode = consultationMode === 'dh'
   const [drSeconds, setDrSeconds] = useState(0)
   const [dhSeconds, setDhSeconds] = useState(0)
   const [drRunning, setDrRunning] = useState(false)
   const [dhRunning, setDhRunning] = useState(false)
   const [vitalBefore, setVitalBefore] = useState(examination.vitalBefore || INITIAL_VITAL)
   const [vitalAfter, setVitalAfter] = useState(examination.vitalAfter || INITIAL_VITAL)
-  const [treatmentItems, setTreatmentItems] = useState(examination.treatmentItems || [])
+  // 実施項目は一旦廃止（MTG 0206決定）
+  // const [treatmentItems, setTreatmentItems] = useState(examination.treatmentItems || [])
   // procedureItems: { [itemId]: { categoryId: string | null } }
   const [procedureItems, setProcedureItems] = useState(examination.procedureItems || {})
   // 実施記録・所見の4項目
@@ -3000,15 +3145,18 @@ const ConsultationPage = ({examination, patient, staff, clinic, hasQualification
   const [nextPlan, setNextPlan] = useState(examination.nextPlan || '')
   const [customTreatment, setCustomTreatment] = useState('')
   const [customTreatments, setCustomTreatments] = useState([])
+  // 解説テキストポップアップ（MTG 0206決定: PDFリンク→テキストポップアップ）
+  const infoModal = useModal()
 
   const vitalBeforeModal = useModal()
   const vitalAfterModal = useModal()
 
   const doctor = staff.find(s => s.id === examination.doctorId)
 
-  const handleToggleTreatment = itemId => {
-    setTreatmentItems(prev => (prev.includes(itemId) ? prev.filter(id => id !== itemId) : [...prev, itemId]))
-  }
+  // 実施項目は一旦廃止（MTG 0206決定）
+  // const handleToggleTreatment = itemId => {
+  //   setTreatmentItems(prev => (prev.includes(itemId) ? prev.filter(id => id !== itemId) : [...prev, itemId]))
+  // }
 
   // 実施項目のON/OFF切り替え
   const handleToggleProcedure = itemId => {
@@ -3222,7 +3370,7 @@ const ConsultationPage = ({examination, patient, staff, clinic, hasQualification
     onUpdate(examination.id, {
       vitalBefore,
       vitalAfter,
-      treatmentItems,
+      // treatmentItems は一旦廃止（MTG 0206決定）
       procedureItems,
       visitCondition,
       oralFindings,
@@ -3254,7 +3402,7 @@ const ConsultationPage = ({examination, patient, staff, clinic, hasQualification
                 {patient.floor}-{patient.room}
               </span>
             </div>
-            <h2 className="text-xl font-bold text-gray-900">{patient.name} 様</h2>
+            <h2 className="text-xl font-bold text-gray-900">{getPatientName(patient)} 様</h2>
           </div>
         </div>
         <div className="text-right text-sm">
@@ -3262,7 +3410,7 @@ const ConsultationPage = ({examination, patient, staff, clinic, hasQualification
             担当: <span className="font-medium text-gray-900">{doctor?.name || '-'}</span>
           </div>
           <div className="text-gray-500">
-            モード: <span className="font-medium text-slate-700">歯科医師</span>
+            モード: <span className={`font-medium ${isDhMode ? 'text-amber-600' : 'text-slate-700'}`}>{isDhMode ? '歯科衛生士（DH）' : '歯科医師'}</span>
           </div>
         </div>
       </div>
@@ -3360,6 +3508,17 @@ const ConsultationPage = ({examination, patient, staff, clinic, hasQualification
         </div>
       </Card>
 
+      {/* DHモード注意バナー */}
+      {isDhMode && (
+        <div className="mb-4 px-4 py-3 bg-amber-50 border border-amber-300 rounded-lg flex items-center gap-2">
+          <span className="text-amber-600 text-lg">⚠</span>
+          <div>
+            <div className="text-sm font-medium text-amber-800">DHモードで操作中</div>
+            <div className="text-xs text-amber-600">操作可能な項目: 訪衛指・在口衛のみ</div>
+          </div>
+        </div>
+      )}
+
       {/* 実施項目の選択（加算） */}
       <Card className="mb-4">
         <div className="p-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
@@ -3370,7 +3529,7 @@ const ConsultationPage = ({examination, patient, staff, clinic, hasQualification
           <div className="text-sm font-bold text-slate-700">合計: {calculateTotalPoints().toLocaleString()} 点</div>
         </div>
         <div className="p-4 space-y-2">
-          {PROCEDURE_ITEMS_MASTER.map(item => {
+          {(isDhMode ? PROCEDURE_ITEMS_MASTER.filter(i => DH_ALLOWED_ITEMS.includes(i.id)) : PROCEDURE_ITEMS_MASTER).map(item => {
             const isSelected = !!procedureItems[item.id]
             const itemData = procedureItems[item.id]
             const points = getItemPoints(item.id)
@@ -3397,11 +3556,11 @@ const ConsultationPage = ({examination, patient, staff, clinic, hasQualification
                       />
                     </div>
                     <span className={`font-medium ${isSelected ? 'text-slate-800' : 'text-gray-700'}`}>{item.name}</span>
-                    {/* インフォマーク（PDF解説リンク） */}
+                    {/* インフォマーク（テキストポップアップ） */}
                     <button
                       onClick={e => {
                         e.stopPropagation()
-                        window.open(item.infoUrl, '_blank')
+                        infoModal.handleOpen({name: item.fullName, text: item.infoText || item.note || ''})
                       }}
                       className="w-5 h-5 flex items-center justify-center rounded-full bg-gray-200 text-gray-600 hover:bg-slate-300 hover:text-slate-700 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500"
                       aria-label={`${item.name}の解説を表示`}
@@ -3501,6 +3660,14 @@ const ConsultationPage = ({examination, patient, staff, clinic, hasQualification
           }
         }}
       />
+
+      {/* 解説テキストポップアップ */}
+      <infoModal.Modal title={infoModal.open?.name || '解説'}>
+        <p className="text-sm text-gray-700 leading-relaxed">{infoModal.open?.text}</p>
+        <div className="flex justify-end mt-4">
+          <Button size="sm" variant="secondary" onClick={infoModal.handleClose}>閉じる</Button>
+        </div>
+      </infoModal.Modal>
 
       {/* 保存ボタン */}
       <div className="flex justify-end gap-2">
@@ -3603,8 +3770,8 @@ const DocumentCreatePage = ({documentType, documentData, onBack, onSave}) => {
       facilityName: facility?.name || '',
       facilityAddress: facility?.address || '',
       // 患者情報
-      patientName: patient?.name || '',
-      patientNameKana: patient?.nameKana || '',
+      patientName: patient ? getPatientName(patient) : '',
+      patientNameKana: patient ? getPatientNameKana(patient) : '',
       patientBuilding: patient?.building || '',
       patientFloor: patient?.floor || '',
       patientRoom: patient?.room || '',
@@ -3668,7 +3835,7 @@ const DocumentCreatePage = ({documentType, documentData, onBack, onSave}) => {
           </button>
           <div>
             <h1 className="text-lg font-bold text-gray-900">{template.fullName}</h1>
-            <p className="text-sm text-gray-500">患者: {patient?.name} 様</p>
+            <p className="text-sm text-gray-500">患者: {patient ? getPatientName(patient) : '-'} 様</p>
           </div>
         </div>
         <div className="flex gap-2">
@@ -4037,11 +4204,11 @@ const DashboardPage = ({onNavigate, visitPlans, examinations}) => {
       stat: `本日の予定: ${todayPlans.length}件`,
     },
     {
-      id: 'patient-list',
-      icon: '🔍',
-      title: 'Patient Management',
-      sub: '患者管理',
-      desc: '検索して、個人の情報を見たい時にも使用します',
+      id: 'admin-patients',
+      icon: '👥',
+      title: 'Patient Master',
+      sub: '利用者マスタ',
+      desc: '利用者の検索・登録・編集・削除を行います',
     },
     {id: 'individual-input', icon: '✏️', title: 'Individual Input', sub: '個別入力', desc: '個人を選択して直接入力する場合'},
     {
@@ -4097,120 +4264,14 @@ const DashboardPage = ({onNavigate, visitPlans, examinations}) => {
 }
 
 /**
- * 患者管理画面（患者リスト一覧）
- */
-const PatientListPage = ({patients, facilities, onSelectPatient, onEditPatient}) => {
-  const [searchQuery, setSearchQuery] = useState('')
-  const [facilityFilter, setFacilityFilter] = useState('')
-
-  const filteredPatients = useMemo(() => {
-    return patients.filter(p => {
-      const matchesSearch = !searchQuery || p.name.includes(searchQuery) || (p.nameKana && p.nameKana.includes(searchQuery))
-      const matchesFacility = !facilityFilter || p.facilityId === Number(facilityFilter)
-      return matchesSearch && matchesFacility
-    })
-  }, [patients, searchQuery, facilityFilter])
-
-  return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold text-gray-900 mb-4">患者管理</h2>
-
-      {/* 検索バー */}
-      <div className="flex gap-3 mb-4">
-        <div className="flex-1">
-          <Input label="" value={searchQuery} onChange={setSearchQuery} placeholder="🔍 氏名・カナで検索" />
-        </div>
-        <div className="w-48">
-          <Select
-            label=""
-            value={facilityFilter}
-            onChange={setFacilityFilter}
-            options={[{value: '', label: '全施設'}, ...facilities.map(f => ({value: String(f.id), label: f.name}))]}
-          />
-        </div>
-      </div>
-
-      {/* 患者テーブル */}
-      <Card>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">#</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">氏名</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">ふりがな</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">施設</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">居室</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">年齢</th>
-                <th className="px-4 py-2 text-center text-xs font-medium text-gray-500">操作</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {filteredPatients.length === 0 ? (
-                <tr>
-                  <td colSpan={7}>
-                    <EmptyState message="該当する患者がいません" />
-                  </td>
-                </tr>
-              ) : (
-                filteredPatients.map((p, idx) => {
-                  const facility = facilities.find(f => f.id === p.facilityId)
-                  return (
-                    <tr key={p.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => onSelectPatient(p.id)}>
-                      <td className="px-4 py-3 text-sm text-gray-500">{idx + 1}</td>
-                      <td className="px-4 py-3 text-sm font-medium text-gray-900">{p.name}</td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{p.nameKana}</td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{facility?.name || '-'}</td>
-                      <td className="px-4 py-3 text-sm text-gray-600">
-                        {p.building}
-                        {p.floor}-{p.room}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{p.age || '-'}歳</td>
-                      <td className="px-4 py-3 text-center">
-                        <div className="flex gap-1 justify-center">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={e => {
-                              e.stopPropagation()
-                              onSelectPatient(p.id)
-                            }}
-                          >
-                            詳細
-                          </Button>
-                          {onEditPatient && (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={e => {
-                                e.stopPropagation()
-                                onEditPatient(p.id)
-                              }}
-                            >
-                              ✏️
-                            </Button>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  )
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
-      </Card>
-    </div>
-  )
-}
-
-/**
  * 患者情報入力・編集画面
  */
 const PatientEditPage = ({patient, onSave, onBack}) => {
   const [form, setForm] = useState({
-    name: patient.name,
-    nameKana: patient.nameKana,
+    lastName: patient.lastName,
+    firstName: patient.firstName,
+    lastNameKana: patient.lastNameKana,
+    firstNameKana: patient.firstNameKana,
     birthDate: patient.birthDate,
     gender: patient.gender,
     careLevel: patient.careLevel || '',
@@ -4247,19 +4308,36 @@ const PatientEditPage = ({patient, onSave, onBack}) => {
       return {...p, assessment: newA}
     })
   }
-  const updateMedication = (idx, value) => {
-    setForm(p => {
-      const meds = [...p.assessment.medications]
-      meds[idx] = {name: value}
-      return {...p, assessment: {...p.assessment, medications: meds}}
-    })
+  // お薬手帳の画像保存（MTG 0206決定: テキスト入力→画像保存に変更）
+  const addMedicationImage = () => {
+    // モック: ダミー画像URLを追加
+    const dummyUrl = `/dental/mock-images/medication_${Date.now()}.jpg`
+    setForm(p => ({
+      ...p,
+      assessment: {
+        ...p.assessment,
+        medicationImages: [...(p.assessment.medicationImages || []), {url: dummyUrl, addedAt: new Date().toISOString()}],
+      },
+    }))
+  }
+  const removeMedicationImage = idx => {
+    setForm(p => ({
+      ...p,
+      assessment: {
+        ...p.assessment,
+        medicationImages: (p.assessment.medicationImages || []).filter((_, i) => i !== idx),
+      },
+    }))
   }
 
   const handleSave = () => {
+    if (!form.lastNameKana || !form.firstNameKana) return
     onSave({
       ...patient,
-      name: form.name,
-      nameKana: form.nameKana,
+      lastName: form.lastName,
+      firstName: form.firstName,
+      lastNameKana: form.lastNameKana,
+      firstNameKana: form.firstNameKana,
       birthDate: form.birthDate,
       gender: form.gender,
       age: calcAge(form.birthDate),
@@ -4308,9 +4386,14 @@ const PatientEditPage = ({patient, onSave, onBack}) => {
               <span className="text-sm font-medium text-white">患者情報入力</span>
             </div>
             <div className="p-4 space-y-3">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 <Input label="患者ID" value={String(patient.id)} onChange={() => {}} disabled />
-                <Input label="氏名" value={form.name} onChange={v => updateField('name', v)} />
+                <Input label="姓" value={form.lastName} onChange={v => updateField('lastName', v)} required />
+                <Input label="名" value={form.firstName} onChange={v => updateField('firstName', v)} required />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <Input label="セイ（必須）" value={form.lastNameKana} onChange={v => updateField('lastNameKana', v)} required />
+                <Input label="メイ（必須）" value={form.firstNameKana} onChange={v => updateField('firstNameKana', v)} required />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <Input label="生年月日" value={form.birthDate} onChange={v => updateField('birthDate', v)} type="date" />
@@ -4340,42 +4423,80 @@ const PatientEditPage = ({patient, onSave, onBack}) => {
                 </div>
               </div>
 
-              {/* 認薬 */}
+              {/* お薬情報（お薬手帳画像の保存） */}
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-2 border-b pb-1">認薬</div>
-                {form.assessment.medications.map((med, i) => (
-                  <div key={i} className="flex items-center gap-2 mb-1">
-                    <span className="text-xs text-gray-500 w-16">薬品名:</span>
-                    <input
-                      type="text"
-                      value={med.name}
-                      onChange={e => updateMedication(i, e.target.value)}
-                      className="flex-1 border border-gray-300 rounded px-2 py-1 text-sm"
-                    />
-                  </div>
-                ))}
+                <div className="text-sm font-medium text-gray-700 mb-2 border-b pb-1">お薬情報</div>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {(form.assessment.medicationImages || []).map((img, i) => (
+                    <div key={i} className="relative w-20 h-20 border border-gray-300 rounded bg-gray-100 flex items-center justify-center group">
+                      <span className="text-2xl">💊</span>
+                      <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-[10px] text-center py-0.5 rounded-b">
+                        {i + 1}枚目
+                      </div>
+                      <button
+                        onClick={() => removeMedicationImage(i)}
+                        className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  onClick={addMedicationImage}
+                  className="px-3 py-1.5 border border-dashed border-gray-400 rounded text-sm text-gray-600 hover:bg-gray-50 flex items-center gap-1"
+                >
+                  📷 お薬手帳の画像を追加
+                </button>
+                <p className="text-xs text-gray-400 mt-1">※ お薬手帳の写真を撮影・アップロードして保存できます</p>
               </div>
 
               {/* 加算チェック */}
-              <div className="space-y-1 pt-2 border-t">
-                <label className="flex items-center gap-2 text-sm cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={!!form.assessment.hasInfoShareFee}
-                    onChange={() => updateAssessment('hasInfoShareFee', !form.assessment.hasInfoShareFee)}
-                    className="w-3.5 h-3.5"
-                  />
-                  診療情報等連携共有料（情共1）
-                </label>
-                <label className="flex items-center gap-2 text-sm cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={!!form.assessment.hasComprehensiveManagement}
-                    onChange={() => updateAssessment('hasComprehensiveManagement', !form.assessment.hasComprehensiveManagement)}
-                    className="w-3.5 h-3.5"
-                  />
-                  総合医療管理加算（総医）
-                </label>
+              <div className="space-y-2 pt-2 border-t">
+                <div>
+                  <label className="flex items-center gap-2 text-sm cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={!!form.assessment.hasInfoShareFee}
+                      onChange={() => updateAssessment('hasInfoShareFee', !form.assessment.hasInfoShareFee)}
+                      className="w-3.5 h-3.5"
+                    />
+                    診療情報等連携共有料（情共1）
+                  </label>
+                  {form.assessment.hasInfoShareFee && (
+                    <div className="ml-6 mt-1 flex items-center gap-2">
+                      <span className="text-xs text-gray-500">最終取得日:</span>
+                      <input
+                        type="date"
+                        value={form.assessment.infoShareFeeLastDate || ''}
+                        onChange={e => updateAssessment('infoShareFeeLastDate', e.target.value)}
+                        className="border border-gray-300 rounded px-2 py-1 text-sm"
+                      />
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <label className="flex items-center gap-2 text-sm cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={!!form.assessment.hasComprehensiveManagement}
+                      onChange={() => updateAssessment('hasComprehensiveManagement', !form.assessment.hasComprehensiveManagement)}
+                      className="w-3.5 h-3.5"
+                    />
+                    総合医療管理加算（総医）
+                  </label>
+                  {form.assessment.hasComprehensiveManagement && (
+                    <div className="ml-6 mt-1 flex items-center gap-2">
+                      <span className="text-xs text-gray-500">最終取得日:</span>
+                      <input
+                        type="date"
+                        value={form.assessment.comprehensiveManagementLastDate || ''}
+                        onChange={e => updateAssessment('comprehensiveManagementLastDate', e.target.value)}
+                        className="border border-gray-300 rounded px-2 py-1 text-sm"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </Card>
@@ -4606,10 +4727,10 @@ const PatientDetailPage = ({patient, facility, examinations, scoringHistory, doc
           <div className="p-4 space-y-2 text-sm">
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <span className="text-gray-500">氏名:</span> <span className="font-medium">{patient.name}</span>
+                <span className="text-gray-500">氏名:</span> <span className="font-medium">{getPatientName(patient)}</span>
               </div>
               <div>
-                <span className="text-gray-500">カナ:</span> {patient.nameKana}
+                <span className="text-gray-500">カナ:</span> {getPatientNameKana(patient)}
               </div>
               <div>
                 <span className="text-gray-500">性別:</span>{' '}
@@ -4875,7 +4996,7 @@ const IndividualInputPage = ({facilities, patients, staff, onStartConsultation})
                       >
                         {selectedPatientId === p.id && '✓'}
                       </span>
-                      <span className="text-sm font-medium text-gray-900">{p.name}</span>
+                      <span className="text-sm font-medium text-gray-900">{getPatientName(p)}</span>
                       <span className="text-xs text-gray-500">({p.room})</span>
                     </button>
                   ))}
@@ -4950,7 +5071,7 @@ const FinalReviewPage = ({examination, patient, facility, staff, clinic, onBack,
       </button>
       <h2 className="text-xl font-bold text-gray-900 mb-1">最終提示画面</h2>
       <p className="text-sm text-gray-500 mb-4">
-        {patient.name} 様 | {facility?.name || '-'} | 2026/01/18
+        {getPatientName(patient)} 様 | {facility?.name || '-'} | 2026/01/18
       </p>
 
       {/* 診療情報 */}
@@ -5194,7 +5315,7 @@ const ScoringLedgerPage = ({patients, facilities, scoringHistory}) => {
                 const facility = facilities.find(f => f.id === p.facilityId)
                 return (
                   <tr key={p.id}>
-                    <td className="px-3 py-2 text-sm font-medium text-gray-900 sticky left-0 bg-white">{p.name}</td>
+                    <td className="px-3 py-2 text-sm font-medium text-gray-900 sticky left-0 bg-white">{getPatientName(p)}</td>
                     <td className="px-3 py-2 text-xs text-gray-500">{facility?.name || '-'}</td>
                     {trackingItems.map(item => {
                       const result = getStatus(p.id, item)
@@ -5251,7 +5372,7 @@ const DocumentListPage = ({documents, patients}) => {
                   return (
                     <tr key={doc.id} className="hover:bg-gray-50">
                       <td className="px-4 py-3 text-sm text-gray-600">{doc.createdAt}</td>
-                      <td className="px-4 py-3 text-sm font-medium text-gray-900">{patient?.name || '-'}</td>
+                      <td className="px-4 py-3 text-sm font-medium text-gray-900">{patient ? getPatientName(patient) : '-'}</td>
                       <td className="px-4 py-3 text-sm text-gray-600">{doc.templateName}</td>
                       <td className="px-4 py-3 text-sm text-center text-gray-500">v{doc.version}</td>
                       <td className="px-4 py-3 text-center">
@@ -5321,13 +5442,485 @@ const TemplateMasterPage = () => {
 }
 
 /**
+ * 施設ポータル画面（施設側モック）
+ */
+const FacilityPortalPage = ({facility, patients, onUpdatePatient}) => {
+  const facilityPatients = patients.filter(p => p.facilityId === facility?.id)
+  const [editingPatientId, setEditingPatientId] = useState(null)
+  const [assessmentData, setAssessmentData] = useState({})
+
+  const getEditData = patientId => {
+    const patient = facilityPatients.find(p => p.id === patientId)
+    return {
+      ...patient?.assessment,
+      careLevel: patient?.careLevel || '',
+      notes: patient?.notes || '',
+      diseases: {...patient?.diseases},
+      teethCount: patient?.teethCount || 0,
+      hasDenture: patient?.hasDenture || false,
+      hasOralHypofunction: patient?.hasOralHypofunction || false,
+      ...(assessmentData[patientId] || {}),
+    }
+  }
+
+  const updateEditData = (patientId, field, value) => {
+    setAssessmentData(prev => ({
+      ...prev,
+      [patientId]: {...(prev[patientId] || {}), [field]: value},
+    }))
+  }
+
+  const calcBmi = (h, w) => {
+    const hm = parseFloat(h) / 100
+    const wk = parseFloat(w)
+    if (!hm || !wk || hm <= 0) return ''
+    return (wk / (hm * hm)).toFixed(1)
+  }
+
+  const handleSaveAssessment = patientId => {
+    const data = getEditData(patientId)
+    const patient = facilityPatients.find(p => p.id === patientId)
+    if (patient && onUpdatePatient) {
+      const bmi = calcBmi(data.height, data.weight)
+      onUpdatePatient(patientId, {
+        careLevel: data.careLevel,
+        notes: data.notes,
+        diseases: data.diseases,
+        teethCount: data.teethCount,
+        hasDenture: data.hasDenture,
+        hasOralHypofunction: data.hasOralHypofunction,
+        assessment: {
+          ...patient.assessment,
+          height: data.height,
+          weight: data.weight,
+          bmi,
+          aspirationPneumoniaHistory: data.aspirationPneumoniaHistory,
+          seatRetention: data.seatRetention,
+          oralCleaning: data.oralCleaning,
+          moistureRetention: data.moistureRetention,
+          gargling: data.gargling,
+          malnutritionRisk: data.malnutritionRisk,
+          choking: data.choking,
+          oralIntake: data.oralIntake,
+          artificialNutrition: data.artificialNutrition,
+          moisture: data.moisture,
+          mainDish: data.mainDish,
+          sideDish: data.sideDish,
+          swallowing: data.swallowing,
+          medicationSwallowing: data.medicationSwallowing,
+        },
+      })
+    }
+    setEditingPatientId(null)
+  }
+
+  // ラジオボタングループ（ポータル用）
+  const PortalRadioGroup = ({label, options, value, onChange}) => (
+    <div className="mb-2">
+      <div className="text-xs font-medium text-gray-600 mb-1">{label}:</div>
+      <div className="flex flex-wrap gap-x-3 gap-y-1">
+        {options.map(opt => (
+          <label key={opt} className="flex items-center gap-1 cursor-pointer text-xs">
+            <input type="radio" name={label} checked={value === opt} onChange={() => onChange(opt)} className="w-3 h-3" />
+            {opt}
+          </label>
+        ))}
+      </div>
+    </div>
+  )
+
+  return (
+    <div className="p-4 max-w-4xl mx-auto">
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-2xl">🏢</span>
+          <h2 className="text-xl font-bold text-gray-900">{facility?.name || '施設名'} ポータル</h2>
+        </div>
+        <p className="text-sm text-gray-500">利用者のアセスメント情報を入力・更新できます。</p>
+      </div>
+
+      <Card>
+        <div className="p-3 border-b border-gray-200 bg-blue-600">
+          <span className="text-sm font-medium text-white">利用者一覧</span>
+        </div>
+        {facilityPatients.length === 0 ? (
+          <EmptyState message="この施設に登録された利用者はいません" />
+        ) : (
+          <div className="divide-y divide-gray-200">
+            {facilityPatients.map(patient => {
+              const data = getEditData(patient.id)
+              return (
+                <div key={patient.id} className="p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-3">
+                      <span className="text-gray-400">👤</span>
+                      <div>
+                        <div className="font-medium text-gray-900">{getPatientName(patient)}</div>
+                        <div className="text-xs text-gray-500">{patient.building} {patient.floor}-{patient.room}</div>
+                      </div>
+                    </div>
+                    {editingPatientId === patient.id ? (
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="secondary" onClick={() => setEditingPatientId(null)}>キャンセル</Button>
+                        <Button size="sm" onClick={() => handleSaveAssessment(patient.id)}>保存</Button>
+                      </div>
+                    ) : (
+                      <Button size="sm" variant="outline" onClick={() => setEditingPatientId(patient.id)}>アセスメント入力</Button>
+                    )}
+                  </div>
+
+                  {editingPatientId === patient.id && (
+                    <div className="mt-3 p-4 bg-gray-50 rounded space-y-4">
+                      {/* 基本情報 */}
+                      <div className="text-sm font-bold text-gray-900 border-b pb-1">基本情報</div>
+                      <div className="grid grid-cols-4 gap-3">
+                        <div>
+                          <label className="text-xs text-gray-500">身長(cm)</label>
+                          <input
+                            type="number"
+                            value={data.height || ''}
+                            onChange={e => updateEditData(patient.id, 'height', e.target.value)}
+                            className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500">体重(kg)</label>
+                          <input
+                            type="number"
+                            value={data.weight || ''}
+                            onChange={e => updateEditData(patient.id, 'weight', e.target.value)}
+                            className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500">BMI</label>
+                          <div className="px-2 py-1 bg-gray-100 rounded text-sm">{calcBmi(data.height, data.weight) || '—'}</div>
+                        </div>
+                        <div>
+                          <label className="text-xs text-gray-500">介護度</label>
+                          <select
+                            value={data.careLevel || ''}
+                            onChange={e => updateEditData(patient.id, 'careLevel', e.target.value)}
+                            className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                          >
+                            <option value="">選択</option>
+                            {['要支援1', '要支援2', '要介護1', '要介護2', '要介護3', '要介護4', '要介護5'].map(v => (
+                              <option key={v} value={v}>{v}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* 誤嚥性肺炎 */}
+                      <PortalRadioGroup
+                        label="誤嚥性肺炎の既往"
+                        options={['無し', 'あり']}
+                        value={data.aspirationPneumoniaHistory || '無し'}
+                        onChange={v => updateEditData(patient.id, 'aspirationPneumoniaHistory', v)}
+                      />
+
+                      {/* 身体・口腔状況 */}
+                      <div className="text-sm font-bold text-gray-900 border-b pb-1">身体・口腔状況</div>
+                      <PortalRadioGroup label="座位保持" options={ASSESSMENT_OPTIONS.seatRetention} value={data.seatRetention || ''} onChange={v => updateEditData(patient.id, 'seatRetention', v)} />
+                      <PortalRadioGroup label="口腔清掃の状況" options={ASSESSMENT_OPTIONS.oralCleaning} value={data.oralCleaning || ''} onChange={v => updateEditData(patient.id, 'oralCleaning', v)} />
+                      <PortalRadioGroup label="口腔内水分保持" options={ASSESSMENT_OPTIONS.moistureRetention} value={data.moistureRetention || ''} onChange={v => updateEditData(patient.id, 'moistureRetention', v)} />
+                      <PortalRadioGroup label="うがい" options={ASSESSMENT_OPTIONS.gargling} value={data.gargling || ''} onChange={v => updateEditData(patient.id, 'gargling', v)} />
+
+                      {/* リスク・摂取 */}
+                      <div className="text-sm font-bold text-gray-900 border-b pb-1">リスク・摂取</div>
+                      <PortalRadioGroup label="低栄養リスク" options={ASSESSMENT_OPTIONS.malnutritionRisk} value={data.malnutritionRisk || ''} onChange={v => updateEditData(patient.id, 'malnutritionRisk', v)} />
+                      <PortalRadioGroup label="むせ" options={ASSESSMENT_OPTIONS.choking} value={data.choking || ''} onChange={v => updateEditData(patient.id, 'choking', v)} />
+                      <PortalRadioGroup label="経口摂取の有無" options={ASSESSMENT_OPTIONS.oralIntake} value={data.oralIntake || ''} onChange={v => updateEditData(patient.id, 'oralIntake', v)} />
+                      <PortalRadioGroup label="人工栄養法" options={ASSESSMENT_OPTIONS.artificialNutrition} value={data.artificialNutrition || ''} onChange={v => updateEditData(patient.id, 'artificialNutrition', v)} />
+
+                      {/* 食事・服薬 */}
+                      <div className="text-sm font-bold text-gray-900 border-b pb-1">食事・服薬</div>
+                      <PortalRadioGroup label="水分" options={ASSESSMENT_OPTIONS.moisture} value={data.moisture || ''} onChange={v => updateEditData(patient.id, 'moisture', v)} />
+                      <PortalRadioGroup label="主食" options={ASSESSMENT_OPTIONS.mainDish} value={data.mainDish || ''} onChange={v => updateEditData(patient.id, 'mainDish', v)} />
+                      <PortalRadioGroup label="おかず" options={ASSESSMENT_OPTIONS.sideDish} value={data.sideDish || ''} onChange={v => updateEditData(patient.id, 'sideDish', v)} />
+                      <PortalRadioGroup label="飲み込み" options={ASSESSMENT_OPTIONS.swallowing} value={data.swallowing || ''} onChange={v => updateEditData(patient.id, 'swallowing', v)} />
+                      <PortalRadioGroup label="薬の服用" options={ASSESSMENT_OPTIONS.medicationSwallowing} value={data.medicationSwallowing || ''} onChange={v => updateEditData(patient.id, 'medicationSwallowing', v)} />
+
+                      {/* 基礎疾患 */}
+                      <div className="text-sm font-bold text-gray-900 border-b pb-1">基礎疾患</div>
+                      <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                        {PATIENT_DISEASES.map(d => (
+                          <label key={d.id} className="flex items-center gap-2 text-xs cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={!!(data.diseases || {})[d.id]}
+                              onChange={() => {
+                                const newDiseases = {...(data.diseases || {}), [d.id]: !(data.diseases || {})[d.id]}
+                                updateEditData(patient.id, 'diseases', newDiseases)
+                              }}
+                              className="w-3 h-3"
+                            />
+                            {d.name}
+                          </label>
+                        ))}
+                      </div>
+
+                      {/* 歯科情報 */}
+                      <div className="text-sm font-bold text-gray-900 border-b pb-1">歯科情報</div>
+                      <div className="grid grid-cols-3 gap-3">
+                        <div>
+                          <label className="text-xs text-gray-500">残歯数</label>
+                          <input
+                            type="number"
+                            value={data.teethCount || 0}
+                            onChange={e => updateEditData(patient.id, 'teethCount', Number(e.target.value))}
+                            className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                          />
+                        </div>
+                        <label className="flex items-center gap-2 text-xs cursor-pointer pt-4">
+                          <input type="checkbox" checked={!!data.hasDenture} onChange={() => updateEditData(patient.id, 'hasDenture', !data.hasDenture)} className="w-3 h-3" />
+                          義歯あり
+                        </label>
+                        <label className="flex items-center gap-2 text-xs cursor-pointer pt-4">
+                          <input type="checkbox" checked={!!data.hasOralHypofunction} onChange={() => updateEditData(patient.id, 'hasOralHypofunction', !data.hasOralHypofunction)} className="w-3 h-3" />
+                          口腔機能低下症
+                        </label>
+                      </div>
+
+                      {/* 備考 */}
+                      <div>
+                        <label className="text-xs text-gray-500">備考・申し送り</label>
+                        <textarea
+                          value={data.notes || ''}
+                          onChange={e => updateEditData(patient.id, 'notes', e.target.value)}
+                          className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                          rows={2}
+                          placeholder="気になる点や伝達事項があれば入力してください"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </Card>
+    </div>
+  )
+}
+
+/**
+ * 履歴・一括印刷画面
+ */
+const BatchPrintPage = ({facilities, examinations, patients, visitPlans, documents}) => {
+  const [selectedFacilityId, setSelectedFacilityId] = useState('')
+  const [selectedMonth, setSelectedMonth] = useState('2026-01')
+
+  // フィルタリング
+  const filteredExams = useMemo(() => {
+    return examinations.filter(exam => {
+      if (exam.status !== EXAMINATION_STATUS.DONE) return false
+      const plan = visitPlans.find(p => p.id === exam.visitPlanId)
+      if (!plan) return false
+      if (selectedFacilityId && plan.facilityId !== Number(selectedFacilityId)) return false
+      if (selectedMonth && plan.visitDate && !plan.visitDate.startsWith(selectedMonth)) return false
+      return true
+    })
+  }, [examinations, visitPlans, selectedFacilityId, selectedMonth])
+
+  return (
+    <div className="p-4">
+      <h2 className="text-xl font-bold text-gray-900 mb-4">履歴・一括印刷</h2>
+
+      {/* フィルタ */}
+      <Card className="mb-4 p-4">
+        <div className="flex items-end gap-4">
+          <div>
+            <label className="block text-xs text-gray-600 mb-1">施設</label>
+            <select
+              value={selectedFacilityId}
+              onChange={e => setSelectedFacilityId(e.target.value)}
+              className="border border-gray-300 rounded px-3 py-2 text-sm min-w-[200px]"
+            >
+              <option value="">すべての施設</option>
+              {facilities.map(f => (
+                <option key={f.id} value={f.id}>{f.name}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs text-gray-600 mb-1">対象月</label>
+            <input
+              type="month"
+              value={selectedMonth}
+              onChange={e => setSelectedMonth(e.target.value)}
+              className="border border-gray-300 rounded px-3 py-2 text-sm"
+            />
+          </div>
+          <Button
+            variant="primary"
+            onClick={() => {
+              // モック: PDF一括出力のシミュレーション
+              console.log('一括PDF出力:', {facility: selectedFacilityId, month: selectedMonth, count: filteredExams.length})
+            }}
+          >
+            🖨️ 一括PDF出力
+          </Button>
+        </div>
+      </Card>
+
+      {/* 統計サマリー */}
+      <div className="grid md:grid-cols-3 gap-4 mb-4">
+        <Card className="p-4">
+          <div className="text-sm text-gray-500">対象患者数</div>
+          <div className="text-2xl font-bold text-gray-900">{filteredExams.length} 名</div>
+        </Card>
+        <Card className="p-4">
+          <div className="text-sm text-gray-500">合計算定点数</div>
+          <div className="text-2xl font-bold text-slate-700">
+            {filteredExams.reduce((sum, e) => {
+              let pts = 0
+              if (e.procedureItems) {
+                Object.entries(e.procedureItems).forEach(([itemId, data]) => {
+                  const item = PROCEDURE_ITEMS_MASTER.find(i => i.id === itemId)
+                  if (!item) return
+                  if (item.categories?.length > 0 && data.categoryId) {
+                    const cat = item.categories.find(c => c.id === data.categoryId)
+                    pts += cat?.points || 0
+                  } else {
+                    pts += item.defaultPoints || 0
+                  }
+                })
+              }
+              return sum + pts
+            }, 0).toLocaleString()} 点
+          </div>
+        </Card>
+        <Card className="p-4">
+          <div className="text-sm text-gray-500">文書作成済み</div>
+          <div className="text-2xl font-bold text-emerald-600">
+            {documents?.filter(d => filteredExams.some(e => e.id === d.examinationId)).length || 0} 件
+          </div>
+        </Card>
+      </div>
+
+      {/* 一覧テーブル */}
+      <Card>
+        <div className="p-3 border-b border-gray-200 bg-gray-50">
+          <span className="text-sm font-medium text-gray-700">診療履歴一覧</span>
+        </div>
+        {filteredExams.length === 0 ? (
+          <EmptyState message="該当する診療記録はありません" />
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">日付</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">患者名</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">施設</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">実施項目</th>
+                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500">点数</th>
+                  <th className="px-4 py-2 text-center text-xs font-medium text-gray-500">文書</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {filteredExams.map(exam => {
+                  const patient = patients.find(p => p.id === exam.patientId)
+                  const plan = visitPlans.find(p => p.id === exam.visitPlanId)
+                  const facility = facilities.find(f => f.id === plan?.facilityId)
+                  let pts = 0
+                  if (exam.procedureItems) {
+                    Object.entries(exam.procedureItems).forEach(([itemId, data]) => {
+                      const item = PROCEDURE_ITEMS_MASTER.find(i => i.id === itemId)
+                      if (!item) return
+                      if (item.categories?.length > 0 && data.categoryId) {
+                        const cat = item.categories.find(c => c.id === data.categoryId)
+                        pts += cat?.points || 0
+                      } else {
+                        pts += item.defaultPoints || 0
+                      }
+                    })
+                  }
+                  const hasDoc = documents?.some(d => d.examinationId === exam.id)
+                  return (
+                    <tr key={exam.id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3 text-sm text-gray-600">{plan?.visitDate || '-'}</td>
+                      <td className="px-4 py-3 text-sm font-medium text-gray-900">{patient ? getPatientName(patient) : '-'}</td>
+                      <td className="px-4 py-3 text-sm text-gray-600">{facility?.name}</td>
+                      <td className="px-4 py-3 text-sm text-gray-600">
+                        {exam.procedureItems && Object.keys(exam.procedureItems).length > 0
+                          ? Object.keys(exam.procedureItems)
+                              .map(id => PROCEDURE_ITEMS_MASTER.find(p => p.id === id)?.name)
+                              .filter(Boolean)
+                              .join(', ')
+                          : '-'}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-right font-medium text-slate-700">
+                        {pts > 0 ? `${pts.toLocaleString()}点` : '-'}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        {hasDoc ? <Badge variant="success">済</Badge> : <span className="text-xs text-gray-400">-</span>}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Card>
+    </div>
+  )
+}
+
+/**
+ * 診察の合計点数を計算するヘルパー関数
+ */
+const calculateExamPoints = exam => {
+  if (!exam.procedureItems) return 0
+  let total = 0
+  Object.entries(exam.procedureItems).forEach(([itemId, data]) => {
+    const item = PROCEDURE_ITEMS_MASTER.find(i => i.id === itemId)
+    if (!item) return
+    if (item.categories?.length > 0 && data.categoryId) {
+      const category = item.categories.find(c => c.id === data.categoryId)
+      total += category?.points || 0
+    } else {
+      total += item.defaultPoints || 0
+    }
+  })
+  return total
+}
+
+/**
+ * 文書作成状況を取得するヘルパー関数
+ */
+const getDocumentStatus = (exam, documents) => {
+  if (!exam.procedureItems) return {required: 0, completed: 0}
+  let required = 0
+  let completed = 0
+  Object.keys(exam.procedureItems).forEach(itemId => {
+    const item = PROCEDURE_ITEMS_MASTER.find(i => i.id === itemId)
+    if (item?.documents?.length > 0) {
+      required += item.documents.length
+      // 関連する文書が作成済みかチェック
+      item.documents.forEach(doc => {
+        const found = documents?.find(d => d.examinationId === exam.id && d.templateId === doc.id)
+        if (found) completed++
+      })
+    }
+  })
+  return {required, completed}
+}
+
+/**
  * 日次報告（Summary）画面
  */
-const SummaryPage = ({visitPlans, examinations, patients, facilities}) => {
+const SummaryPage = ({visitPlans, examinations, patients, facilities, documents}) => {
   const today = formatDate(new Date(2026, 0, 18))
   const todayPlans = visitPlans.filter(p => p.visitDate === today)
 
   const completedExams = examinations.filter(e => e.status === EXAMINATION_STATUS.DONE)
+
+  // 合計点数の計算
+  const totalPoints = completedExams.reduce((sum, exam) => sum + calculateExamPoints(exam), 0)
 
   return (
     <div className="p-4">
@@ -5343,9 +5936,8 @@ const SummaryPage = ({visitPlans, examinations, patients, facilities}) => {
           <div className="text-2xl font-bold text-emerald-600">{completedExams.length} 名</div>
         </Card>
         <Card className="p-4">
-          <div className="text-sm text-gray-500">概算算定点数</div>
-          <div className="text-2xl font-bold text-slate-700">-- 点</div>
-          <div className="text-xs text-gray-400">※ 実装予定</div>
+          <div className="text-sm text-gray-500">合計算定点数</div>
+          <div className="text-2xl font-bold text-slate-700">{totalPoints.toLocaleString()} 点</div>
         </Card>
       </div>
 
@@ -5363,6 +5955,8 @@ const SummaryPage = ({visitPlans, examinations, patients, facilities}) => {
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">患者名</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">施設</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">実施項目</th>
+                  <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">合計点数</th>
+                  <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">文書状況</th>
                   <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">ステータス</th>
                 </tr>
               </thead>
@@ -5371,14 +5965,31 @@ const SummaryPage = ({visitPlans, examinations, patients, facilities}) => {
                   const patient = patients.find(p => p.id === exam.patientId)
                   const plan = visitPlans.find(p => p.id === exam.visitPlanId)
                   const facility = facilities.find(f => f.id === plan?.facilityId)
+                  const examPoints = calculateExamPoints(exam)
+                  const docStatus = getDocumentStatus(exam, documents)
                   return (
                     <tr key={exam.id}>
-                      <td className="px-4 py-3 text-sm font-medium text-gray-900">{patient?.name}</td>
+                      <td className="px-4 py-3 text-sm font-medium text-gray-900">{patient ? getPatientName(patient) : '-'}</td>
                       <td className="px-4 py-3 text-sm text-gray-600">{facility?.name}</td>
                       <td className="px-4 py-3 text-sm text-gray-600">
-                        {exam.treatmentItems.length > 0
-                          ? exam.treatmentItems.map(id => TREATMENT_ITEMS_MASTER.find(t => t.id === id)?.name).join(', ')
+                        {exam.procedureItems && Object.keys(exam.procedureItems).length > 0
+                          ? Object.keys(exam.procedureItems)
+                              .map(id => PROCEDURE_ITEMS_MASTER.find(p => p.id === id)?.name)
+                              .filter(Boolean)
+                              .join(', ')
                           : '-'}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-right font-medium text-slate-700">
+                        {examPoints > 0 ? `${examPoints.toLocaleString()}点` : '-'}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        {docStatus.required === 0 ? (
+                          <span className="text-xs text-gray-400">-</span>
+                        ) : docStatus.completed >= docStatus.required ? (
+                          <Badge variant="success">済</Badge>
+                        ) : (
+                          <Badge variant="warning">未 ({docStatus.completed}/{docStatus.required})</Badge>
+                        )}
                       </td>
                       <td className="px-4 py-3">
                         <Badge variant="success">完了</Badge>
@@ -5530,7 +6141,7 @@ export default function DentalAppMock() {
       dhEndTime: null,
     }
     setSelectedExamination(exam)
-    setConsultationMode(doctorId ? 'doctor' : 'hygienist')
+    setConsultationMode(doctorId ? 'doctor' : 'dh')
     setCurrentPage('consultation')
   }
 
@@ -5612,6 +6223,7 @@ export default function DentalAppMock() {
           staff={staff}
           clinic={clinic}
           hasQualification={hasQualification}
+          consultationMode={consultationMode}
           onBack={handleBackFromConsultation}
           onUpdate={updateExamination}
           onOpenDocument={handleOpenDocument}
@@ -5655,7 +6267,7 @@ export default function DentalAppMock() {
           examinations={examinations}
           scoringHistory={scoringHistory}
           documents={documents}
-          onBack={() => handleNavigate('patient-list')}
+          onBack={() => handleNavigate('admin-patients')}
           onEdit={() => handleEditPatient(detailPatient.id)}
         />
       )
@@ -5672,15 +6284,6 @@ export default function DentalAppMock() {
             visitPlans={visitPlans}
             onAddPlan={addVisitPlan}
             onSelectPlan={handleSelectVisitPlan}
-          />
-        )
-      case 'patient-list':
-        return (
-          <PatientListPage
-            patients={patients}
-            facilities={facilities}
-            onSelectPatient={handleSelectPatient}
-            onEditPatient={handleEditPatient}
           />
         )
       case 'individual-input':
@@ -5712,6 +6315,8 @@ export default function DentalAppMock() {
             onAdd={addPatient}
             onUpdate={updatePatient}
             onDelete={deletePatient}
+            onSelectPatient={handleSelectPatient}
+            onEditPatient={handleEditPatient}
           />
         )
       case 'admin-staff':
@@ -5726,14 +6331,18 @@ export default function DentalAppMock() {
         )
       case 'admin-templates':
         return <TemplateMasterPage />
+      case 'facility-portal':
+        return <FacilityPortalPage facility={facilities[0]} patients={patients} onUpdatePatient={updatePatient} />
       case 'scoring-reference':
         return <ScoringReferencePage />
       case 'scoring-ledger':
         return <ScoringLedgerPage patients={patients} facilities={facilities} scoringHistory={scoringHistory} />
       case 'document-list':
         return <DocumentListPage documents={documents} patients={patients} />
+      case 'batch-print':
+        return <BatchPrintPage facilities={facilities} examinations={examinations} patients={patients} visitPlans={visitPlans} documents={documents} />
       case 'summary':
-        return <SummaryPage visitPlans={visitPlans} examinations={examinations} patients={patients} facilities={facilities} />
+        return <SummaryPage visitPlans={visitPlans} examinations={examinations} patients={patients} facilities={facilities} documents={documents} />
       default:
         return <DashboardPage onNavigate={handleNavigate} visitPlans={visitPlans} examinations={examinations} />
     }

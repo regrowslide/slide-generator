@@ -19,6 +19,7 @@ import {
   Check,
 
   Save,
+  Trash2,
 } from 'lucide-react'
 import Link from 'next/link'
 import {
@@ -36,6 +37,7 @@ import {
   unmergeAnalysisRecord,
   updateAnalysisRecordEvaluation,
   updateMergeComment,
+  saveGeneratedRules,
 } from '../../../../../_actions/analysis-box-actions'
 import type {
   HakobunAnalysisSession,
@@ -944,33 +946,30 @@ export default function AnalysisSessionDetailPage() {
     }
   }, [selectedClient, sessionId, rulePreviewModal])
 
-  // 分析ルール保存
+  // ルールドラフトの個別編集
+  const updateRuleDraft = useCallback((index: number, updates: Partial<typeof ruleDrafts[number]>) => {
+    setRuleDrafts(prev => prev.map((rule, i) => i === index ? { ...rule, ...updates } : rule))
+  }, [])
+
+  // ルールドラフトの削除
+  const removeRuleDraft = useCallback((index: number) => {
+    setRuleDrafts(prev => prev.filter((_, i) => i !== index))
+  }, [])
+
+  // 分析ルール保存（編集済みのruleDraftsをServer Action経由で直接保存）
   const handleSaveRules = useCallback(async () => {
     if (!selectedClient || ruleDrafts.length === 0) return
 
     setIsSavingRules(true)
     try {
-      const response = await fetch('/api/hakobun/rules/generate-from-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sessionId,
-          hakobunClientId: selectedClient.id,
-          saveRules: true, // 保存モード
-        }),
-      })
-      const data = await response.json()
+      const result = await saveGeneratedRules(selectedClient.id, ruleDrafts)
 
-      if (data.success) {
-        alert(
-          `ルールを保存しました。\n\n` +
-          `新規: ${data.savedCount || 0}件\n` +
-          `更新: ${data.mergedCount || 0}件`
-        )
+      if (result.success) {
+        alert(`ルールを保存しました（${result.data?.savedCount || 0}件）`)
         rulePreviewModal.handleClose()
         setRuleDrafts([])
       } else {
-        alert(`ルール保存に失敗しました: ${data.error || ''}`)
+        alert(`ルール保存に失敗しました: ${result.error || ''}`)
       }
     } catch (error) {
       console.error('ルール保存エラー:', error)
@@ -978,7 +977,7 @@ export default function AnalysisSessionDetailPage() {
     } finally {
       setIsSavingRules(false)
     }
-  }, [selectedClient, sessionId, ruleDrafts, rulePreviewModal])
+  }, [selectedClient, ruleDrafts, rulePreviewModal])
 
   // 新規一般カテゴリを追加（マスタ登録あり）
   const handleCreateGeneralCategory = useCallback(async () => {
@@ -1159,7 +1158,7 @@ export default function AnalysisSessionDetailPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <C_Stack className="max-w-[1600px] mx-auto gap-6">
+      <C_Stack className="max-w-[1900px] mx-auto gap-6">
         {/* パンくずリスト */}
         <R_Stack className="items-center gap-2 text-sm">
           <Link href={getHref('/hakobun/analysis-box')} className="text-blue-600 hover:underline">
@@ -1534,14 +1533,14 @@ export default function AnalysisSessionDetailPage() {
                   <tr>
                     <th className="py-0.5 px-1 text-left font-medium text-gray-600 min-w-[32px]">#</th>
                     <th className="py-0.5 px-1 text-center font-medium text-gray-600 min-w-[40px]">評価</th>
-                    <th className="py-0.5 px-1 text-left font-medium text-gray-600 min-w-[200px]">原文</th>
+                    <th className="py-0.5 px-1 text-left font-medium text-gray-600 min-w-[320px]">原文</th>
                     <th className="py-0.5 px-1 text-left font-medium text-gray-600 min-w-[200px]">トピック</th>
                     <th className="py-0.5 px-1 text-left font-medium text-gray-600 min-w-[80px]">ステージ</th>
                     <th className="py-0.5 px-1 text-left font-medium text-gray-600 min-w-[80px]">感情</th>
                     <th className="py-0.5 px-1 text-left font-medium text-gray-600 min-w-[80px]">一般カテゴリ</th>
                     <th className="py-0.5 px-1 text-left font-medium text-gray-600 min-w-[80px]">カテゴリ</th>
                     <th className="py-0.5 px-1 text-left font-medium text-gray-600 min-w-[32px]"></th>
-                    <th className="py-0.5 px-1 text-left font-medium text-gray-600 min-w-[180px]">メモ</th>
+                    <th className="py-0.5 px-1 text-left font-medium text-gray-600 min-w-[240px]">メモ</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1770,26 +1769,25 @@ export default function AnalysisSessionDetailPage() {
                           <td rowSpan={isSubRecord ? 1 : 2} className={`px-3 py-1 align-top ${borderBottom} ${isSubRecord ? 'bg-orange-50/30' : 'bg-amber-50/30'}`}>
                             {isSubRecord ? (
                               <div >
-                                <div className="text-xs text-orange-700 font-medium whitespace-nowrap pt-1">結合理由:</div>
+                                <div className="text-xs text-orange-700 font-medium whitespace-nowrap pt-1 ">結合理由:</div>
                                 <textarea
-
                                   defaultValue={record.mergeComment || ''}
                                   onBlur={(e) => handleMergeCommentSave(record.id, e.target.value)}
-                                  className="flex-1 p-1 border border-orange-200 rounded text-xs bg-white"
+                                  className="flex-1 p-1 border border-orange-200 rounded text-xs bg-white w-full"
                                   placeholder="結合の理由を入力..."
                                   rows={2}
                                 />
                               </div>
                             ) : (
                               <div >
-                                <div className="text-xs text-amber-700 font-medium whitespace-nowrap pt-1">考え方:</div>
+                                <div className="text-xs text-amber-700 font-medium whitespace-nowrap pt-1 ">考え方:</div>
                                 <textarea
                                   value={state.reviewerComment?.trim() || ''}
                                   onChange={(e) =>
                                     updateEditState(record.id, { reviewerComment: e.target.value })
                                   }
                                   onBlur={() => handleAutoSave(record.id)}
-                                  className="flex-1 p-1 border border-amber-200 rounded text-xs bg-white resize-none"
+                                  className="flex-1 p-1 border border-orange-200 rounded text-xs bg-white w-full"
                                   placeholder="この分析の考え方やメモを記録..."
                                   rows={5}
                                 />
@@ -2005,54 +2003,91 @@ export default function AnalysisSessionDetailPage() {
         </div>
       </rawTextModal.Modal>
 
-      {/* ルールプレビューモーダル */}
+      {/* ルールプレビュー・編集モーダル */}
       <rulePreviewModal.Modal
         open={!!rulePreviewModal.open}
         setopen={rulePreviewModal.setopen}
-        title="分析ルールのプレビュー"
+        title="分析ルールの確認・編集"
       >
         <div className="p-4">
           <p className="text-sm text-gray-600 mb-4">
-            修正レコード {rulePreviewModal.open?.modifiedRecordsCount || 0}件から、以下のルールが生成されます。
+            修正レコード {rulePreviewModal.open?.modifiedRecordsCount || 0}件から生成されました。内容を確認・編集してから保存してください。
           </p>
 
           {ruleDrafts.length === 0 ? (
             <p className="text-gray-500 text-center py-8">ルールがありません</p>
           ) : (
-            <div className="space-y-4 max-h-[400px] overflow-y-auto">
+            <div className="space-y-4 max-h-[500px] overflow-y-auto">
               {ruleDrafts.map((rule, index) => (
                 <div
                   key={index}
-                  className={`border rounded-lg p-4 ${rule.isNew ? 'border-green-200 bg-green-50' : 'border-blue-200 bg-blue-50'
-                    }`}
+                  className={`border rounded-lg p-4 ${rule.isNew ? 'border-green-200 bg-green-50' : 'border-blue-200 bg-blue-50'}`}
                 >
-                  <R_Stack className="justify-between items-start mb-2">
-                    <R_Stack className="items-center gap-2">
-                      <span className="font-medium text-gray-800">{rule.targetCategory}</span>
-                      <span
-                        className={`text-xs px-2 py-0.5 rounded ${rule.priority === 'High'
-                          ? 'bg-red-100 text-red-700'
-                          : rule.priority === 'Medium'
-                            ? 'bg-yellow-100 text-yellow-700'
-                            : 'bg-gray-100 text-gray-700'
-                          }`}
-                      >
-                        {rule.priority}
-                      </span>
-                    </R_Stack>
+                  <R_Stack className="justify-between items-start mb-3">
                     <span
-                      className={`text-xs px-2 py-1 rounded ${rule.isNew ? 'bg-green-200 text-green-800' : 'bg-blue-200 text-blue-800'
-                        }`}
+                      className={`text-xs px-2 py-1 rounded ${rule.isNew ? 'bg-green-200 text-green-800' : 'bg-blue-200 text-blue-800'}`}
                     >
                       {rule.isNew ? '新規' : `既存ルール更新 (ID: ${rule.mergedWithRuleId})`}
                     </span>
+                    <button
+                      type="button"
+                      onClick={() => removeRuleDraft(index)}
+                      className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded"
+                      title="このルールを削除"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </R_Stack>
-                  <p className="text-sm text-gray-700 mb-2">{rule.ruleDescription}</p>
-                  {rule.reasoning && (
-                    <p className="text-xs text-gray-500 border-t pt-2 mt-2">
-                      理由: {rule.reasoning}
-                    </p>
-                  )}
+
+                  <C_Stack className="gap-3">
+                    {/* 対象カテゴリ + 優先度 */}
+                    <R_Stack className="gap-3 items-end">
+                      <div className="flex-1">
+                        <label className="block text-xs font-medium text-gray-600 mb-1">対象カテゴリ</label>
+                        <input
+                          type="text"
+                          value={rule.targetCategory}
+                          onChange={(e) => updateRuleDraft(index, { targetCategory: e.target.value })}
+                          className="w-full p-2 border border-gray-300 rounded text-sm"
+                        />
+                      </div>
+                      <div className="w-32">
+                        <label className="block text-xs font-medium text-gray-600 mb-1">優先度</label>
+                        <select
+                          value={rule.priority}
+                          onChange={(e) => updateRuleDraft(index, { priority: e.target.value })}
+                          className={`w-full p-2 border border-gray-300 rounded text-sm ${rule.priority === 'High'
+                            ? 'text-red-700'
+                            : rule.priority === 'Medium'
+                              ? 'text-yellow-700'
+                              : 'text-gray-700'
+                            }`}
+                        >
+                          <option value="High">High</option>
+                          <option value="Medium">Medium</option>
+                          <option value="Low">Low</option>
+                        </select>
+                      </div>
+                    </R_Stack>
+
+                    {/* ルール内容 */}
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">ルール内容</label>
+                      <textarea
+                        value={rule.ruleDescription}
+                        onChange={(e) => updateRuleDraft(index, { ruleDescription: e.target.value })}
+                        rows={3}
+                        className="w-full p-2 border border-gray-300 rounded text-sm resize-y"
+                      />
+                    </div>
+
+                    {/* AI生成理由（読み取り専用） */}
+                    {rule.reasoning && (
+                      <p className="text-xs text-gray-500 border-t pt-2">
+                        AI生成理由: {rule.reasoning}
+                      </p>
+                    )}
+                  </C_Stack>
                 </div>
               ))}
             </div>

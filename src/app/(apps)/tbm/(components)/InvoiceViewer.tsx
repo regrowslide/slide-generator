@@ -11,6 +11,7 @@ import { resetInvoiceManualEdit, saveInvoiceManualEdit } from '@app/(apps)/tbm/(
 import { useRouter } from 'next/navigation'
 import { getInvoiceData } from '@app/(apps)/tbm/(server-actions)/getInvoiceData'
 import useTbmRouteGroupDetailGMF from '@app/(apps)/tbm/(globalHooks)/useTbmRouteGroupDetailGMF'
+import { R_Stack } from '@cm/components/styles/common-components/common-components'
 
 interface InvoiceViewerProps {
   invoiceData: InvoiceData
@@ -148,17 +149,19 @@ export default function InvoiceViewer({ invoiceData, customerId }: InvoiceViewer
     <div className="space-y-4">
       {/* 操作ボタン */}
       <div className="flex gap-4 p-4 bg-gray-50 rounded-lg no-print">
-        <Button onClick={handlePrint} className="bg-blue-600 text-white hover:bg-blue-700">
-          PDF出力・印刷
-        </Button>
-        <Button
-          onClick={handleResetToDriveData}
-          disabled={isResetting}
-          className="bg-orange-600 text-white hover:bg-orange-700 disabled:bg-gray-400"
-        >
-          {isResetting ? 'リセット中...' : '配車連動データに戻す'}
-        </Button>
-        <div className="flex items-center gap-2 text-sm text-gray-600">
+        <R_Stack>
+          <Button onClick={handlePrint} className="bg-blue-600 text-white hover:bg-blue-700">
+            PDF出力・印刷
+          </Button>
+          <Button
+            onClick={handleResetToDriveData}
+            disabled={isResetting}
+            className="bg-orange-600 text-white hover:bg-orange-700 disabled:bg-gray-400"
+          >
+            {isResetting ? 'リセット中...' : '配車連動データに戻す'}
+          </Button>
+        </R_Stack>
+        {/* <div className="flex items-center gap-2 text-sm text-gray-600">
           <span>対象期間:</span>
           <span className="font-semibold">{formatDate(invoiceData.invoiceDetails.yearMonth, 'YYYY年MM月')}</span>
         </div>
@@ -169,7 +172,7 @@ export default function InvoiceViewer({ invoiceData, customerId }: InvoiceViewer
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <span>合計金額:</span>
           <span className="font-semibold text-lg">¥{invoiceData.invoiceDetails.grandTotal.toLocaleString()}</span>
-        </div>
+        </div> */}
       </div>
 
       {/* プレビュー */}

@@ -4,14 +4,15 @@ import { useEffect, useRef } from 'react'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-interface Customer {
-  id: number
-  name: string
-  transactionCount?: number
-}
+
 
 interface CustomerSelectorProps {
-  customers: Customer[]
+  customers: {
+    id: number
+    name: string
+    code: string
+    transactionCount?: number
+  }[]
   currentCustomerId?: number
 }
 
@@ -55,12 +56,14 @@ export default function CustomerSelector({ customers, currentCustomerId }: Custo
           onChange={e => handleCustomerChange(e.target.value)}
         >
           <option value="">-- 顧客を選択してください --</option>
-          {customers.map(customer => (
-            <option key={customer.id} value={customer.id}>
-              {customer.name}
-              {customer.transactionCount !== undefined && customer.transactionCount > 0 ? ` (${customer.transactionCount})` : ''}
-            </option>
-          ))}
+          {customers
+            .sort((a, b) => (a.code ?? '').localeCompare(b.code ?? ''))
+            .map(customer => (
+              <option key={customer.id} value={customer.id}>
+                {customer.name} {customer.code ? ` [${customer.code}]` : ''}
+                {customer.transactionCount !== undefined && customer.transactionCount > 0 ? `【${customer.transactionCount}件】` : '[売上なし]'}
+              </option>
+            ))}
         </select>
       </div>
     </div>

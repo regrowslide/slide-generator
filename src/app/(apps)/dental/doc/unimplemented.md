@@ -120,8 +120,10 @@ model DentalFacility {
 model DentalPatient {
   id                 Int      @id @default(autoincrement())
   facilityId         Int
-  name               String
-  nameKana           String?
+  lastName           String
+  firstName          String
+  lastNameKana       String?
+  firstNameKana      String?
   gender             String?  // male, female
   birthDate          DateTime?
   careLevel          String?
@@ -227,6 +229,37 @@ model DentalScoringHistory {
 
 ---
 
+## 7. 施設ポータル機能（優先度: 中）
+
+### 概要
+
+モックでは基本UIを実装済み。本番では以下が必要。
+
+### 必要な機能
+
+1. **認証基盤** - 施設ごとのID/パスワード認証（NextAuth or カスタム認証）
+2. **専用URL発行** - 施設ごとのユニークなポータルURL生成
+3. **アセスメントデータ連携** - 施設が入力したデータをクリニック側にリアルタイム反映
+4. **アクセスログ** - 施設側のアクセス履歴の記録・表示
+5. **権限管理** - 施設側が編集可能な項目の制御
+
+---
+
+## 8. 履歴・一括印刷機能（優先度: 中）
+
+### 概要
+
+モックでは基本UIを実装済み。本番では以下が必要。
+
+### 必要な機能
+
+1. **PDF一括生成** - フィルタされた診療記録を一括でPDF化
+2. **帳票フォーマット** - 施設×月ごとの統合帳票テンプレート
+3. **ダウンロード/印刷** - 生成したPDFのダウンロードと印刷機能
+4. **S3保存** - 生成した帳票のS3アーカイブ
+
+---
+
 ## 実装優先度まとめ
 
 | 優先度 | 項目 | 理由 |
@@ -237,3 +270,5 @@ model DentalScoringHistory {
 | 中 | 過去履歴参照モーダル | 実務上必要 |
 | 低 | 時刻手動変更・履歴 | 運用でカバー可能 |
 | 低 | テンプレート追加・編集 | マスタメンテナンス用 |
+| 中 | 施設ポータル本番実装 | 認証・データ連携が必要 |
+| 中 | 履歴・一括印刷本番実装 | PDF一括生成が必要 |

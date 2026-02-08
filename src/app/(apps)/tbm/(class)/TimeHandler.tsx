@@ -278,7 +278,6 @@ export class BillingHandler {
         return new Date(billingDate.getFullYear(), billingDate.getMonth(), 1)
       }
 
-
       return Days.month.getMonthDatum(operationDate).firstDayOfMonth
     }
 
