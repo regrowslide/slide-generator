@@ -34,6 +34,9 @@ type DataContextType = {
   monthlyData: MonthlyData
   updateMonthlyData: (updater: (prev: MonthlyData) => MonthlyData) => void
 
+  // データ再読み込み
+  refreshData: () => Promise<void>
+
   // インポートデータ更新
   addImportedData: (parseResult: ExcelParseResult) => void
   clearImportedData: () => void
@@ -99,6 +102,23 @@ export const DataContextProvider = ({children}: {children: React.ReactNode}) => 
     const months = getAllMonths()
     setAvailableMonths(months)
   }, [])
+
+  // データを再読み込み（月リスト + 現在の月データ）
+  const refreshData = useCallback(async () => {
+    // 月リストを更新
+    const months = getAllMonths()
+    setAvailableMonths(months)
+
+    // 現在の月データを再読み込み
+    if (currentYearMonth) {
+      let data = loadMonthlyData(currentYearMonth)
+      if (!data) {
+        data = createEmptyMonthlyData(currentYearMonth)
+        saveMonthlyData(currentYearMonth, data)
+      }
+      setMonthlyData(data)
+    }
+  }, [currentYearMonth])
 
   // 月次データを更新し、localStorageに保存
   const updateMonthlyData = useCallback(
@@ -292,6 +312,7 @@ export const DataContextProvider = ({children}: {children: React.ReactNode}) => 
         refreshAvailableMonths,
         monthlyData,
         updateMonthlyData,
+        refreshData,
         addImportedData,
         clearImportedData,
         updateStoreKpi,

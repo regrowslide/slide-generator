@@ -5,18 +5,20 @@
  * YYYY-MM別の資料作成手順を案内
  */
 
-import React from 'react'
+import React, {useState} from 'react'
 import {useDataContext} from '../../context/DataContext'
 import {formatYearMonth} from '../../lib/storage'
 import {StatusBadge} from '../StatusBadge'
 import type {SectionKey, Status, GuidanceStep} from '../../types'
+import {loadMockData} from '../../lib/mockData'
 
 type GuidanceViewProps = {
   onNavigate: (section: SectionKey) => void
 }
 
 export const GuidanceView = ({onNavigate}: GuidanceViewProps) => {
-  const {currentYearMonth, monthlyData} = useDataContext()
+  const {currentYearMonth, monthlyData, refreshData} = useDataContext()
+  const [isLoadingMock, setIsLoadingMock] = useState(false)
 
   // Step 1: Excelインポート完了判定
   const step1Completed = monthlyData.importedData !== null && (monthlyData.importedData.storeTotals?.length || 0) >= 3
@@ -56,6 +58,33 @@ export const GuidanceView = ({onNavigate}: GuidanceViewProps) => {
 
   const getStatus = (completed: boolean): Status => {
     return completed ? 'completed' : 'incomplete'
+  }
+
+  /**
+   * モックデータを読み込む
+   */
+  const handleLoadMockData = async () => {
+    if (!confirm('モックデータを読み込みますか？\n2026年1月〜12月の通年データを生成します。\n既存のデータは上書きされます。')) {
+      return
+    }
+
+    setIsLoadingMock(true)
+    try {
+      loadMockData()
+      await refreshData() // データを再読み込み
+      alert(
+        '✅ モックデータの読み込みが完了しました！\n\n' +
+          '2026年1月〜12月の通年データを生成しました。\n' +
+          '・季節変動を反映した売上データ\n' +
+          '・月別の店舗コメント\n' +
+          '・月別のお客様の声'
+      )
+    } catch (error) {
+      console.error('モックデータ読み込みエラー:', error)
+      alert('❌ モックデータの読み込みに失敗しました')
+    } finally {
+      setIsLoadingMock(false)
+    }
   }
 
   return (
@@ -155,6 +184,30 @@ export const GuidanceView = ({onNavigate}: GuidanceViewProps) => {
           <p className="text-green-700 text-sm mt-1">スライド資料を確認して、印刷またはPDF出力してください。</p>
         </div>
       )}
+
+      {/* 開発用モックデータ読み込み */}
+      <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-5">
+        <h3 className="text-lg font-bold mb-3 text-blue-900">🛠️ 開発用モックデータ</h3>
+        <p className="text-sm text-blue-800 mb-4">
+          デモ用のサンプルデータを読み込みます。2026年1月〜12月の通年データが生成されます。
+        </p>
+        <ul className="text-sm text-blue-700 mb-4 space-y-1 list-disc list-inside">
+          <li>全店舗（新潟西店、三条店、新潟中央店）の12ヶ月分データ</li>
+          <li>各店舗5名のスタッフデータ（売上、客数、指名数など）</li>
+          <li>季節変動を反映した売上データ（春秋繁忙期、年末ピーク）</li>
+          <li>店舗KPI（稼働率、失客率、月別コメント）</li>
+          <li>スタッフ稼働率とCS登録数</li>
+          <li>月別のお客様の声</li>
+        </ul>
+        <button
+          onClick={handleLoadMockData}
+          disabled={isLoadingMock}
+          className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg font-medium transition-colors shadow-md hover:shadow-lg"
+        >
+          {isLoadingMock ? '読み込み中...' : 'モックデータを読み込む（2026年通年）'}
+        </button>
+        <p className="text-xs text-blue-600 mt-3">⚠️ 既存の2026年データは上書きされます</p>
+      </div>
     </div>
   )
 }

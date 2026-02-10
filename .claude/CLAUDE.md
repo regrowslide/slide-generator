@@ -80,6 +80,7 @@ npm run generateType        # Generate TypeScript interfaces from Prisma
 - `hakobun` - Document management
 - `training` - Workout/fitness tracking
 - `keihi` - Expense management
+- `regrow` - Monthly business performance report slides (16 slides with charts and tables)
 - `compas`, `kickswrap`, `image-captioner`, `tmp` - Other utilities
 
 ### Multi-Schema Prisma Setup

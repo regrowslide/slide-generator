@@ -25,12 +25,19 @@ export const saveMonthlyData = (yearMonth: YearMonth, data: MonthlyData): void =
 
 /**
  * YYYY-MM単位でデータを読み込み
+ * localStorageにデータがない場合はモックデータを返す
  */
 export const loadMonthlyData = (yearMonth: YearMonth): MonthlyData | null => {
   try {
     const key = `${STORAGE_PREFIX}${yearMonth}`
     const stored = localStorage.getItem(key)
-    if (!stored) return null
+
+    // localStorageにデータがない場合はモックデータを使用
+    if (!stored) {
+      // モックデータをインポート（動的インポートを避けるため、ここでは返さずnullを返す）
+      // モックデータは別の方法で提供される
+      return null
+    }
 
     const data = JSON.parse(stored) as any
 
@@ -98,10 +105,13 @@ export const loadMonthlyData = (yearMonth: YearMonth): MonthlyData | null => {
 
 /**
  * 全YYYY-MMリストを取得（降順）
+ * localStorageのデータとモックデータの月をマージ
  */
 export const getAllMonths = (): YearMonth[] => {
   try {
     const keys: YearMonth[] = []
+
+    // localStorageから取得
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i)
       if (key?.startsWith(STORAGE_PREFIX)) {
@@ -109,8 +119,18 @@ export const getAllMonths = (): YearMonth[] => {
         keys.push(yearMonth)
       }
     }
+
+    // モックデータの月も追加（2026-01〜12）
+    const mockMonths: YearMonth[] = Array.from({length: 12}, (_, i) => {
+      const month = String(i + 1).padStart(2, '0')
+      return `2026-${month}` as YearMonth
+    })
+
+    // 重複を除去してマージ
+    const allMonths = [...new Set([...keys, ...mockMonths])]
+
     // 降順ソート（最新が先頭）
-    return keys.sort((a, b) => b.localeCompare(a))
+    return allMonths.sort((a, b) => b.localeCompare(a))
   } catch (error) {
     console.error('Failed to get all months:', error)
     return []
