@@ -73,6 +73,8 @@ export default async function SimpleDriveHistoryPage(props) {
     orderBy: [{ date: 'asc' }, { createdAt: 'asc' }],
   })
 
+
+
   return (
     <div>
       <SimpleDriveHistoryCC tbmBase={tbmBase} driveHistory={driveHistory} query={query} whereQuery={whereQuery} />

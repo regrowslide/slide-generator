@@ -51,7 +51,7 @@ export const tbm_PAGES = (props: PageGetterType) => {
 
     {
       tabId: '',
-      label: <IconLetter {...{ Icon: FileText }}>レポート①</IconLetter>,
+      label: <IconLetter {...{ Icon: FileText }}>レポートA</IconLetter>,
       children: [
         {
           tabId: 'unkomeisai',
@@ -78,7 +78,7 @@ export const tbm_PAGES = (props: PageGetterType) => {
     },
     {
       tabId: '',
-      label: <IconLetter {...{ Icon: FileText }}>レポート②</IconLetter>,
+      label: <IconLetter {...{ Icon: FileText }}>レポートB</IconLetter>,
       children: [
         //
         {
@@ -109,14 +109,13 @@ export const tbm_PAGES = (props: PageGetterType) => {
         },
         {
           tabId: 'simpleDriveHistory',
-          label: <IconLetter {...{ Icon: FileText }}>簡易走行記録（PDF）</IconLetter>
+          label: <IconLetter {...{ Icon: FileText }}>簡易記録（PDF）</IconLetter>
         },
-
         {
           tabId: 'unkobinKyuyo',
           label: <IconLetter {...{ Icon: JapaneseYenIcon }}>簡易給与レポート</IconLetter>
         },
-        { tabId: `testProgress`, label: 'テストレポート' },
+        // { tabId: `testProgress`, label: 'テストレポート' },
       ],
     },
   ].map(item => ({

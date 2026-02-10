@@ -1,16 +1,16 @@
 'use client'
 
-import React, {useRef} from 'react'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
-import {C_Stack, R_Stack, FitMargin, Padding} from '@cm/components/styles/common-components/common-components'
-import {Head1} from '@cm/components/styles/common-components/heading'
+import React, { useRef } from 'react'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
+import { C_Stack, R_Stack, FitMargin, Padding } from '@cm/components/styles/common-components/common-components'
+import { Head1 } from '@cm/components/styles/common-components/heading'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
-import {Fields} from '@cm/class/Fields/Fields'
+import { Fields } from '@cm/class/Fields/Fields'
 import useBasicFormProps from '@cm/hooks/useBasicForm/useBasicFormProps'
-import {defaultRegister} from '@cm/class/builders/ColBuilderVariables'
-import {Button} from '@cm/components/styles/common-components/Button'
-import {CsvTable} from '@cm/components/styles/common-components/CsvTable/CsvTable'
-import {useReactToPrint} from 'react-to-print'
+import { defaultRegister } from '@cm/class/builders/ColBuilderVariables'
+import { Button } from '@cm/components/styles/common-components/Button'
+import { CsvTable } from '@cm/components/styles/common-components/CsvTable/CsvTable'
+import { useReactToPrint } from 'react-to-print'
 
 interface SimpleDriveHistoryCCProps {
   tbmBase: any
@@ -19,12 +19,12 @@ interface SimpleDriveHistoryCCProps {
   whereQuery: any
 }
 
-export default function SimpleDriveHistoryCC({tbmBase, driveHistory, query, whereQuery}: SimpleDriveHistoryCCProps) {
+export default function SimpleDriveHistoryCC({ tbmBase, driveHistory, query, whereQuery }: SimpleDriveHistoryCCProps) {
   const useGlobalProps = useGlobal()
-  const {addQuery} = useGlobalProps
+  const { addQuery } = useGlobalProps
 
   // フィルター用のフォーム
-  const {BasicForm, latestFormData} = useBasicFormProps({
+  const { BasicForm, latestFormData } = useBasicFormProps({
     columns: new Fields([
       {
         id: 'month',
@@ -55,7 +55,7 @@ export default function SimpleDriveHistoryCC({tbmBase, driveHistory, query, wher
 
   // 検索実行
   const handleSearch = () => {
-    const {month, driverId} = latestFormData
+    const { month, driverId } = latestFormData
 
     addQuery({
       month: formatDate(month, 'YYYY-MM-DD'),
@@ -63,7 +63,7 @@ export default function SimpleDriveHistoryCC({tbmBase, driveHistory, query, wher
     })
   }
 
-  const selectedDriver = latestFormData.driverId ? tbmBase?.User?.find(user => user.id === latestFormData.driverId)?.name : null
+  const selectedDriver = latestFormData.driverId ? tbmBase?.User?.find(user => user.id === Number(latestFormData.driverId))?.name : null
   const selectedMonth = query.month
 
   const componentRef = useRef(null)
@@ -76,6 +76,7 @@ export default function SimpleDriveHistoryCC({tbmBase, driveHistory, query, wher
       }
     `,
   })
+
 
   return (
     <Padding>
@@ -95,7 +96,7 @@ export default function SimpleDriveHistoryCC({tbmBase, driveHistory, query, wher
           </div>
 
           {/* データ表示エリア */}
-          {selectedMonth && selectedDriver && (
+          {selectedMonth && query.driverId && (
             <>
               <div className="flex justify-end mb-4 max-w-fit">
                 <Button onClick={handlePrint} size="sm">
@@ -123,15 +124,15 @@ export default function SimpleDriveHistoryCC({tbmBase, driveHistory, query, wher
                       const approved = data.approved
                       return {
                         csvTableRow: [
-                          {label: '日付', cellValue: formatDate(data.date, 'YYYY/MM/DD(ddd)')},
-                          {label: '担当ドライバ', cellValue: data.User?.name},
-                          {label: '便名', cellValue: data.TbmRouteGroup?.name},
-                          {label: '車両番号', cellValue: data.TbmVehicle?.vehicleNumber},
+                          { label: '日付', cellValue: formatDate(data.date, 'YYYY/MM/DD(ddd)') },
+                          { label: '担当ドライバ', cellValue: data.User?.name },
+                          { label: '便名', cellValue: data.TbmRouteGroup?.name },
+                          { label: '車両番号', cellValue: data.TbmVehicle?.vehicleNumber },
                           {
                             label: '承認',
                             cellValue: approved ? '承認' : '未承認',
-                            style: {color: approved ? 'green' : 'red'},
-                            thStyle: {color: ''},
+                            style: { color: approved ? 'green' : 'red' },
+                            thStyle: { color: '' },
                           },
                         ],
                       }

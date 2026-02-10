@@ -58,13 +58,7 @@ export const getFilteredSchedulesByMonth = async (props: {
       schedule.TbmRouteGroup.id
     )
 
-    // if (schedule.TbmRouteGroup.name.includes('土・日曜運行')) {
-    //   console.log({
-    //     foo: [
-    //       formatDate(schedule.date), schedule.TbmRouteGroup.name
-    //     ]
-    //   })  //logs
-    // }
+
 
     return formatDate(billingMonth, 'YYYYMM') === formatDate(billingTargetMonth, 'YYYYMM')
   })

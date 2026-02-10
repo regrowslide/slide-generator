@@ -7,6 +7,7 @@ import { tbm_PAGES } from 'src/non-common/getPages/getTbm_PAGES'
 import { KM_PAGES } from 'src/non-common/getPages/KM_PAGES'
 
 import { training_PAGES } from 'src/non-common/getPages/training_PAGES'
+import { regrow_PAGES } from 'src/non-common/getPages/regrow_PAGES'
 
 /**
  * ページ設定取得関数の戻り値型
@@ -172,6 +173,7 @@ export const PAGES: Record<string, PageGetterFunction> = {
   tbm_PAGES,
   KM_PAGES,
   training_PAGES,
+  regrow_PAGES,
 
   Colabo_PAGES: (props: PageGetterType) => {
     const { roles, session, rootPath, query, pathname, dynamicRoutingParams } = props

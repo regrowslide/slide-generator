@@ -7,8 +7,8 @@
     "upload": "node scripts/prepareVercelUpload.js  ",
     "convert": "node scripts/convertPrismaToJSON.js",
     "generate:vercel": "node scripts/generateVercelJson.js",
-    "dev": " npm run convert &&  next dev --turbo",
-    "dev-mini": "NODE_OPTIONS='--max-old-space-size=1769 --expose-gc' npm run convert && NODE_OPTIONS='--max-old-space-size=1769 --expose-gc' npm run generateType && NODE_OPTIONS='--max-old-space-size=1769 --expose-gc' next dev --turbo",
+    "kill-ports": "bash scripts/kill-ports.sh",
+    "dev": "npm run kill-ports && npm run convert &&  next dev --turbo",
     "prebuild": "npm run generate:vercel",
     "build": "rm -rf .next && rm -rf node_modules/.cache && next build ",
     "start": "next start",
@@ -113,7 +113,8 @@
     "tailwind-variants": "^1.0.0",
     "tar": "^7.5.3",
     "uuid": "^11.1.0",
-    "vaul": "^1.1.2"
+    "vaul": "^1.1.2",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
