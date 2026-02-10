@@ -404,17 +404,11 @@ export const importKondateCsv = async (csvText: string, targetDate?: Date): Prom
 
           // Ingredient（KgRecipeIngredient）を作成
           let ingredientOrder = 0
-          let linkedCount = 0
           for (const ing of dish.ingredients) {
-            // RcIngredientMasterからstandardCodeで検索してリレーション
-            const masterIngredient = await prisma.rcIngredientMaster.findFirst({
-              where: {standardCode: ing.code},
-            })
-
             await prisma.kgRecipeIngredient.create({
               data: {
                 menuRecipeId: dishRecipe.id,
-                ingredientMasterId: masterIngredient?.id ?? null,
+                ingredientMasterId: null, // マスタ連携なし
                 ingredientCode: ing.code,
                 ingredientName: ing.name,
                 amountPerServing: ing.amount,
@@ -430,10 +424,6 @@ export const importKondateCsv = async (csvText: string, targetDate?: Date): Prom
               },
             })
             savedIngredients++
-            if (masterIngredient) linkedCount++
-          }
-          if (dish.ingredients.length > 0 && linkedCount < dish.ingredients.length) {
-            addLog(`        ⚠️ 未リンク材料: ${dish.ingredients.length - linkedCount}件`)
           }
         }
       }

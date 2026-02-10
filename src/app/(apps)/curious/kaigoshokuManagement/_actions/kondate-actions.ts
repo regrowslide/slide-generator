@@ -27,7 +27,6 @@ export type KondateListItem = {
   dishCode: string
   dishName: string
   ingredientCount: number // 材料数
-  unlinkedIngredientCount: number // 未リンク材料数
   createdAt: Date
 }
 
@@ -91,12 +90,7 @@ export const getKondateList = async (
                 }
               : {},
             include: {
-              KgRecipeIngredient: {
-                select: {
-                  id: true,
-                  ingredientMasterId: true,
-                },
-              },
+              KgRecipeIngredient: true,
             },
             orderBy: { sortOrder: 'asc' },
           },
@@ -117,9 +111,6 @@ export const getKondateList = async (
     for (const menu of slot.KgMenuRecipe) {
       for (const dish of menu.ChildRecipes) {
         const ingredientCount = dish.KgRecipeIngredient.length
-        const unlinkedCount = dish.KgRecipeIngredient.filter(
-          (ing) => ing.ingredientMasterId === null
-        ).length
 
         result.push({
           id: slot.KgDailyMenu.id,
@@ -134,7 +125,6 @@ export const getKondateList = async (
           dishCode: dish.code,
           dishName: dish.name,
           ingredientCount,
-          unlinkedIngredientCount: unlinkedCount,
           createdAt: dish.createdAt,
         })
       }
@@ -153,9 +143,6 @@ export const getMenuDetail = async (
     include: {
       // Menu 自体の材料（通常は空）
       KgRecipeIngredient: {
-        include: {
-          RcIngredientMaster: true,
-        },
         orderBy: { sortOrder: 'asc' },
       },
       // Dish（子レシピ）
@@ -163,18 +150,12 @@ export const getMenuDetail = async (
         include: {
           // Dish の材料
           KgRecipeIngredient: {
-            include: {
-              RcIngredientMaster: true,
-            },
             orderBy: { sortOrder: 'asc' },
           },
           // さらに深い階層（通常は使わない）
           ChildRecipes: {
             include: {
               KgRecipeIngredient: {
-                include: {
-                  RcIngredientMaster: true,
-                },
                 orderBy: { sortOrder: 'asc' },
               },
               ChildRecipes: true,
@@ -202,9 +183,6 @@ export const getDishDetail = async (
     include: {
       // Dish の材料
       KgRecipeIngredient: {
-        include: {
-          RcIngredientMaster: true,
-        },
         orderBy: { sortOrder: 'asc' },
       },
       // 親 Menu の情報
@@ -213,9 +191,6 @@ export const getDishDetail = async (
       ChildRecipes: {
         include: {
           KgRecipeIngredient: {
-            include: {
-              RcIngredientMaster: true,
-            },
             orderBy: { sortOrder: 'asc' },
           },
           ChildRecipes: true,
@@ -226,49 +201,6 @@ export const getDishDetail = async (
   })
 
   return dish as KgMenuRecipeWithRelations | null
-}
-
-// 材料マスタを検索
-export const searchIngredientMasters = async (
-  query: string
-): Promise<{ id: number; name: string; standardCode: string | null; category: string }[]> => {
-  if (!query || query.length < 2) return []
-
-  const masters = await prisma.rcIngredientMaster.findMany({
-    where: {
-      OR: [
-        { name: { contains: query } },
-        { standardCode: { contains: query } },
-      ],
-    },
-    select: {
-      id: true,
-      name: true,
-      standardCode: true,
-      category: true,
-    },
-    take: 20,
-    orderBy: { name: 'asc' },
-  })
-
-  return masters
-}
-
-// 材料とマスタをリンク
-export const linkIngredientToMaster = async (
-  ingredientId: number,
-  masterId: number | null
-): Promise<{ success: boolean; message: string }> => {
-  try {
-    await prisma.kgRecipeIngredient.update({
-      where: { id: ingredientId },
-      data: { ingredientMasterId: masterId },
-    })
-    return { success: true, message: 'リンクを更新しました' }
-  } catch (error) {
-    console.error('材料リンクエラー:', error)
-    return { success: false, message: 'リンクの更新に失敗しました' }
-  }
 }
 
 // 年月リストを取得（データが存在する年月のみ）

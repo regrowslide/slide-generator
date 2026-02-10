@@ -10,7 +10,6 @@ import type {
   KgProductionBatch,
   KgProductionItem,
   KgRequiredIngredient,
-  RcIngredientMaster,
 } from '@prisma/generated/prisma/client'
 
 // 基本的なPrisma型の再エクスポート
@@ -51,9 +50,8 @@ export type KgMenuRecipeWithRelations = KgMenuRecipe & {
 }
 
 // Ingredient（材料）
-export type KgRecipeIngredientWithMaster = KgRecipeIngredient & {
-  RcIngredientMaster: RcIngredientMaster | null
-}
+// 型名は互換性のため残す（マスタリレーションは削除）
+export type KgRecipeIngredientWithMaster = KgRecipeIngredient
 
 // 受注関連
 export type KgOrderWithRelations = KgOrder & {
@@ -77,9 +75,8 @@ export type KgProductionItemWithRelations = KgProductionItem & {
   KgDietTypeMaster: KgDietTypeMaster
 }
 
-export type KgRequiredIngredientWithMaster = KgRequiredIngredient & {
-  RcIngredientMaster: RcIngredientMaster | null
-}
+// 型名は互換性のため残す（マスタリレーションは削除）
+export type KgRequiredIngredientWithMaster = KgRequiredIngredient
 
 // CSVインポート用の型
 

@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { Calendar, Search, List, Upload, AlertTriangle, Link2, X } from 'lucide-react'
+import { Calendar, Search, List, Upload } from 'lucide-react'
 import { Button } from '@shadcn/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@shadcn/ui/card'
 import { Badge } from '@shadcn/ui/badge'
@@ -26,8 +26,6 @@ import { MEAL_TYPES, type MealTypeCode } from '../../lib/constants'
 import {
   getDishDetail,
   getKondateList,
-  searchIngredientMasters,
-  linkIngredientToMaster,
   type KondateListItem,
 } from '../../_actions/kondate-actions'
 import { importKondateCsv } from '../../_actions/csv-import-actions'
@@ -75,13 +73,6 @@ export const KondateClient = ({
 
   // 献立データ（リロード用）
   const [kondateData, setKondateData] = useState(initialData)
-
-  // マスタリンク編集用
-  const [editingIngredientId, setEditingIngredientId] = useState<number | null>(null)
-  const [masterSearchQuery, setMasterSearchQuery] = useState('')
-  const [masterSearchResults, setMasterSearchResults] = useState<
-    { id: number; name: string; standardCode: string | null; category: string }[]
-  >([])
 
   // 年リスト（データがある年 + 現在年）
   const years = Array.from(
@@ -156,56 +147,6 @@ export const KondateClient = ({
   ): KgMenuRecipeWithRelations['KgRecipeIngredient'] => {
     return dish.KgRecipeIngredient
   }
-
-  // マスタ検索
-  const handleMasterSearch = useCallback(async (query: string) => {
-    setMasterSearchQuery(query)
-    if (query.length >= 2) {
-      const results = await searchIngredientMasters(query)
-      setMasterSearchResults(results)
-    } else {
-      setMasterSearchResults([])
-    }
-  }, [])
-
-  // マスタリンク
-  const handleLinkMaster = useCallback(
-    async (ingredientId: number, masterId: number) => {
-      toggleLoad(async () => {
-        const result = await linkIngredientToMaster(ingredientId, masterId)
-        if (result.success) {
-          // Dish詳細を再取得
-          if (dishDetailModal.open) {
-            const updated = await getDishDetail(dishDetailModal.open.id)
-            if (updated) dishDetailModal.setopen(updated)
-          }
-          // 一覧も更新
-          const newData = await getKondateList({ year, month, day, mealType, recipeName })
-          setKondateData(newData)
-        }
-        setEditingIngredientId(null)
-        setMasterSearchQuery('')
-        setMasterSearchResults([])
-      })
-    },
-    [toggleLoad, dishDetailModal, year, month, day, mealType, recipeName]
-  )
-
-  // マスタリンク解除
-  const handleUnlinkMaster = useCallback(
-    async (ingredientId: number) => {
-      toggleLoad(async () => {
-        const result = await linkIngredientToMaster(ingredientId, null)
-        if (result.success && dishDetailModal.open) {
-          const updated = await getDishDetail(dishDetailModal.open.id)
-          if (updated) dishDetailModal.setopen(updated)
-          const newData = await getKondateList({ year, month, day, mealType, recipeName })
-          setKondateData(newData)
-        }
-      })
-    },
-    [toggleLoad, dishDetailModal, year, month, day, mealType, recipeName]
-  )
 
   // 日付フォーマット
   const formatDate = (date: Date) => {
@@ -398,15 +339,7 @@ export const KondateClient = ({
                       {item.menuName}
                     </TableCell>
                     <TableCell className="text-center">
-                      <div className="flex items-center justify-center gap-1">
-                        <Badge color="blue">{item.ingredientCount}</Badge>
-                        {item.unlinkedIngredientCount > 0 && (
-                          <Badge color="orange" className="flex items-center gap-0.5">
-                            <AlertTriangle className="w-3 h-3" />
-                            {item.unlinkedIngredientCount}
-                          </Badge>
-                        )}
-                      </div>
+                      <Badge color="blue">{item.ingredientCount}</Badge>
                     </TableCell>
                     <TableCell>
                       <Button
@@ -472,16 +405,6 @@ export const KondateClient = ({
               )}
             </div>
 
-            {/* 未リンク警告 */}
-            {dishDetailModal.open.KgRecipeIngredient.some((ing) => !ing.RcIngredientMaster) && (
-              <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg flex items-center gap-2 text-orange-800">
-                <AlertTriangle className="w-5 h-5" />
-                <span className="text-sm">
-                  マスタ未登録の材料があります。「リンク」ボタンからマスタを紐付けてください。
-                </span>
-              </div>
-            )}
-
             {/* 材料テーブル */}
             <Table>
               <TableHeader>
@@ -493,23 +416,16 @@ export const KondateClient = ({
                   <TableHead className="w-16 text-right">P</TableHead>
                   <TableHead className="w-16 text-right">F</TableHead>
                   <TableHead className="w-16 text-right">C</TableHead>
-                  <TableHead className="w-24 text-right">単価</TableHead>
-                  <TableHead className="w-32">マスタ</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {dishDetailModal.open.KgRecipeIngredient.map((ing, i) => (
-                  <TableRow key={i} className={!ing.RcIngredientMaster ? 'bg-orange-50' : ''}>
+                  <TableRow key={i}>
                     <TableCell className="font-mono text-sm text-slate-500">
                       {ing.ingredientCode}
                     </TableCell>
                     <TableCell className="font-medium">
                       {ing.ingredientName}
-                      {ing.RcIngredientMaster && (
-                        <Badge color="purple" className="ml-2">
-                          {ing.RcIngredientMaster.category}
-                        </Badge>
-                      )}
                     </TableCell>
                     <TableCell className="text-right">
                       {ing.amountPerServing}
@@ -519,76 +435,6 @@ export const KondateClient = ({
                     <TableCell className="text-right">{ing.protein?.toFixed(1) ?? '-'}</TableCell>
                     <TableCell className="text-right">{ing.fat?.toFixed(1) ?? '-'}</TableCell>
                     <TableCell className="text-right">{ing.carb?.toFixed(1) ?? '-'}</TableCell>
-                    <TableCell className="text-right">
-                      {ing.RcIngredientMaster ? (
-                        <span>¥{ing.RcIngredientMaster.price.toLocaleString()}/kg</span>
-                      ) : (
-                        <span className="text-slate-400">-</span>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {editingIngredientId === ing.id ? (
-                        <div className="space-y-2">
-                          <Input
-                            type="text"
-                            placeholder="マスタ検索..."
-                            value={masterSearchQuery}
-                            onChange={(e) => handleMasterSearch(e.target.value)}
-                            className="w-full text-sm"
-                            autoFocus
-                          />
-                          {masterSearchResults.length > 0 && (
-                            <div className="absolute z-10 bg-white border rounded-lg shadow-lg max-h-48 overflow-y-auto w-64">
-                              {masterSearchResults.map((master) => (
-                                <button
-                                  key={master.id}
-                                  className="w-full px-3 py-2 text-left hover:bg-slate-100 text-sm"
-                                  onClick={() => handleLinkMaster(ing.id, master.id)}
-                                >
-                                  <div className="font-medium">{master.name}</div>
-                                  <div className="text-xs text-slate-500">
-                                    {master.standardCode} / {master.category}
-                                  </div>
-                                </button>
-                              ))}
-                            </div>
-                          )}
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => {
-                              setEditingIngredientId(null)
-                              setMasterSearchQuery('')
-                              setMasterSearchResults([])
-                            }}
-                          >
-                            <X className="w-3 h-3" />
-                          </Button>
-                        </div>
-                      ) : ing.RcIngredientMaster ? (
-                        <div className="flex items-center gap-1">
-                          <span className="text-xs text-green-600">リンク済</span>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="h-6 w-6 p-0"
-                            onClick={() => handleUnlinkMaster(ing.id)}
-                          >
-                            <X className="w-3 h-3 text-slate-400" />
-                          </Button>
-                        </div>
-                      ) : (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="text-orange-600 border-orange-300"
-                          onClick={() => setEditingIngredientId(ing.id)}
-                        >
-                          <Link2 className="w-3 h-3 mr-1" />
-                          リンク
-                        </Button>
-                      )}
-                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

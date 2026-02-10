@@ -34,9 +34,6 @@ export const getProductionBatches = async (params?: {
       },
       KgRequiredIngredient: {
         orderBy: { sortOrder: 'asc' },
-        include: {
-          RcIngredientMaster: true,
-        },
       },
     },
   }) as KgProductionBatchWithRelations[]
@@ -80,9 +77,6 @@ export const getProductionBatch = async (
       },
       KgRequiredIngredient: {
         orderBy: { sortOrder: 'asc' },
-        include: {
-          RcIngredientMaster: true,
-        },
       },
     },
   }) as KgProductionBatchWithRelations | null
@@ -110,9 +104,6 @@ export const getProductionBatchByDateAndMeal = async (
       },
       KgRequiredIngredient: {
         orderBy: { sortOrder: 'asc' },
-        include: {
-          RcIngredientMaster: true,
-        },
       },
     },
   }) as KgProductionBatchWithRelations | null
