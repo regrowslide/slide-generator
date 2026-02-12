@@ -13,10 +13,11 @@ import NewDateSwitcher from '@cm/components/utils/dates/DateSwitcher/NewDateSwit
 import { HaishaTableProps, HaishaTableMode, ModalOpenParams } from '../types/haisha-page-types'
 import { BulkAssignmentModal } from './BulkAssignment/BulkAssignmentModal'
 import useModal from '@cm/components/utils/modal/useModal'
+import PaginationControl from './PaginationControl'
 
 export type haishaTableMode = HaishaTableMode
 
-export default function HaishaTable({ days, tbmBase, whereQuery }: HaishaTableProps) {
+export default function HaishaTable({ days, tbmBase, whereQuery, itemsPerPage }: HaishaTableProps) {
   const useGlobalProps = useGlobal()
   const { query, session, accessScopes } = useGlobalProps
   const { admin } = session.scopes
@@ -24,8 +25,10 @@ export default function HaishaTable({ days, tbmBase, whereQuery }: HaishaTablePr
   const tbmBaseId = tbmBase?.id ?? 0
   const mode: haishaTableMode = query.mode
 
-  // ページネーション管理
-  const { currentPage, itemsPerPage, handlePageChange, handleItemsPerPageChange } = usePagination()
+  // ページネーション管理（itemsPerPageがundefinedの場合は全件表示）
+  const { currentPage, itemsPerPage: localItemsPerPage, handlePageChange, handleItemsPerPageChange } = usePagination({
+    initialItemsPerPage: itemsPerPage,
+  })
 
   // データ取得管理
   const { listDataState, maxRecord, LocalLoader, fetchData } = useHaishaData({
@@ -33,7 +36,7 @@ export default function HaishaTable({ days, tbmBase, whereQuery }: HaishaTablePr
     whereQuery,
     mode,
     currentPage,
-    itemsPerPage,
+    itemsPerPage: localItemsPerPage,
   })
 
   const HK_HaishaTableEditorGMF = useHaishaTableEditorGMF({
@@ -109,6 +112,16 @@ export default function HaishaTable({ days, tbmBase, whereQuery }: HaishaTablePr
         } as any)}
       />
 
+      {/* ページネーションコントロール */}
+      {localItemsPerPage !== undefined && maxRecord > 0 && (
+        <PaginationControl
+          currentPage={currentPage}
+          itemsPerPage={localItemsPerPage}
+          maxRecord={maxRecord}
+          onPageChange={handlePageChange}
+          onItemsPerPageChange={handleItemsPerPageChange}
+        />
+      )}
 
       {/* 一括割り当てモーダル */}
       <BulkAssignmentModalReturn.Modal>

@@ -68,7 +68,7 @@ export default function HaishaTableSwitcher() {
         <BasicForm
           {...{
             onSubmit: data => {
-              shallowAddQuery(data)
+              shallowAddQuery({ ...data, page: '1' })
             },
             alignMode: 'row',
             latestFormData,

@@ -29,7 +29,10 @@ export function useHaishaData({
 
     toggleLocalLoading(async () => {
       await showSpendTime(async () => {
-        const takeSkip = { take: itemsPerPage, skip: (currentPage - 1) * itemsPerPage }
+        // itemsPerPageがundefinedの場合はページネーションなし（全件取得）
+        const takeSkip = itemsPerPage !== undefined
+          ? { take: itemsPerPage, skip: (currentPage - 1) * itemsPerPage }
+          : undefined
         const sortBy = (query.sortBy as HaishaSortBy) ?? 'departureTime'
         const tbmCustomerId = query.tbmCustomerId ? parseInt(query.tbmCustomerId) : undefined
         const routeNameFilter = query.routeNameFilter as string

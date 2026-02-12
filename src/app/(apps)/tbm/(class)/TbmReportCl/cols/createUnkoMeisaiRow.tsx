@@ -175,7 +175,7 @@ export const createUnkoMeisaiRow = (schedule: DriveScheduleData, jitsudoKaisu: n
     },
     P_KosokuShiyodai: {
       label: 'P高速使用代',
-      cellValue: NumHandler.round(S_jomuinFutan, 1),
+      cellValue: NumHandler.round(S_jomuinFutan, 0),
     },
     Q_driverFee: {
       label: 'Q運賃',

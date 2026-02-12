@@ -130,7 +130,7 @@ export interface GetListDataParams {
   tbmBaseId: number
   whereQuery: DateRangeQuery
   mode: HaishaTableMode
-  takeSkip: PaginationConfig
+  takeSkip?: PaginationConfig // undefinedの場合は全件取得
   sortBy?: HaishaSortBy
   tbmCustomerId?: number
   routeNameFilter?: string
@@ -146,7 +146,7 @@ export interface UseHaishaDataParams {
   whereQuery: DateRangeQuery
   mode: HaishaTableMode
   currentPage: number
-  itemsPerPage: number
+  itemsPerPage: number | undefined // undefinedの場合は全件取得
 }
 
 /** useHaishaDataフックの戻り値 */
@@ -162,15 +162,15 @@ export interface UseHaishaDataReturn {
 /** usePaginationフックのパラメータ */
 export interface UsePaginationParams {
   initialPage?: number
-  initialItemsPerPage?: number
+  initialItemsPerPage?: number | undefined // undefinedの場合は全件表示
 }
 
 /** usePaginationフックの戻り値 */
 export interface UsePaginationReturn {
   currentPage: number
-  itemsPerPage: number
+  itemsPerPage: number | undefined // undefinedの場合は全件表示
   handlePageChange: (page: number) => void
-  handleItemsPerPageChange: (itemsPerPage: number) => void
+  handleItemsPerPageChange: (itemsPerPage: number | undefined) => void
 }
 
 // ============================================================================
@@ -192,6 +192,7 @@ export interface HaishaTableProps {
   tbmBase: TbmBase | null
   days: Date[]
   whereQuery: DateRangeQuery
+  itemsPerPage?: number // undefinedの場合は全件表示
 }
 
 /** HaishaCardコンポーネントのプロパティ */

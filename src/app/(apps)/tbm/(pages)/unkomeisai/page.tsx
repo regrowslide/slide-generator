@@ -18,6 +18,14 @@ export default async function Page(props) {
   const { tbmBaseId } = scopes.getTbmScopes()
   const { redirectPath, whereQuery } = await dateSwitcherTemplate({ query })
 
+  // ページあたり表示件数をURLパラメータから取得（undefinedの場合は全件表示）
+  const itemsPerPage = query.itemsPerPage ? parseInt(query.itemsPerPage as string) : 50
+
+  // フィルターパラメータをURLから取得
+  const tbmRouteGroupId = query.tbmRouteGroupId ? parseInt(query.tbmRouteGroupId as string) : undefined
+  const userId = query.userId ? parseInt(query.userId as string) : undefined
+  const tbmCustomerId = query.tbmCustomerId ? parseInt(query.tbmCustomerId as string) : undefined
+  const tbmVehicleId = query.tbmVehicleId ? parseInt(query.tbmVehicleId as string) : undefined
 
   if (redirectPath) return <Redirector {...{ redirectPath }} />
 
@@ -27,7 +35,10 @@ export default async function Page(props) {
     firstDayOfMonth: whereQuery.gte,
     whereQuery,
     tbmBaseId,
-    userId: undefined,
+    userId,
+    tbmRouteGroupId,
+    tbmCustomerId,
+    tbmVehicleId,
   })
 
 
@@ -77,6 +88,13 @@ export default async function Page(props) {
           tbmVehicleList,
           tbmBase,
           whereQuery,
+          itemsPerPage,
+          currentFilters: {
+            tbmRouteGroupId,
+            userId,
+            tbmCustomerId,
+            tbmVehicleId,
+          },
         }}
       />
     </FitMargin>

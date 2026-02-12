@@ -64,7 +64,7 @@ const RECORD_STATUS = {
 }
 
 /** 装備カテゴリ */
- 
+
 const EQUIPMENT_CATEGORIES = {
   tent: {id: 'tent', name: 'テント', icon: '⛺', color: '#22c55e', bgColor: '#dcfce7'},
   rope: {id: 'rope', name: 'ロープ', icon: '🧵', color: '#3b82f6', bgColor: '#dbeafe'},
@@ -75,7 +75,7 @@ const EQUIPMENT_CATEGORIES = {
 }
 
 /** 装備状態 */
- 
+
 const EQUIPMENT_CONDITIONS = {
   good: {id: 'good', label: '良好', color: '#22c55e', bgColor: '#dcfce7'},
   needsCheck: {id: 'needsCheck', label: '要点検', color: '#eab308', bgColor: '#fef9c3'},
@@ -83,7 +83,7 @@ const EQUIPMENT_CONDITIONS = {
 }
 
 /** 装備ステータス */
- 
+
 const EQUIPMENT_STATUS = {
   available: {id: 'available', label: '貸出可', color: '#22c55e', bgColor: '#dcfce7'},
   rented: {id: 'rented', label: '貸出中', color: '#3b82f6', bgColor: '#dbeafe'},
@@ -249,8 +249,10 @@ const INITIAL_RECORDS = [
     weather: '晴れ',
     participants: 'CL 永末康史、新井公子、下垣内福世 計3名',
     accessInfo: '集合: JR三ノ宮駅 8:30\n移動: 市バス16系統で摩耶ケーブル下まで',
-    courseTime: '8:30 出発\n9:15 摩耶ロープウェー\n10:00 掬星台到着\n10:30 六甲山頂出発\n12:00 昼食\n14:00 下山開始\n16:00 摩耶ロープウェー下駅到着',
-    content: '冬の六甲山で雪山装備の実践講座を行いました。\n\n午前中は座学で雪山の基礎知識、装備の使い方を学び、午後は実際にフィールドで練習しました。天候に恵まれ、参加者全員が安全に講座を修了できました。\n\n初心者の方も多かったですが、経験者のサポートもあり、充実した講座となりました。',
+    courseTime:
+      '8:30 出発\n9:15 摩耶ロープウェー\n10:00 掬星台到着\n10:30 六甲山頂出発\n12:00 昼食\n14:00 下山開始\n16:00 摩耶ロープウェー下駅到着',
+    content:
+      '冬の六甲山で雪山装備の実践講座を行いました。\n\n午前中は座学で雪山の基礎知識、装備の使い方を学び、午後は実際にフィールドで練習しました。天候に恵まれ、参加者全員が安全に講座を修了できました。\n\n初心者の方も多かったですが、経験者のサポートもあり、充実した講座となりました。',
     courseCondition: '道路状況: 市バスは通常運行\n混雑度: ロープウェーは待ち時間なし\n積雪: 山頂付近で5cm程度',
     remarks: 'アイゼン装着時の注意点を再確認しました。次回は3月の実践編を予定しています。',
     status: 'published',
@@ -306,32 +308,189 @@ const INITIAL_RECORD_FILES = [
 /** 装備品マスター */
 const INITIAL_EQUIPMENT = [
   // テント
-  {id: 1, name: 'テント 3人用 #1', categoryId: 'tent', condition: 'good', status: 'available', purchaseDate: '2023-04-01', notes: 'MSR製、軽量モデル', isDeleted: false},
-  {id: 2, name: 'テント 3人用 #2', categoryId: 'tent', condition: 'needsCheck', status: 'available', purchaseDate: '2022-06-15', notes: 'ファスナー要確認', isDeleted: false},
-  {id: 3, name: 'テント 4人用', categoryId: 'tent', condition: 'good', status: 'rented', purchaseDate: '2024-01-10', notes: 'モンベル製', isDeleted: false},
+  {
+    id: 1,
+    name: 'テント 3人用 #1',
+    categoryId: 'tent',
+    condition: 'good',
+    status: 'available',
+    purchaseDate: '2023-04-01',
+    notes: 'MSR製、軽量モデル',
+    isDeleted: false,
+  },
+  {
+    id: 2,
+    name: 'テント 3人用 #2',
+    categoryId: 'tent',
+    condition: 'needsCheck',
+    status: 'available',
+    purchaseDate: '2022-06-15',
+    notes: 'ファスナー要確認',
+    isDeleted: false,
+  },
+  {
+    id: 3,
+    name: 'テント 4人用',
+    categoryId: 'tent',
+    condition: 'good',
+    status: 'rented',
+    purchaseDate: '2024-01-10',
+    notes: 'モンベル製',
+    isDeleted: false,
+  },
   // ロープ
-  {id: 4, name: 'ザイル 50m #1', categoryId: 'rope', condition: 'good', status: 'available', purchaseDate: '2024-03-01', notes: '直径10mm、ドライ加工', isDeleted: false},
-  {id: 5, name: 'ザイル 50m #2', categoryId: 'rope', condition: 'good', status: 'rented', purchaseDate: '2024-03-01', notes: '直径10mm、ドライ加工', isDeleted: false},
+  {
+    id: 4,
+    name: 'ザイル 50m #1',
+    categoryId: 'rope',
+    condition: 'good',
+    status: 'available',
+    purchaseDate: '2024-03-01',
+    notes: '直径10mm、ドライ加工',
+    isDeleted: false,
+  },
+  {
+    id: 5,
+    name: 'ザイル 50m #2',
+    categoryId: 'rope',
+    condition: 'good',
+    status: 'rented',
+    purchaseDate: '2024-03-01',
+    notes: '直径10mm、ドライ加工',
+    isDeleted: false,
+  },
   // 無線機
-  {id: 6, name: 'トランシーバー #1', categoryId: 'radio', condition: 'good', status: 'available', purchaseDate: '2023-08-01', notes: 'アイコム IC-R6', isDeleted: false},
-  {id: 7, name: 'トランシーバー #2', categoryId: 'radio', condition: 'repairing', status: 'maintenance', purchaseDate: '2023-08-01', notes: '電池交換中', isDeleted: false},
+  {
+    id: 6,
+    name: 'トランシーバー #1',
+    categoryId: 'radio',
+    condition: 'good',
+    status: 'available',
+    purchaseDate: '2023-08-01',
+    notes: 'アイコム IC-R6',
+    isDeleted: false,
+  },
+  {
+    id: 7,
+    name: 'トランシーバー #2',
+    categoryId: 'radio',
+    condition: 'repairing',
+    status: 'maintenance',
+    purchaseDate: '2023-08-01',
+    notes: '電池交換中',
+    isDeleted: false,
+  },
   // 登攀具
-  {id: 8, name: 'ヘルメット #1', categoryId: 'climbing', condition: 'good', status: 'rented', purchaseDate: '2024-05-01', notes: 'ペツル製', isDeleted: false},
-  {id: 9, name: 'ヘルメット #2', categoryId: 'climbing', condition: 'good', status: 'available', purchaseDate: '2024-05-01', notes: 'ペツル製', isDeleted: false},
+  {
+    id: 8,
+    name: 'ヘルメット #1',
+    categoryId: 'climbing',
+    condition: 'good',
+    status: 'rented',
+    purchaseDate: '2024-05-01',
+    notes: 'ペツル製',
+    isDeleted: false,
+  },
+  {
+    id: 9,
+    name: 'ヘルメット #2',
+    categoryId: 'climbing',
+    condition: 'good',
+    status: 'available',
+    purchaseDate: '2024-05-01',
+    notes: 'ペツル製',
+    isDeleted: false,
+  },
   // 調理器具
-  {id: 10, name: 'コッヘルセット 大', categoryId: 'cooking', condition: 'good', status: 'available', purchaseDate: '2022-03-01', notes: '10人分対応', isDeleted: false},
-  {id: 11, name: 'ガスバーナー #1', categoryId: 'cooking', condition: 'good', status: 'available', purchaseDate: '2023-09-01', notes: 'プリムス製', isDeleted: false},
+  {
+    id: 10,
+    name: 'コッヘルセット 大',
+    categoryId: 'cooking',
+    condition: 'good',
+    status: 'available',
+    purchaseDate: '2022-03-01',
+    notes: '10人分対応',
+    isDeleted: false,
+  },
+  {
+    id: 11,
+    name: 'ガスバーナー #1',
+    categoryId: 'cooking',
+    condition: 'good',
+    status: 'available',
+    purchaseDate: '2023-09-01',
+    notes: 'プリムス製',
+    isDeleted: false,
+  },
   // その他
-  {id: 12, name: 'ツェルト 2人用', categoryId: 'other', condition: 'good', status: 'available', purchaseDate: '2024-02-01', notes: '緊急用', isDeleted: false},
-  {id: 13, name: 'GPS端末', categoryId: 'other', condition: 'needsCheck', status: 'available', purchaseDate: '2021-11-01', notes: 'Garmin、ファームウェア更新要', isDeleted: false},
+  {
+    id: 12,
+    name: 'ツェルト 2人用',
+    categoryId: 'other',
+    condition: 'good',
+    status: 'available',
+    purchaseDate: '2024-02-01',
+    notes: '緊急用',
+    isDeleted: false,
+  },
+  {
+    id: 13,
+    name: 'GPS端末',
+    categoryId: 'other',
+    condition: 'needsCheck',
+    status: 'available',
+    purchaseDate: '2021-11-01',
+    notes: 'Garmin、ファームウェア更新要',
+    isDeleted: false,
+  },
 ]
 
 /** 装備貸出履歴 */
 const INITIAL_RENTALS = [
-  {id: 1, equipmentId: 3, memberId: 2, eventId: 2, rentDate: '2026-02-12', dueDate: '2026-02-17', returnDate: null, notes: '西穂高岳で使用', isDeleted: false},
-  {id: 2, equipmentId: 5, memberId: 5, eventId: 2, rentDate: '2026-02-12', dueDate: '2026-02-17', returnDate: null, notes: '', isDeleted: false},
-  {id: 3, equipmentId: 8, memberId: 7, eventId: null, rentDate: '2026-01-20', dueDate: '2026-01-25', returnDate: null, notes: '個人練習用（期限超過中）', isDeleted: false},
-  {id: 4, equipmentId: 4, memberId: 3, eventId: 1, rentDate: '2026-02-01', dueDate: '2026-02-08', returnDate: '2026-02-08', notes: 'クリーンハイクで使用', isDeleted: false},
+  {
+    id: 1,
+    equipmentId: 3,
+    memberId: 2,
+    eventId: 2,
+    rentDate: '2026-02-12',
+    dueDate: '2026-02-17',
+    returnDate: null,
+    notes: '西穂高岳で使用',
+    isDeleted: false,
+  },
+  {
+    id: 2,
+    equipmentId: 5,
+    memberId: 5,
+    eventId: 2,
+    rentDate: '2026-02-12',
+    dueDate: '2026-02-17',
+    returnDate: null,
+    notes: '',
+    isDeleted: false,
+  },
+  {
+    id: 3,
+    equipmentId: 8,
+    memberId: 7,
+    eventId: null,
+    rentDate: '2026-01-20',
+    dueDate: '2026-01-25',
+    returnDate: null,
+    notes: '個人練習用（期限超過中）',
+    isDeleted: false,
+  },
+  {
+    id: 4,
+    equipmentId: 4,
+    memberId: 3,
+    eventId: 1,
+    rentDate: '2026-02-01',
+    dueDate: '2026-02-08',
+    returnDate: '2026-02-08',
+    notes: 'クリーンハイクで使用',
+    isDeleted: false,
+  },
 ]
 
 // =============================================================================
@@ -521,9 +680,7 @@ export default function YamanokaiMock() {
       // 装備のステータスを貸出可に変更
       setEquipment(prev => prev.map(e => (e.id === rental.equipmentId ? {...e, status: 'available'} : e)))
       // 返却日を記録
-      setRentals(prev =>
-        prev.map(r => (r.id === rentalId ? {...r, returnDate: new Date().toISOString().split('T')[0]} : r))
-      )
+      setRentals(prev => prev.map(r => (r.id === rentalId ? {...r, returnDate: new Date().toISOString().split('T')[0]} : r)))
     }
   }
 
@@ -944,9 +1101,7 @@ function AdminEventList({events, attendances, records, members, onUpdate, onDele
                 setSelectedForPublish([])
               }}
               className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
-                activeTab === status.id
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white text-gray-600 hover:bg-gray-50'
+                activeTab === status.id ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'
               }`}
             >
               {status.label}（{events.filter(e => e.status === status.id).length}件）
@@ -1891,9 +2046,7 @@ function MemberRecords({events, records, recordFiles, members, currentUserId, on
 
       {/* 記録詳細モーダル */}
       <Modal isOpen={!!selectedRecord} onClose={() => setSelectedRecord(null)} title="例会記録" size="lg">
-        {selectedRecord && (
-          <RecordDetail record={selectedRecord} files={getRecordFiles(selectedRecord.id)} members={members} />
-        )}
+        {selectedRecord && <RecordDetail record={selectedRecord} files={getRecordFiles(selectedRecord.id)} members={members} />}
       </Modal>
 
       {/* 記録作成モーダル */}
@@ -2019,9 +2172,7 @@ function RecordDetail({record, files, members}) {
             {imageFiles.map(image => (
               <div key={image.id} className="bg-white rounded-lg border overflow-hidden">
                 <img src={image.fileUrl} alt={image.fileName} className="w-full h-48 object-cover" />
-                {image.description && (
-                  <div className="p-2 text-xs text-gray-600 text-center border-t">{image.description}</div>
-                )}
+                {image.description && <div className="p-2 text-xs text-gray-600 text-center border-t">{image.description}</div>}
               </div>
             ))}
           </div>
@@ -2282,19 +2433,10 @@ function RecordForm({initialData, initialFiles = [], events, members, currentUse
         {/* 画像アップロード */}
         {images.length < 4 && (
           <div className="border-2 border-dashed rounded-lg p-6 text-center hover:bg-gray-50 cursor-pointer">
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleImageUpload}
-              className="hidden"
-              id="image-upload"
-            />
+            <input type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" id="image-upload" />
             <label htmlFor="image-upload" className="cursor-pointer block">
               <span className="text-4xl mb-2 block">📷</span>
-              <span className="text-sm text-gray-600">
-                クリックして画像を選択（{images.length}/4枚）
-              </span>
+              <span className="text-sm text-gray-600">クリックして画像を選択（{images.length}/4枚）</span>
             </label>
           </div>
         )}
@@ -2403,8 +2545,8 @@ function AdminEquipmentList({equipment, rentals, members, events, onUpdate, onDe
                   {currentRental && (
                     <div className="mt-2 text-sm text-gray-500">
                       貸出先: {getMemberName(currentRental.memberId)}
-                      {currentRental.eventId && ` (${getEventTitle(currentRental.eventId)})`}
-                      {' '}/ 返却予定: {formatDate(currentRental.dueDate)}
+                      {currentRental.eventId && ` (${getEventTitle(currentRental.eventId)})`} / 返却予定:{' '}
+                      {formatDate(currentRental.dueDate)}
                     </div>
                   )}
                 </div>
@@ -2614,7 +2756,12 @@ function AdminEquipmentForm({initialData, onSave, onCancel}) {
       </div>
 
       <FormField label="備考">
-        <Textarea value={form.notes} onChange={v => updateForm('notes', v)} rows={3} placeholder="メーカー名、サイズ、注意事項など" />
+        <Textarea
+          value={form.notes}
+          onChange={v => updateForm('notes', v)}
+          rows={3}
+          placeholder="メーカー名、サイズ、注意事項など"
+        />
       </FormField>
 
       <div className="flex justify-end gap-2">
@@ -2671,12 +2818,19 @@ function MemberEquipmentRental({equipment, rentals, members, events, currentUser
               const isOverdue = rental.dueDate < new Date().toISOString().split('T')[0]
 
               return (
-                <div key={rental.id} className={`flex items-center justify-between p-3 rounded border ${isOverdue ? 'border-red-300 bg-red-50' : 'bg-gray-50'}`}>
+                <div
+                  key={rental.id}
+                  className={`flex items-center justify-between p-3 rounded border ${isOverdue ? 'border-red-300 bg-red-50' : 'bg-gray-50'}`}
+                >
                   <div>
                     <div className="flex items-center gap-2">
                       <span>{category.icon}</span>
                       <span className="font-medium">{eq.name}</span>
-                      {isOverdue && <Badge color="#ef4444" bgColor="#fee2e2">期限超過</Badge>}
+                      {isOverdue && (
+                        <Badge color="#ef4444" bgColor="#fee2e2">
+                          期限超過
+                        </Badge>
+                      )}
                     </div>
                     <p className="text-sm text-gray-500">
                       返却予定: {formatDate(rental.dueDate)}
@@ -2738,9 +2892,7 @@ function MemberEquipmentRental({equipment, rentals, members, events, currentUser
           )
         })}
         {availableEquipment.length === 0 && (
-          <Card className="p-8 text-center text-gray-400 col-span-2">
-            貸出可能な装備がありません
-          </Card>
+          <Card className="p-8 text-center text-gray-400 col-span-2">貸出可能な装備がありません</Card>
         )}
       </div>
 
@@ -2791,12 +2943,7 @@ function RentalForm({equipment, events, onSave, onCancel}) {
       </div>
 
       <FormField label="返却予定日" required>
-        <Input
-          type="date"
-          value={dueDate}
-          onChange={setDueDate}
-          min={new Date().toISOString().split('T')[0]}
-        />
+        <Input type="date" value={dueDate} onChange={setDueDate} min={new Date().toISOString().split('T')[0]} />
       </FormField>
 
       <FormField label="使用する例会（任意）">
@@ -2862,11 +3009,19 @@ function MemberMyRentals({equipment, rentals, events, currentUserId}) {
                         {category.name}
                       </Badge>
                       {isActive ? (
-                        <Badge color="#3b82f6" bgColor="#dbeafe">貸出中</Badge>
+                        <Badge color="#3b82f6" bgColor="#dbeafe">
+                          貸出中
+                        </Badge>
                       ) : (
-                        <Badge color="#6b7280" bgColor="#f3f4f6">返却済</Badge>
+                        <Badge color="#6b7280" bgColor="#f3f4f6">
+                          返却済
+                        </Badge>
                       )}
-                      {isOverdue && <Badge color="#ef4444" bgColor="#fee2e2">期限超過</Badge>}
+                      {isOverdue && (
+                        <Badge color="#ef4444" bgColor="#fee2e2">
+                          期限超過
+                        </Badge>
+                      )}
                     </div>
                     <h4 className="font-bold">{eq.name}</h4>
                     <div className="mt-2 text-sm text-gray-500 space-y-1">
@@ -2944,17 +3099,7 @@ function DataStructureDiagram() {
       category: 'member',
       label: '会員',
       color: '#ef4444',
-      fields: [
-        'id',
-        'name',
-        'email',
-        'phone',
-        'insuranceKuchi',
-        'departmentId',
-        'roleId',
-        'isAdmin',
-        'isActive',
-      ],
+      fields: ['id', 'name', 'email', 'phone', 'insuranceKuchi', 'departmentId', 'roleId', 'isAdmin', 'isActive'],
       x: 150,
       y: 220,
     },
@@ -3173,9 +3318,7 @@ function DataStructureDiagram() {
     <div className="space-y-4">
       <Card className="p-4">
         <h3 className="font-bold mb-3">山の会（KCAC）データ構造図</h3>
-        <p className="text-sm text-gray-600 mb-4">
-          Prismaスキーマで定義されたテーブル間の関係性を図示しています。
-        </p>
+        <p className="text-sm text-gray-600 mb-4">Prismaスキーマで定義されたテーブル間の関係性を図示しています。</p>
 
         {/* カテゴリフィルター */}
         <div className="flex flex-wrap gap-2">
@@ -3229,9 +3372,7 @@ function DataStructureDiagram() {
             const isHovered = hoveredTable === name
             const isRelated =
               hoveredTable &&
-              relations.some(
-                r => (r.from === hoveredTable && r.to === name) || (r.to === hoveredTable && r.from === name)
-              )
+              relations.some(r => (r.from === hoveredTable && r.to === name) || (r.to === hoveredTable && r.from === name))
 
             return (
               <div

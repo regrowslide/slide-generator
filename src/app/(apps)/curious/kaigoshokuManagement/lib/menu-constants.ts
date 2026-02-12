@@ -22,13 +22,7 @@ export const MENU_ITEMS: MenuItem[] = [
     icon: 'calendar',
     description: '月別献立データの管理',
   },
-  {
-    id: 'ingredient-master',
-    label: '材料マスタ',
-    href: '/curious/kaigoshokuManagement/ingredient-master',
-    icon: 'database',
-    description: '材料マスタの管理',
-  },
+
   {
     id: 'production',
     label: '製造指示',

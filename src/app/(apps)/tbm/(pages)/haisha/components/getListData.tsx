@@ -197,7 +197,7 @@ export const getListData = async (props: GetListDataParams): Promise<HaishaListD
           tbmBaseId,
         },
         orderBy: { code: 'asc' },
-        ...(mode === 'DRIVER' ? { ...takeSkip } : {}),
+        ...(mode === 'DRIVER' && takeSkip ? { ...takeSkip } : {}),
       }),
 
       // 4. 便グループ
@@ -292,7 +292,7 @@ export const getListData = async (props: GetListDataParams): Promise<HaishaListD
 
         },
         orderBy: getRouteGroupOrderBy(),
-        ...(mode === 'ROUTE' ? { ...takeSkip } : {}),
+        ...(mode === 'ROUTE' && takeSkip ? { ...takeSkip } : {}),
       }),
 
       // 5. 車両リスト（キャッシュ利用）

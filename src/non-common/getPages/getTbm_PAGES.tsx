@@ -69,10 +69,10 @@ export const tbm_PAGES = (props: PageGetterType) => {
           tabId: 'seikyu',
           label: <IconLetter {...{ Icon: ListIcon }}>請求書発行</IconLetter>
         },
-        {
-          tabId: 'eigyosho-hikaku',
-          label: <IconLetter {...{ Icon: ListIcon }}>営業所比較</IconLetter>
-        },
+        // {
+        //   tabId: 'eigyosho-hikaku',
+        //   label: <IconLetter {...{ Icon: ListIcon }}>営業所比較</IconLetter>
+        // },
 
       ],
     },

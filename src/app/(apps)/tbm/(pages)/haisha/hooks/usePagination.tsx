@@ -1,19 +1,26 @@
 'use client'
-import {useState, useCallback} from 'react'
+import {useCallback} from 'react'
 import {UsePaginationParams, UsePaginationReturn} from '../types/haisha-page-types'
+import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 
 export function usePagination({initialPage = 1, initialItemsPerPage = 900}: UsePaginationParams = {}): UsePaginationReturn {
-  const [currentPage, setCurrentPage] = useState(initialPage)
-  const [itemsPerPage, setItemsPerPage] = useState(initialItemsPerPage)
+  const { addQuery, query } = useGlobal()
+
+  // queryから現在のページとitemsPerPageを取得
+  const currentPage = query.page ? parseInt(query.page as string) : initialPage
+  const itemsPerPage = query.itemsPerPage ? parseInt(query.itemsPerPage as string) : initialItemsPerPage
 
   const handlePageChange = useCallback((page: number) => {
-    setCurrentPage(page)
-  }, [])
+    addQuery({ page: String(page) })
+  }, [addQuery])
 
-  const handleItemsPerPageChange = useCallback((newItemsPerPage: number) => {
-    setItemsPerPage(newItemsPerPage)
-    setCurrentPage(1) // ページサイズが変更されたら最初のページに戻る
-  }, [])
+  const handleItemsPerPageChange = useCallback((newItemsPerPage: number | undefined) => {
+    // itemsPerPageとpageを同時に更新
+    addQuery({
+      itemsPerPage: newItemsPerPage === undefined ? undefined : String(newItemsPerPage),
+      page: '1' // ページサイズが変更されたら最初のページに戻る
+    })
+  }, [addQuery])
 
   // const resetPagination = useCallback(() => {
   //   setCurrentPage(1)

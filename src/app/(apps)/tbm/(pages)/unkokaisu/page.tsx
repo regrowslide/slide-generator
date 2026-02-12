@@ -17,7 +17,9 @@ export default async function Page(props) {
 
   if (redirectPath) return <Redirector {...{ redirectPath }} />
 
-  const { UnkoKaisuRecords, userList } = await fetchUnkoKaisuData({ firstDayOfMonth: whereQuery.gte, whereQuery, tbmBaseId })
+  const { UnkoKaisuRecords, userList } = await fetchUnkoKaisuData({
+    firstDayOfMonth: whereQuery.gte, whereQuery, tbmBaseId
+  })
 
   return (
     <FitMargin className={`pt-4`}>

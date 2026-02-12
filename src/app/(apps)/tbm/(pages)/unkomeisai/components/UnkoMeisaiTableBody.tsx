@@ -8,16 +8,23 @@ import { TbmDriveScheduleImage } from '@prisma/generated/prisma/client'
 import { CsvTable } from '@cm/components/styles/common-components/CsvTable/CsvTable'
 import { createCsvTableTotalRow } from '@cm/components/styles/common-components/CsvTable/createCsvTableTotalRow'
 import PlaceHolder from '@cm/components/utils/loader/PlaceHolder'
+import { isDev } from '@cm/lib/methods/common'
 
 type Props = {
   filteredList: MonthlyTbmDriveData[]
+  allFilteredList: MonthlyTbmDriveData[] // 合計行計算用の全件データ
+  startIndex: number // ページネーション用の開始インデックス（連番表示用）
   onScheduleEdit: (schedule: MonthlyTbmDriveData['schedule']) => void
   onImageOpen: (params: { images: TbmDriveScheduleImage[]; date: Date | null; routeGroupName: string | null }) => void
 }
 
-const UnkoMeisaiTableBody = ({ filteredList, onScheduleEdit, onImageOpen }: Props) => {
-  const buildRecords = useCallback(() => {
-    return filteredList.map((row) => {
+
+const UnkoMeisaiTableBody = ({ filteredList, allFilteredList, startIndex, onScheduleEdit, onImageOpen }: Props) => {
+
+  // ページ表示用のレコードを構築
+  const buildRecords = useCallback((dataList: MonthlyTbmDriveData[], showRowNumber: boolean = false, rowStartIndex: number = 0) => {
+
+    return dataList.map((row, index) => {
       const { keyValue, schedule } = row
 
       const cols = Object.entries(keyValue).filter(([dataKey, item]) => !String(item.label).includes(`CD`))
@@ -45,13 +52,19 @@ const UnkoMeisaiTableBody = ({ filteredList, onScheduleEdit, onImageOpen }: Prop
 
       return {
         csvTableRow: [
+          // 連番列
+          ...(showRowNumber ? [{
+            label: <div className="text-xs font-bold">No.</div>,
+            cellValue: rowStartIndex + index + 1,
+            style: { minWidth: 50, textAlign: 'center', fontWeight: 'bold' },
+          }] : []),
+          // 画像列
           {
             label: <div className="text-xs">画像</div>,
             cellValue: (
               <button
-                className={`flex items-center gap-1 text-xs ${
-                  imageCount > 0 ? 'text-blue-600 hover:text-blue-800 cursor-pointer' : 'text-gray-400 cursor-not-allowed'
-                }`}
+                className={`flex items-center gap-1 text-xs ${imageCount > 0 ? 'text-blue-600 hover:text-blue-800 cursor-pointer' : 'text-gray-400 cursor-not-allowed'
+                  }`}
                 onClick={() => {
                   if (imageCount > 0) {
                     onImageOpen({
@@ -99,17 +112,25 @@ const UnkoMeisaiTableBody = ({ filteredList, onScheduleEdit, onImageOpen }: Prop
         ],
       }
     })
-  }, [filteredList, onScheduleEdit, onImageOpen])
+  }, [onScheduleEdit, onImageOpen])
 
   return (
     <div className={` relative`}>
       {filteredList.length === 0 && <PlaceHolder>表示するデータがありません</PlaceHolder>}
       {(() => {
-        const records = buildRecords()
+        // 表示用レコード（ページネーション適用済み、連番あり）
+        const displayRecords = buildRecords(filteredList, true, startIndex)
+        // 合計行用レコード（全件データから計算、連番なし）
+        const allRecords = buildRecords(allFilteredList, false, 0)
+        const totalRow = createCsvTableTotalRow(allRecords)
+
         return CsvTable({
-          records: [...records, createCsvTableTotalRow(records)],
+          records: [
+            ...displayRecords,
+            ...(isDev ? [totalRow] : []),
+          ],
         }).WithWrapper({
-          className: `w-[calc(95vw)] `,
+          className: `w-[calc(95vw)] max-h-[calc(100vh-300px)]`,
         })
       })()}
     </div>

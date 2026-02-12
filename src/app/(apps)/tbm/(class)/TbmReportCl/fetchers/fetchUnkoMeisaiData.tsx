@@ -17,14 +17,37 @@ export type getMonthlyTbmDriveDataReturn = Awaited<ReturnType<typeof fetchUnkoMe
 export type MonthlyTbmDriveData = getMonthlyTbmDriveDataReturn['monthlyTbmDriveList'][number]
 
 import prisma from 'src/lib/prisma'
-import { TbmVehicle, User } from '@prisma/generated/prisma/client'
+import { TbmVehicle, User, Prisma } from '@prisma/generated/prisma/client'
 import { TbmReportCl } from '@app/(apps)/tbm/(class)/TbmReportCl'
 import { unkoMeisaiKeyValue } from '@app/(apps)/tbm/(class)/TbmReportCl/cols/createUnkoMeisaiRow'
 import { Days } from '@cm/class/Days/Days'
 import { formatDate } from '@cm/class/Days/date-utils/formatters'
 import { getFilteredSchedulesByMonth } from '@app/(apps)/tbm/(class)/TbmReportCl/fetchers/shared/getFilteredSchedules'
 
-export type DriveScheduleData = Awaited<ReturnType<typeof getDriveScheduleList>>[number]
+// DriveScheduleDataの型を明示的に定義
+export type DriveScheduleData = Prisma.TbmDriveScheduleGetPayload<{
+  include: {
+    TbmEtcMeisai: true
+    TbmRouteGroup: {
+      include: {
+        TbmMonthlyConfigForRouteGroup: true
+        Mid_TbmRouteGroup_TbmCustomer: {
+          include: {
+            TbmCustomer: true
+          }
+        }
+        TbmRouteGroupFee: true
+      }
+    }
+    TbmVehicle: true
+    User: {
+      include: {
+        TbmVehicle: true
+      }
+    }
+    TbmDriveScheduleImage: true
+  }
+}>
 export const getDriveScheduleList = async (props: {
   firstDayOfMonth,
   allowNonApprovedSchedule?: boolean
@@ -34,9 +57,12 @@ export const getDriveScheduleList = async (props: {
   }
   tbmBaseId: number | undefined
   userId: number | undefined
-}) => {
+  tbmRouteGroupId?: number | undefined
+  tbmCustomerId?: number | undefined
+  tbmVehicleId?: number | undefined
+}): Promise<DriveScheduleData[]> => {
 
-  const { allowNonApprovedSchedule, tbmBaseId, whereQuery, userId, firstDayOfMonth } = props
+  const { allowNonApprovedSchedule, tbmBaseId, whereQuery, userId, firstDayOfMonth, tbmRouteGroupId, tbmCustomerId, tbmVehicleId } = props
 
 
 
@@ -74,9 +100,16 @@ export const getDriveScheduleList = async (props: {
       tbmBaseId: tbmBaseId,
     },
     TbmRouteGroup: {
+      id: tbmRouteGroupId,
       ...displayExpiryDateFilter,
       ...routeGroupBaseFilter,
+      Mid_TbmRouteGroup_TbmCustomer: tbmCustomerId
+        ? {
+            tbmCustomerId: tbmCustomerId,
+          }
+        : undefined,
     },
+    tbmVehicleId: tbmVehicleId,
   }
 
 
@@ -96,7 +129,6 @@ export const getDriveScheduleList = async (props: {
       },
       TbmVehicle: {},
       User: {
-        where: { id: userId, },
         include: { TbmVehicle: {} },
       },
       TbmDriveScheduleImage: {
@@ -116,12 +148,18 @@ export const fetchUnkoMeisaiData = async ({
   whereQuery,
   tbmBaseId,
   userId,
+  tbmRouteGroupId,
+  tbmCustomerId,
+  tbmVehicleId,
 }: {
   firstDayOfMonth: Date | undefined
   allowNonApprovedSchedule?: boolean
   whereQuery: { gte?: Date | undefined; lte?: Date | undefined }
   tbmBaseId: number
   userId: number | undefined
+  tbmRouteGroupId?: number | undefined
+  tbmCustomerId?: number | undefined
+  tbmVehicleId?: number | undefined
 }) => {
   const ConfigForMonth = await prisma.tbmMonthlyConfigForRouteGroup.findFirst({
     where: {
@@ -140,6 +178,9 @@ export const fetchUnkoMeisaiData = async ({
     },
     tbmBaseId,
     userId,
+    tbmRouteGroupId,
+    tbmCustomerId,
+    tbmVehicleId,
   })
 
   // 共通フィルタで対象月のスケジュールのみ抽出
