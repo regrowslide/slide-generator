@@ -26,6 +26,8 @@ import {
   INITIAL_APPLICATIONS,
   INITIAL_EQUIPMENT,
   INITIAL_RENTALS,
+  INITIAL_EQUIPMENT_CHECKLIST_ITEMS,
+  INITIAL_EVENT_EQUIPMENT_ITEMS,
   generateId,
 } from './_constants'
 import {Badge} from './_ui'
@@ -34,6 +36,7 @@ import {MemberCalendar} from './_MemberCalendar'
 import {MemberRecords} from './_MemberRecords'
 import {MemberApplicationView} from './_ApplicationViews'
 import {AdminEquipmentList, AdminEquipmentForm, MemberEquipmentRental, MemberMyRentals} from './_EquipmentViews'
+import {AdminEquipmentChecklistManagement} from './_EquipmentChecklistViews'
 import {ExportPublicDataView} from './_ExportPublicDataView'
 import {DataStructureDiagram} from './_DataStructureDiagram'
 
@@ -57,6 +60,8 @@ export default function YamanokaiMock() {
   const [equipment, setEquipment] = useState(INITIAL_EQUIPMENT)
   const [rentals, setRentals] = useState(INITIAL_RENTALS)
   const [applications, setApplications] = useState(INITIAL_APPLICATIONS)
+  const [checklistItems, setChecklistItems] = useState(INITIAL_EQUIPMENT_CHECKLIST_ITEMS)
+  const [eventEquipmentItems, setEventEquipmentItems] = useState(INITIAL_EVENT_EQUIPMENT_ITEMS)
 
   // 有効なデータのみフィルタ（ソフトデリート対応 + 一般会員は公開済みのみ）
   const activeEvents = useMemo(() => {
@@ -72,6 +77,7 @@ export default function YamanokaiMock() {
   const activeEquipment = useMemo(() => equipment.filter(e => !e.isDeleted), [equipment])
   const activeRentals = useMemo(() => rentals.filter(r => !r.isDeleted), [rentals])
   const activeApplications = useMemo(() => applications.filter(a => !a.isDeleted), [applications])
+  const activeChecklistItems = useMemo(() => checklistItems.filter(c => !c.isDeleted), [checklistItems])
 
   // 装備貸出処理
   const handleRent = (equipmentId, memberId, dueDate, eventId, notes) => {
@@ -127,12 +133,43 @@ export default function YamanokaiMock() {
     }
   }
 
+  // 装備表品目マスター管理ハンドラー
+  const handleCreateChecklistItem = data => {
+    const newItem = {...data, id: generateId(checklistItems), isDeleted: false}
+    setChecklistItems(prev => [...prev, newItem])
+  }
+
+  const handleUpdateChecklistItem = (id, data) => {
+    setChecklistItems(prev => prev.map(c => (c.id === id ? {...c, ...data} : c)))
+  }
+
+  const handleDeleteChecklistItem = id => {
+    setChecklistItems(prev => prev.map(c => (c.id === id ? {...c, isDeleted: true} : c)))
+  }
+
+  // 例会装備表設定ハンドラー
+  const handleSetEventEquipment = (eventId, items) => {
+    // 既存の装備リストを削除
+    setEventEquipmentItems(prev => prev.filter(e => e.eventId !== eventId))
+    // 新しい装備リストを追加
+    const newItems = items.map((item, idx) => ({
+      id: generateId(eventEquipmentItems) + idx,
+      eventId,
+      checklistItemId: item.checklistItemId,
+      requirementLevel: item.requirementLevel,
+    }))
+    setEventEquipmentItems(prev => [...prev, ...newItems])
+  }
+
   // メニュー定義
   const menuItems = [
     {type: 'header', label: '例会'},
     {id: 'admin-event-management', label: '例会設定', icon: '⚙️', adminOnly: true},
     {id: 'export-public', label: '外部公開データ出力', icon: '📤', adminOnly: true},
     {id: 'member-events', label: '例会一覧', icon: '📅'},
+    {type: 'divider'},
+    {type: 'header', label: '装備表'},
+    {id: 'admin-equipment-checklist', label: '装備表品目マスタ管理', icon: '📋', adminOnly: true},
     {type: 'divider'},
     {type: 'header', label: '装備品レンタル'},
     {id: 'admin-equipment', label: '装備品マスタ管理', icon: '🎒', adminOnly: true},
@@ -269,6 +306,9 @@ export default function YamanokaiMock() {
               onRecordFileDelete={fileId =>
                 setRecordFiles(prev => prev.map(f => (f.id === fileId ? {...f, isDeleted: true} : f)))
               }
+              checklistItems={activeChecklistItems}
+              eventEquipmentItems={eventEquipmentItems}
+              onSetEventEquipment={handleSetEventEquipment}
             />
           )}
 
@@ -279,6 +319,16 @@ export default function YamanokaiMock() {
               records={activeRecords}
               recordFiles={activeRecordFiles}
               members={INITIAL_MEMBERS}
+            />
+          )}
+
+          {/* 装備表品目マスタ管理 */}
+          {activeMenu === 'admin-equipment-checklist' && (
+            <AdminEquipmentChecklistManagement
+              checklistItems={activeChecklistItems}
+              onCreate={handleCreateChecklistItem}
+              onUpdate={handleUpdateChecklistItem}
+              onDelete={handleDeleteChecklistItem}
             />
           )}
 
@@ -313,6 +363,8 @@ export default function YamanokaiMock() {
               onRecordFileDelete={fileId =>
                 setRecordFiles(prev => prev.map(f => (f.id === fileId ? {...f, isDeleted: true} : f)))
               }
+              checklistItems={activeChecklistItems}
+              eventEquipmentItems={eventEquipmentItems}
             />
           )}
 
@@ -386,6 +438,9 @@ function AdminEventManagement({
   onToggleAttended,
   onRecordSave,
   onTogglePublic,
+  checklistItems,
+  eventEquipmentItems,
+  onSetEventEquipment,
 }) {
   return (
     <AdminEventList
@@ -403,6 +458,9 @@ function AdminEventManagement({
       onToggleAttended={onToggleAttended}
       onRecordSave={onRecordSave}
       onTogglePublic={onTogglePublic}
+      checklistItems={checklistItems}
+      eventEquipmentItems={eventEquipmentItems}
+      onSetEventEquipment={onSetEventEquipment}
     />
   )
 }
@@ -422,6 +480,8 @@ function MemberEventPage({
   onRecordSave,
   onRecordDelete,
   onRecordFileDelete,
+  checklistItems,
+  eventEquipmentItems,
 }) {
   const [activeTab, setActiveTab] = useState('schedule')
 
@@ -462,6 +522,8 @@ function MemberEventPage({
           members={members}
           currentUserId={currentUserId}
           onApply={onApply}
+          checklistItems={checklistItems}
+          eventEquipmentItems={eventEquipmentItems}
         />
       )}
       {activeTab === 'application' && (

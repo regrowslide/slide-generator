@@ -65,6 +65,19 @@ export const EQUIPMENT_STATUS = {
   maintenance: {id: 'maintenance', label: 'メンテナンス中', color: '#ef4444', bgColor: '#fee2e2'},
 }
 
+/** 装備表品目カテゴリ */
+export const CHECKLIST_CATEGORIES = {
+  personal: {id: 'personal', name: '個人装備', icon: '🎒'},
+  shared: {id: 'shared', name: '共同装備', icon: '🏕️'},
+}
+
+/** 装備表必要度レベル */
+export const REQUIREMENT_LEVELS = {
+  required: {id: 'required', label: '○', name: '必須', color: '#ef4444', bgColor: '#fee2e2'},
+  recommended: {id: 'recommended', label: '△', name: '推奨', color: '#eab308', bgColor: '#fef9c3'},
+  optional: {id: 'optional', label: '', name: '任意', color: '#6b7280', bgColor: '#f3f4f6'},
+}
+
 // =============================================================================
 // 初期データ
 // =============================================================================
@@ -363,6 +376,111 @@ export const INITIAL_RENTALS = [
   {id: 2, equipmentId: 5, memberId: 5, eventId: 2, rentDate: '2026-02-12', dueDate: '2026-02-17', returnDate: null, notes: '', isDeleted: false},
   {id: 3, equipmentId: 8, memberId: 7, eventId: null, rentDate: '2026-01-20', dueDate: '2026-01-25', returnDate: null, notes: '個人練習用（期限超過中）', isDeleted: false},
   {id: 4, equipmentId: 4, memberId: 3, eventId: 1, rentDate: '2026-02-01', dueDate: '2026-02-08', returnDate: '2026-02-08', notes: 'クリーンハイクで使用', isDeleted: false},
+]
+
+/** 装備表品目マスター */
+export const INITIAL_EQUIPMENT_CHECKLIST_ITEMS = [
+  // 個人装備
+  {id: 1, name: 'ザック', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 1, isDeleted: false},
+  {id: 2, name: '登山靴', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 2, isDeleted: false},
+  {id: 3, name: '帽子', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 3, isDeleted: false},
+  {id: 4, name: '雨具', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 4, isDeleted: false},
+  {id: 5, name: '傘', category: 'personal', defaultRequirementLevel: 'optional', sortOrder: 5, isDeleted: false},
+  {id: 6, name: 'ザックカバー', category: 'personal', defaultRequirementLevel: 'recommended', sortOrder: 6, isDeleted: false},
+  {id: 7, name: 'Lスパッツ', category: 'personal', defaultRequirementLevel: 'recommended', sortOrder: 7, isDeleted: false},
+  {id: 8, name: '手袋', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 8, isDeleted: false},
+  {id: 9, name: 'ストック', category: 'personal', defaultRequirementLevel: 'optional', sortOrder: 9, isDeleted: false},
+  {id: 10, name: 'サングラス', category: 'personal', defaultRequirementLevel: 'recommended', sortOrder: 10, isDeleted: false},
+  {id: 11, name: 'ヘッドランプ', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 11, isDeleted: false},
+  {id: 12, name: '替え電池', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 12, isDeleted: false},
+  {id: 13, name: 'ナイフ', category: 'personal', defaultRequirementLevel: 'recommended', sortOrder: 13, isDeleted: false},
+  {id: 14, name: 'ホイッスル', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 14, isDeleted: false},
+  {id: 15, name: '筆記具', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 15, isDeleted: false},
+  {id: 16, name: '地図', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 16, isDeleted: false},
+  {id: 17, name: 'コンパス', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 17, isDeleted: false},
+  {id: 18, name: '時計', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 18, isDeleted: false},
+  {id: 19, name: '計画書', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 19, isDeleted: false},
+  {id: 20, name: 'チリ紙', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 20, isDeleted: false},
+  {id: 21, name: '保険証', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 21, isDeleted: false},
+  {id: 22, name: 'タオル', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 22, isDeleted: false},
+  {id: 23, name: '着替え', category: 'personal', defaultRequirementLevel: 'recommended', sortOrder: 23, isDeleted: false},
+  {id: 24, name: '替靴下', category: 'personal', defaultRequirementLevel: 'recommended', sortOrder: 24, isDeleted: false},
+  {id: 25, name: '替手袋', category: 'personal', defaultRequirementLevel: 'recommended', sortOrder: 25, isDeleted: false},
+  {id: 26, name: '防寒着', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 26, isDeleted: false},
+  {id: 27, name: 'ホッカイロ', category: 'personal', defaultRequirementLevel: 'optional', sortOrder: 27, isDeleted: false},
+  {id: 28, name: '日焼け止め', category: 'personal', defaultRequirementLevel: 'recommended', sortOrder: 28, isDeleted: false},
+  {id: 29, name: '行動食', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 29, isDeleted: false},
+  {id: 30, name: '非常食', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 30, isDeleted: false},
+  {id: 31, name: 'プラティパス2L', category: 'personal', defaultRequirementLevel: 'recommended', sortOrder: 31, isDeleted: false},
+  {id: 32, name: '水筒', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 32, isDeleted: false},
+  {id: 33, name: 'テルモス', category: 'personal', defaultRequirementLevel: 'recommended', sortOrder: 33, isDeleted: false},
+  {id: 34, name: '食器', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 34, isDeleted: false},
+  {id: 35, name: '箸・スプーン', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 35, isDeleted: false},
+  {id: 36, name: '軍手（調理用）', category: 'personal', defaultRequirementLevel: 'optional', sortOrder: 36, isDeleted: false},
+  {id: 37, name: 'オーバーミトン', category: 'personal', defaultRequirementLevel: 'optional', sortOrder: 37, isDeleted: false},
+  {id: 38, name: 'シュラフ', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 38, isDeleted: false},
+  {id: 39, name: 'シュラフカバー', category: 'personal', defaultRequirementLevel: 'recommended', sortOrder: 39, isDeleted: false},
+  {id: 40, name: 'マット', category: 'personal', defaultRequirementLevel: 'required', sortOrder: 40, isDeleted: false},
+
+  // 共同装備
+  {id: 41, name: '個人テント（1人用）本体', category: 'shared', defaultRequirementLevel: 'required', sortOrder: 41, isDeleted: false},
+  {id: 42, name: '個人テント（1人用）フライ', category: 'shared', defaultRequirementLevel: 'required', sortOrder: 42, isDeleted: false},
+  {id: 43, name: '個人テント（1人用）ポール', category: 'shared', defaultRequirementLevel: 'required', sortOrder: 43, isDeleted: false},
+  {id: 44, name: '個人テント（1人用）マット×3', category: 'shared', defaultRequirementLevel: 'optional', sortOrder: 44, isDeleted: false},
+  {id: 45, name: '個人テント（2人用）本体', category: 'shared', defaultRequirementLevel: 'required', sortOrder: 45, isDeleted: false},
+  {id: 46, name: '個人テント（2人用）フライ', category: 'shared', defaultRequirementLevel: 'required', sortOrder: 46, isDeleted: false},
+  {id: 47, name: '個人テント（2人用）ポール', category: 'shared', defaultRequirementLevel: 'required', sortOrder: 47, isDeleted: false},
+  {id: 48, name: '個人テント（2人用）マット×2', category: 'shared', defaultRequirementLevel: 'optional', sortOrder: 48, isDeleted: false},
+  {id: 49, name: 'ツエルト2', category: 'shared', defaultRequirementLevel: 'recommended', sortOrder: 49, isDeleted: false},
+  {id: 50, name: 'コッヘルセット', category: 'shared', defaultRequirementLevel: 'required', sortOrder: 50, isDeleted: false},
+  {id: 51, name: '調理器具', category: 'shared', defaultRequirementLevel: 'required', sortOrder: 51, isDeleted: false},
+  {id: 52, name: 'ポンプ', category: 'shared', defaultRequirementLevel: 'optional', sortOrder: 52, isDeleted: false},
+  {id: 53, name: 'ガスセット', category: 'shared', defaultRequirementLevel: 'required', sortOrder: 53, isDeleted: false},
+  {id: 54, name: 'コンロセット+ガス', category: 'shared', defaultRequirementLevel: 'required', sortOrder: 54, isDeleted: false},
+  {id: 55, name: 'ガス（予備）2個', category: 'shared', defaultRequirementLevel: 'recommended', sortOrder: 55, isDeleted: false},
+  {id: 56, name: 'ベニヤ板', category: 'shared', defaultRequirementLevel: 'optional', sortOrder: 56, isDeleted: false},
+  {id: 57, name: 'プラティパス2L', category: 'shared', defaultRequirementLevel: 'recommended', sortOrder: 57, isDeleted: false},
+  {id: 58, name: 'ブラシ', category: 'shared', defaultRequirementLevel: 'optional', sortOrder: 58, isDeleted: false},
+  {id: 59, name: 'ハイキングレスキューセット', category: 'shared', defaultRequirementLevel: 'required', sortOrder: 59, isDeleted: false},
+]
+
+/** 例会装備表設定（多対多リレーション） */
+export const INITIAL_EVENT_EQUIPMENT_ITEMS = [
+  // 例会1（クリーンハイク）の装備表 - 日帰りハイキングなので軽装備
+  {id: 1, eventId: 1, checklistItemId: 1, requirementLevel: 'required'}, // ザック
+  {id: 2, eventId: 1, checklistItemId: 2, requirementLevel: 'required'}, // 登山靴
+  {id: 3, eventId: 1, checklistItemId: 3, requirementLevel: 'required'}, // 帽子
+  {id: 4, eventId: 1, checklistItemId: 4, requirementLevel: 'required'}, // 雨具
+  {id: 5, eventId: 1, checklistItemId: 11, requirementLevel: 'recommended'}, // ヘッドランプ
+  {id: 6, eventId: 1, checklistItemId: 29, requirementLevel: 'required'}, // 行動食
+  {id: 7, eventId: 1, checklistItemId: 32, requirementLevel: 'required'}, // 水筒
+
+  // 例会2（西穂高岳）の装備表 - 本格的な雪山テント泊装備
+  {id: 11, eventId: 2, checklistItemId: 1, requirementLevel: 'required'}, // ザック
+  {id: 12, eventId: 2, checklistItemId: 2, requirementLevel: 'required'}, // 登山靴
+  {id: 13, eventId: 2, checklistItemId: 3, requirementLevel: 'required'}, // 帽子
+  {id: 14, eventId: 2, checklistItemId: 4, requirementLevel: 'required'}, // 雨具
+  {id: 15, eventId: 2, checklistItemId: 6, requirementLevel: 'required'}, // ザックカバー
+  {id: 16, eventId: 2, checklistItemId: 7, requirementLevel: 'required'}, // Lスパッツ
+  {id: 17, eventId: 2, checklistItemId: 8, requirementLevel: 'required'}, // 手袋
+  {id: 18, eventId: 2, checklistItemId: 10, requirementLevel: 'required'}, // サングラス
+  {id: 19, eventId: 2, checklistItemId: 11, requirementLevel: 'required'}, // ヘッドランプ
+  {id: 20, eventId: 2, checklistItemId: 12, requirementLevel: 'required'}, // 替え電池
+  {id: 21, eventId: 2, checklistItemId: 14, requirementLevel: 'required'}, // ホイッスル
+  {id: 22, eventId: 2, checklistItemId: 16, requirementLevel: 'required'}, // 地図
+  {id: 23, eventId: 2, checklistItemId: 17, requirementLevel: 'required'}, // コンパス
+  {id: 24, eventId: 2, checklistItemId: 26, requirementLevel: 'required'}, // 防寒着
+  {id: 25, eventId: 2, checklistItemId: 29, requirementLevel: 'required'}, // 行動食
+  {id: 26, eventId: 2, checklistItemId: 30, requirementLevel: 'required'}, // 非常食
+  {id: 27, eventId: 2, checklistItemId: 38, requirementLevel: 'required'}, // シュラフ
+  {id: 28, eventId: 2, checklistItemId: 40, requirementLevel: 'required'}, // マット
+  // 共同装備
+  {id: 29, eventId: 2, checklistItemId: 41, requirementLevel: 'required'}, // 個人テント（1人用）本体
+  {id: 30, eventId: 2, checklistItemId: 42, requirementLevel: 'required'}, // 個人テント（1人用）フライ
+  {id: 31, eventId: 2, checklistItemId: 43, requirementLevel: 'required'}, // 個人テント（1人用）ポール
+  {id: 32, eventId: 2, checklistItemId: 50, requirementLevel: 'required'}, // コッヘルセット
+  {id: 33, eventId: 2, checklistItemId: 53, requirementLevel: 'required'}, // ガスセット
+  {id: 34, eventId: 2, checklistItemId: 59, requirementLevel: 'required'}, // ハイキングレスキューセット
 ]
 
 // =============================================================================

@@ -1,12 +1,13 @@
 import {useState, useMemo} from 'react'
 import {DEPARTMENTS, APPLICATION_STATUS, formatDate, formatDateRange} from './_constants'
 import {Modal, Badge, Button, Card, FormField, Textarea} from './_ui'
+import {EventEquipmentChecklistView} from './_EquipmentChecklistViews'
 
 // =============================================================================
 // 一般会員: カレンダービュー
 // =============================================================================
 
-export function MemberCalendar({events, applications, records, members, currentUserId, onApply}) {
+export function MemberCalendar({events, applications, records, members, currentUserId, onApply, checklistItems, eventEquipmentItems}) {
   const [viewMonth, setViewMonth] = useState(new Date(2026, 1, 1)) // 2026年2月
   const [selectedEvent, setSelectedEvent] = useState(null)
   const [applyModal, setApplyModal] = useState(null)
@@ -157,7 +158,12 @@ export function MemberCalendar({events, applications, records, members, currentU
       <Modal isOpen={!!selectedEvent} onClose={() => setSelectedEvent(null)} title="例会詳細" size="lg">
         {selectedEvent && (
           <div className="space-y-6">
-            <MemberEventDetail event={selectedEvent} members={members} />
+            <MemberEventDetail
+              event={selectedEvent}
+              members={members}
+              checklistItems={checklistItems}
+              eventEquipmentItems={eventEquipmentItems?.filter(e => e.eventId === selectedEvent.id) || []}
+            />
 
             {/* 参加申し込み */}
             <div className="border-t pt-4">
@@ -246,10 +252,48 @@ export function MemberCalendar({events, applications, records, members, currentU
 // 一般会員: 例会詳細表示
 // =============================================================================
 
-export function MemberEventDetail({event, members}) {
+export function MemberEventDetail({event, members, checklistItems, eventEquipmentItems}) {
+  const [activeTab, setActiveTab] = useState('basic')
   const dept = DEPARTMENTS[event.departmentId]
   const getMemberName = id => members.find(m => m.id === id)?.name || ''
 
+  const tabs = [
+    {id: 'basic', label: '基本情報', icon: '📋'},
+    {id: 'equipment', label: '装備表', icon: '🎒'},
+  ]
+
+  return (
+    <div className="space-y-4">
+      {/* タブナビゲーション */}
+      <div className="flex gap-2 border-b">
+        {tabs.map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`px-4 py-2 font-medium ${
+              activeTab === tab.id ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600 hover:text-gray-800'
+            }`}
+          >
+            {tab.icon} {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* タブコンテンツ */}
+      {activeTab === 'basic' && <BasicInfoTabMember event={event} dept={dept} getMemberName={getMemberName} />}
+      {activeTab === 'equipment' && checklistItems && (
+        <EventEquipmentChecklistView
+          eventId={event.id}
+          checklistItems={checklistItems}
+          eventEquipmentItems={eventEquipmentItems}
+        />
+      )}
+    </div>
+  )
+}
+
+// 基本情報タブ（一般会員用）
+function BasicInfoTabMember({event, dept, getMemberName}) {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">

@@ -3,6 +3,7 @@ import {DEPARTMENTS, EVENT_STATUS, APPLICATION_STATUS, STAMINA_GRADES, SKILL_GRA
 import {Modal, Badge, Button, Card, FormField, Input, Select, Textarea} from './_ui'
 import {AdminApplicationView} from './_ApplicationViews'
 import {RecordA4View} from './_RecordA4View'
+import {EventEquipmentChecklistEditor} from './_EquipmentChecklistViews'
 
 // =============================================================================
 // 管理者: 例会リスト
@@ -23,6 +24,9 @@ export function AdminEventList({
   onToggleAttended,
   onRecordSave,
   onTogglePublic,
+  checklistItems,
+  eventEquipmentItems,
+  onSetEventEquipment,
 }) {
   const [selectedEvent, setSelectedEvent] = useState(null)
   const [editingEvent, setEditingEvent] = useState(null)
@@ -326,6 +330,9 @@ export function AdminEventList({
             event={selectedEvent}
             applications={applications.filter(a => a.eventId === selectedEvent.id)}
             members={members}
+            checklistItems={checklistItems}
+            eventEquipmentItems={eventEquipmentItems?.filter(e => e.eventId === selectedEvent.id) || []}
+            onSetEventEquipment={onSetEventEquipment}
           />
         )}
       </Modal>
@@ -406,10 +413,51 @@ export function AdminEventList({
 // 管理者: 例会詳細
 // =============================================================================
 
-export function AdminEventDetail({event, applications, members}) {
+export function AdminEventDetail({event, applications, members, checklistItems, eventEquipmentItems, onSetEventEquipment}) {
+  const [activeTab, setActiveTab] = useState('basic')
   const dept = DEPARTMENTS[event.departmentId]
   const getMemberName = id => members.find(m => m.id === id)?.name || ''
 
+  const tabs = [
+    {id: 'basic', label: '基本情報', icon: '📋'},
+    {id: 'equipment', label: '装備表', icon: '🎒'},
+  ]
+
+  return (
+    <div className="space-y-4">
+      {/* タブナビゲーション */}
+      <div className="flex gap-2 border-b">
+        {tabs.map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`px-4 py-2 font-medium ${
+              activeTab === tab.id ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600 hover:text-gray-800'
+            }`}
+          >
+            {tab.icon} {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* タブコンテンツ */}
+      {activeTab === 'basic' && (
+        <BasicInfoTab event={event} applications={applications} members={members} dept={dept} getMemberName={getMemberName} />
+      )}
+      {activeTab === 'equipment' && checklistItems && (
+        <EventEquipmentChecklistEditor
+          eventId={event.id}
+          checklistItems={checklistItems}
+          eventEquipmentItems={eventEquipmentItems}
+          onSave={items => onSetEventEquipment(event.id, items)}
+        />
+      )}
+    </div>
+  )
+}
+
+// 基本情報タブ
+function BasicInfoTab({event, applications, members, dept, getMemberName}) {
   return (
     <div className="space-y-6">
       {/* 基本情報 */}
