@@ -48,19 +48,18 @@ const EVENT_STATUS = {
   published: {id: 'published', label: '公開済み', color: '#22c55e', bgColor: '#dcfce7'},
 }
 
-/** 出席回答ステータス */
-const ATTENDANCE_STATUS = {
-  pending: {id: 'pending', label: '未回答', color: '#6b7280', bgColor: '#f3f4f6'},
-  attending: {id: 'attending', label: '出席', color: '#22c55e', bgColor: '#dcfce7'},
-  notAttending: {id: 'notAttending', label: '欠席', color: '#ef4444', bgColor: '#fee2e2'},
-  undecided: {id: 'undecided', label: '保留', color: '#eab308', bgColor: '#fef9c3'},
-}
-
 /** 記録ステータス */
 const RECORD_STATUS = {
   draft: {id: 'draft', label: '下書き', color: '#6b7280'},
   submitted: {id: 'submitted', label: '提出済', color: '#3b82f6'},
   published: {id: 'published', label: '掲載済', color: '#22c55e'},
+}
+
+/** 参加申請ステータス */
+const APPLICATION_STATUS = {
+  pending: {id: 'pending', label: '審査中', color: '#eab308', bgColor: '#fef9c3'},
+  approved: {id: 'approved', label: '承認', color: '#22c55e', bgColor: '#dcfce7'},
+  rejected: {id: 'rejected', label: '却下', color: '#ef4444', bgColor: '#fee2e2'},
 }
 
 /** 装備カテゴリ */
@@ -225,19 +224,6 @@ const INITIAL_EVENTS = [
   },
 ]
 
-/** 出席回答データ */
-const INITIAL_ATTENDANCES = [
-  {id: 1, eventId: 1, memberId: 3, status: 'attending', comment: '参加します！', updatedAt: '2026-01-20', isDeleted: false},
-  {id: 2, eventId: 1, memberId: 5, status: 'attending', comment: '', updatedAt: '2026-01-21', isDeleted: false},
-  {id: 3, eventId: 1, memberId: 6, status: 'attending', comment: '楽しみにしています', updatedAt: '2026-01-22', isDeleted: false},
-  {id: 4, eventId: 1, memberId: 7, status: 'undecided', comment: '仕事の都合次第', updatedAt: '2026-01-23', isDeleted: false},
-  {id: 5, eventId: 2, memberId: 5, status: 'attending', comment: '', updatedAt: '2026-01-15', isDeleted: false},
-  {id: 6, eventId: 2, memberId: 7, status: 'attending', comment: '車出せます', updatedAt: '2026-01-16', isDeleted: false},
-  {id: 7, eventId: 3, memberId: 3, status: 'attending', comment: '', updatedAt: '2026-02-01', isDeleted: false},
-  {id: 8, eventId: 4, memberId: 3, status: 'attending', comment: '初参加です', updatedAt: '2026-01-28', isDeleted: false},
-  {id: 9, eventId: 4, memberId: 8, status: 'attending', comment: '', updatedAt: '2026-01-29', isDeleted: false},
-]
-
 /** 例会記録データ（複数ファイル対応） */
 const INITIAL_RECORDS = [
   {
@@ -274,6 +260,7 @@ const INITIAL_RECORD_FILES = [
     mimeType: 'image/jpeg',
     description: '山頂からの景色',
     sortOrder: 0,
+    isPublic: true,
     isDeleted: false,
     createdAt: '2026-02-06',
   },
@@ -287,6 +274,7 @@ const INITIAL_RECORD_FILES = [
     mimeType: 'image/jpeg',
     description: 'アイゼン装着の練習',
     sortOrder: 1,
+    isPublic: true,
     isDeleted: false,
     createdAt: '2026-02-06',
   },
@@ -300,8 +288,73 @@ const INITIAL_RECORD_FILES = [
     mimeType: 'image/jpeg',
     description: '参加者全員の集合写真',
     sortOrder: 2,
+    isPublic: false,
     isDeleted: false,
     createdAt: '2026-02-06',
+  },
+]
+
+/** 参加申請データ */
+const INITIAL_APPLICATIONS = [
+  {
+    id: 1,
+    eventId: 1,
+    memberId: 3,
+    comment: '初めての参加です',
+    approvalStatus: 'pending',
+    rejectionReason: null,
+    approvedBy: null,
+    actualAttended: false,
+    createdAt: '2026-01-18',
+    isDeleted: false,
+  },
+  {
+    id: 2,
+    eventId: 1,
+    memberId: 5,
+    comment: '',
+    approvalStatus: 'approved',
+    rejectionReason: null,
+    approvedBy: 1,
+    actualAttended: true,
+    createdAt: '2026-01-16',
+    isDeleted: false,
+  },
+  {
+    id: 3,
+    eventId: 1,
+    memberId: 8,
+    comment: 'よろしくお願いします',
+    approvalStatus: 'approved',
+    rejectionReason: null,
+    approvedBy: 1,
+    actualAttended: true,
+    createdAt: '2026-01-17',
+    isDeleted: false,
+  },
+  {
+    id: 4,
+    eventId: 2,
+    memberId: 7,
+    comment: '',
+    approvalStatus: 'rejected',
+    rejectionReason: '保険口数が不足しています（8口必要）',
+    approvedBy: 2,
+    actualAttended: false,
+    createdAt: '2026-01-12',
+    isDeleted: false,
+  },
+  {
+    id: 5,
+    eventId: 4,
+    memberId: 3,
+    comment: '初参加です、よろしくお願いします',
+    approvalStatus: 'approved',
+    rejectionReason: null,
+    approvedBy: 4,
+    actualAttended: true,
+    createdAt: '2026-01-25',
+    isDeleted: false,
   },
 ]
 
@@ -626,16 +679,16 @@ export default function YamanokaiMock() {
   const currentUser = INITIAL_MEMBERS.find(m => m.id === currentUserId)
 
   // メニュー状態
-  const [activeMenu, setActiveMenu] = useState('member-calendar')
+  const [activeMenu, setActiveMenu] = useState('member-events')
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 
   // データ状態
   const [events, setEvents] = useState(INITIAL_EVENTS)
-  const [attendances, setAttendances] = useState(INITIAL_ATTENDANCES)
   const [records, setRecords] = useState(INITIAL_RECORDS)
   const [recordFiles, setRecordFiles] = useState(INITIAL_RECORD_FILES)
   const [equipment, setEquipment] = useState(INITIAL_EQUIPMENT)
   const [rentals, setRentals] = useState(INITIAL_RENTALS)
+  const [applications, setApplications] = useState(INITIAL_APPLICATIONS)
 
   // 有効なデータのみフィルタ（ソフトデリート対応 + 一般会員は公開済みのみ）
   const activeEvents = useMemo(() => {
@@ -646,11 +699,11 @@ export default function YamanokaiMock() {
     }
     return filtered
   }, [events, currentUser])
-  const activeAttendances = useMemo(() => attendances.filter(a => !a.isDeleted), [attendances])
   const activeRecords = useMemo(() => records.filter(r => !r.isDeleted), [records])
   const activeRecordFiles = useMemo(() => recordFiles.filter(f => !f.isDeleted), [recordFiles])
   const activeEquipment = useMemo(() => equipment.filter(e => !e.isDeleted), [equipment])
   const activeRentals = useMemo(() => rentals.filter(r => !r.isDeleted), [rentals])
+  const activeApplications = useMemo(() => applications.filter(a => !a.isDeleted), [applications])
 
   // 装備貸出処理
   const handleRent = (equipmentId, memberId, dueDate, eventId, notes) => {
@@ -686,24 +739,17 @@ export default function YamanokaiMock() {
 
   // メニュー定義
   const menuItems = [
-    {type: 'header', label: '例会（管理者）', adminOnly: true},
-    {id: 'admin-list', label: '例会一覧', icon: '📋', adminOnly: true},
-    {id: 'admin-create', label: '例会の新規作成', icon: '➕', adminOnly: true},
-    {type: 'divider', adminOnly: true},
-    {type: 'header', label: '装備品（管理者）', adminOnly: true},
-    {id: 'admin-equipment', label: '装備一覧', icon: '🎒', adminOnly: true},
-    {id: 'admin-equipment-create', label: '装備の新規登録', icon: '➕', adminOnly: true},
-    {type: 'divider', adminOnly: true},
-    {type: 'header', label: '例会（一般会員）'},
-    {id: 'member-calendar', label: '例会スケジュール', icon: '📅'},
-    {id: 'member-attendance', label: '出席回答履歴', icon: '✋'},
-    {id: 'member-records', label: '例会記録', icon: '📖'},
+    {type: 'header', label: '例会'},
+    {id: 'admin-event-management', label: '例会設定', icon: '⚙️', adminOnly: true},
+    {id: 'export-public', label: '外部公開データ出力', icon: '📤', adminOnly: true},
+    {id: 'member-events', label: '例会一覧', icon: '📅'},
     {type: 'divider'},
-    {type: 'header', label: '装備品（一般会員）'},
-    {id: 'member-equipment', label: '装備貸出・返却', icon: '🎒'},
+    {type: 'header', label: '装備品レンタル'},
+    {id: 'admin-equipment', label: '装備品マスタ管理', icon: '🎒', adminOnly: true},
+    {id: 'member-equipment', label: '装備貸出・返却', icon: '🔄'},
     {id: 'member-my-rentals', label: '貸出履歴', icon: '📝'},
     {type: 'divider'},
-    {type: 'header', label: 'システム情報'},
+    {type: 'header', label: 'システム'},
     {id: 'data-structure', label: 'データ構造図', icon: '🗂️'},
   ]
 
@@ -789,20 +835,19 @@ export default function YamanokaiMock() {
 
         {/* コンテンツエリア */}
         <div className="p-6">
-          {activeMenu === 'admin-list' && (
-            <AdminEventList
+          {/* 管理者: 例会設定（統合ページ） */}
+          {activeMenu === 'admin-event-management' && (
+            <AdminEventManagement
               events={activeEvents}
-              attendances={activeAttendances}
+              allEvents={events}
               records={activeRecords}
+              recordFiles={activeRecordFiles}
+              applications={activeApplications}
               members={INITIAL_MEMBERS}
-              onUpdate={(id, data) => setEvents(prev => prev.map(e => (e.id === id ? {...e, ...data} : e)))}
-              onDelete={id => setEvents(prev => prev.map(e => (e.id === id ? {...e, isDeleted: true} : e)))}
-            />
-          )}
-          {activeMenu === 'admin-create' && (
-            <AdminEventForm
-              members={INITIAL_MEMBERS}
-              onSave={data => {
+              currentUserId={currentUserId}
+              onEventUpdate={(id, data) => setEvents(prev => prev.map(e => (e.id === id ? {...e, ...data} : e)))}
+              onEventDelete={id => setEvents(prev => prev.map(e => (e.id === id ? {...e, isDeleted: true} : e)))}
+              onEventCreate={data => {
                 const newEvent = {
                   ...data,
                   id: generateId(events),
@@ -810,64 +855,23 @@ export default function YamanokaiMock() {
                   isDeleted: false,
                 }
                 setEvents(prev => [...prev, newEvent])
-                setActiveMenu('admin-list')
               }}
-            />
-          )}
-          {activeMenu === 'member-calendar' && (
-            <MemberCalendar
-              events={activeEvents}
-              attendances={activeAttendances}
-              records={activeRecords}
-              members={INITIAL_MEMBERS}
-              currentUserId={currentUserId}
-              onAttendanceUpdate={(eventId, status, comment) => {
-                const existing = attendances.find(a => a.eventId === eventId && a.memberId === currentUserId && !a.isDeleted)
-                if (existing) {
-                  setAttendances(prev =>
-                    prev.map(a =>
-                      a.id === existing.id ? {...a, status, comment, updatedAt: new Date().toISOString().split('T')[0]} : a
-                    )
-                  )
-                } else {
-                  setAttendances(prev => [
-                    ...prev,
-                    {
-                      id: generateId(prev),
-                      eventId,
-                      memberId: currentUserId,
-                      status,
-                      comment,
-                      updatedAt: new Date().toISOString().split('T')[0],
-                      isDeleted: false,
-                    },
-                  ])
-                }
+              onApprove={appId => {
+                setApplications(prev =>
+                  prev.map(a => (a.id === appId ? {...a, approvalStatus: 'approved', approvedBy: currentUserId} : a))
+                )
               }}
-            />
-          )}
-          {activeMenu === 'member-attendance' && (
-            <MemberAttendanceHistory
-              events={activeEvents}
-              attendances={activeAttendances}
-              currentUserId={currentUserId}
-              onUpdate={(attendanceId, status, comment) => {
-                setAttendances(prev =>
+              onReject={(appId, reason) => {
+                setApplications(prev =>
                   prev.map(a =>
-                    a.id === attendanceId ? {...a, status, comment, updatedAt: new Date().toISOString().split('T')[0]} : a
+                    a.id === appId ? {...a, approvalStatus: 'rejected', rejectionReason: reason, approvedBy: currentUserId} : a
                   )
                 )
               }}
-            />
-          )}
-          {activeMenu === 'member-records' && (
-            <MemberRecords
-              events={activeEvents}
-              records={activeRecords}
-              recordFiles={activeRecordFiles}
-              members={INITIAL_MEMBERS}
-              currentUserId={currentUserId}
-              onSave={(data, files) => {
+              onToggleAttended={appId => {
+                setApplications(prev => prev.map(a => (a.id === appId ? {...a, actualAttended: !a.actualAttended} : a)))
+              }}
+              onRecordSave={(data, files) => {
                 let recordId
                 if (data.id) {
                   setRecords(prev => prev.map(r => (r.id === data.id ? {...r, ...data} : r)))
@@ -879,7 +883,6 @@ export default function YamanokaiMock() {
                     {...data, id: recordId, createdAt: new Date().toISOString().split('T')[0], isDeleted: false},
                   ])
                 }
-                // ファイルの保存
                 if (files && files.length > 0) {
                   const newFiles = files.map((f, idx) => ({
                     ...f,
@@ -891,33 +894,99 @@ export default function YamanokaiMock() {
                   setRecordFiles(prev => [...prev.filter(f => f.recordId !== recordId), ...newFiles])
                 }
               }}
-              onDelete={id => setRecords(prev => prev.map(r => (r.id === id ? {...r, isDeleted: true} : r)))}
-              onDeleteFile={fileId => setRecordFiles(prev => prev.map(f => (f.id === fileId ? {...f, isDeleted: true} : f)))}
+              onTogglePublic={fileId => {
+                setRecordFiles(prev => prev.map(f => (f.id === fileId ? {...f, isPublic: !f.isPublic} : f)))
+              }}
+              onRecordDelete={id => setRecords(prev => prev.map(r => (r.id === id ? {...r, isDeleted: true} : r)))}
+              onRecordFileDelete={fileId => setRecordFiles(prev => prev.map(f => (f.id === fileId ? {...f, isDeleted: true} : f)))}
             />
           )}
+
+          {/* 外部公開データ出力 */}
+          {activeMenu === 'export-public' && (
+            <ExportPublicDataView
+              events={activeEvents}
+              records={activeRecords}
+              recordFiles={activeRecordFiles}
+              members={INITIAL_MEMBERS}
+            />
+          )}
+
+          {/* 一般会員: 例会一覧（統合ページ） */}
+          {activeMenu === 'member-events' && (
+            <MemberEventPage
+              events={activeEvents}
+              records={activeRecords}
+              recordFiles={activeRecordFiles}
+              applications={activeApplications}
+              members={INITIAL_MEMBERS}
+              currentUserId={currentUserId}
+              onApply={(eventId, comment) => {
+                setApplications(prev => [
+                  ...prev,
+                  {
+                    id: generateId(prev),
+                    eventId,
+                    memberId: currentUserId,
+                    comment,
+                    approvalStatus: 'pending',
+                    rejectionReason: null,
+                    approvedBy: null,
+                    actualAttended: false,
+                    createdAt: new Date().toISOString().split('T')[0],
+                    isDeleted: false,
+                  },
+                ])
+              }}
+              onRecordSave={(data, files) => {
+                let recordId
+                if (data.id) {
+                  setRecords(prev => prev.map(r => (r.id === data.id ? {...r, ...data} : r)))
+                  recordId = data.id
+                } else {
+                  recordId = generateId(records)
+                  setRecords(prev => [
+                    ...prev,
+                    {...data, id: recordId, createdAt: new Date().toISOString().split('T')[0], isDeleted: false},
+                  ])
+                }
+                if (files && files.length > 0) {
+                  const newFiles = files.map((f, idx) => ({
+                    ...f,
+                    id: generateId(recordFiles) + idx,
+                    recordId,
+                    createdAt: new Date().toISOString().split('T')[0],
+                    isDeleted: false,
+                  }))
+                  setRecordFiles(prev => [...prev.filter(f => f.recordId !== recordId), ...newFiles])
+                }
+              }}
+              onRecordDelete={id => setRecords(prev => prev.map(r => (r.id === id ? {...r, isDeleted: true} : r)))}
+              onRecordFileDelete={fileId => setRecordFiles(prev => prev.map(f => (f.id === fileId ? {...f, isDeleted: true} : f)))}
+            />
+          )}
+
+          {/* 装備品マスタ管理 */}
           {activeMenu === 'admin-equipment' && (
-            <AdminEquipmentList
+            <AdminEquipmentManagement
               equipment={activeEquipment}
               rentals={activeRentals}
               members={INITIAL_MEMBERS}
               events={activeEvents}
               onUpdate={(id, data) => setEquipment(prev => prev.map(e => (e.id === id ? {...e, ...data} : e)))}
               onDelete={id => setEquipment(prev => prev.map(e => (e.id === id ? {...e, isDeleted: true} : e)))}
-            />
-          )}
-          {activeMenu === 'admin-equipment-create' && (
-            <AdminEquipmentForm
-              onSave={data => {
+              onCreateEquipment={data => {
                 const newEquipment = {
                   ...data,
                   id: generateId(equipment),
                   isDeleted: false,
                 }
                 setEquipment(prev => [...prev, newEquipment])
-                setActiveMenu('admin-equipment')
               }}
             />
           )}
+
+          {/* 装備貸出・返却 */}
           {activeMenu === 'member-equipment' && (
             <MemberEquipmentRental
               equipment={activeEquipment}
@@ -929,6 +998,8 @@ export default function YamanokaiMock() {
               onReturn={handleReturn}
             />
           )}
+
+          {/* 貸出履歴 */}
           {activeMenu === 'member-my-rentals' && (
             <MemberMyRentals
               equipment={activeEquipment}
@@ -937,6 +1008,8 @@ export default function YamanokaiMock() {
               currentUserId={currentUserId}
             />
           )}
+
+          {/* データ構造図 */}
           {activeMenu === 'data-structure' && <DataStructureDiagram />}
         </div>
       </main>
@@ -945,12 +1018,211 @@ export default function YamanokaiMock() {
 }
 
 // =============================================================================
+// 管理者: 例会設定（統合ページ）
+// =============================================================================
+
+function AdminEventManagement({
+  events,
+  allEvents,
+  records,
+  recordFiles,
+  applications,
+  members,
+  currentUserId,
+  onEventUpdate,
+  onEventDelete,
+  onEventCreate,
+  onApprove,
+  onReject,
+  onToggleAttended,
+  onRecordSave,
+  onTogglePublic,
+  onRecordDelete,
+  onRecordFileDelete,
+}) {
+  return (
+    <AdminEventList
+      events={events}
+      applications={applications}
+      records={records}
+      recordFiles={recordFiles}
+      members={members}
+      currentUserId={currentUserId}
+      onUpdate={onEventUpdate}
+      onDelete={onEventDelete}
+      onCreate={onEventCreate}
+      onApprove={onApprove}
+      onReject={onReject}
+      onToggleAttended={onToggleAttended}
+      onRecordSave={onRecordSave}
+      onTogglePublic={onTogglePublic}
+    />
+  )
+}
+
+// =============================================================================
+// 一般会員: 例会一覧（統合ページ）
+// =============================================================================
+
+function MemberEventPage({
+  events,
+  records,
+  recordFiles,
+  applications,
+  members,
+  currentUserId,
+  onApply,
+  onRecordSave,
+  onRecordDelete,
+  onRecordFileDelete,
+}) {
+  const [activeTab, setActiveTab] = useState('schedule')
+
+  const tabs = [
+    {id: 'schedule', label: 'スケジュール', icon: '📅'},
+    {id: 'application', label: '申し込み状況', icon: '🙋'},
+    {id: 'records', label: '例会記録', icon: '📖'},
+  ]
+
+  return (
+    <div className="space-y-4">
+      {/* タブナビゲーション */}
+      <div className="bg-white rounded-lg shadow border overflow-hidden">
+        <div className="flex border-b">
+          {tabs.map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex-1 px-4 py-3 text-sm font-medium transition-colors flex items-center justify-center gap-1.5 ${
+                activeTab === tab.id
+                  ? 'bg-blue-50 text-blue-700 border-b-2 border-blue-600'
+                  : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'
+              }`}
+            >
+              <span>{tab.icon}</span>
+              <span>{tab.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* タブコンテンツ */}
+      {activeTab === 'schedule' && (
+        <MemberCalendar
+          events={events}
+          applications={applications}
+          records={records}
+          members={members}
+          currentUserId={currentUserId}
+          onApply={onApply}
+        />
+      )}
+      {activeTab === 'application' && (
+        <MemberApplicationView
+          events={events}
+          applications={applications}
+          members={members}
+          currentUserId={currentUserId}
+          onApply={onApply}
+        />
+      )}
+      {activeTab === 'records' && (
+        <MemberRecords
+          events={events}
+          records={records}
+          recordFiles={recordFiles}
+          members={members}
+          currentUserId={currentUserId}
+          onSave={onRecordSave}
+          onDelete={onRecordDelete}
+          onDeleteFile={onRecordFileDelete}
+        />
+      )}
+    </div>
+  )
+}
+
+// =============================================================================
+// 管理者: 装備品マスタ管理（統合ページ）
+// =============================================================================
+
+function AdminEquipmentManagement({equipment, rentals, members, events, onUpdate, onDelete, onCreateEquipment}) {
+  const [activeTab, setActiveTab] = useState('list')
+
+  const tabs = [
+    {id: 'list', label: '装備一覧', icon: '🎒'},
+    {id: 'create', label: '新規登録', icon: '➕'},
+  ]
+
+  return (
+    <div className="space-y-4">
+      {/* タブナビゲーション */}
+      <div className="bg-white rounded-lg shadow border overflow-hidden">
+        <div className="flex border-b">
+          {tabs.map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-6 py-3 text-sm font-medium transition-colors flex items-center gap-1.5 ${
+                activeTab === tab.id
+                  ? 'bg-blue-50 text-blue-700 border-b-2 border-blue-600'
+                  : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'
+              }`}
+            >
+              <span>{tab.icon}</span>
+              <span>{tab.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {activeTab === 'list' && (
+        <AdminEquipmentList
+          equipment={equipment}
+          rentals={rentals}
+          members={members}
+          events={events}
+          onUpdate={onUpdate}
+          onDelete={onDelete}
+        />
+      )}
+      {activeTab === 'create' && (
+        <AdminEquipmentForm
+          onSave={data => {
+            onCreateEquipment(data)
+            setActiveTab('list')
+          }}
+        />
+      )}
+    </div>
+  )
+}
+
+// =============================================================================
 // 管理者: 例会一覧
 // =============================================================================
 
-function AdminEventList({events, attendances, records, members, onUpdate, onDelete}) {
+function AdminEventList({
+  events,
+  applications,
+  records,
+  recordFiles,
+  members,
+  currentUserId,
+  onUpdate,
+  onDelete,
+  onCreate,
+  onApprove,
+  onReject,
+  onToggleAttended,
+  onRecordSave,
+  onTogglePublic,
+}) {
   const [selectedEvent, setSelectedEvent] = useState(null)
   const [editingEvent, setEditingEvent] = useState(null)
+  const [creatingEvent, setCreatingEvent] = useState(false)
+  const [applicationEvent, setApplicationEvent] = useState(null) // 申し込み管理モーダル用
+  const [recordEvent, setRecordEvent] = useState(null) // 例会記録モーダル用
   const [filterDept, setFilterDept] = useState('')
   const [activeTab, setActiveTab] = useState('draft') // draft, polished, published
   const [selectedForPublish, setSelectedForPublish] = useState([]) // 一括公開用の選択
@@ -961,16 +1233,13 @@ function AdminEventList({events, attendances, records, members, onUpdate, onDele
 
   const sortedEvents = [...filteredEvents].sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
 
-  const getAttendanceSummary = eventId => {
-    const eventAttendances = attendances.filter(a => a.eventId === eventId)
-    const responded = eventAttendances.length
+  const getApplicationSummary = eventId => {
+    const eventApps = applications.filter(a => a.eventId === eventId)
     return {
-      total: members.length,
-      responded,
-      noResponse: members.length - responded,
-      attending: eventAttendances.filter(a => a.status === 'attending').length,
-      notAttending: eventAttendances.filter(a => a.status === 'notAttending').length,
-      undecided: eventAttendances.filter(a => a.status === 'undecided').length,
+      total: eventApps.length,
+      approved: eventApps.filter(a => a.approvalStatus === 'approved').length,
+      pending: eventApps.filter(a => a.approvalStatus === 'pending').length,
+      rejected: eventApps.filter(a => a.approvalStatus === 'rejected').length,
     }
   }
 
@@ -1125,12 +1394,15 @@ function AdminEventList({events, attendances, records, members, onUpdate, onDele
             <span className="text-sm text-gray-500">全{filteredEvents.length}件</span>
           </div>
 
-          {/* タブごとのアクションボタン */}
+          {/* アクションボタン */}
           <div className="flex gap-2">
+            <Button size="sm" onClick={() => setCreatingEvent(true)}>
+              ➕ 新規作成
+            </Button>
             {activeTab === 'draft' && (
               <>
                 <Button size="sm" variant="secondary" onClick={handleDownloadCSV}>
-                  📥 CSV一括ダウンロード
+                  📥 CSV一括DL
                 </Button>
                 <label className="cursor-pointer">
                   <Button size="sm" variant="secondary" as="span">
@@ -1153,7 +1425,7 @@ function AdminEventList({events, attendances, records, members, onUpdate, onDele
       <div className="space-y-2">
         {sortedEvents.map(event => {
           const dept = DEPARTMENTS[event.departmentId]
-          const summary = getAttendanceSummary(event.id)
+          const summary = getApplicationSummary(event.id)
           const hasRecord = records.some(r => r.eventId === event.id)
           const isSelected = selectedForPublish.includes(event.id)
 
@@ -1200,12 +1472,12 @@ function AdminEventList({events, attendances, records, members, onUpdate, onDele
                   </div>
                 </div>
 
-                {/* 出席状況サマリー */}
+                {/* 申し込み状況サマリー */}
                 <div className="text-center ml-4">
-                  <div className="text-2xl font-bold text-green-600">{summary.attending}</div>
-                  <div className="text-xs text-gray-500">出席</div>
+                  <div className="text-2xl font-bold text-green-600">{summary.approved}</div>
+                  <div className="text-xs text-gray-500">承認</div>
                   <div className="text-xs text-gray-400 mt-1">
-                    未回答{summary.noResponse} / 保留{summary.undecided} / 欠席{summary.notAttending}
+                    審査中{summary.pending} / 却下{summary.rejected}
                   </div>
                 </div>
 
@@ -1216,6 +1488,14 @@ function AdminEventList({events, attendances, records, members, onUpdate, onDele
                   </Button>
                   <Button size="sm" variant="secondary" onClick={() => setEditingEvent(event)}>
                     編集
+                  </Button>
+                  {event.status === 'published' && (
+                    <Button size="sm" variant="secondary" onClick={() => setApplicationEvent(event)}>
+                      申し込み管理
+                    </Button>
+                  )}
+                  <Button size="sm" variant="secondary" onClick={() => setRecordEvent(event)}>
+                    例会記録
                   </Button>
                   <Button size="sm" variant="danger" onClick={() => onDelete(event.id)}>
                     削除
@@ -1238,7 +1518,7 @@ function AdminEventList({events, attendances, records, members, onUpdate, onDele
         {selectedEvent && (
           <AdminEventDetail
             event={selectedEvent}
-            attendances={attendances.filter(a => a.eventId === selectedEvent.id)}
+            applications={applications.filter(a => a.eventId === selectedEvent.id)}
             members={members}
           />
         )}
@@ -1258,6 +1538,60 @@ function AdminEventList({events, attendances, records, members, onUpdate, onDele
           />
         )}
       </Modal>
+
+      {/* 新規作成モーダル */}
+      <Modal isOpen={creatingEvent} onClose={() => setCreatingEvent(false)} title="例会の新規作成" size="lg">
+        <AdminEventForm
+          members={members}
+          onSave={data => {
+            onCreate(data)
+            setCreatingEvent(false)
+          }}
+          onCancel={() => setCreatingEvent(false)}
+        />
+      </Modal>
+
+      {/* 申し込み管理モーダル */}
+      <Modal
+        isOpen={!!applicationEvent}
+        onClose={() => setApplicationEvent(null)}
+        title={`申し込み管理 — ${applicationEvent?.title || ''}`}
+        size="lg"
+      >
+        {applicationEvent && (
+          <AdminApplicationView
+            events={events.filter(e => e.id === applicationEvent.id)}
+            applications={applications.filter(a => a.eventId === applicationEvent.id)}
+            members={members}
+            currentUserId={currentUserId}
+            onApprove={onApprove}
+            onReject={onReject}
+            onToggleAttended={onToggleAttended}
+            initialEventId={applicationEvent.id}
+          />
+        )}
+      </Modal>
+
+      {/* 例会記録モーダル */}
+      <Modal
+        isOpen={!!recordEvent}
+        onClose={() => setRecordEvent(null)}
+        title={`例会記録 — ${recordEvent?.title || ''}`}
+        size="lg"
+      >
+        {recordEvent && (
+          <RecordA4View
+            events={events.filter(e => e.id === recordEvent.id)}
+            records={records.filter(r => r.eventId === recordEvent.id)}
+            recordFiles={recordFiles.filter(f => records.some(r => r.eventId === recordEvent.id && r.id === f.recordId))}
+            members={members}
+            currentUserId={currentUserId}
+            onSave={onRecordSave}
+            onTogglePublic={onTogglePublic}
+            initialEvent={recordEvent}
+          />
+        )}
+      </Modal>
     </div>
   )
 }
@@ -1266,7 +1600,7 @@ function AdminEventList({events, attendances, records, members, onUpdate, onDele
 // 管理者: 例会詳細
 // =============================================================================
 
-function AdminEventDetail({event, attendances, members}) {
+function AdminEventDetail({event, applications, members}) {
   const dept = DEPARTMENTS[event.departmentId]
   const getMemberName = id => members.find(m => m.id === id)?.name || ''
 
@@ -1333,9 +1667,9 @@ function AdminEventDetail({event, attendances, members}) {
         </div>
       )}
 
-      {/* 出席回答一覧 */}
+      {/* 参加申し込み一覧 */}
       <div>
-        <h4 className="font-bold text-sm text-gray-500 mb-2">出席回答一覧 ({attendances.length}件)</h4>
+        <h4 className="font-bold text-sm text-gray-500 mb-2">参加申し込み ({applications.length}件)</h4>
         <div className="border rounded overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-gray-50">
@@ -1343,29 +1677,29 @@ function AdminEventDetail({event, attendances, members}) {
                 <th className="px-4 py-2 text-left">会員名</th>
                 <th className="px-4 py-2 text-left">ステータス</th>
                 <th className="px-4 py-2 text-left">コメント</th>
-                <th className="px-4 py-2 text-left">更新日</th>
+                <th className="px-4 py-2 text-left">申請日</th>
               </tr>
             </thead>
             <tbody>
-              {attendances.map(att => {
-                const status = ATTENDANCE_STATUS[att.status]
+              {applications.map(app => {
+                const status = APPLICATION_STATUS[app.approvalStatus]
                 return (
-                  <tr key={att.id} className="border-t">
-                    <td className="px-4 py-2">{getMemberName(att.memberId)}</td>
+                  <tr key={app.id} className="border-t">
+                    <td className="px-4 py-2">{getMemberName(app.memberId)}</td>
                     <td className="px-4 py-2">
                       <Badge color={status.color} bgColor={status.bgColor}>
                         {status.label}
                       </Badge>
                     </td>
-                    <td className="px-4 py-2 text-gray-600">{att.comment || '-'}</td>
-                    <td className="px-4 py-2 text-gray-500">{att.updatedAt}</td>
+                    <td className="px-4 py-2 text-gray-600">{app.comment || '-'}</td>
+                    <td className="px-4 py-2 text-gray-500">{formatDate(app.createdAt)}</td>
                   </tr>
                 )
               })}
-              {attendances.length === 0 && (
+              {applications.length === 0 && (
                 <tr>
                   <td colSpan={4} className="px-4 py-8 text-center text-gray-400">
-                    まだ回答がありません
+                    まだ申し込みがありません
                   </td>
                 </tr>
               )}
@@ -1530,10 +1864,11 @@ function AdminEventForm({initialData, members, onSave, onCancel}) {
 // 一般会員: 例会スケジュール（カレンダービュー）
 // =============================================================================
 
-function MemberCalendar({events, attendances, records, members, currentUserId, onAttendanceUpdate}) {
+function MemberCalendar({events, applications, records, members, currentUserId, onApply}) {
   const [viewMonth, setViewMonth] = useState(new Date(2026, 1, 1)) // 2026年2月
   const [selectedEvent, setSelectedEvent] = useState(null)
-  const [attendanceModal, setAttendanceModal] = useState(null)
+  const [applyModal, setApplyModal] = useState(null)
+  const [applyComment, setApplyComment] = useState('')
 
   // カレンダー生成
   const calendarDays = useMemo(() => {
@@ -1569,9 +1904,9 @@ function MemberCalendar({events, attendances, records, members, currentUserId, o
     })
   }
 
-  // ユーザーの回答を取得
-  const getMyAttendance = eventId => {
-    return attendances.find(a => a.eventId === eventId && a.memberId === currentUserId)
+  // ユーザーの申し込みを取得
+  const getMyApplication = eventId => {
+    return applications.find(a => a.eventId === eventId && a.memberId === currentUserId)
   }
 
   return (
@@ -1626,8 +1961,8 @@ function MemberCalendar({events, attendances, records, members, currentUserId, o
                 <div className="space-y-1">
                   {dayEvents.slice(0, 3).map(event => {
                     const dept = DEPARTMENTS[event.departmentId]
-                    const myAtt = getMyAttendance(event.id)
-                    const attStatus = myAtt ? ATTENDANCE_STATUS[myAtt.status] : null
+                    const myApp = getMyApplication(event.id)
+                    const appStatus = myApp ? APPLICATION_STATUS[myApp.approvalStatus] : null
 
                     return (
                       <div
@@ -1638,8 +1973,8 @@ function MemberCalendar({events, attendances, records, members, currentUserId, o
                         title={event.title}
                       >
                         <span className="font-medium">{event.title}</span>
-                        {attStatus && (
-                          <span className="ml-1" style={{color: attStatus.color}}>
+                        {appStatus && (
+                          <span className="ml-1" style={{color: appStatus.color}}>
                             ●
                           </span>
                         )}
@@ -1666,8 +2001,8 @@ function MemberCalendar({events, attendances, records, members, currentUserId, o
           ))}
         </div>
         <div className="flex flex-wrap gap-4 text-sm mt-2">
-          <span className="font-medium">回答状況:</span>
-          {Object.values(ATTENDANCE_STATUS).map(st => (
+          <span className="font-medium">申し込み状況:</span>
+          {Object.values(APPLICATION_STATUS).map(st => (
             <span key={st.id} className="flex items-center gap-1">
               <span style={{color: st.color}}>●</span>
               {st.label}
@@ -1682,22 +2017,39 @@ function MemberCalendar({events, attendances, records, members, currentUserId, o
           <div className="space-y-6">
             <MemberEventDetail event={selectedEvent} members={members} />
 
-            {/* 自分の出席回答 */}
+            {/* 参加申し込み */}
             <div className="border-t pt-4">
-              <h4 className="font-bold mb-3">出席回答</h4>
+              <h4 className="font-bold mb-3">参加申し込み</h4>
               {(() => {
-                const myAtt = getMyAttendance(selectedEvent.id)
-                const attStatus = myAtt ? ATTENDANCE_STATUS[myAtt.status] : ATTENDANCE_STATUS.pending
+                const myApp = getMyApplication(selectedEvent.id)
+                if (myApp) {
+                  const appStatus = APPLICATION_STATUS[myApp.approvalStatus]
+                  return (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-4">
+                        <span>申し込み状況:</span>
+                        <Badge color={appStatus.color} bgColor={appStatus.bgColor}>
+                          {appStatus.label}
+                        </Badge>
+                      </div>
+                      {myApp.comment && (
+                        <p className="text-sm text-gray-600">コメント: {myApp.comment}</p>
+                      )}
+                      {myApp.approvalStatus === 'rejected' && myApp.rejectionReason && (
+                        <div className="text-sm text-red-600 bg-red-50 rounded p-2">
+                          却下理由: {myApp.rejectionReason}
+                        </div>
+                      )}
+                    </div>
+                  )
+                }
                 return (
-                  <div className="flex items-center gap-4">
-                    <span>現在の回答:</span>
-                    <Badge color={attStatus.color} bgColor={attStatus.bgColor}>
-                      {attStatus.label}
-                    </Badge>
-                    <Button size="sm" onClick={() => setAttendanceModal({event: selectedEvent, attendance: myAtt})}>
-                      {myAtt ? '回答を変更' : '回答する'}
-                    </Button>
-                  </div>
+                  <Button size="sm" onClick={() => {
+                    setApplyModal(selectedEvent)
+                    setApplyComment('')
+                  }}>
+                    参加申請する
+                  </Button>
                 )
               })()}
             </div>
@@ -1713,19 +2065,35 @@ function MemberCalendar({events, attendances, records, members, currentUserId, o
         )}
       </Modal>
 
-      {/* 出席回答モーダル */}
-      <Modal isOpen={!!attendanceModal} onClose={() => setAttendanceModal(null)} title="出席回答" size="sm">
-        {attendanceModal && (
-          <AttendanceForm
-            event={attendanceModal.event}
-            attendance={attendanceModal.attendance}
-            onSave={(status, comment) => {
-              onAttendanceUpdate(attendanceModal.event.id, status, comment)
-              setAttendanceModal(null)
-              setSelectedEvent(null)
-            }}
-            onCancel={() => setAttendanceModal(null)}
-          />
+      {/* 参加申請モーダル */}
+      <Modal isOpen={!!applyModal} onClose={() => setApplyModal(null)} title="参加申請" size="sm">
+        {applyModal && (
+          <div className="space-y-4">
+            <div className="bg-blue-50 rounded p-3 text-sm">
+              <p className="font-bold">{applyModal.title}</p>
+              <p className="text-gray-600 mt-1">{formatDateRange(applyModal.startDate, applyModal.endDate)}</p>
+            </div>
+            <FormField label="コメント（任意）">
+              <Textarea
+                value={applyComment}
+                onChange={setApplyComment}
+                placeholder="CL/SLへの連絡事項があれば記入してください"
+                rows={3}
+              />
+            </FormField>
+            <div className="flex justify-end gap-2">
+              <Button variant="secondary" onClick={() => setApplyModal(null)}>
+                キャンセル
+              </Button>
+              <Button onClick={() => {
+                onApply(applyModal.id, applyComment)
+                setApplyModal(null)
+                setSelectedEvent(null)
+              }}>
+                申請を送信
+              </Button>
+            </div>
+          </div>
         )}
       </Modal>
     </div>
@@ -1792,164 +2160,6 @@ function MemberEventDetail({event, members}) {
           <p className="whitespace-pre-wrap">{event.notes}</p>
         </div>
       )}
-    </div>
-  )
-}
-
-// =============================================================================
-// 出席回答フォーム
-// =============================================================================
-
-function AttendanceForm({event, attendance, onSave, onCancel}) {
-  const [status, setStatus] = useState(attendance?.status || 'pending')
-  const [comment, setComment] = useState(attendance?.comment || '')
-
-  return (
-    <div className="space-y-4">
-      <p className="text-gray-600">
-        {event.title} ({formatDateRange(event.startDate, event.endDate)})
-      </p>
-
-      <FormField label="出席">
-        <div className="flex gap-2">
-          {Object.values(ATTENDANCE_STATUS)
-            .filter(s => s.id !== 'pending')
-            .map(st => (
-              <button
-                key={st.id}
-                type="button"
-                onClick={() => setStatus(st.id)}
-                className={`flex-1 py-2 rounded border-2 transition-colors ${
-                  status === st.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
-                }`}
-                style={status === st.id ? {borderColor: st.color, backgroundColor: st.bgColor} : {}}
-              >
-                {st.label}
-              </button>
-            ))}
-        </div>
-      </FormField>
-
-      <FormField label="コメント">
-        <Textarea value={comment} onChange={setComment} placeholder="コメントがあれば入力" rows={2} />
-      </FormField>
-
-      <div className="flex justify-end gap-2">
-        <Button variant="secondary" onClick={onCancel}>
-          キャンセル
-        </Button>
-        <Button onClick={() => onSave(status, comment)} disabled={status === 'pending'}>
-          回答する
-        </Button>
-      </div>
-    </div>
-  )
-}
-
-// =============================================================================
-// 一般会員: 出席回答履歴
-// =============================================================================
-
-function MemberAttendanceHistory({events, attendances, currentUserId, onUpdate}) {
-  const [editingId, setEditingId] = useState(null)
-  const [editStatus, setEditStatus] = useState('')
-  const [editComment, setEditComment] = useState('')
-
-  const myAttendances = attendances.filter(a => a.memberId === currentUserId)
-
-  const getEvent = eventId => events.find(e => e.id === eventId)
-
-  const handleEdit = att => {
-    setEditingId(att.id)
-    setEditStatus(att.status)
-    setEditComment(att.comment)
-  }
-
-  const handleSave = () => {
-    onUpdate(editingId, editStatus, editComment)
-    setEditingId(null)
-  }
-
-  return (
-    <div className="space-y-4">
-      <Card className="p-4">
-        <p className="text-gray-600">あなたの出席回答履歴です。回答を変更することもできます。</p>
-      </Card>
-
-      <div className="space-y-2">
-        {myAttendances.length === 0 ? (
-          <Card className="p-8 text-center text-gray-400">まだ出席回答がありません</Card>
-        ) : (
-          myAttendances.map(att => {
-            const event = getEvent(att.eventId)
-            if (!event) return null
-            const dept = DEPARTMENTS[event.departmentId]
-            const status = ATTENDANCE_STATUS[att.status]
-            const isEditing = editingId === att.id
-
-            return (
-              <Card key={att.id} className="p-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Badge color={dept.color} bgColor={dept.bgColor}>
-                        {dept.name}
-                      </Badge>
-                      <span className="text-sm text-gray-500">{formatDateRange(event.startDate, event.endDate)}</span>
-                    </div>
-                    <h4 className="font-bold">{event.title}</h4>
-
-                    {isEditing ? (
-                      <div className="mt-3 space-y-3">
-                        <div className="flex gap-2">
-                          {Object.values(ATTENDANCE_STATUS)
-                            .filter(s => s.id !== 'pending')
-                            .map(st => (
-                              <button
-                                key={st.id}
-                                type="button"
-                                onClick={() => setEditStatus(st.id)}
-                                className={`px-3 py-1 rounded border-2 text-sm ${
-                                  editStatus === st.id ? 'border-blue-500' : 'border-gray-200'
-                                }`}
-                                style={editStatus === st.id ? {borderColor: st.color, backgroundColor: st.bgColor} : {}}
-                              >
-                                {st.label}
-                              </button>
-                            ))}
-                        </div>
-                        <Input value={editComment} onChange={setEditComment} placeholder="コメント" />
-                        <div className="flex gap-2">
-                          <Button size="sm" onClick={handleSave}>
-                            保存
-                          </Button>
-                          <Button size="sm" variant="secondary" onClick={() => setEditingId(null)}>
-                            キャンセル
-                          </Button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="mt-2 flex items-center gap-4">
-                        <Badge color={status.color} bgColor={status.bgColor}>
-                          {status.label}
-                        </Badge>
-                        {att.comment && <span className="text-sm text-gray-600">{att.comment}</span>}
-                        <span className="text-xs text-gray-400">更新: {att.updatedAt}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  {!isEditing && (
-                    <Button size="sm" variant="secondary" onClick={() => handleEdit(att)}>
-                      編集
-                    </Button>
-                  )}
-                </div>
-              </Card>
-            )
-          })
-        )}
-      </div>
     </div>
   )
 }
@@ -3043,6 +3253,1012 @@ function MemberMyRentals({equipment, rentals, events, currentUserId}) {
 }
 
 // =============================================================================
+// 会員: 例会申し込み（参加申請）
+// =============================================================================
+
+function MemberApplicationView({events, applications, members, currentUserId, onApply}) {
+  const [applyingEventId, setApplyingEventId] = useState(null)
+  const [applyComment, setApplyComment] = useState('')
+
+  const publishedEvents = events.filter(e => e.status === 'published')
+  const getMemberName = id => members.find(m => m.id === id)?.name || ''
+
+  const handleSubmitApplication = () => {
+    if (!applyingEventId) return
+    onApply(applyingEventId, applyComment)
+    setApplyingEventId(null)
+    setApplyComment('')
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* 公開済み例会一覧 */}
+      <Card className="p-6">
+        <h3 className="text-lg font-bold mb-4">公開中の例会</h3>
+        {publishedEvents.length === 0 ? (
+          <p className="text-gray-500 text-sm">公開中の例会はありません</p>
+        ) : (
+          <div className="space-y-3">
+            {publishedEvents.map(event => {
+              const myApp = applications.find(a => a.eventId === event.id && a.memberId === currentUserId)
+              const cl = members.find(m => m.id === event.clId)
+              return (
+                <div key={event.id} className="border rounded-lg p-4 hover:bg-gray-50">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <Badge {...DEPARTMENTS[event.departmentId]}>{DEPARTMENTS[event.departmentId].name}</Badge>
+                        <span className="font-bold">{event.title}</span>
+                      </div>
+                      <div className="text-sm text-gray-600 space-y-0.5">
+                        <div>📅 {formatDateRange(event.startDate, event.endDate)}</div>
+                        <div>📍 {event.meetingPlace} {event.meetingTime}</div>
+                        <div>👤 CL: {cl?.name || '未定'}</div>
+                        <div>🏔️ コース: {event.course}</div>
+                        <div>⏰ 締切: {formatDate(event.deadline)}</div>
+                      </div>
+                    </div>
+                    <div className="flex-shrink-0 ml-4">
+                      {myApp ? (
+                        <div className="text-center">
+                          <Badge {...APPLICATION_STATUS[myApp.approvalStatus]}>
+                            {APPLICATION_STATUS[myApp.approvalStatus].label}
+                          </Badge>
+                          {myApp.approvalStatus === 'rejected' && myApp.rejectionReason && (
+                            <div className="mt-2 text-xs text-red-600 bg-red-50 rounded p-2 max-w-[200px]">
+                              却下理由: {myApp.rejectionReason}
+                            </div>
+                          )}
+                          {myApp.approvalStatus === 'approved' && (
+                            <div className="mt-1 text-xs text-green-600">申請済み</div>
+                          )}
+                        </div>
+                      ) : (
+                        <Button size="sm" onClick={() => setApplyingEventId(event.id)}>
+                          参加申請
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </Card>
+
+      {/* 自分の申請履歴 */}
+      <Card className="p-6">
+        <h3 className="text-lg font-bold mb-4">自分の申請履歴</h3>
+        {(() => {
+          const myApps = applications.filter(a => a.memberId === currentUserId)
+          if (myApps.length === 0) return <p className="text-gray-500 text-sm">申請履歴はありません</p>
+          return (
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b text-left text-gray-500">
+                  <th className="py-2 px-2">例会</th>
+                  <th className="py-2 px-2">申請日</th>
+                  <th className="py-2 px-2">コメント</th>
+                  <th className="py-2 px-2">ステータス</th>
+                  <th className="py-2 px-2">却下理由</th>
+                </tr>
+              </thead>
+              <tbody>
+                {myApps.map(app => {
+                  const event = events.find(e => e.id === app.eventId)
+                  return (
+                    <tr key={app.id} className="border-b hover:bg-gray-50">
+                      <td className="py-2 px-2 font-medium">{event?.title || '不明'}</td>
+                      <td className="py-2 px-2 text-gray-500">{formatDate(app.createdAt)}</td>
+                      <td className="py-2 px-2 text-gray-600">{app.comment || '—'}</td>
+                      <td className="py-2 px-2">
+                        <Badge {...APPLICATION_STATUS[app.approvalStatus]}>
+                          {APPLICATION_STATUS[app.approvalStatus].label}
+                        </Badge>
+                      </td>
+                      <td className="py-2 px-2 text-red-600 text-xs">{app.rejectionReason || '—'}</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          )
+        })()}
+      </Card>
+
+      {/* 申請モーダル */}
+      <Modal isOpen={!!applyingEventId} onClose={() => setApplyingEventId(null)} title="参加申請">
+        {applyingEventId && (
+          <div className="space-y-4">
+            <div className="bg-blue-50 rounded p-3 text-sm">
+              <p className="font-bold">{events.find(e => e.id === applyingEventId)?.title}</p>
+              <p className="text-gray-600 mt-1">
+                {formatDateRange(
+                  events.find(e => e.id === applyingEventId)?.startDate,
+                  events.find(e => e.id === applyingEventId)?.endDate
+                )}
+              </p>
+            </div>
+            <FormField label="コメント（任意）">
+              <Textarea
+                value={applyComment}
+                onChange={setApplyComment}
+                placeholder="CL/SLへの連絡事項があれば記入してください"
+                rows={3}
+              />
+            </FormField>
+            <div className="flex justify-end gap-2">
+              <Button variant="secondary" onClick={() => setApplyingEventId(null)}>
+                キャンセル
+              </Button>
+              <Button onClick={handleSubmitApplication}>申請を送信</Button>
+            </div>
+          </div>
+        )}
+      </Modal>
+    </div>
+  )
+}
+
+// =============================================================================
+// 管理者: 申請管理
+// =============================================================================
+
+function AdminApplicationView({events, applications, members, currentUserId, onApprove, onReject, onToggleAttended, initialEventId}) {
+  const [selectedEventId, setSelectedEventId] = useState(initialEventId || null)
+  const [rejectingAppId, setRejectingAppId] = useState(null)
+  const [rejectionReason, setRejectionReason] = useState('')
+  const [isClosed, setIsClosed] = useState({}) // eventId → boolean
+
+  const getMemberName = id => members.find(m => m.id === id)?.name || ''
+
+  // 例会ごとの申請をグルーピング
+  const eventIds = [...new Set(applications.map(a => a.eventId))]
+  const eventList = eventIds
+    .map(eid => events.find(e => e.id === eid))
+    .filter(Boolean)
+    .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
+
+  const currentEventId = selectedEventId || eventList[0]?.id
+  const currentEventApps = applications.filter(a => a.eventId === currentEventId)
+  const currentEvent = events.find(e => e.id === currentEventId)
+
+  const handleReject = () => {
+    if (!rejectionReason.trim()) return
+    onReject(rejectingAppId, rejectionReason)
+    setRejectingAppId(null)
+    setRejectionReason('')
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* 例会選択（モーダルから開いた場合は非表示） */}
+      {!initialEventId && (
+      <Card className="p-4">
+        <div className="flex items-center gap-4">
+          <label className="text-sm font-medium text-gray-700">例会:</label>
+          <Select
+            value={currentEventId || ''}
+            onChange={v => setSelectedEventId(Number(v))}
+            options={eventList.map(e => ({value: e.id, label: `${e.title}（${formatDate(e.startDate)}）`}))}
+          />
+        </div>
+      </Card>
+      )}
+
+      {currentEvent && (
+        <>
+          {/* 例会情報サマリー */}
+          <Card className="p-4">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="font-bold text-lg">{currentEvent.title}</h3>
+              <div className="flex items-center gap-2">
+                {isClosed[currentEventId] ? (
+                  <Badge color="#ef4444" bgColor="#fee2e2">申し込みクローズ済</Badge>
+                ) : (
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => setIsClosed(prev => ({...prev, [currentEventId]: true}))}
+                  >
+                    申し込みクローズ
+                  </Button>
+                )}
+              </div>
+            </div>
+            <div className="text-sm text-gray-600 flex gap-4 flex-wrap">
+              <span>📅 {formatDateRange(currentEvent.startDate, currentEvent.endDate)}</span>
+              <span>👤 CL: {getMemberName(currentEvent.clId)}</span>
+              <span>🛡️ 必要保険口数: {currentEvent.requiredInsurance}</span>
+            </div>
+            <div className="mt-3 flex gap-4 text-sm">
+              <span className="text-green-600 font-medium">
+                承認: {currentEventApps.filter(a => a.approvalStatus === 'approved').length}名
+              </span>
+              <span className="text-yellow-600 font-medium">
+                審査中: {currentEventApps.filter(a => a.approvalStatus === 'pending').length}名
+              </span>
+              <span className="text-red-600 font-medium">
+                却下: {currentEventApps.filter(a => a.approvalStatus === 'rejected').length}名
+              </span>
+            </div>
+          </Card>
+
+          {/* 申請一覧テーブル */}
+          <Card className="overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b bg-gray-50 text-left text-gray-500">
+                  <th className="py-3 px-4">申請者</th>
+                  <th className="py-3 px-4">保険口数</th>
+                  <th className="py-3 px-4">コメント</th>
+                  <th className="py-3 px-4">ステータス</th>
+                  <th className="py-3 px-4">操作</th>
+                  {isClosed[currentEventId] && <th className="py-3 px-4">当日出席</th>}
+                </tr>
+              </thead>
+              <tbody>
+                {currentEventApps.length === 0 ? (
+                  <tr>
+                    <td colSpan={isClosed[currentEventId] ? 6 : 5} className="py-8 text-center text-gray-400">
+                      申請はありません
+                    </td>
+                  </tr>
+                ) : (
+                  currentEventApps.map(app => {
+                    const member = members.find(m => m.id === app.memberId)
+                    const insuranceOk = member && member.insuranceKuchi >= currentEvent.requiredInsurance
+                    return (
+                      <tr key={app.id} className="border-b hover:bg-gray-50">
+                        <td className="py-3 px-4">
+                          <div className="font-medium">{member?.name || '不明'}</div>
+                          <div className="text-xs text-gray-400">{member?.role}</div>
+                        </td>
+                        <td className="py-3 px-4">
+                          <span className={insuranceOk ? 'text-green-600' : 'text-red-600 font-bold'}>
+                            {member?.insuranceKuchi || 0}口
+                          </span>
+                          {!insuranceOk && (
+                            <span className="text-xs text-red-500 ml-1">（{currentEvent.requiredInsurance}口必要）</span>
+                          )}
+                        </td>
+                        <td className="py-3 px-4 text-gray-600">{app.comment || '—'}</td>
+                        <td className="py-3 px-4">
+                          <Badge {...APPLICATION_STATUS[app.approvalStatus]}>
+                            {APPLICATION_STATUS[app.approvalStatus].label}
+                          </Badge>
+                          {app.approvalStatus === 'rejected' && (
+                            <div className="text-xs text-red-500 mt-1">{app.rejectionReason}</div>
+                          )}
+                        </td>
+                        <td className="py-3 px-4">
+                          {app.approvalStatus === 'pending' && !isClosed[currentEventId] && (
+                            <div className="flex gap-1">
+                              <Button variant="success" size="sm" onClick={() => onApprove(app.id)}>
+                                承認
+                              </Button>
+                              <Button variant="danger" size="sm" onClick={() => setRejectingAppId(app.id)}>
+                                却下
+                              </Button>
+                            </div>
+                          )}
+                          {app.approvalStatus !== 'pending' && (
+                            <span className="text-xs text-gray-400">
+                              {getMemberName(app.approvedBy)}が処理
+                            </span>
+                          )}
+                        </td>
+                        {isClosed[currentEventId] && (
+                          <td className="py-3 px-4">
+                            {app.approvalStatus === 'approved' && (
+                              <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={app.actualAttended}
+                                  onChange={() => onToggleAttended(app.id)}
+                                  className="w-4 h-4 rounded"
+                                />
+                                <span className="text-xs">{app.actualAttended ? '出席' : '未出席'}</span>
+                              </label>
+                            )}
+                          </td>
+                        )}
+                      </tr>
+                    )
+                  })
+                )}
+              </tbody>
+            </table>
+          </Card>
+        </>
+      )}
+
+      {/* 却下理由モーダル */}
+      <Modal isOpen={!!rejectingAppId} onClose={() => setRejectingAppId(null)} title="却下理由の入力">
+        <div className="space-y-4">
+          <FormField label="却下理由" required>
+            <Textarea
+              value={rejectionReason}
+              onChange={setRejectionReason}
+              placeholder="却下の理由を入力してください（申請者に通知されます）"
+              rows={3}
+            />
+          </FormField>
+          <div className="flex justify-end gap-2">
+            <Button variant="secondary" onClick={() => setRejectingAppId(null)}>
+              キャンセル
+            </Button>
+            <Button variant="danger" onClick={handleReject} disabled={!rejectionReason.trim()}>
+              却下する
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    </div>
+  )
+}
+
+// =============================================================================
+// 例会記録 A4表示・印刷
+// =============================================================================
+
+function RecordA4View({events, records, recordFiles, members, currentUserId, onSave, onTogglePublic, initialEvent}) {
+  const [selectedRecordId, setSelectedRecordId] = useState(null)
+  const [mode, setMode] = useState('list') // list, preview, edit
+  const [editData, setEditData] = useState(null)
+
+  const getMemberName = id => members.find(m => m.id === id)?.name || ''
+
+  const selectedRecord = records.find(r => r.id === selectedRecordId)
+  const selectedFiles = recordFiles.filter(f => f.recordId === selectedRecordId)
+
+  // 新規記録の初期データを作成
+  const createNewRecordData = () => {
+    const event = initialEvent || events[0]
+    return {
+      eventId: event?.id,
+      title: event?.title || '',
+      date: event?.dateFrom || new Date().toISOString().split('T')[0],
+      weather: '',
+      participants: event ? members.filter(m => !m.isDeleted).slice(0, 3).map(m => m.name).join('、') : '',
+      content: '',
+      accessInfo: '',
+      courseTime: '',
+      courseCondition: '',
+      remarks: '',
+      authorId: currentUserId,
+      status: 'draft',
+    }
+  }
+
+  const handlePrint = () => {
+    window.print()
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* 印刷用CSS */}
+      <style>{`
+        @media print {
+          body * { visibility: hidden; }
+          .print-area, .print-area * { visibility: visible; }
+          .print-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 15mm;
+            margin: 0;
+          }
+          .no-print { display: none !important; }
+        }
+      `}</style>
+
+      {mode === 'list' && (
+        <>
+          <Card className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold">例会記録一覧（A4表示対応）</h3>
+              <Button
+                onClick={() => {
+                  setEditData(createNewRecordData())
+                  setSelectedRecordId(null)
+                  setMode('edit')
+                }}
+              >
+                ＋ 新規作成
+              </Button>
+            </div>
+            {records.length === 0 ? (
+              <div className="text-center py-8">
+                <div className="text-gray-400 text-4xl mb-3">📝</div>
+                <p className="text-gray-500 mb-4">この例会の記録はまだありません</p>
+                <Button
+                  onClick={() => {
+                    setEditData(createNewRecordData())
+                    setSelectedRecordId(null)
+                    setMode('edit')
+                  }}
+                >
+                  記録を作成する
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {records.map(record => {
+                  const event = events.find(e => e.id === record.eventId)
+                  const files = recordFiles.filter(f => f.recordId === record.id)
+                  const publicFiles = files.filter(f => f.isPublic)
+                  return (
+                    <div
+                      key={record.id}
+                      className="border rounded-lg p-3 hover:bg-gray-50 cursor-pointer flex items-center justify-between"
+                      onClick={() => {
+                        setSelectedRecordId(record.id)
+                        setMode('preview')
+                      }}
+                    >
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold">{record.title}</span>
+                          <Badge color={RECORD_STATUS[record.status].color} bgColor="#f3f4f6">
+                            {RECORD_STATUS[record.status].label}
+                          </Badge>
+                        </div>
+                        <div className="text-sm text-gray-500 mt-1">
+                          {formatDate(record.date)} / 作成者: {getMemberName(record.authorId)} / 写真{files.length}枚（公開{publicFiles.length}枚）
+                        </div>
+                      </div>
+                      <div className="flex gap-1">
+                        <Button
+                          size="sm"
+                          onClick={e => {
+                            e.stopPropagation()
+                            setSelectedRecordId(record.id)
+                            setMode('preview')
+                          }}
+                        >
+                          A4表示
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={e => {
+                            e.stopPropagation()
+                            setSelectedRecordId(record.id)
+                            setEditData({...record})
+                            setMode('edit')
+                          }}
+                        >
+                          編集
+                        </Button>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+          </Card>
+        </>
+      )}
+
+      {mode === 'preview' && selectedRecord && (
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 no-print">
+            <Button variant="secondary" onClick={() => setMode('list')}>
+              ← 一覧に戻る
+            </Button>
+            <Button onClick={handlePrint}>🖨️ 印刷</Button>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setEditData({...selectedRecord})
+                setMode('edit')
+              }}
+            >
+              編集
+            </Button>
+          </div>
+
+          {/* A4プレビュー */}
+          <div className="flex justify-center">
+            <div
+              className="print-area bg-white shadow-lg border"
+              style={{
+                width: '210mm',
+                minHeight: '297mm',
+                padding: '15mm',
+                fontFamily: 'serif',
+              }}
+            >
+              {/* ヘッダー */}
+              <div className="text-center mb-6">
+                <h1 className="text-2xl font-bold mb-1">例会記録</h1>
+                <div className="text-sm text-gray-600">神戸勤労者山岳会（KCAC）</div>
+              </div>
+
+              {/* 基本情報テーブル */}
+              <table className="w-full border-collapse border text-sm mb-6">
+                <tbody>
+                  <tr>
+                    <th className="border px-3 py-1.5 bg-gray-100 text-left w-24">例会名</th>
+                    <td className="border px-3 py-1.5" colSpan={3}>{selectedRecord.title}</td>
+                  </tr>
+                  <tr>
+                    <th className="border px-3 py-1.5 bg-gray-100 text-left">日程</th>
+                    <td className="border px-3 py-1.5">{selectedRecord.date}</td>
+                    <th className="border px-3 py-1.5 bg-gray-100 text-left w-24">天候</th>
+                    <td className="border px-3 py-1.5">{selectedRecord.weather}</td>
+                  </tr>
+                  <tr>
+                    <th className="border px-3 py-1.5 bg-gray-100 text-left">参加者</th>
+                    <td className="border px-3 py-1.5" colSpan={3}>{selectedRecord.participants}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              {/* アクセス情報 */}
+              {selectedRecord.accessInfo && (
+                <div className="mb-4">
+                  <h3 className="font-bold text-sm border-b pb-1 mb-2">アクセス</h3>
+                  <div className="text-sm whitespace-pre-line">{selectedRecord.accessInfo}</div>
+                </div>
+              )}
+
+              {/* コースタイム */}
+              {selectedRecord.courseTime && (
+                <div className="mb-4">
+                  <h3 className="font-bold text-sm border-b pb-1 mb-2">コースタイム</h3>
+                  <div className="text-sm whitespace-pre-line">{selectedRecord.courseTime}</div>
+                </div>
+              )}
+
+              {/* 本文 */}
+              <div className="mb-4">
+                <h3 className="font-bold text-sm border-b pb-1 mb-2">記録</h3>
+                <div className="text-sm whitespace-pre-line leading-relaxed">{selectedRecord.content}</div>
+              </div>
+
+              {/* コース状況 */}
+              {selectedRecord.courseCondition && (
+                <div className="mb-4">
+                  <h3 className="font-bold text-sm border-b pb-1 mb-2">コース状況</h3>
+                  <div className="text-sm whitespace-pre-line">{selectedRecord.courseCondition}</div>
+                </div>
+              )}
+
+              {/* 備考 */}
+              {selectedRecord.remarks && (
+                <div className="mb-4">
+                  <h3 className="font-bold text-sm border-b pb-1 mb-2">備考</h3>
+                  <div className="text-sm whitespace-pre-line">{selectedRecord.remarks}</div>
+                </div>
+              )}
+
+              {/* 画像 */}
+              {selectedFiles.length > 0 && (
+                <div className="mb-4">
+                  <h3 className="font-bold text-sm border-b pb-1 mb-2">写真</h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    {selectedFiles.map(file => (
+                      <div key={file.id} className="text-center">
+                        {file.fileType === 'image' && (
+                          <img
+                            src={file.fileUrl}
+                            alt={file.description || file.fileName}
+                            className="w-full h-32 object-cover border rounded"
+                          />
+                        )}
+                        <div className="text-xs text-gray-500 mt-1">{file.description || file.fileName}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* フッター */}
+              <div className="text-right text-xs text-gray-400 mt-8 pt-4 border-t">
+                作成者: {getMemberName(selectedRecord.authorId)} / 作成日: {selectedRecord.createdAt}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {mode === 'edit' && editData && (
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <Button variant="secondary" onClick={() => setMode('list')}>
+              ← 一覧に戻る
+            </Button>
+          </div>
+
+          <Card className="p-6">
+            <h3 className="text-lg font-bold mb-4">{editData.id ? '例会記録の編集' : '例会記録の新規作成'}</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <FormField label="タイトル" required>
+                <Input value={editData.title} onChange={v => setEditData(prev => ({...prev, title: v}))} />
+              </FormField>
+              <FormField label="日付" required>
+                <Input type="date" value={editData.date} onChange={v => setEditData(prev => ({...prev, date: v}))} />
+              </FormField>
+              <FormField label="天候">
+                <Input value={editData.weather} onChange={v => setEditData(prev => ({...prev, weather: v}))} />
+              </FormField>
+              <FormField label="参加者">
+                <Input value={editData.participants} onChange={v => setEditData(prev => ({...prev, participants: v}))} />
+              </FormField>
+            </div>
+            <FormField label="アクセス情報">
+              <Textarea
+                value={editData.accessInfo}
+                onChange={v => setEditData(prev => ({...prev, accessInfo: v}))}
+                rows={3}
+              />
+            </FormField>
+            <FormField label="コースタイム">
+              <Textarea
+                value={editData.courseTime}
+                onChange={v => setEditData(prev => ({...prev, courseTime: v}))}
+                rows={4}
+              />
+            </FormField>
+            <FormField label="記録本文" required>
+              <Textarea
+                value={editData.content}
+                onChange={v => setEditData(prev => ({...prev, content: v}))}
+                rows={6}
+              />
+            </FormField>
+            <FormField label="コース状況">
+              <Textarea
+                value={editData.courseCondition}
+                onChange={v => setEditData(prev => ({...prev, courseCondition: v}))}
+                rows={3}
+              />
+            </FormField>
+            <FormField label="備考">
+              <Textarea
+                value={editData.remarks}
+                onChange={v => setEditData(prev => ({...prev, remarks: v}))}
+                rows={2}
+              />
+            </FormField>
+
+            {/* ファイル一覧と公開フラグ */}
+            {selectedFiles.length > 0 && (
+              <div className="mt-4">
+                <h4 className="font-bold text-sm mb-2">添付ファイル</h4>
+                <div className="space-y-2">
+                  {selectedFiles.map(file => (
+                    <div key={file.id} className="flex items-center gap-3 border rounded p-2">
+                      {file.fileType === 'image' && (
+                        <img src={file.fileUrl} alt="" className="w-16 h-12 object-cover rounded" />
+                      )}
+                      {file.fileType === 'pdf' && (
+                        <div className="w-16 h-12 bg-red-50 rounded flex items-center justify-center text-red-500 text-xs">
+                          PDF
+                        </div>
+                      )}
+                      <div className="flex-1">
+                        <div className="text-sm font-medium">{file.fileName}</div>
+                        <div className="text-xs text-gray-500">{file.description}</div>
+                      </div>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={file.isPublic || false}
+                          onChange={() => onTogglePublic(file.id)}
+                          className="w-4 h-4 rounded"
+                        />
+                        <span className="text-sm">外部公開</span>
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ファイルアップロード（モック） */}
+            <div className="mt-4 border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+              <div className="text-gray-400 text-3xl mb-2">📎</div>
+              <p className="text-sm text-gray-500">ファイルをドラッグ＆ドロップまたはクリックして追加</p>
+              <p className="text-xs text-gray-400 mt-1">画像(JPG, PNG) / PDF対応</p>
+            </div>
+
+            <div className="flex justify-end gap-2 mt-6">
+              <Button variant="secondary" onClick={() => setMode('list')}>
+                キャンセル
+              </Button>
+              <Button
+                onClick={() => {
+                  onSave(editData, selectedFiles)
+                  setMode('preview')
+                }}
+              >
+                保存
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  onSave(editData, selectedFiles)
+                  setMode('preview')
+                }}
+              >
+                保存してプレビュー
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// =============================================================================
+// 外部公開データ出力
+// =============================================================================
+
+function ExportPublicDataView({events, records, recordFiles, members}) {
+  const [selectedRecordIds, setSelectedRecordIds] = useState([])
+  const [showCsvPreview, setShowCsvPreview] = useState(false)
+
+  const getMemberName = id => members.find(m => m.id === id)?.name || ''
+
+  const toggleRecord = recordId => {
+    setSelectedRecordIds(prev => (prev.includes(recordId) ? prev.filter(id => id !== recordId) : [...prev, recordId]))
+  }
+
+  const toggleAll = () => {
+    if (selectedRecordIds.length === records.length) {
+      setSelectedRecordIds([])
+    } else {
+      setSelectedRecordIds(records.map(r => r.id))
+    }
+  }
+
+  // CSV生成
+  const generateCsvData = () => {
+    const selectedRecords = records.filter(r => selectedRecordIds.includes(r.id))
+    const headers = ['例会名', '日程', '天候', '参加者', 'コース', '記録', '作成者', '公開画像数']
+    const rows = selectedRecords.map(record => {
+      const event = events.find(e => e.id === record.eventId)
+      const publicFiles = recordFiles.filter(f => f.recordId === record.id && f.isPublic)
+      return [
+        record.title,
+        record.date,
+        record.weather,
+        record.participants,
+        event?.course || '',
+        record.content?.replace(/\n/g, ' ').slice(0, 100) + '...',
+        getMemberName(record.authorId),
+        publicFiles.length,
+      ]
+    })
+    return {headers, rows}
+  }
+
+  const handleExportCsv = () => {
+    if (selectedRecordIds.length === 0) return
+    const {headers, rows} = generateCsvData()
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row =>
+        row
+          .map(cell => {
+            const s = String(cell)
+            if (s.includes(',') || s.includes('"') || s.includes('\n')) {
+              return `"${s.replace(/"/g, '""')}"`
+            }
+            return s
+          })
+          .join(',')
+      ),
+    ].join('\n')
+
+    const bom = '\uFEFF'
+    const blob = new Blob([bom + csvContent], {type: 'text/csv;charset=utf-8;'})
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = `yamanokai_public_records_${new Date().toISOString().split('T')[0]}.csv`
+    link.click()
+  }
+
+  const handleExportZip = () => {
+    if (selectedRecordIds.length === 0) return
+    const selectedRecords = records.filter(r => selectedRecordIds.includes(r.id))
+    const publicFilesList = selectedRecords.flatMap(record => {
+      const files = recordFiles.filter(f => f.recordId === record.id && f.isPublic && f.fileType === 'image')
+      return files.map(f => `${record.title}/${f.fileName}`)
+    })
+    console.log('ZIP出力（モック）:', publicFilesList)
+    // モック：ダウンロードの代わりにログ出力
+    const message = [
+      `ZIP出力内容（${publicFilesList.length}ファイル）:`,
+      '',
+      ...publicFilesList.map((f, i) => `  ${i + 1}. ${f}`),
+    ].join('\n')
+    const blob = new Blob([message], {type: 'text/plain'})
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = `yamanokai_public_images_${new Date().toISOString().split('T')[0]}_filelist.txt`
+    link.click()
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* 操作パネル */}
+      <Card className="p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <h3 className="font-bold text-lg">外部公開データ出力</h3>
+            <span className="text-sm text-gray-500">
+              {selectedRecordIds.length > 0
+                ? `${selectedRecordIds.length}件選択中`
+                : '記録を選択してください'}
+            </span>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setShowCsvPreview(!showCsvPreview)}
+              disabled={selectedRecordIds.length === 0}
+            >
+              {showCsvPreview ? 'プレビューを閉じる' : 'CSVプレビュー'}
+            </Button>
+            <Button size="sm" onClick={handleExportCsv} disabled={selectedRecordIds.length === 0}>
+              📄 CSV出力
+            </Button>
+            <Button size="sm" variant="success" onClick={handleExportZip} disabled={selectedRecordIds.length === 0}>
+              🗂️ 画像ZIP出力
+            </Button>
+          </div>
+        </div>
+      </Card>
+
+      {/* 記録選択テーブル */}
+      <Card className="overflow-hidden">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b bg-gray-50 text-left text-gray-500">
+              <th className="py-3 px-4 w-10">
+                <input
+                  type="checkbox"
+                  checked={selectedRecordIds.length === records.length && records.length > 0}
+                  onChange={toggleAll}
+                  className="w-4 h-4 rounded"
+                />
+              </th>
+              <th className="py-3 px-4">例会名</th>
+              <th className="py-3 px-4">日程</th>
+              <th className="py-3 px-4">作成者</th>
+              <th className="py-3 px-4">ステータス</th>
+              <th className="py-3 px-4">写真数</th>
+              <th className="py-3 px-4">公開写真数</th>
+            </tr>
+          </thead>
+          <tbody>
+            {records.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="py-8 text-center text-gray-400">
+                  記録はありません
+                </td>
+              </tr>
+            ) : (
+              records.map(record => {
+                const files = recordFiles.filter(f => f.recordId === record.id)
+                const publicFiles = files.filter(f => f.isPublic)
+                return (
+                  <tr
+                    key={record.id}
+                    className={`border-b cursor-pointer ${
+                      selectedRecordIds.includes(record.id) ? 'bg-blue-50' : 'hover:bg-gray-50'
+                    }`}
+                    onClick={() => toggleRecord(record.id)}
+                  >
+                    <td className="py-3 px-4">
+                      <input
+                        type="checkbox"
+                        checked={selectedRecordIds.includes(record.id)}
+                        onChange={() => toggleRecord(record.id)}
+                        className="w-4 h-4 rounded"
+                      />
+                    </td>
+                    <td className="py-3 px-4 font-medium">{record.title}</td>
+                    <td className="py-3 px-4 text-gray-500">{formatDate(record.date)}</td>
+                    <td className="py-3 px-4 text-gray-600">{getMemberName(record.authorId)}</td>
+                    <td className="py-3 px-4">
+                      <Badge color={RECORD_STATUS[record.status].color} bgColor="#f3f4f6">
+                        {RECORD_STATUS[record.status].label}
+                      </Badge>
+                    </td>
+                    <td className="py-3 px-4">{files.length}枚</td>
+                    <td className="py-3 px-4">
+                      <span className={publicFiles.length > 0 ? 'text-green-600 font-medium' : 'text-gray-400'}>
+                        {publicFiles.length}枚
+                      </span>
+                    </td>
+                  </tr>
+                )
+              })
+            )}
+          </tbody>
+        </table>
+      </Card>
+
+      {/* CSVプレビュー */}
+      {showCsvPreview && selectedRecordIds.length > 0 && (
+        <Card className="p-4">
+          <h4 className="font-bold text-sm mb-3">CSVプレビュー</h4>
+          {(() => {
+            const {headers, rows} = generateCsvData()
+            return (
+              <div className="overflow-x-auto">
+                <table className="text-xs border-collapse">
+                  <thead>
+                    <tr>
+                      {headers.map((h, i) => (
+                        <th key={i} className="border px-2 py-1 bg-gray-100 whitespace-nowrap">
+                          {h}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map((row, ri) => (
+                      <tr key={ri}>
+                        {row.map((cell, ci) => (
+                          <td key={ci} className="border px-2 py-1 whitespace-nowrap max-w-[200px] truncate">
+                            {cell}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )
+          })()}
+        </Card>
+      )}
+
+      {/* 公開ファイル一覧 */}
+      {selectedRecordIds.length > 0 && (
+        <Card className="p-4">
+          <h4 className="font-bold text-sm mb-3">選択中の記録の公開ファイル</h4>
+          {(() => {
+            const selectedRecords = records.filter(r => selectedRecordIds.includes(r.id))
+            const allPublicFiles = selectedRecords.flatMap(record => {
+              const files = recordFiles.filter(f => f.recordId === record.id && f.isPublic)
+              return files.map(f => ({...f, recordTitle: record.title}))
+            })
+            if (allPublicFiles.length === 0) {
+              return <p className="text-gray-500 text-sm">公開ファイルはありません</p>
+            }
+            return (
+              <div className="grid grid-cols-4 gap-3">
+                {allPublicFiles.map(file => (
+                  <div key={file.id} className="border rounded p-2 text-center">
+                    {file.fileType === 'image' && (
+                      <img src={file.fileUrl} alt="" className="w-full h-20 object-cover rounded mb-1" />
+                    )}
+                    <div className="text-xs font-medium truncate">{file.fileName}</div>
+                    <div className="text-xs text-gray-400 truncate">{file.recordTitle}</div>
+                  </div>
+                ))}
+              </div>
+            )
+          })()}
+        </Card>
+      )}
+    </div>
+  )
+}
+
+// =============================================================================
 // データ構造図（ER図）
 // =============================================================================
 
@@ -3158,12 +4374,12 @@ function DataStructureDiagram() {
       y: 400,
     },
 
-    // 出席・記録データ
-    YamanokaiAttendance: {
-      category: 'attendance',
-      label: '出席回答',
+    // 参加申し込み・記録データ
+    YamanokaiApplication: {
+      category: 'application',
+      label: '参加申し込み',
       color: '#8b5cf6',
-      fields: ['id', 'eventId', 'memberId', 'status', 'comment'],
+      fields: ['id', 'eventId', 'memberId', 'comment', 'approvalStatus', 'rejectionReason', 'approvedBy', 'actualAttended'],
       x: 150,
       y: 570,
     },
@@ -3209,7 +4425,7 @@ function DataStructureDiagram() {
     // 会員との関係
     {from: 'YamanokaiMember', to: 'YamanokaiMemberRole', label: '1:N', type: 'one-to-many'},
     {from: 'YamanokaiMember', to: 'YamanokaiCourseCompletion', label: '1:N', type: 'one-to-many'},
-    {from: 'YamanokaiMember', to: 'YamanokaiAttendance', label: '1:N', type: 'one-to-many'},
+    {from: 'YamanokaiMember', to: 'YamanokaiApplication', label: '1:N', type: 'one-to-many'},
     {from: 'YamanokaiMember', to: 'YamanokaiRecord', label: '1:N', type: 'one-to-many'},
     {from: 'YamanokaiMember', to: 'YamanokaiEquipmentLoan', label: '1:N', type: 'one-to-many'},
     {from: 'YamanokaiMember', to: 'YamanokaiEventPlanParticipant', label: '1:N', type: 'one-to-many'},
@@ -3218,7 +4434,7 @@ function DataStructureDiagram() {
     {from: 'YamanokaiCourse', to: 'YamanokaiCourseCompletion', label: '1:N', type: 'one-to-many'},
 
     // 例会との関係
-    {from: 'YamanokaiEvent', to: 'YamanokaiAttendance', label: '1:N', type: 'one-to-many'},
+    {from: 'YamanokaiEvent', to: 'YamanokaiApplication', label: '1:N', type: 'one-to-many'},
     {from: 'YamanokaiEvent', to: 'YamanokaiEventPlan', label: '1:1', type: 'one-to-one'},
     {from: 'YamanokaiEvent', to: 'YamanokaiRecord', label: '1:1', type: 'one-to-one'},
     {from: 'YamanokaiEvent', to: 'YamanokaiCourseCompletion', label: '1:N', type: 'one-to-many'},
@@ -3240,7 +4456,7 @@ function DataStructureDiagram() {
     {id: 'master', label: 'マスターデータ', color: '#22c55e'},
     {id: 'member', label: '会員データ', color: '#ef4444'},
     {id: 'event', label: '例会データ', color: '#0ea5e9'},
-    {id: 'attendance', label: '出席データ', color: '#8b5cf6'},
+    {id: 'application', label: '申し込みデータ', color: '#8b5cf6'},
     {id: 'record', label: '記録データ', color: '#ec4899'},
     {id: 'equipment', label: '装備データ', color: '#d97706'},
   ]
