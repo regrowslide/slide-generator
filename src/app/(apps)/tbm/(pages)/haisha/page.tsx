@@ -35,7 +35,7 @@ export default async function Page(props) {
   const tbmBase = await prisma.tbmBase.findUnique({ where: { id: tbmBaseId } })
 
   // ページあたり表示件数をURLパラメータから取得（undefinedの場合は全件表示）
-  const itemsPerPage = query.itemsPerPage ? parseInt(query.itemsPerPage as string) : 30
+  const itemsPerPage = query.itemsPerPage ? parseInt(query.itemsPerPage as string) : 50
 
   return (
     <div className="print-target ">
