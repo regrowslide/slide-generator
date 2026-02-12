@@ -245,12 +245,23 @@ export const importKondateCsv = async (csvText: string, targetDate?: Date): Prom
       }
 
       // Dish の検出（D列にコード、E列に名前）
-      // C列が空で、D列に数値コードがあり、E列に名前があり、G列（重量）が空
-      if (!colC && colD && /^\d+$/.test(colD) && colE && !colG) {
+      // C列が空で、D列に数値コードがあり、E列に名前があり、G列が空または数値でない
+      if (!colC && colD && /^\d+$/.test(colD) && colE && (!colG || isNaN(parseFloat(colG)))) {
         if (currentMenu) {
           currentDish = {code: colD, name: colE, ingredients: []}
           currentMenu.dishes.push(currentDish)
           addLog(`      🍳 Dish検出: [${colD}] ${colE}`)
+        }
+        continue
+      }
+
+      // コードなしのDish検出（E列にテキストがありD列が空、コードなし）
+      // 例: ヨーグルト（数値コードなしでE列に品名のみ）
+      if (!colC && !colD && colE && !/^\d+$/.test(colE) && !colF && !colG) {
+        if (currentMenu) {
+          currentDish = {code: '', name: colE, ingredients: []}
+          currentMenu.dishes.push(currentDish)
+          addLog(`      🍳 Dish検出（コードなし）: ${colE}`)
         }
         continue
       }

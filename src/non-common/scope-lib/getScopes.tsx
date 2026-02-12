@@ -52,6 +52,14 @@ export const getScopes = (session: anyObject, options: getScopeOptionsProps) => 
     },
 
 
+    getYamanokaiScopes: () => {
+      const isSystemAdmin = !!arr__findCommonValues([`管理者`], roleNames) || admin
+      const isCL = !!arr__findCommonValues([`CL`], roleNames)
+      const canEdit = isSystemAdmin || isCL
+      const userId = !admin ? session?.id : Number(query?.[globalIds.globalUserId] ?? session?.id ?? 0)
+      return { userId, isSystemAdmin, isCL, canEdit }
+    },
+
     getTbmScopes: () => {
       // const eigyoshoKirikae = !!arr__findCommonValues([`営業所切替`], roleNames)
       const isSystemAdmin = !!arr__findCommonValues([`管理者`], roleNames) || admin

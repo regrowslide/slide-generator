@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Calendar, Search, List, Upload } from 'lucide-react'
 import { Button } from '@shadcn/ui/button'
@@ -73,6 +73,11 @@ export const KondateClient = ({
 
   // 献立データ（リロード用）
   const [kondateData, setKondateData] = useState(initialData)
+
+  // RSC再実行時に initialData が変わったら同期
+  useEffect(() => {
+    setKondateData(initialData)
+  }, [initialData])
 
   // 年リスト（データがある年 + 現在年）
   const years = Array.from(
@@ -310,9 +315,9 @@ export const KondateClient = ({
                 <TableRow>
                   <TableHead className="w-24">日付</TableHead>
                   <TableHead className="w-20">区分</TableHead>
+                  <TableHead className="w-32">献立</TableHead>
                   <TableHead className="w-28">料理コード</TableHead>
                   <TableHead>料理名</TableHead>
-                  <TableHead className="w-32">献立</TableHead>
                   <TableHead className="w-24 text-center">材料</TableHead>
                   <TableHead className="w-32">操作</TableHead>
                 </TableRow>
@@ -331,13 +336,13 @@ export const KondateClient = ({
                         {item.mealTypeName}
                       </Badge>
                     </TableCell>
+                    <TableCell className="text-sm text-slate-500">
+                      {item.menuName}
+                    </TableCell>
                     <TableCell className="font-mono text-sm text-slate-500">
                       {item.dishCode}
                     </TableCell>
                     <TableCell className="font-medium">{item.dishName}</TableCell>
-                    <TableCell className="text-sm text-slate-500">
-                      {item.menuName}
-                    </TableCell>
                     <TableCell className="text-center">
                       <Badge color="blue">{item.ingredientCount}</Badge>
                     </TableCell>

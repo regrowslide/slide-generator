@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useCallback } from 'react'
-import { Upload, Calendar, RefreshCw, AlertTriangle, CheckCircle, Clock } from 'lucide-react'
+import { useState, useCallback, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { Upload, Calendar, Search, RefreshCw, AlertTriangle, CheckCircle, Clock } from 'lucide-react'
 import { Button } from '@shadcn/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@shadcn/ui/card'
 import { Badge } from '@shadcn/ui/badge'
@@ -13,7 +14,13 @@ import {
   TableHeader,
   TableRow,
 } from '@shadcn/ui/table'
-import { Input } from '@shadcn/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@shadcn/ui/select'
 import { importOrderCsv } from '../_actions/csv-import-actions'
 import { getOrders, updateOrderStatus } from '../_actions/order-actions'
 import { ORDER_STATUS, MEAL_TYPES, type OrderStatusCode } from '../lib/constants'
@@ -24,23 +31,52 @@ import useModal from '@cm/components/utils/modal/useModal'
 type Props = {
   initialOrders: KgOrderWithRelations[]
   facilities: KgFacilityMaster[]
+  currentFilter: {
+    year: number
+    month: number
+    day: number
+    facilityId?: number
+    status?: string
+  }
 }
 
-export const OrderDashboardClient = ({ initialOrders, facilities }: Props) => {
+export const OrderDashboardClient = ({ initialOrders, facilities, currentFilter }: Props) => {
+  const router = useRouter()
   const { toggleLoad } = useGlobal()
   const [orders, setOrders] = useState(initialOrders)
-  const [selectedDate, setSelectedDate] = useState<string>(
-    new Date().toISOString().split('T')[0]
-  )
+
+  // フィルター状態
+  const [year, setYear] = useState(currentFilter.year)
+  const [month, setMonth] = useState(currentFilter.month)
+  const [day, setDay] = useState(currentFilter.day)
+  const [facilityId, setFacilityId] = useState<number | undefined>(currentFilter.facilityId)
+  const [status, setStatus] = useState<string | undefined>(currentFilter.status)
+
+  // RSC再実行時に initialOrders が変わったら同期
+  useEffect(() => {
+    setOrders(initialOrders)
+  }, [initialOrders])
 
   // インポートログモーダル
   const logModal = useModal<string[]>()
 
-  // 日付でフィルタリング
-  const filteredOrders = orders.filter((order) => {
-    const orderDate = new Date(order.deliveryDate).toISOString().split('T')[0]
-    return orderDate === selectedDate
-  })
+  // 年リスト（現在年 ± 1年）
+  const currentYear = new Date().getFullYear()
+  const years = [currentYear + 1, currentYear, currentYear - 1]
+
+  // 日リスト（1〜31）
+  const days = Array.from({ length: 31 }, (_, i) => i + 1)
+
+  // フィルター適用
+  const applyFilter = useCallback(() => {
+    const params = new URLSearchParams()
+    params.set('year', year.toString())
+    params.set('month', month.toString())
+    params.set('day', day.toString())
+    if (facilityId) params.set('facilityId', facilityId.toString())
+    if (status) params.set('status', status)
+    router.push(`?${params.toString()}`)
+  }, [year, month, day, facilityId, status, router])
 
   // 受注CSVアップロード処理
   const handleOrderCsvUpload = useCallback(
@@ -52,26 +88,24 @@ export const OrderDashboardClient = ({ initialOrders, facilities }: Props) => {
         const text = await file.text()
         const result = await importOrderCsv(text)
 
-        // ログを表示
         logModal.handleOpen(result.logList)
 
         if (result.success) {
-          // 再取得
-          const today = new Date()
-          today.setHours(0, 0, 0, 0)
+          const dateFrom = new Date(year, month - 1, day)
+          dateFrom.setHours(0, 0, 0, 0)
+          const dateTo = new Date(year, month - 1, day + 1)
+
           const newOrders = await getOrders({
-            where: { deliveryDate: { gte: today } },
+            where: { deliveryDate: { gte: dateFrom, lt: dateTo } },
             orderBy: { deliveryDate: 'asc' },
-            take: 50,
           })
           setOrders(newOrders)
         }
       })
 
-      // input をリセット
       event.target.value = ''
     },
-    [toggleLoad, logModal]
+    [toggleLoad, logModal, year, month, day]
   )
 
   // ステータス更新処理
@@ -102,14 +136,9 @@ export const OrderDashboardClient = ({ initialOrders, facilities }: Props) => {
     )
   }
 
-  // 日付変更処理
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedDate(e.target.value)
-  }
-
   // 食事区分ごとの集計
   const getMealSummary = (mealType: string) => {
-    return filteredOrders.reduce((acc, order) => {
+    return orders.reduce((acc, order) => {
       const lines = order.KgOrderLine.filter((line) => line.mealType === mealType)
       return acc + lines.reduce((sum, line) => sum + line.quantity, 0)
     }, 0)
@@ -124,7 +153,6 @@ export const OrderDashboardClient = ({ initialOrders, facilities }: Props) => {
           <p className="text-slate-500 text-sm">受注データの取込・確認</p>
         </div>
         <div className="flex items-center gap-3">
-          {/* 受注CSV取込 */}
           <label className="cursor-pointer">
             <input
               type="file"
@@ -142,27 +170,103 @@ export const OrderDashboardClient = ({ initialOrders, facilities }: Props) => {
         </div>
       </div>
 
-      {/* 日付選択 */}
-      <div className="flex items-center gap-3">
-        <Calendar className="w-5 h-5 text-slate-500" />
-        <Input
-          type="date"
-          value={selectedDate}
-          onChange={handleDateChange}
-          className="w-48"
-        />
-        <span className="text-sm text-slate-500">
-          {(() => {
-            const d = new Date(selectedDate)
-            const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][d.getDay()]
-            const isToday = selectedDate === new Date().toISOString().split('T')[0]
-            return isToday ? '（今日）' : `（${dayOfWeek}曜日）`
-          })()}
-        </span>
-        <Badge color="gray">
-          {filteredOrders.length}件
-        </Badge>
-      </div>
+      {/* フィルターエリア */}
+      <Card>
+        <CardContent className="pt-4">
+          <div className="flex flex-wrap items-end gap-3">
+            {/* 年月選択 */}
+            <div className="flex items-center gap-2">
+              <Select
+                value={year.toString()}
+                onValueChange={(v) => setYear(parseInt(v))}
+              >
+                <SelectTrigger className="w-24">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {years.map((y) => (
+                    <SelectItem key={y} value={y.toString()}>
+                      {y}年
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select
+                value={month.toString()}
+                onValueChange={(v) => setMonth(parseInt(v))}
+              >
+                <SelectTrigger className="w-20">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+                    <SelectItem key={m} value={m.toString()}>
+                      {m}月
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select
+                value={day.toString()}
+                onValueChange={(v) => setDay(parseInt(v))}
+              >
+                <SelectTrigger className="w-20">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {days.map((d) => (
+                    <SelectItem key={d} value={d.toString()}>
+                      {d}日
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* 施設選択 */}
+            <Select
+              value={facilityId?.toString() ?? 'all'}
+              onValueChange={(v) => setFacilityId(v === 'all' ? undefined : parseInt(v))}
+            >
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="施設" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">全施設</SelectItem>
+                {facilities.map((f) => (
+                  <SelectItem key={f.id} value={f.id.toString()}>
+                    {f.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* ステータス選択 */}
+            <Select
+              value={status ?? 'all'}
+              onValueChange={(v) => setStatus(v === 'all' ? undefined : v)}
+            >
+              <SelectTrigger className="w-28">
+                <SelectValue placeholder="ステータス" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">全状態</SelectItem>
+                {Object.entries(ORDER_STATUS).map(([code, data]) => (
+                  <SelectItem key={code} value={code}>
+                    {data.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* 検索ボタン */}
+            <Button onClick={applyFilter}>
+              <Search className="w-4 h-4 mr-2" />
+              検索
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* サマリーカード */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -187,11 +291,12 @@ export const OrderDashboardClient = ({ initialOrders, facilities }: Props) => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="w-5 h-5" />
-            {selectedDate} の受注一覧
+            {year}年{month}月{day}日の受注一覧
+            <Badge color="gray">{orders.length}件</Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {filteredOrders.length === 0 ? (
+          {orders.length === 0 ? (
             <div className="text-center py-12 text-slate-400">
               <AlertTriangle className="w-12 h-12 mx-auto mb-4 opacity-50" />
               <p>この日の受注データはありません</p>
@@ -211,7 +316,7 @@ export const OrderDashboardClient = ({ initialOrders, facilities }: Props) => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredOrders.map((order, i) => {
+                {orders.map((order, i) => {
                   const breakfastTotal = order.KgOrderLine.filter(
                     (l) => l.mealType === 'breakfast'
                   ).reduce((s, l) => s + l.quantity, 0)

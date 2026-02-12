@@ -19,7 +19,7 @@ export default async function KondatePage(props: Props) {
   const now = new Date()
   const year = query.year ? parseInt(query.year) : now.getFullYear()
   const month = query.month ? parseInt(query.month) : now.getMonth() + 1
-  const day = query.day ? parseInt(query.day) : undefined
+  const day = query.day ? parseInt(query.day) : now.getDate()
   const mealType = query.mealType || undefined
   const recipeName = query.recipeName || undefined
 
