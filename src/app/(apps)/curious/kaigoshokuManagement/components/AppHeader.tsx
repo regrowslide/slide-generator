@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { Utensils, ClipboardList, Factory, Package, Database, Menu, CalendarDays } from 'lucide-react'
-import { Button } from '@shadcn/ui/button'
+import { usePathname, useSearchParams } from 'next/navigation'
+import { Utensils, ClipboardList, Factory, Package, Database, Menu, CalendarDays, Building2, ShoppingCart } from 'lucide-react'
+import { Button } from '@cm/components/styles/common-components/Button'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@shadcn/ui/drawer'
 import { useIsMobile } from '@shadcn/hooks/use-mobile'
 import { MENU_ITEMS, type MenuItem } from '../lib/menu-constants'
@@ -18,21 +18,28 @@ const IconMap = {
   database: Database,
   settings: Database,
   calendar: CalendarDays,
+  building: Building2,
+  'shopping-cart': ShoppingCart,
 }
+
+// 日付パラメータを保持するページのID
+const DATE_FILTER_PAGE_IDS = ['orders', 'production', 'packing', 'kondate']
 
 const NavItem = ({
   item,
   isActive,
+  href,
   onClick,
 }: {
   item: MenuItem
   isActive: boolean
+  href: string
   onClick?: () => void
 }) => {
   const Icon = IconMap[item.icon]
   return (
     <Link
-      href={item.href}
+      href={href}
       onClick={onClick}
       className={`
         flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm font-medium
@@ -47,6 +54,7 @@ const NavItem = ({
 
 export const AppHeader = () => {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
   const isMobile = useIsMobile()
   const [drawerOpen, setDrawerOpen] = useState(false)
   const { session } = useGlobal()
@@ -56,6 +64,18 @@ export const AppHeader = () => {
 
   // ユーザー権限に基づいてメニューをフィルタリング
   const filteredMenuItems = MENU_ITEMS.filter((item) => !item.adminOnly || isAdmin)
+
+  // 日付パラメータ付きの href を構築
+  const getHref = (item: MenuItem) => {
+    const year = searchParams?.get('year')
+    const month = searchParams?.get('month')
+    const day = searchParams?.get('day')
+    return `${item.href}?year=${year}&month=${month}&day=${day}`
+    // if (DATE_FILTER_PAGE_IDS.includes(item.id) && year && month && day) {
+    //   return `${item.href}?year=${year}&month=${month}&day=${day}`
+    // }
+    // return item.href
+  }
 
   // 現在のパスに基づいてアクティブなメニュー項目を判定
   const isActive = (item: MenuItem) => {
@@ -87,7 +107,7 @@ export const AppHeader = () => {
           {!isMobile && (
             <nav className="flex items-center gap-2">
               {filteredMenuItems.map((item) => (
-                <NavItem key={item.id} item={item} isActive={isActive(item)} />
+                <NavItem key={item.id} item={item} isActive={isActive(item)} href={getHref(item)} />
               ))}
             </nav>
           )}
@@ -96,7 +116,7 @@ export const AppHeader = () => {
           {isMobile && (
             <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
               <DrawerTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" >
                   <Menu className="w-6 h-6" />
                 </Button>
               </DrawerTrigger>
@@ -110,6 +130,7 @@ export const AppHeader = () => {
                       key={item.id}
                       item={item}
                       isActive={isActive(item)}
+                      href={getHref(item)}
                       onClick={() => setDrawerOpen(false)}
                     />
                   ))}

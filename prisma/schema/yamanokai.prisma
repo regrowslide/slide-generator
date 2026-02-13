@@ -188,8 +188,6 @@ model YamanokaiMember {
   YamanokaiEquipmentLoan  YamanokaiEquipmentLoan[]
   YamanokaiAttendance     YamanokaiAttendance[]
   YamanokaiRecord         YamanokaiRecord[] // 作成した記録
-  YamanokaiEventAsCL      YamanokaiEvent[]  @relation("EventCL")
-  YamanokaiEventAsSL      YamanokaiEvent[]  @relation("EventSL")
   YamanokaiEventPlanApprover YamanokaiEventPlan[] @relation("EventPlanApprover")
   YamanokaiEventPlanParticipant YamanokaiEventPlanParticipant[]
 
@@ -282,9 +280,9 @@ model YamanokaiEvent {
   // リレーション
   YamanokaiDepartment    YamanokaiDepartment @relation(fields: [yamanokaiDepartmentId], references: [id])
   yamanokaiDepartmentId  Int
-  YamanokaiCL            YamanokaiMember     @relation("EventCL", fields: [clId], references: [id])
+  CL                     User                @relation("YamanokaiEventCL", fields: [clId], references: [id])
   clId                   Int
-  YamanokaiSL            YamanokaiMember?    @relation("EventSL", fields: [slId], references: [id])
+  SL                     User?               @relation("YamanokaiEventSL", fields: [slId], references: [id])
   slId                   Int?
   YamanokaiAttendance    YamanokaiAttendance[]
   YamanokaiEventPlan     YamanokaiEventPlan?

@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
-import { PackingClient } from './PackingClient'
-import { calculatePackingData } from '../../_actions/production-actions'
+import { IngredientsClient } from './IngredientsClient'
+import { calculateIngredientSummary } from '../../_actions/production-actions'
 
 type Props = {
   searchParams: Promise<{
@@ -10,7 +10,7 @@ type Props = {
   }>
 }
 
-export default async function PackingPage(props: Props) {
+export default async function IngredientsPage(props: Props) {
   const query = await props.searchParams
 
   const now = new Date()
@@ -18,14 +18,14 @@ export default async function PackingPage(props: Props) {
   const month = query.month ? parseInt(query.month) : now.getMonth() + 1
   const day = query.day ? parseInt(query.day) : now.getDate()
 
-  // 指定日の梱包データを献立×受注から動的に計算
+  // 指定日の原材料データを献立×受注から動的に計算
   const targetDate = new Date(year, month - 1, day)
-  const packingData = await calculatePackingData(targetDate)
+  const ingredients = await calculateIngredientSummary(targetDate)
 
   return (
     <Suspense fallback={<div className="animate-pulse">読み込み中...</div>}>
-      <PackingClient
-        packingData={packingData}
+      <IngredientsClient
+        ingredients={ingredients}
         currentFilter={{ year, month, day }}
       />
     </Suspense>

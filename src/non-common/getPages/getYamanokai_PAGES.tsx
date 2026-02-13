@@ -1,4 +1,4 @@
-import { Settings, Calendar, Users, Shield, Package } from 'lucide-react'
+import { Settings, Calendar, Users, Shield, Package, Building2 } from 'lucide-react'
 import IconLetter from '@cm/components/styles/common-components/IconLetter'
 
 import { CleansePathSource } from 'src/non-common/path-title-constsnts'
@@ -39,12 +39,16 @@ export const yamanokai_PAGES = (props: PageGetterType) => {
       label: <IconLetter {...{ Icon: Shield }}>管理者メニュー</IconLetter>,
       children: [
         {
+          tabId: 'yamanokaiDepartment',
+          label: <IconLetter {...{ Icon: Building2 }}>部署マスタ</IconLetter>,
+        },
+        {
           tabId: 'equipment-checklist',
           label: <IconLetter {...{ Icon: Package }}>装備表品目マスタ</IconLetter>,
         },
         {
           tabId: 'members',
-          label: <IconLetter {...{ Icon: Users }}>会員管理</IconLetter>,
+          label: <IconLetter {...{ Icon: Users }}>ユーザー管理</IconLetter>,
         },
         {
           tabId: 'roleMaster',

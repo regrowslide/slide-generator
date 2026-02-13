@@ -15,7 +15,9 @@ export const Button = (
 
   const buttonVariants = tv({
     base: cn(
-      `t-btn transition-all  ease-in-out transform shadow-md `,
+      `t-btn   shadow-none!   shadow-md `,
+      `flex items-center gap-1`,
+      `ease-in-out transform transition-all`,
       `ring-1 `,
       `focus:outline-none focus:ring-2  focus:ring-opacity-50`,
       `disabled:opacity-50 disabled:cursor-not-allowed `
@@ -23,9 +25,9 @@ export const Button = (
     variants: {
       color: btnColorVariants,
       size: {
-        xs: 'text-[12px] py-[1px] px-[8px] ',
-        sm: 'text-[14px] py-[2px] px-[10px] ',
-        md: 'text-[16px] py-[4px] px-[14px] ',
+        xs: 'text-[12px] py-[2px] px-[8px] ',
+        sm: 'text-[14px] py-[4px] px-[10px] ',
+        md: 'text-[16px] py-[6px] px-[14px] ',
         lg: 'text-[18px] py-[6px] px-[18px] ',
       },
       active: {
@@ -56,7 +58,7 @@ export const Button = (
 }
 
 export const btnColorVariants = {
-  gray: 'bg-gray-main text-white  ring-gray-400 ',
+  gray: 'bg-gray-300 text-gray-700  border-none ring-0',
   red: 'bg-error-main text-white  ring-red-400 ',
   blue: 'bg-blue-main text-white  ring-blue-400 ',
   green: 'bg-green-main text-white  ring-green-400 ',

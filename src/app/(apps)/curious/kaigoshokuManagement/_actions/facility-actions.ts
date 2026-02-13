@@ -34,7 +34,7 @@ export const createFacility = async (data: KgFacilityFormData): Promise<KgFacili
     data: {
       code: data.code,
       name: data.name,
-      contactMethod: data.contactMethod,
+      contactMethod: 'CSV',
       address: data.address,
       phone: data.phone,
       email: data.email,

@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Calendar, Search, List, Upload } from 'lucide-react'
-import { Button } from '@shadcn/ui/button'
+import { Button } from '@cm/components/styles/common-components/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@shadcn/ui/card'
 import { Badge } from '@shadcn/ui/badge'
 import { Input } from '@shadcn/ui/input'
@@ -189,11 +189,9 @@ export const KondateClient = ({
               onChange={handleKondateCsvUpload}
               className="hidden"
             />
-            <Button variant="outline" asChild>
-              <span>
-                <Upload className="w-4 h-4 mr-2" />
-                CSV取込
-              </span>
+            <Button >
+              <Upload className="w-4 h-4 mr-2" />
+              CSV取込
             </Button>
           </label>
         </div>
@@ -349,7 +347,6 @@ export const KondateClient = ({
                     <TableCell>
                       <Button
                         size="sm"
-                        variant="outline"
                         onClick={() => handleShowIngredients(item.dishId)}
                       >
                         <List className="w-4 h-4 mr-1" />

@@ -9,7 +9,6 @@ type Props = {
     month?: string
     day?: string
     facilityId?: string
-    status?: string
   }>
 }
 
@@ -21,7 +20,6 @@ export default async function OrderDashboardPage(props: Props) {
   const month = query.month ? parseInt(query.month) : now.getMonth() + 1
   const day = query.day ? parseInt(query.day) : now.getDate()
   const facilityId = query.facilityId ? parseInt(query.facilityId) : undefined
-  const status = query.status || undefined
 
   // 日付範囲を構築
   const dateFrom = new Date(year, month - 1, day)
@@ -32,7 +30,6 @@ export default async function OrderDashboardPage(props: Props) {
     deliveryDate: { gte: dateFrom, lt: dateTo },
   }
   if (facilityId) where.facilityId = facilityId
-  if (status) where.status = status
 
   const [orders, facilities] = await Promise.all([
     getOrders({
@@ -47,7 +44,7 @@ export default async function OrderDashboardPage(props: Props) {
       <OrderDashboardClient
         initialOrders={orders}
         facilities={facilities}
-        currentFilter={{ year, month, day, facilityId, status }}
+        currentFilter={{ year, month, day, facilityId }}
       />
     </Suspense>
   )

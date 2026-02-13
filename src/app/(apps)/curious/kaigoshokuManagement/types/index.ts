@@ -71,7 +71,10 @@ export type KgProductionBatchWithRelations = KgProductionBatch & {
 }
 
 export type KgProductionItemWithRelations = KgProductionItem & {
-  KgMenuRecipe: KgMenuRecipe
+  KgMenuRecipe: KgMenuRecipe & {
+    ChildRecipes: (KgMenuRecipe & { KgRecipeIngredient: KgRecipeIngredient[] })[]
+    KgRecipeIngredient: KgRecipeIngredient[]
+  }
   KgDietTypeMaster: KgDietTypeMaster
 }
 
@@ -144,7 +147,6 @@ export type RequiredIngredientSummary = {
 export type KgFacilityFormData = {
   code: string
   name: string
-  contactMethod: string
   address?: string
   phone?: string
   email?: string

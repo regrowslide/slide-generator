@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react'
 import { Upload, Calendar, ArrowLeft, Eye, Trash2 } from 'lucide-react'
 import Link from 'next/link'
-import { Button } from '@shadcn/ui/button'
+import { Button } from '@cm/components/styles/common-components/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@shadcn/ui/card'
 import { Badge } from '@shadcn/ui/badge'
 import {

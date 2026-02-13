@@ -2,8 +2,8 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Upload, Calendar, Search, RefreshCw, AlertTriangle, CheckCircle, Clock } from 'lucide-react'
-import { Button } from '@shadcn/ui/button'
+import { Upload, Calendar, Search, AlertTriangle } from 'lucide-react'
+
 import { Card, CardContent, CardHeader, CardTitle } from '@shadcn/ui/card'
 import { Badge } from '@shadcn/ui/badge'
 import {
@@ -22,11 +22,12 @@ import {
   SelectValue,
 } from '@shadcn/ui/select'
 import { importOrderCsv } from '../_actions/csv-import-actions'
-import { getOrders, updateOrderStatus } from '../_actions/order-actions'
-import { ORDER_STATUS, MEAL_TYPES, type OrderStatusCode } from '../lib/constants'
+import { getOrders, updateOrder } from '../_actions/order-actions'
+import { MEAL_TYPES } from '../lib/constants'
 import type { KgOrderWithRelations, KgFacilityMaster } from '../types'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import useModal from '@cm/components/utils/modal/useModal'
+import { Button } from '@cm/components/styles/common-components/Button'
 
 type Props = {
   initialOrders: KgOrderWithRelations[]
@@ -36,7 +37,6 @@ type Props = {
     month: number
     day: number
     facilityId?: number
-    status?: string
   }
 }
 
@@ -50,12 +50,14 @@ export const OrderDashboardClient = ({ initialOrders, facilities, currentFilter 
   const [month, setMonth] = useState(currentFilter.month)
   const [day, setDay] = useState(currentFilter.day)
   const [facilityId, setFacilityId] = useState<number | undefined>(currentFilter.facilityId)
-  const [status, setStatus] = useState<string | undefined>(currentFilter.status)
 
   // RSC再実行時に initialOrders が変わったら同期
   useEffect(() => {
     setOrders(initialOrders)
   }, [initialOrders])
+
+  // 取り込み用施設選択
+  const [importFacilityId, setImportFacilityId] = useState<number | undefined>(undefined)
 
   // インポートログモーダル
   const logModal = useModal<string[]>()
@@ -74,9 +76,8 @@ export const OrderDashboardClient = ({ initialOrders, facilities, currentFilter 
     params.set('month', month.toString())
     params.set('day', day.toString())
     if (facilityId) params.set('facilityId', facilityId.toString())
-    if (status) params.set('status', status)
     router.push(`?${params.toString()}`)
-  }, [year, month, day, facilityId, status, router])
+  }, [year, month, day, facilityId, router])
 
   // 受注CSVアップロード処理
   const handleOrderCsvUpload = useCallback(
@@ -86,7 +87,7 @@ export const OrderDashboardClient = ({ initialOrders, facilities, currentFilter 
 
       toggleLoad(async () => {
         const text = await file.text()
-        const result = await importOrderCsv(text)
+        const result = await importOrderCsv(text, importFacilityId)
 
         logModal.handleOpen(result.logList)
 
@@ -105,36 +106,31 @@ export const OrderDashboardClient = ({ initialOrders, facilities, currentFilter 
 
       event.target.value = ''
     },
-    [toggleLoad, logModal, year, month, day]
+    [toggleLoad, logModal, year, month, day, importFacilityId]
   )
 
-  // ステータス更新処理
-  const handleStatusUpdate = useCallback(
-    async (orderId: number, newStatus: string) => {
+  // 施設変更処理
+  const handleFacilityChange = useCallback(
+    async (orderId: number, newFacilityId: number | null) => {
       toggleLoad(async () => {
-        await updateOrderStatus(orderId, newStatus)
+        await updateOrder(orderId, { facilityId: newFacilityId })
         setOrders((prev) =>
           prev.map((order) =>
-            order.id === orderId ? { ...order, status: newStatus } : order
+            order.id === orderId
+              ? {
+                  ...order,
+                  facilityId: newFacilityId,
+                  KgFacilityMaster: newFacilityId
+                    ? facilities.find((f) => f.id === newFacilityId) ?? null
+                    : null,
+                }
+              : order
           )
         )
       })
     },
-    [toggleLoad]
+    [toggleLoad, facilities]
   )
-
-  // ステータスバッジ
-  const StatusBadge = ({ status }: { status: string }) => {
-    const statusInfo = ORDER_STATUS[status as OrderStatusCode] ?? ORDER_STATUS.pending
-    return (
-      <Badge className={statusInfo.colorClass}>
-        {status === 'pending' && <Clock className="w-3 h-3 mr-1" />}
-        {status === 'confirmed' && <CheckCircle className="w-3 h-3 mr-1" />}
-        {status === 'processing' && <RefreshCw className="w-3 h-3 mr-1" />}
-        {statusInfo.name}
-      </Badge>
-    )
-  }
 
   // 食事区分ごとの集計
   const getMealSummary = (mealType: string) => {
@@ -153,6 +149,22 @@ export const OrderDashboardClient = ({ initialOrders, facilities, currentFilter 
           <p className="text-slate-500 text-sm">受注データの取込・確認</p>
         </div>
         <div className="flex items-center gap-3">
+          <Select
+            value={importFacilityId?.toString() ?? 'none'}
+            onValueChange={(v) => setImportFacilityId(v === 'none' ? undefined : parseInt(v))}
+          >
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="取込先施設" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">施設未指定</SelectItem>
+              {facilities.map((f) => (
+                <SelectItem key={f.id} value={f.id.toString()}>
+                  {f.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <label className="cursor-pointer">
             <input
               type="file"
@@ -160,11 +172,10 @@ export const OrderDashboardClient = ({ initialOrders, facilities, currentFilter 
               onChange={handleOrderCsvUpload}
               className="hidden"
             />
-            <Button variant="outline" asChild>
-              <span>
-                <Upload className="w-4 h-4 mr-2" />
-                受注取込
-              </span>
+            <Button>
+
+              <Upload className="w-4 h-4 " />
+              受注取込
             </Button>
           </label>
         </div>
@@ -241,24 +252,6 @@ export const OrderDashboardClient = ({ initialOrders, facilities, currentFilter 
               </SelectContent>
             </Select>
 
-            {/* ステータス選択 */}
-            <Select
-              value={status ?? 'all'}
-              onValueChange={(v) => setStatus(v === 'all' ? undefined : v)}
-            >
-              <SelectTrigger className="w-28">
-                <SelectValue placeholder="ステータス" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">全状態</SelectItem>
-                {Object.entries(ORDER_STATUS).map(([code, data]) => (
-                  <SelectItem key={code} value={code}>
-                    {data.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
             {/* 検索ボタン */}
             <Button onClick={applyFilter}>
               <Search className="w-4 h-4 mr-2" />
@@ -308,11 +301,9 @@ export const OrderDashboardClient = ({ initialOrders, facilities, currentFilter 
                 <TableRow>
                   <TableHead>受注ID</TableHead>
                   <TableHead>施設</TableHead>
-                  <TableHead>ステータス</TableHead>
                   <TableHead className="text-center">朝食</TableHead>
                   <TableHead className="text-center">昼食</TableHead>
                   <TableHead className="text-center">夕食</TableHead>
-                  <TableHead>操作</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -331,12 +322,24 @@ export const OrderDashboardClient = ({ initialOrders, facilities, currentFilter 
                     <TableRow key={i}>
                       <TableCell className="font-mono text-sm">#{order.id}</TableCell>
                       <TableCell>
-                        {order.KgFacilityMaster?.name ?? (
-                          <span className="text-slate-400">未設定</span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <StatusBadge status={order.status} />
+                        <Select
+                          value={order.facilityId?.toString() ?? 'none'}
+                          onValueChange={(v) =>
+                            handleFacilityChange(order.id, v === 'none' ? null : parseInt(v))
+                          }
+                        >
+                          <SelectTrigger className="w-36 h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="none">未設定</SelectItem>
+                            {facilities.map((f) => (
+                              <SelectItem key={f.id} value={f.id.toString()}>
+                                {f.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </TableCell>
                       <TableCell className="text-center">
                         {breakfastTotal > 0 ? breakfastTotal : '-'}
@@ -346,28 +349,6 @@ export const OrderDashboardClient = ({ initialOrders, facilities, currentFilter 
                       </TableCell>
                       <TableCell className="text-center">
                         {dinnerTotal > 0 ? dinnerTotal : '-'}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          {order.status === 'pending' && (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleStatusUpdate(order.id, 'confirmed')}
-                            >
-                              確認
-                            </Button>
-                          )}
-                          {order.status === 'confirmed' && (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleStatusUpdate(order.id, 'processing')}
-                            >
-                              製造開始
-                            </Button>
-                          )}
-                        </div>
                       </TableCell>
                     </TableRow>
                   )

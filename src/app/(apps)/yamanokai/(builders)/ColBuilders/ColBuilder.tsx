@@ -13,4 +13,23 @@ export class ColBuilder {
       { ...props.transposeColumnsOptions }
     )
   }
+
+  static user = (props: columnGetterType) => {
+    return new Fields([
+      { id: 'name', label: '氏名', form: { ...defaultRegister }, search: {} },
+      { id: 'email', label: 'メール', form: {} },
+      { id: 'password', label: 'パスワード', type: 'password', form: {} },
+      { id: 'phone', label: '電話番号', form: {} },
+    ]).transposeColumns()
+  }
+
+  static yamanokaiDepartment = (props: columnGetterType) => {
+    return new Fields([
+      { id: 'code', label: 'コード', form: { ...defaultRegister } },
+      { id: 'name', label: '部署名', form: { ...defaultRegister }, search: {} },
+      { id: 'color', label: 'カラー', form: {}, type: 'color' },
+      { id: 'bgColor', label: '背景色', form: {}, type: 'color' },
+    ]).transposeColumns()
+  }
+
 }

@@ -3,9 +3,9 @@
 import { useState, useCallback } from 'react'
 import { Plus, Pencil, Trash2, Building2, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
-import { Button } from '@shadcn/ui/button'
+
 import { Card, CardContent } from '@shadcn/ui/card'
-import { Badge } from '@shadcn/ui/badge'
+
 import {
   Table,
   TableBody,
@@ -16,13 +16,6 @@ import {
 } from '@shadcn/ui/table'
 import { Input } from '@shadcn/ui/input'
 import { Label } from '@shadcn/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@shadcn/ui/select'
 import { Switch } from '@shadcn/ui/switch'
 import {
   createFacility,
@@ -30,10 +23,11 @@ import {
   deleteFacility,
   checkFacilityCodeExists,
 } from '../../../_actions/facility-actions'
-import { CONTACT_METHODS } from '../../../lib/constants'
 import type { KgFacilityMaster, KgFacilityFormData } from '../../../types'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import useModal from '@cm/components/utils/modal/useModal'
+import { Button } from '@cm/shadcn/ui/button'
+import { Badge } from '@cm/shadcn/ui/badge'
 
 type Props = {
   initialFacilities: KgFacilityMaster[]
@@ -42,7 +36,6 @@ type Props = {
 const defaultFormData: KgFacilityFormData = {
   code: '',
   name: '',
-  contactMethod: 'CSV',
   address: '',
   phone: '',
   email: '',
@@ -74,7 +67,6 @@ export const FacilityMasterClient = ({ initialFacilities }: Props) => {
       setFormData({
         code: facility.code,
         name: facility.name,
-        contactMethod: facility.contactMethod,
         address: facility.address ?? '',
         phone: facility.phone ?? '',
         email: facility.email ?? '',
@@ -156,7 +148,6 @@ export const FacilityMasterClient = ({ initialFacilities }: Props) => {
               <TableRow>
                 <TableHead>コード</TableHead>
                 <TableHead>施設名</TableHead>
-                <TableHead>連絡方法</TableHead>
                 <TableHead>電話番号</TableHead>
                 <TableHead>ステータス</TableHead>
                 <TableHead>操作</TableHead>
@@ -165,7 +156,7 @@ export const FacilityMasterClient = ({ initialFacilities }: Props) => {
             <TableBody>
               {facilities.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-slate-400">
+                  <TableCell colSpan={5} className="text-center py-8 text-slate-400">
                     施設が登録されていません
                   </TableCell>
                 </TableRow>
@@ -179,10 +170,6 @@ export const FacilityMasterClient = ({ initialFacilities }: Props) => {
                         {facility.name}
                       </div>
                     </TableCell>
-                    <TableCell>
-                      {CONTACT_METHODS[facility.contactMethod as keyof typeof CONTACT_METHODS]
-                        ?.name ?? facility.contactMethod}
-                    </TableCell>
                     <TableCell>{facility.phone ?? '-'}</TableCell>
                     <TableCell>
                       <Badge color={facility.isActive ? 'green' : 'gray'}>
@@ -192,7 +179,7 @@ export const FacilityMasterClient = ({ initialFacilities }: Props) => {
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Button
-                          size="icon"
+
                           variant="ghost"
                           onClick={() => handleOpenEdit(facility)}
                         >
@@ -200,7 +187,7 @@ export const FacilityMasterClient = ({ initialFacilities }: Props) => {
                         </Button>
                         {facility.isActive && (
                           <Button
-                            size="icon"
+
                             variant="ghost"
                             onClick={() => handleDelete(facility.id)}
                           >
@@ -244,24 +231,6 @@ export const FacilityMasterClient = ({ initialFacilities }: Props) => {
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="contactMethod">連絡方法</Label>
-            <Select
-              value={formData.contactMethod}
-              onValueChange={(value) => setFormData({ ...formData, contactMethod: value })}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.entries(CONTACT_METHODS).map(([code, data]) => (
-                  <SelectItem key={code} value={code}>
-                    {data.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
             <Label htmlFor="address">住所</Label>
             <Input
               id="address"
@@ -291,7 +260,7 @@ export const FacilityMasterClient = ({ initialFacilities }: Props) => {
           <div className="flex items-center gap-2">
             <Switch
               id="isActive"
-              checked={formData.isActive}
+              checked={!!formData.isActive}
               onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
             />
             <Label htmlFor="isActive">有効</Label>

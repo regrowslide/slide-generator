@@ -393,8 +393,8 @@ export type YamanokaiEventWhereInput = {
   clId?: Prisma.IntFilter<"YamanokaiEvent"> | number
   slId?: Prisma.IntNullableFilter<"YamanokaiEvent"> | number | null
   YamanokaiDepartment?: Prisma.XOR<Prisma.YamanokaiDepartmentScalarRelationFilter, Prisma.YamanokaiDepartmentWhereInput>
-  YamanokaiCL?: Prisma.XOR<Prisma.YamanokaiMemberScalarRelationFilter, Prisma.YamanokaiMemberWhereInput>
-  YamanokaiSL?: Prisma.XOR<Prisma.YamanokaiMemberNullableScalarRelationFilter, Prisma.YamanokaiMemberWhereInput> | null
+  CL?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  SL?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceListRelationFilter
   YamanokaiEventPlan?: Prisma.XOR<Prisma.YamanokaiEventPlanNullableScalarRelationFilter, Prisma.YamanokaiEventPlanWhereInput> | null
   YamanokaiRecord?: Prisma.XOR<Prisma.YamanokaiRecordNullableScalarRelationFilter, Prisma.YamanokaiRecordWhereInput> | null
@@ -429,8 +429,8 @@ export type YamanokaiEventOrderByWithRelationInput = {
   clId?: Prisma.SortOrder
   slId?: Prisma.SortOrderInput | Prisma.SortOrder
   YamanokaiDepartment?: Prisma.YamanokaiDepartmentOrderByWithRelationInput
-  YamanokaiCL?: Prisma.YamanokaiMemberOrderByWithRelationInput
-  YamanokaiSL?: Prisma.YamanokaiMemberOrderByWithRelationInput
+  CL?: Prisma.UserOrderByWithRelationInput
+  SL?: Prisma.UserOrderByWithRelationInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceOrderByRelationAggregateInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanOrderByWithRelationInput
   YamanokaiRecord?: Prisma.YamanokaiRecordOrderByWithRelationInput
@@ -468,8 +468,8 @@ export type YamanokaiEventWhereUniqueInput = Prisma.AtLeast<{
   clId?: Prisma.IntFilter<"YamanokaiEvent"> | number
   slId?: Prisma.IntNullableFilter<"YamanokaiEvent"> | number | null
   YamanokaiDepartment?: Prisma.XOR<Prisma.YamanokaiDepartmentScalarRelationFilter, Prisma.YamanokaiDepartmentWhereInput>
-  YamanokaiCL?: Prisma.XOR<Prisma.YamanokaiMemberScalarRelationFilter, Prisma.YamanokaiMemberWhereInput>
-  YamanokaiSL?: Prisma.XOR<Prisma.YamanokaiMemberNullableScalarRelationFilter, Prisma.YamanokaiMemberWhereInput> | null
+  CL?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  SL?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceListRelationFilter
   YamanokaiEventPlan?: Prisma.XOR<Prisma.YamanokaiEventPlanNullableScalarRelationFilter, Prisma.YamanokaiEventPlanWhereInput> | null
   YamanokaiRecord?: Prisma.XOR<Prisma.YamanokaiRecordNullableScalarRelationFilter, Prisma.YamanokaiRecordWhereInput> | null
@@ -562,8 +562,8 @@ export type YamanokaiEventCreateInput = {
   status?: string
   isDeleted?: boolean
   YamanokaiDepartment: Prisma.YamanokaiDepartmentCreateNestedOneWithoutYamanokaiEventInput
-  YamanokaiCL: Prisma.YamanokaiMemberCreateNestedOneWithoutYamanokaiEventAsCLInput
-  YamanokaiSL?: Prisma.YamanokaiMemberCreateNestedOneWithoutYamanokaiEventAsSLInput
+  CL: Prisma.UserCreateNestedOneWithoutYamanokaiEventAsCLInput
+  SL?: Prisma.UserCreateNestedOneWithoutYamanokaiEventAsSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutYamanokaiEventInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanCreateNestedOneWithoutYamanokaiEventInput
   YamanokaiRecord?: Prisma.YamanokaiRecordCreateNestedOneWithoutYamanokaiEventInput
@@ -627,8 +627,8 @@ export type YamanokaiEventUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   YamanokaiDepartment?: Prisma.YamanokaiDepartmentUpdateOneRequiredWithoutYamanokaiEventNestedInput
-  YamanokaiCL?: Prisma.YamanokaiMemberUpdateOneRequiredWithoutYamanokaiEventAsCLNestedInput
-  YamanokaiSL?: Prisma.YamanokaiMemberUpdateOneWithoutYamanokaiEventAsSLNestedInput
+  CL?: Prisma.UserUpdateOneRequiredWithoutYamanokaiEventAsCLNestedInput
+  SL?: Prisma.UserUpdateOneWithoutYamanokaiEventAsSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutYamanokaiEventNestedInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUpdateOneWithoutYamanokaiEventNestedInput
@@ -868,6 +868,90 @@ export type YamanokaiEventScalarRelationFilter = {
   isNot?: Prisma.YamanokaiEventWhereInput
 }
 
+export type YamanokaiEventCreateNestedManyWithoutCLInput = {
+  create?: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutCLInput, Prisma.YamanokaiEventUncheckedCreateWithoutCLInput> | Prisma.YamanokaiEventCreateWithoutCLInput[] | Prisma.YamanokaiEventUncheckedCreateWithoutCLInput[]
+  connectOrCreate?: Prisma.YamanokaiEventCreateOrConnectWithoutCLInput | Prisma.YamanokaiEventCreateOrConnectWithoutCLInput[]
+  createMany?: Prisma.YamanokaiEventCreateManyCLInputEnvelope
+  connect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
+}
+
+export type YamanokaiEventCreateNestedManyWithoutSLInput = {
+  create?: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutSLInput, Prisma.YamanokaiEventUncheckedCreateWithoutSLInput> | Prisma.YamanokaiEventCreateWithoutSLInput[] | Prisma.YamanokaiEventUncheckedCreateWithoutSLInput[]
+  connectOrCreate?: Prisma.YamanokaiEventCreateOrConnectWithoutSLInput | Prisma.YamanokaiEventCreateOrConnectWithoutSLInput[]
+  createMany?: Prisma.YamanokaiEventCreateManySLInputEnvelope
+  connect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
+}
+
+export type YamanokaiEventUncheckedCreateNestedManyWithoutCLInput = {
+  create?: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutCLInput, Prisma.YamanokaiEventUncheckedCreateWithoutCLInput> | Prisma.YamanokaiEventCreateWithoutCLInput[] | Prisma.YamanokaiEventUncheckedCreateWithoutCLInput[]
+  connectOrCreate?: Prisma.YamanokaiEventCreateOrConnectWithoutCLInput | Prisma.YamanokaiEventCreateOrConnectWithoutCLInput[]
+  createMany?: Prisma.YamanokaiEventCreateManyCLInputEnvelope
+  connect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
+}
+
+export type YamanokaiEventUncheckedCreateNestedManyWithoutSLInput = {
+  create?: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutSLInput, Prisma.YamanokaiEventUncheckedCreateWithoutSLInput> | Prisma.YamanokaiEventCreateWithoutSLInput[] | Prisma.YamanokaiEventUncheckedCreateWithoutSLInput[]
+  connectOrCreate?: Prisma.YamanokaiEventCreateOrConnectWithoutSLInput | Prisma.YamanokaiEventCreateOrConnectWithoutSLInput[]
+  createMany?: Prisma.YamanokaiEventCreateManySLInputEnvelope
+  connect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
+}
+
+export type YamanokaiEventUpdateManyWithoutCLNestedInput = {
+  create?: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutCLInput, Prisma.YamanokaiEventUncheckedCreateWithoutCLInput> | Prisma.YamanokaiEventCreateWithoutCLInput[] | Prisma.YamanokaiEventUncheckedCreateWithoutCLInput[]
+  connectOrCreate?: Prisma.YamanokaiEventCreateOrConnectWithoutCLInput | Prisma.YamanokaiEventCreateOrConnectWithoutCLInput[]
+  upsert?: Prisma.YamanokaiEventUpsertWithWhereUniqueWithoutCLInput | Prisma.YamanokaiEventUpsertWithWhereUniqueWithoutCLInput[]
+  createMany?: Prisma.YamanokaiEventCreateManyCLInputEnvelope
+  set?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
+  disconnect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
+  delete?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
+  connect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
+  update?: Prisma.YamanokaiEventUpdateWithWhereUniqueWithoutCLInput | Prisma.YamanokaiEventUpdateWithWhereUniqueWithoutCLInput[]
+  updateMany?: Prisma.YamanokaiEventUpdateManyWithWhereWithoutCLInput | Prisma.YamanokaiEventUpdateManyWithWhereWithoutCLInput[]
+  deleteMany?: Prisma.YamanokaiEventScalarWhereInput | Prisma.YamanokaiEventScalarWhereInput[]
+}
+
+export type YamanokaiEventUpdateManyWithoutSLNestedInput = {
+  create?: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutSLInput, Prisma.YamanokaiEventUncheckedCreateWithoutSLInput> | Prisma.YamanokaiEventCreateWithoutSLInput[] | Prisma.YamanokaiEventUncheckedCreateWithoutSLInput[]
+  connectOrCreate?: Prisma.YamanokaiEventCreateOrConnectWithoutSLInput | Prisma.YamanokaiEventCreateOrConnectWithoutSLInput[]
+  upsert?: Prisma.YamanokaiEventUpsertWithWhereUniqueWithoutSLInput | Prisma.YamanokaiEventUpsertWithWhereUniqueWithoutSLInput[]
+  createMany?: Prisma.YamanokaiEventCreateManySLInputEnvelope
+  set?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
+  disconnect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
+  delete?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
+  connect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
+  update?: Prisma.YamanokaiEventUpdateWithWhereUniqueWithoutSLInput | Prisma.YamanokaiEventUpdateWithWhereUniqueWithoutSLInput[]
+  updateMany?: Prisma.YamanokaiEventUpdateManyWithWhereWithoutSLInput | Prisma.YamanokaiEventUpdateManyWithWhereWithoutSLInput[]
+  deleteMany?: Prisma.YamanokaiEventScalarWhereInput | Prisma.YamanokaiEventScalarWhereInput[]
+}
+
+export type YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput = {
+  create?: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutCLInput, Prisma.YamanokaiEventUncheckedCreateWithoutCLInput> | Prisma.YamanokaiEventCreateWithoutCLInput[] | Prisma.YamanokaiEventUncheckedCreateWithoutCLInput[]
+  connectOrCreate?: Prisma.YamanokaiEventCreateOrConnectWithoutCLInput | Prisma.YamanokaiEventCreateOrConnectWithoutCLInput[]
+  upsert?: Prisma.YamanokaiEventUpsertWithWhereUniqueWithoutCLInput | Prisma.YamanokaiEventUpsertWithWhereUniqueWithoutCLInput[]
+  createMany?: Prisma.YamanokaiEventCreateManyCLInputEnvelope
+  set?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
+  disconnect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
+  delete?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
+  connect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
+  update?: Prisma.YamanokaiEventUpdateWithWhereUniqueWithoutCLInput | Prisma.YamanokaiEventUpdateWithWhereUniqueWithoutCLInput[]
+  updateMany?: Prisma.YamanokaiEventUpdateManyWithWhereWithoutCLInput | Prisma.YamanokaiEventUpdateManyWithWhereWithoutCLInput[]
+  deleteMany?: Prisma.YamanokaiEventScalarWhereInput | Prisma.YamanokaiEventScalarWhereInput[]
+}
+
+export type YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput = {
+  create?: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutSLInput, Prisma.YamanokaiEventUncheckedCreateWithoutSLInput> | Prisma.YamanokaiEventCreateWithoutSLInput[] | Prisma.YamanokaiEventUncheckedCreateWithoutSLInput[]
+  connectOrCreate?: Prisma.YamanokaiEventCreateOrConnectWithoutSLInput | Prisma.YamanokaiEventCreateOrConnectWithoutSLInput[]
+  upsert?: Prisma.YamanokaiEventUpsertWithWhereUniqueWithoutSLInput | Prisma.YamanokaiEventUpsertWithWhereUniqueWithoutSLInput[]
+  createMany?: Prisma.YamanokaiEventCreateManySLInputEnvelope
+  set?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
+  disconnect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
+  delete?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
+  connect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
+  update?: Prisma.YamanokaiEventUpdateWithWhereUniqueWithoutSLInput | Prisma.YamanokaiEventUpdateWithWhereUniqueWithoutSLInput[]
+  updateMany?: Prisma.YamanokaiEventUpdateManyWithWhereWithoutSLInput | Prisma.YamanokaiEventUpdateManyWithWhereWithoutSLInput[]
+  deleteMany?: Prisma.YamanokaiEventScalarWhereInput | Prisma.YamanokaiEventScalarWhereInput[]
+}
+
 export type YamanokaiEventCreateNestedManyWithoutYamanokaiDepartmentInput = {
   create?: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutYamanokaiDepartmentInput, Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiDepartmentInput> | Prisma.YamanokaiEventCreateWithoutYamanokaiDepartmentInput[] | Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiDepartmentInput[]
   connectOrCreate?: Prisma.YamanokaiEventCreateOrConnectWithoutYamanokaiDepartmentInput | Prisma.YamanokaiEventCreateOrConnectWithoutYamanokaiDepartmentInput[]
@@ -907,90 +991,6 @@ export type YamanokaiEventUncheckedUpdateManyWithoutYamanokaiDepartmentNestedInp
   connect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
   update?: Prisma.YamanokaiEventUpdateWithWhereUniqueWithoutYamanokaiDepartmentInput | Prisma.YamanokaiEventUpdateWithWhereUniqueWithoutYamanokaiDepartmentInput[]
   updateMany?: Prisma.YamanokaiEventUpdateManyWithWhereWithoutYamanokaiDepartmentInput | Prisma.YamanokaiEventUpdateManyWithWhereWithoutYamanokaiDepartmentInput[]
-  deleteMany?: Prisma.YamanokaiEventScalarWhereInput | Prisma.YamanokaiEventScalarWhereInput[]
-}
-
-export type YamanokaiEventCreateNestedManyWithoutYamanokaiCLInput = {
-  create?: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutYamanokaiCLInput, Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiCLInput> | Prisma.YamanokaiEventCreateWithoutYamanokaiCLInput[] | Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiCLInput[]
-  connectOrCreate?: Prisma.YamanokaiEventCreateOrConnectWithoutYamanokaiCLInput | Prisma.YamanokaiEventCreateOrConnectWithoutYamanokaiCLInput[]
-  createMany?: Prisma.YamanokaiEventCreateManyYamanokaiCLInputEnvelope
-  connect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
-}
-
-export type YamanokaiEventCreateNestedManyWithoutYamanokaiSLInput = {
-  create?: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutYamanokaiSLInput, Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiSLInput> | Prisma.YamanokaiEventCreateWithoutYamanokaiSLInput[] | Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiSLInput[]
-  connectOrCreate?: Prisma.YamanokaiEventCreateOrConnectWithoutYamanokaiSLInput | Prisma.YamanokaiEventCreateOrConnectWithoutYamanokaiSLInput[]
-  createMany?: Prisma.YamanokaiEventCreateManyYamanokaiSLInputEnvelope
-  connect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
-}
-
-export type YamanokaiEventUncheckedCreateNestedManyWithoutYamanokaiCLInput = {
-  create?: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutYamanokaiCLInput, Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiCLInput> | Prisma.YamanokaiEventCreateWithoutYamanokaiCLInput[] | Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiCLInput[]
-  connectOrCreate?: Prisma.YamanokaiEventCreateOrConnectWithoutYamanokaiCLInput | Prisma.YamanokaiEventCreateOrConnectWithoutYamanokaiCLInput[]
-  createMany?: Prisma.YamanokaiEventCreateManyYamanokaiCLInputEnvelope
-  connect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
-}
-
-export type YamanokaiEventUncheckedCreateNestedManyWithoutYamanokaiSLInput = {
-  create?: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutYamanokaiSLInput, Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiSLInput> | Prisma.YamanokaiEventCreateWithoutYamanokaiSLInput[] | Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiSLInput[]
-  connectOrCreate?: Prisma.YamanokaiEventCreateOrConnectWithoutYamanokaiSLInput | Prisma.YamanokaiEventCreateOrConnectWithoutYamanokaiSLInput[]
-  createMany?: Prisma.YamanokaiEventCreateManyYamanokaiSLInputEnvelope
-  connect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
-}
-
-export type YamanokaiEventUpdateManyWithoutYamanokaiCLNestedInput = {
-  create?: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutYamanokaiCLInput, Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiCLInput> | Prisma.YamanokaiEventCreateWithoutYamanokaiCLInput[] | Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiCLInput[]
-  connectOrCreate?: Prisma.YamanokaiEventCreateOrConnectWithoutYamanokaiCLInput | Prisma.YamanokaiEventCreateOrConnectWithoutYamanokaiCLInput[]
-  upsert?: Prisma.YamanokaiEventUpsertWithWhereUniqueWithoutYamanokaiCLInput | Prisma.YamanokaiEventUpsertWithWhereUniqueWithoutYamanokaiCLInput[]
-  createMany?: Prisma.YamanokaiEventCreateManyYamanokaiCLInputEnvelope
-  set?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
-  disconnect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
-  delete?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
-  connect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
-  update?: Prisma.YamanokaiEventUpdateWithWhereUniqueWithoutYamanokaiCLInput | Prisma.YamanokaiEventUpdateWithWhereUniqueWithoutYamanokaiCLInput[]
-  updateMany?: Prisma.YamanokaiEventUpdateManyWithWhereWithoutYamanokaiCLInput | Prisma.YamanokaiEventUpdateManyWithWhereWithoutYamanokaiCLInput[]
-  deleteMany?: Prisma.YamanokaiEventScalarWhereInput | Prisma.YamanokaiEventScalarWhereInput[]
-}
-
-export type YamanokaiEventUpdateManyWithoutYamanokaiSLNestedInput = {
-  create?: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutYamanokaiSLInput, Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiSLInput> | Prisma.YamanokaiEventCreateWithoutYamanokaiSLInput[] | Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiSLInput[]
-  connectOrCreate?: Prisma.YamanokaiEventCreateOrConnectWithoutYamanokaiSLInput | Prisma.YamanokaiEventCreateOrConnectWithoutYamanokaiSLInput[]
-  upsert?: Prisma.YamanokaiEventUpsertWithWhereUniqueWithoutYamanokaiSLInput | Prisma.YamanokaiEventUpsertWithWhereUniqueWithoutYamanokaiSLInput[]
-  createMany?: Prisma.YamanokaiEventCreateManyYamanokaiSLInputEnvelope
-  set?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
-  disconnect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
-  delete?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
-  connect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
-  update?: Prisma.YamanokaiEventUpdateWithWhereUniqueWithoutYamanokaiSLInput | Prisma.YamanokaiEventUpdateWithWhereUniqueWithoutYamanokaiSLInput[]
-  updateMany?: Prisma.YamanokaiEventUpdateManyWithWhereWithoutYamanokaiSLInput | Prisma.YamanokaiEventUpdateManyWithWhereWithoutYamanokaiSLInput[]
-  deleteMany?: Prisma.YamanokaiEventScalarWhereInput | Prisma.YamanokaiEventScalarWhereInput[]
-}
-
-export type YamanokaiEventUncheckedUpdateManyWithoutYamanokaiCLNestedInput = {
-  create?: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutYamanokaiCLInput, Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiCLInput> | Prisma.YamanokaiEventCreateWithoutYamanokaiCLInput[] | Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiCLInput[]
-  connectOrCreate?: Prisma.YamanokaiEventCreateOrConnectWithoutYamanokaiCLInput | Prisma.YamanokaiEventCreateOrConnectWithoutYamanokaiCLInput[]
-  upsert?: Prisma.YamanokaiEventUpsertWithWhereUniqueWithoutYamanokaiCLInput | Prisma.YamanokaiEventUpsertWithWhereUniqueWithoutYamanokaiCLInput[]
-  createMany?: Prisma.YamanokaiEventCreateManyYamanokaiCLInputEnvelope
-  set?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
-  disconnect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
-  delete?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
-  connect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
-  update?: Prisma.YamanokaiEventUpdateWithWhereUniqueWithoutYamanokaiCLInput | Prisma.YamanokaiEventUpdateWithWhereUniqueWithoutYamanokaiCLInput[]
-  updateMany?: Prisma.YamanokaiEventUpdateManyWithWhereWithoutYamanokaiCLInput | Prisma.YamanokaiEventUpdateManyWithWhereWithoutYamanokaiCLInput[]
-  deleteMany?: Prisma.YamanokaiEventScalarWhereInput | Prisma.YamanokaiEventScalarWhereInput[]
-}
-
-export type YamanokaiEventUncheckedUpdateManyWithoutYamanokaiSLNestedInput = {
-  create?: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutYamanokaiSLInput, Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiSLInput> | Prisma.YamanokaiEventCreateWithoutYamanokaiSLInput[] | Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiSLInput[]
-  connectOrCreate?: Prisma.YamanokaiEventCreateOrConnectWithoutYamanokaiSLInput | Prisma.YamanokaiEventCreateOrConnectWithoutYamanokaiSLInput[]
-  upsert?: Prisma.YamanokaiEventUpsertWithWhereUniqueWithoutYamanokaiSLInput | Prisma.YamanokaiEventUpsertWithWhereUniqueWithoutYamanokaiSLInput[]
-  createMany?: Prisma.YamanokaiEventCreateManyYamanokaiSLInputEnvelope
-  set?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
-  disconnect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
-  delete?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
-  connect?: Prisma.YamanokaiEventWhereUniqueInput | Prisma.YamanokaiEventWhereUniqueInput[]
-  update?: Prisma.YamanokaiEventUpdateWithWhereUniqueWithoutYamanokaiSLInput | Prisma.YamanokaiEventUpdateWithWhereUniqueWithoutYamanokaiSLInput[]
-  updateMany?: Prisma.YamanokaiEventUpdateManyWithWhereWithoutYamanokaiSLInput | Prisma.YamanokaiEventUpdateManyWithWhereWithoutYamanokaiSLInput[]
   deleteMany?: Prisma.YamanokaiEventScalarWhereInput | Prisma.YamanokaiEventScalarWhereInput[]
 }
 
@@ -1082,6 +1082,214 @@ export type YamanokaiEventUpdateOneWithoutYamanokaiEquipmentLoanNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.YamanokaiEventUpdateToOneWithWhereWithoutYamanokaiEquipmentLoanInput, Prisma.YamanokaiEventUpdateWithoutYamanokaiEquipmentLoanInput>, Prisma.YamanokaiEventUncheckedUpdateWithoutYamanokaiEquipmentLoanInput>
 }
 
+export type YamanokaiEventCreateWithoutCLInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  title: string
+  mountainName?: string | null
+  altitude?: string | null
+  startAt: Date | string
+  endAt: Date | string
+  deadline: Date | string
+  staminaGrade: string
+  skillGrade: string
+  rockCategory: string
+  requiredInsurance?: number
+  meetingPlace: string
+  meetingTime: string
+  course?: string | null
+  capacity?: number | null
+  notes?: string | null
+  status?: string
+  isDeleted?: boolean
+  YamanokaiDepartment: Prisma.YamanokaiDepartmentCreateNestedOneWithoutYamanokaiEventInput
+  SL?: Prisma.UserCreateNestedOneWithoutYamanokaiEventAsSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutYamanokaiEventInput
+  YamanokaiEventPlan?: Prisma.YamanokaiEventPlanCreateNestedOneWithoutYamanokaiEventInput
+  YamanokaiRecord?: Prisma.YamanokaiRecordCreateNestedOneWithoutYamanokaiEventInput
+  YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionCreateNestedManyWithoutYamanokaiEventInput
+  YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanCreateNestedManyWithoutYamanokaiEventInput
+  YamanokaiEventRequiredCourse?: Prisma.YamanokaiEventRequiredCourseCreateNestedManyWithoutYamanokaiEventInput
+}
+
+export type YamanokaiEventUncheckedCreateWithoutCLInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  title: string
+  mountainName?: string | null
+  altitude?: string | null
+  startAt: Date | string
+  endAt: Date | string
+  deadline: Date | string
+  staminaGrade: string
+  skillGrade: string
+  rockCategory: string
+  requiredInsurance?: number
+  meetingPlace: string
+  meetingTime: string
+  course?: string | null
+  capacity?: number | null
+  notes?: string | null
+  status?: string
+  isDeleted?: boolean
+  yamanokaiDepartmentId: number
+  slId?: number | null
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiEventInput
+  YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedCreateNestedOneWithoutYamanokaiEventInput
+  YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedOneWithoutYamanokaiEventInput
+  YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedCreateNestedManyWithoutYamanokaiEventInput
+  YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedCreateNestedManyWithoutYamanokaiEventInput
+  YamanokaiEventRequiredCourse?: Prisma.YamanokaiEventRequiredCourseUncheckedCreateNestedManyWithoutYamanokaiEventInput
+}
+
+export type YamanokaiEventCreateOrConnectWithoutCLInput = {
+  where: Prisma.YamanokaiEventWhereUniqueInput
+  create: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutCLInput, Prisma.YamanokaiEventUncheckedCreateWithoutCLInput>
+}
+
+export type YamanokaiEventCreateManyCLInputEnvelope = {
+  data: Prisma.YamanokaiEventCreateManyCLInput | Prisma.YamanokaiEventCreateManyCLInput[]
+  skipDuplicates?: boolean
+}
+
+export type YamanokaiEventCreateWithoutSLInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  title: string
+  mountainName?: string | null
+  altitude?: string | null
+  startAt: Date | string
+  endAt: Date | string
+  deadline: Date | string
+  staminaGrade: string
+  skillGrade: string
+  rockCategory: string
+  requiredInsurance?: number
+  meetingPlace: string
+  meetingTime: string
+  course?: string | null
+  capacity?: number | null
+  notes?: string | null
+  status?: string
+  isDeleted?: boolean
+  YamanokaiDepartment: Prisma.YamanokaiDepartmentCreateNestedOneWithoutYamanokaiEventInput
+  CL: Prisma.UserCreateNestedOneWithoutYamanokaiEventAsCLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutYamanokaiEventInput
+  YamanokaiEventPlan?: Prisma.YamanokaiEventPlanCreateNestedOneWithoutYamanokaiEventInput
+  YamanokaiRecord?: Prisma.YamanokaiRecordCreateNestedOneWithoutYamanokaiEventInput
+  YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionCreateNestedManyWithoutYamanokaiEventInput
+  YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanCreateNestedManyWithoutYamanokaiEventInput
+  YamanokaiEventRequiredCourse?: Prisma.YamanokaiEventRequiredCourseCreateNestedManyWithoutYamanokaiEventInput
+}
+
+export type YamanokaiEventUncheckedCreateWithoutSLInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  title: string
+  mountainName?: string | null
+  altitude?: string | null
+  startAt: Date | string
+  endAt: Date | string
+  deadline: Date | string
+  staminaGrade: string
+  skillGrade: string
+  rockCategory: string
+  requiredInsurance?: number
+  meetingPlace: string
+  meetingTime: string
+  course?: string | null
+  capacity?: number | null
+  notes?: string | null
+  status?: string
+  isDeleted?: boolean
+  yamanokaiDepartmentId: number
+  clId: number
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiEventInput
+  YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedCreateNestedOneWithoutYamanokaiEventInput
+  YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedOneWithoutYamanokaiEventInput
+  YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedCreateNestedManyWithoutYamanokaiEventInput
+  YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedCreateNestedManyWithoutYamanokaiEventInput
+  YamanokaiEventRequiredCourse?: Prisma.YamanokaiEventRequiredCourseUncheckedCreateNestedManyWithoutYamanokaiEventInput
+}
+
+export type YamanokaiEventCreateOrConnectWithoutSLInput = {
+  where: Prisma.YamanokaiEventWhereUniqueInput
+  create: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutSLInput, Prisma.YamanokaiEventUncheckedCreateWithoutSLInput>
+}
+
+export type YamanokaiEventCreateManySLInputEnvelope = {
+  data: Prisma.YamanokaiEventCreateManySLInput | Prisma.YamanokaiEventCreateManySLInput[]
+  skipDuplicates?: boolean
+}
+
+export type YamanokaiEventUpsertWithWhereUniqueWithoutCLInput = {
+  where: Prisma.YamanokaiEventWhereUniqueInput
+  update: Prisma.XOR<Prisma.YamanokaiEventUpdateWithoutCLInput, Prisma.YamanokaiEventUncheckedUpdateWithoutCLInput>
+  create: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutCLInput, Prisma.YamanokaiEventUncheckedCreateWithoutCLInput>
+}
+
+export type YamanokaiEventUpdateWithWhereUniqueWithoutCLInput = {
+  where: Prisma.YamanokaiEventWhereUniqueInput
+  data: Prisma.XOR<Prisma.YamanokaiEventUpdateWithoutCLInput, Prisma.YamanokaiEventUncheckedUpdateWithoutCLInput>
+}
+
+export type YamanokaiEventUpdateManyWithWhereWithoutCLInput = {
+  where: Prisma.YamanokaiEventScalarWhereInput
+  data: Prisma.XOR<Prisma.YamanokaiEventUpdateManyMutationInput, Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLInput>
+}
+
+export type YamanokaiEventScalarWhereInput = {
+  AND?: Prisma.YamanokaiEventScalarWhereInput | Prisma.YamanokaiEventScalarWhereInput[]
+  OR?: Prisma.YamanokaiEventScalarWhereInput[]
+  NOT?: Prisma.YamanokaiEventScalarWhereInput | Prisma.YamanokaiEventScalarWhereInput[]
+  id?: Prisma.IntFilter<"YamanokaiEvent"> | number
+  createdAt?: Prisma.DateTimeFilter<"YamanokaiEvent"> | Date | string
+  updatedAt?: Prisma.DateTimeNullableFilter<"YamanokaiEvent"> | Date | string | null
+  sortOrder?: Prisma.FloatFilter<"YamanokaiEvent"> | number
+  title?: Prisma.StringFilter<"YamanokaiEvent"> | string
+  mountainName?: Prisma.StringNullableFilter<"YamanokaiEvent"> | string | null
+  altitude?: Prisma.StringNullableFilter<"YamanokaiEvent"> | string | null
+  startAt?: Prisma.DateTimeFilter<"YamanokaiEvent"> | Date | string
+  endAt?: Prisma.DateTimeFilter<"YamanokaiEvent"> | Date | string
+  deadline?: Prisma.DateTimeFilter<"YamanokaiEvent"> | Date | string
+  staminaGrade?: Prisma.StringFilter<"YamanokaiEvent"> | string
+  skillGrade?: Prisma.StringFilter<"YamanokaiEvent"> | string
+  rockCategory?: Prisma.StringFilter<"YamanokaiEvent"> | string
+  requiredInsurance?: Prisma.IntFilter<"YamanokaiEvent"> | number
+  meetingPlace?: Prisma.StringFilter<"YamanokaiEvent"> | string
+  meetingTime?: Prisma.StringFilter<"YamanokaiEvent"> | string
+  course?: Prisma.StringNullableFilter<"YamanokaiEvent"> | string | null
+  capacity?: Prisma.IntNullableFilter<"YamanokaiEvent"> | number | null
+  notes?: Prisma.StringNullableFilter<"YamanokaiEvent"> | string | null
+  status?: Prisma.StringFilter<"YamanokaiEvent"> | string
+  isDeleted?: Prisma.BoolFilter<"YamanokaiEvent"> | boolean
+  yamanokaiDepartmentId?: Prisma.IntFilter<"YamanokaiEvent"> | number
+  clId?: Prisma.IntFilter<"YamanokaiEvent"> | number
+  slId?: Prisma.IntNullableFilter<"YamanokaiEvent"> | number | null
+}
+
+export type YamanokaiEventUpsertWithWhereUniqueWithoutSLInput = {
+  where: Prisma.YamanokaiEventWhereUniqueInput
+  update: Prisma.XOR<Prisma.YamanokaiEventUpdateWithoutSLInput, Prisma.YamanokaiEventUncheckedUpdateWithoutSLInput>
+  create: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutSLInput, Prisma.YamanokaiEventUncheckedCreateWithoutSLInput>
+}
+
+export type YamanokaiEventUpdateWithWhereUniqueWithoutSLInput = {
+  where: Prisma.YamanokaiEventWhereUniqueInput
+  data: Prisma.XOR<Prisma.YamanokaiEventUpdateWithoutSLInput, Prisma.YamanokaiEventUncheckedUpdateWithoutSLInput>
+}
+
+export type YamanokaiEventUpdateManyWithWhereWithoutSLInput = {
+  where: Prisma.YamanokaiEventScalarWhereInput
+  data: Prisma.XOR<Prisma.YamanokaiEventUpdateManyMutationInput, Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLInput>
+}
+
 export type YamanokaiEventCreateWithoutYamanokaiDepartmentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
@@ -1103,8 +1311,8 @@ export type YamanokaiEventCreateWithoutYamanokaiDepartmentInput = {
   notes?: string | null
   status?: string
   isDeleted?: boolean
-  YamanokaiCL: Prisma.YamanokaiMemberCreateNestedOneWithoutYamanokaiEventAsCLInput
-  YamanokaiSL?: Prisma.YamanokaiMemberCreateNestedOneWithoutYamanokaiEventAsSLInput
+  CL: Prisma.UserCreateNestedOneWithoutYamanokaiEventAsCLInput
+  SL?: Prisma.UserCreateNestedOneWithoutYamanokaiEventAsSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutYamanokaiEventInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanCreateNestedOneWithoutYamanokaiEventInput
   YamanokaiRecord?: Prisma.YamanokaiRecordCreateNestedOneWithoutYamanokaiEventInput
@@ -1171,214 +1379,6 @@ export type YamanokaiEventUpdateManyWithWhereWithoutYamanokaiDepartmentInput = {
   data: Prisma.XOR<Prisma.YamanokaiEventUpdateManyMutationInput, Prisma.YamanokaiEventUncheckedUpdateManyWithoutYamanokaiDepartmentInput>
 }
 
-export type YamanokaiEventScalarWhereInput = {
-  AND?: Prisma.YamanokaiEventScalarWhereInput | Prisma.YamanokaiEventScalarWhereInput[]
-  OR?: Prisma.YamanokaiEventScalarWhereInput[]
-  NOT?: Prisma.YamanokaiEventScalarWhereInput | Prisma.YamanokaiEventScalarWhereInput[]
-  id?: Prisma.IntFilter<"YamanokaiEvent"> | number
-  createdAt?: Prisma.DateTimeFilter<"YamanokaiEvent"> | Date | string
-  updatedAt?: Prisma.DateTimeNullableFilter<"YamanokaiEvent"> | Date | string | null
-  sortOrder?: Prisma.FloatFilter<"YamanokaiEvent"> | number
-  title?: Prisma.StringFilter<"YamanokaiEvent"> | string
-  mountainName?: Prisma.StringNullableFilter<"YamanokaiEvent"> | string | null
-  altitude?: Prisma.StringNullableFilter<"YamanokaiEvent"> | string | null
-  startAt?: Prisma.DateTimeFilter<"YamanokaiEvent"> | Date | string
-  endAt?: Prisma.DateTimeFilter<"YamanokaiEvent"> | Date | string
-  deadline?: Prisma.DateTimeFilter<"YamanokaiEvent"> | Date | string
-  staminaGrade?: Prisma.StringFilter<"YamanokaiEvent"> | string
-  skillGrade?: Prisma.StringFilter<"YamanokaiEvent"> | string
-  rockCategory?: Prisma.StringFilter<"YamanokaiEvent"> | string
-  requiredInsurance?: Prisma.IntFilter<"YamanokaiEvent"> | number
-  meetingPlace?: Prisma.StringFilter<"YamanokaiEvent"> | string
-  meetingTime?: Prisma.StringFilter<"YamanokaiEvent"> | string
-  course?: Prisma.StringNullableFilter<"YamanokaiEvent"> | string | null
-  capacity?: Prisma.IntNullableFilter<"YamanokaiEvent"> | number | null
-  notes?: Prisma.StringNullableFilter<"YamanokaiEvent"> | string | null
-  status?: Prisma.StringFilter<"YamanokaiEvent"> | string
-  isDeleted?: Prisma.BoolFilter<"YamanokaiEvent"> | boolean
-  yamanokaiDepartmentId?: Prisma.IntFilter<"YamanokaiEvent"> | number
-  clId?: Prisma.IntFilter<"YamanokaiEvent"> | number
-  slId?: Prisma.IntNullableFilter<"YamanokaiEvent"> | number | null
-}
-
-export type YamanokaiEventCreateWithoutYamanokaiCLInput = {
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  title: string
-  mountainName?: string | null
-  altitude?: string | null
-  startAt: Date | string
-  endAt: Date | string
-  deadline: Date | string
-  staminaGrade: string
-  skillGrade: string
-  rockCategory: string
-  requiredInsurance?: number
-  meetingPlace: string
-  meetingTime: string
-  course?: string | null
-  capacity?: number | null
-  notes?: string | null
-  status?: string
-  isDeleted?: boolean
-  YamanokaiDepartment: Prisma.YamanokaiDepartmentCreateNestedOneWithoutYamanokaiEventInput
-  YamanokaiSL?: Prisma.YamanokaiMemberCreateNestedOneWithoutYamanokaiEventAsSLInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutYamanokaiEventInput
-  YamanokaiEventPlan?: Prisma.YamanokaiEventPlanCreateNestedOneWithoutYamanokaiEventInput
-  YamanokaiRecord?: Prisma.YamanokaiRecordCreateNestedOneWithoutYamanokaiEventInput
-  YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionCreateNestedManyWithoutYamanokaiEventInput
-  YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanCreateNestedManyWithoutYamanokaiEventInput
-  YamanokaiEventRequiredCourse?: Prisma.YamanokaiEventRequiredCourseCreateNestedManyWithoutYamanokaiEventInput
-}
-
-export type YamanokaiEventUncheckedCreateWithoutYamanokaiCLInput = {
-  id?: number
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  title: string
-  mountainName?: string | null
-  altitude?: string | null
-  startAt: Date | string
-  endAt: Date | string
-  deadline: Date | string
-  staminaGrade: string
-  skillGrade: string
-  rockCategory: string
-  requiredInsurance?: number
-  meetingPlace: string
-  meetingTime: string
-  course?: string | null
-  capacity?: number | null
-  notes?: string | null
-  status?: string
-  isDeleted?: boolean
-  yamanokaiDepartmentId: number
-  slId?: number | null
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiEventInput
-  YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedCreateNestedOneWithoutYamanokaiEventInput
-  YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedOneWithoutYamanokaiEventInput
-  YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedCreateNestedManyWithoutYamanokaiEventInput
-  YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedCreateNestedManyWithoutYamanokaiEventInput
-  YamanokaiEventRequiredCourse?: Prisma.YamanokaiEventRequiredCourseUncheckedCreateNestedManyWithoutYamanokaiEventInput
-}
-
-export type YamanokaiEventCreateOrConnectWithoutYamanokaiCLInput = {
-  where: Prisma.YamanokaiEventWhereUniqueInput
-  create: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutYamanokaiCLInput, Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiCLInput>
-}
-
-export type YamanokaiEventCreateManyYamanokaiCLInputEnvelope = {
-  data: Prisma.YamanokaiEventCreateManyYamanokaiCLInput | Prisma.YamanokaiEventCreateManyYamanokaiCLInput[]
-  skipDuplicates?: boolean
-}
-
-export type YamanokaiEventCreateWithoutYamanokaiSLInput = {
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  title: string
-  mountainName?: string | null
-  altitude?: string | null
-  startAt: Date | string
-  endAt: Date | string
-  deadline: Date | string
-  staminaGrade: string
-  skillGrade: string
-  rockCategory: string
-  requiredInsurance?: number
-  meetingPlace: string
-  meetingTime: string
-  course?: string | null
-  capacity?: number | null
-  notes?: string | null
-  status?: string
-  isDeleted?: boolean
-  YamanokaiDepartment: Prisma.YamanokaiDepartmentCreateNestedOneWithoutYamanokaiEventInput
-  YamanokaiCL: Prisma.YamanokaiMemberCreateNestedOneWithoutYamanokaiEventAsCLInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutYamanokaiEventInput
-  YamanokaiEventPlan?: Prisma.YamanokaiEventPlanCreateNestedOneWithoutYamanokaiEventInput
-  YamanokaiRecord?: Prisma.YamanokaiRecordCreateNestedOneWithoutYamanokaiEventInput
-  YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionCreateNestedManyWithoutYamanokaiEventInput
-  YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanCreateNestedManyWithoutYamanokaiEventInput
-  YamanokaiEventRequiredCourse?: Prisma.YamanokaiEventRequiredCourseCreateNestedManyWithoutYamanokaiEventInput
-}
-
-export type YamanokaiEventUncheckedCreateWithoutYamanokaiSLInput = {
-  id?: number
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  title: string
-  mountainName?: string | null
-  altitude?: string | null
-  startAt: Date | string
-  endAt: Date | string
-  deadline: Date | string
-  staminaGrade: string
-  skillGrade: string
-  rockCategory: string
-  requiredInsurance?: number
-  meetingPlace: string
-  meetingTime: string
-  course?: string | null
-  capacity?: number | null
-  notes?: string | null
-  status?: string
-  isDeleted?: boolean
-  yamanokaiDepartmentId: number
-  clId: number
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiEventInput
-  YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedCreateNestedOneWithoutYamanokaiEventInput
-  YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedOneWithoutYamanokaiEventInput
-  YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedCreateNestedManyWithoutYamanokaiEventInput
-  YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedCreateNestedManyWithoutYamanokaiEventInput
-  YamanokaiEventRequiredCourse?: Prisma.YamanokaiEventRequiredCourseUncheckedCreateNestedManyWithoutYamanokaiEventInput
-}
-
-export type YamanokaiEventCreateOrConnectWithoutYamanokaiSLInput = {
-  where: Prisma.YamanokaiEventWhereUniqueInput
-  create: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutYamanokaiSLInput, Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiSLInput>
-}
-
-export type YamanokaiEventCreateManyYamanokaiSLInputEnvelope = {
-  data: Prisma.YamanokaiEventCreateManyYamanokaiSLInput | Prisma.YamanokaiEventCreateManyYamanokaiSLInput[]
-  skipDuplicates?: boolean
-}
-
-export type YamanokaiEventUpsertWithWhereUniqueWithoutYamanokaiCLInput = {
-  where: Prisma.YamanokaiEventWhereUniqueInput
-  update: Prisma.XOR<Prisma.YamanokaiEventUpdateWithoutYamanokaiCLInput, Prisma.YamanokaiEventUncheckedUpdateWithoutYamanokaiCLInput>
-  create: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutYamanokaiCLInput, Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiCLInput>
-}
-
-export type YamanokaiEventUpdateWithWhereUniqueWithoutYamanokaiCLInput = {
-  where: Prisma.YamanokaiEventWhereUniqueInput
-  data: Prisma.XOR<Prisma.YamanokaiEventUpdateWithoutYamanokaiCLInput, Prisma.YamanokaiEventUncheckedUpdateWithoutYamanokaiCLInput>
-}
-
-export type YamanokaiEventUpdateManyWithWhereWithoutYamanokaiCLInput = {
-  where: Prisma.YamanokaiEventScalarWhereInput
-  data: Prisma.XOR<Prisma.YamanokaiEventUpdateManyMutationInput, Prisma.YamanokaiEventUncheckedUpdateManyWithoutYamanokaiCLInput>
-}
-
-export type YamanokaiEventUpsertWithWhereUniqueWithoutYamanokaiSLInput = {
-  where: Prisma.YamanokaiEventWhereUniqueInput
-  update: Prisma.XOR<Prisma.YamanokaiEventUpdateWithoutYamanokaiSLInput, Prisma.YamanokaiEventUncheckedUpdateWithoutYamanokaiSLInput>
-  create: Prisma.XOR<Prisma.YamanokaiEventCreateWithoutYamanokaiSLInput, Prisma.YamanokaiEventUncheckedCreateWithoutYamanokaiSLInput>
-}
-
-export type YamanokaiEventUpdateWithWhereUniqueWithoutYamanokaiSLInput = {
-  where: Prisma.YamanokaiEventWhereUniqueInput
-  data: Prisma.XOR<Prisma.YamanokaiEventUpdateWithoutYamanokaiSLInput, Prisma.YamanokaiEventUncheckedUpdateWithoutYamanokaiSLInput>
-}
-
-export type YamanokaiEventUpdateManyWithWhereWithoutYamanokaiSLInput = {
-  where: Prisma.YamanokaiEventScalarWhereInput
-  data: Prisma.XOR<Prisma.YamanokaiEventUpdateManyMutationInput, Prisma.YamanokaiEventUncheckedUpdateManyWithoutYamanokaiSLInput>
-}
-
 export type YamanokaiEventCreateWithoutYamanokaiCourseCompletionInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
@@ -1401,8 +1401,8 @@ export type YamanokaiEventCreateWithoutYamanokaiCourseCompletionInput = {
   status?: string
   isDeleted?: boolean
   YamanokaiDepartment: Prisma.YamanokaiDepartmentCreateNestedOneWithoutYamanokaiEventInput
-  YamanokaiCL: Prisma.YamanokaiMemberCreateNestedOneWithoutYamanokaiEventAsCLInput
-  YamanokaiSL?: Prisma.YamanokaiMemberCreateNestedOneWithoutYamanokaiEventAsSLInput
+  CL: Prisma.UserCreateNestedOneWithoutYamanokaiEventAsCLInput
+  SL?: Prisma.UserCreateNestedOneWithoutYamanokaiEventAsSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutYamanokaiEventInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanCreateNestedOneWithoutYamanokaiEventInput
   YamanokaiRecord?: Prisma.YamanokaiRecordCreateNestedOneWithoutYamanokaiEventInput
@@ -1480,8 +1480,8 @@ export type YamanokaiEventUpdateWithoutYamanokaiCourseCompletionInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   YamanokaiDepartment?: Prisma.YamanokaiDepartmentUpdateOneRequiredWithoutYamanokaiEventNestedInput
-  YamanokaiCL?: Prisma.YamanokaiMemberUpdateOneRequiredWithoutYamanokaiEventAsCLNestedInput
-  YamanokaiSL?: Prisma.YamanokaiMemberUpdateOneWithoutYamanokaiEventAsSLNestedInput
+  CL?: Prisma.UserUpdateOneRequiredWithoutYamanokaiEventAsCLNestedInput
+  SL?: Prisma.UserUpdateOneWithoutYamanokaiEventAsSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutYamanokaiEventNestedInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUpdateOneWithoutYamanokaiEventNestedInput
@@ -1543,8 +1543,8 @@ export type YamanokaiEventCreateWithoutYamanokaiEventRequiredCourseInput = {
   status?: string
   isDeleted?: boolean
   YamanokaiDepartment: Prisma.YamanokaiDepartmentCreateNestedOneWithoutYamanokaiEventInput
-  YamanokaiCL: Prisma.YamanokaiMemberCreateNestedOneWithoutYamanokaiEventAsCLInput
-  YamanokaiSL?: Prisma.YamanokaiMemberCreateNestedOneWithoutYamanokaiEventAsSLInput
+  CL: Prisma.UserCreateNestedOneWithoutYamanokaiEventAsCLInput
+  SL?: Prisma.UserCreateNestedOneWithoutYamanokaiEventAsSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutYamanokaiEventInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanCreateNestedOneWithoutYamanokaiEventInput
   YamanokaiRecord?: Prisma.YamanokaiRecordCreateNestedOneWithoutYamanokaiEventInput
@@ -1622,8 +1622,8 @@ export type YamanokaiEventUpdateWithoutYamanokaiEventRequiredCourseInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   YamanokaiDepartment?: Prisma.YamanokaiDepartmentUpdateOneRequiredWithoutYamanokaiEventNestedInput
-  YamanokaiCL?: Prisma.YamanokaiMemberUpdateOneRequiredWithoutYamanokaiEventAsCLNestedInput
-  YamanokaiSL?: Prisma.YamanokaiMemberUpdateOneWithoutYamanokaiEventAsSLNestedInput
+  CL?: Prisma.UserUpdateOneRequiredWithoutYamanokaiEventAsCLNestedInput
+  SL?: Prisma.UserUpdateOneWithoutYamanokaiEventAsSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutYamanokaiEventNestedInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUpdateOneWithoutYamanokaiEventNestedInput
@@ -1685,8 +1685,8 @@ export type YamanokaiEventCreateWithoutYamanokaiEventPlanInput = {
   status?: string
   isDeleted?: boolean
   YamanokaiDepartment: Prisma.YamanokaiDepartmentCreateNestedOneWithoutYamanokaiEventInput
-  YamanokaiCL: Prisma.YamanokaiMemberCreateNestedOneWithoutYamanokaiEventAsCLInput
-  YamanokaiSL?: Prisma.YamanokaiMemberCreateNestedOneWithoutYamanokaiEventAsSLInput
+  CL: Prisma.UserCreateNestedOneWithoutYamanokaiEventAsCLInput
+  SL?: Prisma.UserCreateNestedOneWithoutYamanokaiEventAsSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutYamanokaiEventInput
   YamanokaiRecord?: Prisma.YamanokaiRecordCreateNestedOneWithoutYamanokaiEventInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionCreateNestedManyWithoutYamanokaiEventInput
@@ -1764,8 +1764,8 @@ export type YamanokaiEventUpdateWithoutYamanokaiEventPlanInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   YamanokaiDepartment?: Prisma.YamanokaiDepartmentUpdateOneRequiredWithoutYamanokaiEventNestedInput
-  YamanokaiCL?: Prisma.YamanokaiMemberUpdateOneRequiredWithoutYamanokaiEventAsCLNestedInput
-  YamanokaiSL?: Prisma.YamanokaiMemberUpdateOneWithoutYamanokaiEventAsSLNestedInput
+  CL?: Prisma.UserUpdateOneRequiredWithoutYamanokaiEventAsCLNestedInput
+  SL?: Prisma.UserUpdateOneWithoutYamanokaiEventAsSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutYamanokaiEventNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUpdateManyWithoutYamanokaiEventNestedInput
@@ -1827,8 +1827,8 @@ export type YamanokaiEventCreateWithoutYamanokaiAttendanceInput = {
   status?: string
   isDeleted?: boolean
   YamanokaiDepartment: Prisma.YamanokaiDepartmentCreateNestedOneWithoutYamanokaiEventInput
-  YamanokaiCL: Prisma.YamanokaiMemberCreateNestedOneWithoutYamanokaiEventAsCLInput
-  YamanokaiSL?: Prisma.YamanokaiMemberCreateNestedOneWithoutYamanokaiEventAsSLInput
+  CL: Prisma.UserCreateNestedOneWithoutYamanokaiEventAsCLInput
+  SL?: Prisma.UserCreateNestedOneWithoutYamanokaiEventAsSLInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanCreateNestedOneWithoutYamanokaiEventInput
   YamanokaiRecord?: Prisma.YamanokaiRecordCreateNestedOneWithoutYamanokaiEventInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionCreateNestedManyWithoutYamanokaiEventInput
@@ -1906,8 +1906,8 @@ export type YamanokaiEventUpdateWithoutYamanokaiAttendanceInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   YamanokaiDepartment?: Prisma.YamanokaiDepartmentUpdateOneRequiredWithoutYamanokaiEventNestedInput
-  YamanokaiCL?: Prisma.YamanokaiMemberUpdateOneRequiredWithoutYamanokaiEventAsCLNestedInput
-  YamanokaiSL?: Prisma.YamanokaiMemberUpdateOneWithoutYamanokaiEventAsSLNestedInput
+  CL?: Prisma.UserUpdateOneRequiredWithoutYamanokaiEventAsCLNestedInput
+  SL?: Prisma.UserUpdateOneWithoutYamanokaiEventAsSLNestedInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUpdateManyWithoutYamanokaiEventNestedInput
@@ -1969,8 +1969,8 @@ export type YamanokaiEventCreateWithoutYamanokaiRecordInput = {
   status?: string
   isDeleted?: boolean
   YamanokaiDepartment: Prisma.YamanokaiDepartmentCreateNestedOneWithoutYamanokaiEventInput
-  YamanokaiCL: Prisma.YamanokaiMemberCreateNestedOneWithoutYamanokaiEventAsCLInput
-  YamanokaiSL?: Prisma.YamanokaiMemberCreateNestedOneWithoutYamanokaiEventAsSLInput
+  CL: Prisma.UserCreateNestedOneWithoutYamanokaiEventAsCLInput
+  SL?: Prisma.UserCreateNestedOneWithoutYamanokaiEventAsSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutYamanokaiEventInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanCreateNestedOneWithoutYamanokaiEventInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionCreateNestedManyWithoutYamanokaiEventInput
@@ -2048,8 +2048,8 @@ export type YamanokaiEventUpdateWithoutYamanokaiRecordInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   YamanokaiDepartment?: Prisma.YamanokaiDepartmentUpdateOneRequiredWithoutYamanokaiEventNestedInput
-  YamanokaiCL?: Prisma.YamanokaiMemberUpdateOneRequiredWithoutYamanokaiEventAsCLNestedInput
-  YamanokaiSL?: Prisma.YamanokaiMemberUpdateOneWithoutYamanokaiEventAsSLNestedInput
+  CL?: Prisma.UserUpdateOneRequiredWithoutYamanokaiEventAsCLNestedInput
+  SL?: Prisma.UserUpdateOneWithoutYamanokaiEventAsSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutYamanokaiEventNestedInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUpdateManyWithoutYamanokaiEventNestedInput
@@ -2111,8 +2111,8 @@ export type YamanokaiEventCreateWithoutYamanokaiEquipmentLoanInput = {
   status?: string
   isDeleted?: boolean
   YamanokaiDepartment: Prisma.YamanokaiDepartmentCreateNestedOneWithoutYamanokaiEventInput
-  YamanokaiCL: Prisma.YamanokaiMemberCreateNestedOneWithoutYamanokaiEventAsCLInput
-  YamanokaiSL?: Prisma.YamanokaiMemberCreateNestedOneWithoutYamanokaiEventAsSLInput
+  CL: Prisma.UserCreateNestedOneWithoutYamanokaiEventAsCLInput
+  SL?: Prisma.UserCreateNestedOneWithoutYamanokaiEventAsSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutYamanokaiEventInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanCreateNestedOneWithoutYamanokaiEventInput
   YamanokaiRecord?: Prisma.YamanokaiRecordCreateNestedOneWithoutYamanokaiEventInput
@@ -2190,8 +2190,8 @@ export type YamanokaiEventUpdateWithoutYamanokaiEquipmentLoanInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   YamanokaiDepartment?: Prisma.YamanokaiDepartmentUpdateOneRequiredWithoutYamanokaiEventNestedInput
-  YamanokaiCL?: Prisma.YamanokaiMemberUpdateOneRequiredWithoutYamanokaiEventAsCLNestedInput
-  YamanokaiSL?: Prisma.YamanokaiMemberUpdateOneWithoutYamanokaiEventAsSLNestedInput
+  CL?: Prisma.UserUpdateOneRequiredWithoutYamanokaiEventAsCLNestedInput
+  SL?: Prisma.UserUpdateOneWithoutYamanokaiEventAsSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutYamanokaiEventNestedInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUpdateOneWithoutYamanokaiEventNestedInput
@@ -2229,6 +2229,236 @@ export type YamanokaiEventUncheckedUpdateWithoutYamanokaiEquipmentLoanInput = {
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedUpdateManyWithoutYamanokaiEventNestedInput
   YamanokaiEventRequiredCourse?: Prisma.YamanokaiEventRequiredCourseUncheckedUpdateManyWithoutYamanokaiEventNestedInput
+}
+
+export type YamanokaiEventCreateManyCLInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  title: string
+  mountainName?: string | null
+  altitude?: string | null
+  startAt: Date | string
+  endAt: Date | string
+  deadline: Date | string
+  staminaGrade: string
+  skillGrade: string
+  rockCategory: string
+  requiredInsurance?: number
+  meetingPlace: string
+  meetingTime: string
+  course?: string | null
+  capacity?: number | null
+  notes?: string | null
+  status?: string
+  isDeleted?: boolean
+  yamanokaiDepartmentId: number
+  slId?: number | null
+}
+
+export type YamanokaiEventCreateManySLInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  title: string
+  mountainName?: string | null
+  altitude?: string | null
+  startAt: Date | string
+  endAt: Date | string
+  deadline: Date | string
+  staminaGrade: string
+  skillGrade: string
+  rockCategory: string
+  requiredInsurance?: number
+  meetingPlace: string
+  meetingTime: string
+  course?: string | null
+  capacity?: number | null
+  notes?: string | null
+  status?: string
+  isDeleted?: boolean
+  yamanokaiDepartmentId: number
+  clId: number
+}
+
+export type YamanokaiEventUpdateWithoutCLInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  mountainName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  altitude?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  staminaGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  skillGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  rockCategory?: Prisma.StringFieldUpdateOperationsInput | string
+  requiredInsurance?: Prisma.IntFieldUpdateOperationsInput | number
+  meetingPlace?: Prisma.StringFieldUpdateOperationsInput | string
+  meetingTime?: Prisma.StringFieldUpdateOperationsInput | string
+  course?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  capacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  YamanokaiDepartment?: Prisma.YamanokaiDepartmentUpdateOneRequiredWithoutYamanokaiEventNestedInput
+  SL?: Prisma.UserUpdateOneWithoutYamanokaiEventAsSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutYamanokaiEventNestedInput
+  YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUpdateOneWithoutYamanokaiEventNestedInput
+  YamanokaiRecord?: Prisma.YamanokaiRecordUpdateOneWithoutYamanokaiEventNestedInput
+  YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUpdateManyWithoutYamanokaiEventNestedInput
+  YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUpdateManyWithoutYamanokaiEventNestedInput
+  YamanokaiEventRequiredCourse?: Prisma.YamanokaiEventRequiredCourseUpdateManyWithoutYamanokaiEventNestedInput
+}
+
+export type YamanokaiEventUncheckedUpdateWithoutCLInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  mountainName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  altitude?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  staminaGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  skillGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  rockCategory?: Prisma.StringFieldUpdateOperationsInput | string
+  requiredInsurance?: Prisma.IntFieldUpdateOperationsInput | number
+  meetingPlace?: Prisma.StringFieldUpdateOperationsInput | string
+  meetingTime?: Prisma.StringFieldUpdateOperationsInput | string
+  course?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  capacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  yamanokaiDepartmentId?: Prisma.IntFieldUpdateOperationsInput | number
+  slId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiEventNestedInput
+  YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedUpdateOneWithoutYamanokaiEventNestedInput
+  YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateOneWithoutYamanokaiEventNestedInput
+  YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedUpdateManyWithoutYamanokaiEventNestedInput
+  YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedUpdateManyWithoutYamanokaiEventNestedInput
+  YamanokaiEventRequiredCourse?: Prisma.YamanokaiEventRequiredCourseUncheckedUpdateManyWithoutYamanokaiEventNestedInput
+}
+
+export type YamanokaiEventUncheckedUpdateManyWithoutCLInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  mountainName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  altitude?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  staminaGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  skillGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  rockCategory?: Prisma.StringFieldUpdateOperationsInput | string
+  requiredInsurance?: Prisma.IntFieldUpdateOperationsInput | number
+  meetingPlace?: Prisma.StringFieldUpdateOperationsInput | string
+  meetingTime?: Prisma.StringFieldUpdateOperationsInput | string
+  course?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  capacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  yamanokaiDepartmentId?: Prisma.IntFieldUpdateOperationsInput | number
+  slId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type YamanokaiEventUpdateWithoutSLInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  mountainName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  altitude?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  staminaGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  skillGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  rockCategory?: Prisma.StringFieldUpdateOperationsInput | string
+  requiredInsurance?: Prisma.IntFieldUpdateOperationsInput | number
+  meetingPlace?: Prisma.StringFieldUpdateOperationsInput | string
+  meetingTime?: Prisma.StringFieldUpdateOperationsInput | string
+  course?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  capacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  YamanokaiDepartment?: Prisma.YamanokaiDepartmentUpdateOneRequiredWithoutYamanokaiEventNestedInput
+  CL?: Prisma.UserUpdateOneRequiredWithoutYamanokaiEventAsCLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutYamanokaiEventNestedInput
+  YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUpdateOneWithoutYamanokaiEventNestedInput
+  YamanokaiRecord?: Prisma.YamanokaiRecordUpdateOneWithoutYamanokaiEventNestedInput
+  YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUpdateManyWithoutYamanokaiEventNestedInput
+  YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUpdateManyWithoutYamanokaiEventNestedInput
+  YamanokaiEventRequiredCourse?: Prisma.YamanokaiEventRequiredCourseUpdateManyWithoutYamanokaiEventNestedInput
+}
+
+export type YamanokaiEventUncheckedUpdateWithoutSLInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  mountainName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  altitude?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  staminaGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  skillGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  rockCategory?: Prisma.StringFieldUpdateOperationsInput | string
+  requiredInsurance?: Prisma.IntFieldUpdateOperationsInput | number
+  meetingPlace?: Prisma.StringFieldUpdateOperationsInput | string
+  meetingTime?: Prisma.StringFieldUpdateOperationsInput | string
+  course?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  capacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  yamanokaiDepartmentId?: Prisma.IntFieldUpdateOperationsInput | number
+  clId?: Prisma.IntFieldUpdateOperationsInput | number
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiEventNestedInput
+  YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedUpdateOneWithoutYamanokaiEventNestedInput
+  YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateOneWithoutYamanokaiEventNestedInput
+  YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedUpdateManyWithoutYamanokaiEventNestedInput
+  YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedUpdateManyWithoutYamanokaiEventNestedInput
+  YamanokaiEventRequiredCourse?: Prisma.YamanokaiEventRequiredCourseUncheckedUpdateManyWithoutYamanokaiEventNestedInput
+}
+
+export type YamanokaiEventUncheckedUpdateManyWithoutSLInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  mountainName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  altitude?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  staminaGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  skillGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  rockCategory?: Prisma.StringFieldUpdateOperationsInput | string
+  requiredInsurance?: Prisma.IntFieldUpdateOperationsInput | number
+  meetingPlace?: Prisma.StringFieldUpdateOperationsInput | string
+  meetingTime?: Prisma.StringFieldUpdateOperationsInput | string
+  course?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  capacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  yamanokaiDepartmentId?: Prisma.IntFieldUpdateOperationsInput | number
+  clId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type YamanokaiEventCreateManyYamanokaiDepartmentInput = {
@@ -2278,8 +2508,8 @@ export type YamanokaiEventUpdateWithoutYamanokaiDepartmentInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  YamanokaiCL?: Prisma.YamanokaiMemberUpdateOneRequiredWithoutYamanokaiEventAsCLNestedInput
-  YamanokaiSL?: Prisma.YamanokaiMemberUpdateOneWithoutYamanokaiEventAsSLNestedInput
+  CL?: Prisma.UserUpdateOneRequiredWithoutYamanokaiEventAsCLNestedInput
+  SL?: Prisma.UserUpdateOneWithoutYamanokaiEventAsSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutYamanokaiEventNestedInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUpdateOneWithoutYamanokaiEventNestedInput
@@ -2344,236 +2574,6 @@ export type YamanokaiEventUncheckedUpdateManyWithoutYamanokaiDepartmentInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   clId?: Prisma.IntFieldUpdateOperationsInput | number
   slId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
-
-export type YamanokaiEventCreateManyYamanokaiCLInput = {
-  id?: number
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  title: string
-  mountainName?: string | null
-  altitude?: string | null
-  startAt: Date | string
-  endAt: Date | string
-  deadline: Date | string
-  staminaGrade: string
-  skillGrade: string
-  rockCategory: string
-  requiredInsurance?: number
-  meetingPlace: string
-  meetingTime: string
-  course?: string | null
-  capacity?: number | null
-  notes?: string | null
-  status?: string
-  isDeleted?: boolean
-  yamanokaiDepartmentId: number
-  slId?: number | null
-}
-
-export type YamanokaiEventCreateManyYamanokaiSLInput = {
-  id?: number
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  title: string
-  mountainName?: string | null
-  altitude?: string | null
-  startAt: Date | string
-  endAt: Date | string
-  deadline: Date | string
-  staminaGrade: string
-  skillGrade: string
-  rockCategory: string
-  requiredInsurance?: number
-  meetingPlace: string
-  meetingTime: string
-  course?: string | null
-  capacity?: number | null
-  notes?: string | null
-  status?: string
-  isDeleted?: boolean
-  yamanokaiDepartmentId: number
-  clId: number
-}
-
-export type YamanokaiEventUpdateWithoutYamanokaiCLInput = {
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  mountainName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  altitude?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  staminaGrade?: Prisma.StringFieldUpdateOperationsInput | string
-  skillGrade?: Prisma.StringFieldUpdateOperationsInput | string
-  rockCategory?: Prisma.StringFieldUpdateOperationsInput | string
-  requiredInsurance?: Prisma.IntFieldUpdateOperationsInput | number
-  meetingPlace?: Prisma.StringFieldUpdateOperationsInput | string
-  meetingTime?: Prisma.StringFieldUpdateOperationsInput | string
-  course?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  capacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  YamanokaiDepartment?: Prisma.YamanokaiDepartmentUpdateOneRequiredWithoutYamanokaiEventNestedInput
-  YamanokaiSL?: Prisma.YamanokaiMemberUpdateOneWithoutYamanokaiEventAsSLNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutYamanokaiEventNestedInput
-  YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUpdateOneWithoutYamanokaiEventNestedInput
-  YamanokaiRecord?: Prisma.YamanokaiRecordUpdateOneWithoutYamanokaiEventNestedInput
-  YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUpdateManyWithoutYamanokaiEventNestedInput
-  YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUpdateManyWithoutYamanokaiEventNestedInput
-  YamanokaiEventRequiredCourse?: Prisma.YamanokaiEventRequiredCourseUpdateManyWithoutYamanokaiEventNestedInput
-}
-
-export type YamanokaiEventUncheckedUpdateWithoutYamanokaiCLInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  mountainName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  altitude?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  staminaGrade?: Prisma.StringFieldUpdateOperationsInput | string
-  skillGrade?: Prisma.StringFieldUpdateOperationsInput | string
-  rockCategory?: Prisma.StringFieldUpdateOperationsInput | string
-  requiredInsurance?: Prisma.IntFieldUpdateOperationsInput | number
-  meetingPlace?: Prisma.StringFieldUpdateOperationsInput | string
-  meetingTime?: Prisma.StringFieldUpdateOperationsInput | string
-  course?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  capacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  yamanokaiDepartmentId?: Prisma.IntFieldUpdateOperationsInput | number
-  slId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiEventNestedInput
-  YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedUpdateOneWithoutYamanokaiEventNestedInput
-  YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateOneWithoutYamanokaiEventNestedInput
-  YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedUpdateManyWithoutYamanokaiEventNestedInput
-  YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedUpdateManyWithoutYamanokaiEventNestedInput
-  YamanokaiEventRequiredCourse?: Prisma.YamanokaiEventRequiredCourseUncheckedUpdateManyWithoutYamanokaiEventNestedInput
-}
-
-export type YamanokaiEventUncheckedUpdateManyWithoutYamanokaiCLInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  mountainName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  altitude?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  staminaGrade?: Prisma.StringFieldUpdateOperationsInput | string
-  skillGrade?: Prisma.StringFieldUpdateOperationsInput | string
-  rockCategory?: Prisma.StringFieldUpdateOperationsInput | string
-  requiredInsurance?: Prisma.IntFieldUpdateOperationsInput | number
-  meetingPlace?: Prisma.StringFieldUpdateOperationsInput | string
-  meetingTime?: Prisma.StringFieldUpdateOperationsInput | string
-  course?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  capacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  yamanokaiDepartmentId?: Prisma.IntFieldUpdateOperationsInput | number
-  slId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
-
-export type YamanokaiEventUpdateWithoutYamanokaiSLInput = {
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  mountainName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  altitude?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  staminaGrade?: Prisma.StringFieldUpdateOperationsInput | string
-  skillGrade?: Prisma.StringFieldUpdateOperationsInput | string
-  rockCategory?: Prisma.StringFieldUpdateOperationsInput | string
-  requiredInsurance?: Prisma.IntFieldUpdateOperationsInput | number
-  meetingPlace?: Prisma.StringFieldUpdateOperationsInput | string
-  meetingTime?: Prisma.StringFieldUpdateOperationsInput | string
-  course?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  capacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  YamanokaiDepartment?: Prisma.YamanokaiDepartmentUpdateOneRequiredWithoutYamanokaiEventNestedInput
-  YamanokaiCL?: Prisma.YamanokaiMemberUpdateOneRequiredWithoutYamanokaiEventAsCLNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutYamanokaiEventNestedInput
-  YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUpdateOneWithoutYamanokaiEventNestedInput
-  YamanokaiRecord?: Prisma.YamanokaiRecordUpdateOneWithoutYamanokaiEventNestedInput
-  YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUpdateManyWithoutYamanokaiEventNestedInput
-  YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUpdateManyWithoutYamanokaiEventNestedInput
-  YamanokaiEventRequiredCourse?: Prisma.YamanokaiEventRequiredCourseUpdateManyWithoutYamanokaiEventNestedInput
-}
-
-export type YamanokaiEventUncheckedUpdateWithoutYamanokaiSLInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  mountainName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  altitude?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  staminaGrade?: Prisma.StringFieldUpdateOperationsInput | string
-  skillGrade?: Prisma.StringFieldUpdateOperationsInput | string
-  rockCategory?: Prisma.StringFieldUpdateOperationsInput | string
-  requiredInsurance?: Prisma.IntFieldUpdateOperationsInput | number
-  meetingPlace?: Prisma.StringFieldUpdateOperationsInput | string
-  meetingTime?: Prisma.StringFieldUpdateOperationsInput | string
-  course?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  capacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  yamanokaiDepartmentId?: Prisma.IntFieldUpdateOperationsInput | number
-  clId?: Prisma.IntFieldUpdateOperationsInput | number
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiEventNestedInput
-  YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedUpdateOneWithoutYamanokaiEventNestedInput
-  YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateOneWithoutYamanokaiEventNestedInput
-  YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedUpdateManyWithoutYamanokaiEventNestedInput
-  YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedUpdateManyWithoutYamanokaiEventNestedInput
-  YamanokaiEventRequiredCourse?: Prisma.YamanokaiEventRequiredCourseUncheckedUpdateManyWithoutYamanokaiEventNestedInput
-}
-
-export type YamanokaiEventUncheckedUpdateManyWithoutYamanokaiSLInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  mountainName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  altitude?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  staminaGrade?: Prisma.StringFieldUpdateOperationsInput | string
-  skillGrade?: Prisma.StringFieldUpdateOperationsInput | string
-  rockCategory?: Prisma.StringFieldUpdateOperationsInput | string
-  requiredInsurance?: Prisma.IntFieldUpdateOperationsInput | number
-  meetingPlace?: Prisma.StringFieldUpdateOperationsInput | string
-  meetingTime?: Prisma.StringFieldUpdateOperationsInput | string
-  course?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  capacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  yamanokaiDepartmentId?: Prisma.IntFieldUpdateOperationsInput | number
-  clId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -2660,8 +2660,8 @@ export type YamanokaiEventSelect<ExtArgs extends runtime.Types.Extensions.Intern
   clId?: boolean
   slId?: boolean
   YamanokaiDepartment?: boolean | Prisma.YamanokaiDepartmentDefaultArgs<ExtArgs>
-  YamanokaiCL?: boolean | Prisma.YamanokaiMemberDefaultArgs<ExtArgs>
-  YamanokaiSL?: boolean | Prisma.YamanokaiEvent$YamanokaiSLArgs<ExtArgs>
+  CL?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  SL?: boolean | Prisma.YamanokaiEvent$SLArgs<ExtArgs>
   YamanokaiAttendance?: boolean | Prisma.YamanokaiEvent$YamanokaiAttendanceArgs<ExtArgs>
   YamanokaiEventPlan?: boolean | Prisma.YamanokaiEvent$YamanokaiEventPlanArgs<ExtArgs>
   YamanokaiRecord?: boolean | Prisma.YamanokaiEvent$YamanokaiRecordArgs<ExtArgs>
@@ -2697,8 +2697,8 @@ export type YamanokaiEventSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   clId?: boolean
   slId?: boolean
   YamanokaiDepartment?: boolean | Prisma.YamanokaiDepartmentDefaultArgs<ExtArgs>
-  YamanokaiCL?: boolean | Prisma.YamanokaiMemberDefaultArgs<ExtArgs>
-  YamanokaiSL?: boolean | Prisma.YamanokaiEvent$YamanokaiSLArgs<ExtArgs>
+  CL?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  SL?: boolean | Prisma.YamanokaiEvent$SLArgs<ExtArgs>
 }, ExtArgs["result"]["yamanokaiEvent"]>
 
 export type YamanokaiEventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -2727,8 +2727,8 @@ export type YamanokaiEventSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   clId?: boolean
   slId?: boolean
   YamanokaiDepartment?: boolean | Prisma.YamanokaiDepartmentDefaultArgs<ExtArgs>
-  YamanokaiCL?: boolean | Prisma.YamanokaiMemberDefaultArgs<ExtArgs>
-  YamanokaiSL?: boolean | Prisma.YamanokaiEvent$YamanokaiSLArgs<ExtArgs>
+  CL?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  SL?: boolean | Prisma.YamanokaiEvent$SLArgs<ExtArgs>
 }, ExtArgs["result"]["yamanokaiEvent"]>
 
 export type YamanokaiEventSelectScalar = {
@@ -2761,8 +2761,8 @@ export type YamanokaiEventSelectScalar = {
 export type YamanokaiEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "title" | "mountainName" | "altitude" | "startAt" | "endAt" | "deadline" | "staminaGrade" | "skillGrade" | "rockCategory" | "requiredInsurance" | "meetingPlace" | "meetingTime" | "course" | "capacity" | "notes" | "status" | "isDeleted" | "yamanokaiDepartmentId" | "clId" | "slId", ExtArgs["result"]["yamanokaiEvent"]>
 export type YamanokaiEventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   YamanokaiDepartment?: boolean | Prisma.YamanokaiDepartmentDefaultArgs<ExtArgs>
-  YamanokaiCL?: boolean | Prisma.YamanokaiMemberDefaultArgs<ExtArgs>
-  YamanokaiSL?: boolean | Prisma.YamanokaiEvent$YamanokaiSLArgs<ExtArgs>
+  CL?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  SL?: boolean | Prisma.YamanokaiEvent$SLArgs<ExtArgs>
   YamanokaiAttendance?: boolean | Prisma.YamanokaiEvent$YamanokaiAttendanceArgs<ExtArgs>
   YamanokaiEventPlan?: boolean | Prisma.YamanokaiEvent$YamanokaiEventPlanArgs<ExtArgs>
   YamanokaiRecord?: boolean | Prisma.YamanokaiEvent$YamanokaiRecordArgs<ExtArgs>
@@ -2773,21 +2773,21 @@ export type YamanokaiEventInclude<ExtArgs extends runtime.Types.Extensions.Inter
 }
 export type YamanokaiEventIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   YamanokaiDepartment?: boolean | Prisma.YamanokaiDepartmentDefaultArgs<ExtArgs>
-  YamanokaiCL?: boolean | Prisma.YamanokaiMemberDefaultArgs<ExtArgs>
-  YamanokaiSL?: boolean | Prisma.YamanokaiEvent$YamanokaiSLArgs<ExtArgs>
+  CL?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  SL?: boolean | Prisma.YamanokaiEvent$SLArgs<ExtArgs>
 }
 export type YamanokaiEventIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   YamanokaiDepartment?: boolean | Prisma.YamanokaiDepartmentDefaultArgs<ExtArgs>
-  YamanokaiCL?: boolean | Prisma.YamanokaiMemberDefaultArgs<ExtArgs>
-  YamanokaiSL?: boolean | Prisma.YamanokaiEvent$YamanokaiSLArgs<ExtArgs>
+  CL?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  SL?: boolean | Prisma.YamanokaiEvent$SLArgs<ExtArgs>
 }
 
 export type $YamanokaiEventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "YamanokaiEvent"
   objects: {
     YamanokaiDepartment: Prisma.$YamanokaiDepartmentPayload<ExtArgs>
-    YamanokaiCL: Prisma.$YamanokaiMemberPayload<ExtArgs>
-    YamanokaiSL: Prisma.$YamanokaiMemberPayload<ExtArgs> | null
+    CL: Prisma.$UserPayload<ExtArgs>
+    SL: Prisma.$UserPayload<ExtArgs> | null
     YamanokaiAttendance: Prisma.$YamanokaiAttendancePayload<ExtArgs>[]
     YamanokaiEventPlan: Prisma.$YamanokaiEventPlanPayload<ExtArgs> | null
     YamanokaiRecord: Prisma.$YamanokaiRecordPayload<ExtArgs> | null
@@ -3215,8 +3215,8 @@ readonly fields: YamanokaiEventFieldRefs;
 export interface Prisma__YamanokaiEventClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   YamanokaiDepartment<T extends Prisma.YamanokaiDepartmentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.YamanokaiDepartmentDefaultArgs<ExtArgs>>): Prisma.Prisma__YamanokaiDepartmentClient<runtime.Types.Result.GetResult<Prisma.$YamanokaiDepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  YamanokaiCL<T extends Prisma.YamanokaiMemberDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.YamanokaiMemberDefaultArgs<ExtArgs>>): Prisma.Prisma__YamanokaiMemberClient<runtime.Types.Result.GetResult<Prisma.$YamanokaiMemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  YamanokaiSL<T extends Prisma.YamanokaiEvent$YamanokaiSLArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.YamanokaiEvent$YamanokaiSLArgs<ExtArgs>>): Prisma.Prisma__YamanokaiMemberClient<runtime.Types.Result.GetResult<Prisma.$YamanokaiMemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  CL<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  SL<T extends Prisma.YamanokaiEvent$SLArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.YamanokaiEvent$SLArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   YamanokaiAttendance<T extends Prisma.YamanokaiEvent$YamanokaiAttendanceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.YamanokaiEvent$YamanokaiAttendanceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$YamanokaiAttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   YamanokaiEventPlan<T extends Prisma.YamanokaiEvent$YamanokaiEventPlanArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.YamanokaiEvent$YamanokaiEventPlanArgs<ExtArgs>>): Prisma.Prisma__YamanokaiEventPlanClient<runtime.Types.Result.GetResult<Prisma.$YamanokaiEventPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   YamanokaiRecord<T extends Prisma.YamanokaiEvent$YamanokaiRecordArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.YamanokaiEvent$YamanokaiRecordArgs<ExtArgs>>): Prisma.Prisma__YamanokaiRecordClient<runtime.Types.Result.GetResult<Prisma.$YamanokaiRecordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -3672,22 +3672,22 @@ export type YamanokaiEventDeleteManyArgs<ExtArgs extends runtime.Types.Extension
 }
 
 /**
- * YamanokaiEvent.YamanokaiSL
+ * YamanokaiEvent.SL
  */
-export type YamanokaiEvent$YamanokaiSLArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type YamanokaiEvent$SLArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the YamanokaiMember
+   * Select specific fields to fetch from the User
    */
-  select?: Prisma.YamanokaiMemberSelect<ExtArgs> | null
+  select?: Prisma.UserSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the YamanokaiMember
+   * Omit specific fields from the User
    */
-  omit?: Prisma.YamanokaiMemberOmit<ExtArgs> | null
+  omit?: Prisma.UserOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.YamanokaiMemberInclude<ExtArgs> | null
-  where?: Prisma.YamanokaiMemberWhereInput
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

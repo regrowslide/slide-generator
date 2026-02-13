@@ -2,7 +2,7 @@ export type MenuItem = {
   id: string
   label: string
   href: string
-  icon: 'clipboard' | 'factory' | 'package' | 'database' | 'settings' | 'calendar'
+  icon: 'clipboard' | 'factory' | 'package' | 'database' | 'settings' | 'calendar' | 'building' | 'shopping-cart'
   description?: string
   adminOnly?: boolean
 }
@@ -31,11 +31,25 @@ export const MENU_ITEMS: MenuItem[] = [
     description: '製造計画の作成・管理',
   },
   {
+    id: 'ingredients',
+    label: '原材料発注',
+    href: '/curious/kaigoshokuManagement/ingredients',
+    icon: 'shopping-cart',
+    description: '材料別の必要量集計',
+  },
+  {
     id: 'packing',
     label: '梱包・配送',
     href: '/curious/kaigoshokuManagement/packing',
     icon: 'package',
     description: '梱包・配送準備',
+  },
+  {
+    id: 'facility',
+    label: '施設管理',
+    href: '/curious/kaigoshokuManagement/master/facility',
+    icon: 'building',
+    description: '取引先施設の管理',
   },
   {
     id: 'master',

@@ -115,6 +115,10 @@ model User {
   AidocumentCompany   AidocumentCompany? @relation(fields: [aidocumentCompanyId], references: [id], onDelete: SetNull)
   Store               Store?             @relation(fields: [storeId], references: [id])
   storeId             Int?
+
+  // yamanokai
+  YamanokaiEventAsCL YamanokaiEvent[] @relation("YamanokaiEventCL")
+  YamanokaiEventAsSL YamanokaiEvent[] @relation("YamanokaiEventSL")
 }
 
 model ReleaseNotes {
