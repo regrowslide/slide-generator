@@ -105,7 +105,7 @@ export const MenuMasterClient = ({ initialMenus }: Props) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/curious/kaigoshokuManagement/master">
-            <Button variant="ghost" size="icon">
+            <Button >
               <ArrowLeft className="w-5 h-5" />
             </Button>
           </Link>
@@ -121,7 +121,7 @@ export const MenuMasterClient = ({ initialMenus }: Props) => {
             onChange={handleCsvUpload}
             className="hidden"
           />
-          <Button variant="outline" asChild>
+          <Button >
             <span>
               <Upload className="w-4 h-4 mr-2" />
               献立CSV取込
@@ -177,15 +177,13 @@ export const MenuMasterClient = ({ initialMenus }: Props) => {
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Button
-                          size="icon"
-                          variant="ghost"
+
                           onClick={() => handleShowDetail(menu)}
                         >
                           <Eye className="w-4 h-4" />
                         </Button>
                         <Button
-                          size="icon"
-                          variant="ghost"
+
                           onClick={() => handleDelete(menu.id)}
                         >
                           <Trash2 className="w-4 h-4 text-red-500" />

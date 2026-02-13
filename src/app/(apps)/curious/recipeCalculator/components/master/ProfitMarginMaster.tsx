@@ -9,6 +9,7 @@ import {
   updateProfitMarginStandard,
   deleteProfitMarginStandard,
 } from '../../server-actions/profit-margin-actions'
+import {seedProfitMarginStandards} from '../../server-actions/seed-profit-margin'
 
 interface ProfitMarginMasterProps {
   initialStandards: ProfitMarginStandard[]
@@ -90,6 +91,17 @@ export const ProfitMarginMaster = ({initialStandards}: ProfitMarginMasterProps) 
     })
   }
 
+  // 初期データ投入
+  const handleSeed = () => {
+    if (!window.confirm('既存データを削除して初期データを投入しますか？')) return
+
+    startTransition(async () => {
+      await seedProfitMarginStandards()
+      const updated = await getProfitMarginStandards()
+      setStandards(updated)
+    })
+  }
+
   // 食数範囲の表示フォーマット
   const formatPackRange = (min: number, max: number | null) => {
     if (max === null) return `${min}食〜`
@@ -104,13 +116,24 @@ export const ProfitMarginMaster = ({initialStandards}: ProfitMarginMasterProps) 
           <Settings className="w-6 h-6 text-indigo-500" />
           <h2 className="text-xl font-bold text-slate-800">粗利基準マスタ</h2>
         </div>
-        <button
-          onClick={handleOpenCreateModal}
-          className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-        >
-          <Plus className="w-4 h-4" />
-          新規登録
-        </button>
+        <div className="flex items-center gap-2">
+          {standards.length === 0 && (
+            <button
+              onClick={handleSeed}
+              disabled={isPending}
+              className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors text-sm"
+            >
+              初期データ投入
+            </button>
+          )}
+          <button
+            onClick={handleOpenCreateModal}
+            className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            新規登録
+          </button>
+        </div>
       </div>
 
       {/* 説明 */}

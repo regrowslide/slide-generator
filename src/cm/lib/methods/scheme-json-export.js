@@ -16487,6 +16487,40 @@
           "relationToFields": [],
           "isGenerated": false,
           "isUpdatedAt": false
+        },
+        {
+          "name": "YamanokaiAttendance",
+          "kind": "object",
+          "isList": true,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "YamanokaiAttendance",
+          "nativeType": null,
+          "relationName": "UserToYamanokaiAttendance",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "YamanokaiAttendanceAsApprover",
+          "kind": "object",
+          "isList": true,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "YamanokaiAttendance",
+          "nativeType": null,
+          "relationName": "AttendanceApprover",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isGenerated": false,
+          "isUpdatedAt": false
         }
       ],
       "primaryKey": null,
@@ -28047,23 +28081,6 @@
           "isUpdatedAt": false
         },
         {
-          "name": "YamanokaiAttendance",
-          "kind": "object",
-          "isList": true,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "YamanokaiAttendance",
-          "nativeType": null,
-          "relationName": "YamanokaiAttendanceToYamanokaiMember",
-          "relationFromFields": [],
-          "relationToFields": [],
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
           "name": "YamanokaiRecord",
           "kind": "object",
           "isList": true,
@@ -30115,6 +30132,38 @@
           "isUpdatedAt": false
         },
         {
+          "name": "rejectionReason",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": [
+            "Text",
+            []
+          ],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "actualAttended",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Boolean",
+          "nativeType": null,
+          "default": false,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
           "name": "isDeleted",
           "kind": "scalar",
           "isList": false,
@@ -30166,7 +30215,7 @@
           "isUpdatedAt": false
         },
         {
-          "name": "YamanokaiMember",
+          "name": "User",
           "kind": "object",
           "isList": false,
           "isRequired": true,
@@ -30174,11 +30223,11 @@
           "isId": false,
           "isReadOnly": false,
           "hasDefaultValue": false,
-          "type": "YamanokaiMember",
+          "type": "User",
           "nativeType": null,
-          "relationName": "YamanokaiAttendanceToYamanokaiMember",
+          "relationName": "UserToYamanokaiAttendance",
           "relationFromFields": [
-            "yamanokaiMemberId"
+            "userId"
           ],
           "relationToFields": [
             "id"
@@ -30188,10 +30237,45 @@
           "isUpdatedAt": false
         },
         {
-          "name": "yamanokaiMemberId",
+          "name": "userId",
           "kind": "scalar",
           "isList": false,
           "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": true,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "ApprovedByUser",
+          "kind": "object",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "User",
+          "nativeType": null,
+          "relationName": "AttendanceApprover",
+          "relationFromFields": [
+            "approvedBy"
+          ],
+          "relationToFields": [
+            "id"
+          ],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "approvedBy",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
           "isUnique": false,
           "isId": false,
           "isReadOnly": true,
@@ -30206,7 +30290,7 @@
       "uniqueFields": [
         [
           "yamanokaiEventId",
-          "yamanokaiMemberId"
+          "userId"
         ]
       ],
       "uniqueIndexes": [
@@ -30214,12 +30298,12 @@
           "name": null,
           "fields": [
             "yamanokaiEventId",
-            "yamanokaiMemberId"
+            "userId"
           ]
         }
       ],
       "isGenerated": false,
-      "documentation": "出席回答"
+      "documentation": "参加申請"
     },
     {
       "name": "YamanokaiRecord",
@@ -33355,7 +33439,7 @@
           "name": "yamanokaiEventId"
         },
         {
-          "name": "yamanokaiMemberId"
+          "name": "userId"
         }
       ]
     },

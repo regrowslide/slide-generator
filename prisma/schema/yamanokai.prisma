@@ -186,7 +186,6 @@ model YamanokaiMember {
   YamanokaiMemberRole     YamanokaiMemberRole[]
   YamanokaiCourseCompletion YamanokaiCourseCompletion[]
   YamanokaiEquipmentLoan  YamanokaiEquipmentLoan[]
-  YamanokaiAttendance     YamanokaiAttendance[]
   YamanokaiRecord         YamanokaiRecord[] // 作成した記録
   YamanokaiEventPlanApprover YamanokaiEventPlan[] @relation("EventPlanApprover")
   YamanokaiEventPlanParticipant YamanokaiEventPlanParticipant[]
@@ -379,24 +378,28 @@ model YamanokaiEventPlanParticipant {
 // 出席回答データ
 // =============================================================================
 
-/// 出席回答
+/// 参加申請
 model YamanokaiAttendance {
   id        Int       @id @default(autoincrement())
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
   sortOrder Float     @default(0)
 
-  status    String  @default("pending") @db.VarChar(20) // "pending", "attending", "notAttending", "undecided"
-  comment   String? @db.Text
-  isDeleted Boolean @default(false)
+  status          String  @default("pending") @db.VarChar(20) // "pending", "approved", "rejected"
+  comment         String? @db.Text // 申請者コメント
+  rejectionReason String? @db.Text // 却下理由
+  actualAttended  Boolean @default(false) // 当日出席フラグ
+  isDeleted       Boolean @default(false)
 
   // リレーション
-  YamanokaiEvent    YamanokaiEvent  @relation(fields: [yamanokaiEventId], references: [id], onDelete: Cascade)
-  yamanokaiEventId  Int
-  YamanokaiMember   YamanokaiMember @relation(fields: [yamanokaiMemberId], references: [id], onDelete: Cascade)
-  yamanokaiMemberId Int
+  YamanokaiEvent   YamanokaiEvent @relation(fields: [yamanokaiEventId], references: [id], onDelete: Cascade)
+  yamanokaiEventId Int
+  User             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           Int
+  ApprovedByUser   User?          @relation("AttendanceApprover", fields: [approvedBy], references: [id])
+  approvedBy       Int? // 承認/却下した管理者のUser ID
 
-  @@unique([yamanokaiEventId, yamanokaiMemberId])
+  @@unique([yamanokaiEventId, userId])
   @@map("yamanokai_attendances")
 }
 

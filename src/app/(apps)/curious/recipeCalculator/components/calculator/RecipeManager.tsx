@@ -214,14 +214,14 @@ export const RecipeManager = () => {
               <ManufacturingParams
                 settings={settings}
                 calculatedData={calculatedData}
-                onSettingChange={editor.handleSettingChange}
+                onRecalculate={editor.handleRecalculateParams}
                 onInputModeChange={editor.handleInputModeChange}
               />
               <CostSummaryPanel
                 settings={settings}
                 calculatedData={calculatedData}
                 profitAlert={profitAlert}
-                onSettingChange={editor.handleSettingChange}
+                onRecalculate={editor.handleRecalculateCosts}
               />
             </div>
           )}

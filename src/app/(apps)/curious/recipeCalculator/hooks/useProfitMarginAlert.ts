@@ -15,7 +15,7 @@ export const useProfitMarginAlert = ({packCount, profitMargin, sellingPrice}: Us
   const [isLoading, setIsLoading] = useState(false)
 
   const fetchAlert = useCallback(async () => {
-    if (packCount <= 0 || sellingPrice <= 0) {
+    if (packCount <= 0) {
       setAlert(null)
       return
     }

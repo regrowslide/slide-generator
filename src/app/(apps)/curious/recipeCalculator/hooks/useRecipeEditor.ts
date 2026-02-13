@@ -137,6 +137,34 @@ export const useRecipeEditor = ({recipe, ingredientMasters, setRecipe}: UseRecip
     [recipe, setRecipe]
   )
 
+  // 製造パラメータ一括再計算ハンドラ
+  const handleRecalculateParams = useCallback(
+    (params: {lossRate: number; packWeightG: number; productionWeightG: number | null}) => {
+      if (!recipe) return
+
+      startTransition(async () => {
+        await updateRecipe(recipe.id, params)
+        const updated = await recalculateRecipeCosts(recipe.id)
+        if (updated) setRecipe(updated)
+      })
+    },
+    [recipe, setRecipe]
+  )
+
+  // 原価見積一括再計算ハンドラ
+  const handleRecalculateCosts = useCallback(
+    (params: {packagingCost: number; processingCost: number; otherCost: number; profitMargin: number}) => {
+      if (!recipe) return
+
+      startTransition(async () => {
+        await updateRecipe(recipe.id, params)
+        const updated = await recalculateRecipeCosts(recipe.id)
+        if (updated) setRecipe(updated)
+      })
+    },
+    [recipe, setRecipe]
+  )
+
   // 入力モード切替ハンドラ
   const handleInputModeChange = useCallback(
     (mode: InputMode) => {
@@ -158,6 +186,8 @@ export const useRecipeEditor = ({recipe, ingredientMasters, setRecipe}: UseRecip
     handleIngredientChange,
     handleDeleteIngredient,
     handleSettingChange,
+    handleRecalculateParams,
+    handleRecalculateCosts,
     handleInputModeChange,
   }
 }

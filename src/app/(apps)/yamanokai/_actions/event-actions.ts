@@ -129,6 +129,15 @@ export const bulkUpdateYamanokaiEventStatus = async (ids: number[], status: stri
   })
 }
 
+// 公開済み例会一覧取得（一般会員向け）
+export const getPublishedYamanokaiEvents = async () => {
+  return await prisma.yamanokaiEvent.findMany({
+    where: { status: 'published', isDeleted: false },
+    orderBy: { startAt: 'asc' },
+    include: eventInclude,
+  })
+}
+
 // 論理削除
 export const deleteYamanokaiEvent = async (id: number) => {
   return await prisma.yamanokaiEvent.update({

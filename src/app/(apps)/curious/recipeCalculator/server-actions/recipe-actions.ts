@@ -3,6 +3,7 @@
 import type {RcRecipeIngredient} from '@prisma/generated/prisma/client'
 import type {RecipeWithIngredients} from '../types'
 import {convertToKg} from '../lib/unit-converter'
+import {getApplicableStandard} from './profit-margin-actions'
 import prisma from 'src/lib/prisma'
 
 export type RecipeInput = {
@@ -267,10 +268,25 @@ export const recalculateRecipeCosts = async (recipeId: number): Promise<RecipeWi
     packCount = packWeightKg > 0 ? Math.floor(productionWeightKg / packWeightKg) : 0
   }
 
+  // パック数に応じた粗利額の自動提案
+  let profitMargin = recipe.profitMargin
+  if (packCount > 0) {
+    const currentStandard = await getApplicableStandard(packCount)
+    if (currentStandard) {
+      const isDefault = profitMargin === 200 // Prismaデフォルト値 → 初回計算
+      const previousStandard = await getApplicableStandard(recipe.packCount ?? 0)
+      const isPreviousStandardValue = previousStandard && profitMargin === previousStandard.minProfitAmount
+
+      if (isDefault || isPreviousStandardValue) {
+        profitMargin = currentStandard.minProfitAmount
+      }
+    }
+  }
+
   const materialCostPerPack = packCount > 0 ? totalMaterialCost / packCount : 0
   // その他費用(otherCost)を原価に追加
   const totalCostPerPack = materialCostPerPack + recipe.packagingCost + recipe.processingCost + recipe.otherCost
-  const sellingPrice = totalCostPerPack + recipe.profitMargin
+  const sellingPrice = totalCostPerPack + profitMargin
 
   // レシピの計算結果を更新
   const result = await prisma.rcRecipe.update({
@@ -281,6 +297,7 @@ export const recalculateRecipeCosts = async (recipeId: number): Promise<RecipeWi
       productionWeightKg,
       packCount,
       packWeightG, // 計算された充填量も保存
+      profitMargin,
       materialCostPerPack,
       totalCostPerPack,
       sellingPrice,

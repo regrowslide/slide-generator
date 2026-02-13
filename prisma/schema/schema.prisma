@@ -117,8 +117,10 @@ model User {
   storeId             Int?
 
   // yamanokai
-  YamanokaiEventAsCL YamanokaiEvent[] @relation("YamanokaiEventCL")
-  YamanokaiEventAsSL YamanokaiEvent[] @relation("YamanokaiEventSL")
+  YamanokaiEventAsCL            YamanokaiEvent[]      @relation("YamanokaiEventCL")
+  YamanokaiEventAsSL            YamanokaiEvent[]      @relation("YamanokaiEventSL")
+  YamanokaiAttendance           YamanokaiAttendance[]
+  YamanokaiAttendanceAsApprover YamanokaiAttendance[] @relation("AttendanceApprover")
 }
 
 model ReleaseNotes {

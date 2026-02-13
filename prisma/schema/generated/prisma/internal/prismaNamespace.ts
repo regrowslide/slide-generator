@@ -12764,9 +12764,12 @@ export const YamanokaiAttendanceScalarFieldEnum = {
   sortOrder: 'sortOrder',
   status: 'status',
   comment: 'comment',
+  rejectionReason: 'rejectionReason',
+  actualAttended: 'actualAttended',
   isDeleted: 'isDeleted',
   yamanokaiEventId: 'yamanokaiEventId',
-  yamanokaiMemberId: 'yamanokaiMemberId'
+  userId: 'userId',
+  approvedBy: 'approvedBy'
 } as const
 
 export type YamanokaiAttendanceScalarFieldEnum = (typeof YamanokaiAttendanceScalarFieldEnum)[keyof typeof YamanokaiAttendanceScalarFieldEnum]

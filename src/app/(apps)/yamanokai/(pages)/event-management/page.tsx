@@ -1,5 +1,6 @@
 import { initServerComopnent } from 'src/non-common/serverSideFunction'
 import { getYamanokaiEvents } from '@app/(apps)/yamanokai/_actions/event-actions'
+import { getApplicationSummaryByEventIds } from '@app/(apps)/yamanokai/_actions/attendance-actions'
 import prisma from 'src/lib/prisma'
 import EventManagementClient from './EventManagementClient'
 import { FitMargin } from '@cm/components/styles/common-components/common-components'
@@ -18,5 +19,11 @@ export default async function Page(props) {
     }),
   ])
 
-  return <FitMargin className={`p-2 min-w-[80vw]`}><EventManagementClient {...{ events, departments, users, canEdit, isSystemAdmin }} /></FitMargin>
+  const applicationSummary = await getApplicationSummaryByEventIds(events.map(e => e.id))
+
+  return (
+    <FitMargin className='p-2 min-w-[80vw]'>
+      <EventManagementClient {...{ events, departments, users, canEdit, isSystemAdmin, applicationSummary, currentUserId: session.id }} />
+    </FitMargin>
+  )
 }

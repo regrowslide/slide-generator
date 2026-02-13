@@ -389,7 +389,6 @@ export type YamanokaiMemberWhereInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleListRelationFilter
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionListRelationFilter
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanListRelationFilter
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceListRelationFilter
   YamanokaiRecord?: Prisma.YamanokaiRecordListRelationFilter
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanListRelationFilter
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantListRelationFilter
@@ -425,7 +424,6 @@ export type YamanokaiMemberOrderByWithRelationInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleOrderByRelationAggregateInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionOrderByRelationAggregateInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanOrderByRelationAggregateInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceOrderByRelationAggregateInput
   YamanokaiRecord?: Prisma.YamanokaiRecordOrderByRelationAggregateInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanOrderByRelationAggregateInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantOrderByRelationAggregateInput
@@ -464,7 +462,6 @@ export type YamanokaiMemberWhereUniqueInput = Prisma.AtLeast<{
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleListRelationFilter
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionListRelationFilter
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanListRelationFilter
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceListRelationFilter
   YamanokaiRecord?: Prisma.YamanokaiRecordListRelationFilter
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanListRelationFilter
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantListRelationFilter
@@ -559,7 +556,6 @@ export type YamanokaiMemberCreateInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiRecord?: Prisma.YamanokaiRecordCreateNestedManyWithoutYamanokaiAuthorInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanCreateNestedManyWithoutYamanokaiApproverInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantCreateNestedManyWithoutYamanokaiMemberInput
@@ -593,7 +589,6 @@ export type YamanokaiMemberUncheckedCreateInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedManyWithoutYamanokaiAuthorInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUncheckedCreateNestedManyWithoutYamanokaiApproverInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUncheckedCreateNestedManyWithoutYamanokaiMemberInput
@@ -626,7 +621,6 @@ export type YamanokaiMemberUpdateInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUpdateManyWithoutYamanokaiAuthorNestedInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUpdateManyWithoutYamanokaiApproverNestedInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUpdateManyWithoutYamanokaiMemberNestedInput
@@ -660,7 +654,6 @@ export type YamanokaiMemberUncheckedUpdateInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateManyWithoutYamanokaiAuthorNestedInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUncheckedUpdateManyWithoutYamanokaiApproverNestedInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
@@ -1003,20 +996,6 @@ export type YamanokaiMemberUpdateOneRequiredWithoutYamanokaiEventPlanParticipant
   update?: Prisma.XOR<Prisma.XOR<Prisma.YamanokaiMemberUpdateToOneWithWhereWithoutYamanokaiEventPlanParticipantInput, Prisma.YamanokaiMemberUpdateWithoutYamanokaiEventPlanParticipantInput>, Prisma.YamanokaiMemberUncheckedUpdateWithoutYamanokaiEventPlanParticipantInput>
 }
 
-export type YamanokaiMemberCreateNestedOneWithoutYamanokaiAttendanceInput = {
-  create?: Prisma.XOR<Prisma.YamanokaiMemberCreateWithoutYamanokaiAttendanceInput, Prisma.YamanokaiMemberUncheckedCreateWithoutYamanokaiAttendanceInput>
-  connectOrCreate?: Prisma.YamanokaiMemberCreateOrConnectWithoutYamanokaiAttendanceInput
-  connect?: Prisma.YamanokaiMemberWhereUniqueInput
-}
-
-export type YamanokaiMemberUpdateOneRequiredWithoutYamanokaiAttendanceNestedInput = {
-  create?: Prisma.XOR<Prisma.YamanokaiMemberCreateWithoutYamanokaiAttendanceInput, Prisma.YamanokaiMemberUncheckedCreateWithoutYamanokaiAttendanceInput>
-  connectOrCreate?: Prisma.YamanokaiMemberCreateOrConnectWithoutYamanokaiAttendanceInput
-  upsert?: Prisma.YamanokaiMemberUpsertWithoutYamanokaiAttendanceInput
-  connect?: Prisma.YamanokaiMemberWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.YamanokaiMemberUpdateToOneWithWhereWithoutYamanokaiAttendanceInput, Prisma.YamanokaiMemberUpdateWithoutYamanokaiAttendanceInput>, Prisma.YamanokaiMemberUncheckedUpdateWithoutYamanokaiAttendanceInput>
-}
-
 export type YamanokaiMemberCreateNestedOneWithoutYamanokaiRecordInput = {
   create?: Prisma.XOR<Prisma.YamanokaiMemberCreateWithoutYamanokaiRecordInput, Prisma.YamanokaiMemberUncheckedCreateWithoutYamanokaiRecordInput>
   connectOrCreate?: Prisma.YamanokaiMemberCreateOrConnectWithoutYamanokaiRecordInput
@@ -1071,7 +1050,6 @@ export type YamanokaiMemberCreateWithoutYamanokaiDepartmentInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiRecord?: Prisma.YamanokaiRecordCreateNestedManyWithoutYamanokaiAuthorInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanCreateNestedManyWithoutYamanokaiApproverInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantCreateNestedManyWithoutYamanokaiMemberInput
@@ -1104,7 +1082,6 @@ export type YamanokaiMemberUncheckedCreateWithoutYamanokaiDepartmentInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedManyWithoutYamanokaiAuthorInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUncheckedCreateNestedManyWithoutYamanokaiApproverInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUncheckedCreateNestedManyWithoutYamanokaiMemberInput
@@ -1192,7 +1169,6 @@ export type YamanokaiMemberCreateWithoutYamanokaiRoleInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiRecord?: Prisma.YamanokaiRecordCreateNestedManyWithoutYamanokaiAuthorInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanCreateNestedManyWithoutYamanokaiApproverInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantCreateNestedManyWithoutYamanokaiMemberInput
@@ -1225,7 +1201,6 @@ export type YamanokaiMemberUncheckedCreateWithoutYamanokaiRoleInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedManyWithoutYamanokaiAuthorInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUncheckedCreateNestedManyWithoutYamanokaiApproverInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUncheckedCreateNestedManyWithoutYamanokaiMemberInput
@@ -1283,7 +1258,6 @@ export type YamanokaiMemberCreateWithoutYamanokaiMemberRoleInput = {
   YamanokaiRole?: Prisma.YamanokaiRoleCreateNestedOneWithoutYamanokaiMemberInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiRecord?: Prisma.YamanokaiRecordCreateNestedManyWithoutYamanokaiAuthorInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanCreateNestedManyWithoutYamanokaiApproverInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantCreateNestedManyWithoutYamanokaiMemberInput
@@ -1316,7 +1290,6 @@ export type YamanokaiMemberUncheckedCreateWithoutYamanokaiMemberRoleInput = {
   yamanokaiRoleId?: number | null
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedManyWithoutYamanokaiAuthorInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUncheckedCreateNestedManyWithoutYamanokaiApproverInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUncheckedCreateNestedManyWithoutYamanokaiMemberInput
@@ -1364,7 +1337,6 @@ export type YamanokaiMemberUpdateWithoutYamanokaiMemberRoleInput = {
   YamanokaiRole?: Prisma.YamanokaiRoleUpdateOneWithoutYamanokaiMemberNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUpdateManyWithoutYamanokaiAuthorNestedInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUpdateManyWithoutYamanokaiApproverNestedInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUpdateManyWithoutYamanokaiMemberNestedInput
@@ -1397,7 +1369,6 @@ export type YamanokaiMemberUncheckedUpdateWithoutYamanokaiMemberRoleInput = {
   yamanokaiRoleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateManyWithoutYamanokaiAuthorNestedInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUncheckedUpdateManyWithoutYamanokaiApproverNestedInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
@@ -1429,7 +1400,6 @@ export type YamanokaiMemberCreateWithoutYamanokaiCourseCompletionInput = {
   YamanokaiRole?: Prisma.YamanokaiRoleCreateNestedOneWithoutYamanokaiMemberInput
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiRecord?: Prisma.YamanokaiRecordCreateNestedManyWithoutYamanokaiAuthorInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanCreateNestedManyWithoutYamanokaiApproverInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantCreateNestedManyWithoutYamanokaiMemberInput
@@ -1462,7 +1432,6 @@ export type YamanokaiMemberUncheckedCreateWithoutYamanokaiCourseCompletionInput 
   yamanokaiRoleId?: number | null
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedManyWithoutYamanokaiAuthorInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUncheckedCreateNestedManyWithoutYamanokaiApproverInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUncheckedCreateNestedManyWithoutYamanokaiMemberInput
@@ -1510,7 +1479,6 @@ export type YamanokaiMemberUpdateWithoutYamanokaiCourseCompletionInput = {
   YamanokaiRole?: Prisma.YamanokaiRoleUpdateOneWithoutYamanokaiMemberNestedInput
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUpdateManyWithoutYamanokaiAuthorNestedInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUpdateManyWithoutYamanokaiApproverNestedInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUpdateManyWithoutYamanokaiMemberNestedInput
@@ -1543,7 +1511,6 @@ export type YamanokaiMemberUncheckedUpdateWithoutYamanokaiCourseCompletionInput 
   yamanokaiRoleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateManyWithoutYamanokaiAuthorNestedInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUncheckedUpdateManyWithoutYamanokaiApproverNestedInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
@@ -1576,7 +1543,6 @@ export type YamanokaiMemberCreateWithoutYamanokaiEventPlanApproverInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiRecord?: Prisma.YamanokaiRecordCreateNestedManyWithoutYamanokaiAuthorInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantCreateNestedManyWithoutYamanokaiMemberInput
 }
@@ -1609,7 +1575,6 @@ export type YamanokaiMemberUncheckedCreateWithoutYamanokaiEventPlanApproverInput
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedManyWithoutYamanokaiAuthorInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUncheckedCreateNestedManyWithoutYamanokaiMemberInput
 }
@@ -1657,7 +1622,6 @@ export type YamanokaiMemberUpdateWithoutYamanokaiEventPlanApproverInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUpdateManyWithoutYamanokaiAuthorNestedInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUpdateManyWithoutYamanokaiMemberNestedInput
 }
@@ -1690,7 +1654,6 @@ export type YamanokaiMemberUncheckedUpdateWithoutYamanokaiEventPlanApproverInput
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateManyWithoutYamanokaiAuthorNestedInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
 }
@@ -1722,7 +1685,6 @@ export type YamanokaiMemberCreateWithoutYamanokaiEventPlanParticipantInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiRecord?: Prisma.YamanokaiRecordCreateNestedManyWithoutYamanokaiAuthorInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanCreateNestedManyWithoutYamanokaiApproverInput
 }
@@ -1755,7 +1717,6 @@ export type YamanokaiMemberUncheckedCreateWithoutYamanokaiEventPlanParticipantIn
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedManyWithoutYamanokaiAuthorInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUncheckedCreateNestedManyWithoutYamanokaiApproverInput
 }
@@ -1803,7 +1764,6 @@ export type YamanokaiMemberUpdateWithoutYamanokaiEventPlanParticipantInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUpdateManyWithoutYamanokaiAuthorNestedInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUpdateManyWithoutYamanokaiApproverNestedInput
 }
@@ -1836,155 +1796,8 @@ export type YamanokaiMemberUncheckedUpdateWithoutYamanokaiEventPlanParticipantIn
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateManyWithoutYamanokaiAuthorNestedInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUncheckedUpdateManyWithoutYamanokaiApproverNestedInput
-}
-
-export type YamanokaiMemberCreateWithoutYamanokaiAttendanceInput = {
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  name: string
-  nameKana?: string | null
-  email?: string | null
-  phone?: string | null
-  address?: string | null
-  birthday?: Date | string | null
-  gender?: string | null
-  bloodType?: string | null
-  insuranceKuchi?: number
-  cocoHeliId?: string | null
-  medicalHistory?: string | null
-  emergencyName?: string | null
-  emergencyPhone?: string | null
-  emergencyRelation?: string | null
-  joinedAt?: Date | string | null
-  isAdmin?: boolean
-  isActive?: boolean
-  isDeleted?: boolean
-  YamanokaiDepartment?: Prisma.YamanokaiDepartmentCreateNestedOneWithoutYamanokaiMemberInput
-  YamanokaiRole?: Prisma.YamanokaiRoleCreateNestedOneWithoutYamanokaiMemberInput
-  YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiRecord?: Prisma.YamanokaiRecordCreateNestedManyWithoutYamanokaiAuthorInput
-  YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanCreateNestedManyWithoutYamanokaiApproverInput
-  YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantCreateNestedManyWithoutYamanokaiMemberInput
-}
-
-export type YamanokaiMemberUncheckedCreateWithoutYamanokaiAttendanceInput = {
-  id?: number
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  name: string
-  nameKana?: string | null
-  email?: string | null
-  phone?: string | null
-  address?: string | null
-  birthday?: Date | string | null
-  gender?: string | null
-  bloodType?: string | null
-  insuranceKuchi?: number
-  cocoHeliId?: string | null
-  medicalHistory?: string | null
-  emergencyName?: string | null
-  emergencyPhone?: string | null
-  emergencyRelation?: string | null
-  joinedAt?: Date | string | null
-  isAdmin?: boolean
-  isActive?: boolean
-  isDeleted?: boolean
-  yamanokaiDepartmentId?: number | null
-  yamanokaiRoleId?: number | null
-  YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUncheckedCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedManyWithoutYamanokaiAuthorInput
-  YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUncheckedCreateNestedManyWithoutYamanokaiApproverInput
-  YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUncheckedCreateNestedManyWithoutYamanokaiMemberInput
-}
-
-export type YamanokaiMemberCreateOrConnectWithoutYamanokaiAttendanceInput = {
-  where: Prisma.YamanokaiMemberWhereUniqueInput
-  create: Prisma.XOR<Prisma.YamanokaiMemberCreateWithoutYamanokaiAttendanceInput, Prisma.YamanokaiMemberUncheckedCreateWithoutYamanokaiAttendanceInput>
-}
-
-export type YamanokaiMemberUpsertWithoutYamanokaiAttendanceInput = {
-  update: Prisma.XOR<Prisma.YamanokaiMemberUpdateWithoutYamanokaiAttendanceInput, Prisma.YamanokaiMemberUncheckedUpdateWithoutYamanokaiAttendanceInput>
-  create: Prisma.XOR<Prisma.YamanokaiMemberCreateWithoutYamanokaiAttendanceInput, Prisma.YamanokaiMemberUncheckedCreateWithoutYamanokaiAttendanceInput>
-  where?: Prisma.YamanokaiMemberWhereInput
-}
-
-export type YamanokaiMemberUpdateToOneWithWhereWithoutYamanokaiAttendanceInput = {
-  where?: Prisma.YamanokaiMemberWhereInput
-  data: Prisma.XOR<Prisma.YamanokaiMemberUpdateWithoutYamanokaiAttendanceInput, Prisma.YamanokaiMemberUncheckedUpdateWithoutYamanokaiAttendanceInput>
-}
-
-export type YamanokaiMemberUpdateWithoutYamanokaiAttendanceInput = {
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  nameKana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bloodType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceKuchi?: Prisma.IntFieldUpdateOperationsInput | number
-  cocoHeliId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  medicalHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyRelation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  joinedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  YamanokaiDepartment?: Prisma.YamanokaiDepartmentUpdateOneWithoutYamanokaiMemberNestedInput
-  YamanokaiRole?: Prisma.YamanokaiRoleUpdateOneWithoutYamanokaiMemberNestedInput
-  YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiRecord?: Prisma.YamanokaiRecordUpdateManyWithoutYamanokaiAuthorNestedInput
-  YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUpdateManyWithoutYamanokaiApproverNestedInput
-  YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUpdateManyWithoutYamanokaiMemberNestedInput
-}
-
-export type YamanokaiMemberUncheckedUpdateWithoutYamanokaiAttendanceInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  nameKana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  birthday?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bloodType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  insuranceKuchi?: Prisma.IntFieldUpdateOperationsInput | number
-  cocoHeliId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  medicalHistory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emergencyRelation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  joinedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  yamanokaiDepartmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  yamanokaiRoleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateManyWithoutYamanokaiAuthorNestedInput
-  YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUncheckedUpdateManyWithoutYamanokaiApproverNestedInput
-  YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
 }
 
 export type YamanokaiMemberCreateWithoutYamanokaiRecordInput = {
@@ -2014,7 +1827,6 @@ export type YamanokaiMemberCreateWithoutYamanokaiRecordInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanCreateNestedManyWithoutYamanokaiApproverInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantCreateNestedManyWithoutYamanokaiMemberInput
 }
@@ -2047,7 +1859,6 @@ export type YamanokaiMemberUncheckedCreateWithoutYamanokaiRecordInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUncheckedCreateNestedManyWithoutYamanokaiApproverInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUncheckedCreateNestedManyWithoutYamanokaiMemberInput
 }
@@ -2095,7 +1906,6 @@ export type YamanokaiMemberUpdateWithoutYamanokaiRecordInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUpdateManyWithoutYamanokaiApproverNestedInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUpdateManyWithoutYamanokaiMemberNestedInput
 }
@@ -2128,7 +1938,6 @@ export type YamanokaiMemberUncheckedUpdateWithoutYamanokaiRecordInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUncheckedUpdateManyWithoutYamanokaiApproverNestedInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
 }
@@ -2159,7 +1968,6 @@ export type YamanokaiMemberCreateWithoutYamanokaiEquipmentLoanInput = {
   YamanokaiRole?: Prisma.YamanokaiRoleCreateNestedOneWithoutYamanokaiMemberInput
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiRecord?: Prisma.YamanokaiRecordCreateNestedManyWithoutYamanokaiAuthorInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanCreateNestedManyWithoutYamanokaiApproverInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantCreateNestedManyWithoutYamanokaiMemberInput
@@ -2192,7 +2000,6 @@ export type YamanokaiMemberUncheckedCreateWithoutYamanokaiEquipmentLoanInput = {
   yamanokaiRoleId?: number | null
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedCreateNestedManyWithoutYamanokaiMemberInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiMemberInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedManyWithoutYamanokaiAuthorInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUncheckedCreateNestedManyWithoutYamanokaiApproverInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUncheckedCreateNestedManyWithoutYamanokaiMemberInput
@@ -2240,7 +2047,6 @@ export type YamanokaiMemberUpdateWithoutYamanokaiEquipmentLoanInput = {
   YamanokaiRole?: Prisma.YamanokaiRoleUpdateOneWithoutYamanokaiMemberNestedInput
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUpdateManyWithoutYamanokaiAuthorNestedInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUpdateManyWithoutYamanokaiApproverNestedInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUpdateManyWithoutYamanokaiMemberNestedInput
@@ -2273,7 +2079,6 @@ export type YamanokaiMemberUncheckedUpdateWithoutYamanokaiEquipmentLoanInput = {
   yamanokaiRoleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateManyWithoutYamanokaiAuthorNestedInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUncheckedUpdateManyWithoutYamanokaiApproverNestedInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
@@ -2331,7 +2136,6 @@ export type YamanokaiMemberUpdateWithoutYamanokaiDepartmentInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUpdateManyWithoutYamanokaiAuthorNestedInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUpdateManyWithoutYamanokaiApproverNestedInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUpdateManyWithoutYamanokaiMemberNestedInput
@@ -2364,7 +2168,6 @@ export type YamanokaiMemberUncheckedUpdateWithoutYamanokaiDepartmentInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateManyWithoutYamanokaiAuthorNestedInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUncheckedUpdateManyWithoutYamanokaiApproverNestedInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
@@ -2448,7 +2251,6 @@ export type YamanokaiMemberUpdateWithoutYamanokaiRoleInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUpdateManyWithoutYamanokaiAuthorNestedInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUpdateManyWithoutYamanokaiApproverNestedInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUpdateManyWithoutYamanokaiMemberNestedInput
@@ -2481,7 +2283,6 @@ export type YamanokaiMemberUncheckedUpdateWithoutYamanokaiRoleInput = {
   YamanokaiMemberRole?: Prisma.YamanokaiMemberRoleUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiEquipmentLoan?: Prisma.YamanokaiEquipmentLoanUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateManyWithoutYamanokaiAuthorNestedInput
   YamanokaiEventPlanApprover?: Prisma.YamanokaiEventPlanUncheckedUpdateManyWithoutYamanokaiApproverNestedInput
   YamanokaiEventPlanParticipant?: Prisma.YamanokaiEventPlanParticipantUncheckedUpdateManyWithoutYamanokaiMemberNestedInput
@@ -2522,7 +2323,6 @@ export type YamanokaiMemberCountOutputType = {
   YamanokaiMemberRole: number
   YamanokaiCourseCompletion: number
   YamanokaiEquipmentLoan: number
-  YamanokaiAttendance: number
   YamanokaiRecord: number
   YamanokaiEventPlanApprover: number
   YamanokaiEventPlanParticipant: number
@@ -2532,7 +2332,6 @@ export type YamanokaiMemberCountOutputTypeSelect<ExtArgs extends runtime.Types.E
   YamanokaiMemberRole?: boolean | YamanokaiMemberCountOutputTypeCountYamanokaiMemberRoleArgs
   YamanokaiCourseCompletion?: boolean | YamanokaiMemberCountOutputTypeCountYamanokaiCourseCompletionArgs
   YamanokaiEquipmentLoan?: boolean | YamanokaiMemberCountOutputTypeCountYamanokaiEquipmentLoanArgs
-  YamanokaiAttendance?: boolean | YamanokaiMemberCountOutputTypeCountYamanokaiAttendanceArgs
   YamanokaiRecord?: boolean | YamanokaiMemberCountOutputTypeCountYamanokaiRecordArgs
   YamanokaiEventPlanApprover?: boolean | YamanokaiMemberCountOutputTypeCountYamanokaiEventPlanApproverArgs
   YamanokaiEventPlanParticipant?: boolean | YamanokaiMemberCountOutputTypeCountYamanokaiEventPlanParticipantArgs
@@ -2567,13 +2366,6 @@ export type YamanokaiMemberCountOutputTypeCountYamanokaiCourseCompletionArgs<Ext
  */
 export type YamanokaiMemberCountOutputTypeCountYamanokaiEquipmentLoanArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.YamanokaiEquipmentLoanWhereInput
-}
-
-/**
- * YamanokaiMemberCountOutputType without action
- */
-export type YamanokaiMemberCountOutputTypeCountYamanokaiAttendanceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.YamanokaiAttendanceWhereInput
 }
 
 /**
@@ -2628,7 +2420,6 @@ export type YamanokaiMemberSelect<ExtArgs extends runtime.Types.Extensions.Inter
   YamanokaiMemberRole?: boolean | Prisma.YamanokaiMember$YamanokaiMemberRoleArgs<ExtArgs>
   YamanokaiCourseCompletion?: boolean | Prisma.YamanokaiMember$YamanokaiCourseCompletionArgs<ExtArgs>
   YamanokaiEquipmentLoan?: boolean | Prisma.YamanokaiMember$YamanokaiEquipmentLoanArgs<ExtArgs>
-  YamanokaiAttendance?: boolean | Prisma.YamanokaiMember$YamanokaiAttendanceArgs<ExtArgs>
   YamanokaiRecord?: boolean | Prisma.YamanokaiMember$YamanokaiRecordArgs<ExtArgs>
   YamanokaiEventPlanApprover?: boolean | Prisma.YamanokaiMember$YamanokaiEventPlanApproverArgs<ExtArgs>
   YamanokaiEventPlanParticipant?: boolean | Prisma.YamanokaiMember$YamanokaiEventPlanParticipantArgs<ExtArgs>
@@ -2727,7 +2518,6 @@ export type YamanokaiMemberInclude<ExtArgs extends runtime.Types.Extensions.Inte
   YamanokaiMemberRole?: boolean | Prisma.YamanokaiMember$YamanokaiMemberRoleArgs<ExtArgs>
   YamanokaiCourseCompletion?: boolean | Prisma.YamanokaiMember$YamanokaiCourseCompletionArgs<ExtArgs>
   YamanokaiEquipmentLoan?: boolean | Prisma.YamanokaiMember$YamanokaiEquipmentLoanArgs<ExtArgs>
-  YamanokaiAttendance?: boolean | Prisma.YamanokaiMember$YamanokaiAttendanceArgs<ExtArgs>
   YamanokaiRecord?: boolean | Prisma.YamanokaiMember$YamanokaiRecordArgs<ExtArgs>
   YamanokaiEventPlanApprover?: boolean | Prisma.YamanokaiMember$YamanokaiEventPlanApproverArgs<ExtArgs>
   YamanokaiEventPlanParticipant?: boolean | Prisma.YamanokaiMember$YamanokaiEventPlanParticipantArgs<ExtArgs>
@@ -2750,7 +2540,6 @@ export type $YamanokaiMemberPayload<ExtArgs extends runtime.Types.Extensions.Int
     YamanokaiMemberRole: Prisma.$YamanokaiMemberRolePayload<ExtArgs>[]
     YamanokaiCourseCompletion: Prisma.$YamanokaiCourseCompletionPayload<ExtArgs>[]
     YamanokaiEquipmentLoan: Prisma.$YamanokaiEquipmentLoanPayload<ExtArgs>[]
-    YamanokaiAttendance: Prisma.$YamanokaiAttendancePayload<ExtArgs>[]
     YamanokaiRecord: Prisma.$YamanokaiRecordPayload<ExtArgs>[]
     YamanokaiEventPlanApprover: Prisma.$YamanokaiEventPlanPayload<ExtArgs>[]
     YamanokaiEventPlanParticipant: Prisma.$YamanokaiEventPlanParticipantPayload<ExtArgs>[]
@@ -3179,7 +2968,6 @@ export interface Prisma__YamanokaiMemberClient<T, Null = never, ExtArgs extends 
   YamanokaiMemberRole<T extends Prisma.YamanokaiMember$YamanokaiMemberRoleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.YamanokaiMember$YamanokaiMemberRoleArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$YamanokaiMemberRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   YamanokaiCourseCompletion<T extends Prisma.YamanokaiMember$YamanokaiCourseCompletionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.YamanokaiMember$YamanokaiCourseCompletionArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$YamanokaiCourseCompletionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   YamanokaiEquipmentLoan<T extends Prisma.YamanokaiMember$YamanokaiEquipmentLoanArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.YamanokaiMember$YamanokaiEquipmentLoanArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$YamanokaiEquipmentLoanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  YamanokaiAttendance<T extends Prisma.YamanokaiMember$YamanokaiAttendanceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.YamanokaiMember$YamanokaiAttendanceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$YamanokaiAttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   YamanokaiRecord<T extends Prisma.YamanokaiMember$YamanokaiRecordArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.YamanokaiMember$YamanokaiRecordArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$YamanokaiRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   YamanokaiEventPlanApprover<T extends Prisma.YamanokaiMember$YamanokaiEventPlanApproverArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.YamanokaiMember$YamanokaiEventPlanApproverArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$YamanokaiEventPlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   YamanokaiEventPlanParticipant<T extends Prisma.YamanokaiMember$YamanokaiEventPlanParticipantArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.YamanokaiMember$YamanokaiEventPlanParticipantArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$YamanokaiEventPlanParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3739,30 +3527,6 @@ export type YamanokaiMember$YamanokaiEquipmentLoanArgs<ExtArgs extends runtime.T
   take?: number
   skip?: number
   distinct?: Prisma.YamanokaiEquipmentLoanScalarFieldEnum | Prisma.YamanokaiEquipmentLoanScalarFieldEnum[]
-}
-
-/**
- * YamanokaiMember.YamanokaiAttendance
- */
-export type YamanokaiMember$YamanokaiAttendanceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the YamanokaiAttendance
-   */
-  select?: Prisma.YamanokaiAttendanceSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the YamanokaiAttendance
-   */
-  omit?: Prisma.YamanokaiAttendanceOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.YamanokaiAttendanceInclude<ExtArgs> | null
-  where?: Prisma.YamanokaiAttendanceWhereInput
-  orderBy?: Prisma.YamanokaiAttendanceOrderByWithRelationInput | Prisma.YamanokaiAttendanceOrderByWithRelationInput[]
-  cursor?: Prisma.YamanokaiAttendanceWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.YamanokaiAttendanceScalarFieldEnum | Prisma.YamanokaiAttendanceScalarFieldEnum[]
 }
 
 /**

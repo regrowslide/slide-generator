@@ -691,7 +691,7 @@ export type YamanokaiEventPlan = Prisma.YamanokaiEventPlanModel
 export type YamanokaiEventPlanParticipant = Prisma.YamanokaiEventPlanParticipantModel
 /**
  * Model YamanokaiAttendance
- * 出席回答
+ * 参加申請
  */
 export type YamanokaiAttendance = Prisma.YamanokaiAttendanceModel
 /**

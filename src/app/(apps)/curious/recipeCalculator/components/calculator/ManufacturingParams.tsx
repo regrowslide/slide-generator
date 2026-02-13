@@ -1,22 +1,49 @@
 'use client'
 
-import {Factory, ToggleLeft, ToggleRight} from 'lucide-react'
+import {useState, useEffect} from 'react'
+import {Factory, ToggleLeft, ToggleRight, RefreshCw} from 'lucide-react'
 import type {CostCalculationResult, RecipeSettings, InputMode} from '../../types'
 
 interface ManufacturingParamsProps {
   settings: RecipeSettings
   calculatedData: CostCalculationResult
-  onSettingChange: (key: keyof RecipeSettings, value: number | null) => void
+  onRecalculate: (params: {lossRate: number; packWeightG: number; productionWeightG: number | null}) => void
   onInputModeChange: (mode: InputMode) => void
 }
 
 export const ManufacturingParams = ({
   settings,
   calculatedData,
-  onSettingChange,
+  onRecalculate,
   onInputModeChange,
 }: ManufacturingParamsProps) => {
   const isFillAmountMode = settings.inputMode === 'fillAmount'
+
+  // ローカル state で入力値を管理
+  const [localProductionWeightG, setLocalProductionWeightG] = useState<number | null>(settings.productionWeightG)
+  const [localLossRate, setLocalLossRate] = useState(settings.lossRate)
+  const [localPackWeightG, setLocalPackWeightG] = useState(settings.packWeightG)
+
+  // 親から settings が更新された場合にローカル state を同期
+  useEffect(() => {
+    setLocalProductionWeightG(settings.productionWeightG)
+    setLocalLossRate(settings.lossRate)
+    setLocalPackWeightG(settings.packWeightG)
+  }, [settings.productionWeightG, settings.lossRate, settings.packWeightG])
+
+  // ローカル値が親の値と異なるか判定
+  const hasChanges =
+    localProductionWeightG !== settings.productionWeightG ||
+    localLossRate !== settings.lossRate ||
+    localPackWeightG !== settings.packWeightG
+
+  const handleRecalculate = () => {
+    onRecalculate({
+      lossRate: localLossRate,
+      packWeightG: localPackWeightG,
+      productionWeightG: localProductionWeightG,
+    })
+  }
 
   return (
     <section className="bg-slate-50 rounded-xl p-6 border border-slate-200 shadow-sm">
@@ -36,10 +63,10 @@ export const ManufacturingParams = ({
           <label className="text-sm text-slate-600">製造可能重量 (g)</label>
           <input
             type="number"
-            value={settings.productionWeightG ?? ''}
+            value={localProductionWeightG ?? ''}
             onChange={(e) => {
               const value = e.target.value === '' ? null : Number(e.target.value)
-              onSettingChange('productionWeightG', value)
+              setLocalProductionWeightG(value)
             }}
             placeholder={`${(calculatedData.productionWeightKg * 1000).toFixed(0)}`}
             className="w-28 text-right border rounded px-2 py-1"
@@ -51,8 +78,8 @@ export const ManufacturingParams = ({
           <label className="text-sm text-slate-600">製造ロス率 (%)</label>
           <input
             type="number"
-            value={settings.lossRate}
-            onChange={(e) => onSettingChange('lossRate', Number(e.target.value))}
+            value={localLossRate}
+            onChange={(e) => setLocalLossRate(Number(e.target.value))}
             className="w-24 text-right border rounded px-2 py-1"
           />
         </div>
@@ -87,8 +114,8 @@ export const ManufacturingParams = ({
                 <label className="text-sm text-slate-600">1パック充填量 (g)</label>
                 <input
                   type="number"
-                  value={settings.packWeightG}
-                  onChange={(e) => onSettingChange('packWeightG', Number(e.target.value))}
+                  value={localPackWeightG}
+                  onChange={(e) => setLocalPackWeightG(Number(e.target.value))}
                   className="w-24 text-right border rounded px-2 py-1"
                 />
               </div>
@@ -104,7 +131,6 @@ export const ManufacturingParams = ({
                 <input
                   type="number"
                   value={calculatedData.packCount}
-                  onChange={(e) => onSettingChange('packWeightG', Number(e.target.value))}
                   className="w-24 text-right border rounded px-2 py-1"
                   disabled
                 />
@@ -115,6 +141,19 @@ export const ManufacturingParams = ({
               </div>
             </>
           )}
+        </div>
+
+        {/* 再計算ボタン */}
+        <div className="border-t pt-3 mt-3">
+          <button
+            type="button"
+            onClick={handleRecalculate}
+            disabled={!hasChanges}
+            className="w-full flex items-center justify-center gap-2 bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          >
+            <RefreshCw className="w-4 h-4" />
+            再計算
+          </button>
         </div>
       </div>
     </section>

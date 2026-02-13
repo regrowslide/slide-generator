@@ -61,6 +61,8 @@ export interface ProfitMarginAlert {
   currentProfitRate: number
   minProfitAmount: number
   minProfitRate: number
+  minPackCount: number
+  maxPackCount: number | null
   message: string
 }
 

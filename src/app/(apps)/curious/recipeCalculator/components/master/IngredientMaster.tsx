@@ -11,6 +11,7 @@ import {
   updateIngredientMaster,
   deleteIngredientMaster,
 } from '../../server-actions/ingredient-master-actions'
+import {seedIngredientMasters} from '../../server-actions/seed-ingredient-master'
 import { IngredientMasterTable } from './IngredientTable'
 import { IngredientForm } from './IngredientForm'
 
@@ -66,6 +67,17 @@ export const IngredientMaster = () => {
     })
   }
 
+  // 初期データ投入
+  const handleSeed = () => {
+    if (!window.confirm('既存データを削除して初期データ（約50件）を投入しますか？')) return
+
+    startTransition(async () => {
+      await seedIngredientMasters()
+      const data = await getIngredientMasters()
+      setMasterData(data as RcIngredientMaster[])
+    })
+  }
+
   // 削除処理
   const handleDelete = (id: number) => {
     if (window.confirm('削除しますか？')) {
@@ -104,6 +116,11 @@ export const IngredientMaster = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
+          {masterData.length === 0 && (
+            <Button onClick={handleSeed} disabled={isPending} variant="outline" className="text-emerald-700 border-emerald-300 hover:bg-emerald-50">
+              初期データ投入
+            </Button>
+          )}
           <Button onClick={() => openModal()} className="flex items-center gap-2">
             <Plus className="w-4 h-4" />
             新規

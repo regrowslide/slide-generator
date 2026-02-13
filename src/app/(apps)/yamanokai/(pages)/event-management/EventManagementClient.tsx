@@ -1,7 +1,6 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import useModal from '@cm/components/utils/modal/useModal'
 import { Button } from '@cm/components/styles/common-components/Button'
 import type { YamanokaiDepartment, User, YamanokaiEvent } from '@prisma/generated/prisma/client'
@@ -12,6 +11,11 @@ import {
   deleteYamanokaiEvent,
   type YamanokaiEventFormData,
 } from '@app/(apps)/yamanokai/_actions/event-actions'
+import {
+  getApplicationsByEventId,
+  updateYamanokaiApplication,
+  toggleActualAttended,
+} from '@app/(apps)/yamanokai/_actions/attendance-actions'
 
 // グレード定数
 const STAMINA_GRADES = ['(^^)', 'O(-)', 'O', 'O(+)', 'OO', 'OOO', 'OOOO']
@@ -24,6 +28,12 @@ const EVENT_STATUS_MAP = {
   published: { label: '公開済み', color: '#22c55e', bgColor: '#dcfce7' },
 } as const
 
+const APPLICATION_STATUS_MAP = {
+  pending: { label: '審査中', color: '#eab308', bgColor: '#fef9c3' },
+  approved: { label: '承認', color: '#22c55e', bgColor: '#dcfce7' },
+  rejected: { label: '却下', color: '#ef4444', bgColor: '#fee2e2' },
+} as const
+
 type StatusKey = keyof typeof EVENT_STATUS_MAP
 
 type EventWithRelations = YamanokaiEvent & {
@@ -32,12 +42,17 @@ type EventWithRelations = YamanokaiEvent & {
   SL: User | null
 }
 
+type ApplicationSummary = Record<number, Record<string, number>>
+type ApplicationWithUser = Awaited<ReturnType<typeof getApplicationsByEventId>>[number]
+
 type Props = {
   events: EventWithRelations[]
   departments: YamanokaiDepartment[]
   users: User[]
   canEdit: boolean
   isSystemAdmin: boolean
+  applicationSummary: ApplicationSummary
+  currentUserId: number
 }
 
 // 日付フォーマット
@@ -57,8 +72,15 @@ const toDateInputValue = (date: Date | string | null) => {
 
 const STATUS_KEYS = Object.keys(EVENT_STATUS_MAP) as StatusKey[]
 
-const EventManagementClient = ({ events, departments, users, canEdit, isSystemAdmin }: Props) => {
-  const router = useRouter()
+const EventManagementClient = ({
+  events: initialEvents,
+  departments,
+  users,
+  applicationSummary: initialSummary,
+  currentUserId,
+}: Props) => {
+  const [events, setEvents] = useState(initialEvents)
+  const [applicationSummary, setApplicationSummary] = useState(initialSummary)
   const [activeTab, setActiveTab] = useState<StatusKey>('draft')
   const [selectedIds, setSelectedIds] = useState<number[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -67,6 +89,7 @@ const EventManagementClient = ({ events, departments, users, canEdit, isSystemAd
   const createModal = useModal()
   const editModal = useModal<EventWithRelations | null>()
   const detailModal = useModal<EventWithRelations | null>()
+  const applicationModal = useModal<{ event: EventWithRelations; applications: ApplicationWithUser[] } | null>()
 
   // タブごとにフィルタ
   const filteredEvents = events.filter(e => e.status === activeTab)
@@ -90,9 +113,9 @@ const EventManagementClient = ({ events, departments, users, canEdit, isSystemAd
     if (!window.confirm(`${selectedIds.length}件を「${label}」に変更しますか？`)) return
     setIsLoading(true)
     await bulkUpdateYamanokaiEventStatus(selectedIds, newStatus)
+    setEvents(prev => prev.map(e => (selectedIds.includes(e.id) ? { ...e, status: newStatus } : e)))
     setSelectedIds([])
     setShowStatusMenu(false)
-    router.refresh()
     setIsLoading(false)
   }
 
@@ -100,24 +123,33 @@ const EventManagementClient = ({ events, departments, users, canEdit, isSystemAd
     if (!window.confirm('この例会を削除しますか？')) return
     setIsLoading(true)
     await deleteYamanokaiEvent(id)
-    router.refresh()
+    setEvents(prev => prev.filter(e => e.id !== id))
     setIsLoading(false)
   }
 
   const handleCreate = async (data: YamanokaiEventFormData) => {
     setIsLoading(true)
-    await createYamanokaiEvent(data)
+    const created = await createYamanokaiEvent(data)
+    setEvents(prev => [...prev, created])
     createModal.handleClose()
-    router.refresh()
     setIsLoading(false)
   }
 
   const handleUpdate = async (id: number, data: Partial<YamanokaiEventFormData>) => {
     setIsLoading(true)
-    await updateYamanokaiEvent(id, data)
+    const updated = await updateYamanokaiEvent(id, data)
+    setEvents(prev => prev.map(e => (e.id === id ? updated : e)))
     editModal.handleClose()
-    router.refresh()
     setIsLoading(false)
+  }
+
+  const handleShowApplications = async (event: EventWithRelations) => {
+    const applications = await getApplicationsByEventId(event.id)
+    applicationModal.handleOpen({ event, applications })
+  }
+
+  const handleApplicationSummaryUpdate = (eventId: number, newSummary: Record<string, number>) => {
+    setApplicationSummary(prev => ({ ...prev, [eventId]: newSummary }))
   }
 
   return (
@@ -173,7 +205,7 @@ const EventManagementClient = ({ events, departments, users, canEdit, isSystemAd
               {showStatusMenu && (
                 <div className='absolute right-0 top-full mt-1 bg-white border rounded-lg shadow-lg z-10 min-w-[140px]'>
                   {STATUS_KEYS.filter(key => key !== activeTab).map(key => {
-                    const { label, color, bgColor } = EVENT_STATUS_MAP[key]
+                    const { label, color } = EVENT_STATUS_MAP[key]
                     return (
                       <button
                         key={key}
@@ -239,6 +271,8 @@ const EventManagementClient = ({ events, departments, users, canEdit, isSystemAd
                     </span>
                     <span>申込期限: {formatDate(event.deadline)}</span>
                   </div>
+                  {/* 申請サマリ */}
+                  <ApplicationSummaryRow summary={applicationSummary[event.id]} />
                 </div>
 
                 {/* アクションボタン */}
@@ -248,6 +282,9 @@ const EventManagementClient = ({ events, departments, users, canEdit, isSystemAd
                   </Button>
                   <Button size='xs' color='gray' onClick={() => editModal.handleOpen(event)}>
                     編集
+                  </Button>
+                  <Button size='xs' color='blue' onClick={() => handleShowApplications(event)}>
+                    申請管理
                   </Button>
                   <Button size='xs' color='red' onClick={() => handleDelete(event.id)} disabled={isLoading}>
                     削除
@@ -286,6 +323,17 @@ const EventManagementClient = ({ events, departments, users, canEdit, isSystemAd
       <detailModal.Modal title='例会詳細'>
         {detailModal.open && <EventDetail event={detailModal.open} />}
       </detailModal.Modal>
+
+      {/* 申請管理モーダル */}
+      <applicationModal.Modal title={applicationModal.open ? `申請管理 - ${applicationModal.open.event.title}` : '申請管理'}>
+        {applicationModal.open && (
+          <ApplicationManagement
+            initialApplications={applicationModal.open.applications}
+            currentUserId={currentUserId}
+            onSummaryChange={summary => handleApplicationSummaryUpdate(applicationModal.open!.event.id, summary)}
+          />
+        )}
+      </applicationModal.Modal>
     </div>
   )
 }
@@ -565,3 +613,192 @@ const FormFieldWrap = ({ label, required, children }: { label: string; required?
     {children}
   </div>
 )
+
+// =============================================================================
+// 申請サマリ行
+// =============================================================================
+
+const ApplicationSummaryRow = ({ summary }: { summary?: Record<string, number> }) => {
+  const approved = summary?.approved ?? 0
+  const pending = summary?.pending ?? 0
+  const rejected = summary?.rejected ?? 0
+
+  return (
+    <div className='flex items-center gap-3 mt-2 text-sm'>
+      <span className='text-gray-500'>申請:</span>
+      <span style={{ color: '#22c55e' }}>承認:{approved}</span>
+      <span style={{ color: '#eab308' }}>審査中:{pending}</span>
+      <span style={{ color: '#ef4444' }}>却下:{rejected}</span>
+    </div>
+  )
+}
+
+// =============================================================================
+// 申請管理（ステータス・コメントをインライン編集）
+// =============================================================================
+
+const ApplicationManagement = ({
+  initialApplications,
+  currentUserId,
+  onSummaryChange,
+}: {
+  initialApplications: ApplicationWithUser[]
+  currentUserId: number
+  onSummaryChange: (summary: Record<string, number>) => void
+}) => {
+  const [applications, setApplications] = useState(initialApplications)
+  const [savingIds, setSavingIds] = useState<Set<number>>(new Set())
+
+  const calcSummary = (apps: ApplicationWithUser[]) => {
+    const summary: Record<string, number> = {}
+    for (const a of apps) {
+      summary[a.status] = (summary[a.status] ?? 0) + 1
+    }
+    return summary
+  }
+
+  const handleUpdate = async (appId: number, data: { status?: string; rejectionReason?: string | null; approvedBy?: number | null }) => {
+    setSavingIds(prev => new Set(prev).add(appId))
+    const updated = await updateYamanokaiApplication(appId, data)
+    const newApps = applications.map(a => (a.id === appId ? updated : a))
+    setApplications(newApps)
+    onSummaryChange(calcSummary(newApps))
+    setSavingIds(prev => {
+      const next = new Set(prev)
+      next.delete(appId)
+      return next
+    })
+  }
+
+  const handleToggleAttended = async (appId: number) => {
+    const updated = await toggleActualAttended(appId)
+    if (updated) {
+      setApplications(prev => prev.map(a => (a.id === appId ? updated : a)))
+    }
+  }
+
+  return (
+    <div className='space-y-4'>
+      {/* サマリ */}
+      <div className='flex gap-4 text-sm'>
+        <span className='text-green-600 font-medium'>承認: {applications.filter(a => a.status === 'approved').length}名</span>
+        <span className='text-yellow-600 font-medium'>審査中: {applications.filter(a => a.status === 'pending').length}名</span>
+        <span className='text-red-600 font-medium'>却下: {applications.filter(a => a.status === 'rejected').length}名</span>
+      </div>
+
+      {/* 申請テーブル */}
+      <div className='overflow-x-auto'>
+        <table className='w-full text-sm'>
+          <thead>
+            <tr className='border-b bg-gray-50 text-left text-gray-500'>
+              <th className='py-3 px-4'>申請者</th>
+              <th className='py-3 px-4'>コメント</th>
+              <th className='py-3 px-4'>ステータス</th>
+              <th className='py-3 px-4'>理由/メモ</th>
+              <th className='py-3 px-4'>当日出席</th>
+            </tr>
+          </thead>
+          <tbody>
+            {applications.length === 0 ? (
+              <tr>
+                <td colSpan={5} className='py-8 text-center text-gray-400'>
+                  申請はありません
+                </td>
+              </tr>
+            ) : (
+              applications.map(app => (
+                <ApplicationRow
+                  key={app.id}
+                  app={app}
+                  isSaving={savingIds.has(app.id)}
+                  onStatusChange={status =>
+                    handleUpdate(app.id, {
+                      status,
+                      approvedBy: status === 'pending' ? null : currentUserId,
+                    })
+                  }
+                  onReasonBlur={reason => handleUpdate(app.id, { rejectionReason: reason || null })}
+                  onToggleAttended={() => handleToggleAttended(app.id)}
+                />
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+// 申請行（インライン編集）
+const ApplicationRow = ({
+  app,
+  isSaving,
+  onStatusChange,
+  onReasonBlur,
+  onToggleAttended,
+}: {
+  app: ApplicationWithUser
+  isSaving: boolean
+  onStatusChange: (status: string) => void
+  onReasonBlur: (reason: string) => void
+  onToggleAttended: () => void
+}) => {
+  const [reason, setReason] = useState(app.rejectionReason || '')
+
+  // 親から app が更新されたら同期
+  useEffect(() => {
+    setReason(app.rejectionReason || '')
+  }, [app.rejectionReason])
+
+  const handleReasonBlur = () => {
+    if (reason !== (app.rejectionReason || '')) {
+      onReasonBlur(reason)
+    }
+  }
+
+  const statusInfo = APPLICATION_STATUS_MAP[app.status as keyof typeof APPLICATION_STATUS_MAP]
+
+  return (
+    <tr className='border-b hover:bg-gray-50'>
+      <td className='py-3 px-4 font-medium whitespace-nowrap'>{app.User.name}</td>
+      <td className='py-3 px-4 text-gray-600 max-w-[200px]'>{app.comment || '—'}</td>
+      <td className='py-3 px-4'>
+        <select
+          className='border rounded px-2 py-1 text-xs font-medium'
+          value={app.status}
+          onChange={e => onStatusChange(e.target.value)}
+          disabled={isSaving}
+          style={{ color: statusInfo?.color, borderColor: statusInfo?.color }}
+        >
+          <option value='pending'>審査中</option>
+          <option value='approved'>承認</option>
+          <option value='rejected'>却下</option>
+        </select>
+      </td>
+      <td className='py-3 px-4'>
+        <textarea
+          className='w-full border rounded px-2 py-1 text-xs min-w-[150px] resize-none'
+          value={reason}
+          onChange={e => setReason(e.target.value)}
+          onBlur={handleReasonBlur}
+          placeholder='理由/メモ'
+          rows={1}
+          disabled={isSaving}
+        />
+      </td>
+      <td className='py-3 px-4'>
+        {app.status === 'approved' && (
+          <label className='flex items-center gap-2 cursor-pointer'>
+            <input
+              type='checkbox'
+              checked={app.actualAttended}
+              onChange={onToggleAttended}
+              className='w-4 h-4 rounded'
+            />
+            <span className='text-xs'>{app.actualAttended ? '出席' : '未出席'}</span>
+          </label>
+        )}
+      </td>
+    </tr>
+  )
+}

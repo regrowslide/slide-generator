@@ -533,6 +533,8 @@ export type UserWhereInput = {
   Store?: Prisma.XOR<Prisma.StoreNullableScalarRelationFilter, Prisma.StoreWhereInput> | null
   YamanokaiEventAsCL?: Prisma.YamanokaiEventListRelationFilter
   YamanokaiEventAsSL?: Prisma.YamanokaiEventListRelationFilter
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceListRelationFilter
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -594,6 +596,8 @@ export type UserOrderByWithRelationInput = {
   Store?: Prisma.StoreOrderByWithRelationInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventOrderByRelationAggregateInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventOrderByRelationAggregateInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceOrderByRelationAggregateInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -658,6 +662,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   Store?: Prisma.XOR<Prisma.StoreNullableScalarRelationFilter, Prisma.StoreWhereInput> | null
   YamanokaiEventAsCL?: Prisma.YamanokaiEventListRelationFilter
   YamanokaiEventAsSL?: Prisma.YamanokaiEventListRelationFilter
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceListRelationFilter
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceListRelationFilter
 }, "id" | "code" | "email" | "employeeCode">
 
 export type UserOrderByWithAggregationInput = {
@@ -800,6 +806,8 @@ export type UserCreateInput = {
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -855,6 +863,8 @@ export type UserUncheckedCreateInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUpdateInput = {
@@ -909,6 +919,8 @@ export type UserUpdateInput = {
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -964,6 +976,8 @@ export type UserUncheckedUpdateInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -1730,6 +1744,36 @@ export type UserUpdateOneWithoutYamanokaiEventAsSLNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutYamanokaiEventAsSLInput, Prisma.UserUpdateWithoutYamanokaiEventAsSLInput>, Prisma.UserUncheckedUpdateWithoutYamanokaiEventAsSLInput>
 }
 
+export type UserCreateNestedOneWithoutYamanokaiAttendanceInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutYamanokaiAttendanceInput, Prisma.UserUncheckedCreateWithoutYamanokaiAttendanceInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutYamanokaiAttendanceInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutYamanokaiAttendanceAsApproverInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutYamanokaiAttendanceAsApproverInput, Prisma.UserUncheckedCreateWithoutYamanokaiAttendanceAsApproverInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutYamanokaiAttendanceAsApproverInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutYamanokaiAttendanceNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutYamanokaiAttendanceInput, Prisma.UserUncheckedCreateWithoutYamanokaiAttendanceInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutYamanokaiAttendanceInput
+  upsert?: Prisma.UserUpsertWithoutYamanokaiAttendanceInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutYamanokaiAttendanceInput, Prisma.UserUpdateWithoutYamanokaiAttendanceInput>, Prisma.UserUncheckedUpdateWithoutYamanokaiAttendanceInput>
+}
+
+export type UserUpdateOneWithoutYamanokaiAttendanceAsApproverNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutYamanokaiAttendanceAsApproverInput, Prisma.UserUncheckedCreateWithoutYamanokaiAttendanceAsApproverInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutYamanokaiAttendanceAsApproverInput
+  upsert?: Prisma.UserUpsertWithoutYamanokaiAttendanceAsApproverInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutYamanokaiAttendanceAsApproverInput, Prisma.UserUpdateWithoutYamanokaiAttendanceAsApproverInput>, Prisma.UserUncheckedUpdateWithoutYamanokaiAttendanceAsApproverInput>
+}
+
 export type UserCreateWithoutAidocumentCompanyInput = {
   code?: string | null
   createdAt?: Date | string
@@ -1781,6 +1825,8 @@ export type UserCreateWithoutAidocumentCompanyInput = {
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutAidocumentCompanyInput = {
@@ -1835,6 +1881,8 @@ export type UserUncheckedCreateWithoutAidocumentCompanyInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutAidocumentCompanyInput = {
@@ -1957,6 +2005,8 @@ export type UserCreateWithoutCounselingStoreInput = {
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutCounselingStoreInput = {
@@ -2011,6 +2061,8 @@ export type UserUncheckedCreateWithoutCounselingStoreInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutCounselingStoreInput = {
@@ -2090,6 +2142,8 @@ export type UserCreateWithoutCounselingSlotInput = {
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutCounselingSlotInput = {
@@ -2144,6 +2198,8 @@ export type UserUncheckedCreateWithoutCounselingSlotInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutCounselingSlotInput = {
@@ -2213,6 +2269,8 @@ export type UserUpdateWithoutCounselingSlotInput = {
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCounselingSlotInput = {
@@ -2267,6 +2325,8 @@ export type UserUncheckedUpdateWithoutCounselingSlotInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserCreateWithoutSbmReservationInput = {
@@ -2320,6 +2380,8 @@ export type UserCreateWithoutSbmReservationInput = {
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutSbmReservationInput = {
@@ -2374,6 +2436,8 @@ export type UserUncheckedCreateWithoutSbmReservationInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutSbmReservationInput = {
@@ -2443,6 +2507,8 @@ export type UserUpdateWithoutSbmReservationInput = {
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSbmReservationInput = {
@@ -2497,6 +2563,8 @@ export type UserUncheckedUpdateWithoutSbmReservationInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserCreateWithoutSbmReservationChangeHistoryInput = {
@@ -2550,6 +2618,8 @@ export type UserCreateWithoutSbmReservationChangeHistoryInput = {
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutSbmReservationChangeHistoryInput = {
@@ -2604,6 +2674,8 @@ export type UserUncheckedCreateWithoutSbmReservationChangeHistoryInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutSbmReservationChangeHistoryInput = {
@@ -2673,6 +2745,8 @@ export type UserUpdateWithoutSbmReservationChangeHistoryInput = {
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSbmReservationChangeHistoryInput = {
@@ -2727,6 +2801,8 @@ export type UserUncheckedUpdateWithoutSbmReservationChangeHistoryInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserCreateWithoutSbmDeliveryAssignmentInput = {
@@ -2780,6 +2856,8 @@ export type UserCreateWithoutSbmDeliveryAssignmentInput = {
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutSbmDeliveryAssignmentInput = {
@@ -2834,6 +2912,8 @@ export type UserUncheckedCreateWithoutSbmDeliveryAssignmentInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutSbmDeliveryAssignmentInput = {
@@ -2903,6 +2983,8 @@ export type UserUpdateWithoutSbmDeliveryAssignmentInput = {
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSbmDeliveryAssignmentInput = {
@@ -2957,6 +3039,8 @@ export type UserUncheckedUpdateWithoutSbmDeliveryAssignmentInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserCreateWithoutDepartmentInput = {
@@ -3010,6 +3094,8 @@ export type UserCreateWithoutDepartmentInput = {
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutDepartmentInput = {
@@ -3064,6 +3150,8 @@ export type UserUncheckedCreateWithoutDepartmentInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutDepartmentInput = {
@@ -3143,6 +3231,8 @@ export type UserCreateWithoutStoreInput = {
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutStoreInput = {
@@ -3197,6 +3287,8 @@ export type UserUncheckedCreateWithoutStoreInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutStoreInput = {
@@ -3276,6 +3368,8 @@ export type UserCreateWithoutUserRoleInput = {
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutUserRoleInput = {
@@ -3330,6 +3424,8 @@ export type UserUncheckedCreateWithoutUserRoleInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutUserRoleInput = {
@@ -3399,6 +3495,8 @@ export type UserUpdateWithoutUserRoleInput = {
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUserRoleInput = {
@@ -3453,6 +3551,8 @@ export type UserUncheckedUpdateWithoutUserRoleInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserCreateWithoutTbmBaseInput = {
@@ -3506,6 +3606,8 @@ export type UserCreateWithoutTbmBaseInput = {
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutTbmBaseInput = {
@@ -3560,6 +3662,8 @@ export type UserUncheckedCreateWithoutTbmBaseInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutTbmBaseInput = {
@@ -3639,6 +3743,8 @@ export type UserCreateWithoutTbmVehicleInput = {
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutTbmVehicleInput = {
@@ -3693,6 +3799,8 @@ export type UserUncheckedCreateWithoutTbmVehicleInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutTbmVehicleInput = {
@@ -3772,6 +3880,8 @@ export type UserCreateWithoutTbmRefuelHistoryInput = {
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutTbmRefuelHistoryInput = {
@@ -3826,6 +3936,8 @@ export type UserUncheckedCreateWithoutTbmRefuelHistoryInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutTbmRefuelHistoryInput = {
@@ -3895,6 +4007,8 @@ export type UserUpdateWithoutTbmRefuelHistoryInput = {
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTbmRefuelHistoryInput = {
@@ -3949,6 +4063,8 @@ export type UserUncheckedUpdateWithoutTbmRefuelHistoryInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserCreateWithoutTbmCarWashHistoryInput = {
@@ -4002,6 +4118,8 @@ export type UserCreateWithoutTbmCarWashHistoryInput = {
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutTbmCarWashHistoryInput = {
@@ -4056,6 +4174,8 @@ export type UserUncheckedCreateWithoutTbmCarWashHistoryInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutTbmCarWashHistoryInput = {
@@ -4125,6 +4245,8 @@ export type UserUpdateWithoutTbmCarWashHistoryInput = {
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTbmCarWashHistoryInput = {
@@ -4179,6 +4301,8 @@ export type UserUncheckedUpdateWithoutTbmCarWashHistoryInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserCreateWithoutTbmDriveScheduleInput = {
@@ -4232,6 +4356,8 @@ export type UserCreateWithoutTbmDriveScheduleInput = {
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutTbmDriveScheduleInput = {
@@ -4286,6 +4412,8 @@ export type UserUncheckedCreateWithoutTbmDriveScheduleInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutTbmDriveScheduleInput = {
@@ -4355,6 +4483,8 @@ export type UserUpdateWithoutTbmDriveScheduleInput = {
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTbmDriveScheduleInput = {
@@ -4409,6 +4539,8 @@ export type UserUncheckedUpdateWithoutTbmDriveScheduleInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserCreateWithoutOdometerInputInput = {
@@ -4462,6 +4594,8 @@ export type UserCreateWithoutOdometerInputInput = {
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutOdometerInputInput = {
@@ -4516,6 +4650,8 @@ export type UserUncheckedCreateWithoutOdometerInputInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutOdometerInputInput = {
@@ -4585,6 +4721,8 @@ export type UserUpdateWithoutOdometerInputInput = {
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOdometerInputInput = {
@@ -4639,6 +4777,8 @@ export type UserUncheckedUpdateWithoutOdometerInputInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserCreateWithoutUserWorkStatusInput = {
@@ -4692,6 +4832,8 @@ export type UserCreateWithoutUserWorkStatusInput = {
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutUserWorkStatusInput = {
@@ -4746,6 +4888,8 @@ export type UserUncheckedCreateWithoutUserWorkStatusInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutUserWorkStatusInput = {
@@ -4815,6 +4959,8 @@ export type UserUpdateWithoutUserWorkStatusInput = {
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUserWorkStatusInput = {
@@ -4869,6 +5015,8 @@ export type UserUncheckedUpdateWithoutUserWorkStatusInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserCreateWithoutKyuyoTableRecordInput = {
@@ -4922,6 +5070,8 @@ export type UserCreateWithoutKyuyoTableRecordInput = {
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutKyuyoTableRecordInput = {
@@ -4976,6 +5126,8 @@ export type UserUncheckedCreateWithoutKyuyoTableRecordInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutKyuyoTableRecordInput = {
@@ -5045,6 +5197,8 @@ export type UserUpdateWithoutKyuyoTableRecordInput = {
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutKyuyoTableRecordInput = {
@@ -5099,6 +5253,8 @@ export type UserUncheckedUpdateWithoutKyuyoTableRecordInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserCreateWithoutExerciseMasterInput = {
@@ -5152,6 +5308,8 @@ export type UserCreateWithoutExerciseMasterInput = {
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutExerciseMasterInput = {
@@ -5206,6 +5364,8 @@ export type UserUncheckedCreateWithoutExerciseMasterInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutExerciseMasterInput = {
@@ -5275,6 +5435,8 @@ export type UserUpdateWithoutExerciseMasterInput = {
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExerciseMasterInput = {
@@ -5329,6 +5491,8 @@ export type UserUncheckedUpdateWithoutExerciseMasterInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserCreateWithoutWorkoutLogInput = {
@@ -5382,6 +5546,8 @@ export type UserCreateWithoutWorkoutLogInput = {
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutWorkoutLogInput = {
@@ -5436,6 +5602,8 @@ export type UserUncheckedCreateWithoutWorkoutLogInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutWorkoutLogInput = {
@@ -5505,6 +5673,8 @@ export type UserUpdateWithoutWorkoutLogInput = {
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWorkoutLogInput = {
@@ -5559,6 +5729,8 @@ export type UserUncheckedUpdateWithoutWorkoutLogInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserCreateWithoutYamanokaiEventAsCLInput = {
@@ -5612,6 +5784,8 @@ export type UserCreateWithoutYamanokaiEventAsCLInput = {
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutYamanokaiEventAsCLInput = {
@@ -5666,6 +5840,8 @@ export type UserUncheckedCreateWithoutYamanokaiEventAsCLInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedCreateNestedManyWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutYamanokaiEventAsCLInput = {
@@ -5724,6 +5900,8 @@ export type UserCreateWithoutYamanokaiEventAsSLInput = {
   AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserUncheckedCreateWithoutYamanokaiEventAsSLInput = {
@@ -5778,6 +5956,8 @@ export type UserUncheckedCreateWithoutYamanokaiEventAsSLInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedCreateNestedManyWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
 }
 
 export type UserCreateOrConnectWithoutYamanokaiEventAsSLInput = {
@@ -5847,6 +6027,8 @@ export type UserUpdateWithoutYamanokaiEventAsCLInput = {
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutYamanokaiEventAsCLInput = {
@@ -5901,6 +6083,8 @@ export type UserUncheckedUpdateWithoutYamanokaiEventAsCLInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedUpdateManyWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUpsertWithoutYamanokaiEventAsSLInput = {
@@ -5965,6 +6149,8 @@ export type UserUpdateWithoutYamanokaiEventAsSLInput = {
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutYamanokaiEventAsSLInput = {
@@ -6019,6 +6205,484 @@ export type UserUncheckedUpdateWithoutYamanokaiEventAsSLInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedUpdateManyWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
+}
+
+export type UserCreateWithoutYamanokaiAttendanceInput = {
+  code?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  active?: boolean
+  hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
+  yukyuCategory?: string | null
+  name: string
+  kana?: string | null
+  email?: string | null
+  password?: string | null
+  type?: string | null
+  role?: string
+  tempResetCode?: string | null
+  tempResetCodeExpired?: Date | string | null
+  schoolId?: number | null
+  rentaStoreId?: number | null
+  type2?: string | null
+  shopId?: number | null
+  membershipName?: string | null
+  damageNameMasterId?: number | null
+  color?: string | null
+  app?: string | null
+  apps?: Prisma.UserCreateappsInput | string[]
+  employeeCode?: string | null
+  phone?: string | null
+  avatar?: string | null
+  bcc?: string | null
+  UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
+  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
+  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
+  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
+  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
+  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
+  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
+  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
+  SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
+  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
+  ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
+  WorkoutLog?: Prisma.WorkoutLogCreateNestedManyWithoutUserInput
+  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
+  CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
+  CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
+  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
+  YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
+  YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
+}
+
+export type UserUncheckedCreateWithoutYamanokaiAttendanceInput = {
+  id?: number
+  code?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  active?: boolean
+  hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
+  yukyuCategory?: string | null
+  name: string
+  kana?: string | null
+  email?: string | null
+  password?: string | null
+  type?: string | null
+  role?: string
+  tempResetCode?: string | null
+  tempResetCodeExpired?: Date | string | null
+  schoolId?: number | null
+  rentaStoreId?: number | null
+  type2?: string | null
+  shopId?: number | null
+  membershipName?: string | null
+  damageNameMasterId?: number | null
+  color?: string | null
+  app?: string | null
+  apps?: Prisma.UserCreateappsInput | string[]
+  employeeCode?: string | null
+  phone?: string | null
+  avatar?: string | null
+  bcc?: string | null
+  tbmBaseId?: number | null
+  departmentId?: number | null
+  tbmVehicleId?: number | null
+  counselingStoreId?: number | null
+  aidocumentCompanyId?: number | null
+  storeId?: number | null
+  UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
+  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
+  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
+  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
+  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
+  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
+  SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
+  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
+  ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
+  WorkoutLog?: Prisma.WorkoutLogUncheckedCreateNestedManyWithoutUserInput
+  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedCreateNestedManyWithoutUserInput
+  CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
+  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
+}
+
+export type UserCreateOrConnectWithoutYamanokaiAttendanceInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutYamanokaiAttendanceInput, Prisma.UserUncheckedCreateWithoutYamanokaiAttendanceInput>
+}
+
+export type UserCreateWithoutYamanokaiAttendanceAsApproverInput = {
+  code?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  active?: boolean
+  hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
+  yukyuCategory?: string | null
+  name: string
+  kana?: string | null
+  email?: string | null
+  password?: string | null
+  type?: string | null
+  role?: string
+  tempResetCode?: string | null
+  tempResetCodeExpired?: Date | string | null
+  schoolId?: number | null
+  rentaStoreId?: number | null
+  type2?: string | null
+  shopId?: number | null
+  membershipName?: string | null
+  damageNameMasterId?: number | null
+  color?: string | null
+  app?: string | null
+  apps?: Prisma.UserCreateappsInput | string[]
+  employeeCode?: string | null
+  phone?: string | null
+  avatar?: string | null
+  bcc?: string | null
+  UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
+  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
+  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
+  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
+  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
+  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
+  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
+  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
+  SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
+  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
+  ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
+  WorkoutLog?: Prisma.WorkoutLogCreateNestedManyWithoutUserInput
+  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
+  CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
+  CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
+  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
+  YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
+  YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutYamanokaiAttendanceAsApproverInput = {
+  id?: number
+  code?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  active?: boolean
+  hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
+  yukyuCategory?: string | null
+  name: string
+  kana?: string | null
+  email?: string | null
+  password?: string | null
+  type?: string | null
+  role?: string
+  tempResetCode?: string | null
+  tempResetCodeExpired?: Date | string | null
+  schoolId?: number | null
+  rentaStoreId?: number | null
+  type2?: string | null
+  shopId?: number | null
+  membershipName?: string | null
+  damageNameMasterId?: number | null
+  color?: string | null
+  app?: string | null
+  apps?: Prisma.UserCreateappsInput | string[]
+  employeeCode?: string | null
+  phone?: string | null
+  avatar?: string | null
+  bcc?: string | null
+  tbmBaseId?: number | null
+  departmentId?: number | null
+  tbmVehicleId?: number | null
+  counselingStoreId?: number | null
+  aidocumentCompanyId?: number | null
+  storeId?: number | null
+  UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
+  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
+  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
+  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
+  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
+  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
+  SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
+  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
+  ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
+  WorkoutLog?: Prisma.WorkoutLogUncheckedCreateNestedManyWithoutUserInput
+  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedCreateNestedManyWithoutUserInput
+  CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
+  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutYamanokaiAttendanceAsApproverInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutYamanokaiAttendanceAsApproverInput, Prisma.UserUncheckedCreateWithoutYamanokaiAttendanceAsApproverInput>
+}
+
+export type UserUpsertWithoutYamanokaiAttendanceInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutYamanokaiAttendanceInput, Prisma.UserUncheckedUpdateWithoutYamanokaiAttendanceInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutYamanokaiAttendanceInput, Prisma.UserUncheckedCreateWithoutYamanokaiAttendanceInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutYamanokaiAttendanceInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutYamanokaiAttendanceInput, Prisma.UserUncheckedUpdateWithoutYamanokaiAttendanceInput>
+}
+
+export type UserUpdateWithoutYamanokaiAttendanceInput = {
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apps?: Prisma.UserUpdateappsInput | string[]
+  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
+  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
+  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
+  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
+  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
+  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
+  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
+  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
+  SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
+  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
+  ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
+  WorkoutLog?: Prisma.WorkoutLogUpdateManyWithoutUserNestedInput
+  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
+  CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
+  CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
+  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
+  YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
+  YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutYamanokaiAttendanceInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apps?: Prisma.UserUpdateappsInput | string[]
+  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
+  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
+  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
+  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
+  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
+  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
+  SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
+  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
+  WorkoutLog?: Prisma.WorkoutLogUncheckedUpdateManyWithoutUserNestedInput
+  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedUpdateManyWithoutUserNestedInput
+  CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
+  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
+}
+
+export type UserUpsertWithoutYamanokaiAttendanceAsApproverInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutYamanokaiAttendanceAsApproverInput, Prisma.UserUncheckedUpdateWithoutYamanokaiAttendanceAsApproverInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutYamanokaiAttendanceAsApproverInput, Prisma.UserUncheckedCreateWithoutYamanokaiAttendanceAsApproverInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutYamanokaiAttendanceAsApproverInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutYamanokaiAttendanceAsApproverInput, Prisma.UserUncheckedUpdateWithoutYamanokaiAttendanceAsApproverInput>
+}
+
+export type UserUpdateWithoutYamanokaiAttendanceAsApproverInput = {
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apps?: Prisma.UserUpdateappsInput | string[]
+  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
+  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
+  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
+  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
+  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
+  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
+  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
+  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
+  SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
+  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
+  ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
+  WorkoutLog?: Prisma.WorkoutLogUpdateManyWithoutUserNestedInput
+  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
+  CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
+  CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
+  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
+  YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
+  YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutYamanokaiAttendanceAsApproverInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apps?: Prisma.UserUpdateappsInput | string[]
+  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
+  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
+  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
+  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
+  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
+  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
+  SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
+  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
+  WorkoutLog?: Prisma.WorkoutLogUncheckedUpdateManyWithoutUserNestedInput
+  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedUpdateManyWithoutUserNestedInput
+  CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
+  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyAidocumentCompanyInput = {
@@ -6111,6 +6775,8 @@ export type UserUpdateWithoutAidocumentCompanyInput = {
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAidocumentCompanyInput = {
@@ -6165,6 +6831,8 @@ export type UserUncheckedUpdateWithoutAidocumentCompanyInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutAidocumentCompanyInput = {
@@ -6296,6 +6964,8 @@ export type UserUpdateWithoutCounselingStoreInput = {
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCounselingStoreInput = {
@@ -6350,6 +7020,8 @@ export type UserUncheckedUpdateWithoutCounselingStoreInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutCounselingStoreInput = {
@@ -6481,6 +7153,8 @@ export type UserUpdateWithoutDepartmentInput = {
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDepartmentInput = {
@@ -6535,6 +7209,8 @@ export type UserUncheckedUpdateWithoutDepartmentInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutDepartmentInput = {
@@ -6666,6 +7342,8 @@ export type UserUpdateWithoutStoreInput = {
   AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStoreInput = {
@@ -6720,6 +7398,8 @@ export type UserUncheckedUpdateWithoutStoreInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutStoreInput = {
@@ -6851,6 +7531,8 @@ export type UserUpdateWithoutTbmBaseInput = {
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTbmBaseInput = {
@@ -6905,6 +7587,8 @@ export type UserUncheckedUpdateWithoutTbmBaseInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutTbmBaseInput = {
@@ -7036,6 +7720,8 @@ export type UserUpdateWithoutTbmVehicleInput = {
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTbmVehicleInput = {
@@ -7090,6 +7776,8 @@ export type UserUncheckedUpdateWithoutTbmVehicleInput = {
   CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutTbmVehicleInput = {
@@ -7152,6 +7840,8 @@ export type UserCountOutputType = {
   CounselingSlot: number
   YamanokaiEventAsCL: number
   YamanokaiEventAsSL: number
+  YamanokaiAttendance: number
+  YamanokaiAttendanceAsApprover: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -7170,6 +7860,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   CounselingSlot?: boolean | UserCountOutputTypeCountCounselingSlotArgs
   YamanokaiEventAsCL?: boolean | UserCountOutputTypeCountYamanokaiEventAsCLArgs
   YamanokaiEventAsSL?: boolean | UserCountOutputTypeCountYamanokaiEventAsSLArgs
+  YamanokaiAttendance?: boolean | UserCountOutputTypeCountYamanokaiAttendanceArgs
+  YamanokaiAttendanceAsApprover?: boolean | UserCountOutputTypeCountYamanokaiAttendanceAsApproverArgs
 }
 
 /**
@@ -7287,6 +7979,20 @@ export type UserCountOutputTypeCountYamanokaiEventAsSLArgs<ExtArgs extends runti
   where?: Prisma.YamanokaiEventWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountYamanokaiAttendanceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.YamanokaiAttendanceWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountYamanokaiAttendanceAsApproverArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.YamanokaiAttendanceWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -7347,6 +8053,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   Store?: boolean | Prisma.User$StoreArgs<ExtArgs>
   YamanokaiEventAsCL?: boolean | Prisma.User$YamanokaiEventAsCLArgs<ExtArgs>
   YamanokaiEventAsSL?: boolean | Prisma.User$YamanokaiEventAsSLArgs<ExtArgs>
+  YamanokaiAttendance?: boolean | Prisma.User$YamanokaiAttendanceArgs<ExtArgs>
+  YamanokaiAttendanceAsApprover?: boolean | Prisma.User$YamanokaiAttendanceAsApproverArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -7505,6 +8213,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   Store?: boolean | Prisma.User$StoreArgs<ExtArgs>
   YamanokaiEventAsCL?: boolean | Prisma.User$YamanokaiEventAsCLArgs<ExtArgs>
   YamanokaiEventAsSL?: boolean | Prisma.User$YamanokaiEventAsSLArgs<ExtArgs>
+  YamanokaiAttendance?: boolean | Prisma.User$YamanokaiAttendanceArgs<ExtArgs>
+  YamanokaiAttendanceAsApprover?: boolean | Prisma.User$YamanokaiAttendanceAsApproverArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -7548,6 +8258,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     Store: Prisma.$StorePayload<ExtArgs> | null
     YamanokaiEventAsCL: Prisma.$YamanokaiEventPayload<ExtArgs>[]
     YamanokaiEventAsSL: Prisma.$YamanokaiEventPayload<ExtArgs>[]
+    YamanokaiAttendance: Prisma.$YamanokaiAttendancePayload<ExtArgs>[]
+    YamanokaiAttendanceAsApprover: Prisma.$YamanokaiAttendancePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -8002,6 +8714,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   Store<T extends Prisma.User$StoreArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$StoreArgs<ExtArgs>>): Prisma.Prisma__StoreClient<runtime.Types.Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   YamanokaiEventAsCL<T extends Prisma.User$YamanokaiEventAsCLArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$YamanokaiEventAsCLArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$YamanokaiEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   YamanokaiEventAsSL<T extends Prisma.User$YamanokaiEventAsSLArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$YamanokaiEventAsSLArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$YamanokaiEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  YamanokaiAttendance<T extends Prisma.User$YamanokaiAttendanceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$YamanokaiAttendanceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$YamanokaiAttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  YamanokaiAttendanceAsApprover<T extends Prisma.User$YamanokaiAttendanceAsApproverArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$YamanokaiAttendanceAsApproverArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$YamanokaiAttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8935,6 +9649,54 @@ export type User$YamanokaiEventAsSLArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.YamanokaiEventScalarFieldEnum | Prisma.YamanokaiEventScalarFieldEnum[]
+}
+
+/**
+ * User.YamanokaiAttendance
+ */
+export type User$YamanokaiAttendanceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the YamanokaiAttendance
+   */
+  select?: Prisma.YamanokaiAttendanceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the YamanokaiAttendance
+   */
+  omit?: Prisma.YamanokaiAttendanceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.YamanokaiAttendanceInclude<ExtArgs> | null
+  where?: Prisma.YamanokaiAttendanceWhereInput
+  orderBy?: Prisma.YamanokaiAttendanceOrderByWithRelationInput | Prisma.YamanokaiAttendanceOrderByWithRelationInput[]
+  cursor?: Prisma.YamanokaiAttendanceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.YamanokaiAttendanceScalarFieldEnum | Prisma.YamanokaiAttendanceScalarFieldEnum[]
+}
+
+/**
+ * User.YamanokaiAttendanceAsApprover
+ */
+export type User$YamanokaiAttendanceAsApproverArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the YamanokaiAttendance
+   */
+  select?: Prisma.YamanokaiAttendanceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the YamanokaiAttendance
+   */
+  omit?: Prisma.YamanokaiAttendanceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.YamanokaiAttendanceInclude<ExtArgs> | null
+  where?: Prisma.YamanokaiAttendanceWhereInput
+  orderBy?: Prisma.YamanokaiAttendanceOrderByWithRelationInput | Prisma.YamanokaiAttendanceOrderByWithRelationInput[]
+  cursor?: Prisma.YamanokaiAttendanceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.YamanokaiAttendanceScalarFieldEnum | Prisma.YamanokaiAttendanceScalarFieldEnum[]
 }
 
 /**

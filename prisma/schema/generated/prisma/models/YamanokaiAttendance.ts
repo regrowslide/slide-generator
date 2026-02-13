@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model YamanokaiAttendance
- * 出席回答
+ * 参加申請
  */
 export type YamanokaiAttendanceModel = runtime.Types.Result.DefaultSelection<Prisma.$YamanokaiAttendancePayload>
 
@@ -30,14 +30,16 @@ export type YamanokaiAttendanceAvgAggregateOutputType = {
   id: number | null
   sortOrder: number | null
   yamanokaiEventId: number | null
-  yamanokaiMemberId: number | null
+  userId: number | null
+  approvedBy: number | null
 }
 
 export type YamanokaiAttendanceSumAggregateOutputType = {
   id: number | null
   sortOrder: number | null
   yamanokaiEventId: number | null
-  yamanokaiMemberId: number | null
+  userId: number | null
+  approvedBy: number | null
 }
 
 export type YamanokaiAttendanceMinAggregateOutputType = {
@@ -47,9 +49,12 @@ export type YamanokaiAttendanceMinAggregateOutputType = {
   sortOrder: number | null
   status: string | null
   comment: string | null
+  rejectionReason: string | null
+  actualAttended: boolean | null
   isDeleted: boolean | null
   yamanokaiEventId: number | null
-  yamanokaiMemberId: number | null
+  userId: number | null
+  approvedBy: number | null
 }
 
 export type YamanokaiAttendanceMaxAggregateOutputType = {
@@ -59,9 +64,12 @@ export type YamanokaiAttendanceMaxAggregateOutputType = {
   sortOrder: number | null
   status: string | null
   comment: string | null
+  rejectionReason: string | null
+  actualAttended: boolean | null
   isDeleted: boolean | null
   yamanokaiEventId: number | null
-  yamanokaiMemberId: number | null
+  userId: number | null
+  approvedBy: number | null
 }
 
 export type YamanokaiAttendanceCountAggregateOutputType = {
@@ -71,9 +79,12 @@ export type YamanokaiAttendanceCountAggregateOutputType = {
   sortOrder: number
   status: number
   comment: number
+  rejectionReason: number
+  actualAttended: number
   isDeleted: number
   yamanokaiEventId: number
-  yamanokaiMemberId: number
+  userId: number
+  approvedBy: number
   _all: number
 }
 
@@ -82,14 +93,16 @@ export type YamanokaiAttendanceAvgAggregateInputType = {
   id?: true
   sortOrder?: true
   yamanokaiEventId?: true
-  yamanokaiMemberId?: true
+  userId?: true
+  approvedBy?: true
 }
 
 export type YamanokaiAttendanceSumAggregateInputType = {
   id?: true
   sortOrder?: true
   yamanokaiEventId?: true
-  yamanokaiMemberId?: true
+  userId?: true
+  approvedBy?: true
 }
 
 export type YamanokaiAttendanceMinAggregateInputType = {
@@ -99,9 +112,12 @@ export type YamanokaiAttendanceMinAggregateInputType = {
   sortOrder?: true
   status?: true
   comment?: true
+  rejectionReason?: true
+  actualAttended?: true
   isDeleted?: true
   yamanokaiEventId?: true
-  yamanokaiMemberId?: true
+  userId?: true
+  approvedBy?: true
 }
 
 export type YamanokaiAttendanceMaxAggregateInputType = {
@@ -111,9 +127,12 @@ export type YamanokaiAttendanceMaxAggregateInputType = {
   sortOrder?: true
   status?: true
   comment?: true
+  rejectionReason?: true
+  actualAttended?: true
   isDeleted?: true
   yamanokaiEventId?: true
-  yamanokaiMemberId?: true
+  userId?: true
+  approvedBy?: true
 }
 
 export type YamanokaiAttendanceCountAggregateInputType = {
@@ -123,9 +142,12 @@ export type YamanokaiAttendanceCountAggregateInputType = {
   sortOrder?: true
   status?: true
   comment?: true
+  rejectionReason?: true
+  actualAttended?: true
   isDeleted?: true
   yamanokaiEventId?: true
-  yamanokaiMemberId?: true
+  userId?: true
+  approvedBy?: true
   _all?: true
 }
 
@@ -222,9 +244,12 @@ export type YamanokaiAttendanceGroupByOutputType = {
   sortOrder: number
   status: string
   comment: string | null
+  rejectionReason: string | null
+  actualAttended: boolean
   isDeleted: boolean
   yamanokaiEventId: number
-  yamanokaiMemberId: number
+  userId: number
+  approvedBy: number | null
   _count: YamanokaiAttendanceCountAggregateOutputType | null
   _avg: YamanokaiAttendanceAvgAggregateOutputType | null
   _sum: YamanokaiAttendanceSumAggregateOutputType | null
@@ -257,11 +282,15 @@ export type YamanokaiAttendanceWhereInput = {
   sortOrder?: Prisma.FloatFilter<"YamanokaiAttendance"> | number
   status?: Prisma.StringFilter<"YamanokaiAttendance"> | string
   comment?: Prisma.StringNullableFilter<"YamanokaiAttendance"> | string | null
+  rejectionReason?: Prisma.StringNullableFilter<"YamanokaiAttendance"> | string | null
+  actualAttended?: Prisma.BoolFilter<"YamanokaiAttendance"> | boolean
   isDeleted?: Prisma.BoolFilter<"YamanokaiAttendance"> | boolean
   yamanokaiEventId?: Prisma.IntFilter<"YamanokaiAttendance"> | number
-  yamanokaiMemberId?: Prisma.IntFilter<"YamanokaiAttendance"> | number
+  userId?: Prisma.IntFilter<"YamanokaiAttendance"> | number
+  approvedBy?: Prisma.IntNullableFilter<"YamanokaiAttendance"> | number | null
   YamanokaiEvent?: Prisma.XOR<Prisma.YamanokaiEventScalarRelationFilter, Prisma.YamanokaiEventWhereInput>
-  YamanokaiMember?: Prisma.XOR<Prisma.YamanokaiMemberScalarRelationFilter, Prisma.YamanokaiMemberWhereInput>
+  User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  ApprovedByUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
 export type YamanokaiAttendanceOrderByWithRelationInput = {
@@ -271,16 +300,20 @@ export type YamanokaiAttendanceOrderByWithRelationInput = {
   sortOrder?: Prisma.SortOrder
   status?: Prisma.SortOrder
   comment?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  actualAttended?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   yamanokaiEventId?: Prisma.SortOrder
-  yamanokaiMemberId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   YamanokaiEvent?: Prisma.YamanokaiEventOrderByWithRelationInput
-  YamanokaiMember?: Prisma.YamanokaiMemberOrderByWithRelationInput
+  User?: Prisma.UserOrderByWithRelationInput
+  ApprovedByUser?: Prisma.UserOrderByWithRelationInput
 }
 
 export type YamanokaiAttendanceWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  yamanokaiEventId_yamanokaiMemberId?: Prisma.YamanokaiAttendanceYamanokaiEventIdYamanokaiMemberIdCompoundUniqueInput
+  yamanokaiEventId_userId?: Prisma.YamanokaiAttendanceYamanokaiEventIdUserIdCompoundUniqueInput
   AND?: Prisma.YamanokaiAttendanceWhereInput | Prisma.YamanokaiAttendanceWhereInput[]
   OR?: Prisma.YamanokaiAttendanceWhereInput[]
   NOT?: Prisma.YamanokaiAttendanceWhereInput | Prisma.YamanokaiAttendanceWhereInput[]
@@ -289,12 +322,16 @@ export type YamanokaiAttendanceWhereUniqueInput = Prisma.AtLeast<{
   sortOrder?: Prisma.FloatFilter<"YamanokaiAttendance"> | number
   status?: Prisma.StringFilter<"YamanokaiAttendance"> | string
   comment?: Prisma.StringNullableFilter<"YamanokaiAttendance"> | string | null
+  rejectionReason?: Prisma.StringNullableFilter<"YamanokaiAttendance"> | string | null
+  actualAttended?: Prisma.BoolFilter<"YamanokaiAttendance"> | boolean
   isDeleted?: Prisma.BoolFilter<"YamanokaiAttendance"> | boolean
   yamanokaiEventId?: Prisma.IntFilter<"YamanokaiAttendance"> | number
-  yamanokaiMemberId?: Prisma.IntFilter<"YamanokaiAttendance"> | number
+  userId?: Prisma.IntFilter<"YamanokaiAttendance"> | number
+  approvedBy?: Prisma.IntNullableFilter<"YamanokaiAttendance"> | number | null
   YamanokaiEvent?: Prisma.XOR<Prisma.YamanokaiEventScalarRelationFilter, Prisma.YamanokaiEventWhereInput>
-  YamanokaiMember?: Prisma.XOR<Prisma.YamanokaiMemberScalarRelationFilter, Prisma.YamanokaiMemberWhereInput>
-}, "id" | "yamanokaiEventId_yamanokaiMemberId">
+  User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  ApprovedByUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+}, "id" | "yamanokaiEventId_userId">
 
 export type YamanokaiAttendanceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -303,9 +340,12 @@ export type YamanokaiAttendanceOrderByWithAggregationInput = {
   sortOrder?: Prisma.SortOrder
   status?: Prisma.SortOrder
   comment?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  actualAttended?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   yamanokaiEventId?: Prisma.SortOrder
-  yamanokaiMemberId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.YamanokaiAttendanceCountOrderByAggregateInput
   _avg?: Prisma.YamanokaiAttendanceAvgOrderByAggregateInput
   _max?: Prisma.YamanokaiAttendanceMaxOrderByAggregateInput
@@ -323,9 +363,12 @@ export type YamanokaiAttendanceScalarWhereWithAggregatesInput = {
   sortOrder?: Prisma.FloatWithAggregatesFilter<"YamanokaiAttendance"> | number
   status?: Prisma.StringWithAggregatesFilter<"YamanokaiAttendance"> | string
   comment?: Prisma.StringNullableWithAggregatesFilter<"YamanokaiAttendance"> | string | null
+  rejectionReason?: Prisma.StringNullableWithAggregatesFilter<"YamanokaiAttendance"> | string | null
+  actualAttended?: Prisma.BoolWithAggregatesFilter<"YamanokaiAttendance"> | boolean
   isDeleted?: Prisma.BoolWithAggregatesFilter<"YamanokaiAttendance"> | boolean
   yamanokaiEventId?: Prisma.IntWithAggregatesFilter<"YamanokaiAttendance"> | number
-  yamanokaiMemberId?: Prisma.IntWithAggregatesFilter<"YamanokaiAttendance"> | number
+  userId?: Prisma.IntWithAggregatesFilter<"YamanokaiAttendance"> | number
+  approvedBy?: Prisma.IntNullableWithAggregatesFilter<"YamanokaiAttendance"> | number | null
 }
 
 export type YamanokaiAttendanceCreateInput = {
@@ -334,9 +377,12 @@ export type YamanokaiAttendanceCreateInput = {
   sortOrder?: number
   status?: string
   comment?: string | null
+  rejectionReason?: string | null
+  actualAttended?: boolean
   isDeleted?: boolean
   YamanokaiEvent: Prisma.YamanokaiEventCreateNestedOneWithoutYamanokaiAttendanceInput
-  YamanokaiMember: Prisma.YamanokaiMemberCreateNestedOneWithoutYamanokaiAttendanceInput
+  User: Prisma.UserCreateNestedOneWithoutYamanokaiAttendanceInput
+  ApprovedByUser?: Prisma.UserCreateNestedOneWithoutYamanokaiAttendanceAsApproverInput
 }
 
 export type YamanokaiAttendanceUncheckedCreateInput = {
@@ -346,9 +392,12 @@ export type YamanokaiAttendanceUncheckedCreateInput = {
   sortOrder?: number
   status?: string
   comment?: string | null
+  rejectionReason?: string | null
+  actualAttended?: boolean
   isDeleted?: boolean
   yamanokaiEventId: number
-  yamanokaiMemberId: number
+  userId: number
+  approvedBy?: number | null
 }
 
 export type YamanokaiAttendanceUpdateInput = {
@@ -357,9 +406,12 @@ export type YamanokaiAttendanceUpdateInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   YamanokaiEvent?: Prisma.YamanokaiEventUpdateOneRequiredWithoutYamanokaiAttendanceNestedInput
-  YamanokaiMember?: Prisma.YamanokaiMemberUpdateOneRequiredWithoutYamanokaiAttendanceNestedInput
+  User?: Prisma.UserUpdateOneRequiredWithoutYamanokaiAttendanceNestedInput
+  ApprovedByUser?: Prisma.UserUpdateOneWithoutYamanokaiAttendanceAsApproverNestedInput
 }
 
 export type YamanokaiAttendanceUncheckedUpdateInput = {
@@ -369,9 +421,12 @@ export type YamanokaiAttendanceUncheckedUpdateInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiEventId?: Prisma.IntFieldUpdateOperationsInput | number
-  yamanokaiMemberId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  approvedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type YamanokaiAttendanceCreateManyInput = {
@@ -381,9 +436,12 @@ export type YamanokaiAttendanceCreateManyInput = {
   sortOrder?: number
   status?: string
   comment?: string | null
+  rejectionReason?: string | null
+  actualAttended?: boolean
   isDeleted?: boolean
   yamanokaiEventId: number
-  yamanokaiMemberId: number
+  userId: number
+  approvedBy?: number | null
 }
 
 export type YamanokaiAttendanceUpdateManyMutationInput = {
@@ -392,6 +450,8 @@ export type YamanokaiAttendanceUpdateManyMutationInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
@@ -402,9 +462,12 @@ export type YamanokaiAttendanceUncheckedUpdateManyInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiEventId?: Prisma.IntFieldUpdateOperationsInput | number
-  yamanokaiMemberId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  approvedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type YamanokaiAttendanceListRelationFilter = {
@@ -417,9 +480,9 @@ export type YamanokaiAttendanceOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type YamanokaiAttendanceYamanokaiEventIdYamanokaiMemberIdCompoundUniqueInput = {
+export type YamanokaiAttendanceYamanokaiEventIdUserIdCompoundUniqueInput = {
   yamanokaiEventId: number
-  yamanokaiMemberId: number
+  userId: number
 }
 
 export type YamanokaiAttendanceCountOrderByAggregateInput = {
@@ -429,16 +492,20 @@ export type YamanokaiAttendanceCountOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
   status?: Prisma.SortOrder
   comment?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrder
+  actualAttended?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   yamanokaiEventId?: Prisma.SortOrder
-  yamanokaiMemberId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrder
 }
 
 export type YamanokaiAttendanceAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   yamanokaiEventId?: Prisma.SortOrder
-  yamanokaiMemberId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrder
 }
 
 export type YamanokaiAttendanceMaxOrderByAggregateInput = {
@@ -448,9 +515,12 @@ export type YamanokaiAttendanceMaxOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
   status?: Prisma.SortOrder
   comment?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrder
+  actualAttended?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   yamanokaiEventId?: Prisma.SortOrder
-  yamanokaiMemberId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrder
 }
 
 export type YamanokaiAttendanceMinOrderByAggregateInput = {
@@ -460,57 +530,103 @@ export type YamanokaiAttendanceMinOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
   status?: Prisma.SortOrder
   comment?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrder
+  actualAttended?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   yamanokaiEventId?: Prisma.SortOrder
-  yamanokaiMemberId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrder
 }
 
 export type YamanokaiAttendanceSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   yamanokaiEventId?: Prisma.SortOrder
-  yamanokaiMemberId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrder
 }
 
-export type YamanokaiAttendanceCreateNestedManyWithoutYamanokaiMemberInput = {
-  create?: Prisma.XOR<Prisma.YamanokaiAttendanceCreateWithoutYamanokaiMemberInput, Prisma.YamanokaiAttendanceUncheckedCreateWithoutYamanokaiMemberInput> | Prisma.YamanokaiAttendanceCreateWithoutYamanokaiMemberInput[] | Prisma.YamanokaiAttendanceUncheckedCreateWithoutYamanokaiMemberInput[]
-  connectOrCreate?: Prisma.YamanokaiAttendanceCreateOrConnectWithoutYamanokaiMemberInput | Prisma.YamanokaiAttendanceCreateOrConnectWithoutYamanokaiMemberInput[]
-  createMany?: Prisma.YamanokaiAttendanceCreateManyYamanokaiMemberInputEnvelope
+export type YamanokaiAttendanceCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.YamanokaiAttendanceCreateWithoutUserInput, Prisma.YamanokaiAttendanceUncheckedCreateWithoutUserInput> | Prisma.YamanokaiAttendanceCreateWithoutUserInput[] | Prisma.YamanokaiAttendanceUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.YamanokaiAttendanceCreateOrConnectWithoutUserInput | Prisma.YamanokaiAttendanceCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.YamanokaiAttendanceCreateManyUserInputEnvelope
   connect?: Prisma.YamanokaiAttendanceWhereUniqueInput | Prisma.YamanokaiAttendanceWhereUniqueInput[]
 }
 
-export type YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiMemberInput = {
-  create?: Prisma.XOR<Prisma.YamanokaiAttendanceCreateWithoutYamanokaiMemberInput, Prisma.YamanokaiAttendanceUncheckedCreateWithoutYamanokaiMemberInput> | Prisma.YamanokaiAttendanceCreateWithoutYamanokaiMemberInput[] | Prisma.YamanokaiAttendanceUncheckedCreateWithoutYamanokaiMemberInput[]
-  connectOrCreate?: Prisma.YamanokaiAttendanceCreateOrConnectWithoutYamanokaiMemberInput | Prisma.YamanokaiAttendanceCreateOrConnectWithoutYamanokaiMemberInput[]
-  createMany?: Prisma.YamanokaiAttendanceCreateManyYamanokaiMemberInputEnvelope
+export type YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput = {
+  create?: Prisma.XOR<Prisma.YamanokaiAttendanceCreateWithoutApprovedByUserInput, Prisma.YamanokaiAttendanceUncheckedCreateWithoutApprovedByUserInput> | Prisma.YamanokaiAttendanceCreateWithoutApprovedByUserInput[] | Prisma.YamanokaiAttendanceUncheckedCreateWithoutApprovedByUserInput[]
+  connectOrCreate?: Prisma.YamanokaiAttendanceCreateOrConnectWithoutApprovedByUserInput | Prisma.YamanokaiAttendanceCreateOrConnectWithoutApprovedByUserInput[]
+  createMany?: Prisma.YamanokaiAttendanceCreateManyApprovedByUserInputEnvelope
   connect?: Prisma.YamanokaiAttendanceWhereUniqueInput | Prisma.YamanokaiAttendanceWhereUniqueInput[]
 }
 
-export type YamanokaiAttendanceUpdateManyWithoutYamanokaiMemberNestedInput = {
-  create?: Prisma.XOR<Prisma.YamanokaiAttendanceCreateWithoutYamanokaiMemberInput, Prisma.YamanokaiAttendanceUncheckedCreateWithoutYamanokaiMemberInput> | Prisma.YamanokaiAttendanceCreateWithoutYamanokaiMemberInput[] | Prisma.YamanokaiAttendanceUncheckedCreateWithoutYamanokaiMemberInput[]
-  connectOrCreate?: Prisma.YamanokaiAttendanceCreateOrConnectWithoutYamanokaiMemberInput | Prisma.YamanokaiAttendanceCreateOrConnectWithoutYamanokaiMemberInput[]
-  upsert?: Prisma.YamanokaiAttendanceUpsertWithWhereUniqueWithoutYamanokaiMemberInput | Prisma.YamanokaiAttendanceUpsertWithWhereUniqueWithoutYamanokaiMemberInput[]
-  createMany?: Prisma.YamanokaiAttendanceCreateManyYamanokaiMemberInputEnvelope
+export type YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.YamanokaiAttendanceCreateWithoutUserInput, Prisma.YamanokaiAttendanceUncheckedCreateWithoutUserInput> | Prisma.YamanokaiAttendanceCreateWithoutUserInput[] | Prisma.YamanokaiAttendanceUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.YamanokaiAttendanceCreateOrConnectWithoutUserInput | Prisma.YamanokaiAttendanceCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.YamanokaiAttendanceCreateManyUserInputEnvelope
+  connect?: Prisma.YamanokaiAttendanceWhereUniqueInput | Prisma.YamanokaiAttendanceWhereUniqueInput[]
+}
+
+export type YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput = {
+  create?: Prisma.XOR<Prisma.YamanokaiAttendanceCreateWithoutApprovedByUserInput, Prisma.YamanokaiAttendanceUncheckedCreateWithoutApprovedByUserInput> | Prisma.YamanokaiAttendanceCreateWithoutApprovedByUserInput[] | Prisma.YamanokaiAttendanceUncheckedCreateWithoutApprovedByUserInput[]
+  connectOrCreate?: Prisma.YamanokaiAttendanceCreateOrConnectWithoutApprovedByUserInput | Prisma.YamanokaiAttendanceCreateOrConnectWithoutApprovedByUserInput[]
+  createMany?: Prisma.YamanokaiAttendanceCreateManyApprovedByUserInputEnvelope
+  connect?: Prisma.YamanokaiAttendanceWhereUniqueInput | Prisma.YamanokaiAttendanceWhereUniqueInput[]
+}
+
+export type YamanokaiAttendanceUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.YamanokaiAttendanceCreateWithoutUserInput, Prisma.YamanokaiAttendanceUncheckedCreateWithoutUserInput> | Prisma.YamanokaiAttendanceCreateWithoutUserInput[] | Prisma.YamanokaiAttendanceUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.YamanokaiAttendanceCreateOrConnectWithoutUserInput | Prisma.YamanokaiAttendanceCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.YamanokaiAttendanceUpsertWithWhereUniqueWithoutUserInput | Prisma.YamanokaiAttendanceUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.YamanokaiAttendanceCreateManyUserInputEnvelope
   set?: Prisma.YamanokaiAttendanceWhereUniqueInput | Prisma.YamanokaiAttendanceWhereUniqueInput[]
   disconnect?: Prisma.YamanokaiAttendanceWhereUniqueInput | Prisma.YamanokaiAttendanceWhereUniqueInput[]
   delete?: Prisma.YamanokaiAttendanceWhereUniqueInput | Prisma.YamanokaiAttendanceWhereUniqueInput[]
   connect?: Prisma.YamanokaiAttendanceWhereUniqueInput | Prisma.YamanokaiAttendanceWhereUniqueInput[]
-  update?: Prisma.YamanokaiAttendanceUpdateWithWhereUniqueWithoutYamanokaiMemberInput | Prisma.YamanokaiAttendanceUpdateWithWhereUniqueWithoutYamanokaiMemberInput[]
-  updateMany?: Prisma.YamanokaiAttendanceUpdateManyWithWhereWithoutYamanokaiMemberInput | Prisma.YamanokaiAttendanceUpdateManyWithWhereWithoutYamanokaiMemberInput[]
+  update?: Prisma.YamanokaiAttendanceUpdateWithWhereUniqueWithoutUserInput | Prisma.YamanokaiAttendanceUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.YamanokaiAttendanceUpdateManyWithWhereWithoutUserInput | Prisma.YamanokaiAttendanceUpdateManyWithWhereWithoutUserInput[]
   deleteMany?: Prisma.YamanokaiAttendanceScalarWhereInput | Prisma.YamanokaiAttendanceScalarWhereInput[]
 }
 
-export type YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiMemberNestedInput = {
-  create?: Prisma.XOR<Prisma.YamanokaiAttendanceCreateWithoutYamanokaiMemberInput, Prisma.YamanokaiAttendanceUncheckedCreateWithoutYamanokaiMemberInput> | Prisma.YamanokaiAttendanceCreateWithoutYamanokaiMemberInput[] | Prisma.YamanokaiAttendanceUncheckedCreateWithoutYamanokaiMemberInput[]
-  connectOrCreate?: Prisma.YamanokaiAttendanceCreateOrConnectWithoutYamanokaiMemberInput | Prisma.YamanokaiAttendanceCreateOrConnectWithoutYamanokaiMemberInput[]
-  upsert?: Prisma.YamanokaiAttendanceUpsertWithWhereUniqueWithoutYamanokaiMemberInput | Prisma.YamanokaiAttendanceUpsertWithWhereUniqueWithoutYamanokaiMemberInput[]
-  createMany?: Prisma.YamanokaiAttendanceCreateManyYamanokaiMemberInputEnvelope
+export type YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput = {
+  create?: Prisma.XOR<Prisma.YamanokaiAttendanceCreateWithoutApprovedByUserInput, Prisma.YamanokaiAttendanceUncheckedCreateWithoutApprovedByUserInput> | Prisma.YamanokaiAttendanceCreateWithoutApprovedByUserInput[] | Prisma.YamanokaiAttendanceUncheckedCreateWithoutApprovedByUserInput[]
+  connectOrCreate?: Prisma.YamanokaiAttendanceCreateOrConnectWithoutApprovedByUserInput | Prisma.YamanokaiAttendanceCreateOrConnectWithoutApprovedByUserInput[]
+  upsert?: Prisma.YamanokaiAttendanceUpsertWithWhereUniqueWithoutApprovedByUserInput | Prisma.YamanokaiAttendanceUpsertWithWhereUniqueWithoutApprovedByUserInput[]
+  createMany?: Prisma.YamanokaiAttendanceCreateManyApprovedByUserInputEnvelope
   set?: Prisma.YamanokaiAttendanceWhereUniqueInput | Prisma.YamanokaiAttendanceWhereUniqueInput[]
   disconnect?: Prisma.YamanokaiAttendanceWhereUniqueInput | Prisma.YamanokaiAttendanceWhereUniqueInput[]
   delete?: Prisma.YamanokaiAttendanceWhereUniqueInput | Prisma.YamanokaiAttendanceWhereUniqueInput[]
   connect?: Prisma.YamanokaiAttendanceWhereUniqueInput | Prisma.YamanokaiAttendanceWhereUniqueInput[]
-  update?: Prisma.YamanokaiAttendanceUpdateWithWhereUniqueWithoutYamanokaiMemberInput | Prisma.YamanokaiAttendanceUpdateWithWhereUniqueWithoutYamanokaiMemberInput[]
-  updateMany?: Prisma.YamanokaiAttendanceUpdateManyWithWhereWithoutYamanokaiMemberInput | Prisma.YamanokaiAttendanceUpdateManyWithWhereWithoutYamanokaiMemberInput[]
+  update?: Prisma.YamanokaiAttendanceUpdateWithWhereUniqueWithoutApprovedByUserInput | Prisma.YamanokaiAttendanceUpdateWithWhereUniqueWithoutApprovedByUserInput[]
+  updateMany?: Prisma.YamanokaiAttendanceUpdateManyWithWhereWithoutApprovedByUserInput | Prisma.YamanokaiAttendanceUpdateManyWithWhereWithoutApprovedByUserInput[]
+  deleteMany?: Prisma.YamanokaiAttendanceScalarWhereInput | Prisma.YamanokaiAttendanceScalarWhereInput[]
+}
+
+export type YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.YamanokaiAttendanceCreateWithoutUserInput, Prisma.YamanokaiAttendanceUncheckedCreateWithoutUserInput> | Prisma.YamanokaiAttendanceCreateWithoutUserInput[] | Prisma.YamanokaiAttendanceUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.YamanokaiAttendanceCreateOrConnectWithoutUserInput | Prisma.YamanokaiAttendanceCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.YamanokaiAttendanceUpsertWithWhereUniqueWithoutUserInput | Prisma.YamanokaiAttendanceUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.YamanokaiAttendanceCreateManyUserInputEnvelope
+  set?: Prisma.YamanokaiAttendanceWhereUniqueInput | Prisma.YamanokaiAttendanceWhereUniqueInput[]
+  disconnect?: Prisma.YamanokaiAttendanceWhereUniqueInput | Prisma.YamanokaiAttendanceWhereUniqueInput[]
+  delete?: Prisma.YamanokaiAttendanceWhereUniqueInput | Prisma.YamanokaiAttendanceWhereUniqueInput[]
+  connect?: Prisma.YamanokaiAttendanceWhereUniqueInput | Prisma.YamanokaiAttendanceWhereUniqueInput[]
+  update?: Prisma.YamanokaiAttendanceUpdateWithWhereUniqueWithoutUserInput | Prisma.YamanokaiAttendanceUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.YamanokaiAttendanceUpdateManyWithWhereWithoutUserInput | Prisma.YamanokaiAttendanceUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.YamanokaiAttendanceScalarWhereInput | Prisma.YamanokaiAttendanceScalarWhereInput[]
+}
+
+export type YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput = {
+  create?: Prisma.XOR<Prisma.YamanokaiAttendanceCreateWithoutApprovedByUserInput, Prisma.YamanokaiAttendanceUncheckedCreateWithoutApprovedByUserInput> | Prisma.YamanokaiAttendanceCreateWithoutApprovedByUserInput[] | Prisma.YamanokaiAttendanceUncheckedCreateWithoutApprovedByUserInput[]
+  connectOrCreate?: Prisma.YamanokaiAttendanceCreateOrConnectWithoutApprovedByUserInput | Prisma.YamanokaiAttendanceCreateOrConnectWithoutApprovedByUserInput[]
+  upsert?: Prisma.YamanokaiAttendanceUpsertWithWhereUniqueWithoutApprovedByUserInput | Prisma.YamanokaiAttendanceUpsertWithWhereUniqueWithoutApprovedByUserInput[]
+  createMany?: Prisma.YamanokaiAttendanceCreateManyApprovedByUserInputEnvelope
+  set?: Prisma.YamanokaiAttendanceWhereUniqueInput | Prisma.YamanokaiAttendanceWhereUniqueInput[]
+  disconnect?: Prisma.YamanokaiAttendanceWhereUniqueInput | Prisma.YamanokaiAttendanceWhereUniqueInput[]
+  delete?: Prisma.YamanokaiAttendanceWhereUniqueInput | Prisma.YamanokaiAttendanceWhereUniqueInput[]
+  connect?: Prisma.YamanokaiAttendanceWhereUniqueInput | Prisma.YamanokaiAttendanceWhereUniqueInput[]
+  update?: Prisma.YamanokaiAttendanceUpdateWithWhereUniqueWithoutApprovedByUserInput | Prisma.YamanokaiAttendanceUpdateWithWhereUniqueWithoutApprovedByUserInput[]
+  updateMany?: Prisma.YamanokaiAttendanceUpdateManyWithWhereWithoutApprovedByUserInput | Prisma.YamanokaiAttendanceUpdateManyWithWhereWithoutApprovedByUserInput[]
   deleteMany?: Prisma.YamanokaiAttendanceScalarWhereInput | Prisma.YamanokaiAttendanceScalarWhereInput[]
 }
 
@@ -556,51 +672,94 @@ export type YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiEventNestedInp
   deleteMany?: Prisma.YamanokaiAttendanceScalarWhereInput | Prisma.YamanokaiAttendanceScalarWhereInput[]
 }
 
-export type YamanokaiAttendanceCreateWithoutYamanokaiMemberInput = {
+export type YamanokaiAttendanceCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
   status?: string
   comment?: string | null
+  rejectionReason?: string | null
+  actualAttended?: boolean
   isDeleted?: boolean
   YamanokaiEvent: Prisma.YamanokaiEventCreateNestedOneWithoutYamanokaiAttendanceInput
+  ApprovedByUser?: Prisma.UserCreateNestedOneWithoutYamanokaiAttendanceAsApproverInput
 }
 
-export type YamanokaiAttendanceUncheckedCreateWithoutYamanokaiMemberInput = {
+export type YamanokaiAttendanceUncheckedCreateWithoutUserInput = {
   id?: number
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
   status?: string
   comment?: string | null
+  rejectionReason?: string | null
+  actualAttended?: boolean
   isDeleted?: boolean
   yamanokaiEventId: number
+  approvedBy?: number | null
 }
 
-export type YamanokaiAttendanceCreateOrConnectWithoutYamanokaiMemberInput = {
+export type YamanokaiAttendanceCreateOrConnectWithoutUserInput = {
   where: Prisma.YamanokaiAttendanceWhereUniqueInput
-  create: Prisma.XOR<Prisma.YamanokaiAttendanceCreateWithoutYamanokaiMemberInput, Prisma.YamanokaiAttendanceUncheckedCreateWithoutYamanokaiMemberInput>
+  create: Prisma.XOR<Prisma.YamanokaiAttendanceCreateWithoutUserInput, Prisma.YamanokaiAttendanceUncheckedCreateWithoutUserInput>
 }
 
-export type YamanokaiAttendanceCreateManyYamanokaiMemberInputEnvelope = {
-  data: Prisma.YamanokaiAttendanceCreateManyYamanokaiMemberInput | Prisma.YamanokaiAttendanceCreateManyYamanokaiMemberInput[]
+export type YamanokaiAttendanceCreateManyUserInputEnvelope = {
+  data: Prisma.YamanokaiAttendanceCreateManyUserInput | Prisma.YamanokaiAttendanceCreateManyUserInput[]
   skipDuplicates?: boolean
 }
 
-export type YamanokaiAttendanceUpsertWithWhereUniqueWithoutYamanokaiMemberInput = {
-  where: Prisma.YamanokaiAttendanceWhereUniqueInput
-  update: Prisma.XOR<Prisma.YamanokaiAttendanceUpdateWithoutYamanokaiMemberInput, Prisma.YamanokaiAttendanceUncheckedUpdateWithoutYamanokaiMemberInput>
-  create: Prisma.XOR<Prisma.YamanokaiAttendanceCreateWithoutYamanokaiMemberInput, Prisma.YamanokaiAttendanceUncheckedCreateWithoutYamanokaiMemberInput>
+export type YamanokaiAttendanceCreateWithoutApprovedByUserInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  status?: string
+  comment?: string | null
+  rejectionReason?: string | null
+  actualAttended?: boolean
+  isDeleted?: boolean
+  YamanokaiEvent: Prisma.YamanokaiEventCreateNestedOneWithoutYamanokaiAttendanceInput
+  User: Prisma.UserCreateNestedOneWithoutYamanokaiAttendanceInput
 }
 
-export type YamanokaiAttendanceUpdateWithWhereUniqueWithoutYamanokaiMemberInput = {
-  where: Prisma.YamanokaiAttendanceWhereUniqueInput
-  data: Prisma.XOR<Prisma.YamanokaiAttendanceUpdateWithoutYamanokaiMemberInput, Prisma.YamanokaiAttendanceUncheckedUpdateWithoutYamanokaiMemberInput>
+export type YamanokaiAttendanceUncheckedCreateWithoutApprovedByUserInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  status?: string
+  comment?: string | null
+  rejectionReason?: string | null
+  actualAttended?: boolean
+  isDeleted?: boolean
+  yamanokaiEventId: number
+  userId: number
 }
 
-export type YamanokaiAttendanceUpdateManyWithWhereWithoutYamanokaiMemberInput = {
+export type YamanokaiAttendanceCreateOrConnectWithoutApprovedByUserInput = {
+  where: Prisma.YamanokaiAttendanceWhereUniqueInput
+  create: Prisma.XOR<Prisma.YamanokaiAttendanceCreateWithoutApprovedByUserInput, Prisma.YamanokaiAttendanceUncheckedCreateWithoutApprovedByUserInput>
+}
+
+export type YamanokaiAttendanceCreateManyApprovedByUserInputEnvelope = {
+  data: Prisma.YamanokaiAttendanceCreateManyApprovedByUserInput | Prisma.YamanokaiAttendanceCreateManyApprovedByUserInput[]
+  skipDuplicates?: boolean
+}
+
+export type YamanokaiAttendanceUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.YamanokaiAttendanceWhereUniqueInput
+  update: Prisma.XOR<Prisma.YamanokaiAttendanceUpdateWithoutUserInput, Prisma.YamanokaiAttendanceUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.YamanokaiAttendanceCreateWithoutUserInput, Prisma.YamanokaiAttendanceUncheckedCreateWithoutUserInput>
+}
+
+export type YamanokaiAttendanceUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.YamanokaiAttendanceWhereUniqueInput
+  data: Prisma.XOR<Prisma.YamanokaiAttendanceUpdateWithoutUserInput, Prisma.YamanokaiAttendanceUncheckedUpdateWithoutUserInput>
+}
+
+export type YamanokaiAttendanceUpdateManyWithWhereWithoutUserInput = {
   where: Prisma.YamanokaiAttendanceScalarWhereInput
-  data: Prisma.XOR<Prisma.YamanokaiAttendanceUpdateManyMutationInput, Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiMemberInput>
+  data: Prisma.XOR<Prisma.YamanokaiAttendanceUpdateManyMutationInput, Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserInput>
 }
 
 export type YamanokaiAttendanceScalarWhereInput = {
@@ -613,9 +772,28 @@ export type YamanokaiAttendanceScalarWhereInput = {
   sortOrder?: Prisma.FloatFilter<"YamanokaiAttendance"> | number
   status?: Prisma.StringFilter<"YamanokaiAttendance"> | string
   comment?: Prisma.StringNullableFilter<"YamanokaiAttendance"> | string | null
+  rejectionReason?: Prisma.StringNullableFilter<"YamanokaiAttendance"> | string | null
+  actualAttended?: Prisma.BoolFilter<"YamanokaiAttendance"> | boolean
   isDeleted?: Prisma.BoolFilter<"YamanokaiAttendance"> | boolean
   yamanokaiEventId?: Prisma.IntFilter<"YamanokaiAttendance"> | number
-  yamanokaiMemberId?: Prisma.IntFilter<"YamanokaiAttendance"> | number
+  userId?: Prisma.IntFilter<"YamanokaiAttendance"> | number
+  approvedBy?: Prisma.IntNullableFilter<"YamanokaiAttendance"> | number | null
+}
+
+export type YamanokaiAttendanceUpsertWithWhereUniqueWithoutApprovedByUserInput = {
+  where: Prisma.YamanokaiAttendanceWhereUniqueInput
+  update: Prisma.XOR<Prisma.YamanokaiAttendanceUpdateWithoutApprovedByUserInput, Prisma.YamanokaiAttendanceUncheckedUpdateWithoutApprovedByUserInput>
+  create: Prisma.XOR<Prisma.YamanokaiAttendanceCreateWithoutApprovedByUserInput, Prisma.YamanokaiAttendanceUncheckedCreateWithoutApprovedByUserInput>
+}
+
+export type YamanokaiAttendanceUpdateWithWhereUniqueWithoutApprovedByUserInput = {
+  where: Prisma.YamanokaiAttendanceWhereUniqueInput
+  data: Prisma.XOR<Prisma.YamanokaiAttendanceUpdateWithoutApprovedByUserInput, Prisma.YamanokaiAttendanceUncheckedUpdateWithoutApprovedByUserInput>
+}
+
+export type YamanokaiAttendanceUpdateManyWithWhereWithoutApprovedByUserInput = {
+  where: Prisma.YamanokaiAttendanceScalarWhereInput
+  data: Prisma.XOR<Prisma.YamanokaiAttendanceUpdateManyMutationInput, Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserInput>
 }
 
 export type YamanokaiAttendanceCreateWithoutYamanokaiEventInput = {
@@ -624,8 +802,11 @@ export type YamanokaiAttendanceCreateWithoutYamanokaiEventInput = {
   sortOrder?: number
   status?: string
   comment?: string | null
+  rejectionReason?: string | null
+  actualAttended?: boolean
   isDeleted?: boolean
-  YamanokaiMember: Prisma.YamanokaiMemberCreateNestedOneWithoutYamanokaiAttendanceInput
+  User: Prisma.UserCreateNestedOneWithoutYamanokaiAttendanceInput
+  ApprovedByUser?: Prisma.UserCreateNestedOneWithoutYamanokaiAttendanceAsApproverInput
 }
 
 export type YamanokaiAttendanceUncheckedCreateWithoutYamanokaiEventInput = {
@@ -635,8 +816,11 @@ export type YamanokaiAttendanceUncheckedCreateWithoutYamanokaiEventInput = {
   sortOrder?: number
   status?: string
   comment?: string | null
+  rejectionReason?: string | null
+  actualAttended?: boolean
   isDeleted?: boolean
-  yamanokaiMemberId: number
+  userId: number
+  approvedBy?: number | null
 }
 
 export type YamanokaiAttendanceCreateOrConnectWithoutYamanokaiEventInput = {
@@ -665,47 +849,114 @@ export type YamanokaiAttendanceUpdateManyWithWhereWithoutYamanokaiEventInput = {
   data: Prisma.XOR<Prisma.YamanokaiAttendanceUpdateManyMutationInput, Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiEventInput>
 }
 
-export type YamanokaiAttendanceCreateManyYamanokaiMemberInput = {
+export type YamanokaiAttendanceCreateManyUserInput = {
   id?: number
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
   status?: string
   comment?: string | null
+  rejectionReason?: string | null
+  actualAttended?: boolean
   isDeleted?: boolean
   yamanokaiEventId: number
+  approvedBy?: number | null
 }
 
-export type YamanokaiAttendanceUpdateWithoutYamanokaiMemberInput = {
+export type YamanokaiAttendanceCreateManyApprovedByUserInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  status?: string
+  comment?: string | null
+  rejectionReason?: string | null
+  actualAttended?: boolean
+  isDeleted?: boolean
+  yamanokaiEventId: number
+  userId: number
+}
+
+export type YamanokaiAttendanceUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   YamanokaiEvent?: Prisma.YamanokaiEventUpdateOneRequiredWithoutYamanokaiAttendanceNestedInput
+  ApprovedByUser?: Prisma.UserUpdateOneWithoutYamanokaiAttendanceAsApproverNestedInput
 }
 
-export type YamanokaiAttendanceUncheckedUpdateWithoutYamanokaiMemberInput = {
+export type YamanokaiAttendanceUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiEventId?: Prisma.IntFieldUpdateOperationsInput | number
+  approvedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
-export type YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiMemberInput = {
+export type YamanokaiAttendanceUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiEventId?: Prisma.IntFieldUpdateOperationsInput | number
+  approvedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type YamanokaiAttendanceUpdateWithoutApprovedByUserInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  YamanokaiEvent?: Prisma.YamanokaiEventUpdateOneRequiredWithoutYamanokaiAttendanceNestedInput
+  User?: Prisma.UserUpdateOneRequiredWithoutYamanokaiAttendanceNestedInput
+}
+
+export type YamanokaiAttendanceUncheckedUpdateWithoutApprovedByUserInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  yamanokaiEventId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  yamanokaiEventId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type YamanokaiAttendanceCreateManyYamanokaiEventInput = {
@@ -715,8 +966,11 @@ export type YamanokaiAttendanceCreateManyYamanokaiEventInput = {
   sortOrder?: number
   status?: string
   comment?: string | null
+  rejectionReason?: string | null
+  actualAttended?: boolean
   isDeleted?: boolean
-  yamanokaiMemberId: number
+  userId: number
+  approvedBy?: number | null
 }
 
 export type YamanokaiAttendanceUpdateWithoutYamanokaiEventInput = {
@@ -725,8 +979,11 @@ export type YamanokaiAttendanceUpdateWithoutYamanokaiEventInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  YamanokaiMember?: Prisma.YamanokaiMemberUpdateOneRequiredWithoutYamanokaiAttendanceNestedInput
+  User?: Prisma.UserUpdateOneRequiredWithoutYamanokaiAttendanceNestedInput
+  ApprovedByUser?: Prisma.UserUpdateOneWithoutYamanokaiAttendanceAsApproverNestedInput
 }
 
 export type YamanokaiAttendanceUncheckedUpdateWithoutYamanokaiEventInput = {
@@ -736,8 +993,11 @@ export type YamanokaiAttendanceUncheckedUpdateWithoutYamanokaiEventInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  yamanokaiMemberId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  approvedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiEventInput = {
@@ -747,8 +1007,11 @@ export type YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiEventInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   comment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  yamanokaiMemberId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  approvedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 
@@ -760,11 +1023,15 @@ export type YamanokaiAttendanceSelect<ExtArgs extends runtime.Types.Extensions.I
   sortOrder?: boolean
   status?: boolean
   comment?: boolean
+  rejectionReason?: boolean
+  actualAttended?: boolean
   isDeleted?: boolean
   yamanokaiEventId?: boolean
-  yamanokaiMemberId?: boolean
+  userId?: boolean
+  approvedBy?: boolean
   YamanokaiEvent?: boolean | Prisma.YamanokaiEventDefaultArgs<ExtArgs>
-  YamanokaiMember?: boolean | Prisma.YamanokaiMemberDefaultArgs<ExtArgs>
+  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  ApprovedByUser?: boolean | Prisma.YamanokaiAttendance$ApprovedByUserArgs<ExtArgs>
 }, ExtArgs["result"]["yamanokaiAttendance"]>
 
 export type YamanokaiAttendanceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -774,11 +1041,15 @@ export type YamanokaiAttendanceSelectCreateManyAndReturn<ExtArgs extends runtime
   sortOrder?: boolean
   status?: boolean
   comment?: boolean
+  rejectionReason?: boolean
+  actualAttended?: boolean
   isDeleted?: boolean
   yamanokaiEventId?: boolean
-  yamanokaiMemberId?: boolean
+  userId?: boolean
+  approvedBy?: boolean
   YamanokaiEvent?: boolean | Prisma.YamanokaiEventDefaultArgs<ExtArgs>
-  YamanokaiMember?: boolean | Prisma.YamanokaiMemberDefaultArgs<ExtArgs>
+  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  ApprovedByUser?: boolean | Prisma.YamanokaiAttendance$ApprovedByUserArgs<ExtArgs>
 }, ExtArgs["result"]["yamanokaiAttendance"]>
 
 export type YamanokaiAttendanceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -788,11 +1059,15 @@ export type YamanokaiAttendanceSelectUpdateManyAndReturn<ExtArgs extends runtime
   sortOrder?: boolean
   status?: boolean
   comment?: boolean
+  rejectionReason?: boolean
+  actualAttended?: boolean
   isDeleted?: boolean
   yamanokaiEventId?: boolean
-  yamanokaiMemberId?: boolean
+  userId?: boolean
+  approvedBy?: boolean
   YamanokaiEvent?: boolean | Prisma.YamanokaiEventDefaultArgs<ExtArgs>
-  YamanokaiMember?: boolean | Prisma.YamanokaiMemberDefaultArgs<ExtArgs>
+  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  ApprovedByUser?: boolean | Prisma.YamanokaiAttendance$ApprovedByUserArgs<ExtArgs>
 }, ExtArgs["result"]["yamanokaiAttendance"]>
 
 export type YamanokaiAttendanceSelectScalar = {
@@ -802,30 +1077,37 @@ export type YamanokaiAttendanceSelectScalar = {
   sortOrder?: boolean
   status?: boolean
   comment?: boolean
+  rejectionReason?: boolean
+  actualAttended?: boolean
   isDeleted?: boolean
   yamanokaiEventId?: boolean
-  yamanokaiMemberId?: boolean
+  userId?: boolean
+  approvedBy?: boolean
 }
 
-export type YamanokaiAttendanceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "status" | "comment" | "isDeleted" | "yamanokaiEventId" | "yamanokaiMemberId", ExtArgs["result"]["yamanokaiAttendance"]>
+export type YamanokaiAttendanceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "status" | "comment" | "rejectionReason" | "actualAttended" | "isDeleted" | "yamanokaiEventId" | "userId" | "approvedBy", ExtArgs["result"]["yamanokaiAttendance"]>
 export type YamanokaiAttendanceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   YamanokaiEvent?: boolean | Prisma.YamanokaiEventDefaultArgs<ExtArgs>
-  YamanokaiMember?: boolean | Prisma.YamanokaiMemberDefaultArgs<ExtArgs>
+  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  ApprovedByUser?: boolean | Prisma.YamanokaiAttendance$ApprovedByUserArgs<ExtArgs>
 }
 export type YamanokaiAttendanceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   YamanokaiEvent?: boolean | Prisma.YamanokaiEventDefaultArgs<ExtArgs>
-  YamanokaiMember?: boolean | Prisma.YamanokaiMemberDefaultArgs<ExtArgs>
+  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  ApprovedByUser?: boolean | Prisma.YamanokaiAttendance$ApprovedByUserArgs<ExtArgs>
 }
 export type YamanokaiAttendanceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   YamanokaiEvent?: boolean | Prisma.YamanokaiEventDefaultArgs<ExtArgs>
-  YamanokaiMember?: boolean | Prisma.YamanokaiMemberDefaultArgs<ExtArgs>
+  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  ApprovedByUser?: boolean | Prisma.YamanokaiAttendance$ApprovedByUserArgs<ExtArgs>
 }
 
 export type $YamanokaiAttendancePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "YamanokaiAttendance"
   objects: {
     YamanokaiEvent: Prisma.$YamanokaiEventPayload<ExtArgs>
-    YamanokaiMember: Prisma.$YamanokaiMemberPayload<ExtArgs>
+    User: Prisma.$UserPayload<ExtArgs>
+    ApprovedByUser: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -834,9 +1116,12 @@ export type $YamanokaiAttendancePayload<ExtArgs extends runtime.Types.Extensions
     sortOrder: number
     status: string
     comment: string | null
+    rejectionReason: string | null
+    actualAttended: boolean
     isDeleted: boolean
     yamanokaiEventId: number
-    yamanokaiMemberId: number
+    userId: number
+    approvedBy: number | null
   }, ExtArgs["result"]["yamanokaiAttendance"]>
   composites: {}
 }
@@ -1232,7 +1517,8 @@ readonly fields: YamanokaiAttendanceFieldRefs;
 export interface Prisma__YamanokaiAttendanceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   YamanokaiEvent<T extends Prisma.YamanokaiEventDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.YamanokaiEventDefaultArgs<ExtArgs>>): Prisma.Prisma__YamanokaiEventClient<runtime.Types.Result.GetResult<Prisma.$YamanokaiEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  YamanokaiMember<T extends Prisma.YamanokaiMemberDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.YamanokaiMemberDefaultArgs<ExtArgs>>): Prisma.Prisma__YamanokaiMemberClient<runtime.Types.Result.GetResult<Prisma.$YamanokaiMemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  User<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  ApprovedByUser<T extends Prisma.YamanokaiAttendance$ApprovedByUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.YamanokaiAttendance$ApprovedByUserArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1268,9 +1554,12 @@ export interface YamanokaiAttendanceFieldRefs {
   readonly sortOrder: Prisma.FieldRef<"YamanokaiAttendance", 'Float'>
   readonly status: Prisma.FieldRef<"YamanokaiAttendance", 'String'>
   readonly comment: Prisma.FieldRef<"YamanokaiAttendance", 'String'>
+  readonly rejectionReason: Prisma.FieldRef<"YamanokaiAttendance", 'String'>
+  readonly actualAttended: Prisma.FieldRef<"YamanokaiAttendance", 'Boolean'>
   readonly isDeleted: Prisma.FieldRef<"YamanokaiAttendance", 'Boolean'>
   readonly yamanokaiEventId: Prisma.FieldRef<"YamanokaiAttendance", 'Int'>
-  readonly yamanokaiMemberId: Prisma.FieldRef<"YamanokaiAttendance", 'Int'>
+  readonly userId: Prisma.FieldRef<"YamanokaiAttendance", 'Int'>
+  readonly approvedBy: Prisma.FieldRef<"YamanokaiAttendance", 'Int'>
 }
     
 
@@ -1664,6 +1953,25 @@ export type YamanokaiAttendanceDeleteManyArgs<ExtArgs extends runtime.Types.Exte
    * Limit how many YamanokaiAttendances to delete.
    */
   limit?: number
+}
+
+/**
+ * YamanokaiAttendance.ApprovedByUser
+ */
+export type YamanokaiAttendance$ApprovedByUserArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

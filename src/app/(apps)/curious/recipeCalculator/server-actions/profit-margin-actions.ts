@@ -81,14 +81,22 @@ export const checkProfitMarginAlert = async (
   profitMargin: number,
   sellingPrice: number
 ): Promise<ProfitMarginAlert | null> => {
-  // 基本チェック
-  if (packCount <= 0 || sellingPrice <= 0) {
-    return null
-  }
+  if (packCount <= 0) return null
 
   const standard = await getApplicableStandard(packCount)
-  if (!standard) {
-    return null
+  if (!standard) return null
+
+  // 販売価格が未計算の場合は基準情報のみ返す
+  if (sellingPrice <= 0) {
+    return {
+      isWarning: false,
+      currentProfitRate: 0,
+      minProfitAmount: standard.minProfitAmount,
+      minProfitRate: standard.minProfitRate,
+      minPackCount: standard.minPackCount,
+      maxPackCount: standard.maxPackCount,
+      message: '',
+    }
   }
 
   // 現在の粗利率を計算
@@ -113,6 +121,8 @@ export const checkProfitMarginAlert = async (
     currentProfitRate,
     minProfitAmount: standard.minProfitAmount,
     minProfitRate: standard.minProfitRate,
+    minPackCount: standard.minPackCount,
+    maxPackCount: standard.maxPackCount,
     message,
   }
 }

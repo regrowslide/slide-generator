@@ -116,7 +116,7 @@ export const AppHeader = () => {
           {isMobile && (
             <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
               <DrawerTrigger asChild>
-                <Button variant="ghost" >
+                <Button >
                   <Menu className="w-6 h-6" />
                 </Button>
               </DrawerTrigger>
