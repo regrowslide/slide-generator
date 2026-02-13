@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
-import {Button} from '@cm/components/styles/common-components/Button'
-import {R_Stack} from '@cm/components/styles/common-components/common-components'
+import { Button } from '@cm/components/styles/common-components/Button'
+import { R_Stack } from '@cm/components/styles/common-components/common-components'
 
 interface PaginationControlProps {
   currentPage: number
@@ -21,7 +21,7 @@ export default function PaginationControl({
   const totalPages = itemsPerPage ? Math.ceil(maxRecord / itemsPerPage) : 1
 
   return (
-    <R_Stack className="mt-4 justify-center gap-2 p-2">
+    <R_Stack className=" justify-center gap-2 p-2">
       {/* ページあたり表示件数選択 */}
       <select
         className="rounded-sm border px-2 py-1 text-sm"

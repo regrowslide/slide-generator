@@ -1,6 +1,6 @@
 @charset "UTF-8";
 :root {
-  color: oklch(0.32 0 0);
+  color: oklch(32% 0 0deg);
   --color-border-gray: oklch(0.8 0.032 261.325);
   --color-background: oklch(1 0 0);
   --color-primary-main: #407eb9;

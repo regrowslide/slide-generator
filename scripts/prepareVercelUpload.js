@@ -28,7 +28,7 @@ const asyncFunction = async appName => {
 
   let targetAppNames = [appName]
   if (appName === `KM`) {
-    targetAppNames = [`KM`, `kickswrap`, 'stock', 'keihi']
+    targetAppNames = [`KM`, `kickswrap`]
   }
 
   console.log({targetAppNames})
@@ -93,7 +93,7 @@ const ProPlanVercelJson = {
   framework: 'nextjs',
   installCommand: 'npm install',
   devCommand: 'next dev',
-  buildCommand: 'npx prisma generate && next build --no-lint',
+  buildCommand: 'npx prisma generate && next build ',
   cleanUrls: true,
   regions: ['sin1'],
   trailingSlash: false,
