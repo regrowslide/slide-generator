@@ -305,9 +305,9 @@ export const InvoiceDocument = forwardRef<InvoiceDocumentRef, InvoiceDocumentPro
                 </div>
               </div>
               {/* 右側: 自社情報 */}
-              <div className="flex-1 text-right relative pr-20">
+              <div className="flex-1 text-right relative pr-8">
                 {/* 角印（会社情報エリアに少しかぶるように、Y軸中央、X軸やや右） */}
-                <div className="absolute top-1/2 -translate-y-1/2 right-[10px] z-10">
+                <div className="absolute top-1/2  right-[10px] z-10">
                   <Image
                     src="/image/tbm/kakuin.png"
                     alt="角印"

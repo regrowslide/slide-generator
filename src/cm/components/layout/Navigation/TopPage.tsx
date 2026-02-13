@@ -1,14 +1,15 @@
 'use client'
 
-import React, {useEffect, useState, useMemo} from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
-import {C_Stack} from '@cm/components/styles/common-components/common-components'
-import {PAGES, pathItemType} from 'src/non-common/path-title-constsnts'
-import {HREF} from '@cm/lib/methods/urls'
-import {T_LINK} from '@cm/components/styles/common-components/links'
+import { C_Stack } from '@cm/components/styles/common-components/common-components'
+import { PAGES, pathItemType } from 'src/non-common/path-title-constsnts'
+import { HREF } from '@cm/lib/methods/urls'
+import { T_LINK } from '@cm/components/styles/common-components/links'
 
 const TopPage = React.memo(() => {
-  const {session, rootPath, pathname, query, roles} = useGlobal()
+  const { session, rootPath, pathname, query, roles } = useGlobal()
+  console.log({ session })  //logs
 
   const [navItems, setNavItems] = useState<any[]>([])
 
@@ -16,7 +17,7 @@ const TopPage = React.memo(() => {
     if (session && rootPath) {
       const pageGetterMethod = PAGES[`${rootPath}_PAGES`]
       if (pageGetterMethod) {
-        const {navItems} = pageGetterMethod({
+        const { navItems } = pageGetterMethod({
           session,
           rootPath,
           pathname,
@@ -49,7 +50,7 @@ const TopPage = React.memo(() => {
             <h2 className="mb-4 text-2xl font-bold text-gray-600">{category.label}</h2>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {category.children?.map((item: pathItemType, i: number) => {
-                const {href, label} = item
+                const { href, label } = item
 
                 return (
                   <T_LINK

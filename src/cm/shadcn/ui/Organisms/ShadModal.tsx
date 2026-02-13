@@ -1,7 +1,7 @@
 'use client'
 
-import {useIsMobile} from '@shadcn/hooks/use-mobile'
-import {Dialog, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from '@shadcn/ui/dialog'
+import { useIsMobile } from '@shadcn/hooks/use-mobile'
+import { Dialog, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@shadcn/ui/dialog'
 import {
   Drawer,
   // DrawerContent,
@@ -21,10 +21,10 @@ const DrawerContent = dynamic(() => import('@shadcn/ui/drawer').then(mod => mod.
   loading: () => <></>,
 })
 
-import {cn} from '@shadcn/lib/utils'
+import { cn } from '@shadcn/lib/utils'
 
 import React from 'react'
-import {JSX} from 'react'
+import { JSX } from 'react'
 
 type ShadModalProps = {
   Trigger?: JSX.Element | string
@@ -72,40 +72,40 @@ const ShadModal = React.memo((props: ShadModalProps) => {
   const isControlled = open !== undefined
   const openState = isControlled ? open : isOpen
 
-  if (mobile) {
-    return (
-      <Drawer open={openState} onOpenChange={handleOpenChange}>
-        {Trigger && <DrawerTrigger asChild>{Trigger}</DrawerTrigger>}
+  // if (mobile) {
+  //   return (
+  //     <Drawer open={openState} onOpenChange={handleOpenChange}>
+  //       {Trigger && <DrawerTrigger asChild>{Trigger}</DrawerTrigger>}
 
-        {openState && (
-          <DrawerContent
-            style={style}
-            onOpenAutoFocus={onOpenAutoFocus}
-            className={cn(`ModalContent rounded-lg bg-white p-1 shadow-md border border-gray-200 ${className}`)}
-          >
-            <div
-              style={{
-                maxHeight: '75vh',
-                maxWidth: '95vw',
-                overflow: 'auto',
-              }}
-            >
-              <div className="mx-auto w-full ">
-                <DrawerHeader>
-                  <DrawerTitle>{title}</DrawerTitle>
-                  <DrawerDescription>{description}</DrawerDescription>
-                </DrawerHeader>
+  //       {openState && (
+  //         <DrawerContent
+  //           style={style}
+  //           onOpenAutoFocus={onOpenAutoFocus}
+  //           className={cn(`ModalContent rounded-lg bg-white p-1 shadow-md border border-gray-200 ${className}`)}
+  //         >
+  //           <div
+  //             style={{
+  //               maxHeight: '75vh',
+  //               maxWidth: '95vw',
+  //               overflow: 'auto',
+  //             }}
+  //           >
+  //             <div className="mx-auto w-full ">
+  //               <DrawerHeader>
+  //                 <DrawerTitle>{title}</DrawerTitle>
+  //                 <DrawerDescription>{description}</DrawerDescription>
+  //               </DrawerHeader>
 
-                <div className="w-fit mx-auto">{children}</div>
+  //               <div className="w-fit mx-auto">{children}</div>
 
-                {footer && <DrawerFooter>{footer}</DrawerFooter>}
-              </div>
-            </div>
-          </DrawerContent>
-        )}
-      </Drawer>
-    )
-  }
+  //               {footer && <DrawerFooter>{footer}</DrawerFooter>}
+  //             </div>
+  //           </div>
+  //         </DrawerContent>
+  //       )}
+  //     </Drawer>
+  //   )
+  // }
 
   return (
     <Dialog open={openState} onOpenChange={handleOpenChange}>

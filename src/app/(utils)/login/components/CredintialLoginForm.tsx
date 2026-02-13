@@ -63,8 +63,7 @@ export default function CredintialLoginForm(props) {
                       // const session = await getSession()
                       toast.success(`ログインしました。`)
 
-                      await sleep(500)
-                      router.push(callbackUrl)
+                      router.refresh()
                     } else if (result?.error) {
                       toast.error(`ログインに失敗しました。:${result.error}`)
                     }

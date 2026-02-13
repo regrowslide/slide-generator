@@ -69,17 +69,6 @@ export const ModelName = {
   CounselingClient: 'CounselingClient',
   CounselingReservation: 'CounselingReservation',
   CounselingSlot: 'CounselingSlot',
-  HakobunIndustry: 'HakobunIndustry',
-  HakobunIndustryGeneralCategory: 'HakobunIndustryGeneralCategory',
-  HakobunIndustryCategory: 'HakobunIndustryCategory',
-  HakobunClient: 'HakobunClient',
-  HakobunClientStage: 'HakobunClientStage',
-  HakobunCorrection: 'HakobunCorrection',
-  HakobunRule: 'HakobunRule',
-  HakobunVoice: 'HakobunVoice',
-  HakobunAnalysisBox: 'HakobunAnalysisBox',
-  HakobunAnalysisSession: 'HakobunAnalysisSession',
-  HakobunAnalysisRecord: 'HakobunAnalysisRecord',
   KgFacilityMaster: 'KgFacilityMaster',
   KgDietTypeMaster: 'KgDietTypeMaster',
   KgDailyMenu: 'KgDailyMenu',
@@ -91,10 +80,6 @@ export const ModelName = {
   KgProductionBatch: 'KgProductionBatch',
   KgProductionItem: 'KgProductionItem',
   KgRequiredIngredient: 'KgRequiredIngredient',
-  KeihiExpense: 'KeihiExpense',
-  KeihiAttachment: 'KeihiAttachment',
-  KeihiAccountMaster: 'KeihiAccountMaster',
-  KeihiOptionMaster: 'KeihiOptionMaster',
   Product: 'Product',
   RawMaterial: 'RawMaterial',
   ProductRecipe: 'ProductRecipe',
@@ -163,7 +148,6 @@ export const ModelName = {
   KyuyoTableRecord: 'KyuyoTableRecord',
   TbmRouteGroupShare: 'TbmRouteGroupShare',
   TbmRelatedRouteGroup: 'TbmRelatedRouteGroup',
-  TeamSynapseAnalysis: 'TeamSynapseAnalysis',
   ExerciseMaster: 'ExerciseMaster',
   WorkoutLog: 'WorkoutLog',
   YamanokaiDepartment: 'YamanokaiDepartment',
@@ -502,178 +486,6 @@ export const CounselingSlotScalarFieldEnum = {
 export type CounselingSlotScalarFieldEnum = (typeof CounselingSlotScalarFieldEnum)[keyof typeof CounselingSlotScalarFieldEnum]
 
 
-export const HakobunIndustryScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  code: 'code',
-  name: 'name'
-} as const
-
-export type HakobunIndustryScalarFieldEnum = (typeof HakobunIndustryScalarFieldEnum)[keyof typeof HakobunIndustryScalarFieldEnum]
-
-
-export const HakobunIndustryGeneralCategoryScalarFieldEnum = {
-  id: 'id',
-  sortOrder: 'sortOrder',
-  name: 'name',
-  description: 'description',
-  industryId: 'industryId'
-} as const
-
-export type HakobunIndustryGeneralCategoryScalarFieldEnum = (typeof HakobunIndustryGeneralCategoryScalarFieldEnum)[keyof typeof HakobunIndustryGeneralCategoryScalarFieldEnum]
-
-
-export const HakobunIndustryCategoryScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  sortOrder: 'sortOrder',
-  name: 'name',
-  description: 'description',
-  enabled: 'enabled',
-  generalCategoryId: 'generalCategoryId'
-} as const
-
-export type HakobunIndustryCategoryScalarFieldEnum = (typeof HakobunIndustryCategoryScalarFieldEnum)[keyof typeof HakobunIndustryCategoryScalarFieldEnum]
-
-
-export const HakobunClientScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  clientId: 'clientId',
-  name: 'name',
-  inputDataExplain: 'inputDataExplain',
-  analysisStartDate: 'analysisStartDate',
-  analysisEndDate: 'analysisEndDate',
-  industryId: 'industryId'
-} as const
-
-export type HakobunClientScalarFieldEnum = (typeof HakobunClientScalarFieldEnum)[keyof typeof HakobunClientScalarFieldEnum]
-
-
-export const HakobunClientStageScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  name: 'name',
-  description: 'description',
-  enabled: 'enabled',
-  hakobunClientId: 'hakobunClientId'
-} as const
-
-export type HakobunClientStageScalarFieldEnum = (typeof HakobunClientStageScalarFieldEnum)[keyof typeof HakobunClientStageScalarFieldEnum]
-
-
-export const HakobunCorrectionScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  rawSegment: 'rawSegment',
-  originalGeneralCategory: 'originalGeneralCategory',
-  originalCategory: 'originalCategory',
-  originalSentiment: 'originalSentiment',
-  correctGeneralCategory: 'correctGeneralCategory',
-  correctCategory: 'correctCategory',
-  correctSentiment: 'correctSentiment',
-  reviewerComment: 'reviewerComment',
-  archived: 'archived',
-  hakobunClientId: 'hakobunClientId'
-} as const
-
-export type HakobunCorrectionScalarFieldEnum = (typeof HakobunCorrectionScalarFieldEnum)[keyof typeof HakobunCorrectionScalarFieldEnum]
-
-
-export const HakobunRuleScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  targetCategory: 'targetCategory',
-  ruleDescription: 'ruleDescription',
-  priority: 'priority',
-  hakobunClientId: 'hakobunClientId'
-} as const
-
-export type HakobunRuleScalarFieldEnum = (typeof HakobunRuleScalarFieldEnum)[keyof typeof HakobunRuleScalarFieldEnum]
-
-
-export const HakobunVoiceScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  voiceId: 'voiceId',
-  rawText: 'rawText',
-  processedAt: 'processedAt',
-  resultJson: 'resultJson',
-  hakobunClientId: 'hakobunClientId'
-} as const
-
-export type HakobunVoiceScalarFieldEnum = (typeof HakobunVoiceScalarFieldEnum)[keyof typeof HakobunVoiceScalarFieldEnum]
-
-
-export const HakobunAnalysisBoxScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  name: 'name',
-  description: 'description',
-  hakobunClientId: 'hakobunClientId'
-} as const
-
-export type HakobunAnalysisBoxScalarFieldEnum = (typeof HakobunAnalysisBoxScalarFieldEnum)[keyof typeof HakobunAnalysisBoxScalarFieldEnum]
-
-
-export const HakobunAnalysisSessionScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  name: 'name',
-  status: 'status',
-  analyzedAt: 'analyzedAt',
-  errorMessage: 'errorMessage',
-  analysisBoxId: 'analysisBoxId'
-} as const
-
-export type HakobunAnalysisSessionScalarFieldEnum = (typeof HakobunAnalysisSessionScalarFieldEnum)[keyof typeof HakobunAnalysisSessionScalarFieldEnum]
-
-
-export const HakobunAnalysisRecordScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  rawText: 'rawText',
-  analysisStage: 'analysisStage',
-  analysisSentiment: 'analysisSentiment',
-  analysisGeneralCategory: 'analysisGeneralCategory',
-  analysisCategory: 'analysisCategory',
-  analysisTopic: 'analysisTopic',
-  isProposedGeneralCategory: 'isProposedGeneralCategory',
-  isProposedCategory: 'isProposedCategory',
-  proposalApproved: 'proposalApproved',
-  feedbackStage: 'feedbackStage',
-  feedbackSentiment: 'feedbackSentiment',
-  feedbackGeneralCategory: 'feedbackGeneralCategory',
-  feedbackCategory: 'feedbackCategory',
-  feedbackTopic: 'feedbackTopic',
-  isModified: 'isModified',
-  reviewerComment: 'reviewerComment',
-  isEnabled: 'isEnabled',
-  evaluation: 'evaluation',
-  mergedIntoId: 'mergedIntoId',
-  mergeComment: 'mergeComment',
-  sessionId: 'sessionId'
-} as const
-
-export type HakobunAnalysisRecordScalarFieldEnum = (typeof HakobunAnalysisRecordScalarFieldEnum)[keyof typeof HakobunAnalysisRecordScalarFieldEnum]
-
-
 export const KgFacilityMasterScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -866,79 +678,6 @@ export const KgRequiredIngredientScalarFieldEnum = {
 } as const
 
 export type KgRequiredIngredientScalarFieldEnum = (typeof KgRequiredIngredientScalarFieldEnum)[keyof typeof KgRequiredIngredientScalarFieldEnum]
-
-
-export const KeihiExpenseScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  date: 'date',
-  amount: 'amount',
-  counterparty: 'counterparty',
-  participants: 'participants',
-  conversationPurpose: 'conversationPurpose',
-  keywords: 'keywords',
-  summary: 'summary',
-  conversationSummary: 'conversationSummary',
-  insight: 'insight',
-  autoTags: 'autoTags',
-  status: 'status',
-  mfSubject: 'mfSubject',
-  mfSubAccount: 'mfSubAccount',
-  mfTaxCategory: 'mfTaxCategory',
-  mfDepartment: 'mfDepartment',
-  userId: 'userId'
-} as const
-
-export type KeihiExpenseScalarFieldEnum = (typeof KeihiExpenseScalarFieldEnum)[keyof typeof KeihiExpenseScalarFieldEnum]
-
-
-export const KeihiAttachmentScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  filename: 'filename',
-  originalName: 'originalName',
-  mimeType: 'mimeType',
-  size: 'size',
-  url: 'url',
-  keihiExpenseId: 'keihiExpenseId'
-} as const
-
-export type KeihiAttachmentScalarFieldEnum = (typeof KeihiAttachmentScalarFieldEnum)[keyof typeof KeihiAttachmentScalarFieldEnum]
-
-
-export const KeihiAccountMasterScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  category: 'category',
-  classification: 'classification',
-  balanceSheet: 'balanceSheet',
-  account: 'account',
-  subAccount: 'subAccount',
-  taxCategory: 'taxCategory',
-  searchKey: 'searchKey',
-  isActive: 'isActive',
-  sortOrder: 'sortOrder'
-} as const
-
-export type KeihiAccountMasterScalarFieldEnum = (typeof KeihiAccountMasterScalarFieldEnum)[keyof typeof KeihiAccountMasterScalarFieldEnum]
-
-
-export const KeihiOptionMasterScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  category: 'category',
-  value: 'value',
-  label: 'label',
-  description: 'description',
-  isActive: 'isActive',
-  sortOrder: 'sortOrder',
-  color: 'color'
-} as const
-
-export type KeihiOptionMasterScalarFieldEnum = (typeof KeihiOptionMasterScalarFieldEnum)[keyof typeof KeihiOptionMasterScalarFieldEnum]
 
 
 export const ProductScalarFieldEnum = {
@@ -2160,26 +1899,6 @@ export const TbmRelatedRouteGroupScalarFieldEnum = {
 } as const
 
 export type TbmRelatedRouteGroupScalarFieldEnum = (typeof TbmRelatedRouteGroupScalarFieldEnum)[keyof typeof TbmRelatedRouteGroupScalarFieldEnum]
-
-
-export const TeamSynapseAnalysisScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  userId: 'userId',
-  userEmail: 'userEmail',
-  enabledServices: 'enabledServices',
-  gmailTargetEmails: 'gmailTargetEmails',
-  gmailDateFrom: 'gmailDateFrom',
-  gmailDateTo: 'gmailDateTo',
-  chatRoomId: 'chatRoomId',
-  chatDateFrom: 'chatDateFrom',
-  chatDateTo: 'chatDateTo',
-  driveFolderUrl: 'driveFolderUrl',
-  analysisResult: 'analysisResult'
-} as const
-
-export type TeamSynapseAnalysisScalarFieldEnum = (typeof TeamSynapseAnalysisScalarFieldEnum)[keyof typeof TeamSynapseAnalysisScalarFieldEnum]
 
 
 export const ExerciseMasterScalarFieldEnum = {

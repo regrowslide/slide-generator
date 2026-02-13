@@ -30,8 +30,10 @@ export const authOptions: any = {
       session.refreshToken = token.refreshToken
       session.accessTokenExpires = token.accessTokenExpires
       session.user = { ...token.user }
-
       return session
+    },
+    async redirect({ url, baseUrl }) {
+      return url.startsWith(baseUrl) ? url : `${baseUrl}/login`
     },
   },
 
@@ -43,7 +45,7 @@ export const authOptions: any = {
   secret: process.env.NEXTAUTH_SECRET,
 
   pages: {
-    // signIn: '/login',
+    signIn: '/login',
     // signOut: '/login',
     error: `/login?`,
   },

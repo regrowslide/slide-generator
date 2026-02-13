@@ -130,61 +130,6 @@ export type CounselingReservation = Prisma.CounselingReservationModel
  */
 export type CounselingSlot = Prisma.CounselingSlotModel
 /**
- * Model HakobunIndustry
- * 
- */
-export type HakobunIndustry = Prisma.HakobunIndustryModel
-/**
- * Model HakobunIndustryGeneralCategory
- * 
- */
-export type HakobunIndustryGeneralCategory = Prisma.HakobunIndustryGeneralCategoryModel
-/**
- * Model HakobunIndustryCategory
- * 
- */
-export type HakobunIndustryCategory = Prisma.HakobunIndustryCategoryModel
-/**
- * Model HakobunClient
- * 
- */
-export type HakobunClient = Prisma.HakobunClientModel
-/**
- * Model HakobunClientStage
- * 
- */
-export type HakobunClientStage = Prisma.HakobunClientStageModel
-/**
- * Model HakobunCorrection
- * 
- */
-export type HakobunCorrection = Prisma.HakobunCorrectionModel
-/**
- * Model HakobunRule
- * 
- */
-export type HakobunRule = Prisma.HakobunRuleModel
-/**
- * Model HakobunVoice
- * 
- */
-export type HakobunVoice = Prisma.HakobunVoiceModel
-/**
- * Model HakobunAnalysisBox
- * 
- */
-export type HakobunAnalysisBox = Prisma.HakobunAnalysisBoxModel
-/**
- * Model HakobunAnalysisSession
- * 
- */
-export type HakobunAnalysisSession = Prisma.HakobunAnalysisSessionModel
-/**
- * Model HakobunAnalysisRecord
- * 
- */
-export type HakobunAnalysisRecord = Prisma.HakobunAnalysisRecordModel
-/**
  * Model KgFacilityMaster
  * 
  */
@@ -239,26 +184,6 @@ export type KgProductionItem = Prisma.KgProductionItemModel
  * 
  */
 export type KgRequiredIngredient = Prisma.KgRequiredIngredientModel
-/**
- * Model KeihiExpense
- * 
- */
-export type KeihiExpense = Prisma.KeihiExpenseModel
-/**
- * Model KeihiAttachment
- * 
- */
-export type KeihiAttachment = Prisma.KeihiAttachmentModel
-/**
- * Model KeihiAccountMaster
- * 
- */
-export type KeihiAccountMaster = Prisma.KeihiAccountMasterModel
-/**
- * Model KeihiOptionMaster
- * 
- */
-export type KeihiOptionMaster = Prisma.KeihiOptionMasterModel
 /**
  * Model Product
  * 
@@ -599,11 +524,6 @@ export type TbmRouteGroupShare = Prisma.TbmRouteGroupShareModel
  * 
  */
 export type TbmRelatedRouteGroup = Prisma.TbmRelatedRouteGroupModel
-/**
- * Model TeamSynapseAnalysis
- * 
- */
-export type TeamSynapseAnalysis = Prisma.TeamSynapseAnalysisModel
 /**
  * Model ExerciseMaster
  * 
