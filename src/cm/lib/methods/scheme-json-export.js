@@ -16453,6 +16453,40 @@
           "nativeType": null,
           "isGenerated": false,
           "isUpdatedAt": false
+        },
+        {
+          "name": "YamanokaiEventAsCL",
+          "kind": "object",
+          "isList": true,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "YamanokaiEvent",
+          "nativeType": null,
+          "relationName": "YamanokaiEventCL",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "YamanokaiEventAsSL",
+          "kind": "object",
+          "isList": true,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "YamanokaiEvent",
+          "nativeType": null,
+          "relationName": "YamanokaiEventSL",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isGenerated": false,
+          "isUpdatedAt": false
         }
       ],
       "primaryKey": null,
@@ -28047,40 +28081,6 @@
           "isUpdatedAt": false
         },
         {
-          "name": "YamanokaiEventAsCL",
-          "kind": "object",
-          "isList": true,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "YamanokaiEvent",
-          "nativeType": null,
-          "relationName": "EventCL",
-          "relationFromFields": [],
-          "relationToFields": [],
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "YamanokaiEventAsSL",
-          "kind": "object",
-          "isList": true,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "YamanokaiEvent",
-          "nativeType": null,
-          "relationName": "EventSL",
-          "relationFromFields": [],
-          "relationToFields": [],
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
           "name": "YamanokaiEventPlanApprover",
           "kind": "object",
           "isList": true,
@@ -28957,7 +28957,7 @@
           "isUpdatedAt": false
         },
         {
-          "name": "YamanokaiCL",
+          "name": "CL",
           "kind": "object",
           "isList": false,
           "isRequired": true,
@@ -28965,9 +28965,9 @@
           "isId": false,
           "isReadOnly": false,
           "hasDefaultValue": false,
-          "type": "YamanokaiMember",
+          "type": "User",
           "nativeType": null,
-          "relationName": "EventCL",
+          "relationName": "YamanokaiEventCL",
           "relationFromFields": [
             "clId"
           ],
@@ -28992,7 +28992,7 @@
           "isUpdatedAt": false
         },
         {
-          "name": "YamanokaiSL",
+          "name": "SL",
           "kind": "object",
           "isList": false,
           "isRequired": false,
@@ -29000,9 +29000,9 @@
           "isId": false,
           "isReadOnly": false,
           "hasDefaultValue": false,
-          "type": "YamanokaiMember",
+          "type": "User",
           "nativeType": null,
-          "relationName": "EventSL",
+          "relationName": "YamanokaiEventSL",
           "relationFromFields": [
             "slId"
           ],

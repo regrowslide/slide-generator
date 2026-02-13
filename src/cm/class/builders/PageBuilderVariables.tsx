@@ -251,7 +251,7 @@ const RoleAllocationTable = ({ PageBuilderExtraProps, searchFields = [] }: RoleA
 
   return (
     <>
-      <C_Stack>
+      <C_Stack className={`items-start`}>
 
         {/* 検索・フィルタエリア */}
         <div className="space-y-4 p-2 ">
@@ -402,7 +402,7 @@ const RoleAllocationTable = ({ PageBuilderExtraProps, searchFields = [] }: RoleA
               ],
             })),
           }).WithWrapper({
-            className: 'border rounded-lg border-gray-200 max-h-[55vh] ',
+            className: 'border rounded-lg border-gray-200 max-h-[55vh]  min-w-[400px]',
           })}
         </div>
 
