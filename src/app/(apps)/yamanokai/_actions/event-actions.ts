@@ -121,11 +121,11 @@ export const updateYamanokaiEventStatus = async (id: number, status: string) => 
   })
 }
 
-// 一括公開
-export const bulkPublishYamanokaiEvents = async (ids: number[]) => {
+// 一括ステータス変更
+export const bulkUpdateYamanokaiEventStatus = async (ids: number[], status: string) => {
   return await prisma.yamanokaiEvent.updateMany({
     where: { id: { in: ids } },
-    data: { status: 'published' },
+    data: { status },
   })
 }
 

@@ -2,6 +2,7 @@ import { initServerComopnent } from 'src/non-common/serverSideFunction'
 import { getYamanokaiEvents } from '@app/(apps)/yamanokai/_actions/event-actions'
 import prisma from 'src/lib/prisma'
 import EventManagementClient from './EventManagementClient'
+import { FitMargin } from '@cm/components/styles/common-components/common-components'
 
 export default async function Page(props) {
   const query = await props.searchParams
@@ -17,5 +18,5 @@ export default async function Page(props) {
     }),
   ])
 
-  return <EventManagementClient {...{ events, departments, users, canEdit, isSystemAdmin }} />
+  return <FitMargin className={`p-2 min-w-[80vw]`}><EventManagementClient {...{ events, departments, users, canEdit, isSystemAdmin }} /></FitMargin>
 }

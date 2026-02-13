@@ -8,8 +8,7 @@ import type { YamanokaiDepartment, User, YamanokaiEvent } from '@prisma/generate
 import {
   createYamanokaiEvent,
   updateYamanokaiEvent,
-  updateYamanokaiEventStatus,
-  bulkPublishYamanokaiEvents,
+  bulkUpdateYamanokaiEventStatus,
   deleteYamanokaiEvent,
   type YamanokaiEventFormData,
 } from '@app/(apps)/yamanokai/_actions/event-actions'
@@ -56,11 +55,14 @@ const toDateInputValue = (date: Date | string | null) => {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
+const STATUS_KEYS = Object.keys(EVENT_STATUS_MAP) as StatusKey[]
+
 const EventManagementClient = ({ events, departments, users, canEdit, isSystemAdmin }: Props) => {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<StatusKey>('draft')
-  const [selectedForPublish, setSelectedForPublish] = useState<number[]>([])
+  const [selectedIds, setSelectedIds] = useState<number[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [showStatusMenu, setShowStatusMenu] = useState(false)
 
   const createModal = useModal()
   const editModal = useModal<EventWithRelations | null>()
@@ -70,23 +72,26 @@ const EventManagementClient = ({ events, departments, users, canEdit, isSystemAd
   const filteredEvents = events.filter(e => e.status === activeTab)
   const sortedEvents = [...filteredEvents].sort((a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime())
 
-  // ステータス遷移ボタンラベル
-  const getStatusActions = (status: string) => {
-    switch (status) {
-      case 'draft':
-        return { next: 'polished' as StatusKey, label: '清書完了' }
-      case 'polished':
-        return { next: 'published' as StatusKey, label: '公開' }
-      case 'published':
-        return { next: 'draft' as StatusKey, label: '下書きに戻す' }
-      default:
-        return null
-    }
+  // 選択操作
+  const toggleSelect = (eventId: number) => {
+    setSelectedIds(prev => (prev.includes(eventId) ? prev.filter(id => id !== eventId) : [...prev, eventId]))
   }
 
-  const handleStatusChange = async (id: number, newStatus: string) => {
+  const toggleSelectAll = () => {
+    const allIds = sortedEvents.map(e => e.id)
+    const isAllSelected = allIds.length > 0 && allIds.every(id => selectedIds.includes(id))
+    setSelectedIds(isAllSelected ? [] : allIds)
+  }
+
+  // 一括ステータス変更
+  const handleBulkStatusChange = async (newStatus: StatusKey) => {
+    if (selectedIds.length === 0) return
+    const label = EVENT_STATUS_MAP[newStatus].label
+    if (!window.confirm(`${selectedIds.length}件を「${label}」に変更しますか？`)) return
     setIsLoading(true)
-    await updateYamanokaiEventStatus(id, newStatus)
+    await bulkUpdateYamanokaiEventStatus(selectedIds, newStatus)
+    setSelectedIds([])
+    setShowStatusMenu(false)
     router.refresh()
     setIsLoading(false)
   }
@@ -97,20 +102,6 @@ const EventManagementClient = ({ events, departments, users, canEdit, isSystemAd
     await deleteYamanokaiEvent(id)
     router.refresh()
     setIsLoading(false)
-  }
-
-  const handleBulkPublish = async () => {
-    if (selectedForPublish.length === 0) return
-    if (!window.confirm(`${selectedForPublish.length}件の例会を一括公開しますか？`)) return
-    setIsLoading(true)
-    await bulkPublishYamanokaiEvents(selectedForPublish)
-    setSelectedForPublish([])
-    router.refresh()
-    setIsLoading(false)
-  }
-
-  const toggleSelect = (eventId: number) => {
-    setSelectedForPublish(prev => (prev.includes(eventId) ? prev.filter(id => id !== eventId) : [...prev, eventId]))
   }
 
   const handleCreate = async (data: YamanokaiEventFormData) => {
@@ -134,7 +125,7 @@ const EventManagementClient = ({ events, departments, users, canEdit, isSystemAd
       {/* タブ UI */}
       <div className='rounded-lg overflow-hidden border'>
         <div className='flex'>
-          {(Object.keys(EVENT_STATUS_MAP) as StatusKey[]).map(key => {
+          {STATUS_KEYS.map(key => {
             const status = EVENT_STATUS_MAP[key]
             const count = events.filter(e => e.status === key).length
             return (
@@ -142,7 +133,8 @@ const EventManagementClient = ({ events, departments, users, canEdit, isSystemAd
                 key={key}
                 onClick={() => {
                   setActiveTab(key)
-                  setSelectedForPublish([])
+                  setSelectedIds([])
+                  setShowStatusMenu(false)
                 }}
                 className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
                   activeTab === key ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'
@@ -157,16 +149,49 @@ const EventManagementClient = ({ events, departments, users, canEdit, isSystemAd
 
       {/* アクションバー */}
       <div className='flex items-center justify-between'>
-        <span className='text-sm text-gray-500'>全{sortedEvents.length}件</span>
-        <div className='flex gap-2'>
+        <div className='flex items-center gap-3'>
+          <label className='flex items-center gap-1.5 cursor-pointer text-sm text-gray-600'>
+            <input
+              type='checkbox'
+              checked={sortedEvents.length > 0 && sortedEvents.every(e => selectedIds.includes(e.id))}
+              onChange={toggleSelectAll}
+              className='w-4 h-4'
+            />
+            全選択
+          </label>
+          <span className='text-sm text-gray-500'>
+            {selectedIds.length > 0 ? `${selectedIds.length}件選択中` : `全${sortedEvents.length}件`}
+          </span>
+        </div>
+        <div className='flex gap-2 items-center'>
+          {/* ステータス変更ドロップダウン */}
+          {selectedIds.length > 0 && (
+            <div className='relative'>
+              <Button color='blue' size='sm' onClick={() => setShowStatusMenu(prev => !prev)} disabled={isLoading}>
+                ステータス変更
+              </Button>
+              {showStatusMenu && (
+                <div className='absolute right-0 top-full mt-1 bg-white border rounded-lg shadow-lg z-10 min-w-[140px]'>
+                  {STATUS_KEYS.filter(key => key !== activeTab).map(key => {
+                    const { label, color, bgColor } = EVENT_STATUS_MAP[key]
+                    return (
+                      <button
+                        key={key}
+                        onClick={() => handleBulkStatusChange(key)}
+                        className='w-full px-4 py-2 text-left text-sm hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg flex items-center gap-2'
+                      >
+                        <span className='w-2.5 h-2.5 rounded-full' style={{ backgroundColor: color }} />
+                        {label}
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+          )}
           <Button color='blue' size='sm' onClick={() => createModal.handleOpen()}>
             新規作成
           </Button>
-          {activeTab === 'polished' && selectedForPublish.length > 0 && (
-            <Button color='green' size='sm' onClick={handleBulkPublish} disabled={isLoading}>
-              選択した{selectedForPublish.length}件を一括公開
-            </Button>
-          )}
         </div>
       </div>
 
@@ -174,23 +199,19 @@ const EventManagementClient = ({ events, departments, users, canEdit, isSystemAd
       <div className='space-y-2'>
         {sortedEvents.map(event => {
           const dept = event.YamanokaiDepartment
-          const statusAction = getStatusActions(event.status)
-          const isSelected = selectedForPublish.includes(event.id)
+          const isSelected = selectedIds.includes(event.id)
 
           return (
-            <div key={event.id} className='p-4 border rounded-lg hover:shadow-md transition-shadow bg-white'>
+            <div key={event.id} className={`p-4 border rounded-lg hover:shadow-md transition-shadow bg-white ${isSelected ? 'ring-2 ring-blue-300' : ''}`}>
               <div className='flex items-start justify-between'>
-                {/* 清書タブの場合はチェックボックス */}
-                {activeTab === 'polished' && (
-                  <div className='mr-3 pt-1'>
-                    <input
-                      type='checkbox'
-                      checked={isSelected}
-                      onChange={() => toggleSelect(event.id)}
-                      className='w-5 h-5 cursor-pointer'
-                    />
-                  </div>
-                )}
+                <div className='mr-3 pt-1'>
+                  <input
+                    type='checkbox'
+                    checked={isSelected}
+                    onChange={() => toggleSelect(event.id)}
+                    className='w-5 h-5 cursor-pointer'
+                  />
+                </div>
 
                 <div className='flex-1'>
                   <div className='flex items-center gap-2 mb-1'>
@@ -228,16 +249,6 @@ const EventManagementClient = ({ events, departments, users, canEdit, isSystemAd
                   <Button size='xs' color='gray' onClick={() => editModal.handleOpen(event)}>
                     編集
                   </Button>
-                  {statusAction && (
-                    <Button
-                      size='xs'
-                      color={statusAction.next === 'published' ? 'green' : statusAction.next === 'polished' ? 'blue' : 'gray'}
-                      onClick={() => handleStatusChange(event.id, statusAction.next)}
-                      disabled={isLoading}
-                    >
-                      {statusAction.label}
-                    </Button>
-                  )}
                   <Button size='xs' color='red' onClick={() => handleDelete(event.id)} disabled={isLoading}>
                     削除
                   </Button>
