@@ -63,13 +63,7 @@ export const deleteIngredientMaster = async (id: number) => {
 // 名前でファジーマッチング検索（AI解析用）
 // 目的：キロ単価を取得して原価計算するため、類似商品でもOK
 export const findIngredientByFuzzyName = async (rawName: string): Promise<RcIngredientMaster | null> => {
-  // 1. 完全一致検索
-  // const exactMatch = await prisma.rcIngredientMaster.findFirst({
-  //   where: {name: rawName},
-  // })
-  // if (exactMatch) return exactMatch
-
-  // 2. AIによる類似商品検索（DBマスタから）
+  // AIによる類似商品検索（DBマスタから）
   const masters = await prisma.rcIngredientMaster.findMany({})
   if (masters.length > 0) {
     const aiMatch = await findSimilarIngredientByAI(rawName, masters)

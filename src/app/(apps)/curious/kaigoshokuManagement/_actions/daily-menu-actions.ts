@@ -8,6 +8,45 @@ import type {
   KgMealSlotWithRelations,
 } from '../types'
 
+// 共通の include 定義（Menu → Dish → Ingredient の階層構造）
+const MENU_RECIPE_INCLUDE = {
+  where: { parentRecipeId: null } as const,
+  orderBy: { sortOrder: 'asc' } as const,
+  include: {
+    ChildRecipes: {
+      orderBy: { sortOrder: 'asc' } as const,
+      include: {
+        KgRecipeIngredient: {
+          orderBy: { sortOrder: 'asc' } as const,
+          include: { RcIngredientMaster: true },
+        },
+        ChildRecipes: {
+          orderBy: { sortOrder: 'asc' } as const,
+          include: {
+            KgRecipeIngredient: {
+              orderBy: { sortOrder: 'asc' } as const,
+              include: { RcIngredientMaster: true },
+            },
+          },
+        },
+      },
+    },
+    KgRecipeIngredient: {
+      orderBy: { sortOrder: 'asc' } as const,
+      include: { RcIngredientMaster: true },
+    },
+  },
+}
+
+const DAILY_MENU_INCLUDE = {
+  KgMealSlot: {
+    orderBy: { sortOrder: 'asc' } as const,
+    include: {
+      KgMenuRecipe: MENU_RECIPE_INCLUDE,
+    },
+  },
+}
+
 // 献立一覧取得
 export const getDailyMenus = async (params?: {
   where?: Prisma.KgDailyMenuWhereInput
@@ -31,41 +70,7 @@ export const getDailyMenuWithRelations = async (
 ): Promise<KgDailyMenuWithRelations | null> => {
   return await prisma.kgDailyMenu.findUnique({
     where: { id },
-    include: {
-      KgMealSlot: {
-        orderBy: { sortOrder: 'asc' },
-        include: {
-          KgMenuRecipe: {
-            where: { parentRecipeId: null }, // トップレベルのレシピのみ
-            orderBy: { sortOrder: 'asc' },
-            include: {
-              ChildRecipes: {
-                orderBy: { sortOrder: 'asc' },
-                include: {
-                  KgRecipeIngredient: {
-                    orderBy: { sortOrder: 'asc' },
-                    include: { RcIngredientMaster: true },
-                  },
-                  ChildRecipes: {
-                    orderBy: { sortOrder: 'asc' },
-                    include: {
-                      KgRecipeIngredient: {
-                        orderBy: { sortOrder: 'asc' },
-                        include: { RcIngredientMaster: true },
-                      },
-                    },
-                  },
-                },
-              },
-              KgRecipeIngredient: {
-                orderBy: { sortOrder: 'asc' },
-                include: { RcIngredientMaster: true },
-              },
-            },
-          },
-        },
-      },
-    },
+    include: DAILY_MENU_INCLUDE,
   }) as KgDailyMenuWithRelations | null
 }
 
@@ -73,45 +78,10 @@ export const getDailyMenuWithRelations = async (
 export const getDailyMenuByDate = async (
   menuDate: Date
 ): Promise<KgDailyMenuWithRelations | null> => {
-  const menu = await prisma.kgDailyMenu.findUnique({
+  return await prisma.kgDailyMenu.findUnique({
     where: { menuDate },
-    include: {
-      KgMealSlot: {
-        orderBy: { sortOrder: 'asc' },
-        include: {
-          KgMenuRecipe: {
-            where: { parentRecipeId: null },
-            orderBy: { sortOrder: 'asc' },
-            include: {
-              ChildRecipes: {
-                orderBy: { sortOrder: 'asc' },
-                include: {
-                  KgRecipeIngredient: {
-                    orderBy: { sortOrder: 'asc' },
-                    include: { RcIngredientMaster: true },
-                  },
-                  ChildRecipes: {
-                    orderBy: { sortOrder: 'asc' },
-                    include: {
-                      KgRecipeIngredient: {
-                        orderBy: { sortOrder: 'asc' },
-                        include: { RcIngredientMaster: true },
-                      },
-                    },
-                  },
-                },
-              },
-              KgRecipeIngredient: {
-                orderBy: { sortOrder: 'asc' },
-                include: { RcIngredientMaster: true },
-              },
-            },
-          },
-        },
-      },
-    },
-  })
-  return menu as KgDailyMenuWithRelations | null
+    include: DAILY_MENU_INCLUDE,
+  }) as KgDailyMenuWithRelations | null
 }
 
 // 献立作成
@@ -156,6 +126,8 @@ export const getOrCreateMealSlot = async (data: {
   mealTypeName: string
   sortOrder: number
 }): Promise<KgMealSlotWithRelations> => {
+  const mealSlotInclude = { KgMenuRecipe: MENU_RECIPE_INCLUDE }
+
   const existing = await prisma.kgMealSlot.findUnique({
     where: {
       dailyMenuId_mealType: {
@@ -163,27 +135,7 @@ export const getOrCreateMealSlot = async (data: {
         mealType: data.mealType,
       },
     },
-    include: {
-      KgMenuRecipe: {
-        where: { parentRecipeId: null },
-        orderBy: { sortOrder: 'asc' },
-        include: {
-          ChildRecipes: {
-            orderBy: { sortOrder: 'asc' },
-            include: {
-              KgRecipeIngredient: {
-                orderBy: { sortOrder: 'asc' },
-                include: { RcIngredientMaster: true },
-              },
-            },
-          },
-          KgRecipeIngredient: {
-            orderBy: { sortOrder: 'asc' },
-            include: { RcIngredientMaster: true },
-          },
-        },
-      },
-    },
+    include: mealSlotInclude,
   })
 
   if (existing) {
@@ -197,27 +149,7 @@ export const getOrCreateMealSlot = async (data: {
       mealTypeName: data.mealTypeName,
       sortOrder: data.sortOrder,
     },
-    include: {
-      KgMenuRecipe: {
-        where: { parentRecipeId: null },
-        orderBy: { sortOrder: 'asc' },
-        include: {
-          ChildRecipes: {
-            orderBy: { sortOrder: 'asc' },
-            include: {
-              KgRecipeIngredient: {
-                orderBy: { sortOrder: 'asc' },
-                include: { RcIngredientMaster: true },
-              },
-            },
-          },
-          KgRecipeIngredient: {
-            orderBy: { sortOrder: 'asc' },
-            include: { RcIngredientMaster: true },
-          },
-        },
-      },
-    },
+    include: mealSlotInclude,
   })
 
   return created as KgMealSlotWithRelations

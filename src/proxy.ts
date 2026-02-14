@@ -78,24 +78,6 @@ const getFreePathsMatcher = (rootPath: string, pathArray: string[]): string => {
 }
 export const rootPaths: RootPathConfig[] = [
   {
-    rootPath: 'Grouping',
-    paths: [
-      {
-        matcher: getFreePathsMatcher('Grouping', ['/game/main']),
-        ...pathValidation,
-      },
-    ],
-  },
-  {
-    rootPath: 'tbm',
-    paths: [
-      {
-        matcher: getFreePathsMatcher('tbm', []),
-        ...pathValidation,
-      },
-    ],
-  },
-  {
     rootPath: 'KM',
     paths: [
       {

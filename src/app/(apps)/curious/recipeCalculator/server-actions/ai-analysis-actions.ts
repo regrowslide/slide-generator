@@ -88,7 +88,11 @@ ${text}
     throw new Error('OpenAI APIからの応答が空です')
   }
 
-  return JSON.parse(content) as AiAnalysisResult
+  try {
+    return JSON.parse(content) as AiAnalysisResult
+  } catch {
+    throw new Error(`AIレスポンスのJSON解析に失敗しました: ${content.substring(0, 200)}`)
+  }
 }
 
 // OpenAI APIでレシピ画像を解析（Vision API）
@@ -145,7 +149,11 @@ const analyzeRecipeImageWithOpenAI = async (imageBase64: string): Promise<AiAnal
   const jsonMatch = content.match(/```json\s*([\s\S]*?)\s*```/) || content.match(/\{[\s\S]*\}/)
   const jsonStr = jsonMatch ? jsonMatch[1] || jsonMatch[0] : content
 
-  return JSON.parse(jsonStr) as AiAnalysisResult
+  try {
+    return JSON.parse(jsonStr) as AiAnalysisResult
+  } catch {
+    throw new Error(`AIレスポンスのJSON解析に失敗しました: ${jsonStr.substring(0, 200)}`)
+  }
 }
 
 // Gemini APIでレシピ画像を解析
@@ -205,7 +213,11 @@ const analyzeRecipeImageWithGemini = async (imageBase64: string): Promise<AiAnal
   const jsonMatch = content.match(/```json\s*([\s\S]*?)\s*```/) || content.match(/\{[\s\S]*\}/)
   const jsonStr = jsonMatch ? jsonMatch[1] || jsonMatch[0] : content
 
-  return JSON.parse(jsonStr) as AiAnalysisResult
+  try {
+    return JSON.parse(jsonStr) as AiAnalysisResult
+  } catch {
+    throw new Error(`AIレスポンスのJSON解析に失敗しました: ${jsonStr.substring(0, 200)}`)
+  }
 }
 
 /**
@@ -326,7 +338,6 @@ export const searchIngredientPrice = async (ingredientName: string): Promise<Pri
 // AI解析→マスタ照合→外部検索の一連のフローを実行
 export const executeFullAnalysis = async (
   input: {text?: string; imageBase64?: string},
-  _onProgress?: (phase: string, message: string, progress: number) => void
 ): Promise<RecipeWithIngredients> => {
   let analysisResult: AiAnalysisResult
 
@@ -400,7 +411,7 @@ export const executeFullAnalysis = async (
       if (ingredient) {
         if (priceResult) {
           await updateRecipeIngredient(ingredient.id, {
-            pricePerKg: priceResult.price,
+            pricePerKg: priceResult.pricePerKg,
             isExternal: true,
             source: priceResult.source,
             status: 'done',
@@ -418,5 +429,9 @@ export const executeFullAnalysis = async (
   const finalRecipe = await recalculateRecipeCosts(recipe.id)
   await updateRecipe(recipe.id, {status: 'completed'})
 
-  return finalRecipe!
+  if (!finalRecipe) {
+    throw new Error('レシピの原価計算に失敗しました')
+  }
+
+  return finalRecipe
 }

@@ -830,20 +830,21 @@ export const generateProductionBatchFromOrders = async (
     })
   })
 
-  // 既存の製造品目を削除して新規作成
+  // 既存の製造品目を削除して一括作成
   await prisma.kgProductionItem.deleteMany({
     where: { productionBatchId: batch.id },
   })
 
-  let sortOrder = 0
-  for (const item of itemMap.values()) {
-    await createProductionItem({
-      productionBatchId: batch.id,
-      menuRecipeId: item.menuRecipeId,
-      dietTypeId: item.dietTypeId,
-      totalQuantity: item.totalQuantity,
-      sortOrder: sortOrder++,
-    })
+  const itemsData = Array.from(itemMap.values()).map((item, idx) => ({
+    productionBatchId: batch.id,
+    menuRecipeId: item.menuRecipeId,
+    dietTypeId: item.dietTypeId,
+    totalQuantity: item.totalQuantity,
+    sortOrder: idx,
+  }))
+
+  if (itemsData.length > 0) {
+    await prisma.kgProductionItem.createMany({ data: itemsData })
   }
 
   // 必要食材を更新

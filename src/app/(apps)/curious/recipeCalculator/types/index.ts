@@ -46,6 +46,7 @@ export interface RecipeSettings {
   otherCost: number
   productionWeightG: number | null
   inputMode: InputMode
+  packCount: number
 }
 
 // AI解析進捗

@@ -3,6 +3,8 @@
 import prisma from 'src/lib/prisma'
 import type {
   KgMenuRecipeWithRelations,
+  KondateListItem,
+  KondateFilter,
 } from '../types'
 
 /**
@@ -12,32 +14,6 @@ import type {
  * - Menu has many Dish（料理）
  * - Dish has many Ingredient（材料）
  */
-
-// 献立一覧を取得するための型（Dish レベル）
-export type KondateListItem = {
-  id: number // dailyMenuId
-  menuDate: Date
-  mealSlotId: number
-  mealType: string
-  mealTypeName: string
-  menuId: number // Menu の ID
-  menuCode: string
-  menuName: string
-  dishId: number // Dish の ID
-  dishCode: string
-  dishName: string
-  ingredientCount: number // 材料数
-  createdAt: Date
-}
-
-// 献立フィルター
-export type KondateFilter = {
-  year?: number
-  month?: number
-  day?: number
-  mealType?: string
-  recipeName?: string
-}
 
 // 献立一覧を取得（Dish レベルで取得）
 export const getKondateList = async (
@@ -171,9 +147,6 @@ export const getMenuDetail = async (
   return menu as KgMenuRecipeWithRelations | null
 }
 
-// 後方互換性のためのエイリアス
-export const getRecipeDetail = getMenuDetail
-
 // Dish の詳細を取得（Ingredient を含む）
 export const getDishDetail = async (
   dishId: number
@@ -214,8 +187,9 @@ export const getAvailableYearMonths = async (): Promise<
 
   const yearMonthSet = new Set<string>()
   for (const menu of menus) {
+    // menuDate は @db.Date（UTC 00:00:00）なので UTC メソッドを使用
     const date = new Date(menu.menuDate)
-    const key = `${date.getFullYear()}-${date.getMonth() + 1}`
+    const key = `${date.getUTCFullYear()}-${date.getUTCMonth() + 1}`
     yearMonthSet.add(key)
   }
 

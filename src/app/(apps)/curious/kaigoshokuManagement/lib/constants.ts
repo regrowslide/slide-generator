@@ -59,27 +59,6 @@ export const RECIPE_CATEGORIES = {
 
 export type RecipeCategoryCode = keyof typeof RECIPE_CATEGORIES
 
-// CSVカラムのマッピング（献立CSV）
-export const KONDATE_CSV_COLUMNS = {
-  DATE: 0,
-  MEAL_TYPE: 1,
-  RECIPE_CODE: 2,
-  RECIPE_NAME: 3,
-  SUB_RECIPE_CODE: 4,
-  SUB_RECIPE_NAME: 5,
-  INGREDIENT_CODE: 6,
-  INGREDIENT_NAME: 7,
-  AMOUNT: 8,
-  UNIT: 9,
-  ENERGY: 10,
-  PROTEIN: 11,
-  FAT: 12,
-  CARB: 13,
-  SODIUM: 14,
-  SALT: 15,
-  VEGETABLE: 16,
-} as const
-
 // 栄養素の単位
 export const NUTRIENT_UNITS = {
   energy: 'kcal',

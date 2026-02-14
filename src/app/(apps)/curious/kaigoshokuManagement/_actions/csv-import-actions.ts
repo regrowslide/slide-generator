@@ -353,92 +353,91 @@ export const importKondateCsv = async (csvText: string, targetDate?: Date): Prom
 
     const importedDates: string[] = []
 
-    // データベースに保存
+    // データベースに保存（トランザクションで一括処理）
     addLog('💾 データベース保存を開始')
 
-    // 既存の献立を削除（カスケードで関連データも削除）
     addLog(`🗑️ 既存データを削除: ${dateKey}`)
-    await prisma.kgDailyMenu.deleteMany({
-      where: {menuDate: date},
-    })
-
-    // 新しい献立を作成
-    addLog('📝 日付献立を作成')
-    const dailyMenu = await prisma.kgDailyMenu.create({
-      data: {menuDate: date},
-    })
 
     let savedCategories = 0
     let savedMenus = 0
     let savedDishes = 0
     let savedIngredients = 0
 
-    for (const category of parsed.categories) {
-      // Category（MealSlot）を作成
-      const mealSlot = await prisma.kgMealSlot.create({
-        data: {
-          dailyMenuId: dailyMenu.id,
-          mealType: category.mealType,
-          mealTypeName: category.mealTypeName,
-          sortOrder: MEAL_TYPES[category.mealType].sortOrder,
-        },
+    await prisma.$transaction(async (tx) => {
+      // 既存の献立を削除（カスケードで関連データも削除）
+      await tx.kgDailyMenu.deleteMany({
+        where: {menuDate: date},
       })
-      savedCategories++
-      addLog(`  ✅ Category保存: ${category.mealTypeName}`)
 
-      let menuOrder = 0
-      for (const menu of category.menus) {
-        // Menu（KgMenuRecipe: parentRecipeId = null）を作成
-        const menuRecipe = await prisma.kgMenuRecipe.create({
+      // 新しい献立を作成
+      addLog('📝 日付献立を作成')
+      const dailyMenu = await tx.kgDailyMenu.create({
+        data: {menuDate: date},
+      })
+
+      for (const category of parsed.categories) {
+        const mealSlot = await tx.kgMealSlot.create({
           data: {
-            mealSlotId: mealSlot.id,
-            code: menu.code,
-            name: menu.name,
-            sortOrder: menuOrder++,
+            dailyMenuId: dailyMenu.id,
+            mealType: category.mealType,
+            mealTypeName: category.mealTypeName,
+            sortOrder: MEAL_TYPES[category.mealType].sortOrder,
           },
         })
-        savedMenus++
+        savedCategories++
+        addLog(`  ✅ Category保存: ${category.mealTypeName}`)
 
-        let dishOrder = 0
-        for (const dish of menu.dishes) {
-          // Dish（KgMenuRecipe: parentRecipeId = menuRecipe.id）を作成
-          const dishRecipe = await prisma.kgMenuRecipe.create({
+        let menuOrder = 0
+        for (const menu of category.menus) {
+          const menuRecipe = await tx.kgMenuRecipe.create({
             data: {
               mealSlotId: mealSlot.id,
-              parentRecipeId: menuRecipe.id,
-              code: dish.code,
-              name: dish.name,
-              sortOrder: dishOrder++,
+              code: menu.code,
+              name: menu.name,
+              sortOrder: menuOrder++,
             },
           })
-          savedDishes++
+          savedMenus++
 
-          // Ingredient（KgRecipeIngredient）を作成
-          let ingredientOrder = 0
-          for (const ing of dish.ingredients) {
-            await prisma.kgRecipeIngredient.create({
+          let dishOrder = 0
+          for (const dish of menu.dishes) {
+            const dishRecipe = await tx.kgMenuRecipe.create({
               data: {
-                menuRecipeId: dishRecipe.id,
-                ingredientMasterId: null, // マスタ連携なし
-                ingredientCode: ing.code,
-                ingredientName: ing.name,
-                amountPerServing: ing.amount,
-                unit: ing.unit,
-                energy: ing.energy,
-                protein: ing.protein,
-                fat: ing.fat,
-                carb: ing.carb,
-                sodium: ing.sodium,
-                salt: ing.salt,
-                vegetableG: ing.vegetable,
-                sortOrder: ingredientOrder++,
+                mealSlotId: mealSlot.id,
+                parentRecipeId: menuRecipe.id,
+                code: dish.code,
+                name: dish.name,
+                sortOrder: dishOrder++,
               },
             })
-            savedIngredients++
+            savedDishes++
+
+            // Ingredient を一括作成
+            if (dish.ingredients.length > 0) {
+              await tx.kgRecipeIngredient.createMany({
+                data: dish.ingredients.map((ing, idx) => ({
+                  menuRecipeId: dishRecipe.id,
+                  ingredientMasterId: null,
+                  ingredientCode: ing.code,
+                  ingredientName: ing.name,
+                  amountPerServing: ing.amount,
+                  unit: ing.unit,
+                  energy: ing.energy,
+                  protein: ing.protein,
+                  fat: ing.fat,
+                  carb: ing.carb,
+                  sodium: ing.sodium,
+                  salt: ing.salt,
+                  vegetableG: ing.vegetable,
+                  sortOrder: idx,
+                })),
+              })
+              savedIngredients += dish.ingredients.length
+            }
           }
         }
       }
-    }
+    })
 
     importedDates.push(dateKey)
 

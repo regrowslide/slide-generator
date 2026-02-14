@@ -136,8 +136,10 @@ export const useRecipeAnalysis = ({recipe, setRecipe, setRecipes, setViewMode}: 
 
       // 原価計算（この時点では0円）
       const createdRecipe = await recalculateRecipeCosts(newRecipe.id)
-      setRecipe(createdRecipe)
-      setRecipes((prev) => [createdRecipe!, ...prev])
+      if (createdRecipe) {
+        setRecipe(createdRecipe)
+        setRecipes((prev) => [createdRecipe, ...prev])
+      }
 
       setAnalysisProgress({
         phase: 'ocr',
@@ -292,8 +294,10 @@ export const useRecipeAnalysis = ({recipe, setRecipe, setRecipes, setViewMode}: 
       const finalRecipe = await recalculateRecipeCosts(recipe.id)
       await updateRecipe(recipe.id, {status: 'completed'})
 
-      setRecipe(finalRecipe)
-      setRecipes((prev) => prev.map((r) => (r.id === finalRecipe!.id ? finalRecipe! : r)))
+      if (finalRecipe) {
+        setRecipe(finalRecipe)
+        setRecipes((prev) => prev.map((r) => (r.id === finalRecipe.id ? finalRecipe : r)))
+      }
 
       const errorCount = progressState.errors
       const successCount = total - errorCount

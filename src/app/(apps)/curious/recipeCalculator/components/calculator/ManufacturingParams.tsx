@@ -7,7 +7,7 @@ import type {CostCalculationResult, RecipeSettings, InputMode} from '../../types
 interface ManufacturingParamsProps {
   settings: RecipeSettings
   calculatedData: CostCalculationResult
-  onRecalculate: (params: {lossRate: number; packWeightG: number; productionWeightG: number | null}) => void
+  onRecalculate: (params: {lossRate: number; packWeightG: number; productionWeightG: number | null; packCount?: number}) => void
   onInputModeChange: (mode: InputMode) => void
 }
 
@@ -23,25 +23,35 @@ export const ManufacturingParams = ({
   const [localProductionWeightG, setLocalProductionWeightG] = useState<number | null>(settings.productionWeightG)
   const [localLossRate, setLocalLossRate] = useState(settings.lossRate)
   const [localPackWeightG, setLocalPackWeightG] = useState(settings.packWeightG)
+  const [localPackCount, setLocalPackCount] = useState(settings.packCount)
 
   // 親から settings が更新された場合にローカル state を同期
   useEffect(() => {
     setLocalProductionWeightG(settings.productionWeightG)
     setLocalLossRate(settings.lossRate)
     setLocalPackWeightG(settings.packWeightG)
-  }, [settings.productionWeightG, settings.lossRate, settings.packWeightG])
+    setLocalPackCount(settings.packCount)
+  }, [settings.productionWeightG, settings.lossRate, settings.packWeightG, settings.packCount])
 
   // ローカル値が親の値と異なるか判定
   const hasChanges =
     localProductionWeightG !== settings.productionWeightG ||
     localLossRate !== settings.lossRate ||
-    localPackWeightG !== settings.packWeightG
+    localPackWeightG !== settings.packWeightG ||
+    localPackCount !== settings.packCount
+
+  // ロス率適用後重量（表示用）
+  const lossAppliedWeightG = settings.productionWeightG !== null && settings.productionWeightG > 0
+    ? settings.productionWeightG
+    : calculatedData.totalRecipeWeightG * (1 - localLossRate / 100)
+  const isManualProductionWeight = settings.productionWeightG !== null && settings.productionWeightG > 0
 
   const handleRecalculate = () => {
     onRecalculate({
       lossRate: localLossRate,
       packWeightG: localPackWeightG,
       productionWeightG: localProductionWeightG,
+      ...(!isFillAmountMode ? {packCount: localPackCount} : {}),
     })
   }
 
@@ -73,15 +83,27 @@ export const ManufacturingParams = ({
           />
         </div>
 
-        {/* 製造ロス率 */}
+        {/* 製造ロス率（手動指定時は無効） */}
         <div className="flex justify-between items-center">
-          <label className="text-sm text-slate-600">製造ロス率 (%)</label>
+          <label className={`text-sm ${isManualProductionWeight ? 'text-slate-400' : 'text-slate-600'}`}>
+            製造ロス率 (%)
+            {isManualProductionWeight && <span className="ml-1 text-xs">※手動指定時は無効</span>}
+          </label>
           <input
             type="number"
             value={localLossRate}
             onChange={(e) => setLocalLossRate(Number(e.target.value))}
-            className="w-24 text-right border rounded px-2 py-1"
+            disabled={isManualProductionWeight}
+            className={`w-24 text-right border rounded px-2 py-1 ${isManualProductionWeight ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : ''}`}
           />
+        </div>
+
+        {/* ロス適用後重量 */}
+        <div className="flex justify-between items-center text-sm bg-orange-50 p-2 rounded">
+          <span className="text-slate-500">
+            ロス適用後重量{isManualProductionWeight ? '（手動）' : ` (${localLossRate}%減)`}
+          </span>
+          <span className="font-medium text-orange-600">{lossAppliedWeightG.toFixed(0)} g</span>
         </div>
 
         {/* 入力モード切替トグル */}
@@ -130,9 +152,9 @@ export const ManufacturingParams = ({
                 <label className="text-sm text-slate-600">製造パック数</label>
                 <input
                   type="number"
-                  value={calculatedData.packCount}
+                  value={localPackCount}
+                  onChange={(e) => setLocalPackCount(Number(e.target.value))}
                   className="w-24 text-right border rounded px-2 py-1"
-                  disabled
                 />
               </div>
               <div className="flex justify-between text-sm mt-2">

@@ -3,8 +3,11 @@
 import type {RcRecipeIngredient} from '@prisma/generated/prisma/client'
 import type {RecipeWithIngredients} from '../types'
 import {convertToKg} from '../lib/unit-converter'
-import {getApplicableStandard} from './profit-margin-actions'
+import {getProfitMarginStandards} from './profit-margin-actions'
 import prisma from 'src/lib/prisma'
+
+// Prismaデフォルトの粗利額（schema.prisma の @default(200) と一致）
+const DEFAULT_PROFIT_MARGIN = 200
 
 export type RecipeInput = {
   name: string
@@ -17,6 +20,7 @@ export type RecipeInput = {
   otherCost?: number
   productionWeightG?: number | null
   inputMode?: string
+  packCount?: number
   sourceType?: string
   sourceFileName?: string
   sourceFileUrl?: string
@@ -176,31 +180,24 @@ export const addRecipeIngredients = async (ingredients: RecipeIngredientInput[])
 
 // レシピ食材更新
 export const updateRecipeIngredient = async (id: number, data: Partial<RecipeIngredientInput>): Promise<RcRecipeIngredient> => {
-  const updateData: Record<string, unknown> = {...data}
+  const updateData = {...data} as Record<string, unknown>
 
-  // amount/unitが変更された場合、weightKgを再計算
-  if (data.amount !== undefined || data.unit !== undefined) {
-    const current = await prisma.rcRecipeIngredient.findUnique({
-      where: {id},
-    })
+  // amount/unit/pricePerKg/yieldRate の変更時に weightKg と cost を再計算
+  const needsRecalculation =
+    data.amount !== undefined || data.unit !== undefined ||
+    data.pricePerKg !== undefined || data.yieldRate !== undefined
+
+  if (needsRecalculation) {
+    const current = await prisma.rcRecipeIngredient.findUnique({where: {id}})
 
     if (current) {
       const amount = data.amount ?? current.amount
       const unit = data.unit ?? current.unit
-      updateData.weightKg = convertToKg(amount, unit)
-    }
-  }
+      const weightKg = convertToKg(amount, unit)
+      updateData.weightKg = weightKg
 
-  // pricePerKg/yieldRateが変更された場合、costを再計算
-  if (data.pricePerKg !== undefined || data.yieldRate !== undefined) {
-    const current = await prisma.rcRecipeIngredient.findUnique({
-      where: {id},
-    })
-
-    if (current) {
       const pricePerKg = data.pricePerKg ?? current.pricePerKg
       const yieldRate = data.yieldRate ?? current.yieldRate
-      const weightKg = (updateData.weightKg as number) ?? current.weightKg
       const adjustedPricePerKg = yieldRate > 0 ? pricePerKg / (yieldRate / 100) : 0
       updateData.cost = adjustedPricePerKg * weightKg
     }
@@ -228,23 +225,31 @@ export const recalculateRecipeCosts = async (recipeId: number): Promise<RecipeWi
   let totalMaterialCost = 0
   let totalWeightKg = 0
 
-  // 各食材のコストを再計算して更新
+  // 各食材のコストを再計算してバッチ更新
+  const ingredientUpdates: {id: number; weightKg: number; cost: number}[] = []
   for (const ing of recipe.RcRecipeIngredient) {
     const weightKg = convertToKg(ing.amount, ing.unit)
     const adjustedPricePerKg = ing.yieldRate > 0 ? ing.pricePerKg / (ing.yieldRate / 100) : 0
     const cost = adjustedPricePerKg * weightKg
 
-    await prisma.rcRecipeIngredient.update({
-      where: {id: ing.id},
-      data: {weightKg, cost},
-    })
-
+    ingredientUpdates.push({id: ing.id, weightKg, cost})
     totalMaterialCost += cost
     totalWeightKg += weightKg
   }
 
+  // トランザクション内で一括更新
+  if (ingredientUpdates.length > 0) {
+    await prisma.$transaction(
+      ingredientUpdates.map(({id, weightKg, cost}) =>
+        prisma.rcRecipeIngredient.update({
+          where: {id},
+          data: {weightKg, cost},
+        })
+      )
+    )
+  }
+
   // 製造可能重量の決定
-  // 手動入力値(productionWeightG)があればそれを使用、なければ自動計算
   let productionWeightKg: number
   if (recipe.productionWeightG !== null && recipe.productionWeightG > 0) {
     productionWeightKg = recipe.productionWeightG / 1000
@@ -257,24 +262,27 @@ export const recalculateRecipeCosts = async (recipeId: number): Promise<RecipeWi
   let packWeightG = recipe.packWeightG
 
   if (recipe.inputMode === 'packCount') {
-    // パック数入力モード: パック数は固定、充填量を計算
     packCount = recipe.packCount ?? 0
+    // packCount が 0 の場合は充填量を計算しない（Infinity防止）
     if (packCount > 0) {
       packWeightG = (productionWeightKg * 1000) / packCount
     }
   } else {
-    // 充填量入力モード（デフォルト）: 充填量からパック数を計算
     const packWeightKg = recipe.packWeightG / 1000
     packCount = packWeightKg > 0 ? Math.floor(productionWeightKg / packWeightKg) : 0
   }
 
-  // パック数に応じた粗利額の自動提案
+  // パック数に応じた粗利額の自動提案（standard を1回取得してキャッシュ）
   let profitMargin = recipe.profitMargin
   if (packCount > 0) {
-    const currentStandard = await getApplicableStandard(packCount)
+    const standards = await getProfitMarginStandards()
+    const findStandard = (count: number) =>
+      standards.find(s => count >= s.minPackCount && (s.maxPackCount === null || count <= s.maxPackCount)) ?? null
+
+    const currentStandard = findStandard(packCount)
     if (currentStandard) {
-      const isDefault = profitMargin === 200 // Prismaデフォルト値 → 初回計算
-      const previousStandard = await getApplicableStandard(recipe.packCount ?? 0)
+      const isDefault = profitMargin === DEFAULT_PROFIT_MARGIN
+      const previousStandard = findStandard(recipe.packCount ?? 0)
       const isPreviousStandardValue = previousStandard && profitMargin === previousStandard.minProfitAmount
 
       if (isDefault || isPreviousStandardValue) {
@@ -284,11 +292,9 @@ export const recalculateRecipeCosts = async (recipeId: number): Promise<RecipeWi
   }
 
   const materialCostPerPack = packCount > 0 ? totalMaterialCost / packCount : 0
-  // その他費用(otherCost)を原価に追加
   const totalCostPerPack = materialCostPerPack + recipe.packagingCost + recipe.processingCost + recipe.otherCost
   const sellingPrice = totalCostPerPack + profitMargin
 
-  // レシピの計算結果を更新
   const result = await prisma.rcRecipe.update({
     where: {id: recipeId},
     data: {
@@ -296,7 +302,7 @@ export const recalculateRecipeCosts = async (recipeId: number): Promise<RecipeWi
       totalWeightKg,
       productionWeightKg,
       packCount,
-      packWeightG, // 計算された充填量も保存
+      packWeightG,
       profitMargin,
       materialCostPerPack,
       totalCostPerPack,
@@ -306,3 +312,4 @@ export const recalculateRecipeCosts = async (recipeId: number): Promise<RecipeWi
   })
   return result
 }
+

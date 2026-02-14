@@ -2,6 +2,7 @@
 
 import {useCallback, useTransition} from 'react'
 import type {RecipeWithIngredients, IngredientMaster, InputMode} from '../types'
+import type {RecipeIngredientInput} from '../server-actions/recipe-actions'
 import {
   updateRecipe,
   updateRecipeIngredient,
@@ -89,14 +90,9 @@ export const useRecipeEditor = ({recipe, ingredientMasters, setRecipe}: UseRecip
       if (!ingredient) return
 
       startTransition(async () => {
-        const updateData: Record<string, unknown> = {}
         const numericFields = ['amount', 'pricePerKg', 'yieldRate']
-
-        if (numericFields.includes(field)) {
-          updateData[field] = Number(value)
-        } else {
-          updateData[field] = value
-        }
+        const parsedValue = numericFields.includes(field) ? Number(value) : value
+        const updateData: Partial<RecipeIngredientInput> = {[field]: parsedValue}
 
         await updateRecipeIngredient(ingredient.id, updateData)
         const updated = await recalculateRecipeCosts(recipe.id)
@@ -139,11 +135,19 @@ export const useRecipeEditor = ({recipe, ingredientMasters, setRecipe}: UseRecip
 
   // 製造パラメータ一括再計算ハンドラ
   const handleRecalculateParams = useCallback(
-    (params: {lossRate: number; packWeightG: number; productionWeightG: number | null}) => {
+    (params: {lossRate: number; packWeightG: number; productionWeightG: number | null; packCount?: number}) => {
       if (!recipe) return
 
       startTransition(async () => {
-        await updateRecipe(recipe.id, params)
+        const updateData: Record<string, unknown> = {
+          lossRate: params.lossRate,
+          packWeightG: params.packWeightG,
+          productionWeightG: params.productionWeightG,
+        }
+        if (params.packCount !== undefined) {
+          updateData.packCount = params.packCount
+        }
+        await updateRecipe(recipe.id, updateData as Parameters<typeof updateRecipe>[1])
         const updated = await recalculateRecipeCosts(recipe.id)
         if (updated) setRecipe(updated)
       })
@@ -179,6 +183,20 @@ export const useRecipeEditor = ({recipe, ingredientMasters, setRecipe}: UseRecip
     [recipe, setRecipe]
   )
 
+  // 粗利自動セットハンドラ
+  const handleAutoSetProfitMargin = useCallback(
+    (amount: number) => {
+      if (!recipe) return
+
+      startTransition(async () => {
+        await updateRecipe(recipe.id, {profitMargin: amount})
+        const updated = await recalculateRecipeCosts(recipe.id)
+        if (updated) setRecipe(updated)
+      })
+    },
+    [recipe, setRecipe]
+  )
+
   return {
     isPending,
     handleAddIngredient,
@@ -189,5 +207,6 @@ export const useRecipeEditor = ({recipe, ingredientMasters, setRecipe}: UseRecip
     handleRecalculateParams,
     handleRecalculateCosts,
     handleInputModeChange,
+    handleAutoSetProfitMargin,
   }
 }

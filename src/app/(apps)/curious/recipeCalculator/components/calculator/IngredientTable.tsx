@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo } from 'react'
 import { Trash2, Loader2, Database, Globe, Search, ChevronDown, ExternalLink, Package } from 'lucide-react'
 import { Button } from '@shadcn/ui/button'
 import type { RcRecipeIngredient, IngredientMaster } from '../../types'
@@ -24,13 +25,16 @@ export const IngredientTable = ({
   onMasterSelect,
   searchingIndex,
 }: IngredientTableProps) => {
-  // マスタをカテゴリ別にグループ化
-  const mastersByCategory = ingredientMasters.reduce((acc, master) => {
-    const category = master.category || 'その他'
-    if (!acc[category]) acc[category] = []
-    acc[category].push(master)
-    return acc
-  }, {} as Record<string, IngredientMaster[]>)
+  // マスタをカテゴリ別にグループ化（メモ化）
+  const mastersByCategory = useMemo(() =>
+    ingredientMasters.reduce((acc, master) => {
+      const category = master.category || 'その他'
+      if (!acc[category]) acc[category] = []
+      acc[category].push(master)
+      return acc
+    }, {} as Record<string, IngredientMaster[]>),
+    [ingredientMasters]
+  )
 
   return (
     <section className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
@@ -50,9 +54,10 @@ export const IngredientTable = ({
               <th className="px-4 py-3 min-w-[200px]">取得元詳細</th>
               <th className="px-4 py-3 w-32 text-right">分量 / 単位</th>
               <th className="px-4 py-3 w-24 text-right bg-blue-50/50 text-blue-800">換算重量</th>
-              <th className="px-4 py-3 w-32 text-right">キロ単価</th>
+              <th className="px-4 py-3 w-40 text-right">キロ単価</th>
               <th className="px-4 py-3 w-20 text-center">AI照合</th>
               <th className="px-4 py-3 w-24 text-right">歩留(%)</th>
+              <th className="px-4 py-3 w-28 text-right bg-amber-50/50 text-amber-800">調整後単価</th>
               <th className="px-4 py-3 w-32 text-right">原価小計</th>
               <th className="px-4 py-3 w-10"></th>
             </tr>
@@ -60,13 +65,14 @@ export const IngredientTable = ({
           <tbody className="divide-y divide-slate-100">
             {ingredients.length === 0 && (
               <tr>
-                <td colSpan={10} className="p-12 text-center text-slate-400">
+                <td colSpan={11} className="p-12 text-center text-slate-400">
                   データなし
                 </td>
               </tr>
             )}
-            {ingredients.map((ing, idx) => (
-              <tr key={ing.id} className={ing.status === 'searching' ? 'bg-blue-50' : ''}>
+            {ingredients.map((ing, idx) => {
+
+              return <tr key={ing.id} className={ing.status === 'searching' ? 'bg-blue-50' : ''}>
                 {/* 解析された名前（元表記） */}
                 <td className="px-4 py-3">
                   <div className="text-sm text-slate-700">
@@ -196,13 +202,15 @@ export const IngredientTable = ({
                       <Loader2 className="w-4 h-4 animate-spin inline" />
                     </span>
                   ) : (
-                    <input
-                      type="number"
-                      value={ing.pricePerKg}
-                      onChange={(e) => onIngredientChange(idx, 'pricePerKg', e.target.value)}
-                      className={`w-full text-right border rounded px-1 font-bold ${ing.isExternal ? 'text-orange-600 bg-orange-50 border-orange-200' : ''
-                        }`}
-                    />
+                    <div>
+                      < input
+                        type="number"
+                        value={ing.pricePerKg}
+                        onChange={(e) => onIngredientChange(idx, 'pricePerKg', e.target.value)}
+                        className={`w-full min-w-[80px] text-right border rounded px-1 font-bold ${ing.isExternal ? 'text-orange-600 bg-orange-50 border-orange-200' : ''
+                          }`}
+                      />
+                    </div>
                   )}
                 </td>
 
@@ -215,7 +223,6 @@ export const IngredientTable = ({
                       variant="ghost"
                       size="sm"
                       onClick={() => onAiSearch?.(idx)}
-                      // disabled={searchingIndex !== null && searchingIndex !== undefined}
                       className={`text-xs px-2 py-1 h-7 ${ing.status === 'pending' || ing.status === 'error' || ing.pricePerKg === 0
                         ? 'text-blue-600 hover:text-blue-700 hover:bg-blue-50'
                         : 'text-slate-400 hover:text-slate-500'
@@ -238,6 +245,14 @@ export const IngredientTable = ({
                   />
                 </td>
 
+                {/* 調整後単価 */}
+                <td className="px-4 py-3 text-right bg-amber-50/30 font-mono text-slate-600">
+                  {ing.yieldRate > 0
+                    ? `¥${Math.round(ing.pricePerKg / (ing.yieldRate / 100)).toLocaleString()}`
+                    : '-'}
+                  <span className="text-[10px] ml-0.5 text-slate-400">/kg</span>
+                </td>
+
                 {/* 原価小計 */}
                 <td className="px-4 py-3 text-right font-bold">
                   {ing.status === 'done' ? `¥${Math.round(ing.cost).toLocaleString()}` : '-'}
@@ -255,7 +270,21 @@ export const IngredientTable = ({
                   </Button>
                 </td>
               </tr>
-            ))}
+            })}
+            {ingredients.length > 0 && (
+              <tr className="bg-slate-50 border-t-2 border-slate-300">
+                <td colSpan={4} className="px-4 py-3 text-right font-bold text-slate-700">合計</td>
+                <td className="px-4 py-3 text-right bg-blue-50/30 font-mono font-bold text-slate-700">
+                  {ingredients.reduce((sum, ing) => sum + ing.weightKg, 0).toFixed(3)}
+                  <span className="text-[10px] ml-0.5">kg</span>
+                </td>
+                <td colSpan={4}></td>
+                <td className="px-4 py-3 text-right font-bold text-slate-700">
+                  ¥{Math.round(ingredients.reduce((sum, ing) => sum + ing.cost, 0)).toLocaleString()}
+                </td>
+                <td></td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

@@ -26,8 +26,8 @@ import { MEAL_TYPES, type MealTypeCode } from '../../lib/constants'
 import {
   getDishDetail,
   getKondateList,
-  type KondateListItem,
 } from '../../_actions/kondate-actions'
+import type { KondateListItem } from '../../types'
 import { importKondateCsv } from '../../_actions/csv-import-actions'
 import type { KgMenuRecipeWithRelations } from '../../types'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'

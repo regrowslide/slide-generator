@@ -1,19 +1,19 @@
 'use client'
 
-import {useState, useEffect} from 'react'
-import {Save, Loader2, FileImage, Plus} from 'lucide-react'
-import {Button} from '@shadcn/ui/button'
-import type {RecipeWithIngredients, CostCalculationResult, IngredientMaster, RecipeSettings} from '../../types'
-import {getRecipes} from '../../server-actions/recipe-actions'
-import {getIngredientMasters} from '../../server-actions/ingredient-master-actions'
-import {IngredientTable} from './IngredientTable'
-import {ManufacturingParams} from './ManufacturingParams'
-import {CostSummaryPanel} from './CostSummaryPanel'
-import {AiAnalysisStatus} from './AiAnalysisStatus'
-import {RecipeSelectView} from './RecipeSelectView'
-import {RecipeInputPanel} from './RecipeInputPanel'
-import {convertToKg} from '../../lib/unit-converter'
-import {useRecipeAnalysis, useRecipeEditor, useProfitMarginAlert, type ViewMode} from '../../hooks'
+import { useState, useEffect, useMemo } from 'react'
+import { Save, Loader2, FileImage, Plus } from 'lucide-react'
+import { Button } from '@shadcn/ui/button'
+import type { RecipeWithIngredients, CostCalculationResult, IngredientMaster, RecipeSettings } from '../../types'
+import { getRecipes } from '../../server-actions/recipe-actions'
+import { getIngredientMasters } from '../../server-actions/ingredient-master-actions'
+import { IngredientTable } from './IngredientTable'
+import { ManufacturingParams } from './ManufacturingParams'
+import { CostSummaryPanel } from './CostSummaryPanel'
+import { AiAnalysisStatus } from './AiAnalysisStatus'
+import { RecipeSelectView } from './RecipeSelectView'
+import { RecipeInputPanel } from './RecipeInputPanel'
+import { convertToKg } from '../../lib/unit-converter'
+import { useRecipeAnalysis, useRecipeEditor, useProfitMarginAlert, type ViewMode } from '../../hooks'
 
 export const RecipeManager = () => {
   const [recipe, setRecipe] = useState<RecipeWithIngredients | null>(null)
@@ -52,13 +52,17 @@ export const RecipeManager = () => {
   }, [])
 
   // レシピ合計量を計算（参考値）
-  const totalRecipeWeightG = recipe
-    ? recipe.RcRecipeIngredient.reduce((sum, ing) => sum + convertToKg(ing.amount, ing.unit) * 1000, 0)
-    : 0
+  const totalRecipeWeightG = useMemo(() =>
+    recipe
+      ? recipe.RcRecipeIngredient.reduce((sum, ing) => sum + convertToKg(ing.amount, ing.unit) * 1000, 0)
+      : 0,
+    [recipe]
+  )
 
   // 原価計算結果を生成
-  const calculatedData: CostCalculationResult | null = recipe
-    ? {
+  const calculatedData: CostCalculationResult | null = useMemo(() =>
+    recipe
+      ? {
         detailedIngredients: recipe.RcRecipeIngredient.map((ing) => ({
           ...ing,
           weightKg: convertToKg(ing.amount, ing.unit),
@@ -73,24 +77,27 @@ export const RecipeManager = () => {
         totalCostPerPack: recipe.totalCostPerPack ?? 0,
         sellingPrice: recipe.sellingPrice ?? 0,
       }
-    : null
+      : null,
+    [recipe, totalRecipeWeightG]
+  )
 
   // レシピ設定を生成
   const settings: RecipeSettings | null = recipe
     ? {
-        lossRate: recipe.lossRate,
-        packWeightG: recipe.packWeightG,
-        packagingCost: recipe.packagingCost,
-        processingCost: recipe.processingCost,
-        profitMargin: recipe.profitMargin,
-        otherCost: recipe.otherCost,
-        productionWeightG: recipe.productionWeightG,
-        inputMode: (recipe.inputMode as 'fillAmount' | 'packCount') ?? 'fillAmount',
-      }
+      lossRate: recipe.lossRate,
+      packWeightG: recipe.packWeightG,
+      packagingCost: recipe.packagingCost,
+      processingCost: recipe.processingCost,
+      profitMargin: recipe.profitMargin,
+      otherCost: recipe.otherCost,
+      productionWeightG: recipe.productionWeightG,
+      inputMode: (recipe.inputMode as 'fillAmount' | 'packCount') ?? 'fillAmount',
+      packCount: recipe.packCount ?? 0,
+    }
     : null
 
   // 粗利アラート
-  const {alert: profitAlert} = useProfitMarginAlert({
+  const { alert: profitAlert } = useProfitMarginAlert({
     packCount: recipe?.packCount ?? 0,
     profitMargin: recipe?.profitMargin ?? 0,
     sellingPrice: recipe?.sellingPrice ?? 0,
@@ -115,7 +122,7 @@ export const RecipeManager = () => {
   }
 
   return (
-    <div className="h-full flex flex-col gap-6">
+    <div className="h-full flex flex-col gap-6 ">
       {/* ヘッダー */}
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
         {/* 戻るボタン */}
@@ -222,6 +229,7 @@ export const RecipeManager = () => {
                 calculatedData={calculatedData}
                 profitAlert={profitAlert}
                 onRecalculate={editor.handleRecalculateCosts}
+                onAutoSetProfitMargin={editor.handleAutoSetProfitMargin}
               />
             </div>
           )}

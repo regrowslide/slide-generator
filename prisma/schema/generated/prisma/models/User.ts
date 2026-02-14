@@ -33,12 +33,10 @@ export type UserAvgAggregateOutputType = {
   rentaStoreId: number | null
   shopId: number | null
   damageNameMasterId: number | null
-  tbmBaseId: number | null
-  departmentId: number | null
-  tbmVehicleId: number | null
   counselingStoreId: number | null
   aidocumentCompanyId: number | null
   storeId: number | null
+  departmentId: number | null
 }
 
 export type UserSumAggregateOutputType = {
@@ -48,12 +46,10 @@ export type UserSumAggregateOutputType = {
   rentaStoreId: number | null
   shopId: number | null
   damageNameMasterId: number | null
-  tbmBaseId: number | null
-  departmentId: number | null
-  tbmVehicleId: number | null
   counselingStoreId: number | null
   aidocumentCompanyId: number | null
   storeId: number | null
+  departmentId: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -87,12 +83,10 @@ export type UserMinAggregateOutputType = {
   phone: string | null
   avatar: string | null
   bcc: string | null
-  tbmBaseId: number | null
-  departmentId: number | null
-  tbmVehicleId: number | null
   counselingStoreId: number | null
   aidocumentCompanyId: number | null
   storeId: number | null
+  departmentId: number | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -126,12 +120,10 @@ export type UserMaxAggregateOutputType = {
   phone: string | null
   avatar: string | null
   bcc: string | null
-  tbmBaseId: number | null
-  departmentId: number | null
-  tbmVehicleId: number | null
   counselingStoreId: number | null
   aidocumentCompanyId: number | null
   storeId: number | null
+  departmentId: number | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -166,12 +158,10 @@ export type UserCountAggregateOutputType = {
   phone: number
   avatar: number
   bcc: number
-  tbmBaseId: number
-  departmentId: number
-  tbmVehicleId: number
   counselingStoreId: number
   aidocumentCompanyId: number
   storeId: number
+  departmentId: number
   _all: number
 }
 
@@ -183,12 +173,10 @@ export type UserAvgAggregateInputType = {
   rentaStoreId?: true
   shopId?: true
   damageNameMasterId?: true
-  tbmBaseId?: true
-  departmentId?: true
-  tbmVehicleId?: true
   counselingStoreId?: true
   aidocumentCompanyId?: true
   storeId?: true
+  departmentId?: true
 }
 
 export type UserSumAggregateInputType = {
@@ -198,12 +186,10 @@ export type UserSumAggregateInputType = {
   rentaStoreId?: true
   shopId?: true
   damageNameMasterId?: true
-  tbmBaseId?: true
-  departmentId?: true
-  tbmVehicleId?: true
   counselingStoreId?: true
   aidocumentCompanyId?: true
   storeId?: true
+  departmentId?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -237,12 +223,10 @@ export type UserMinAggregateInputType = {
   phone?: true
   avatar?: true
   bcc?: true
-  tbmBaseId?: true
-  departmentId?: true
-  tbmVehicleId?: true
   counselingStoreId?: true
   aidocumentCompanyId?: true
   storeId?: true
+  departmentId?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -276,12 +260,10 @@ export type UserMaxAggregateInputType = {
   phone?: true
   avatar?: true
   bcc?: true
-  tbmBaseId?: true
-  departmentId?: true
-  tbmVehicleId?: true
   counselingStoreId?: true
   aidocumentCompanyId?: true
   storeId?: true
+  departmentId?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -316,12 +298,10 @@ export type UserCountAggregateInputType = {
   phone?: true
   avatar?: true
   bcc?: true
-  tbmBaseId?: true
-  departmentId?: true
-  tbmVehicleId?: true
   counselingStoreId?: true
   aidocumentCompanyId?: true
   storeId?: true
+  departmentId?: true
   _all?: true
 }
 
@@ -443,12 +423,10 @@ export type UserGroupByOutputType = {
   phone: string | null
   avatar: string | null
   bcc: string | null
-  tbmBaseId: number | null
-  departmentId: number | null
-  tbmVehicleId: number | null
   counselingStoreId: number | null
   aidocumentCompanyId: number | null
   storeId: number | null
+  departmentId: number | null
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -506,22 +484,11 @@ export type UserWhereInput = {
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   avatar?: Prisma.StringNullableFilter<"User"> | string | null
   bcc?: Prisma.StringNullableFilter<"User"> | string | null
-  tbmBaseId?: Prisma.IntNullableFilter<"User"> | number | null
-  departmentId?: Prisma.IntNullableFilter<"User"> | number | null
-  tbmVehicleId?: Prisma.IntNullableFilter<"User"> | number | null
   counselingStoreId?: Prisma.IntNullableFilter<"User"> | number | null
   aidocumentCompanyId?: Prisma.IntNullableFilter<"User"> | number | null
   storeId?: Prisma.IntNullableFilter<"User"> | number | null
+  departmentId?: Prisma.IntNullableFilter<"User"> | number | null
   UserRole?: Prisma.UserRoleListRelationFilter
-  TbmBase?: Prisma.XOR<Prisma.TbmBaseNullableScalarRelationFilter, Prisma.TbmBaseWhereInput> | null
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleListRelationFilter
-  UserWorkStatus?: Prisma.UserWorkStatusListRelationFilter
-  OdometerInput?: Prisma.OdometerInputListRelationFilter
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryListRelationFilter
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryListRelationFilter
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordListRelationFilter
-  Department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
-  TbmVehicle?: Prisma.XOR<Prisma.TbmVehicleNullableScalarRelationFilter, Prisma.TbmVehicleWhereInput> | null
   SbmReservation?: Prisma.SbmReservationListRelationFilter
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentListRelationFilter
   ExerciseMaster?: Prisma.ExerciseMasterListRelationFilter
@@ -535,6 +502,7 @@ export type UserWhereInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventListRelationFilter
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceListRelationFilter
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceListRelationFilter
+  department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
 }
 
 export type UserOrderByWithRelationInput = {
@@ -569,22 +537,11 @@ export type UserOrderByWithRelationInput = {
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
   bcc?: Prisma.SortOrderInput | Prisma.SortOrder
-  tbmBaseId?: Prisma.SortOrderInput | Prisma.SortOrder
-  departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
-  tbmVehicleId?: Prisma.SortOrderInput | Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrderInput | Prisma.SortOrder
   aidocumentCompanyId?: Prisma.SortOrderInput | Prisma.SortOrder
   storeId?: Prisma.SortOrderInput | Prisma.SortOrder
+  departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   UserRole?: Prisma.UserRoleOrderByRelationAggregateInput
-  TbmBase?: Prisma.TbmBaseOrderByWithRelationInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleOrderByRelationAggregateInput
-  UserWorkStatus?: Prisma.UserWorkStatusOrderByRelationAggregateInput
-  OdometerInput?: Prisma.OdometerInputOrderByRelationAggregateInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryOrderByRelationAggregateInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryOrderByRelationAggregateInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordOrderByRelationAggregateInput
-  Department?: Prisma.DepartmentOrderByWithRelationInput
-  TbmVehicle?: Prisma.TbmVehicleOrderByWithRelationInput
   SbmReservation?: Prisma.SbmReservationOrderByRelationAggregateInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentOrderByRelationAggregateInput
   ExerciseMaster?: Prisma.ExerciseMasterOrderByRelationAggregateInput
@@ -598,6 +555,7 @@ export type UserOrderByWithRelationInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventOrderByRelationAggregateInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceOrderByRelationAggregateInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceOrderByRelationAggregateInput
+  department?: Prisma.DepartmentOrderByWithRelationInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -635,22 +593,11 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   avatar?: Prisma.StringNullableFilter<"User"> | string | null
   bcc?: Prisma.StringNullableFilter<"User"> | string | null
-  tbmBaseId?: Prisma.IntNullableFilter<"User"> | number | null
-  departmentId?: Prisma.IntNullableFilter<"User"> | number | null
-  tbmVehicleId?: Prisma.IntNullableFilter<"User"> | number | null
   counselingStoreId?: Prisma.IntNullableFilter<"User"> | number | null
   aidocumentCompanyId?: Prisma.IntNullableFilter<"User"> | number | null
   storeId?: Prisma.IntNullableFilter<"User"> | number | null
+  departmentId?: Prisma.IntNullableFilter<"User"> | number | null
   UserRole?: Prisma.UserRoleListRelationFilter
-  TbmBase?: Prisma.XOR<Prisma.TbmBaseNullableScalarRelationFilter, Prisma.TbmBaseWhereInput> | null
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleListRelationFilter
-  UserWorkStatus?: Prisma.UserWorkStatusListRelationFilter
-  OdometerInput?: Prisma.OdometerInputListRelationFilter
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryListRelationFilter
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryListRelationFilter
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordListRelationFilter
-  Department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
-  TbmVehicle?: Prisma.XOR<Prisma.TbmVehicleNullableScalarRelationFilter, Prisma.TbmVehicleWhereInput> | null
   SbmReservation?: Prisma.SbmReservationListRelationFilter
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentListRelationFilter
   ExerciseMaster?: Prisma.ExerciseMasterListRelationFilter
@@ -664,6 +611,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   YamanokaiEventAsSL?: Prisma.YamanokaiEventListRelationFilter
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceListRelationFilter
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceListRelationFilter
+  department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
 }, "id" | "code" | "email" | "employeeCode">
 
 export type UserOrderByWithAggregationInput = {
@@ -698,12 +646,10 @@ export type UserOrderByWithAggregationInput = {
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
   bcc?: Prisma.SortOrderInput | Prisma.SortOrder
-  tbmBaseId?: Prisma.SortOrderInput | Prisma.SortOrder
-  departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
-  tbmVehicleId?: Prisma.SortOrderInput | Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrderInput | Prisma.SortOrder
   aidocumentCompanyId?: Prisma.SortOrderInput | Prisma.SortOrder
   storeId?: Prisma.SortOrderInput | Prisma.SortOrder
+  departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -746,12 +692,10 @@ export type UserScalarWhereWithAggregatesInput = {
   phone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   avatar?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   bcc?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  tbmBaseId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
-  departmentId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
-  tbmVehicleId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
   counselingStoreId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
   aidocumentCompanyId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
   storeId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
+  departmentId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
 }
 
 export type UserCreateInput = {
@@ -786,15 +730,6 @@ export type UserCreateInput = {
   avatar?: string | null
   bcc?: string | null
   UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
   SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
@@ -808,6 +743,7 @@ export type UserCreateInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -842,19 +778,11 @@ export type UserUncheckedCreateInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
   storeId?: number | null
+  departmentId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
   SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
@@ -899,15 +827,6 @@ export type UserUpdateInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
@@ -921,6 +840,7 @@ export type UserUpdateInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -955,19 +875,11 @@ export type UserUncheckedUpdateInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
@@ -1012,12 +924,10 @@ export type UserCreateManyInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
   storeId?: number | null
+  departmentId?: number | null
 }
 
 export type UserUpdateManyMutationInput = {
@@ -1085,12 +995,10 @@ export type UserUncheckedUpdateManyInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type UserListRelationFilter = {
@@ -1148,12 +1056,10 @@ export type UserCountOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   bcc?: Prisma.SortOrder
-  tbmBaseId?: Prisma.SortOrder
-  departmentId?: Prisma.SortOrder
-  tbmVehicleId?: Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrder
   aidocumentCompanyId?: Prisma.SortOrder
   storeId?: Prisma.SortOrder
+  departmentId?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
@@ -1163,12 +1069,10 @@ export type UserAvgOrderByAggregateInput = {
   rentaStoreId?: Prisma.SortOrder
   shopId?: Prisma.SortOrder
   damageNameMasterId?: Prisma.SortOrder
-  tbmBaseId?: Prisma.SortOrder
-  departmentId?: Prisma.SortOrder
-  tbmVehicleId?: Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrder
   aidocumentCompanyId?: Prisma.SortOrder
   storeId?: Prisma.SortOrder
+  departmentId?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -1202,12 +1106,10 @@ export type UserMaxOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   bcc?: Prisma.SortOrder
-  tbmBaseId?: Prisma.SortOrder
-  departmentId?: Prisma.SortOrder
-  tbmVehicleId?: Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrder
   aidocumentCompanyId?: Prisma.SortOrder
   storeId?: Prisma.SortOrder
+  departmentId?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -1241,12 +1143,10 @@ export type UserMinOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   bcc?: Prisma.SortOrder
-  tbmBaseId?: Prisma.SortOrder
-  departmentId?: Prisma.SortOrder
-  tbmVehicleId?: Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrder
   aidocumentCompanyId?: Prisma.SortOrder
   storeId?: Prisma.SortOrder
+  departmentId?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
@@ -1256,12 +1156,10 @@ export type UserSumOrderByAggregateInput = {
   rentaStoreId?: Prisma.SortOrder
   shopId?: Prisma.SortOrder
   damageNameMasterId?: Prisma.SortOrder
-  tbmBaseId?: Prisma.SortOrder
-  departmentId?: Prisma.SortOrder
-  tbmVehicleId?: Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrder
   aidocumentCompanyId?: Prisma.SortOrder
   storeId?: Prisma.SortOrder
+  departmentId?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -1524,176 +1422,6 @@ export type UserUpdateOneRequiredWithoutUserRoleNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUserRoleInput, Prisma.UserUpdateWithoutUserRoleInput>, Prisma.UserUncheckedUpdateWithoutUserRoleInput>
 }
 
-export type UserCreateNestedManyWithoutTbmBaseInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTbmBaseInput, Prisma.UserUncheckedCreateWithoutTbmBaseInput> | Prisma.UserCreateWithoutTbmBaseInput[] | Prisma.UserUncheckedCreateWithoutTbmBaseInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTbmBaseInput | Prisma.UserCreateOrConnectWithoutTbmBaseInput[]
-  createMany?: Prisma.UserCreateManyTbmBaseInputEnvelope
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-}
-
-export type UserUncheckedCreateNestedManyWithoutTbmBaseInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTbmBaseInput, Prisma.UserUncheckedCreateWithoutTbmBaseInput> | Prisma.UserCreateWithoutTbmBaseInput[] | Prisma.UserUncheckedCreateWithoutTbmBaseInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTbmBaseInput | Prisma.UserCreateOrConnectWithoutTbmBaseInput[]
-  createMany?: Prisma.UserCreateManyTbmBaseInputEnvelope
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-}
-
-export type UserUpdateManyWithoutTbmBaseNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTbmBaseInput, Prisma.UserUncheckedCreateWithoutTbmBaseInput> | Prisma.UserCreateWithoutTbmBaseInput[] | Prisma.UserUncheckedCreateWithoutTbmBaseInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTbmBaseInput | Prisma.UserCreateOrConnectWithoutTbmBaseInput[]
-  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutTbmBaseInput | Prisma.UserUpsertWithWhereUniqueWithoutTbmBaseInput[]
-  createMany?: Prisma.UserCreateManyTbmBaseInputEnvelope
-  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  update?: Prisma.UserUpdateWithWhereUniqueWithoutTbmBaseInput | Prisma.UserUpdateWithWhereUniqueWithoutTbmBaseInput[]
-  updateMany?: Prisma.UserUpdateManyWithWhereWithoutTbmBaseInput | Prisma.UserUpdateManyWithWhereWithoutTbmBaseInput[]
-  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
-}
-
-export type UserUncheckedUpdateManyWithoutTbmBaseNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTbmBaseInput, Prisma.UserUncheckedCreateWithoutTbmBaseInput> | Prisma.UserCreateWithoutTbmBaseInput[] | Prisma.UserUncheckedCreateWithoutTbmBaseInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTbmBaseInput | Prisma.UserCreateOrConnectWithoutTbmBaseInput[]
-  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutTbmBaseInput | Prisma.UserUpsertWithWhereUniqueWithoutTbmBaseInput[]
-  createMany?: Prisma.UserCreateManyTbmBaseInputEnvelope
-  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  update?: Prisma.UserUpdateWithWhereUniqueWithoutTbmBaseInput | Prisma.UserUpdateWithWhereUniqueWithoutTbmBaseInput[]
-  updateMany?: Prisma.UserUpdateManyWithWhereWithoutTbmBaseInput | Prisma.UserUpdateManyWithWhereWithoutTbmBaseInput[]
-  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
-}
-
-export type UserCreateNestedManyWithoutTbmVehicleInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTbmVehicleInput, Prisma.UserUncheckedCreateWithoutTbmVehicleInput> | Prisma.UserCreateWithoutTbmVehicleInput[] | Prisma.UserUncheckedCreateWithoutTbmVehicleInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTbmVehicleInput | Prisma.UserCreateOrConnectWithoutTbmVehicleInput[]
-  createMany?: Prisma.UserCreateManyTbmVehicleInputEnvelope
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-}
-
-export type UserUncheckedCreateNestedManyWithoutTbmVehicleInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTbmVehicleInput, Prisma.UserUncheckedCreateWithoutTbmVehicleInput> | Prisma.UserCreateWithoutTbmVehicleInput[] | Prisma.UserUncheckedCreateWithoutTbmVehicleInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTbmVehicleInput | Prisma.UserCreateOrConnectWithoutTbmVehicleInput[]
-  createMany?: Prisma.UserCreateManyTbmVehicleInputEnvelope
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-}
-
-export type UserUpdateManyWithoutTbmVehicleNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTbmVehicleInput, Prisma.UserUncheckedCreateWithoutTbmVehicleInput> | Prisma.UserCreateWithoutTbmVehicleInput[] | Prisma.UserUncheckedCreateWithoutTbmVehicleInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTbmVehicleInput | Prisma.UserCreateOrConnectWithoutTbmVehicleInput[]
-  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutTbmVehicleInput | Prisma.UserUpsertWithWhereUniqueWithoutTbmVehicleInput[]
-  createMany?: Prisma.UserCreateManyTbmVehicleInputEnvelope
-  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  update?: Prisma.UserUpdateWithWhereUniqueWithoutTbmVehicleInput | Prisma.UserUpdateWithWhereUniqueWithoutTbmVehicleInput[]
-  updateMany?: Prisma.UserUpdateManyWithWhereWithoutTbmVehicleInput | Prisma.UserUpdateManyWithWhereWithoutTbmVehicleInput[]
-  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
-}
-
-export type UserUncheckedUpdateManyWithoutTbmVehicleNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTbmVehicleInput, Prisma.UserUncheckedCreateWithoutTbmVehicleInput> | Prisma.UserCreateWithoutTbmVehicleInput[] | Prisma.UserUncheckedCreateWithoutTbmVehicleInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTbmVehicleInput | Prisma.UserCreateOrConnectWithoutTbmVehicleInput[]
-  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutTbmVehicleInput | Prisma.UserUpsertWithWhereUniqueWithoutTbmVehicleInput[]
-  createMany?: Prisma.UserCreateManyTbmVehicleInputEnvelope
-  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  update?: Prisma.UserUpdateWithWhereUniqueWithoutTbmVehicleInput | Prisma.UserUpdateWithWhereUniqueWithoutTbmVehicleInput[]
-  updateMany?: Prisma.UserUpdateManyWithWhereWithoutTbmVehicleInput | Prisma.UserUpdateManyWithWhereWithoutTbmVehicleInput[]
-  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
-}
-
-export type UserCreateNestedOneWithoutTbmRefuelHistoryInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTbmRefuelHistoryInput, Prisma.UserUncheckedCreateWithoutTbmRefuelHistoryInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTbmRefuelHistoryInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneRequiredWithoutTbmRefuelHistoryNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTbmRefuelHistoryInput, Prisma.UserUncheckedCreateWithoutTbmRefuelHistoryInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTbmRefuelHistoryInput
-  upsert?: Prisma.UserUpsertWithoutTbmRefuelHistoryInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTbmRefuelHistoryInput, Prisma.UserUpdateWithoutTbmRefuelHistoryInput>, Prisma.UserUncheckedUpdateWithoutTbmRefuelHistoryInput>
-}
-
-export type UserCreateNestedOneWithoutTbmCarWashHistoryInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTbmCarWashHistoryInput, Prisma.UserUncheckedCreateWithoutTbmCarWashHistoryInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTbmCarWashHistoryInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneRequiredWithoutTbmCarWashHistoryNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTbmCarWashHistoryInput, Prisma.UserUncheckedCreateWithoutTbmCarWashHistoryInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTbmCarWashHistoryInput
-  upsert?: Prisma.UserUpsertWithoutTbmCarWashHistoryInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTbmCarWashHistoryInput, Prisma.UserUpdateWithoutTbmCarWashHistoryInput>, Prisma.UserUncheckedUpdateWithoutTbmCarWashHistoryInput>
-}
-
-export type UserCreateNestedOneWithoutTbmDriveScheduleInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTbmDriveScheduleInput, Prisma.UserUncheckedCreateWithoutTbmDriveScheduleInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTbmDriveScheduleInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneWithoutTbmDriveScheduleNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTbmDriveScheduleInput, Prisma.UserUncheckedCreateWithoutTbmDriveScheduleInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTbmDriveScheduleInput
-  upsert?: Prisma.UserUpsertWithoutTbmDriveScheduleInput
-  disconnect?: Prisma.UserWhereInput | boolean
-  delete?: Prisma.UserWhereInput | boolean
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTbmDriveScheduleInput, Prisma.UserUpdateWithoutTbmDriveScheduleInput>, Prisma.UserUncheckedUpdateWithoutTbmDriveScheduleInput>
-}
-
-export type UserCreateNestedOneWithoutOdometerInputInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutOdometerInputInput, Prisma.UserUncheckedCreateWithoutOdometerInputInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOdometerInputInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneRequiredWithoutOdometerInputNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutOdometerInputInput, Prisma.UserUncheckedCreateWithoutOdometerInputInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOdometerInputInput
-  upsert?: Prisma.UserUpsertWithoutOdometerInputInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOdometerInputInput, Prisma.UserUpdateWithoutOdometerInputInput>, Prisma.UserUncheckedUpdateWithoutOdometerInputInput>
-}
-
-export type UserCreateNestedOneWithoutUserWorkStatusInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutUserWorkStatusInput, Prisma.UserUncheckedCreateWithoutUserWorkStatusInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserWorkStatusInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneRequiredWithoutUserWorkStatusNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutUserWorkStatusInput, Prisma.UserUncheckedCreateWithoutUserWorkStatusInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserWorkStatusInput
-  upsert?: Prisma.UserUpsertWithoutUserWorkStatusInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUserWorkStatusInput, Prisma.UserUpdateWithoutUserWorkStatusInput>, Prisma.UserUncheckedUpdateWithoutUserWorkStatusInput>
-}
-
-export type UserCreateNestedOneWithoutKyuyoTableRecordInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutKyuyoTableRecordInput, Prisma.UserUncheckedCreateWithoutKyuyoTableRecordInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutKyuyoTableRecordInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneRequiredWithoutKyuyoTableRecordNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutKyuyoTableRecordInput, Prisma.UserUncheckedCreateWithoutKyuyoTableRecordInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutKyuyoTableRecordInput
-  upsert?: Prisma.UserUpsertWithoutKyuyoTableRecordInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutKyuyoTableRecordInput, Prisma.UserUpdateWithoutKyuyoTableRecordInput>, Prisma.UserUncheckedUpdateWithoutKyuyoTableRecordInput>
-}
-
 export type UserCreateNestedOneWithoutExerciseMasterInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutExerciseMasterInput, Prisma.UserUncheckedCreateWithoutExerciseMasterInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutExerciseMasterInput
@@ -1814,15 +1542,6 @@ export type UserCreateWithoutAidocumentCompanyInput = {
   avatar?: string | null
   bcc?: string | null
   UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
   SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
@@ -1835,6 +1554,7 @@ export type UserCreateWithoutAidocumentCompanyInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAidocumentCompanyInput = {
@@ -1869,18 +1589,10 @@ export type UserUncheckedCreateWithoutAidocumentCompanyInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
   counselingStoreId?: number | null
   storeId?: number | null
+  departmentId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
   SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
@@ -1954,12 +1666,10 @@ export type UserScalarWhereInput = {
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   avatar?: Prisma.StringNullableFilter<"User"> | string | null
   bcc?: Prisma.StringNullableFilter<"User"> | string | null
-  tbmBaseId?: Prisma.IntNullableFilter<"User"> | number | null
-  departmentId?: Prisma.IntNullableFilter<"User"> | number | null
-  tbmVehicleId?: Prisma.IntNullableFilter<"User"> | number | null
   counselingStoreId?: Prisma.IntNullableFilter<"User"> | number | null
   aidocumentCompanyId?: Prisma.IntNullableFilter<"User"> | number | null
   storeId?: Prisma.IntNullableFilter<"User"> | number | null
+  departmentId?: Prisma.IntNullableFilter<"User"> | number | null
 }
 
 export type UserCreateWithoutCounselingStoreInput = {
@@ -1994,15 +1704,6 @@ export type UserCreateWithoutCounselingStoreInput = {
   avatar?: string | null
   bcc?: string | null
   UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
   SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
@@ -2015,6 +1716,7 @@ export type UserCreateWithoutCounselingStoreInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCounselingStoreInput = {
@@ -2049,18 +1751,10 @@ export type UserUncheckedCreateWithoutCounselingStoreInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
   aidocumentCompanyId?: number | null
   storeId?: number | null
+  departmentId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
   SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
@@ -2131,15 +1825,6 @@ export type UserCreateWithoutCounselingSlotInput = {
   avatar?: string | null
   bcc?: string | null
   UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
   SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
@@ -2152,6 +1837,7 @@ export type UserCreateWithoutCounselingSlotInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCounselingSlotInput = {
@@ -2186,19 +1872,11 @@ export type UserUncheckedCreateWithoutCounselingSlotInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
   storeId?: number | null
+  departmentId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
   SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
@@ -2258,15 +1936,6 @@ export type UserUpdateWithoutCounselingSlotInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
@@ -2279,6 +1948,7 @@ export type UserUpdateWithoutCounselingSlotInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCounselingSlotInput = {
@@ -2313,19 +1983,11 @@ export type UserUncheckedUpdateWithoutCounselingSlotInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
@@ -2369,15 +2031,6 @@ export type UserCreateWithoutSbmReservationInput = {
   avatar?: string | null
   bcc?: string | null
   UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
   WorkoutLog?: Prisma.WorkoutLogCreateNestedManyWithoutUserInput
@@ -2390,6 +2043,7 @@ export type UserCreateWithoutSbmReservationInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSbmReservationInput = {
@@ -2424,19 +2078,11 @@ export type UserUncheckedCreateWithoutSbmReservationInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
   storeId?: number | null
+  departmentId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
   WorkoutLog?: Prisma.WorkoutLogUncheckedCreateNestedManyWithoutUserInput
@@ -2496,15 +2142,6 @@ export type UserUpdateWithoutSbmReservationInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
   WorkoutLog?: Prisma.WorkoutLogUpdateManyWithoutUserNestedInput
@@ -2517,6 +2154,7 @@ export type UserUpdateWithoutSbmReservationInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSbmReservationInput = {
@@ -2551,19 +2189,11 @@ export type UserUncheckedUpdateWithoutSbmReservationInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
   WorkoutLog?: Prisma.WorkoutLogUncheckedUpdateManyWithoutUserNestedInput
@@ -2607,15 +2237,6 @@ export type UserCreateWithoutSbmReservationChangeHistoryInput = {
   avatar?: string | null
   bcc?: string | null
   UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
   SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
@@ -2628,6 +2249,7 @@ export type UserCreateWithoutSbmReservationChangeHistoryInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSbmReservationChangeHistoryInput = {
@@ -2662,19 +2284,11 @@ export type UserUncheckedCreateWithoutSbmReservationChangeHistoryInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
   storeId?: number | null
+  departmentId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
   SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
@@ -2734,15 +2348,6 @@ export type UserUpdateWithoutSbmReservationChangeHistoryInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
@@ -2755,6 +2360,7 @@ export type UserUpdateWithoutSbmReservationChangeHistoryInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSbmReservationChangeHistoryInput = {
@@ -2789,19 +2395,11 @@ export type UserUncheckedUpdateWithoutSbmReservationChangeHistoryInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
@@ -2845,15 +2443,6 @@ export type UserCreateWithoutSbmDeliveryAssignmentInput = {
   avatar?: string | null
   bcc?: string | null
   UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
   SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
   WorkoutLog?: Prisma.WorkoutLogCreateNestedManyWithoutUserInput
@@ -2866,6 +2455,7 @@ export type UserCreateWithoutSbmDeliveryAssignmentInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSbmDeliveryAssignmentInput = {
@@ -2900,19 +2490,11 @@ export type UserUncheckedCreateWithoutSbmDeliveryAssignmentInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
   storeId?: number | null
+  departmentId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
   SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
   WorkoutLog?: Prisma.WorkoutLogUncheckedCreateNestedManyWithoutUserInput
@@ -2972,15 +2554,6 @@ export type UserUpdateWithoutSbmDeliveryAssignmentInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
   WorkoutLog?: Prisma.WorkoutLogUpdateManyWithoutUserNestedInput
@@ -2993,6 +2566,7 @@ export type UserUpdateWithoutSbmDeliveryAssignmentInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSbmDeliveryAssignmentInput = {
@@ -3027,19 +2601,11 @@ export type UserUncheckedUpdateWithoutSbmDeliveryAssignmentInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
   WorkoutLog?: Prisma.WorkoutLogUncheckedUpdateManyWithoutUserNestedInput
@@ -3083,14 +2649,6 @@ export type UserCreateWithoutDepartmentInput = {
   avatar?: string | null
   bcc?: string | null
   UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
   SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
@@ -3138,18 +2696,10 @@ export type UserUncheckedCreateWithoutDepartmentInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
   storeId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
   SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
@@ -3220,15 +2770,6 @@ export type UserCreateWithoutStoreInput = {
   avatar?: string | null
   bcc?: string | null
   UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
   SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
@@ -3241,6 +2782,7 @@ export type UserCreateWithoutStoreInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutStoreInput = {
@@ -3275,18 +2817,10 @@ export type UserUncheckedCreateWithoutStoreInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  departmentId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
   SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
@@ -3356,15 +2890,6 @@ export type UserCreateWithoutUserRoleInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
   SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
@@ -3378,6 +2903,7 @@ export type UserCreateWithoutUserRoleInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUserRoleInput = {
@@ -3412,18 +2938,10 @@ export type UserUncheckedCreateWithoutUserRoleInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
   storeId?: number | null
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
+  departmentId?: number | null
   SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
@@ -3483,15 +3001,6 @@ export type UserUpdateWithoutUserRoleInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
@@ -3505,6 +3014,7 @@ export type UserUpdateWithoutUserRoleInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUserRoleInput = {
@@ -3539,1720 +3049,10 @@ export type UserUncheckedUpdateWithoutUserRoleInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
-  SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
-  ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
-  WorkoutLog?: Prisma.WorkoutLogUncheckedUpdateManyWithoutUserNestedInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedUpdateManyWithoutUserNestedInput
-  CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
-}
-
-export type UserCreateWithoutTbmBaseInput = {
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
-  SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
-  ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
-  WorkoutLog?: Prisma.WorkoutLogCreateNestedManyWithoutUserInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
-  CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
-  CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
-  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
-}
-
-export type UserUncheckedCreateWithoutTbmBaseInput = {
-  id?: number
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
-  counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
-  storeId?: number | null
-  UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
-  SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
-  ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
-  WorkoutLog?: Prisma.WorkoutLogUncheckedCreateNestedManyWithoutUserInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedCreateNestedManyWithoutUserInput
-  CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
-}
-
-export type UserCreateOrConnectWithoutTbmBaseInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutTbmBaseInput, Prisma.UserUncheckedCreateWithoutTbmBaseInput>
-}
-
-export type UserCreateManyTbmBaseInputEnvelope = {
-  data: Prisma.UserCreateManyTbmBaseInput | Prisma.UserCreateManyTbmBaseInput[]
-  skipDuplicates?: boolean
-}
-
-export type UserUpsertWithWhereUniqueWithoutTbmBaseInput = {
-  where: Prisma.UserWhereUniqueInput
-  update: Prisma.XOR<Prisma.UserUpdateWithoutTbmBaseInput, Prisma.UserUncheckedUpdateWithoutTbmBaseInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutTbmBaseInput, Prisma.UserUncheckedCreateWithoutTbmBaseInput>
-}
-
-export type UserUpdateWithWhereUniqueWithoutTbmBaseInput = {
-  where: Prisma.UserWhereUniqueInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutTbmBaseInput, Prisma.UserUncheckedUpdateWithoutTbmBaseInput>
-}
-
-export type UserUpdateManyWithWhereWithoutTbmBaseInput = {
-  where: Prisma.UserScalarWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutTbmBaseInput>
-}
-
-export type UserCreateWithoutTbmVehicleInput = {
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
-  ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
-  WorkoutLog?: Prisma.WorkoutLogCreateNestedManyWithoutUserInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
-  CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
-  CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
-  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
-}
-
-export type UserUncheckedCreateWithoutTbmVehicleInput = {
-  id?: number
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
-  storeId?: number | null
-  UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
-  SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
-  ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
-  WorkoutLog?: Prisma.WorkoutLogUncheckedCreateNestedManyWithoutUserInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedCreateNestedManyWithoutUserInput
-  CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
-}
-
-export type UserCreateOrConnectWithoutTbmVehicleInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutTbmVehicleInput, Prisma.UserUncheckedCreateWithoutTbmVehicleInput>
-}
-
-export type UserCreateManyTbmVehicleInputEnvelope = {
-  data: Prisma.UserCreateManyTbmVehicleInput | Prisma.UserCreateManyTbmVehicleInput[]
-  skipDuplicates?: boolean
-}
-
-export type UserUpsertWithWhereUniqueWithoutTbmVehicleInput = {
-  where: Prisma.UserWhereUniqueInput
-  update: Prisma.XOR<Prisma.UserUpdateWithoutTbmVehicleInput, Prisma.UserUncheckedUpdateWithoutTbmVehicleInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutTbmVehicleInput, Prisma.UserUncheckedCreateWithoutTbmVehicleInput>
-}
-
-export type UserUpdateWithWhereUniqueWithoutTbmVehicleInput = {
-  where: Prisma.UserWhereUniqueInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutTbmVehicleInput, Prisma.UserUncheckedUpdateWithoutTbmVehicleInput>
-}
-
-export type UserUpdateManyWithWhereWithoutTbmVehicleInput = {
-  where: Prisma.UserScalarWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutTbmVehicleInput>
-}
-
-export type UserCreateWithoutTbmRefuelHistoryInput = {
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
-  SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
-  ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
-  WorkoutLog?: Prisma.WorkoutLogCreateNestedManyWithoutUserInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
-  CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
-  CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
-  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
-}
-
-export type UserUncheckedCreateWithoutTbmRefuelHistoryInput = {
-  id?: number
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
-  counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
-  storeId?: number | null
-  UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
-  SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
-  ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
-  WorkoutLog?: Prisma.WorkoutLogUncheckedCreateNestedManyWithoutUserInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedCreateNestedManyWithoutUserInput
-  CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
-}
-
-export type UserCreateOrConnectWithoutTbmRefuelHistoryInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutTbmRefuelHistoryInput, Prisma.UserUncheckedCreateWithoutTbmRefuelHistoryInput>
-}
-
-export type UserUpsertWithoutTbmRefuelHistoryInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutTbmRefuelHistoryInput, Prisma.UserUncheckedUpdateWithoutTbmRefuelHistoryInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutTbmRefuelHistoryInput, Prisma.UserUncheckedCreateWithoutTbmRefuelHistoryInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutTbmRefuelHistoryInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutTbmRefuelHistoryInput, Prisma.UserUncheckedUpdateWithoutTbmRefuelHistoryInput>
-}
-
-export type UserUpdateWithoutTbmRefuelHistoryInput = {
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
-  SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
-  ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
-  WorkoutLog?: Prisma.WorkoutLogUpdateManyWithoutUserNestedInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
-  CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
-  CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
-  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutTbmRefuelHistoryInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
-  SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
-  ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
-  WorkoutLog?: Prisma.WorkoutLogUncheckedUpdateManyWithoutUserNestedInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedUpdateManyWithoutUserNestedInput
-  CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
-}
-
-export type UserCreateWithoutTbmCarWashHistoryInput = {
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
-  SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
-  ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
-  WorkoutLog?: Prisma.WorkoutLogCreateNestedManyWithoutUserInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
-  CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
-  CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
-  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
-}
-
-export type UserUncheckedCreateWithoutTbmCarWashHistoryInput = {
-  id?: number
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
-  counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
-  storeId?: number | null
-  UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
-  SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
-  ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
-  WorkoutLog?: Prisma.WorkoutLogUncheckedCreateNestedManyWithoutUserInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedCreateNestedManyWithoutUserInput
-  CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
-}
-
-export type UserCreateOrConnectWithoutTbmCarWashHistoryInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutTbmCarWashHistoryInput, Prisma.UserUncheckedCreateWithoutTbmCarWashHistoryInput>
-}
-
-export type UserUpsertWithoutTbmCarWashHistoryInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutTbmCarWashHistoryInput, Prisma.UserUncheckedUpdateWithoutTbmCarWashHistoryInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutTbmCarWashHistoryInput, Prisma.UserUncheckedCreateWithoutTbmCarWashHistoryInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutTbmCarWashHistoryInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutTbmCarWashHistoryInput, Prisma.UserUncheckedUpdateWithoutTbmCarWashHistoryInput>
-}
-
-export type UserUpdateWithoutTbmCarWashHistoryInput = {
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
-  SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
-  ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
-  WorkoutLog?: Prisma.WorkoutLogUpdateManyWithoutUserNestedInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
-  CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
-  CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
-  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutTbmCarWashHistoryInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
-  SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
-  ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
-  WorkoutLog?: Prisma.WorkoutLogUncheckedUpdateManyWithoutUserNestedInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedUpdateManyWithoutUserNestedInput
-  CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
-}
-
-export type UserCreateWithoutTbmDriveScheduleInput = {
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
-  SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
-  ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
-  WorkoutLog?: Prisma.WorkoutLogCreateNestedManyWithoutUserInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
-  CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
-  CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
-  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
-}
-
-export type UserUncheckedCreateWithoutTbmDriveScheduleInput = {
-  id?: number
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
-  counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
-  storeId?: number | null
-  UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
-  SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
-  ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
-  WorkoutLog?: Prisma.WorkoutLogUncheckedCreateNestedManyWithoutUserInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedCreateNestedManyWithoutUserInput
-  CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
-}
-
-export type UserCreateOrConnectWithoutTbmDriveScheduleInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutTbmDriveScheduleInput, Prisma.UserUncheckedCreateWithoutTbmDriveScheduleInput>
-}
-
-export type UserUpsertWithoutTbmDriveScheduleInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutTbmDriveScheduleInput, Prisma.UserUncheckedUpdateWithoutTbmDriveScheduleInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutTbmDriveScheduleInput, Prisma.UserUncheckedCreateWithoutTbmDriveScheduleInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutTbmDriveScheduleInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutTbmDriveScheduleInput, Prisma.UserUncheckedUpdateWithoutTbmDriveScheduleInput>
-}
-
-export type UserUpdateWithoutTbmDriveScheduleInput = {
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
-  SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
-  ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
-  WorkoutLog?: Prisma.WorkoutLogUpdateManyWithoutUserNestedInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
-  CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
-  CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
-  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutTbmDriveScheduleInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
-  SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
-  ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
-  WorkoutLog?: Prisma.WorkoutLogUncheckedUpdateManyWithoutUserNestedInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedUpdateManyWithoutUserNestedInput
-  CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
-}
-
-export type UserCreateWithoutOdometerInputInput = {
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
-  SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
-  ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
-  WorkoutLog?: Prisma.WorkoutLogCreateNestedManyWithoutUserInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
-  CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
-  CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
-  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
-}
-
-export type UserUncheckedCreateWithoutOdometerInputInput = {
-  id?: number
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
-  counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
-  storeId?: number | null
-  UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
-  SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
-  ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
-  WorkoutLog?: Prisma.WorkoutLogUncheckedCreateNestedManyWithoutUserInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedCreateNestedManyWithoutUserInput
-  CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
-}
-
-export type UserCreateOrConnectWithoutOdometerInputInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutOdometerInputInput, Prisma.UserUncheckedCreateWithoutOdometerInputInput>
-}
-
-export type UserUpsertWithoutOdometerInputInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutOdometerInputInput, Prisma.UserUncheckedUpdateWithoutOdometerInputInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutOdometerInputInput, Prisma.UserUncheckedCreateWithoutOdometerInputInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutOdometerInputInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutOdometerInputInput, Prisma.UserUncheckedUpdateWithoutOdometerInputInput>
-}
-
-export type UserUpdateWithoutOdometerInputInput = {
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
-  SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
-  ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
-  WorkoutLog?: Prisma.WorkoutLogUpdateManyWithoutUserNestedInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
-  CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
-  CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
-  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutOdometerInputInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
-  SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
-  ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
-  WorkoutLog?: Prisma.WorkoutLogUncheckedUpdateManyWithoutUserNestedInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedUpdateManyWithoutUserNestedInput
-  CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
-}
-
-export type UserCreateWithoutUserWorkStatusInput = {
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
-  SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
-  ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
-  WorkoutLog?: Prisma.WorkoutLogCreateNestedManyWithoutUserInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
-  CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
-  CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
-  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
-}
-
-export type UserUncheckedCreateWithoutUserWorkStatusInput = {
-  id?: number
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
-  counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
-  storeId?: number | null
-  UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
-  SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
-  ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
-  WorkoutLog?: Prisma.WorkoutLogUncheckedCreateNestedManyWithoutUserInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedCreateNestedManyWithoutUserInput
-  CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
-}
-
-export type UserCreateOrConnectWithoutUserWorkStatusInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutUserWorkStatusInput, Prisma.UserUncheckedCreateWithoutUserWorkStatusInput>
-}
-
-export type UserUpsertWithoutUserWorkStatusInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutUserWorkStatusInput, Prisma.UserUncheckedUpdateWithoutUserWorkStatusInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutUserWorkStatusInput, Prisma.UserUncheckedCreateWithoutUserWorkStatusInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutUserWorkStatusInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutUserWorkStatusInput, Prisma.UserUncheckedUpdateWithoutUserWorkStatusInput>
-}
-
-export type UserUpdateWithoutUserWorkStatusInput = {
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
-  SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
-  ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
-  WorkoutLog?: Prisma.WorkoutLogUpdateManyWithoutUserNestedInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
-  CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
-  CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
-  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutUserWorkStatusInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
-  SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
-  ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
-  WorkoutLog?: Prisma.WorkoutLogUncheckedUpdateManyWithoutUserNestedInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedUpdateManyWithoutUserNestedInput
-  CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
-}
-
-export type UserCreateWithoutKyuyoTableRecordInput = {
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
-  SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
-  ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
-  WorkoutLog?: Prisma.WorkoutLogCreateNestedManyWithoutUserInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
-  CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
-  CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
-  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
-}
-
-export type UserUncheckedCreateWithoutKyuyoTableRecordInput = {
-  id?: number
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
-  counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
-  storeId?: number | null
-  UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
-  ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
-  WorkoutLog?: Prisma.WorkoutLogUncheckedCreateNestedManyWithoutUserInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedCreateNestedManyWithoutUserInput
-  CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
-}
-
-export type UserCreateOrConnectWithoutKyuyoTableRecordInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutKyuyoTableRecordInput, Prisma.UserUncheckedCreateWithoutKyuyoTableRecordInput>
-}
-
-export type UserUpsertWithoutKyuyoTableRecordInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutKyuyoTableRecordInput, Prisma.UserUncheckedUpdateWithoutKyuyoTableRecordInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutKyuyoTableRecordInput, Prisma.UserUncheckedCreateWithoutKyuyoTableRecordInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutKyuyoTableRecordInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutKyuyoTableRecordInput, Prisma.UserUncheckedUpdateWithoutKyuyoTableRecordInput>
-}
-
-export type UserUpdateWithoutKyuyoTableRecordInput = {
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
-  SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
-  ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
-  WorkoutLog?: Prisma.WorkoutLogUpdateManyWithoutUserNestedInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
-  CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
-  CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
-  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutKyuyoTableRecordInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
@@ -5297,15 +3097,6 @@ export type UserCreateWithoutExerciseMasterInput = {
   avatar?: string | null
   bcc?: string | null
   UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
   SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
   WorkoutLog?: Prisma.WorkoutLogCreateNestedManyWithoutUserInput
@@ -5318,6 +3109,7 @@ export type UserCreateWithoutExerciseMasterInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutExerciseMasterInput = {
@@ -5352,19 +3144,11 @@ export type UserUncheckedCreateWithoutExerciseMasterInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
   storeId?: number | null
+  departmentId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
   SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
   WorkoutLog?: Prisma.WorkoutLogUncheckedCreateNestedManyWithoutUserInput
@@ -5424,15 +3208,6 @@ export type UserUpdateWithoutExerciseMasterInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
   WorkoutLog?: Prisma.WorkoutLogUpdateManyWithoutUserNestedInput
@@ -5445,6 +3220,7 @@ export type UserUpdateWithoutExerciseMasterInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExerciseMasterInput = {
@@ -5479,19 +3255,11 @@ export type UserUncheckedUpdateWithoutExerciseMasterInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
   WorkoutLog?: Prisma.WorkoutLogUncheckedUpdateManyWithoutUserNestedInput
@@ -5535,15 +3303,6 @@ export type UserCreateWithoutWorkoutLogInput = {
   avatar?: string | null
   bcc?: string | null
   UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
   SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
@@ -5556,6 +3315,7 @@ export type UserCreateWithoutWorkoutLogInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWorkoutLogInput = {
@@ -5590,19 +3350,11 @@ export type UserUncheckedCreateWithoutWorkoutLogInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
   storeId?: number | null
+  departmentId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
   SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
@@ -5662,15 +3414,6 @@ export type UserUpdateWithoutWorkoutLogInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
@@ -5683,6 +3426,7 @@ export type UserUpdateWithoutWorkoutLogInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWorkoutLogInput = {
@@ -5717,19 +3461,11 @@ export type UserUncheckedUpdateWithoutWorkoutLogInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
@@ -5773,15 +3509,6 @@ export type UserCreateWithoutYamanokaiEventAsCLInput = {
   avatar?: string | null
   bcc?: string | null
   UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
   SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
@@ -5794,6 +3521,7 @@ export type UserCreateWithoutYamanokaiEventAsCLInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutYamanokaiEventAsCLInput = {
@@ -5828,19 +3556,11 @@ export type UserUncheckedCreateWithoutYamanokaiEventAsCLInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
   storeId?: number | null
+  departmentId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
   SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
@@ -5889,15 +3609,6 @@ export type UserCreateWithoutYamanokaiEventAsSLInput = {
   avatar?: string | null
   bcc?: string | null
   UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
   SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
@@ -5910,6 +3621,7 @@ export type UserCreateWithoutYamanokaiEventAsSLInput = {
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutYamanokaiEventAsSLInput = {
@@ -5944,19 +3656,11 @@ export type UserUncheckedCreateWithoutYamanokaiEventAsSLInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
   storeId?: number | null
+  departmentId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
   SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
@@ -6016,15 +3720,6 @@ export type UserUpdateWithoutYamanokaiEventAsCLInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
@@ -6037,6 +3732,7 @@ export type UserUpdateWithoutYamanokaiEventAsCLInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutYamanokaiEventAsCLInput = {
@@ -6071,19 +3767,11 @@ export type UserUncheckedUpdateWithoutYamanokaiEventAsCLInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
@@ -6138,15 +3826,6 @@ export type UserUpdateWithoutYamanokaiEventAsSLInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
@@ -6159,6 +3838,7 @@ export type UserUpdateWithoutYamanokaiEventAsSLInput = {
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutYamanokaiEventAsSLInput = {
@@ -6193,19 +3873,11 @@ export type UserUncheckedUpdateWithoutYamanokaiEventAsSLInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
@@ -6249,15 +3921,6 @@ export type UserCreateWithoutYamanokaiAttendanceInput = {
   avatar?: string | null
   bcc?: string | null
   UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
   SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
@@ -6270,6 +3933,7 @@ export type UserCreateWithoutYamanokaiAttendanceInput = {
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutYamanokaiAttendanceInput = {
@@ -6304,19 +3968,11 @@ export type UserUncheckedCreateWithoutYamanokaiAttendanceInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
   storeId?: number | null
+  departmentId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
   SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
@@ -6365,15 +4021,6 @@ export type UserCreateWithoutYamanokaiAttendanceAsApproverInput = {
   avatar?: string | null
   bcc?: string | null
   UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  TbmBase?: Prisma.TbmBaseCreateNestedOneWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordCreateNestedManyWithoutUserInput
-  Department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutUserInput
   SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
@@ -6386,6 +4033,7 @@ export type UserCreateWithoutYamanokaiAttendanceAsApproverInput = {
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutYamanokaiAttendanceAsApproverInput = {
@@ -6420,19 +4068,11 @@ export type UserUncheckedCreateWithoutYamanokaiAttendanceAsApproverInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
   storeId?: number | null
+  departmentId?: number | null
   UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedCreateNestedManyWithoutUserInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedCreateNestedManyWithoutUserInput
-  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedManyWithoutUserInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedCreateNestedManyWithoutUserInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedCreateNestedManyWithoutUserInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedCreateNestedManyWithoutUserInput
   SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
@@ -6492,15 +4132,6 @@ export type UserUpdateWithoutYamanokaiAttendanceInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
@@ -6513,6 +4144,7 @@ export type UserUpdateWithoutYamanokaiAttendanceInput = {
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutYamanokaiAttendanceInput = {
@@ -6547,19 +4179,11 @@ export type UserUncheckedUpdateWithoutYamanokaiAttendanceInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
@@ -6614,15 +4238,6 @@ export type UserUpdateWithoutYamanokaiAttendanceAsApproverInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
@@ -6635,6 +4250,7 @@ export type UserUpdateWithoutYamanokaiAttendanceAsApproverInput = {
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutYamanokaiAttendanceAsApproverInput = {
@@ -6669,19 +4285,11 @@ export type UserUncheckedUpdateWithoutYamanokaiAttendanceAsApproverInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
@@ -6725,11 +4333,9 @@ export type UserCreateManyAidocumentCompanyInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
   counselingStoreId?: number | null
   storeId?: number | null
+  departmentId?: number | null
 }
 
 export type UserUpdateWithoutAidocumentCompanyInput = {
@@ -6764,15 +4370,6 @@ export type UserUpdateWithoutAidocumentCompanyInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
@@ -6785,6 +4382,7 @@ export type UserUpdateWithoutAidocumentCompanyInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAidocumentCompanyInput = {
@@ -6819,18 +4417,10 @@ export type UserUncheckedUpdateWithoutAidocumentCompanyInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
@@ -6875,11 +4465,9 @@ export type UserUncheckedUpdateManyWithoutAidocumentCompanyInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type UserCreateManyCounselingStoreInput = {
@@ -6914,11 +4502,9 @@ export type UserCreateManyCounselingStoreInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
   aidocumentCompanyId?: number | null
   storeId?: number | null
+  departmentId?: number | null
 }
 
 export type UserUpdateWithoutCounselingStoreInput = {
@@ -6953,15 +4539,6 @@ export type UserUpdateWithoutCounselingStoreInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
@@ -6974,6 +4551,7 @@ export type UserUpdateWithoutCounselingStoreInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCounselingStoreInput = {
@@ -7008,18 +4586,10 @@ export type UserUncheckedUpdateWithoutCounselingStoreInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
@@ -7064,11 +4634,9 @@ export type UserUncheckedUpdateManyWithoutCounselingStoreInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type UserCreateManyDepartmentInput = {
@@ -7103,8 +4671,6 @@ export type UserCreateManyDepartmentInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
   storeId?: number | null
@@ -7142,14 +4708,6 @@ export type UserUpdateWithoutDepartmentInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
@@ -7197,18 +4755,10 @@ export type UserUncheckedUpdateWithoutDepartmentInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
@@ -7253,8 +4803,6 @@ export type UserUncheckedUpdateManyWithoutDepartmentInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -7292,11 +4840,9 @@ export type UserCreateManyStoreInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
   counselingStoreId?: number | null
   aidocumentCompanyId?: number | null
+  departmentId?: number | null
 }
 
 export type UserUpdateWithoutStoreInput = {
@@ -7331,15 +4877,6 @@ export type UserUpdateWithoutStoreInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
@@ -7352,6 +4889,7 @@ export type UserUpdateWithoutStoreInput = {
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStoreInput = {
@@ -7386,18 +4924,10 @@ export type UserUncheckedUpdateWithoutStoreInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
   SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
   SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
   ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
@@ -7442,389 +4972,9 @@ export type UserUncheckedUpdateManyWithoutStoreInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
-
-export type UserCreateManyTbmBaseInput = {
-  id?: number
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  departmentId?: number | null
-  tbmVehicleId?: number | null
-  counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
-  storeId?: number | null
-}
-
-export type UserUpdateWithoutTbmBaseInput = {
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutUserNestedInput
-  SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
-  ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
-  WorkoutLog?: Prisma.WorkoutLogUpdateManyWithoutUserNestedInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
-  CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
-  CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
-  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutTbmBaseInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
-  SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
-  ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
-  WorkoutLog?: Prisma.WorkoutLogUncheckedUpdateManyWithoutUserNestedInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedUpdateManyWithoutUserNestedInput
-  CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
-}
-
-export type UserUncheckedUpdateManyWithoutTbmBaseInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-}
-
-export type UserCreateManyTbmVehicleInput = {
-  id?: number
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  tbmBaseId?: number | null
-  departmentId?: number | null
-  counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
-  storeId?: number | null
-}
-
-export type UserUpdateWithoutTbmVehicleInput = {
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  TbmBase?: Prisma.TbmBaseUpdateOneWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUpdateManyWithoutUserNestedInput
-  Department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
-  ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
-  WorkoutLog?: Prisma.WorkoutLogUpdateManyWithoutUserNestedInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
-  CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
-  CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
-  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutTbmVehicleInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  TbmDriveSchedule?: Prisma.TbmDriveScheduleUncheckedUpdateManyWithoutUserNestedInput
-  UserWorkStatus?: Prisma.UserWorkStatusUncheckedUpdateManyWithoutUserNestedInput
-  OdometerInput?: Prisma.OdometerInputUncheckedUpdateManyWithoutUserNestedInput
-  TbmRefuelHistory?: Prisma.TbmRefuelHistoryUncheckedUpdateManyWithoutUserNestedInput
-  TbmCarWashHistory?: Prisma.TbmCarWashHistoryUncheckedUpdateManyWithoutUserNestedInput
-  KyuyoTableRecord?: Prisma.KyuyoTableRecordUncheckedUpdateManyWithoutUserNestedInput
-  SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
-  ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
-  WorkoutLog?: Prisma.WorkoutLogUncheckedUpdateManyWithoutUserNestedInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedUpdateManyWithoutUserNestedInput
-  CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
-}
-
-export type UserUncheckedUpdateManyWithoutTbmVehicleInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tbmBaseId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 
@@ -7834,12 +4984,6 @@ export type UserUncheckedUpdateManyWithoutTbmVehicleInput = {
 
 export type UserCountOutputType = {
   UserRole: number
-  TbmDriveSchedule: number
-  UserWorkStatus: number
-  OdometerInput: number
-  TbmRefuelHistory: number
-  TbmCarWashHistory: number
-  KyuyoTableRecord: number
   SbmReservation: number
   SbmDeliveryAssignment: number
   ExerciseMaster: number
@@ -7854,12 +4998,6 @@ export type UserCountOutputType = {
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   UserRole?: boolean | UserCountOutputTypeCountUserRoleArgs
-  TbmDriveSchedule?: boolean | UserCountOutputTypeCountTbmDriveScheduleArgs
-  UserWorkStatus?: boolean | UserCountOutputTypeCountUserWorkStatusArgs
-  OdometerInput?: boolean | UserCountOutputTypeCountOdometerInputArgs
-  TbmRefuelHistory?: boolean | UserCountOutputTypeCountTbmRefuelHistoryArgs
-  TbmCarWashHistory?: boolean | UserCountOutputTypeCountTbmCarWashHistoryArgs
-  KyuyoTableRecord?: boolean | UserCountOutputTypeCountKyuyoTableRecordArgs
   SbmReservation?: boolean | UserCountOutputTypeCountSbmReservationArgs
   SbmDeliveryAssignment?: boolean | UserCountOutputTypeCountSbmDeliveryAssignmentArgs
   ExerciseMaster?: boolean | UserCountOutputTypeCountExerciseMasterArgs
@@ -7887,48 +5025,6 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
  */
 export type UserCountOutputTypeCountUserRoleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.UserRoleWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountTbmDriveScheduleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.TbmDriveScheduleWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountUserWorkStatusArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.UserWorkStatusWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountOdometerInputArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.OdometerInputWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountTbmRefuelHistoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.TbmRefuelHistoryWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountTbmCarWashHistoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.TbmCarWashHistoryWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountKyuyoTableRecordArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.KyuyoTableRecordWhereInput
 }
 
 /**
@@ -8034,22 +5130,11 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   phone?: boolean
   avatar?: boolean
   bcc?: boolean
-  tbmBaseId?: boolean
-  departmentId?: boolean
-  tbmVehicleId?: boolean
   counselingStoreId?: boolean
   aidocumentCompanyId?: boolean
   storeId?: boolean
+  departmentId?: boolean
   UserRole?: boolean | Prisma.User$UserRoleArgs<ExtArgs>
-  TbmBase?: boolean | Prisma.User$TbmBaseArgs<ExtArgs>
-  TbmDriveSchedule?: boolean | Prisma.User$TbmDriveScheduleArgs<ExtArgs>
-  UserWorkStatus?: boolean | Prisma.User$UserWorkStatusArgs<ExtArgs>
-  OdometerInput?: boolean | Prisma.User$OdometerInputArgs<ExtArgs>
-  TbmRefuelHistory?: boolean | Prisma.User$TbmRefuelHistoryArgs<ExtArgs>
-  TbmCarWashHistory?: boolean | Prisma.User$TbmCarWashHistoryArgs<ExtArgs>
-  KyuyoTableRecord?: boolean | Prisma.User$KyuyoTableRecordArgs<ExtArgs>
-  Department?: boolean | Prisma.User$DepartmentArgs<ExtArgs>
-  TbmVehicle?: boolean | Prisma.User$TbmVehicleArgs<ExtArgs>
   SbmReservation?: boolean | Prisma.User$SbmReservationArgs<ExtArgs>
   SbmDeliveryAssignment?: boolean | Prisma.User$SbmDeliveryAssignmentArgs<ExtArgs>
   ExerciseMaster?: boolean | Prisma.User$ExerciseMasterArgs<ExtArgs>
@@ -8063,6 +5148,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   YamanokaiEventAsSL?: boolean | Prisma.User$YamanokaiEventAsSLArgs<ExtArgs>
   YamanokaiAttendance?: boolean | Prisma.User$YamanokaiAttendanceArgs<ExtArgs>
   YamanokaiAttendanceAsApprover?: boolean | Prisma.User$YamanokaiAttendanceAsApproverArgs<ExtArgs>
+  department?: boolean | Prisma.User$departmentArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -8098,18 +5184,14 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   phone?: boolean
   avatar?: boolean
   bcc?: boolean
-  tbmBaseId?: boolean
-  departmentId?: boolean
-  tbmVehicleId?: boolean
   counselingStoreId?: boolean
   aidocumentCompanyId?: boolean
   storeId?: boolean
-  TbmBase?: boolean | Prisma.User$TbmBaseArgs<ExtArgs>
-  Department?: boolean | Prisma.User$DepartmentArgs<ExtArgs>
-  TbmVehicle?: boolean | Prisma.User$TbmVehicleArgs<ExtArgs>
+  departmentId?: boolean
   CounselingStore?: boolean | Prisma.User$CounselingStoreArgs<ExtArgs>
   AidocumentCompany?: boolean | Prisma.User$AidocumentCompanyArgs<ExtArgs>
   Store?: boolean | Prisma.User$StoreArgs<ExtArgs>
+  department?: boolean | Prisma.User$departmentArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -8144,18 +5226,14 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   phone?: boolean
   avatar?: boolean
   bcc?: boolean
-  tbmBaseId?: boolean
-  departmentId?: boolean
-  tbmVehicleId?: boolean
   counselingStoreId?: boolean
   aidocumentCompanyId?: boolean
   storeId?: boolean
-  TbmBase?: boolean | Prisma.User$TbmBaseArgs<ExtArgs>
-  Department?: boolean | Prisma.User$DepartmentArgs<ExtArgs>
-  TbmVehicle?: boolean | Prisma.User$TbmVehicleArgs<ExtArgs>
+  departmentId?: boolean
   CounselingStore?: boolean | Prisma.User$CounselingStoreArgs<ExtArgs>
   AidocumentCompany?: boolean | Prisma.User$AidocumentCompanyArgs<ExtArgs>
   Store?: boolean | Prisma.User$StoreArgs<ExtArgs>
+  department?: boolean | Prisma.User$departmentArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -8190,26 +5268,15 @@ export type UserSelectScalar = {
   phone?: boolean
   avatar?: boolean
   bcc?: boolean
-  tbmBaseId?: boolean
-  departmentId?: boolean
-  tbmVehicleId?: boolean
   counselingStoreId?: boolean
   aidocumentCompanyId?: boolean
   storeId?: boolean
+  departmentId?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "createdAt" | "updatedAt" | "sortOrder" | "active" | "hiredAt" | "retiredAt" | "transferredAt" | "yukyuCategory" | "name" | "kana" | "email" | "password" | "type" | "role" | "tempResetCode" | "tempResetCodeExpired" | "schoolId" | "rentaStoreId" | "type2" | "shopId" | "membershipName" | "damageNameMasterId" | "color" | "app" | "apps" | "employeeCode" | "phone" | "avatar" | "bcc" | "tbmBaseId" | "departmentId" | "tbmVehicleId" | "counselingStoreId" | "aidocumentCompanyId" | "storeId", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "createdAt" | "updatedAt" | "sortOrder" | "active" | "hiredAt" | "retiredAt" | "transferredAt" | "yukyuCategory" | "name" | "kana" | "email" | "password" | "type" | "role" | "tempResetCode" | "tempResetCodeExpired" | "schoolId" | "rentaStoreId" | "type2" | "shopId" | "membershipName" | "damageNameMasterId" | "color" | "app" | "apps" | "employeeCode" | "phone" | "avatar" | "bcc" | "counselingStoreId" | "aidocumentCompanyId" | "storeId" | "departmentId", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   UserRole?: boolean | Prisma.User$UserRoleArgs<ExtArgs>
-  TbmBase?: boolean | Prisma.User$TbmBaseArgs<ExtArgs>
-  TbmDriveSchedule?: boolean | Prisma.User$TbmDriveScheduleArgs<ExtArgs>
-  UserWorkStatus?: boolean | Prisma.User$UserWorkStatusArgs<ExtArgs>
-  OdometerInput?: boolean | Prisma.User$OdometerInputArgs<ExtArgs>
-  TbmRefuelHistory?: boolean | Prisma.User$TbmRefuelHistoryArgs<ExtArgs>
-  TbmCarWashHistory?: boolean | Prisma.User$TbmCarWashHistoryArgs<ExtArgs>
-  KyuyoTableRecord?: boolean | Prisma.User$KyuyoTableRecordArgs<ExtArgs>
-  Department?: boolean | Prisma.User$DepartmentArgs<ExtArgs>
-  TbmVehicle?: boolean | Prisma.User$TbmVehicleArgs<ExtArgs>
   SbmReservation?: boolean | Prisma.User$SbmReservationArgs<ExtArgs>
   SbmDeliveryAssignment?: boolean | Prisma.User$SbmDeliveryAssignmentArgs<ExtArgs>
   ExerciseMaster?: boolean | Prisma.User$ExerciseMasterArgs<ExtArgs>
@@ -8223,38 +5290,26 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   YamanokaiEventAsSL?: boolean | Prisma.User$YamanokaiEventAsSLArgs<ExtArgs>
   YamanokaiAttendance?: boolean | Prisma.User$YamanokaiAttendanceArgs<ExtArgs>
   YamanokaiAttendanceAsApprover?: boolean | Prisma.User$YamanokaiAttendanceAsApproverArgs<ExtArgs>
+  department?: boolean | Prisma.User$departmentArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  TbmBase?: boolean | Prisma.User$TbmBaseArgs<ExtArgs>
-  Department?: boolean | Prisma.User$DepartmentArgs<ExtArgs>
-  TbmVehicle?: boolean | Prisma.User$TbmVehicleArgs<ExtArgs>
   CounselingStore?: boolean | Prisma.User$CounselingStoreArgs<ExtArgs>
   AidocumentCompany?: boolean | Prisma.User$AidocumentCompanyArgs<ExtArgs>
   Store?: boolean | Prisma.User$StoreArgs<ExtArgs>
+  department?: boolean | Prisma.User$departmentArgs<ExtArgs>
 }
 export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  TbmBase?: boolean | Prisma.User$TbmBaseArgs<ExtArgs>
-  Department?: boolean | Prisma.User$DepartmentArgs<ExtArgs>
-  TbmVehicle?: boolean | Prisma.User$TbmVehicleArgs<ExtArgs>
   CounselingStore?: boolean | Prisma.User$CounselingStoreArgs<ExtArgs>
   AidocumentCompany?: boolean | Prisma.User$AidocumentCompanyArgs<ExtArgs>
   Store?: boolean | Prisma.User$StoreArgs<ExtArgs>
+  department?: boolean | Prisma.User$departmentArgs<ExtArgs>
 }
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
     UserRole: Prisma.$UserRolePayload<ExtArgs>[]
-    TbmBase: Prisma.$TbmBasePayload<ExtArgs> | null
-    TbmDriveSchedule: Prisma.$TbmDriveSchedulePayload<ExtArgs>[]
-    UserWorkStatus: Prisma.$UserWorkStatusPayload<ExtArgs>[]
-    OdometerInput: Prisma.$OdometerInputPayload<ExtArgs>[]
-    TbmRefuelHistory: Prisma.$TbmRefuelHistoryPayload<ExtArgs>[]
-    TbmCarWashHistory: Prisma.$TbmCarWashHistoryPayload<ExtArgs>[]
-    KyuyoTableRecord: Prisma.$KyuyoTableRecordPayload<ExtArgs>[]
-    Department: Prisma.$DepartmentPayload<ExtArgs> | null
-    TbmVehicle: Prisma.$TbmVehiclePayload<ExtArgs> | null
     SbmReservation: Prisma.$SbmReservationPayload<ExtArgs>[]
     SbmDeliveryAssignment: Prisma.$SbmDeliveryAssignmentPayload<ExtArgs>[]
     ExerciseMaster: Prisma.$ExerciseMasterPayload<ExtArgs>[]
@@ -8268,6 +5323,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     YamanokaiEventAsSL: Prisma.$YamanokaiEventPayload<ExtArgs>[]
     YamanokaiAttendance: Prisma.$YamanokaiAttendancePayload<ExtArgs>[]
     YamanokaiAttendanceAsApprover: Prisma.$YamanokaiAttendancePayload<ExtArgs>[]
+    department: Prisma.$DepartmentPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -8301,12 +5357,10 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     phone: string | null
     avatar: string | null
     bcc: string | null
-    tbmBaseId: number | null
-    departmentId: number | null
-    tbmVehicleId: number | null
     counselingStoreId: number | null
     aidocumentCompanyId: number | null
     storeId: number | null
+    departmentId: number | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -8702,15 +5756,6 @@ readonly fields: UserFieldRefs;
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   UserRole<T extends Prisma.User$UserRoleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$UserRoleArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  TbmBase<T extends Prisma.User$TbmBaseArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$TbmBaseArgs<ExtArgs>>): Prisma.Prisma__TbmBaseClient<runtime.Types.Result.GetResult<Prisma.$TbmBasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  TbmDriveSchedule<T extends Prisma.User$TbmDriveScheduleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$TbmDriveScheduleArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TbmDriveSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  UserWorkStatus<T extends Prisma.User$UserWorkStatusArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$UserWorkStatusArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserWorkStatusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  OdometerInput<T extends Prisma.User$OdometerInputArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$OdometerInputArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OdometerInputPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  TbmRefuelHistory<T extends Prisma.User$TbmRefuelHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$TbmRefuelHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TbmRefuelHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  TbmCarWashHistory<T extends Prisma.User$TbmCarWashHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$TbmCarWashHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TbmCarWashHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  KyuyoTableRecord<T extends Prisma.User$KyuyoTableRecordArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$KyuyoTableRecordArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KyuyoTableRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  Department<T extends Prisma.User$DepartmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$DepartmentArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  TbmVehicle<T extends Prisma.User$TbmVehicleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$TbmVehicleArgs<ExtArgs>>): Prisma.Prisma__TbmVehicleClient<runtime.Types.Result.GetResult<Prisma.$TbmVehiclePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   SbmReservation<T extends Prisma.User$SbmReservationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$SbmReservationArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SbmReservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   SbmDeliveryAssignment<T extends Prisma.User$SbmDeliveryAssignmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$SbmDeliveryAssignmentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SbmDeliveryAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   ExerciseMaster<T extends Prisma.User$ExerciseMasterArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ExerciseMasterArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExerciseMasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -8724,6 +5769,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   YamanokaiEventAsSL<T extends Prisma.User$YamanokaiEventAsSLArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$YamanokaiEventAsSLArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$YamanokaiEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   YamanokaiAttendance<T extends Prisma.User$YamanokaiAttendanceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$YamanokaiAttendanceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$YamanokaiAttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   YamanokaiAttendanceAsApprover<T extends Prisma.User$YamanokaiAttendanceAsApproverArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$YamanokaiAttendanceAsApproverArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$YamanokaiAttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  department<T extends Prisma.User$departmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$departmentArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8784,12 +5830,10 @@ export interface UserFieldRefs {
   readonly phone: Prisma.FieldRef<"User", 'String'>
   readonly avatar: Prisma.FieldRef<"User", 'String'>
   readonly bcc: Prisma.FieldRef<"User", 'String'>
-  readonly tbmBaseId: Prisma.FieldRef<"User", 'Int'>
-  readonly departmentId: Prisma.FieldRef<"User", 'Int'>
-  readonly tbmVehicleId: Prisma.FieldRef<"User", 'Int'>
   readonly counselingStoreId: Prisma.FieldRef<"User", 'Int'>
   readonly aidocumentCompanyId: Prisma.FieldRef<"User", 'Int'>
   readonly storeId: Prisma.FieldRef<"User", 'Int'>
+  readonly departmentId: Prisma.FieldRef<"User", 'Int'>
 }
     
 
@@ -9210,207 +6254,6 @@ export type User$UserRoleArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 }
 
 /**
- * User.TbmBase
- */
-export type User$TbmBaseArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the TbmBase
-   */
-  select?: Prisma.TbmBaseSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the TbmBase
-   */
-  omit?: Prisma.TbmBaseOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TbmBaseInclude<ExtArgs> | null
-  where?: Prisma.TbmBaseWhereInput
-}
-
-/**
- * User.TbmDriveSchedule
- */
-export type User$TbmDriveScheduleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the TbmDriveSchedule
-   */
-  select?: Prisma.TbmDriveScheduleSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the TbmDriveSchedule
-   */
-  omit?: Prisma.TbmDriveScheduleOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TbmDriveScheduleInclude<ExtArgs> | null
-  where?: Prisma.TbmDriveScheduleWhereInput
-  orderBy?: Prisma.TbmDriveScheduleOrderByWithRelationInput | Prisma.TbmDriveScheduleOrderByWithRelationInput[]
-  cursor?: Prisma.TbmDriveScheduleWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.TbmDriveScheduleScalarFieldEnum | Prisma.TbmDriveScheduleScalarFieldEnum[]
-}
-
-/**
- * User.UserWorkStatus
- */
-export type User$UserWorkStatusArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the UserWorkStatus
-   */
-  select?: Prisma.UserWorkStatusSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the UserWorkStatus
-   */
-  omit?: Prisma.UserWorkStatusOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserWorkStatusInclude<ExtArgs> | null
-  where?: Prisma.UserWorkStatusWhereInput
-  orderBy?: Prisma.UserWorkStatusOrderByWithRelationInput | Prisma.UserWorkStatusOrderByWithRelationInput[]
-  cursor?: Prisma.UserWorkStatusWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.UserWorkStatusScalarFieldEnum | Prisma.UserWorkStatusScalarFieldEnum[]
-}
-
-/**
- * User.OdometerInput
- */
-export type User$OdometerInputArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the OdometerInput
-   */
-  select?: Prisma.OdometerInputSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the OdometerInput
-   */
-  omit?: Prisma.OdometerInputOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.OdometerInputInclude<ExtArgs> | null
-  where?: Prisma.OdometerInputWhereInput
-  orderBy?: Prisma.OdometerInputOrderByWithRelationInput | Prisma.OdometerInputOrderByWithRelationInput[]
-  cursor?: Prisma.OdometerInputWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.OdometerInputScalarFieldEnum | Prisma.OdometerInputScalarFieldEnum[]
-}
-
-/**
- * User.TbmRefuelHistory
- */
-export type User$TbmRefuelHistoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the TbmRefuelHistory
-   */
-  select?: Prisma.TbmRefuelHistorySelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the TbmRefuelHistory
-   */
-  omit?: Prisma.TbmRefuelHistoryOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TbmRefuelHistoryInclude<ExtArgs> | null
-  where?: Prisma.TbmRefuelHistoryWhereInput
-  orderBy?: Prisma.TbmRefuelHistoryOrderByWithRelationInput | Prisma.TbmRefuelHistoryOrderByWithRelationInput[]
-  cursor?: Prisma.TbmRefuelHistoryWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.TbmRefuelHistoryScalarFieldEnum | Prisma.TbmRefuelHistoryScalarFieldEnum[]
-}
-
-/**
- * User.TbmCarWashHistory
- */
-export type User$TbmCarWashHistoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the TbmCarWashHistory
-   */
-  select?: Prisma.TbmCarWashHistorySelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the TbmCarWashHistory
-   */
-  omit?: Prisma.TbmCarWashHistoryOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TbmCarWashHistoryInclude<ExtArgs> | null
-  where?: Prisma.TbmCarWashHistoryWhereInput
-  orderBy?: Prisma.TbmCarWashHistoryOrderByWithRelationInput | Prisma.TbmCarWashHistoryOrderByWithRelationInput[]
-  cursor?: Prisma.TbmCarWashHistoryWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.TbmCarWashHistoryScalarFieldEnum | Prisma.TbmCarWashHistoryScalarFieldEnum[]
-}
-
-/**
- * User.KyuyoTableRecord
- */
-export type User$KyuyoTableRecordArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the KyuyoTableRecord
-   */
-  select?: Prisma.KyuyoTableRecordSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the KyuyoTableRecord
-   */
-  omit?: Prisma.KyuyoTableRecordOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.KyuyoTableRecordInclude<ExtArgs> | null
-  where?: Prisma.KyuyoTableRecordWhereInput
-  orderBy?: Prisma.KyuyoTableRecordOrderByWithRelationInput | Prisma.KyuyoTableRecordOrderByWithRelationInput[]
-  cursor?: Prisma.KyuyoTableRecordWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.KyuyoTableRecordScalarFieldEnum | Prisma.KyuyoTableRecordScalarFieldEnum[]
-}
-
-/**
- * User.Department
- */
-export type User$DepartmentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Department
-   */
-  select?: Prisma.DepartmentSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Department
-   */
-  omit?: Prisma.DepartmentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DepartmentInclude<ExtArgs> | null
-  where?: Prisma.DepartmentWhereInput
-}
-
-/**
- * User.TbmVehicle
- */
-export type User$TbmVehicleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the TbmVehicle
-   */
-  select?: Prisma.TbmVehicleSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the TbmVehicle
-   */
-  omit?: Prisma.TbmVehicleOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TbmVehicleInclude<ExtArgs> | null
-  where?: Prisma.TbmVehicleWhereInput
-}
-
-/**
  * User.SbmReservation
  */
 export type User$SbmReservationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -9705,6 +6548,25 @@ export type User$YamanokaiAttendanceAsApproverArgs<ExtArgs extends runtime.Types
   take?: number
   skip?: number
   distinct?: Prisma.YamanokaiAttendanceScalarFieldEnum | Prisma.YamanokaiAttendanceScalarFieldEnum[]
+}
+
+/**
+ * User.department
+ */
+export type User$departmentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Department
+   */
+  select?: Prisma.DepartmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Department
+   */
+  omit?: Prisma.DepartmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DepartmentInclude<ExtArgs> | null
+  where?: Prisma.DepartmentWhereInput
 }
 
 /**

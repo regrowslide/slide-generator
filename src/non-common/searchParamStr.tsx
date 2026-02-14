@@ -6,9 +6,6 @@ export const globalIds = {
 
   globalTeacherId: globalSelectorPrefix + 'teacherId',
   globalSchoolId: globalSelectorPrefix + 'schoolId',
-  globalTbmBaseId: globalSelectorPrefix + 'tbmBaseId',
-  globalHakobunClientId: globalSelectorPrefix + 'hakobunClientId',
-  tbmDriveInputUserId: 'tbmDriveInputUserId' //nonglobal
 
 }
 

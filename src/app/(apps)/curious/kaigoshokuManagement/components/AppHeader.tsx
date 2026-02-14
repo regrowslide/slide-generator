@@ -70,11 +70,10 @@ export const AppHeader = () => {
     const year = searchParams?.get('year')
     const month = searchParams?.get('month')
     const day = searchParams?.get('day')
-    return `${item.href}?year=${year}&month=${month}&day=${day}`
-    // if (DATE_FILTER_PAGE_IDS.includes(item.id) && year && month && day) {
-    //   return `${item.href}?year=${year}&month=${month}&day=${day}`
-    // }
-    // return item.href
+    if (DATE_FILTER_PAGE_IDS.includes(item.id) && year && month && day) {
+      return `${item.href}?year=${year}&month=${month}&day=${day}`
+    }
+    return item.href
   }
 
   // 現在のパスに基づいてアクティブなメニュー項目を判定

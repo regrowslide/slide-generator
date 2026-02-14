@@ -80,25 +80,6 @@ model User {
 
   UserRole UserRole[]
 
-  // TbmOperation                     TbmOperation[]
-  // TbmOperationGroup                TbmOperationGroup[]
-
-  TbmBase          TbmBase?           @relation(fields: [tbmBaseId], references: [id])
-  tbmBaseId        Int?
-  TbmDriveSchedule TbmDriveSchedule[]
-  UserWorkStatus   UserWorkStatus[]
-  OdometerInput    OdometerInput[]
-  TbmRefuelHistory TbmRefuelHistory[]
-
-  TbmCarWashHistory TbmCarWashHistory[]
-
-  KyuyoTableRecord KyuyoTableRecord[]
-  Department       Department?        @relation(fields: [departmentId], references: [id])
-  departmentId     Int?
-
-  // TbmVehicle           TbmVehicle?
-  TbmVehicle            TbmVehicle?             @relation(fields: [tbmVehicleId], references: [id])
-  tbmVehicleId          Int?
   SbmReservation        SbmReservation[]
   SbmDeliveryAssignment SbmDeliveryAssignment[]
 
@@ -121,6 +102,8 @@ model User {
   YamanokaiEventAsSL            YamanokaiEvent[]      @relation("YamanokaiEventSL")
   YamanokaiAttendance           YamanokaiAttendance[]
   YamanokaiAttendanceAsApprover YamanokaiAttendance[] @relation("AttendanceApprover")
+  department                    Department?           @relation(fields: [departmentId], references: [id])
+  departmentId                  Int?
 }
 
 model ReleaseNotes {

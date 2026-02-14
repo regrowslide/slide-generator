@@ -46,12 +46,10 @@ export type KgMealSlotWithRelations = KgMealSlot & {
 export type KgMenuRecipeWithRelations = KgMenuRecipe & {
   ParentRecipe?: KgMenuRecipe | null // 親Menu（Dishの場合）
   ChildRecipes: KgMenuRecipeWithRelations[] // Dishes
-  KgRecipeIngredient: KgRecipeIngredientWithMaster[] // Ingredients
+  KgRecipeIngredient: KgRecipeIngredient[] // Ingredients
 }
 
 // Ingredient（材料）
-// 型名は互換性のため残す（マスタリレーションは削除）
-export type KgRecipeIngredientWithMaster = KgRecipeIngredient
 
 // 受注関連
 export type KgOrderWithRelations = KgOrder & {
@@ -67,7 +65,7 @@ export type KgOrderLineWithRelations = KgOrderLine & {
 // 製造関連
 export type KgProductionBatchWithRelations = KgProductionBatch & {
   KgProductionItem: KgProductionItemWithRelations[]
-  KgRequiredIngredient: KgRequiredIngredientWithMaster[]
+  KgRequiredIngredient: KgRequiredIngredient[]
 }
 
 export type KgProductionItemWithRelations = KgProductionItem & {
@@ -78,8 +76,6 @@ export type KgProductionItemWithRelations = KgProductionItem & {
   KgDietTypeMaster: KgDietTypeMaster
 }
 
-// 型名は互換性のため残す（マスタリレーションは削除）
-export type KgRequiredIngredientWithMaster = KgRequiredIngredient
 
 // CSVインポート用の型
 
@@ -186,4 +182,30 @@ export type ProductionFilter = {
   productionDateTo?: Date
   status?: string
   mealType?: string
+}
+
+// 献立一覧を取得するための型（Dish レベル）
+export type KondateListItem = {
+  id: number // dailyMenuId
+  menuDate: Date
+  mealSlotId: number
+  mealType: string
+  mealTypeName: string
+  menuId: number // Menu の ID
+  menuCode: string
+  menuName: string
+  dishId: number // Dish の ID
+  dishCode: string
+  dishName: string
+  ingredientCount: number // 材料数
+  createdAt: Date
+}
+
+// 献立フィルター
+export type KondateFilter = {
+  year?: number
+  month?: number
+  day?: number
+  mealType?: string
+  recipeName?: string
 }

@@ -1,4 +1,5 @@
 import { Suspense } from 'react'
+import type { Prisma } from '@prisma/generated/prisma/client'
 import { OrderDashboardClient } from './OrderDashboardClient'
 import { getOrders } from '../_actions/order-actions'
 import { getFacilities } from '../_actions/facility-actions'
@@ -26,10 +27,10 @@ export default async function OrderDashboardPage(props: Props) {
   dateFrom.setHours(0, 0, 0, 0)
   const dateTo = new Date(year, month - 1, day + 1)
 
-  const where: Record<string, unknown> = {
+  const where: Prisma.KgOrderWhereInput = {
     deliveryDate: { gte: dateFrom, lt: dateTo },
+    ...(facilityId ? { facilityId } : {}),
   }
-  if (facilityId) where.facilityId = facilityId
 
   const [orders, facilities] = await Promise.all([
     getOrders({

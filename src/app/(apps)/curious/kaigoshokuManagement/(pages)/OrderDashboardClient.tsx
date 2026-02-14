@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { Upload, Calendar, Search, AlertTriangle } from 'lucide-react'
 
@@ -132,13 +132,16 @@ export const OrderDashboardClient = ({ initialOrders, facilities, currentFilter 
     [toggleLoad, facilities]
   )
 
-  // 食事区分ごとの集計
-  const getMealSummary = (mealType: string) => {
-    return orders.reduce((acc, order) => {
-      const lines = order.KgOrderLine.filter((line) => line.mealType === mealType)
-      return acc + lines.reduce((sum, line) => sum + line.quantity, 0)
-    }, 0)
-  }
+  // 食事区分ごとの集計（メモ化）
+  const mealSummary = useMemo(() => {
+    const summary: Record<string, number> = {}
+    for (const order of orders) {
+      for (const line of order.KgOrderLine) {
+        summary[line.mealType] = (summary[line.mealType] ?? 0) + line.quantity
+      }
+    }
+    return summary
+  }, [orders])
 
   return (
     <div className="space-y-6">
@@ -264,7 +267,7 @@ export const OrderDashboardClient = ({ initialOrders, facilities, currentFilter 
       {/* サマリーカード */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {Object.entries(MEAL_TYPES).map(([code, data]) => {
-          const total = getMealSummary(code)
+          const total = mealSummary[code] ?? 0
           return (
             <Card key={code}>
               <CardContent className="pt-4">

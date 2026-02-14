@@ -1,7 +1,7 @@
 'use client'
 
 import {useState, useEffect} from 'react'
-import {Calculator, AlertTriangle, BarChart3, RefreshCw} from 'lucide-react'
+import {Calculator, AlertTriangle, BarChart3, RefreshCw, RotateCcw} from 'lucide-react'
 import type {CostCalculationResult, RecipeSettings, ProfitMarginAlert} from '../../types'
 
 interface CostSummaryPanelProps {
@@ -9,9 +9,10 @@ interface CostSummaryPanelProps {
   calculatedData: CostCalculationResult
   profitAlert: ProfitMarginAlert | null
   onRecalculate: (params: {packagingCost: number; processingCost: number; otherCost: number; profitMargin: number}) => void
+  onAutoSetProfitMargin?: (amount: number) => void
 }
 
-export const CostSummaryPanel = ({settings, calculatedData, profitAlert, onRecalculate}: CostSummaryPanelProps) => {
+export const CostSummaryPanel = ({settings, calculatedData, profitAlert, onRecalculate, onAutoSetProfitMargin}: CostSummaryPanelProps) => {
   // ローカル state で入力値を管理
   const [localPackagingCost, setLocalPackagingCost] = useState(settings.packagingCost)
   const [localProcessingCost, setLocalProcessingCost] = useState(settings.processingCost)
@@ -92,12 +93,28 @@ export const CostSummaryPanel = ({settings, calculatedData, profitAlert, onRecal
         </div>
         <div className="flex justify-between items-center text-sm">
           <label>粗利（額）</label>
-          <input
-            type="number"
-            value={localProfitMargin}
-            onChange={(e) => setLocalProfitMargin(Number(e.target.value))}
-            className="w-24 text-right border border-blue-300 text-blue-700 font-bold rounded"
-          />
+          <div className="flex items-center gap-1">
+            <input
+              type="number"
+              value={localProfitMargin}
+              onChange={(e) => setLocalProfitMargin(Number(e.target.value))}
+              className="w-24 text-right border border-blue-300 text-blue-700 font-bold rounded"
+            />
+            {profitAlert?.isWarning && onAutoSetProfitMargin && (
+              <button
+                type="button"
+                onClick={() => {
+                  setLocalProfitMargin(profitAlert.minProfitAmount)
+                  onAutoSetProfitMargin(profitAlert.minProfitAmount)
+                }}
+                className="flex items-center gap-1 px-2 py-1 text-xs bg-amber-100 text-amber-700 border border-amber-300 rounded hover:bg-amber-200 transition-colors whitespace-nowrap"
+                title={`¥${profitAlert.minProfitAmount}に自動設定`}
+              >
+                <RotateCcw className="w-3 h-3" />
+                自動セット
+              </button>
+            )}
+          </div>
         </div>
         {/* 粗利率表示 */}
         <div className="flex justify-between text-sm text-slate-500">
