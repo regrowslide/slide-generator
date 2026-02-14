@@ -21070,6 +21070,23 @@
           "relationToFields": [],
           "isGenerated": false,
           "isUpdatedAt": false
+        },
+        {
+          "name": "OdometerInput",
+          "kind": "object",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "OdometerInput",
+          "nativeType": null,
+          "relationName": "OdometerInputToTbmDriveSchedule",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isGenerated": false,
+          "isUpdatedAt": false
         }
       ],
       "primaryKey": null,
@@ -21866,24 +21883,47 @@
           "nativeType": null,
           "isGenerated": false,
           "isUpdatedAt": false
+        },
+        {
+          "name": "TbmDriveSchedule",
+          "kind": "object",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "TbmDriveSchedule",
+          "nativeType": null,
+          "relationName": "OdometerInputToTbmDriveSchedule",
+          "relationFromFields": [
+            "tbmDriveScheduleId"
+          ],
+          "relationToFields": [
+            "id"
+          ],
+          "relationOnDelete": "Cascade",
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "tbmDriveScheduleId",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": true,
+          "isId": false,
+          "isReadOnly": true,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
         }
       ],
       "primaryKey": null,
-      "uniqueFields": [
-        [
-          "tbmVehicleId",
-          "date"
-        ]
-      ],
-      "uniqueIndexes": [
-        {
-          "name": "unique_tbmVehicleId_date",
-          "fields": [
-            "tbmVehicleId",
-            "date"
-          ]
-        }
-      ],
+      "uniqueFields": [],
+      "uniqueIndexes": [],
       "isGenerated": false
     },
     {
@@ -29571,14 +29611,10 @@
     {
       "model": "OdometerInput",
       "type": "unique",
-      "isDefinedOnField": false,
-      "name": "unique_tbmVehicleId_date",
+      "isDefinedOnField": true,
       "fields": [
         {
-          "name": "tbmVehicleId"
-        },
-        {
-          "name": "date"
+          "name": "tbmDriveScheduleId"
         }
       ]
     },

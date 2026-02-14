@@ -13,11 +13,13 @@ import { toastByResult } from '@cm/lib/ui/notifications'
 import React from 'react'
 
 export default function useOdometerInputGMF() {
-  return useGlobalModalForm<{ OdometerInput: { date: Date; TbmVehicle: any; odometerStart: number; odometerEnd: number } }>(`odometerInputGMF`, null, {
+  return useGlobalModalForm<{
+    OdometerInput: { date: Date; TbmVehicle: any; odometerStart: number; odometerEnd: number; tbmDriveScheduleId: number }
+  }>(`odometerInputGMF`, null, {
     mainJsx: ({ GMF_OPEN, setGMF_OPEN }) => {
       const useGlobalProps = useGlobal()
       const { OdometerInput } = GMF_OPEN ?? {}
-      const { date, TbmVehicle, odometerStart, odometerEnd } = OdometerInput || {}
+      const { date, TbmVehicle, odometerStart, odometerEnd, tbmDriveScheduleId } = OdometerInput || {}
 
       const lastOdometer = TbmVehicle.OdometerInput.filter(d => d.date < date).sort(
         (a, b) => -(a.date.getTime() - b.date.getTime())
@@ -28,6 +30,7 @@ export default function useOdometerInputGMF() {
         formData: {
           date,
           tbmVehicleId: TbmVehicle?.id,
+          tbmDriveScheduleId,
           odometerStart,
           odometerEnd,
         },
@@ -37,6 +40,7 @@ export default function useOdometerInputGMF() {
             lastOdometerStart,
             lastOdometerEnd,
             tbmVehicleId: TbmVehicle?.id,
+            tbmDriveScheduleId,
             date,
           },
         }),
@@ -56,16 +60,17 @@ export default function useOdometerInputGMF() {
               {...{
                 latestFormData,
                 onSubmit: async data => {
-                  const { date, tbmVehicleId, odometerStart, odometerEnd, userId } = data
+                  const { date, tbmVehicleId, odometerStart, odometerEnd, userId, tbmDriveScheduleId: scheduleId } = data
 
                   useGlobalProps.toggleLoad(async () => {
                     const res = await doStandardPrisma(`odometerInput`, `upsert`, {
-                      where: { unique_tbmVehicleId_date: { tbmVehicleId: TbmVehicle?.id, date: date } },
+                      where: { tbmDriveScheduleId: scheduleId },
                       ...createUpdate({
                         userId,
                         odometerStart,
                         odometerEnd,
                         tbmVehicleId,
+                        tbmDriveScheduleId: scheduleId,
                         date,
                       }),
                     })

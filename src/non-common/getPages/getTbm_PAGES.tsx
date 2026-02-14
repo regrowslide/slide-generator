@@ -191,7 +191,7 @@ export const tbm_PAGES = (props: PageGetterType) => {
     ...publicPaths,
     ...shochoPath,
     ...systemAdminPath,
-    ...kaizenManiaPath,
+    // ...kaizenManiaPath,
   ]
 
   const { cleansedPathSource, navItems, breads, allPathsPattenrs } = CleansePathSource({

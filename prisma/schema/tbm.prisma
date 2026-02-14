@@ -455,6 +455,7 @@ model TbmDriveSchedule {
   // 1対多の関係に変更
   TbmEtcMeisai          TbmEtcMeisai[]
   TbmDriveScheduleImage TbmDriveScheduleImage[]
+  OdometerInput         OdometerInput?
 
   // パフォーマンス改善用インデックス
   @@index([date])
@@ -547,7 +548,8 @@ model OdometerInput {
   User   User @relation(fields: [userId], references: [id])
   userId Int
 
-  @@unique([tbmVehicleId, date], name: "unique_tbmVehicleId_date")
+  TbmDriveSchedule   TbmDriveSchedule? @relation(fields: [tbmDriveScheduleId], references: [id], onDelete: Cascade)
+  tbmDriveScheduleId Int?              @unique
 }
 
 model UserWorkStatus {

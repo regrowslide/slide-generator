@@ -4,7 +4,8 @@ import {Fields} from '@cm/class/Fields/Fields'
 import {columnGetterType} from '@cm/types/types'
 
 export const odometerInputColBuilder = (props: columnGetterType) => {
-  const {date, tbmVehicleId, lastOdometerStart = 0, lastOdometerEnd = 0} = props.ColBuilderExtraProps ?? {}
+  const {date, tbmVehicleId, tbmDriveScheduleId, lastOdometerStart = 0, lastOdometerEnd = 0} =
+    props.ColBuilderExtraProps ?? {}
   const {session} = props.useGlobalProps
   const userId = session?.id
   return new Fields([
@@ -24,6 +25,14 @@ export const odometerInputColBuilder = (props: columnGetterType) => {
       form: {
         defaultValue: tbmVehicleId,
         disabled: tbmVehicleId,
+      },
+    },
+    {
+      id: 'tbmDriveScheduleId',
+      label: 'スケジュールID',
+      form: {
+        defaultValue: tbmDriveScheduleId,
+        hidden: true,
       },
     },
     {

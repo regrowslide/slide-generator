@@ -4,9 +4,6 @@ import useCarWashGMF from '@app/(apps)/tbm/(globalHooks)/useCarWashGMF'
 import useGasolineGMF from '@app/(apps)/tbm/(globalHooks)/useGasolineGMF'
 import useHaishaTableEditorGMF from '@app/(apps)/tbm/(globalHooks)/useHaishaTableEditorGMF'
 import useOdometerInputGMF from '@app/(apps)/tbm/(globalHooks)/useOdometerInputGMF'
-import { arr__uniqArray } from '@cm/class/ArrHandler/array-utils/basic-operations'
-
-import { Days } from '@cm/class/Days/Days'
 import { toUtc } from '@cm/class/Days/date-utils/calculations'
 
 import { NumHandler } from '@cm/class/NumHandler'
@@ -37,7 +34,6 @@ export default function DriveInputCC({ driveScheduleList }: { driveScheduleList:
   const HK_GasolineGMF = useGasolineGMF()
   const HK_CarWashGMF = useCarWashGMF()
   const HK_OdometerInputGMF = useOdometerInputGMF()
-  const allVehicleIdList = arr__uniqArray(driveScheduleList.map(d => d.tbmVehicleId))
 
   const theDate = toUtc(query.from)
   const TextBtnClass = ` cursor-pointer text-lg font-bold hover:bg-gray-300 rounded-md p-1`
@@ -95,42 +91,46 @@ export default function DriveInputCC({ driveScheduleList }: { driveScheduleList:
                 carInputCompleted ? 'bg-green-200' : ''
               )}
             >
-              {!allVehicleIdList.length && <TextGray>予定がありません</TextGray>}
-              {allVehicleIdList.map((id, i) => {
-                const TbmVehicle = driveScheduleList.map(item => item.TbmVehicle).find(vehicle => vehicle?.id === id)
-
-                const TodayMeter = TbmVehicle?.OdometerInput.find(item => {
-                  return Days.validate.isSameDate(item.date, theDate)
-                })
+              {!driveScheduleList.length && <TextGray>予定がありません</TextGray>}
+              {driveScheduleList.map((drive, i) => {
+                const { TbmVehicle, TbmRouteGroup, OdometerInput: TodayMeter } = drive
 
                 const { odometerStart = 0, odometerEnd = 0 } = TodayMeter ?? {}
 
-                const LastMeter = TbmVehicle?.OdometerInput.find(item => {
-                  return item.date.getDate() < theDate.getDate()
-                })
+                // 同日・同車両の前の便（sortOrderが小さい）のodometerEndを参考値にする
+                const prevSchedule = driveScheduleList.find(
+                  d => d.tbmVehicleId === drive.tbmVehicleId && d.sortOrder < drive.sortOrder
+                )
+                const prevOdometerEnd = prevSchedule?.OdometerInput?.odometerEnd ?? 0
 
-                const lastOdometerEnd = LastMeter?.odometerEnd ?? 0
+                // 前便がなければ、車両の過去レコードから最新のodometerEndを取得
+                const lastOdometerEnd =
+                  prevOdometerEnd ||
+                  (TbmVehicle?.OdometerInput?.find(item => item.tbmDriveScheduleId !== drive.id)?.odometerEnd ??
+                  0)
 
                 const handleOpenEditGMF = () => {
                   HK_OdometerInputGMF.setGMF_OPEN({
-                    OdometerInput: { date: theDate, odometerStart, odometerEnd, TbmVehicle },
+                    OdometerInput: {
+                      date: theDate,
+                      odometerStart,
+                      odometerEnd,
+                      TbmVehicle,
+                      tbmDriveScheduleId: drive.id,
+                    },
                   })
                 }
 
                 return (
-                  <div key={i} className=" p-1 [&:not(:last-child)]:border-b">
+                  <div key={drive.id} className=" p-1 [&:not(:last-child)]:border-b">
                     <R_Stack className="justify-between   ">
-                      <C_Stack className="w-[80px] justify-between gap-1 font-semibold">
+                      <C_Stack className="w-[120px] justify-between gap-1 font-semibold">
+                        <small>{TbmRouteGroup?.name}</small>
                         <small>({TbmVehicle?.vehicleNumber})</small>
                       </C_Stack>
 
                       <R_Stack className={`gap-3 ${gyomushuryo ? 'disabled ' : ''}`} >
                         <C_Stack className={` w-[180px] gap-0`}>
-                          {/* <small className={`flex gap-1`}>
-                            <span>最終:</span>
-                            <span>{formatDate(LastMeter?.date, 'MM/DD(ddd)')}</span>
-                            <TextOrange>{NumHandler.toPrice(lastOdometerEnd ?? 0)}km</TextOrange>
-                          </small> */}
                           <div>
                             <span>乗車:</span>
                             {odometerStart ? (

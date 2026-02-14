@@ -1832,7 +1832,8 @@ export const OdometerInputScalarFieldEnum = {
   odometerEnd: 'odometerEnd',
   date: 'date',
   tbmVehicleId: 'tbmVehicleId',
-  userId: 'userId'
+  userId: 'userId',
+  tbmDriveScheduleId: 'tbmDriveScheduleId'
 } as const
 
 export type OdometerInputScalarFieldEnum = (typeof OdometerInputScalarFieldEnum)[keyof typeof OdometerInputScalarFieldEnum]

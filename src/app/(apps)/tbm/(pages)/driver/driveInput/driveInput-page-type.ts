@@ -12,12 +12,13 @@ export const getDriveInputPageData = async ({user, whereQuery}: {user: any; wher
     include: {
       TbmBase: {},
       TbmRouteGroup: {},
+      OdometerInput: true,
       TbmVehicle: {
         include: {
           OdometerInput: {
             where: {date: {lte: whereQuery.gte}},
             orderBy: {date: `desc`},
-            take: 2,
+            take: 5,
           },
         },
       },

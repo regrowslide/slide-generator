@@ -330,6 +330,7 @@ export type TbmDriveScheduleWhereInput = {
   TbmBase?: Prisma.XOR<Prisma.TbmBaseScalarRelationFilter, Prisma.TbmBaseWhereInput>
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiListRelationFilter
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageListRelationFilter
+  OdometerInput?: Prisma.XOR<Prisma.OdometerInputNullableScalarRelationFilter, Prisma.OdometerInputWhereInput> | null
 }
 
 export type TbmDriveScheduleOrderByWithRelationInput = {
@@ -354,6 +355,7 @@ export type TbmDriveScheduleOrderByWithRelationInput = {
   TbmBase?: Prisma.TbmBaseOrderByWithRelationInput
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiOrderByRelationAggregateInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageOrderByRelationAggregateInput
+  OdometerInput?: Prisma.OdometerInputOrderByWithRelationInput
 }
 
 export type TbmDriveScheduleWhereUniqueInput = Prisma.AtLeast<{
@@ -381,6 +383,7 @@ export type TbmDriveScheduleWhereUniqueInput = Prisma.AtLeast<{
   TbmBase?: Prisma.XOR<Prisma.TbmBaseScalarRelationFilter, Prisma.TbmBaseWhereInput>
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiListRelationFilter
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageListRelationFilter
+  OdometerInput?: Prisma.XOR<Prisma.OdometerInputNullableScalarRelationFilter, Prisma.OdometerInputWhereInput> | null
 }, "id">
 
 export type TbmDriveScheduleOrderByWithAggregationInput = {
@@ -444,6 +447,7 @@ export type TbmDriveScheduleCreateInput = {
   TbmBase: Prisma.TbmBaseCreateNestedOneWithoutTbmDriveScheduleInput
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiCreateNestedManyWithoutTbmDriveScheduleInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageCreateNestedManyWithoutTbmDriveScheduleInput
+  OdometerInput?: Prisma.OdometerInputCreateNestedOneWithoutTbmDriveScheduleInput
 }
 
 export type TbmDriveScheduleUncheckedCreateInput = {
@@ -464,6 +468,7 @@ export type TbmDriveScheduleUncheckedCreateInput = {
   tbmBaseId: number
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiUncheckedCreateNestedManyWithoutTbmDriveScheduleInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUncheckedCreateNestedManyWithoutTbmDriveScheduleInput
+  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedOneWithoutTbmDriveScheduleInput
 }
 
 export type TbmDriveScheduleUpdateInput = {
@@ -483,6 +488,7 @@ export type TbmDriveScheduleUpdateInput = {
   TbmBase?: Prisma.TbmBaseUpdateOneRequiredWithoutTbmDriveScheduleNestedInput
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiUpdateManyWithoutTbmDriveScheduleNestedInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUpdateManyWithoutTbmDriveScheduleNestedInput
+  OdometerInput?: Prisma.OdometerInputUpdateOneWithoutTbmDriveScheduleNestedInput
 }
 
 export type TbmDriveScheduleUncheckedUpdateInput = {
@@ -503,6 +509,7 @@ export type TbmDriveScheduleUncheckedUpdateInput = {
   tbmBaseId?: Prisma.IntFieldUpdateOperationsInput | number
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiUncheckedUpdateManyWithoutTbmDriveScheduleNestedInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUncheckedUpdateManyWithoutTbmDriveScheduleNestedInput
+  OdometerInput?: Prisma.OdometerInputUncheckedUpdateOneWithoutTbmDriveScheduleNestedInput
 }
 
 export type TbmDriveScheduleCreateManyInput = {
@@ -845,6 +852,22 @@ export type TbmDriveScheduleUpdateOneWithoutTbmEtcMeisaiNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TbmDriveScheduleUpdateToOneWithWhereWithoutTbmEtcMeisaiInput, Prisma.TbmDriveScheduleUpdateWithoutTbmEtcMeisaiInput>, Prisma.TbmDriveScheduleUncheckedUpdateWithoutTbmEtcMeisaiInput>
 }
 
+export type TbmDriveScheduleCreateNestedOneWithoutOdometerInputInput = {
+  create?: Prisma.XOR<Prisma.TbmDriveScheduleCreateWithoutOdometerInputInput, Prisma.TbmDriveScheduleUncheckedCreateWithoutOdometerInputInput>
+  connectOrCreate?: Prisma.TbmDriveScheduleCreateOrConnectWithoutOdometerInputInput
+  connect?: Prisma.TbmDriveScheduleWhereUniqueInput
+}
+
+export type TbmDriveScheduleUpdateOneWithoutOdometerInputNestedInput = {
+  create?: Prisma.XOR<Prisma.TbmDriveScheduleCreateWithoutOdometerInputInput, Prisma.TbmDriveScheduleUncheckedCreateWithoutOdometerInputInput>
+  connectOrCreate?: Prisma.TbmDriveScheduleCreateOrConnectWithoutOdometerInputInput
+  upsert?: Prisma.TbmDriveScheduleUpsertWithoutOdometerInputInput
+  disconnect?: Prisma.TbmDriveScheduleWhereInput | boolean
+  delete?: Prisma.TbmDriveScheduleWhereInput | boolean
+  connect?: Prisma.TbmDriveScheduleWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TbmDriveScheduleUpdateToOneWithWhereWithoutOdometerInputInput, Prisma.TbmDriveScheduleUpdateWithoutOdometerInputInput>, Prisma.TbmDriveScheduleUncheckedUpdateWithoutOdometerInputInput>
+}
+
 export type TbmDriveScheduleCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
@@ -861,6 +884,7 @@ export type TbmDriveScheduleCreateWithoutUserInput = {
   TbmBase: Prisma.TbmBaseCreateNestedOneWithoutTbmDriveScheduleInput
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiCreateNestedManyWithoutTbmDriveScheduleInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageCreateNestedManyWithoutTbmDriveScheduleInput
+  OdometerInput?: Prisma.OdometerInputCreateNestedOneWithoutTbmDriveScheduleInput
 }
 
 export type TbmDriveScheduleUncheckedCreateWithoutUserInput = {
@@ -880,6 +904,7 @@ export type TbmDriveScheduleUncheckedCreateWithoutUserInput = {
   tbmBaseId: number
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiUncheckedCreateNestedManyWithoutTbmDriveScheduleInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUncheckedCreateNestedManyWithoutTbmDriveScheduleInput
+  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedOneWithoutTbmDriveScheduleInput
 }
 
 export type TbmDriveScheduleCreateOrConnectWithoutUserInput = {
@@ -945,6 +970,7 @@ export type TbmDriveScheduleCreateWithoutTbmBaseInput = {
   TbmRouteGroup: Prisma.TbmRouteGroupCreateNestedOneWithoutTbmDriveScheduleInput
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiCreateNestedManyWithoutTbmDriveScheduleInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageCreateNestedManyWithoutTbmDriveScheduleInput
+  OdometerInput?: Prisma.OdometerInputCreateNestedOneWithoutTbmDriveScheduleInput
 }
 
 export type TbmDriveScheduleUncheckedCreateWithoutTbmBaseInput = {
@@ -964,6 +990,7 @@ export type TbmDriveScheduleUncheckedCreateWithoutTbmBaseInput = {
   approved?: boolean | null
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiUncheckedCreateNestedManyWithoutTbmDriveScheduleInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUncheckedCreateNestedManyWithoutTbmDriveScheduleInput
+  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedOneWithoutTbmDriveScheduleInput
 }
 
 export type TbmDriveScheduleCreateOrConnectWithoutTbmBaseInput = {
@@ -1008,6 +1035,7 @@ export type TbmDriveScheduleCreateWithoutTbmDriveScheduleImageInput = {
   TbmRouteGroup: Prisma.TbmRouteGroupCreateNestedOneWithoutTbmDriveScheduleInput
   TbmBase: Prisma.TbmBaseCreateNestedOneWithoutTbmDriveScheduleInput
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiCreateNestedManyWithoutTbmDriveScheduleInput
+  OdometerInput?: Prisma.OdometerInputCreateNestedOneWithoutTbmDriveScheduleInput
 }
 
 export type TbmDriveScheduleUncheckedCreateWithoutTbmDriveScheduleImageInput = {
@@ -1027,6 +1055,7 @@ export type TbmDriveScheduleUncheckedCreateWithoutTbmDriveScheduleImageInput = {
   approved?: boolean | null
   tbmBaseId: number
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiUncheckedCreateNestedManyWithoutTbmDriveScheduleInput
+  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedOneWithoutTbmDriveScheduleInput
 }
 
 export type TbmDriveScheduleCreateOrConnectWithoutTbmDriveScheduleImageInput = {
@@ -1061,6 +1090,7 @@ export type TbmDriveScheduleUpdateWithoutTbmDriveScheduleImageInput = {
   TbmRouteGroup?: Prisma.TbmRouteGroupUpdateOneRequiredWithoutTbmDriveScheduleNestedInput
   TbmBase?: Prisma.TbmBaseUpdateOneRequiredWithoutTbmDriveScheduleNestedInput
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiUpdateManyWithoutTbmDriveScheduleNestedInput
+  OdometerInput?: Prisma.OdometerInputUpdateOneWithoutTbmDriveScheduleNestedInput
 }
 
 export type TbmDriveScheduleUncheckedUpdateWithoutTbmDriveScheduleImageInput = {
@@ -1080,6 +1110,7 @@ export type TbmDriveScheduleUncheckedUpdateWithoutTbmDriveScheduleImageInput = {
   approved?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   tbmBaseId?: Prisma.IntFieldUpdateOperationsInput | number
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiUncheckedUpdateManyWithoutTbmDriveScheduleNestedInput
+  OdometerInput?: Prisma.OdometerInputUncheckedUpdateOneWithoutTbmDriveScheduleNestedInput
 }
 
 export type TbmDriveScheduleCreateWithoutTbmVehicleInput = {
@@ -1098,6 +1129,7 @@ export type TbmDriveScheduleCreateWithoutTbmVehicleInput = {
   TbmBase: Prisma.TbmBaseCreateNestedOneWithoutTbmDriveScheduleInput
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiCreateNestedManyWithoutTbmDriveScheduleInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageCreateNestedManyWithoutTbmDriveScheduleInput
+  OdometerInput?: Prisma.OdometerInputCreateNestedOneWithoutTbmDriveScheduleInput
 }
 
 export type TbmDriveScheduleUncheckedCreateWithoutTbmVehicleInput = {
@@ -1117,6 +1149,7 @@ export type TbmDriveScheduleUncheckedCreateWithoutTbmVehicleInput = {
   tbmBaseId: number
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiUncheckedCreateNestedManyWithoutTbmDriveScheduleInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUncheckedCreateNestedManyWithoutTbmDriveScheduleInput
+  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedOneWithoutTbmDriveScheduleInput
 }
 
 export type TbmDriveScheduleCreateOrConnectWithoutTbmVehicleInput = {
@@ -1161,6 +1194,7 @@ export type TbmDriveScheduleCreateWithoutTbmRouteGroupInput = {
   TbmBase: Prisma.TbmBaseCreateNestedOneWithoutTbmDriveScheduleInput
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiCreateNestedManyWithoutTbmDriveScheduleInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageCreateNestedManyWithoutTbmDriveScheduleInput
+  OdometerInput?: Prisma.OdometerInputCreateNestedOneWithoutTbmDriveScheduleInput
 }
 
 export type TbmDriveScheduleUncheckedCreateWithoutTbmRouteGroupInput = {
@@ -1180,6 +1214,7 @@ export type TbmDriveScheduleUncheckedCreateWithoutTbmRouteGroupInput = {
   tbmBaseId: number
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiUncheckedCreateNestedManyWithoutTbmDriveScheduleInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUncheckedCreateNestedManyWithoutTbmDriveScheduleInput
+  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedOneWithoutTbmDriveScheduleInput
 }
 
 export type TbmDriveScheduleCreateOrConnectWithoutTbmRouteGroupInput = {
@@ -1224,6 +1259,7 @@ export type TbmDriveScheduleCreateWithoutTbmEtcMeisaiInput = {
   TbmRouteGroup: Prisma.TbmRouteGroupCreateNestedOneWithoutTbmDriveScheduleInput
   TbmBase: Prisma.TbmBaseCreateNestedOneWithoutTbmDriveScheduleInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageCreateNestedManyWithoutTbmDriveScheduleInput
+  OdometerInput?: Prisma.OdometerInputCreateNestedOneWithoutTbmDriveScheduleInput
 }
 
 export type TbmDriveScheduleUncheckedCreateWithoutTbmEtcMeisaiInput = {
@@ -1243,6 +1279,7 @@ export type TbmDriveScheduleUncheckedCreateWithoutTbmEtcMeisaiInput = {
   approved?: boolean | null
   tbmBaseId: number
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUncheckedCreateNestedManyWithoutTbmDriveScheduleInput
+  OdometerInput?: Prisma.OdometerInputUncheckedCreateNestedOneWithoutTbmDriveScheduleInput
 }
 
 export type TbmDriveScheduleCreateOrConnectWithoutTbmEtcMeisaiInput = {
@@ -1277,6 +1314,7 @@ export type TbmDriveScheduleUpdateWithoutTbmEtcMeisaiInput = {
   TbmRouteGroup?: Prisma.TbmRouteGroupUpdateOneRequiredWithoutTbmDriveScheduleNestedInput
   TbmBase?: Prisma.TbmBaseUpdateOneRequiredWithoutTbmDriveScheduleNestedInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUpdateManyWithoutTbmDriveScheduleNestedInput
+  OdometerInput?: Prisma.OdometerInputUpdateOneWithoutTbmDriveScheduleNestedInput
 }
 
 export type TbmDriveScheduleUncheckedUpdateWithoutTbmEtcMeisaiInput = {
@@ -1295,6 +1333,101 @@ export type TbmDriveScheduleUncheckedUpdateWithoutTbmEtcMeisaiInput = {
   confirmed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   approved?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   tbmBaseId?: Prisma.IntFieldUpdateOperationsInput | number
+  TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUncheckedUpdateManyWithoutTbmDriveScheduleNestedInput
+  OdometerInput?: Prisma.OdometerInputUncheckedUpdateOneWithoutTbmDriveScheduleNestedInput
+}
+
+export type TbmDriveScheduleCreateWithoutOdometerInputInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  date: Date | string
+  remark?: string | null
+  M_postalHighwayFee?: number | null
+  O_generalHighwayFee?: number | null
+  finished?: boolean | null
+  confirmed?: boolean | null
+  approved?: boolean | null
+  User?: Prisma.UserCreateNestedOneWithoutTbmDriveScheduleInput
+  TbmVehicle?: Prisma.TbmVehicleCreateNestedOneWithoutTbmDriveScheduleInput
+  TbmRouteGroup: Prisma.TbmRouteGroupCreateNestedOneWithoutTbmDriveScheduleInput
+  TbmBase: Prisma.TbmBaseCreateNestedOneWithoutTbmDriveScheduleInput
+  TbmEtcMeisai?: Prisma.TbmEtcMeisaiCreateNestedManyWithoutTbmDriveScheduleInput
+  TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageCreateNestedManyWithoutTbmDriveScheduleInput
+}
+
+export type TbmDriveScheduleUncheckedCreateWithoutOdometerInputInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  date: Date | string
+  remark?: string | null
+  M_postalHighwayFee?: number | null
+  O_generalHighwayFee?: number | null
+  userId?: number | null
+  tbmVehicleId?: number | null
+  tbmRouteGroupId: number
+  finished?: boolean | null
+  confirmed?: boolean | null
+  approved?: boolean | null
+  tbmBaseId: number
+  TbmEtcMeisai?: Prisma.TbmEtcMeisaiUncheckedCreateNestedManyWithoutTbmDriveScheduleInput
+  TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUncheckedCreateNestedManyWithoutTbmDriveScheduleInput
+}
+
+export type TbmDriveScheduleCreateOrConnectWithoutOdometerInputInput = {
+  where: Prisma.TbmDriveScheduleWhereUniqueInput
+  create: Prisma.XOR<Prisma.TbmDriveScheduleCreateWithoutOdometerInputInput, Prisma.TbmDriveScheduleUncheckedCreateWithoutOdometerInputInput>
+}
+
+export type TbmDriveScheduleUpsertWithoutOdometerInputInput = {
+  update: Prisma.XOR<Prisma.TbmDriveScheduleUpdateWithoutOdometerInputInput, Prisma.TbmDriveScheduleUncheckedUpdateWithoutOdometerInputInput>
+  create: Prisma.XOR<Prisma.TbmDriveScheduleCreateWithoutOdometerInputInput, Prisma.TbmDriveScheduleUncheckedCreateWithoutOdometerInputInput>
+  where?: Prisma.TbmDriveScheduleWhereInput
+}
+
+export type TbmDriveScheduleUpdateToOneWithWhereWithoutOdometerInputInput = {
+  where?: Prisma.TbmDriveScheduleWhereInput
+  data: Prisma.XOR<Prisma.TbmDriveScheduleUpdateWithoutOdometerInputInput, Prisma.TbmDriveScheduleUncheckedUpdateWithoutOdometerInputInput>
+}
+
+export type TbmDriveScheduleUpdateWithoutOdometerInputInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  M_postalHighwayFee?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  O_generalHighwayFee?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  finished?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  confirmed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  approved?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  User?: Prisma.UserUpdateOneWithoutTbmDriveScheduleNestedInput
+  TbmVehicle?: Prisma.TbmVehicleUpdateOneWithoutTbmDriveScheduleNestedInput
+  TbmRouteGroup?: Prisma.TbmRouteGroupUpdateOneRequiredWithoutTbmDriveScheduleNestedInput
+  TbmBase?: Prisma.TbmBaseUpdateOneRequiredWithoutTbmDriveScheduleNestedInput
+  TbmEtcMeisai?: Prisma.TbmEtcMeisaiUpdateManyWithoutTbmDriveScheduleNestedInput
+  TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUpdateManyWithoutTbmDriveScheduleNestedInput
+}
+
+export type TbmDriveScheduleUncheckedUpdateWithoutOdometerInputInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  M_postalHighwayFee?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  O_generalHighwayFee?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tbmVehicleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tbmRouteGroupId?: Prisma.IntFieldUpdateOperationsInput | number
+  finished?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  confirmed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  approved?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tbmBaseId?: Prisma.IntFieldUpdateOperationsInput | number
+  TbmEtcMeisai?: Prisma.TbmEtcMeisaiUncheckedUpdateManyWithoutTbmDriveScheduleNestedInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUncheckedUpdateManyWithoutTbmDriveScheduleNestedInput
 }
 
@@ -1331,6 +1464,7 @@ export type TbmDriveScheduleUpdateWithoutUserInput = {
   TbmBase?: Prisma.TbmBaseUpdateOneRequiredWithoutTbmDriveScheduleNestedInput
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiUpdateManyWithoutTbmDriveScheduleNestedInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUpdateManyWithoutTbmDriveScheduleNestedInput
+  OdometerInput?: Prisma.OdometerInputUpdateOneWithoutTbmDriveScheduleNestedInput
 }
 
 export type TbmDriveScheduleUncheckedUpdateWithoutUserInput = {
@@ -1350,6 +1484,7 @@ export type TbmDriveScheduleUncheckedUpdateWithoutUserInput = {
   tbmBaseId?: Prisma.IntFieldUpdateOperationsInput | number
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiUncheckedUpdateManyWithoutTbmDriveScheduleNestedInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUncheckedUpdateManyWithoutTbmDriveScheduleNestedInput
+  OdometerInput?: Prisma.OdometerInputUncheckedUpdateOneWithoutTbmDriveScheduleNestedInput
 }
 
 export type TbmDriveScheduleUncheckedUpdateManyWithoutUserInput = {
@@ -1402,6 +1537,7 @@ export type TbmDriveScheduleUpdateWithoutTbmBaseInput = {
   TbmRouteGroup?: Prisma.TbmRouteGroupUpdateOneRequiredWithoutTbmDriveScheduleNestedInput
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiUpdateManyWithoutTbmDriveScheduleNestedInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUpdateManyWithoutTbmDriveScheduleNestedInput
+  OdometerInput?: Prisma.OdometerInputUpdateOneWithoutTbmDriveScheduleNestedInput
 }
 
 export type TbmDriveScheduleUncheckedUpdateWithoutTbmBaseInput = {
@@ -1421,6 +1557,7 @@ export type TbmDriveScheduleUncheckedUpdateWithoutTbmBaseInput = {
   approved?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiUncheckedUpdateManyWithoutTbmDriveScheduleNestedInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUncheckedUpdateManyWithoutTbmDriveScheduleNestedInput
+  OdometerInput?: Prisma.OdometerInputUncheckedUpdateOneWithoutTbmDriveScheduleNestedInput
 }
 
 export type TbmDriveScheduleUncheckedUpdateManyWithoutTbmBaseInput = {
@@ -1473,6 +1610,7 @@ export type TbmDriveScheduleUpdateWithoutTbmVehicleInput = {
   TbmBase?: Prisma.TbmBaseUpdateOneRequiredWithoutTbmDriveScheduleNestedInput
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiUpdateManyWithoutTbmDriveScheduleNestedInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUpdateManyWithoutTbmDriveScheduleNestedInput
+  OdometerInput?: Prisma.OdometerInputUpdateOneWithoutTbmDriveScheduleNestedInput
 }
 
 export type TbmDriveScheduleUncheckedUpdateWithoutTbmVehicleInput = {
@@ -1492,6 +1630,7 @@ export type TbmDriveScheduleUncheckedUpdateWithoutTbmVehicleInput = {
   tbmBaseId?: Prisma.IntFieldUpdateOperationsInput | number
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiUncheckedUpdateManyWithoutTbmDriveScheduleNestedInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUncheckedUpdateManyWithoutTbmDriveScheduleNestedInput
+  OdometerInput?: Prisma.OdometerInputUncheckedUpdateOneWithoutTbmDriveScheduleNestedInput
 }
 
 export type TbmDriveScheduleUncheckedUpdateManyWithoutTbmVehicleInput = {
@@ -1544,6 +1683,7 @@ export type TbmDriveScheduleUpdateWithoutTbmRouteGroupInput = {
   TbmBase?: Prisma.TbmBaseUpdateOneRequiredWithoutTbmDriveScheduleNestedInput
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiUpdateManyWithoutTbmDriveScheduleNestedInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUpdateManyWithoutTbmDriveScheduleNestedInput
+  OdometerInput?: Prisma.OdometerInputUpdateOneWithoutTbmDriveScheduleNestedInput
 }
 
 export type TbmDriveScheduleUncheckedUpdateWithoutTbmRouteGroupInput = {
@@ -1563,6 +1703,7 @@ export type TbmDriveScheduleUncheckedUpdateWithoutTbmRouteGroupInput = {
   tbmBaseId?: Prisma.IntFieldUpdateOperationsInput | number
   TbmEtcMeisai?: Prisma.TbmEtcMeisaiUncheckedUpdateManyWithoutTbmDriveScheduleNestedInput
   TbmDriveScheduleImage?: Prisma.TbmDriveScheduleImageUncheckedUpdateManyWithoutTbmDriveScheduleNestedInput
+  OdometerInput?: Prisma.OdometerInputUncheckedUpdateOneWithoutTbmDriveScheduleNestedInput
 }
 
 export type TbmDriveScheduleUncheckedUpdateManyWithoutTbmRouteGroupInput = {
@@ -1644,6 +1785,7 @@ export type TbmDriveScheduleSelect<ExtArgs extends runtime.Types.Extensions.Inte
   TbmBase?: boolean | Prisma.TbmBaseDefaultArgs<ExtArgs>
   TbmEtcMeisai?: boolean | Prisma.TbmDriveSchedule$TbmEtcMeisaiArgs<ExtArgs>
   TbmDriveScheduleImage?: boolean | Prisma.TbmDriveSchedule$TbmDriveScheduleImageArgs<ExtArgs>
+  OdometerInput?: boolean | Prisma.TbmDriveSchedule$OdometerInputArgs<ExtArgs>
   _count?: boolean | Prisma.TbmDriveScheduleCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tbmDriveSchedule"]>
 
@@ -1717,6 +1859,7 @@ export type TbmDriveScheduleInclude<ExtArgs extends runtime.Types.Extensions.Int
   TbmBase?: boolean | Prisma.TbmBaseDefaultArgs<ExtArgs>
   TbmEtcMeisai?: boolean | Prisma.TbmDriveSchedule$TbmEtcMeisaiArgs<ExtArgs>
   TbmDriveScheduleImage?: boolean | Prisma.TbmDriveSchedule$TbmDriveScheduleImageArgs<ExtArgs>
+  OdometerInput?: boolean | Prisma.TbmDriveSchedule$OdometerInputArgs<ExtArgs>
   _count?: boolean | Prisma.TbmDriveScheduleCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TbmDriveScheduleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1741,6 +1884,7 @@ export type $TbmDriveSchedulePayload<ExtArgs extends runtime.Types.Extensions.In
     TbmBase: Prisma.$TbmBasePayload<ExtArgs>
     TbmEtcMeisai: Prisma.$TbmEtcMeisaiPayload<ExtArgs>[]
     TbmDriveScheduleImage: Prisma.$TbmDriveScheduleImagePayload<ExtArgs>[]
+    OdometerInput: Prisma.$OdometerInputPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -2158,6 +2302,7 @@ export interface Prisma__TbmDriveScheduleClient<T, Null = never, ExtArgs extends
   TbmBase<T extends Prisma.TbmBaseDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TbmBaseDefaultArgs<ExtArgs>>): Prisma.Prisma__TbmBaseClient<runtime.Types.Result.GetResult<Prisma.$TbmBasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   TbmEtcMeisai<T extends Prisma.TbmDriveSchedule$TbmEtcMeisaiArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TbmDriveSchedule$TbmEtcMeisaiArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TbmEtcMeisaiPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   TbmDriveScheduleImage<T extends Prisma.TbmDriveSchedule$TbmDriveScheduleImageArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TbmDriveSchedule$TbmDriveScheduleImageArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TbmDriveScheduleImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  OdometerInput<T extends Prisma.TbmDriveSchedule$OdometerInputArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TbmDriveSchedule$OdometerInputArgs<ExtArgs>>): Prisma.Prisma__OdometerInputClient<runtime.Types.Result.GetResult<Prisma.$OdometerInputPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2681,6 +2826,25 @@ export type TbmDriveSchedule$TbmDriveScheduleImageArgs<ExtArgs extends runtime.T
   take?: number
   skip?: number
   distinct?: Prisma.TbmDriveScheduleImageScalarFieldEnum | Prisma.TbmDriveScheduleImageScalarFieldEnum[]
+}
+
+/**
+ * TbmDriveSchedule.OdometerInput
+ */
+export type TbmDriveSchedule$OdometerInputArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OdometerInput
+   */
+  select?: Prisma.OdometerInputSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OdometerInput
+   */
+  omit?: Prisma.OdometerInputOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OdometerInputInclude<ExtArgs> | null
+  where?: Prisma.OdometerInputWhereInput
 }
 
 /**

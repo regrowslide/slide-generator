@@ -33,6 +33,7 @@ export type OdometerInputAvgAggregateOutputType = {
   odometerEnd: number | null
   tbmVehicleId: number | null
   userId: number | null
+  tbmDriveScheduleId: number | null
 }
 
 export type OdometerInputSumAggregateOutputType = {
@@ -42,6 +43,7 @@ export type OdometerInputSumAggregateOutputType = {
   odometerEnd: number | null
   tbmVehicleId: number | null
   userId: number | null
+  tbmDriveScheduleId: number | null
 }
 
 export type OdometerInputMinAggregateOutputType = {
@@ -54,6 +56,7 @@ export type OdometerInputMinAggregateOutputType = {
   date: Date | null
   tbmVehicleId: number | null
   userId: number | null
+  tbmDriveScheduleId: number | null
 }
 
 export type OdometerInputMaxAggregateOutputType = {
@@ -66,6 +69,7 @@ export type OdometerInputMaxAggregateOutputType = {
   date: Date | null
   tbmVehicleId: number | null
   userId: number | null
+  tbmDriveScheduleId: number | null
 }
 
 export type OdometerInputCountAggregateOutputType = {
@@ -78,6 +82,7 @@ export type OdometerInputCountAggregateOutputType = {
   date: number
   tbmVehicleId: number
   userId: number
+  tbmDriveScheduleId: number
   _all: number
 }
 
@@ -89,6 +94,7 @@ export type OdometerInputAvgAggregateInputType = {
   odometerEnd?: true
   tbmVehicleId?: true
   userId?: true
+  tbmDriveScheduleId?: true
 }
 
 export type OdometerInputSumAggregateInputType = {
@@ -98,6 +104,7 @@ export type OdometerInputSumAggregateInputType = {
   odometerEnd?: true
   tbmVehicleId?: true
   userId?: true
+  tbmDriveScheduleId?: true
 }
 
 export type OdometerInputMinAggregateInputType = {
@@ -110,6 +117,7 @@ export type OdometerInputMinAggregateInputType = {
   date?: true
   tbmVehicleId?: true
   userId?: true
+  tbmDriveScheduleId?: true
 }
 
 export type OdometerInputMaxAggregateInputType = {
@@ -122,6 +130,7 @@ export type OdometerInputMaxAggregateInputType = {
   date?: true
   tbmVehicleId?: true
   userId?: true
+  tbmDriveScheduleId?: true
 }
 
 export type OdometerInputCountAggregateInputType = {
@@ -134,6 +143,7 @@ export type OdometerInputCountAggregateInputType = {
   date?: true
   tbmVehicleId?: true
   userId?: true
+  tbmDriveScheduleId?: true
   _all?: true
 }
 
@@ -233,6 +243,7 @@ export type OdometerInputGroupByOutputType = {
   date: Date
   tbmVehicleId: number
   userId: number
+  tbmDriveScheduleId: number | null
   _count: OdometerInputCountAggregateOutputType | null
   _avg: OdometerInputAvgAggregateOutputType | null
   _sum: OdometerInputSumAggregateOutputType | null
@@ -268,8 +279,10 @@ export type OdometerInputWhereInput = {
   date?: Prisma.DateTimeFilter<"OdometerInput"> | Date | string
   tbmVehicleId?: Prisma.IntFilter<"OdometerInput"> | number
   userId?: Prisma.IntFilter<"OdometerInput"> | number
+  tbmDriveScheduleId?: Prisma.IntNullableFilter<"OdometerInput"> | number | null
   TbmVehicle?: Prisma.XOR<Prisma.TbmVehicleScalarRelationFilter, Prisma.TbmVehicleWhereInput>
   User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  TbmDriveSchedule?: Prisma.XOR<Prisma.TbmDriveScheduleNullableScalarRelationFilter, Prisma.TbmDriveScheduleWhereInput> | null
 }
 
 export type OdometerInputOrderByWithRelationInput = {
@@ -282,13 +295,15 @@ export type OdometerInputOrderByWithRelationInput = {
   date?: Prisma.SortOrder
   tbmVehicleId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  tbmDriveScheduleId?: Prisma.SortOrderInput | Prisma.SortOrder
   TbmVehicle?: Prisma.TbmVehicleOrderByWithRelationInput
   User?: Prisma.UserOrderByWithRelationInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleOrderByWithRelationInput
 }
 
 export type OdometerInputWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  unique_tbmVehicleId_date?: Prisma.OdometerInputUnique_tbmVehicleId_dateCompoundUniqueInput
+  tbmDriveScheduleId?: number
   AND?: Prisma.OdometerInputWhereInput | Prisma.OdometerInputWhereInput[]
   OR?: Prisma.OdometerInputWhereInput[]
   NOT?: Prisma.OdometerInputWhereInput | Prisma.OdometerInputWhereInput[]
@@ -302,7 +317,8 @@ export type OdometerInputWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.IntFilter<"OdometerInput"> | number
   TbmVehicle?: Prisma.XOR<Prisma.TbmVehicleScalarRelationFilter, Prisma.TbmVehicleWhereInput>
   User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id" | "unique_tbmVehicleId_date">
+  TbmDriveSchedule?: Prisma.XOR<Prisma.TbmDriveScheduleNullableScalarRelationFilter, Prisma.TbmDriveScheduleWhereInput> | null
+}, "id" | "tbmDriveScheduleId">
 
 export type OdometerInputOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -314,6 +330,7 @@ export type OdometerInputOrderByWithAggregationInput = {
   date?: Prisma.SortOrder
   tbmVehicleId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  tbmDriveScheduleId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.OdometerInputCountOrderByAggregateInput
   _avg?: Prisma.OdometerInputAvgOrderByAggregateInput
   _max?: Prisma.OdometerInputMaxOrderByAggregateInput
@@ -334,6 +351,7 @@ export type OdometerInputScalarWhereWithAggregatesInput = {
   date?: Prisma.DateTimeWithAggregatesFilter<"OdometerInput"> | Date | string
   tbmVehicleId?: Prisma.IntWithAggregatesFilter<"OdometerInput"> | number
   userId?: Prisma.IntWithAggregatesFilter<"OdometerInput"> | number
+  tbmDriveScheduleId?: Prisma.IntNullableWithAggregatesFilter<"OdometerInput"> | number | null
 }
 
 export type OdometerInputCreateInput = {
@@ -345,6 +363,7 @@ export type OdometerInputCreateInput = {
   date: Date | string
   TbmVehicle: Prisma.TbmVehicleCreateNestedOneWithoutOdometerInputInput
   User: Prisma.UserCreateNestedOneWithoutOdometerInputInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedOneWithoutOdometerInputInput
 }
 
 export type OdometerInputUncheckedCreateInput = {
@@ -357,6 +376,7 @@ export type OdometerInputUncheckedCreateInput = {
   date: Date | string
   tbmVehicleId: number
   userId: number
+  tbmDriveScheduleId?: number | null
 }
 
 export type OdometerInputUpdateInput = {
@@ -368,6 +388,7 @@ export type OdometerInputUpdateInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   TbmVehicle?: Prisma.TbmVehicleUpdateOneRequiredWithoutOdometerInputNestedInput
   User?: Prisma.UserUpdateOneRequiredWithoutOdometerInputNestedInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateOneWithoutOdometerInputNestedInput
 }
 
 export type OdometerInputUncheckedUpdateInput = {
@@ -380,6 +401,7 @@ export type OdometerInputUncheckedUpdateInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tbmVehicleId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  tbmDriveScheduleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type OdometerInputCreateManyInput = {
@@ -392,6 +414,7 @@ export type OdometerInputCreateManyInput = {
   date: Date | string
   tbmVehicleId: number
   userId: number
+  tbmDriveScheduleId?: number | null
 }
 
 export type OdometerInputUpdateManyMutationInput = {
@@ -413,6 +436,7 @@ export type OdometerInputUncheckedUpdateManyInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tbmVehicleId?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  tbmDriveScheduleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type OdometerInputListRelationFilter = {
@@ -425,9 +449,9 @@ export type OdometerInputOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type OdometerInputUnique_tbmVehicleId_dateCompoundUniqueInput = {
-  tbmVehicleId: number
-  date: Date | string
+export type OdometerInputNullableScalarRelationFilter = {
+  is?: Prisma.OdometerInputWhereInput | null
+  isNot?: Prisma.OdometerInputWhereInput | null
 }
 
 export type OdometerInputCountOrderByAggregateInput = {
@@ -440,6 +464,7 @@ export type OdometerInputCountOrderByAggregateInput = {
   date?: Prisma.SortOrder
   tbmVehicleId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  tbmDriveScheduleId?: Prisma.SortOrder
 }
 
 export type OdometerInputAvgOrderByAggregateInput = {
@@ -449,6 +474,7 @@ export type OdometerInputAvgOrderByAggregateInput = {
   odometerEnd?: Prisma.SortOrder
   tbmVehicleId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  tbmDriveScheduleId?: Prisma.SortOrder
 }
 
 export type OdometerInputMaxOrderByAggregateInput = {
@@ -461,6 +487,7 @@ export type OdometerInputMaxOrderByAggregateInput = {
   date?: Prisma.SortOrder
   tbmVehicleId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  tbmDriveScheduleId?: Prisma.SortOrder
 }
 
 export type OdometerInputMinOrderByAggregateInput = {
@@ -473,6 +500,7 @@ export type OdometerInputMinOrderByAggregateInput = {
   date?: Prisma.SortOrder
   tbmVehicleId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  tbmDriveScheduleId?: Prisma.SortOrder
 }
 
 export type OdometerInputSumOrderByAggregateInput = {
@@ -482,6 +510,7 @@ export type OdometerInputSumOrderByAggregateInput = {
   odometerEnd?: Prisma.SortOrder
   tbmVehicleId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  tbmDriveScheduleId?: Prisma.SortOrder
 }
 
 export type OdometerInputCreateNestedManyWithoutUserInput = {
@@ -568,6 +597,38 @@ export type OdometerInputUncheckedUpdateManyWithoutTbmVehicleNestedInput = {
   deleteMany?: Prisma.OdometerInputScalarWhereInput | Prisma.OdometerInputScalarWhereInput[]
 }
 
+export type OdometerInputCreateNestedOneWithoutTbmDriveScheduleInput = {
+  create?: Prisma.XOR<Prisma.OdometerInputCreateWithoutTbmDriveScheduleInput, Prisma.OdometerInputUncheckedCreateWithoutTbmDriveScheduleInput>
+  connectOrCreate?: Prisma.OdometerInputCreateOrConnectWithoutTbmDriveScheduleInput
+  connect?: Prisma.OdometerInputWhereUniqueInput
+}
+
+export type OdometerInputUncheckedCreateNestedOneWithoutTbmDriveScheduleInput = {
+  create?: Prisma.XOR<Prisma.OdometerInputCreateWithoutTbmDriveScheduleInput, Prisma.OdometerInputUncheckedCreateWithoutTbmDriveScheduleInput>
+  connectOrCreate?: Prisma.OdometerInputCreateOrConnectWithoutTbmDriveScheduleInput
+  connect?: Prisma.OdometerInputWhereUniqueInput
+}
+
+export type OdometerInputUpdateOneWithoutTbmDriveScheduleNestedInput = {
+  create?: Prisma.XOR<Prisma.OdometerInputCreateWithoutTbmDriveScheduleInput, Prisma.OdometerInputUncheckedCreateWithoutTbmDriveScheduleInput>
+  connectOrCreate?: Prisma.OdometerInputCreateOrConnectWithoutTbmDriveScheduleInput
+  upsert?: Prisma.OdometerInputUpsertWithoutTbmDriveScheduleInput
+  disconnect?: Prisma.OdometerInputWhereInput | boolean
+  delete?: Prisma.OdometerInputWhereInput | boolean
+  connect?: Prisma.OdometerInputWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OdometerInputUpdateToOneWithWhereWithoutTbmDriveScheduleInput, Prisma.OdometerInputUpdateWithoutTbmDriveScheduleInput>, Prisma.OdometerInputUncheckedUpdateWithoutTbmDriveScheduleInput>
+}
+
+export type OdometerInputUncheckedUpdateOneWithoutTbmDriveScheduleNestedInput = {
+  create?: Prisma.XOR<Prisma.OdometerInputCreateWithoutTbmDriveScheduleInput, Prisma.OdometerInputUncheckedCreateWithoutTbmDriveScheduleInput>
+  connectOrCreate?: Prisma.OdometerInputCreateOrConnectWithoutTbmDriveScheduleInput
+  upsert?: Prisma.OdometerInputUpsertWithoutTbmDriveScheduleInput
+  disconnect?: Prisma.OdometerInputWhereInput | boolean
+  delete?: Prisma.OdometerInputWhereInput | boolean
+  connect?: Prisma.OdometerInputWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OdometerInputUpdateToOneWithWhereWithoutTbmDriveScheduleInput, Prisma.OdometerInputUpdateWithoutTbmDriveScheduleInput>, Prisma.OdometerInputUncheckedUpdateWithoutTbmDriveScheduleInput>
+}
+
 export type OdometerInputCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
@@ -576,6 +637,7 @@ export type OdometerInputCreateWithoutUserInput = {
   odometerEnd: number
   date: Date | string
   TbmVehicle: Prisma.TbmVehicleCreateNestedOneWithoutOdometerInputInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedOneWithoutOdometerInputInput
 }
 
 export type OdometerInputUncheckedCreateWithoutUserInput = {
@@ -587,6 +649,7 @@ export type OdometerInputUncheckedCreateWithoutUserInput = {
   odometerEnd: number
   date: Date | string
   tbmVehicleId: number
+  tbmDriveScheduleId?: number | null
 }
 
 export type OdometerInputCreateOrConnectWithoutUserInput = {
@@ -628,6 +691,7 @@ export type OdometerInputScalarWhereInput = {
   date?: Prisma.DateTimeFilter<"OdometerInput"> | Date | string
   tbmVehicleId?: Prisma.IntFilter<"OdometerInput"> | number
   userId?: Prisma.IntFilter<"OdometerInput"> | number
+  tbmDriveScheduleId?: Prisma.IntNullableFilter<"OdometerInput"> | number | null
 }
 
 export type OdometerInputCreateWithoutTbmVehicleInput = {
@@ -638,6 +702,7 @@ export type OdometerInputCreateWithoutTbmVehicleInput = {
   odometerEnd: number
   date: Date | string
   User: Prisma.UserCreateNestedOneWithoutOdometerInputInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleCreateNestedOneWithoutOdometerInputInput
 }
 
 export type OdometerInputUncheckedCreateWithoutTbmVehicleInput = {
@@ -649,6 +714,7 @@ export type OdometerInputUncheckedCreateWithoutTbmVehicleInput = {
   odometerEnd: number
   date: Date | string
   userId: number
+  tbmDriveScheduleId?: number | null
 }
 
 export type OdometerInputCreateOrConnectWithoutTbmVehicleInput = {
@@ -677,6 +743,68 @@ export type OdometerInputUpdateManyWithWhereWithoutTbmVehicleInput = {
   data: Prisma.XOR<Prisma.OdometerInputUpdateManyMutationInput, Prisma.OdometerInputUncheckedUpdateManyWithoutTbmVehicleInput>
 }
 
+export type OdometerInputCreateWithoutTbmDriveScheduleInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  odometerStart: number
+  odometerEnd: number
+  date: Date | string
+  TbmVehicle: Prisma.TbmVehicleCreateNestedOneWithoutOdometerInputInput
+  User: Prisma.UserCreateNestedOneWithoutOdometerInputInput
+}
+
+export type OdometerInputUncheckedCreateWithoutTbmDriveScheduleInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  odometerStart: number
+  odometerEnd: number
+  date: Date | string
+  tbmVehicleId: number
+  userId: number
+}
+
+export type OdometerInputCreateOrConnectWithoutTbmDriveScheduleInput = {
+  where: Prisma.OdometerInputWhereUniqueInput
+  create: Prisma.XOR<Prisma.OdometerInputCreateWithoutTbmDriveScheduleInput, Prisma.OdometerInputUncheckedCreateWithoutTbmDriveScheduleInput>
+}
+
+export type OdometerInputUpsertWithoutTbmDriveScheduleInput = {
+  update: Prisma.XOR<Prisma.OdometerInputUpdateWithoutTbmDriveScheduleInput, Prisma.OdometerInputUncheckedUpdateWithoutTbmDriveScheduleInput>
+  create: Prisma.XOR<Prisma.OdometerInputCreateWithoutTbmDriveScheduleInput, Prisma.OdometerInputUncheckedCreateWithoutTbmDriveScheduleInput>
+  where?: Prisma.OdometerInputWhereInput
+}
+
+export type OdometerInputUpdateToOneWithWhereWithoutTbmDriveScheduleInput = {
+  where?: Prisma.OdometerInputWhereInput
+  data: Prisma.XOR<Prisma.OdometerInputUpdateWithoutTbmDriveScheduleInput, Prisma.OdometerInputUncheckedUpdateWithoutTbmDriveScheduleInput>
+}
+
+export type OdometerInputUpdateWithoutTbmDriveScheduleInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  odometerStart?: Prisma.FloatFieldUpdateOperationsInput | number
+  odometerEnd?: Prisma.FloatFieldUpdateOperationsInput | number
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  TbmVehicle?: Prisma.TbmVehicleUpdateOneRequiredWithoutOdometerInputNestedInput
+  User?: Prisma.UserUpdateOneRequiredWithoutOdometerInputNestedInput
+}
+
+export type OdometerInputUncheckedUpdateWithoutTbmDriveScheduleInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  odometerStart?: Prisma.FloatFieldUpdateOperationsInput | number
+  odometerEnd?: Prisma.FloatFieldUpdateOperationsInput | number
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tbmVehicleId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
 export type OdometerInputCreateManyUserInput = {
   id?: number
   createdAt?: Date | string
@@ -686,6 +814,7 @@ export type OdometerInputCreateManyUserInput = {
   odometerEnd: number
   date: Date | string
   tbmVehicleId: number
+  tbmDriveScheduleId?: number | null
 }
 
 export type OdometerInputUpdateWithoutUserInput = {
@@ -696,6 +825,7 @@ export type OdometerInputUpdateWithoutUserInput = {
   odometerEnd?: Prisma.FloatFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   TbmVehicle?: Prisma.TbmVehicleUpdateOneRequiredWithoutOdometerInputNestedInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateOneWithoutOdometerInputNestedInput
 }
 
 export type OdometerInputUncheckedUpdateWithoutUserInput = {
@@ -707,6 +837,7 @@ export type OdometerInputUncheckedUpdateWithoutUserInput = {
   odometerEnd?: Prisma.FloatFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tbmVehicleId?: Prisma.IntFieldUpdateOperationsInput | number
+  tbmDriveScheduleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type OdometerInputUncheckedUpdateManyWithoutUserInput = {
@@ -718,6 +849,7 @@ export type OdometerInputUncheckedUpdateManyWithoutUserInput = {
   odometerEnd?: Prisma.FloatFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tbmVehicleId?: Prisma.IntFieldUpdateOperationsInput | number
+  tbmDriveScheduleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type OdometerInputCreateManyTbmVehicleInput = {
@@ -729,6 +861,7 @@ export type OdometerInputCreateManyTbmVehicleInput = {
   odometerEnd: number
   date: Date | string
   userId: number
+  tbmDriveScheduleId?: number | null
 }
 
 export type OdometerInputUpdateWithoutTbmVehicleInput = {
@@ -739,6 +872,7 @@ export type OdometerInputUpdateWithoutTbmVehicleInput = {
   odometerEnd?: Prisma.FloatFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   User?: Prisma.UserUpdateOneRequiredWithoutOdometerInputNestedInput
+  TbmDriveSchedule?: Prisma.TbmDriveScheduleUpdateOneWithoutOdometerInputNestedInput
 }
 
 export type OdometerInputUncheckedUpdateWithoutTbmVehicleInput = {
@@ -750,6 +884,7 @@ export type OdometerInputUncheckedUpdateWithoutTbmVehicleInput = {
   odometerEnd?: Prisma.FloatFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  tbmDriveScheduleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type OdometerInputUncheckedUpdateManyWithoutTbmVehicleInput = {
@@ -761,6 +896,7 @@ export type OdometerInputUncheckedUpdateManyWithoutTbmVehicleInput = {
   odometerEnd?: Prisma.FloatFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  tbmDriveScheduleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 
@@ -775,8 +911,10 @@ export type OdometerInputSelect<ExtArgs extends runtime.Types.Extensions.Interna
   date?: boolean
   tbmVehicleId?: boolean
   userId?: boolean
+  tbmDriveScheduleId?: boolean
   TbmVehicle?: boolean | Prisma.TbmVehicleDefaultArgs<ExtArgs>
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  TbmDriveSchedule?: boolean | Prisma.OdometerInput$TbmDriveScheduleArgs<ExtArgs>
 }, ExtArgs["result"]["odometerInput"]>
 
 export type OdometerInputSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -789,8 +927,10 @@ export type OdometerInputSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   date?: boolean
   tbmVehicleId?: boolean
   userId?: boolean
+  tbmDriveScheduleId?: boolean
   TbmVehicle?: boolean | Prisma.TbmVehicleDefaultArgs<ExtArgs>
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  TbmDriveSchedule?: boolean | Prisma.OdometerInput$TbmDriveScheduleArgs<ExtArgs>
 }, ExtArgs["result"]["odometerInput"]>
 
 export type OdometerInputSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -803,8 +943,10 @@ export type OdometerInputSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   date?: boolean
   tbmVehicleId?: boolean
   userId?: boolean
+  tbmDriveScheduleId?: boolean
   TbmVehicle?: boolean | Prisma.TbmVehicleDefaultArgs<ExtArgs>
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  TbmDriveSchedule?: boolean | Prisma.OdometerInput$TbmDriveScheduleArgs<ExtArgs>
 }, ExtArgs["result"]["odometerInput"]>
 
 export type OdometerInputSelectScalar = {
@@ -817,20 +959,24 @@ export type OdometerInputSelectScalar = {
   date?: boolean
   tbmVehicleId?: boolean
   userId?: boolean
+  tbmDriveScheduleId?: boolean
 }
 
-export type OdometerInputOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "odometerStart" | "odometerEnd" | "date" | "tbmVehicleId" | "userId", ExtArgs["result"]["odometerInput"]>
+export type OdometerInputOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "odometerStart" | "odometerEnd" | "date" | "tbmVehicleId" | "userId" | "tbmDriveScheduleId", ExtArgs["result"]["odometerInput"]>
 export type OdometerInputInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   TbmVehicle?: boolean | Prisma.TbmVehicleDefaultArgs<ExtArgs>
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  TbmDriveSchedule?: boolean | Prisma.OdometerInput$TbmDriveScheduleArgs<ExtArgs>
 }
 export type OdometerInputIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   TbmVehicle?: boolean | Prisma.TbmVehicleDefaultArgs<ExtArgs>
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  TbmDriveSchedule?: boolean | Prisma.OdometerInput$TbmDriveScheduleArgs<ExtArgs>
 }
 export type OdometerInputIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   TbmVehicle?: boolean | Prisma.TbmVehicleDefaultArgs<ExtArgs>
   User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  TbmDriveSchedule?: boolean | Prisma.OdometerInput$TbmDriveScheduleArgs<ExtArgs>
 }
 
 export type $OdometerInputPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -838,6 +984,7 @@ export type $OdometerInputPayload<ExtArgs extends runtime.Types.Extensions.Inter
   objects: {
     TbmVehicle: Prisma.$TbmVehiclePayload<ExtArgs>
     User: Prisma.$UserPayload<ExtArgs>
+    TbmDriveSchedule: Prisma.$TbmDriveSchedulePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -849,6 +996,7 @@ export type $OdometerInputPayload<ExtArgs extends runtime.Types.Extensions.Inter
     date: Date
     tbmVehicleId: number
     userId: number
+    tbmDriveScheduleId: number | null
   }, ExtArgs["result"]["odometerInput"]>
   composites: {}
 }
@@ -1245,6 +1393,7 @@ export interface Prisma__OdometerInputClient<T, Null = never, ExtArgs extends ru
   readonly [Symbol.toStringTag]: "PrismaPromise"
   TbmVehicle<T extends Prisma.TbmVehicleDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TbmVehicleDefaultArgs<ExtArgs>>): Prisma.Prisma__TbmVehicleClient<runtime.Types.Result.GetResult<Prisma.$TbmVehiclePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   User<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  TbmDriveSchedule<T extends Prisma.OdometerInput$TbmDriveScheduleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OdometerInput$TbmDriveScheduleArgs<ExtArgs>>): Prisma.Prisma__TbmDriveScheduleClient<runtime.Types.Result.GetResult<Prisma.$TbmDriveSchedulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1283,6 +1432,7 @@ export interface OdometerInputFieldRefs {
   readonly date: Prisma.FieldRef<"OdometerInput", 'DateTime'>
   readonly tbmVehicleId: Prisma.FieldRef<"OdometerInput", 'Int'>
   readonly userId: Prisma.FieldRef<"OdometerInput", 'Int'>
+  readonly tbmDriveScheduleId: Prisma.FieldRef<"OdometerInput", 'Int'>
 }
     
 
@@ -1676,6 +1826,25 @@ export type OdometerInputDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many OdometerInputs to delete.
    */
   limit?: number
+}
+
+/**
+ * OdometerInput.TbmDriveSchedule
+ */
+export type OdometerInput$TbmDriveScheduleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TbmDriveSchedule
+   */
+  select?: Prisma.TbmDriveScheduleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TbmDriveSchedule
+   */
+  omit?: Prisma.TbmDriveScheduleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TbmDriveScheduleInclude<ExtArgs> | null
+  where?: Prisma.TbmDriveScheduleWhereInput
 }
 
 /**
