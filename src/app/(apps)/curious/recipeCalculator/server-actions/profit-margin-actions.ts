@@ -16,6 +16,7 @@ export const getProfitMarginStandards = async (): Promise<RcProfitMarginStandard
   const result = await prisma.rcProfitMarginStandard.findMany({
     orderBy: {minPackCount: 'asc'},
   })
+
   return result
 }
 
@@ -84,6 +85,7 @@ export const checkProfitMarginAlert = async (
   if (packCount <= 0) return null
 
   const standard = await getApplicableStandard(packCount)
+
   if (!standard) return null
 
   // 販売価格が未計算の場合は基準情報のみ返す

@@ -23,6 +23,7 @@ export const useProfitMarginAlert = ({packCount, profitMargin, sellingPrice}: Us
     setIsLoading(true)
     try {
       const result = await checkProfitMarginAlert(packCount, profitMargin, sellingPrice)
+
       setAlert(result)
     } catch (error) {
       console.error('粗利アラート取得エラー:', error)
@@ -34,7 +35,7 @@ export const useProfitMarginAlert = ({packCount, profitMargin, sellingPrice}: Us
 
   useEffect(() => {
     fetchAlert()
-  }, [fetchAlert])
+  }, [fetchAlert, packCount, profitMargin, sellingPrice])
 
   return {alert, isLoading}
 }
