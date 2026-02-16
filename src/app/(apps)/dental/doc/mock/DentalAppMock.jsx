@@ -109,6 +109,7 @@ const INITIAL_PATIENTS = [
       cerebellarDegeneration: false,
       multipleSclerosis: false,
       disuseSyndrome: false,
+      diabetes: false,
     },
     teethCount: 18,
     hasDenture: true,
@@ -162,6 +163,7 @@ const INITIAL_PATIENTS = [
       cerebellarDegeneration: false,
       multipleSclerosis: false,
       disuseSyndrome: false,
+      diabetes: false,
     },
     teethCount: 12,
     hasDenture: true,
@@ -216,6 +218,7 @@ const INITIAL_PATIENTS = [
       cerebellarDegeneration: false,
       multipleSclerosis: false,
       disuseSyndrome: false,
+      diabetes: false,
     },
     teethCount: 24,
     hasDenture: false,
@@ -252,6 +255,7 @@ const INITIAL_PATIENTS = [
       cerebellarDegeneration: false,
       multipleSclerosis: false,
       disuseSyndrome: false,
+      diabetes: false,
     },
     teethCount: 20,
     hasDenture: false,
@@ -288,6 +292,7 @@ const INITIAL_PATIENTS = [
       cerebellarDegeneration: false,
       multipleSclerosis: false,
       disuseSyndrome: true,
+      diabetes: false,
     },
     teethCount: 8,
     hasDenture: true,
@@ -343,6 +348,7 @@ const INITIAL_PATIENTS = [
       cerebellarDegeneration: false,
       multipleSclerosis: false,
       disuseSyndrome: false,
+      diabetes: false,
     },
     teethCount: 22,
     hasDenture: false,
@@ -379,6 +385,7 @@ const INITIAL_PATIENTS = [
       cerebellarDegeneration: false,
       multipleSclerosis: false,
       disuseSyndrome: false,
+      diabetes: false,
     },
     teethCount: 15,
     hasDenture: true,
@@ -402,6 +409,134 @@ const INITIAL_PATIENTS = [
       medicationSwallowing: '苦手',
     },
   },
+  {
+    id: 8,
+    facilityId: 1,
+    lastName: '木村',
+    firstName: '糖子',
+    lastNameKana: 'キムラ',
+    firstNameKana: 'トウコ',
+    gender: 'female',
+    birthDate: '1944-04-10',
+    age: 81,
+    careLevel: '要介護3',
+    building: '本館',
+    floor: '3F',
+    room: '305',
+    notes: '糖尿病管理中。血糖値チェック要。',
+    diseases: {
+      dementia: false,
+      hypertension: true,
+      cerebrovascular: false,
+      mentalDisorder: false,
+      parkinsons: false,
+      heartFailure: false,
+      terminalCancer: false,
+      senility: false,
+      femurFracture: false,
+      spinalStenosis: false,
+      als: false,
+      cerebellarDegeneration: false,
+      multipleSclerosis: false,
+      disuseSyndrome: false,
+      diabetes: true,
+    },
+    teethCount: 16,
+    hasDenture: true,
+    hasOralHypofunction: true,
+    assessment: {
+      ...DEFAULT_ASSESSMENT,
+      height: '155',
+      weight: '52',
+      bmi: '21.6',
+      seatRetention: 'やや不良',
+      oralCleaning: '声がけのみ必要',
+      moistureRetention: '困難',
+      gargling: '困難',
+      malnutritionRisk: '少しあり',
+      choking: '液体で時々',
+      oralIntake: '全て経口摂取',
+      moisture: 'トロミあり',
+      mainDish: 'お粥',
+      sideDish: '刻み食',
+      swallowing: '時々むせることがある',
+      medicationSwallowing: '苦手',
+    },
+  },
+  {
+    id: 9,
+    facilityId: 3,
+    lastName: '中島',
+    firstName: '一人',
+    lastNameKana: 'ナカジマ',
+    firstNameKana: 'カズト',
+    gender: 'male',
+    birthDate: '1946-08-20',
+    age: 79,
+    careLevel: '要介護2',
+    building: 'A棟',
+    floor: '1F',
+    room: '103',
+    notes: '',
+    diseases: {
+      dementia: true,
+      hypertension: false,
+      cerebrovascular: false,
+      mentalDisorder: false,
+      parkinsons: false,
+      heartFailure: false,
+      terminalCancer: false,
+      senility: false,
+      femurFracture: false,
+      spinalStenosis: false,
+      als: false,
+      cerebellarDegeneration: false,
+      multipleSclerosis: false,
+      disuseSyndrome: false,
+      diabetes: false,
+    },
+    teethCount: 25,
+    hasDenture: false,
+    hasOralHypofunction: false,
+    assessment: {...DEFAULT_ASSESSMENT},
+  },
+  {
+    id: 10,
+    facilityId: 3,
+    lastName: '松本',
+    firstName: '花子',
+    lastNameKana: 'マツモト',
+    firstNameKana: 'ハナコ',
+    gender: 'female',
+    birthDate: '1936-02-14',
+    age: 90,
+    careLevel: '要介護4',
+    building: 'A棟',
+    floor: '1F',
+    room: '104',
+    notes: '歯数5本。義歯使用中。',
+    diseases: {
+      dementia: false,
+      hypertension: false,
+      cerebrovascular: false,
+      mentalDisorder: false,
+      parkinsons: false,
+      heartFailure: false,
+      terminalCancer: false,
+      senility: true,
+      femurFracture: false,
+      spinalStenosis: false,
+      als: false,
+      cerebellarDegeneration: false,
+      multipleSclerosis: false,
+      disuseSyndrome: false,
+      diabetes: false,
+    },
+    teethCount: 5,
+    hasDenture: true,
+    hasOralHypofunction: true,
+    assessment: {...DEFAULT_ASSESSMENT},
+  },
 ]
 
 /** 初期スタッフデータ */
@@ -417,22 +552,47 @@ const INITIAL_VISIT_PLANS = [
   {id: 1, facilityId: 1, visitDate: '2026-01-18', status: 'scheduled'},
   {id: 2, facilityId: 1, visitDate: '2026-01-25', status: 'scheduled'},
   {id: 3, facilityId: 2, visitDate: '2026-01-20', status: 'scheduled'},
+  {id: 4, facilityId: 3, visitDate: '2026-01-22', status: 'scheduled'},
 ]
 
 /** 初期診察データ */
 const INITIAL_EXAMINATIONS = [
+  // === 施設1: 5人診察（同一日同一施設5人 → 歯訪3区分） ===
   {
     id: 1,
+    visitPlanId: 1,
+    patientId: 1,
+    doctorId: 1,
+    hygienistId: 3,
+    status: EXAMINATION_STATUS.WAITING,
+    sortOrder: 1,
+    vitalBefore: {bloodPressure: '130/85', spo2: '97'},
+    vitalAfter: null,
+    treatmentItems: [],
+    procedureItems: {},
+    visitCondition: '',
+    oralFindings: '',
+    treatment: '',
+    nextPlan: '',
+    drStartTime: null,
+    drEndTime: null,
+    dhStartTime: null,
+    dhEndTime: null,
+    treatmentPerformed: [],
+    oralFunctionRecord: null,
+  },
+  {
+    id: 2,
     visitPlanId: 1,
     patientId: 2,
     doctorId: 1,
     hygienistId: 3,
     status: EXAMINATION_STATUS.WAITING,
-    sortOrder: 1,
+    sortOrder: 2,
     vitalBefore: {bloodPressure: '120/80', spo2: '98'},
     vitalAfter: null,
     treatmentItems: [],
-    procedureItems: {}, // オブジェクト形式: { itemId: { categoryId: string } }
+    procedureItems: {},
     visitCondition: '',
     oralFindings: '',
     treatment: '',
@@ -441,19 +601,114 @@ const INITIAL_EXAMINATIONS = [
     drEndTime: null,
     dhStartTime: null,
     dhEndTime: null,
+    treatmentPerformed: [],
+    oralFunctionRecord: null,
   },
   {
-    id: 2,
+    id: 3,
     visitPlanId: 1,
-    patientId: 1,
+    patientId: 3,
     doctorId: 1,
     hygienistId: null,
+    status: EXAMINATION_STATUS.WAITING,
+    sortOrder: 3,
+    vitalBefore: null,
+    vitalAfter: null,
+    treatmentItems: [],
+    procedureItems: {},
+    visitCondition: '',
+    oralFindings: '',
+    treatment: '',
+    nextPlan: '',
+    drStartTime: null,
+    drEndTime: null,
+    dhStartTime: null,
+    dhEndTime: null,
+    treatmentPerformed: [],
+    oralFunctionRecord: null,
+  },
+  {
+    id: 4,
+    visitPlanId: 1,
+    patientId: 4,
+    doctorId: 1,
+    hygienistId: null,
+    status: EXAMINATION_STATUS.WAITING,
+    sortOrder: 4,
+    vitalBefore: null,
+    vitalAfter: null,
+    treatmentItems: [],
+    procedureItems: {},
+    visitCondition: '',
+    oralFindings: '',
+    treatment: '',
+    nextPlan: '',
+    drStartTime: null,
+    drEndTime: null,
+    dhStartTime: null,
+    dhEndTime: null,
+    treatmentPerformed: [],
+    oralFunctionRecord: null,
+  },
+  {
+    id: 5,
+    visitPlanId: 1,
+    patientId: 8,
+    doctorId: 1,
+    hygienistId: 3,
+    status: EXAMINATION_STATUS.WAITING,
+    sortOrder: 5,
+    vitalBefore: null,
+    vitalAfter: null,
+    treatmentItems: [],
+    procedureItems: {},
+    visitCondition: '',
+    oralFindings: '',
+    treatment: '',
+    nextPlan: '',
+    drStartTime: null,
+    drEndTime: null,
+    dhStartTime: null,
+    dhEndTime: null,
+    treatmentPerformed: [],
+    oralFunctionRecord: null,
+  },
+  // === 施設2: 2人診察（同一日2人 → 歯訪2区分） ===
+  {
+    id: 6,
+    visitPlanId: 3,
+    patientId: 6,
+    doctorId: 1,
+    hygienistId: null,
+    status: EXAMINATION_STATUS.WAITING,
+    sortOrder: 1,
+    vitalBefore: null,
+    vitalAfter: null,
+    treatmentItems: [],
+    procedureItems: {},
+    visitCondition: '',
+    oralFindings: '',
+    treatment: '',
+    nextPlan: '',
+    drStartTime: null,
+    drEndTime: null,
+    dhStartTime: null,
+    dhEndTime: null,
+    treatmentPerformed: [],
+    oralFunctionRecord: null,
+  },
+  {
+    id: 7,
+    visitPlanId: 3,
+    patientId: 7,
+    doctorId: 1,
+    hygienistId: 3,
     status: EXAMINATION_STATUS.WAITING,
     sortOrder: 2,
     vitalBefore: null,
     vitalAfter: null,
     treatmentItems: [],
-    procedureItems: {}, // オブジェクト形式: { itemId: { categoryId: string } }
+    procedureItems: {},
     visitCondition: '',
     oralFindings: '',
     treatment: '',
@@ -462,6 +717,142 @@ const INITIAL_EXAMINATIONS = [
     drEndTime: null,
     dhStartTime: null,
     dhEndTime: null,
+    treatmentPerformed: [],
+    oralFunctionRecord: null,
+  },
+  // === 施設3: 1人診察（同一日1人 → 歯訪1区分） ===
+  {
+    id: 8,
+    visitPlanId: 4,
+    patientId: 9,
+    doctorId: 1,
+    hygienistId: null,
+    status: EXAMINATION_STATUS.WAITING,
+    sortOrder: 1,
+    vitalBefore: null,
+    vitalAfter: null,
+    treatmentItems: [],
+    procedureItems: {},
+    visitCondition: '',
+    oralFindings: '',
+    treatment: '',
+    nextPlan: '',
+    drStartTime: null,
+    drEndTime: null,
+    dhStartTime: null,
+    dhEndTime: null,
+    treatmentPerformed: [],
+    oralFunctionRecord: null,
+  },
+]
+
+/** 過去診察実績データ（月単位の算定履歴） */
+const INITIAL_PAST_EXAMINATIONS = [
+  {patientId: 1, month: '2025-12', claimedItems: ['shizaikan', 'shizaikan_bunsho']},
+  {patientId: 2, month: '2025-12', claimedItems: ['nst2']},
+  {patientId: 1, month: '2025-11', claimedItems: ['koukuu_kensa_zetsuatsu']},
+  {patientId: 2, month: '2025-12', claimedItems: ['shiriha3', 'shiriha3']},
+  {patientId: 7, month: '2025-12', claimedItems: ['fkyoku']},
+]
+
+/** サンプル口腔機能精密検査記録用紙データ */
+const SAMPLE_ORAL_FUNCTION_RECORDS = {
+  // 伊藤博文: 該当項目5つ（口腔機能低下症確定）
+  severe: {
+    tongueCoatingPercent: '60',
+    tongueCoatingApplicable: true,
+    oralMoistureValue: '22',
+    salivaAmount: '1.5',
+    oralDrynessApplicable: true,
+    biteForceN: '150',
+    remainingTeeth: '8',
+    biteForceApplicable: true,
+    oralDiadochoPa: '4.5',
+    oralDiadochoTa: '3.8',
+    oralDiadochoKa: '4.2',
+    oralMotorApplicable: true,
+    tonguePressureKPa: '22',
+    tonguePressureApplicable: true,
+    masticatoryAbilityMgDl: '80',
+    masticatoryApplicable: false,
+    swallowingEAT10Score: '2',
+    swallowingApplicable: false,
+  },
+  // 山田太郎: 該当項目3つ（口腔機能低下症境界値）
+  borderline: {
+    tongueCoatingPercent: '55',
+    tongueCoatingApplicable: true,
+    oralMoistureValue: '25',
+    salivaAmount: '',
+    oralDrynessApplicable: true,
+    biteForceN: '400',
+    remainingTeeth: '18',
+    biteForceApplicable: false,
+    oralDiadochoPa: '5.5',
+    oralDiadochoTa: '5.8',
+    oralDiadochoKa: '5.2',
+    oralMotorApplicable: true,
+    tonguePressureKPa: '32',
+    tonguePressureApplicable: false,
+    masticatoryAbilityMgDl: '120',
+    masticatoryApplicable: false,
+    swallowingEAT10Score: '1',
+    swallowingApplicable: false,
+  },
+  // 高橋健一: 該当項目2つ（口腔機能低下症NOT）
+  normal: {
+    tongueCoatingPercent: '30',
+    tongueCoatingApplicable: false,
+    oralMoistureValue: '29',
+    salivaAmount: '',
+    oralDrynessApplicable: false,
+    biteForceN: '450',
+    remainingTeeth: '24',
+    biteForceApplicable: false,
+    oralDiadochoPa: '6.5',
+    oralDiadochoTa: '5.5',
+    oralDiadochoKa: '6.0',
+    oralMotorApplicable: true,
+    tonguePressureKPa: '28',
+    tonguePressureApplicable: true,
+    masticatoryAbilityMgDl: '150',
+    masticatoryApplicable: false,
+    swallowingEAT10Score: '1',
+    swallowingApplicable: false,
+  },
+}
+
+/** 在歯管算定対象治療リスト */
+const ZAISHIKAN_TARGET_TREATMENTS = [
+  {
+    category: 'う蝕治療',
+    items: [
+      'う蝕処置（むし歯を削る、薬を詰める・サホライド塗布）',
+      '充填処置（レジン、アイオノマー充填）',
+      '知覚過敏処置',
+      '根管治療',
+      '補綴物セット',
+    ],
+  },
+  {category: '歯周治療', items: ['スケーリング', '歯周ポケットへの薬剤注入', '歯周病検査', 'SPT', 'P重防']},
+  {
+    category: '義歯関係',
+    items: [
+      '義歯調整（入れ歯が当たって痛い箇所の削合）',
+      '義歯床裏装（合わなくなった入れ歯の裏打ち・リライニング）',
+      '義歯修理（割れた入れ歯や外れたクラスプの修理）',
+      '新製（新しい入れ歯の型取り、噛み合わせ、試適）',
+      '義歯指導（着脱の練習や清掃の実施）',
+    ],
+  },
+  {
+    category: 'その他主なもの',
+    items: [
+      '抜歯',
+      '抜歯後の処置（消毒、抜糸）',
+      '口内炎の治療（軟膏塗布、レーザー照射など）',
+      '口腔カンジダ症の治療（抗真菌薬の投与・清拭）',
+    ],
   },
 ]
 
@@ -495,12 +886,13 @@ const INITIAL_CLINIC = {
   representative: '院長 山田太郎',
   qualifications: {
     shiensin1: true,
-    shiensin2: true,
+    shiensin2: false,
     zahoshin: true,
-    koukukan: false,
+    koukukan: true,
     johorenkei: true,
     dx: true,
-    baseup: false,
+    baseup: true,
+    electronicPrescription: false,
     other: false,
     otherText: '',
   },
@@ -522,6 +914,7 @@ const PATIENT_DISEASES = [
   {id: 'cerebellarDegeneration', name: '腎臓小脳変性症'},
   {id: 'multipleSclerosis', name: '多発性硬化症'},
   {id: 'disuseSyndrome', name: '廃用症候群'},
+  {id: 'diabetes', name: '糖尿病'},
 ]
 
 /** アセスメント選択肢マスタ */
@@ -541,476 +934,469 @@ const ASSESSMENT_OPTIONS = {
   medicationSwallowing: ['問題なく飲める', '苦手', '上手く飲み込めない'],
 }
 
-/** 実施項目マスタ（加算用） - Excel「算定項目」シートに基づく完全版 */
+/** 実施項目マスタ（加算用） - CSV「算定一覧基準表」に基づく新構造版 */
 const PROCEDURE_ITEMS_MASTER = [
   // === 歯科訪問診療料（歯訪） ===
   {
     id: 'shihou',
     name: '歯訪',
     fullName: '歯科訪問診療料',
-    infoUrl: '/dental/docs/shihou.pdf',
+    selectionMode: 'single',
     infoText: 'Drの診療ありの場合に算定。タイマー時間（20分以上/未満）と同一建物内の患者数で区分が自動判定されます。',
-    requiredRole: 'doctor',
-    requiredQualification: 'shihoujin',
-    categories: [
-      {id: '1-20over', name: '20分以上（1人）', points: 1100, condition: {time: '20over', count: '1'}},
-      {id: '2-20over', name: '20分以上（2～3人）', points: 410, condition: {time: '20over', count: '2-3'}},
-      {id: '3-20over', name: '20分以上（4～9人）', points: 310, condition: {time: '20over', count: '4-9'}},
-      {id: '4-20over', name: '20分以上（10～19人）', points: 160, condition: {time: '20over', count: '10-19'}},
-      {id: '5-20over', name: '20分以上（20人以上）', points: 95, condition: {time: '20over', count: '20+'}},
-      {id: '1-20under', name: '20分未満（1人）', points: 1100, condition: {time: '20under', count: '1'}},
-      {id: '2-20under', name: '20分未満（2～3人）', points: 287, condition: {time: '20under', count: '2-3'}},
-      {id: '3-20under', name: '20分未満（4～9人）', points: 217, condition: {time: '20under', count: '4-9'}},
-      {id: '4-20under', name: '20分未満（10～19人）', points: 96, condition: {time: '20under', count: '10-19'}},
-      {id: '5-20under', name: '20分未満（20人以上）', points: 57, condition: {time: '20under', count: '20+'}},
+    subItems: [
+      {
+        id: 'shihou-1-20over',
+        name: '歯訪 1(20分以上)',
+        points: 1100,
+        isManualOnly: false,
+        requiredRole: 'doctor',
+        requiredQualification: null,
+        conditionLabel: '同一日かつ同一施設で1人のみ診療',
+        infoText: '',
+        evaluate: ctx => ctx.hasDoctor && ctx.drSeconds >= 1200 && ctx.sameDayCount === 1,
+      },
+      {
+        id: 'shihou-2-20over',
+        name: '歯訪 2(20分以上)',
+        points: 410,
+        isManualOnly: false,
+        requiredRole: 'doctor',
+        requiredQualification: null,
+        conditionLabel: '同一日かつ同一施設で2～3人を診療',
+        infoText: '',
+        evaluate: ctx => ctx.hasDoctor && ctx.drSeconds >= 1200 && ctx.sameDayCount >= 2 && ctx.sameDayCount <= 3,
+      },
+      {
+        id: 'shihou-3-20over',
+        name: '歯訪 3(20分以上)',
+        points: 310,
+        isManualOnly: false,
+        requiredRole: 'doctor',
+        requiredQualification: null,
+        conditionLabel: '同一日かつ同一施設で4～9人を診療',
+        infoText: '',
+        evaluate: ctx => ctx.hasDoctor && ctx.drSeconds >= 1200 && ctx.sameDayCount >= 4 && ctx.sameDayCount <= 9,
+      },
+      {
+        id: 'shihou-4-20over',
+        name: '歯訪 4(20分以上)',
+        points: 160,
+        isManualOnly: false,
+        requiredRole: 'doctor',
+        requiredQualification: null,
+        conditionLabel: '同一日かつ同一施設で10～19人を診療',
+        infoText: '',
+        evaluate: ctx => ctx.hasDoctor && ctx.drSeconds >= 1200 && ctx.sameDayCount >= 10 && ctx.sameDayCount <= 19,
+      },
+      {
+        id: 'shihou-5-20over',
+        name: '歯訪 5(20分以上)',
+        points: 95,
+        isManualOnly: false,
+        requiredRole: 'doctor',
+        requiredQualification: null,
+        conditionLabel: '同一日かつ同一施設で20人以上を診療',
+        infoText: '',
+        evaluate: ctx => ctx.hasDoctor && ctx.drSeconds >= 1200 && ctx.sameDayCount >= 20,
+      },
+      {
+        id: 'shihou-1-20under',
+        name: '歯訪 1(20分未満)',
+        points: 1100,
+        isManualOnly: false,
+        requiredRole: 'doctor',
+        requiredQualification: null,
+        conditionLabel: '同一日かつ同一施設で1人のみ診療',
+        infoText: '',
+        evaluate: ctx => ctx.hasDoctor && ctx.drSeconds > 0 && ctx.drSeconds < 1200 && ctx.sameDayCount === 1,
+      },
+      {
+        id: 'shihou-2-20under',
+        name: '歯訪 2(20分未満)',
+        points: 287,
+        isManualOnly: false,
+        requiredRole: 'doctor',
+        requiredQualification: null,
+        conditionLabel: '同一日かつ同一施設で2～3人を診療',
+        infoText: '',
+        evaluate: ctx =>
+          ctx.hasDoctor && ctx.drSeconds > 0 && ctx.drSeconds < 1200 && ctx.sameDayCount >= 2 && ctx.sameDayCount <= 3,
+      },
+      {
+        id: 'shihou-3-20under',
+        name: '歯訪 3(20分未満)',
+        points: 217,
+        isManualOnly: false,
+        requiredRole: 'doctor',
+        requiredQualification: null,
+        conditionLabel: '同一日かつ同一施設で4～9人を診療',
+        infoText: '',
+        evaluate: ctx =>
+          ctx.hasDoctor && ctx.drSeconds > 0 && ctx.drSeconds < 1200 && ctx.sameDayCount >= 4 && ctx.sameDayCount <= 9,
+      },
+      {
+        id: 'shihou-4-20under',
+        name: '歯訪 4(20分未満)',
+        points: 96,
+        isManualOnly: false,
+        requiredRole: 'doctor',
+        requiredQualification: null,
+        conditionLabel: '同一日かつ同一施設で10～19人を診療',
+        infoText: '',
+        evaluate: ctx =>
+          ctx.hasDoctor && ctx.drSeconds > 0 && ctx.drSeconds < 1200 && ctx.sameDayCount >= 10 && ctx.sameDayCount <= 19,
+      },
+      {
+        id: 'shihou-5-20under',
+        name: '歯訪 5(20分未満)',
+        points: 57,
+        isManualOnly: false,
+        requiredRole: 'doctor',
+        requiredQualification: null,
+        conditionLabel: '同一日かつ同一施設で20人以上を診療',
+        infoText: '',
+        evaluate: ctx => ctx.hasDoctor && ctx.drSeconds > 0 && ctx.drSeconds < 1200 && ctx.sameDayCount >= 20,
+      },
     ],
-    documents: [],
-    autoJudgeCondition: 'timeAndPatientCount',
-    note: 'Drの診療ありの場合のみ。タイマー時間と同一建物患者数で自動判定',
+  },
+  // === ベースアップ加算 ===
+  {
+    id: 'baseup',
+    name: 'ベースアップ加算',
+    fullName: 'ベースアップ評価料',
+    selectionMode: 'single',
+    infoText: '医院マスターで「ベースアップ評価料」にチェックが入っている場合に算定可能。',
+    subItems: [
+      {
+        id: 'baseup-1',
+        name: '1人',
+        points: 41,
+        isManualOnly: false,
+        requiredRole: 'doctor',
+        requiredQualification: 'baseup',
+        conditionLabel: 'ベースアップ届出あり＋同一日同一施設1人',
+        infoText: '',
+        evaluate: ctx => ctx.clinic.qualifications.baseup && ctx.sameDayCount === 1,
+      },
+      {
+        id: 'baseup-2plus',
+        name: '2人以上',
+        points: 10,
+        isManualOnly: false,
+        requiredRole: 'doctor',
+        requiredQualification: 'baseup',
+        conditionLabel: 'ベースアップ届出あり＋同一日同一施設2人以上',
+        infoText: '',
+        evaluate: ctx => ctx.clinic.qualifications.baseup && ctx.sameDayCount >= 2,
+      },
+    ],
   },
   // === 歯科訪問診療補助加算（訪補助） ===
   {
     id: 'houhojo',
     name: '訪補助',
     fullName: '歯科訪問診療補助加算',
-    infoUrl: '/dental/docs/houhojo.pdf',
-    infoText: 'DHがDrに同行した場合に算定。カルテに同行衛生士名の記載が必要です。同一建物1名のみ/2名以上で点数が異なります。',
-    requiredRole: 'doctor',
-    requiredQualification: 'shihoujin',
-    categories: [
-      {id: 'single', name: '同一建物1名のみ', points: 115},
-      {id: 'multi-koukankyou', name: '2名以上（口管強）', points: 50, requiredClinicQualification: 'koukukan'},
-      {id: 'multi-normal', name: '2名以上（通常）', points: 30},
+    selectionMode: 'single',
+    infoText: 'DR・DH両方の参加が必要。カルテに同行衛生士名の記載が必要です。',
+    subItems: [
+      {
+        id: 'houhojo-1',
+        name: '1人',
+        points: 115,
+        isManualOnly: false,
+        requiredRole: 'both',
+        requiredQualification: null,
+        conditionLabel: '同一日かつ同一施設で1人のみ診療',
+        infoText: '',
+        evaluate: ctx => ctx.hasDoctor && ctx.hasHygienist && ctx.sameDayCount === 1,
+      },
+      {
+        id: 'houhojo-multi-koukan',
+        name: '2人以上 / 口管強あり',
+        points: 50,
+        isManualOnly: false,
+        requiredRole: 'both',
+        requiredQualification: 'koukukan',
+        conditionLabel: '口管強の届出あり＋2人以上',
+        infoText: '',
+        evaluate: ctx => ctx.hasDoctor && ctx.hasHygienist && ctx.sameDayCount >= 2 && ctx.clinic.qualifications.koukukan,
+      },
+      {
+        id: 'houhojo-multi-normal',
+        name: '2人以上 / 口管強なし',
+        points: 30,
+        isManualOnly: false,
+        requiredRole: 'both',
+        requiredQualification: null,
+        conditionLabel: '口管強の届出なし＋2人以上',
+        infoText: '',
+        evaluate: ctx => ctx.hasDoctor && ctx.hasHygienist && ctx.sameDayCount >= 2 && !ctx.clinic.qualifications.koukukan,
+      },
     ],
-    documents: [],
-    autoJudgeCondition: 'patientCount',
-    note: 'DHがDrに同行した場合。カルテに同行衛生士名の記載が必要',
   },
   // === 歯科疾患在宅療養管理料（歯在管） ===
   {
     id: 'shizaikan',
     name: '歯在管',
     fullName: '歯科疾患在宅療養管理料',
-    infoUrl: '/dental/docs/shizaikan.pdf',
-    infoText: '月1回算定。Drの診療時に算定を提案。歯援診の届出区分により点数が異なります。管理計画書の提供が必要。',
-    requiredRole: 'doctor',
-    monthlyLimit: 1,
-    categories: [
-      {id: 'shiensin1', name: '歯援診１', points: 340, requiredClinicQualification: 'shiensin1'},
-      {id: 'shiensin2', name: '歯援診２', points: 230, requiredClinicQualification: 'shiensin2'},
-      {id: 'other', name: 'それ以外', points: 200},
+    selectionMode: 'single',
+    infoText: '月1回算定。Drの診療時に算定を提案。歯援診の届出区分により点数が異なります。管理計画はカルテに記入する。',
+    subItems: [
+      {
+        id: 'shizaikan-shiensin1',
+        name: '歯援診1',
+        points: 340,
+        isManualOnly: false,
+        requiredRole: 'doctor',
+        requiredQualification: 'shiensin1',
+        conditionLabel: '歯援診1の届出あり＋月初回',
+        infoText: '管理計画はカルテに記入する',
+        evaluate: ctx => ctx.hasDoctor && ctx.clinic.qualifications.shiensin1,
+      },
+      {
+        id: 'shizaikan-shiensin2',
+        name: '歯援診2',
+        points: 230,
+        isManualOnly: false,
+        requiredRole: 'doctor',
+        requiredQualification: 'shiensin2',
+        conditionLabel: '歯援診2の届出あり＋月初回',
+        infoText: '',
+        evaluate: ctx => ctx.hasDoctor && ctx.clinic.qualifications.shiensin2 && !ctx.clinic.qualifications.shiensin1,
+      },
+      {
+        id: 'shizaikan-other',
+        name: '歯援診なし / その他',
+        points: 200,
+        isManualOnly: false,
+        requiredRole: 'doctor',
+        requiredQualification: null,
+        conditionLabel: '歯援診の届出なし＋月初回',
+        infoText: '',
+        evaluate: ctx => ctx.hasDoctor && !ctx.clinic.qualifications.shiensin1 && !ctx.clinic.qualifications.shiensin2,
+      },
     ],
-    documents: [{id: 'doc_kanrikeikaku', name: '管理計画書'}],
-    autoJudgeCondition: 'clinicQualification',
-    note: '月に1度算定。Drの診療があった時に算定を提案',
   },
   // === 歯在管文書提供加算 ===
   {
     id: 'shizaikan_bunsho',
-    name: '歯在管文書',
+    name: '歯在管文書提供加算',
     fullName: '文書提供加算（在宅・訪問関連）',
-    infoUrl: '/dental/docs/shizaikan_bunsho.pdf',
-    infoText: '歯在管を請求した時に合わせて算定。管理計画書等の文書提供が必須です。10点。',
-    monthlyLimit: 1,
-    defaultPoints: 10,
-    categories: [],
-    documents: [{id: 'doc_kanrikeikaku', name: '管理計画書'}],
-    note: '歯在管を請求した時に算定するかどうかを提案。文書提供必須',
-  },
-  // === 画像診断（P画像） ===
-  {
-    id: 'p_gazou',
-    name: 'P画像',
-    fullName: '歯周病患者画像活用指導料',
-    infoUrl: '/dental/docs/p_gazou.pdf',
-    infoText: '1枚につき10点。口腔内写真を撮影し患者に見せながら指導した場合に算定できます。',
-    categories: [{id: '1-5', name: '1～5枚', points: 10, unit: 'per_sheet'}],
-    documents: [],
-    note: '1枚につき10点。算定可能なタイミングを確認',
+    selectionMode: 'single',
+    infoText:
+      '歯在管を算定して、患者さんや家族へ管理計画の内容を文章にして提供した場合に算定。歯在管とセットでなければ算定不可。',
+    subItems: [
+      {
+        id: 'shizaikan-bunsho-main',
+        name: '文',
+        points: 10,
+        isManualOnly: false,
+        requiredRole: 'doctor',
+        requiredQualification: null,
+        conditionLabel: '歯在管とセットで算定＋月初回',
+        infoText: '歯在管を算定して、患者さんや家族へ、管理計画の内容を文章にして提供した場合に算定できる点数。',
+        evaluate: ctx => ctx.currentItems?.shizaikan,
+      },
+    ],
   },
   // === 在宅患者歯科治療総合医療管理料（在歯管） ===
   {
     id: 'zaishikan',
     name: '在歯管',
     fullName: '在宅患者歯科治療総合医療管理料',
-    infoUrl: '/dental/docs/zaishikan.pdf',
-    infoText: '患者マスターに疾患登録があり、かつDrが該当治療を実施した場合に算定可能。45点。',
-    requiredRole: 'doctor',
-    requiredQualification: 'zaishikan',
-    defaultPoints: 45,
-    categories: [],
-    documents: [],
-    autoJudgeCondition: 'patientDiseaseAndTreatment',
-    note: '疾患登録+治療の2条件が必要。患者マスターの疾患☑+Drの該当治療実施時に算定可能',
+    selectionMode: 'single',
+    infoText: '以下の3条件に全て当てはまるときに算定可能。1.医院に在歯管の届出あり。2.患者に基礎疾患あり。3.該当する治療を実施。',
+    subItems: [
+      {
+        id: 'zaishikan-main',
+        name: '在歯管',
+        points: 45,
+        isManualOnly: false,
+        requiredRole: 'doctor',
+        requiredQualification: 'zahoshin',
+        conditionLabel: '医院届出+患者疾患+該当治療の3条件',
+        infoText: '「対象の治療」ボタンから、在歯管の算定対象治療を選択してください。',
+        evaluate: ctx => {
+          const hasClinicRegistration = ctx.clinic.qualifications.zahoshin
+          const hasDisease = Object.values(ctx.patient.diseases || {}).some(v => v)
+          const hasTreatment = (ctx.treatmentPerformed || []).length > 0
+          return hasClinicRegistration && hasDisease && hasTreatment
+        },
+      },
+    ],
   },
   // === 訪問歯科衛生指導料（訪衛指） ===
   {
     id: 'houeishi',
     name: '訪衛指',
     fullName: '訪問歯科衛生指導料',
-    infoUrl: '/dental/docs/houeishi.pdf',
-    infoText: 'DHが20分以上の施術を行った場合に算定。月4回まで。タイマーで20分以上を確認してください。',
-    requiredRole: 'hygienist',
-    monthlyLimit: 4,
-    timeRequirement: 20,
-    categories: [
-      {id: 'single', name: '1名のみ', points: 362},
-      {id: '2-9', name: '2～9名', points: 326},
-      {id: '10+', name: '10名以上', points: 295},
+    selectionMode: 'single',
+    infoText:
+      'DHがDrと一緒、または単独で、その利用者さんに対して20分以上の診療を行った場合に算定。その施設で、1月に何人見たかで点数が変わる。',
+    subItems: [
+      {
+        id: 'houeishi-1',
+        name: '同月内1人',
+        points: 362,
+        isManualOnly: false,
+        requiredRole: 'hygienist',
+        requiredQualification: null,
+        conditionLabel: 'DH20分以上＋同月その施設で1人',
+        infoText: '',
+        evaluate: ctx => ctx.hasHygienist && ctx.dhSeconds >= 1200 && ctx.sameMonthCount === 1,
+      },
+      {
+        id: 'houeishi-2-9',
+        name: '同月内2〜9人',
+        points: 326,
+        isManualOnly: false,
+        requiredRole: 'hygienist',
+        requiredQualification: null,
+        conditionLabel: 'DH20分以上＋同月その施設で2～9人',
+        infoText: '20分未満で算定しようとしたときは、在口衛の算定をしますか？のコメント',
+        evaluate: ctx => ctx.hasHygienist && ctx.dhSeconds >= 1200 && ctx.sameMonthCount >= 2 && ctx.sameMonthCount <= 9,
+      },
+      {
+        id: 'houeishi-10plus',
+        name: '同月内10人以上',
+        points: 295,
+        isManualOnly: false,
+        requiredRole: 'hygienist',
+        requiredQualification: null,
+        conditionLabel: 'DH20分以上＋同月その施設で10人以上',
+        infoText: '',
+        evaluate: ctx => ctx.hasHygienist && ctx.dhSeconds >= 1200 && ctx.sameMonthCount >= 10,
+      },
     ],
-    documents: [{id: 'doc_houeishi', name: '訪問歯科衛生指導説明書'}],
-    autoJudgeCondition: 'patientCount',
-    note: 'DHが20分以上の施術を行った場合。月4回まで。タイマーで20分以上で自動算定を提案',
   },
   // === 在宅等療養患者専門的口腔衛生処置（在口衛） ===
   {
     id: 'zaikouei',
     name: '在口衛',
     fullName: '在宅等療養患者専門的口腔衛生処置',
-    infoUrl: '/dental/docs/zaikouei.pdf',
-    infoText: '専門的な口腔衛生処置を実施した場合にマニュアルで判定。130点。',
-    defaultPoints: 130,
-    categories: [],
-    documents: [],
-    note: 'マニュアル判定',
+    selectionMode: 'single',
+    infoText: '月1回のみ算定可能。Dr同席必須。訪衛指とっている場合はNG。SPT、P重防、訪問口腔リハを算定した日以降は算定できない。',
+    subItems: [
+      {
+        id: 'zaikouei-main',
+        name: '在口衛',
+        points: 130,
+        isManualOnly: true,
+        requiredRole: 'both',
+        requiredQualification: null,
+        conditionLabel: '手動入力のみ',
+        infoText: '',
+        evaluate: () => false,
+      },
+    ],
   },
   // === 在宅歯科栄養サポートチーム等連携指導料（NST2） ===
   {
     id: 'nst2',
     name: 'NST2',
     fullName: '在宅歯科栄養サポートチーム等連携指導料',
-    infoUrl: '/dental/docs/nst2.pdf',
-    infoText: '栄養サポートチームとの連携指導を行った場合にマニュアル判定。100点。',
-    defaultPoints: 100,
-    categories: [],
-    documents: [],
-    note: 'マニュアル判定',
+    selectionMode: 'single',
+    infoText: '一度入力したら毎月算定するもの。Drの月初めの診療の時に標準でチェックが入ると良い。ミールラウンドや会議への参加。',
+    subItems: [
+      {
+        id: 'nst2-main',
+        name: 'NST2',
+        points: 100,
+        isManualOnly: true,
+        requiredRole: null,
+        requiredQualification: null,
+        conditionLabel: '手動入力のみ（過去実績あれば初期チェック）',
+        infoText: '同一患者で過去に入力がある場合、最初からチェック',
+        evaluate: () => false,
+      },
+    ],
   },
-  // === 口腔機能低下症（病名登録用） ===
+  // === 口腔機能低下症（検査） ===
   {
-    id: 'koukuu_kinou',
-    name: '口腔機能低下症',
-    fullName: '口腔機能低下症（病名/管理対象）',
-    infoUrl: '/dental/docs/koukuu_kinou.pdf',
-    infoText: '病名登録用。歯リハ3の算定条件として必要。チェックを入れると歯リハ3が算定可能になります。',
-    defaultPoints: 0,
-    categories: [],
-    documents: [],
-    note: '病名登録用。歯リハ3の算定条件',
-  },
-  // === 舌圧検査 ===
-  {
-    id: 'zetsuatsu',
-    name: '舌圧',
-    fullName: '舌圧検査（口腔機能検査の一部）',
-    infoUrl: '/dental/docs/zetsuatsu.pdf',
-    infoText: '口腔機能検査の一部。3ヶ月に1回算定可能。140点。',
-    defaultPoints: 140,
-    intervalMonths: 3,
-    categories: [],
-    documents: [],
-    note: '3ヶ月毎に算定可能',
-  },
-  // === 咬合圧検査 ===
-  {
-    id: 'kougouatsu1',
-    name: '咬合圧1',
-    fullName: '咬合圧検査１',
-    infoUrl: '/dental/docs/kougouatsu.pdf',
-    infoText: '咬合圧を測定し口腔機能の評価を行う検査。130点。',
-    defaultPoints: 130,
-    categories: [],
-    documents: [],
-  },
-  // === 口腔細菌定量検査 ===
-  {
-    id: 'koukinkensa1',
-    name: '口菌検1',
-    fullName: '口腔細菌定量検査1',
-    infoUrl: '/dental/docs/koukinkensa.pdf',
-    infoText: '口腔内の細菌量を測定する検査。点数は要確認。',
-    defaultPoints: 0,
-    categories: [],
-    documents: [],
-    note: '点数は要確認',
-  },
-  // === 咀嚼能力検査 ===
-  {
-    id: 'soshaku1',
-    name: '咀嚼1',
-    fullName: '咀嚼能力検査１',
-    infoUrl: '/dental/docs/soshaku.pdf',
-    infoText: '咀嚼能力を測定する検査。3ヶ月に1回算定可能。140点。',
-    defaultPoints: 140,
-    intervalMonths: 3,
-    categories: [],
-    documents: [],
-    note: '3ヶ月に1回算定可能',
+    id: 'koukuu_kensa',
+    name: '口腔機能低下症（検査）',
+    fullName: '口腔機能低下症に係る検査',
+    selectionMode: 'multiple',
+    infoText: '3ヶ月毎に1回算定可能。前回の取得日から3ヶ月経過している場合にメッセージを表示。',
+    subItems: [
+      {
+        id: 'koukuu_kensa_zetsuatsu',
+        name: '舌圧',
+        points: 140,
+        isManualOnly: true,
+        requiredRole: null,
+        requiredQualification: null,
+        conditionLabel: '3ヶ月毎に1回',
+        infoText: '前回の取得日から3ヶ月経過している場合、「今月舌圧検査が算定できます」とメッセージを表示',
+        evaluate: () => false,
+      },
+      {
+        id: 'koukuu_kensa_kougouatsu',
+        name: '咬合圧 1',
+        points: 130,
+        isManualOnly: true,
+        requiredRole: null,
+        requiredQualification: null,
+        conditionLabel: '3ヶ月毎に1回・届出必要',
+        infoText: '前回の取得日から3ヶ月経過している場合にメッセージを表示',
+        evaluate: () => false,
+      },
+      {
+        id: 'koukuu_kensa_koukin',
+        name: '口菌検2',
+        points: 65,
+        isManualOnly: true,
+        requiredRole: null,
+        requiredQualification: null,
+        conditionLabel: '3ヶ月毎に1回・届出必要',
+        infoText: '口腔機能低下症の判定のための口菌検は2番の方。1番：130点は口腔バイオフィルム感染症の診断をするときの点数。',
+        evaluate: () => false,
+      },
+      {
+        id: 'koukuu_kensa_soshaku',
+        name: '咀嚼 1',
+        points: 140,
+        isManualOnly: true,
+        requiredRole: null,
+        requiredQualification: null,
+        conditionLabel: '3ヶ月毎に1回・届出必要',
+        infoText: '前回の取得日から3ヶ月経過している場合にメッセージを表示',
+        evaluate: () => false,
+      },
+    ],
   },
   // === 歯科口腔リハビリテーション料３（歯リハ3） ===
   {
     id: 'shiriha3',
     name: '歯リハ3',
     fullName: '歯科口腔リハビリテーション料３',
-    infoUrl: '/dental/docs/shiriha.pdf',
-    infoText: '口腔機能低下症の患者に対するリハビリ。月2回まで。口管強加算の届出で点数UP。',
-    requiredRole: 'doctor',
-    monthlyLimit: 2,
-    categories: [
-      {id: 'normal', name: '通常', points: 60},
-      {id: 'koukankyou', name: '口管強加算', points: 110, requiredClinicQualification: 'koukukan'},
+    selectionMode: 'multiple',
+    infoText: 'Drの診療必須。月に2回まで算定可能。口腔機能精密検査記録用紙に記入があった場合に算定。',
+    subItems: [
+      {
+        id: 'shiriha3-main',
+        name: '歯リハ3',
+        points: 60,
+        isManualOnly: false,
+        requiredRole: 'doctor',
+        requiredQualification: null,
+        conditionLabel: 'Dr診療あり＋記録用紙記入あり＋月2回まで',
+        infoText:
+          'Drの診療があった場合、月に2回まで算定可能なため、1度算定したらその後は「1/2回目算定しますか？」「2/2回目算定しますか？」とコメント。',
+        evaluate: ctx => ctx.hasDoctor && !!ctx.oralFunctionRecord,
+      },
+      {
+        id: 'shiriha3-koukan',
+        name: '口管強届出あり',
+        points: 50,
+        isManualOnly: false,
+        requiredRole: 'doctor',
+        requiredQualification: 'koukukan',
+        conditionLabel: '口管強の届出があれば＋50点',
+        infoText: '',
+        evaluate: ctx => ctx.hasDoctor && !!ctx.oralFunctionRecord && ctx.clinic.qualifications.koukukan,
+      },
     ],
-    documents: [],
-    autoJudgeCondition: 'oralHypofunction',
-    note: '口腔機能低下症にチェックが入っている場合。月2回まで。Drの診療時に提示',
-  },
-  // === 歯科口腔リハビリテーション料１（歯リハ1） ===
-  {
-    id: 'shiriha1',
-    name: '歯リハ1',
-    fullName: '歯科口腔リハビリテーション料１',
-    infoUrl: '/dental/docs/shiriha.pdf',
-    infoText: '義歯の登録がある患者に対するリハビリ。通常104点/複雑124点。',
-    categories: [
-      {id: 'normal', name: '通常', points: 104},
-      {id: 'complex', name: '複雑', points: 124},
-    ],
-    documents: [],
-    note: '利用者マスターに義歯の登録がある場合',
-  },
-  // === ベースアップ加算 ===
-  {
-    id: 'baseup',
-    name: 'ベースアップ',
-    fullName: '在宅ベースアップ評価料',
-    infoUrl: '/dental/docs/baseup.pdf',
-    infoText: '届出が必要。訪問の都度算定可能。点数は届出区分により異なります。',
-    requiredQualification: 'baseup',
-    defaultPoints: 0,
-    categories: [],
-    documents: [],
-    note: '届出必要。訪問の都度算定可能。点数は届出区分により異なる',
-  },
-  // === 在宅医療DX推進体制整備加算（在DX） ===
-  {
-    id: 'dx',
-    name: '在DX',
-    fullName: '在宅医療DX推進体制整備加算',
-    infoUrl: '/dental/docs/dx.pdf',
-    infoText: '施設基準と届出が必要。月1回算定。電子処方箋の有無で点数が異なります。',
-    requiredQualification: 'dx',
-    monthlyLimit: 1,
-    categories: [
-      {id: 'with-prescription', name: '電子処方箋有', points: 11},
-      {id: 'without-prescription', name: '電子処方箋無', points: 8},
-    ],
-    documents: [],
-    autoJudgeCondition: 'clinicDxSetting',
-    note: '施設基準と届出が必要。月1回算定',
-  },
-  // === 診療情報等連携共有料（情共１） ===
-  {
-    id: 'joukyo1',
-    name: '情共1',
-    fullName: '診療情報等連携共有料',
-    infoUrl: '/dental/docs/joukyo.pdf',
-    infoText: '患者マスターに疾患が登録されている場合に算定可能。医科への情報提供が必要。120点。',
-    defaultPoints: 120,
-    categories: [],
-    documents: [],
-    autoJudgeCondition: 'patientDisease',
-    note: '患者マスターに疾患が登録されている場合に「医科に情共１を出しますか？」を表示',
-  },
-  // === 総合医療管理加算（総医） ===
-  {
-    id: 'soui',
-    name: '総医',
-    fullName: '総合医療管理加算',
-    infoUrl: '/dental/docs/soui.pdf',
-    infoText: '歯在管の算定と同時に加算。患者マスターに疾患登録が必要。50点。',
-    defaultPoints: 50,
-    categories: [],
-    documents: [],
-    autoJudgeCondition: 'patientDiseaseKJ3',
-    note: '歯在管の算定と同時に加算。患者マスターの疾患登録確認',
-  },
-  // === フッ化物歯面塗布処置（F局） ===
-  {
-    id: 'fkyoku',
-    name: 'F局（根C）',
-    fullName: 'フッ化物歯面塗布処置',
-    infoUrl: '/dental/docs/fkyoku.pdf',
-    infoText: '3ヶ月に1回のみ算定可能。前回のF塗布から3ヶ月目に算定を提案します。80点。',
-    defaultPoints: 80,
-    intervalMonths: 3,
-    categories: [],
-    documents: [],
-    note: '3ヶ月に1回のみ算定可能。前回のF塗布から3ヶ月目に提案',
-  },
-  // === 根面齲蝕管理料（根C管） ===
-  {
-    id: 'konc_kan',
-    name: '根C管',
-    fullName: '根面齲蝕管理料',
-    infoUrl: '/dental/docs/konc.pdf',
-    infoText: '毎月初回の診療時に提案。カルテに管理計画を記載が必要。口管強加算の届出で点数UP。',
-    categories: [
-      {id: 'normal', name: '通常', points: 30},
-      {id: 'koukankyou', name: '口管強加算', points: 78, requiredClinicQualification: 'koukukan'},
-    ],
-    documents: [],
-    autoJudgeCondition: 'clinicKoukankyou',
-    note: '毎月初回の診療時に提案。カルテに管理計画を記載',
-  },
-  // === う蝕薬物塗布処置（サホ塗布） ===
-  {
-    id: 'saho',
-    name: 'サホ塗布',
-    fullName: 'う蝕薬物塗布処置',
-    infoUrl: '/dental/docs/saho.pdf',
-    infoText: 'う蝕薬物塗布処置。3歯まで46点、4歯以上56点。在歯管算定可能条件の1つ。',
-    categories: [
-      {id: '1-3', name: '～3歯まで', points: 46},
-      {id: '4+', name: '4歯以上', points: 56},
-    ],
-    documents: [],
-    note: '処置時にチェック。在歯管算定可能条件の1つ',
-  },
-  // === 歯周精密検査（P精検） ===
-  {
-    id: 'p_seiken',
-    name: 'P精検',
-    fullName: '歯周精密検査',
-    infoUrl: '/dental/docs/p_seiken.pdf',
-    infoText: '歯周精密検査。患者の歯数で点数が決まります。検査後はSC/SRP/SPT等の処置につながります。',
-    categories: [
-      {id: '20+', name: '20歯以上', points: 400},
-      {id: '10-19', name: '10～19歯', points: 220},
-      {id: '1-9', name: '1～9歯', points: 100},
-    ],
-    documents: [],
-    autoJudgeCondition: 'patientTeethCount',
-    note: '患者マスターの歯数で点数を提案。検査後はSC/SRP/SPT等の処置が来る',
-  },
-  // === 歯周基本検査（P基検） ===
-  {
-    id: 'p_kiken',
-    name: 'P基検',
-    fullName: '歯周基本検査',
-    infoUrl: '/dental/docs/p_kiken.pdf',
-    infoText: '歯周基本検査。歯数で点数が変わります（20歯以上200点/10-19歯110点/1-9歯50点）。',
-    categories: [
-      {id: '20+', name: '20歯以上', points: 200},
-      {id: '10-19', name: '10～19歯', points: 110},
-      {id: '1-9', name: '1～9歯', points: 50},
-    ],
-    documents: [],
-    autoJudgeCondition: 'patientTeethCount',
-  },
-  // === 歯周安定期治療（SPT） ===
-  {
-    id: 'spt',
-    name: 'SPT',
-    fullName: '歯周安定期治療',
-    infoUrl: '/dental/docs/spt.pdf',
-    infoText: '歯周安定期治療。口管強なしの場合は最初の算定から3ヶ月以降に表示。350点。',
-    defaultPoints: 350,
-    categories: [],
-    documents: [],
-    autoJudgeCondition: 'sptTiming',
-    note: '口管強がない時は最初の算定から3ヶ月以降に表示。患者マスターの歯数で反映',
-  },
-  // === 口管強加算（SPT用） ===
-  {
-    id: 'koukan_kasan',
-    name: '口管強加算',
-    fullName: '口管強加算（SPT同時）',
-    infoUrl: '/dental/docs/koukan.pdf',
-    infoText: 'SPTと同時算定。口管強の届出がある場合に自動表示されます。120点。',
-    requiredQualification: 'koukukan',
-    defaultPoints: 120,
-    categories: [],
-    documents: [],
-    autoJudgeCondition: 'clinicKoukankyou',
-    note: 'SPTと同時算定。口管強の届出がある場合に自動表示',
-  },
-  // === 糖尿病加算（SPT用） ===
-  {
-    id: 'tounyou',
-    name: '糖尿病加算',
-    fullName: '糖尿病加算（SPT同時）',
-    infoUrl: '/dental/docs/tounyou.pdf',
-    infoText: 'SPTと同時算定。患者マスターに糖尿病登録がある場合に提案されます。80点。',
-    defaultPoints: 80,
-    categories: [],
-    documents: [],
-    autoJudgeCondition: 'patientDiabetes',
-    note: 'SPTと同時算定。患者マスターで糖尿病の登録がある場合に提案',
-  },
-  // === 歯周重症化予防治療（P重防） ===
-  {
-    id: 'p_juubou',
-    name: 'P重防',
-    fullName: '歯周重症化予防治療',
-    infoUrl: '/dental/docs/p_juubou.pdf',
-    infoText: 'SPTとセットの関係。歯周重症化の予防治療。300点。',
-    defaultPoints: 300,
-    categories: [],
-    documents: [],
-    note: 'SPTとセットのような関係。患者マスターの歯数で反映',
-  },
-  // === 歯科訪問診療移行加算（訪移行） ===
-  {
-    id: 'houikou',
-    name: '訪移行',
-    fullName: '歯科訪問診療移行加算',
-    infoUrl: '/dental/docs/houikou.pdf',
-    infoText: '歯科訪問診療への移行時に算定。100点。',
-    defaultPoints: 100,
-    categories: [],
-    documents: [],
-  },
-  // === 訪問口腔リハビリテーション ===
-  {
-    id: 'houmon_koukuu_riha',
-    name: '訪問口腔リハ',
-    fullName: '訪問口腔リハビリテーション',
-    infoUrl: '/dental/docs/houmon_riha.pdf',
-    infoText: '訪問口腔リハビリテーション。600点。バージョンアップ時に詳細掲載予定。',
-    defaultPoints: 600,
-    categories: [],
-    documents: [],
-    note: 'バージョンアップ時に掲載予定',
-  },
-  // === 訪問口腔リハビリテーション加算 ===
-  {
-    id: 'houmon_koukuu_riha_kasan',
-    name: '訪問口腔リハ加算',
-    fullName: '訪問口腔リハビリテーション加算',
-    infoUrl: '/dental/docs/houmon_riha_kasan.pdf',
-    infoText: '訪問口腔リハの加算。歯援診の区分と口管強の届出により点数が変わります。',
-    categories: [
-      {id: 'shiensin1', name: '歯援診1', points: 145},
-      {id: 'shiensin2', name: '歯援診2', points: 80},
-      {id: 'koukankyou', name: '口管強', points: 75, requiredClinicQualification: 'koukukan'},
-    ],
-    documents: [],
-    autoJudgeCondition: 'clinicQualification',
-    note: 'バージョンアップ時に掲載予定',
-  },
-  // === 在宅歯科医療情報連携加算 ===
-  {
-    id: 'johorenkei',
-    name: '情報連携',
-    fullName: '在宅歯科医療情報連携加算',
-    infoUrl: '/dental/docs/johorenkei.pdf',
-    infoText: 'ICTで他職種と情報共有した月に算定。月1回。100点。届出が必要です。',
-    requiredQualification: 'johorenkei',
-    monthlyLimit: 1,
-    defaultPoints: 100,
-    categories: [],
-    documents: [],
-    note: 'ICTで他職種と情報共有した月に算定。月1回',
   },
 ]
 
@@ -1068,13 +1454,10 @@ const DOCUMENT_TEMPLATES = {
 
 /** 算定項目カテゴリ分類（算定項目・点数一覧ページ用） */
 const SCORING_SECTIONS = [
-  {id: 'shihou', label: '歯訪系', items: ['shihou', 'houhojo', 'shizaikan', 'shizaikan_bunsho', 'p_gazou']},
-  {id: 'zaitaku', label: '在宅管系', items: ['zaishikan', 'joukyo1', 'soui', 'konc_kan', 'saho']},
+  {id: 'shihou', label: '歯訪系', items: ['shihou', 'baseup', 'houhojo']},
+  {id: 'kanri', label: '管理系', items: ['shizaikan', 'shizaikan_bunsho', 'zaishikan']},
   {id: 'houeishi', label: '訪衛指系', items: ['houeishi', 'zaikouei', 'nst2']},
-  {id: 'riha', label: 'リハ系', items: ['shiriha3', 'shiriha1', 'houmon_koukuu_riha', 'houmon_koukuu_riha_kasan']},
-  {id: 'kensa', label: '検査系', items: ['koukuu_kinou', 'zetsuatsu', 'kougouatsu1', 'koukinkensa1', 'soshaku1']},
-  {id: 'shishu', label: '歯周系', items: ['p_seiken', 'p_kiken', 'spt', 'koukan_kasan', 'tounyou', 'p_juubou']},
-  {id: 'other', label: 'その他', items: ['fkyoku', 'houikou', 'baseup', 'dx', 'johorenkei']},
+  {id: 'kensa', label: '口腔機能検査系', items: ['koukuu_kensa', 'shiriha3']},
 ]
 
 /** 算定履歴モックデータ（算定対象台帳用） */
@@ -1202,6 +1585,21 @@ const formatDuration = seconds => {
   return `${m}:${s}`
 }
 
+/** 配列内の最大IDから次のIDを算出 */
+const nextId = items => Math.max(0, ...items.map(i => i.id)) + 1
+
+/** 口腔機能精密検査の該当項目数を算出 */
+const countApplicableItems = record =>
+  [
+    record?.tongueCoatingApplicable,
+    record?.oralDrynessApplicable,
+    record?.biteForceApplicable,
+    record?.oralMotorApplicable,
+    record?.tonguePressureApplicable,
+    record?.masticatoryApplicable,
+    record?.swallowingApplicable,
+  ].filter(Boolean).length
+
 /**
  * カレンダーの日付配列を生成
  * @param {number} year
@@ -1250,7 +1648,7 @@ const useFacilityManager = () => {
   const addFacility = useCallback(facility => {
     setIsLoading(true)
     setTimeout(() => {
-      setFacilities(prev => [...prev, {...facility, id: Math.max(...prev.map(f => f.id)) + 1}])
+      setFacilities(prev => [...prev, {...facility, id: nextId(prev)}])
       setIsLoading(false)
     }, 300)
   }, [])
@@ -1275,7 +1673,7 @@ const usePatientManager = () => {
   const getPatientsByFacility = useCallback(facilityId => patients.filter(p => p.facilityId === facilityId), [patients])
 
   const addPatient = useCallback(patient => {
-    setPatients(prev => [...prev, {...patient, id: Math.max(...prev.map(p => p.id)) + 1}])
+    setPatients(prev => [...prev, {...patient, id: nextId(prev)}])
   }, [])
 
   const updatePatient = useCallback((id, data) => {
@@ -1296,7 +1694,7 @@ const useVisitPlanManager = () => {
   const [visitPlans, setVisitPlans] = useState(INITIAL_VISIT_PLANS)
 
   const addVisitPlan = useCallback(plan => {
-    setVisitPlans(prev => [...prev, {...plan, id: Math.max(0, ...prev.map(p => p.id)) + 1, status: 'scheduled'}])
+    setVisitPlans(prev => [...prev, {...plan, id: nextId(prev), status: 'scheduled'}])
   }, [])
 
   const deleteVisitPlan = useCallback(id => {
@@ -1347,13 +1745,12 @@ const useExaminationManager = () => {
 
   const addExamination = useCallback(examination => {
     setExaminations(prev => {
-      const maxId = Math.max(0, ...prev.map(e => e.id))
       const maxSortOrder = Math.max(0, ...prev.filter(e => e.visitPlanId === examination.visitPlanId).map(e => e.sortOrder))
       return [
         ...prev,
         {
           ...examination,
-          id: maxId + 1,
+          id: nextId(prev),
           sortOrder: maxSortOrder + 1,
           status: EXAMINATION_STATUS.WAITING,
           vitalBefore: null,
@@ -1412,7 +1809,7 @@ const useStaffManager = () => {
       ...prev,
       {
         ...staffData,
-        id: Math.max(0, ...prev.map(s => s.id)) + 1,
+        id: nextId(prev),
         sortOrder: prev.filter(s => s.role === staffData.role).length + 1,
       },
     ])
@@ -1453,7 +1850,7 @@ const useScoringHistoryManager = () => {
   const [scoringHistory, setScoringHistory] = useState(INITIAL_SCORING_HISTORY)
 
   const addScoringRecord = useCallback(record => {
-    setScoringHistory(prev => [...prev, {...record, id: Math.max(0, ...prev.map(h => h.id)) + 1}])
+    setScoringHistory(prev => [...prev, {...record, id: nextId(prev)}])
   }, [])
 
   const getHistoryByPatient = useCallback(patientId => scoringHistory.filter(h => h.patientId === patientId), [scoringHistory])
@@ -1470,7 +1867,7 @@ const useDocumentManager = () => {
   const addDocument = useCallback(doc => {
     setDocuments(prev => [
       ...prev,
-      {...doc, id: Math.max(0, ...prev.map(d => d.id)) + 1, createdAt: formatDate(new Date(2026, 0, 18))},
+      {...doc, id: nextId(prev), createdAt: formatDate(new Date(2026, 0, 18))},
     ])
   }, [])
 
@@ -3133,6 +3530,433 @@ const VitalDisplay = ({vital, label, onEdit}) => {
 }
 
 /**
+ * 口腔機能精密検査 記録用紙フォームコンポーネント
+ * 画像「口腔機能精密検査 記録用紙.png」に完全一致するHTMLテーブル
+ */
+const OralFunctionRecordForm = ({patient, initialData, onSave, onClose}) => {
+  const [formData, setFormData] = useState(
+    initialData || {
+      measureDate: formatDate(new Date()),
+      tongueCoatingPercent: '',
+      tongueCoatingApplicable: false,
+      oralMoistureValue: '',
+      salivaAmount: '',
+      oralDrynessApplicable: false,
+      biteForceN: '',
+      remainingTeeth: String(patient?.teethCount || ''),
+      biteForceApplicable: false,
+      oralDiadochoPa: '',
+      oralDiadochoTa: '',
+      oralDiadochoKa: '',
+      oralMotorApplicable: false,
+      tonguePressureKPa: '',
+      tonguePressureApplicable: false,
+      masticatoryAbilityMgDl: '',
+      masticatoryScoreMethod: '',
+      masticatoryApplicable: false,
+      swallowingEAT10Score: '',
+      swallowingQuestionnaireA: '',
+      swallowingApplicable: false,
+      doctorName: '',
+      hygienistName: '',
+    }
+  )
+
+  const handleChange = (field, value) => {
+    setFormData(prev => ({...prev, [field]: value}))
+  }
+
+  // 該当項目数の自動計算
+  const applicableCount = countApplicableItems(formData)
+  const isOralHypofunction = applicableCount >= 3
+
+  const inputCls =
+    'w-16 px-1 py-0.5 border border-gray-300 rounded text-center text-sm focus:outline-none focus:ring-1 focus:ring-blue-400'
+  const checkCls = 'w-4 h-4 accent-blue-600'
+
+  return (
+    <div className="space-y-4 ">
+      {/* ヘッダー情報 */}
+      <div className="border border-gray-400">
+        <table className="w-full text-sm border-collapse">
+          <tbody>
+            <tr className="border-b border-gray-300">
+              <td className="border-r border-gray-300 p-2 bg-gray-50 w-28">
+                <div className="text-[10px] text-gray-500">フリガナ</div>
+                <div className="text-xs">{patient ? getPatientNameKana(patient) : ''}</div>
+                <div className="text-[10px] text-gray-500 mt-1">患者氏名</div>
+                <div className="font-medium">{patient ? getPatientName(patient) : ''}</div>
+              </td>
+              <td className="border-r border-gray-300 p-2 bg-gray-50 text-center w-24">
+                <div className="text-[10px] text-gray-500">患者番号</div>
+                <div>{patient?.id || ''}</div>
+              </td>
+              <td className="border-r border-gray-300 p-2 bg-gray-50 text-center w-24">
+                <div className="text-[10px] text-gray-500">生年月日</div>
+                <div className="text-xs">{patient?.birthDate || ''}</div>
+              </td>
+              <td className="border-r border-gray-300 p-2 bg-gray-50 text-center w-16">
+                <div className="text-[10px] text-gray-500">(歳)</div>
+                <div>{patient?.age || ''}</div>
+              </td>
+              <td className="p-2 bg-gray-50 text-center w-16">
+                <div>{patient?.gender === 'male' ? '男' : '女'}</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {/* 計測日 */}
+      <div className="text-sm">
+        計測日:{' '}
+        <input
+          type="date"
+          value={formData.measureDate}
+          onChange={e => handleChange('measureDate', e.target.value)}
+          className="border border-gray-300 rounded px-2 py-1 text-sm"
+        />
+      </div>
+
+      {/* 7つの下位症状テーブル */}
+      <div className="border border-gray-400 overflow-x-auto">
+        <table className="w-full text-sm border-collapse">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="border border-gray-300 p-1.5 text-center w-24">下位症状</th>
+              <th className="border border-gray-300 p-1.5 text-center">検査項目</th>
+              <th className="border border-gray-300 p-1.5 text-center w-40">該当基準</th>
+              <th className="border border-gray-300 p-1.5 text-center w-32">検査値</th>
+              <th className="border border-gray-300 p-1.5 text-center w-12">該当</th>
+            </tr>
+          </thead>
+          <tbody>
+            {/* ① 口腔衛生状態不良 */}
+            <tr>
+              <td className="border border-gray-300 p-1.5 text-center bg-gray-50">
+                ① 口腔衛生
+                <br />
+                状態不良
+              </td>
+              <td className="border border-gray-300 p-1.5">舌苔の付着程度</td>
+              <td className="border border-gray-300 p-1.5 text-center">50%以上</td>
+              <td className="border border-gray-300 p-1.5 text-center">
+                <input
+                  type="text"
+                  value={formData.tongueCoatingPercent}
+                  onChange={e => handleChange('tongueCoatingPercent', e.target.value)}
+                  className={inputCls}
+                />{' '}
+                %
+              </td>
+              <td className="border border-gray-300 p-1.5 text-center">
+                <input
+                  type="checkbox"
+                  checked={formData.tongueCoatingApplicable}
+                  onChange={e => handleChange('tongueCoatingApplicable', e.target.checked)}
+                  className={checkCls}
+                />
+              </td>
+            </tr>
+            {/* ② 口腔乾燥 */}
+            <tr>
+              <td className="border border-gray-300 p-1.5 text-center bg-gray-50" rowSpan={2}>
+                ② 口腔乾燥
+              </td>
+              <td className="border border-gray-300 p-1.5">口腔粘膜湿潤度</td>
+              <td className="border border-gray-300 p-1.5 text-center">27未満</td>
+              <td className="border border-gray-300 p-1.5 text-center">
+                <input
+                  type="text"
+                  value={formData.oralMoistureValue}
+                  onChange={e => handleChange('oralMoistureValue', e.target.value)}
+                  className={inputCls}
+                />
+              </td>
+              <td className="border border-gray-300 p-1.5 text-center" rowSpan={2}>
+                <input
+                  type="checkbox"
+                  checked={formData.oralDrynessApplicable}
+                  onChange={e => handleChange('oralDrynessApplicable', e.target.checked)}
+                  className={checkCls}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td className="border border-gray-300 p-1.5">唾液量</td>
+              <td className="border border-gray-300 p-1.5 text-center">2g/2分以下</td>
+              <td className="border border-gray-300 p-1.5 text-center">
+                <input
+                  type="text"
+                  value={formData.salivaAmount}
+                  onChange={e => handleChange('salivaAmount', e.target.value)}
+                  className={inputCls}
+                />{' '}
+                g
+              </td>
+            </tr>
+            {/* ③ 咬合力低下 */}
+            <tr>
+              <td className="border border-gray-300 p-1.5 text-center bg-gray-50" rowSpan={2}>
+                ③ 咬合力低下
+              </td>
+              <td className="border border-gray-300 p-1.5">咬合力検査</td>
+              <td className="border border-gray-300 p-1.5 text-xs leading-tight">
+                350N未満(デンタルプレスケールII・フィルタあり)
+                <br />
+                500N未満(デンタルプレスケールII・フィルタなし)
+                <br />
+                200N未満(デンタルプレスケール)
+                <br />
+                375N未満(Orano-bf)
+              </td>
+              <td className="border border-gray-300 p-1.5 text-center">
+                <input
+                  type="text"
+                  value={formData.biteForceN}
+                  onChange={e => handleChange('biteForceN', e.target.value)}
+                  className={inputCls}
+                />{' '}
+                N
+              </td>
+              <td className="border border-gray-300 p-1.5 text-center" rowSpan={2}>
+                <input
+                  type="checkbox"
+                  checked={formData.biteForceApplicable}
+                  onChange={e => handleChange('biteForceApplicable', e.target.checked)}
+                  className={checkCls}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td className="border border-gray-300 p-1.5">残存歯数</td>
+              <td className="border border-gray-300 p-1.5 text-center">20本未満</td>
+              <td className="border border-gray-300 p-1.5 text-center">
+                <input
+                  type="text"
+                  value={formData.remainingTeeth}
+                  onChange={e => handleChange('remainingTeeth', e.target.value)}
+                  className={inputCls}
+                />{' '}
+                本
+              </td>
+            </tr>
+            {/* ④ 舌口唇運動機能低下 */}
+            <tr>
+              <td className="border border-gray-300 p-1.5 text-center bg-gray-50">
+                ④ 舌口唇運動
+                <br />
+                機能低下
+              </td>
+              <td className="border border-gray-300 p-1.5">オーラルディアドコキネシス</td>
+              <td className="border border-gray-300 p-1.5 text-center">
+                どれか1つでも
+                <br />
+                6回/秒未満
+              </td>
+              <td className="border border-gray-300 p-1.5 text-center text-xs space-y-1">
+                <div>
+                  「パ」
+                  <input
+                    type="text"
+                    value={formData.oralDiadochoPa}
+                    onChange={e => handleChange('oralDiadochoPa', e.target.value)}
+                    className="w-12 px-1 py-0.5 border border-gray-300 rounded text-center text-sm mx-1"
+                  />
+                  回/秒
+                </div>
+                <div>
+                  「タ」
+                  <input
+                    type="text"
+                    value={formData.oralDiadochoTa}
+                    onChange={e => handleChange('oralDiadochoTa', e.target.value)}
+                    className="w-12 px-1 py-0.5 border border-gray-300 rounded text-center text-sm mx-1"
+                  />
+                  回/秒
+                </div>
+                <div>
+                  「カ」
+                  <input
+                    type="text"
+                    value={formData.oralDiadochoKa}
+                    onChange={e => handleChange('oralDiadochoKa', e.target.value)}
+                    className="w-12 px-1 py-0.5 border border-gray-300 rounded text-center text-sm mx-1"
+                  />
+                  回/秒
+                </div>
+              </td>
+              <td className="border border-gray-300 p-1.5 text-center">
+                <input
+                  type="checkbox"
+                  checked={formData.oralMotorApplicable}
+                  onChange={e => handleChange('oralMotorApplicable', e.target.checked)}
+                  className={checkCls}
+                />
+              </td>
+            </tr>
+            {/* ⑤ 低舌圧 */}
+            <tr>
+              <td className="border border-gray-300 p-1.5 text-center bg-gray-50">⑤ 低舌圧</td>
+              <td className="border border-gray-300 p-1.5">舌圧検査</td>
+              <td className="border border-gray-300 p-1.5 text-center">30kPa未満</td>
+              <td className="border border-gray-300 p-1.5 text-center">
+                <input
+                  type="text"
+                  value={formData.tonguePressureKPa}
+                  onChange={e => handleChange('tonguePressureKPa', e.target.value)}
+                  className={inputCls}
+                />{' '}
+                kPa
+              </td>
+              <td className="border border-gray-300 p-1.5 text-center">
+                <input
+                  type="checkbox"
+                  checked={formData.tonguePressureApplicable}
+                  onChange={e => handleChange('tonguePressureApplicable', e.target.checked)}
+                  className={checkCls}
+                />
+              </td>
+            </tr>
+            {/* ⑥ 咀嚼機能低下 */}
+            <tr>
+              <td className="border border-gray-300 p-1.5 text-center bg-gray-50" rowSpan={2}>
+                ⑥ 咀嚼機能
+                <br />
+                低下
+              </td>
+              <td className="border border-gray-300 p-1.5">咀嚼能力検査</td>
+              <td className="border border-gray-300 p-1.5 text-center">100mg/dL未満</td>
+              <td className="border border-gray-300 p-1.5 text-center">
+                <input
+                  type="text"
+                  value={formData.masticatoryAbilityMgDl}
+                  onChange={e => handleChange('masticatoryAbilityMgDl', e.target.value)}
+                  className={inputCls}
+                />{' '}
+                mg/dL
+              </td>
+              <td className="border border-gray-300 p-1.5 text-center" rowSpan={2}>
+                <input
+                  type="checkbox"
+                  checked={formData.masticatoryApplicable}
+                  onChange={e => handleChange('masticatoryApplicable', e.target.checked)}
+                  className={checkCls}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td className="border border-gray-300 p-1.5">咀嚼能率スコア法</td>
+              <td className="border border-gray-300 p-1.5 text-center">スコア 0, 1, 2</td>
+              <td className="border border-gray-300 p-1.5 text-center">
+                <select
+                  value={formData.masticatoryScoreMethod}
+                  onChange={e => handleChange('masticatoryScoreMethod', e.target.value)}
+                  className="border border-gray-300 rounded px-1 py-0.5 text-sm"
+                >
+                  <option value="">-</option>
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
+              </td>
+            </tr>
+            {/* ⑦ 嚥下機能低下 */}
+            <tr>
+              <td className="border border-gray-300 p-1.5 text-center bg-gray-50" rowSpan={2}>
+                ⑦ 嚥下機能
+                <br />
+                低下
+              </td>
+              <td className="border border-gray-300 p-1.5">
+                嚥下スクリーニング検査
+                <br />
+                (EAT-10)
+              </td>
+              <td className="border border-gray-300 p-1.5 text-center">3点以上</td>
+              <td className="border border-gray-300 p-1.5 text-center">
+                <input
+                  type="text"
+                  value={formData.swallowingEAT10Score}
+                  onChange={e => handleChange('swallowingEAT10Score', e.target.value)}
+                  className={inputCls}
+                />{' '}
+                点
+              </td>
+              <td className="border border-gray-300 p-1.5 text-center" rowSpan={2}>
+                <input
+                  type="checkbox"
+                  checked={formData.swallowingApplicable}
+                  onChange={e => handleChange('swallowingApplicable', e.target.checked)}
+                  className={checkCls}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td className="border border-gray-300 p-1.5">
+                自記式質問票
+                <br />
+                (聖隷式嚥下質問紙)
+              </td>
+              <td className="border border-gray-300 p-1.5 text-center">Aが1項目以上</td>
+              <td className="border border-gray-300 p-1.5 text-center">
+                <input
+                  type="text"
+                  value={formData.swallowingQuestionnaireA}
+                  onChange={e => handleChange('swallowingQuestionnaireA', e.target.value)}
+                  className={inputCls}
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {/* フッター */}
+      <div className="flex items-center justify-between">
+        <div className="text-sm">該当項目が3項目以上で「口腔機能低下症」と診断する。</div>
+        <div className={`text-lg font-bold ${isOralHypofunction ? 'text-red-600' : 'text-gray-700'}`}>
+          該当項目数: {applicableCount} {isOralHypofunction && '→ 口腔機能低下症'}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          歯科医師名:{' '}
+          <input
+            type="text"
+            value={formData.doctorName}
+            onChange={e => handleChange('doctorName', e.target.value)}
+            className="border border-gray-300 rounded px-2 py-1 w-40"
+          />
+        </div>
+        <div>
+          歯科衛生士名:{' '}
+          <input
+            type="text"
+            value={formData.hygienistName}
+            onChange={e => handleChange('hygienistName', e.target.value)}
+            className="border border-gray-300 rounded px-2 py-1 w-40"
+          />
+        </div>
+      </div>
+
+      {/* 操作ボタン */}
+      <div className="flex justify-end gap-2">
+        <Button size="sm" variant="secondary" onClick={onClose}>
+          キャンセル
+        </Button>
+        <Button size="sm" variant="success" onClick={() => onSave(formData)}>
+          保存
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+/**
  * 診療画面
  */
 const ConsultationPage = ({
@@ -3145,6 +3969,7 @@ const ConsultationPage = ({
   onUpdate,
   onOpenDocument,
   consultationMode,
+  allExaminations,
 }) => {
   // DHモード制限: DHログイン時は訪衛指と在口衛のみ操作可能（MTG 0206決定）
   const DH_ALLOWED_ITEMS = ['houeishi', 'zaikouei']
@@ -3155,10 +3980,14 @@ const ConsultationPage = ({
   const [dhRunning, setDhRunning] = useState(false)
   const [vitalBefore, setVitalBefore] = useState(examination.vitalBefore || INITIAL_VITAL)
   const [vitalAfter, setVitalAfter] = useState(examination.vitalAfter || INITIAL_VITAL)
-  // 実施項目は一旦廃止（MTG 0206決定）
-  // const [treatmentItems, setTreatmentItems] = useState(examination.treatmentItems || [])
-  // procedureItems: { [itemId]: { categoryId: string | null } }
+  // procedureItems: { [masterId]: { selectedSubItems: string[], isAutoSet: boolean } }
   const [procedureItems, setProcedureItems] = useState(examination.procedureItems || {})
+  // 自動判定結果を保持（手動上書き警告用）
+  const [autoJudgeResult, setAutoJudgeResult] = useState({})
+  // 在歯管の実施治療選択
+  const [treatmentPerformed, setTreatmentPerformed] = useState(examination.treatmentPerformed || [])
+  // 口腔機能精密検査記録用紙データ
+  const [oralFunctionRecord, setOralFunctionRecord] = useState(examination.oralFunctionRecord || null)
   // 実施記録・所見の4項目
   const [visitCondition, setVisitCondition] = useState(examination.visitCondition || '')
   const [oralFindings, setOralFindings] = useState(examination.oralFindings || '')
@@ -3166,215 +3995,146 @@ const ConsultationPage = ({
   const [nextPlan, setNextPlan] = useState(examination.nextPlan || '')
   const [customTreatment, setCustomTreatment] = useState('')
   const [customTreatments, setCustomTreatments] = useState([])
-  // 解説テキストポップアップ（MTG 0206決定: PDFリンク→テキストポップアップ）
+  // 解説テキストポップアップ
   const infoModal = useModal()
+  // 口腔機能精密検査モーダル
+  const oralRecordModal = useModal()
+  const oralPlanModal = useModal()
+  // 在歯管 対象の治療選択モーダル
+  const zaishikanTreatmentModal = useModal()
 
   const vitalBeforeModal = useModal()
   const vitalAfterModal = useModal()
 
   const doctor = staff.find(s => s.id === examination.doctorId)
 
-  // 実施項目は一旦廃止（MTG 0206決定）
-  // const handleToggleTreatment = itemId => {
-  //   setTreatmentItems(prev => (prev.includes(itemId) ? prev.filter(id => id !== itemId) : [...prev, itemId]))
-  // }
+  // 同一日同一施設の患者数を算出
+  const sameDayCount = useMemo(() => {
+    const visitPlan = examination.visitPlanId
+    // 同じvisitPlanに紐づく診察数 = 同一日同一施設の患者数
+    return allExaminations?.filter(e => e.visitPlanId === visitPlan).length || 1
+  }, [examination.visitPlanId, allExaminations])
 
-  // 実施項目のON/OFF切り替え
-  const handleToggleProcedure = itemId => {
+  // 同月の施設内診療患者数（暫定: sameDayCountと同じ扱い）
+  const sameMonthCount = sameDayCount
+
+  // 実施項目のON/OFF切り替え（新構造: subItems対応）
+  const handleToggleProcedure = masterId => {
     setProcedureItems(prev => {
-      if (prev[itemId]) {
-        // 選択解除
-        const {[itemId]: _, ...rest} = prev
+      if (prev[masterId]) {
+        const {[masterId]: _, ...rest} = prev
         return rest
       } else {
-        // 選択（初期値はカテゴリなし、自動判定で設定）
-        const item = PROCEDURE_ITEMS_MASTER.find(i => i.id === itemId)
-        const defaultCategoryId = item?.categories?.[0]?.id || null
-        return {...prev, [itemId]: {categoryId: defaultCategoryId}}
+        const master = PROCEDURE_ITEMS_MASTER.find(i => i.id === masterId)
+        const defaultSub = master?.subItems?.[0]?.id || null
+        return {...prev, [masterId]: {selectedSubItems: defaultSub ? [defaultSub] : [], isAutoSet: false}}
       }
     })
   }
 
-  // 該当区分の変更
-  const handleSetProcedureCategory = (itemId, categoryId) => {
-    setProcedureItems(prev => ({
-      ...prev,
-      [itemId]: {...prev[itemId], categoryId},
-    }))
+  // サブアイテムの選択変更
+  const handleSelectSubItem = (masterId, subItemId, selectionMode) => {
+    setProcedureItems(prev => {
+      const current = prev[masterId]
+      if (!current) return prev
+      let newSelected
+      if (selectionMode === 'single') {
+        newSelected = [subItemId]
+      } else {
+        // multiple: トグル
+        if (current.selectedSubItems.includes(subItemId)) {
+          newSelected = current.selectedSubItems.filter(id => id !== subItemId)
+        } else {
+          newSelected = [...current.selectedSubItems, subItemId]
+        }
+      }
+      return {...prev, [masterId]: {...current, selectedSubItems: newSelected, isAutoSet: false}}
+    })
   }
 
-  // 患者の歯数から歯周検査の点数区分を判定
-  const getTeethCountCategory = teethCount => {
-    if (teethCount >= 20) return '20+'
-    if (teethCount >= 10) return '10-19'
-    return '1-9'
-  }
-
-  // 患者に登録された疾患があるかチェック
-  const hasAnyDisease = () => {
-    if (!patient.diseases) return false
-    return Object.values(patient.diseases).some(v => v === true)
-  }
-
-  // 患者が糖尿病かチェック
-  const hasDiabetes = () => {
-    return patient.diseases?.diabetes === true
-  }
-
-  // 項目が算定可能かチェック（資格要件）
-  const canClaimItem = item => {
-    if (!item.requiredQualification) return true
-    return hasQualification(item.requiredQualification)
-  }
-
-  // 合計点数の計算（資格連携対応版）
+  // 合計点数の計算（subItems構造対応）
   const calculateTotalPoints = () => {
     let total = 0
-    Object.entries(procedureItems).forEach(([itemId, data]) => {
-      const item = PROCEDURE_ITEMS_MASTER.find(i => i.id === itemId)
-      if (!item) return
-
-      // 資格要件をチェック
-      if (!canClaimItem(item)) return
-
-      if (item.categories?.length > 0 && data.categoryId) {
-        const category = item.categories.find(c => c.id === data.categoryId)
-        // カテゴリに資格要件がある場合はチェック
-        if (category?.requiredClinicQualification) {
-          if (!hasQualification(category.requiredClinicQualification)) {
-            // 資格がない場合は通常点数のカテゴリを探す
-            const normalCat = item.categories.find(c => !c.requiredClinicQualification)
-            total += normalCat?.points || 0
-            return
-          }
-        }
-        total += category?.points || 0
-      } else {
-        total += item.defaultPoints || 0
-      }
+    Object.entries(procedureItems).forEach(([masterId, data]) => {
+      const master = PROCEDURE_ITEMS_MASTER.find(i => i.id === masterId)
+      if (!master) return
+      ;(data.selectedSubItems || []).forEach(subId => {
+        const sub = master.subItems.find(s => s.id === subId)
+        if (sub) total += sub.points
+      })
     })
     return total
   }
 
-  // 選択された項目の点数を取得（資格連携対応版）
-  const getItemPoints = itemId => {
-    const item = PROCEDURE_ITEMS_MASTER.find(i => i.id === itemId)
-    const data = procedureItems[itemId]
-    if (!item || !data) return 0
+  // 選択された項目の点数を取得
+  const getItemPoints = masterId => {
+    const master = PROCEDURE_ITEMS_MASTER.find(i => i.id === masterId)
+    const data = procedureItems[masterId]
+    if (!master || !data) return 0
+    let total = 0
+    ;(data.selectedSubItems || []).forEach(subId => {
+      const sub = master.subItems.find(s => s.id === subId)
+      if (sub) total += sub.points
+    })
+    return total
+  }
 
-    // 資格要件をチェック
-    if (!canClaimItem(item)) return 0
+  // evaluate関数用コンテキスト構築
+  const buildEvalContext = useCallback(
+    () => ({
+      drSeconds,
+      dhSeconds,
+      sameDayCount,
+      sameMonthCount,
+      hasDoctor: !!examination.doctorId,
+      hasHygienist: !!examination.hygienistId,
+      clinic,
+      patient,
+      pastClaims: INITIAL_PAST_EXAMINATIONS.filter(p => p.patientId === patient.id),
+      currentMonth: '2026-01',
+      oralFunctionRecord,
+      currentItems: procedureItems,
+      treatmentPerformed,
+    }),
+    [
+      drSeconds,
+      dhSeconds,
+      sameDayCount,
+      sameMonthCount,
+      examination,
+      clinic,
+      patient,
+      oralFunctionRecord,
+      procedureItems,
+      treatmentPerformed,
+    ]
+  )
 
-    if (item.categories?.length > 0 && data.categoryId) {
-      const category = item.categories.find(c => c.id === data.categoryId)
-      // カテゴリに資格要件がある場合はチェック
-      if (category?.requiredClinicQualification) {
-        if (!hasQualification(category.requiredClinicQualification)) {
-          // 資格がない場合は通常点数のカテゴリを探す
-          const normalCat = item.categories.find(c => !c.requiredClinicQualification)
-          return normalCat?.points || 0
+  // 全項目自動判定
+  const handleAutoSetAll = () => {
+    const ctx = buildEvalContext()
+    const result = {}
+    PROCEDURE_ITEMS_MASTER.forEach(master => {
+      const hitSubs = master.subItems.filter(sub => !sub.isManualOnly && sub.evaluate(ctx)).map(sub => sub.id)
+      if (hitSubs.length > 0) {
+        result[master.id] = {
+          selectedSubItems: master.selectionMode === 'single' ? [hitSubs[0]] : hitSubs,
+          isAutoSet: true,
         }
       }
-      return category?.points || 0
-    }
-    return item.defaultPoints || 0
+    })
+    setAutoJudgeResult(result)
+    setProcedureItems(prev => ({...prev, ...result}))
   }
 
-  // 自動判定で資格に基づくカテゴリを選択
-  const autoSelectCategoryByQualification = item => {
-    if (!item.categories?.length) return null
-
-    // 口腔管加算の自動判定
-    if (item.autoJudgeCondition === 'clinicKoukankyou') {
-      if (hasQualification('koukukan')) {
-        const koukanCat = item.categories.find(c => c.requiredClinicQualification === 'koukukan')
-        return koukanCat?.id || item.categories[0].id
-      }
-      return item.categories.find(c => !c.requiredClinicQualification)?.id || item.categories[0].id
-    }
-
-    // 歯援診の自動判定
-    if (item.autoJudgeCondition === 'clinicQualification') {
-      if (hasQualification('shiensin1')) {
-        const cat = item.categories.find(c => c.id === 'shiensin1')
-        return cat?.id || item.categories[0].id
-      }
-      if (hasQualification('shiensin2')) {
-        const cat = item.categories.find(c => c.id === 'shiensin2')
-        return cat?.id || item.categories[0].id
-      }
-      return item.categories.find(c => c.id === 'other')?.id || item.categories[0].id
-    }
-
-    // DX加算の自動判定
-    if (item.autoJudgeCondition === 'clinicDxSetting') {
-      if (hasQualification('dx')) {
-        return item.categories.find(c => c.id === 'with-prescription' || c.id === 'without-prescription')?.id
-      }
-      return null
-    }
-
-    // 患者の歯数による自動判定
-    if (item.autoJudgeCondition === 'patientTeethCount' && patient.teethCount) {
-      const teethCat = getTeethCountCategory(patient.teethCount)
-      return item.categories.find(c => c.id === teethCat)?.id || item.categories[0].id
-    }
-
-    return item.categories[0].id
-  }
-
-  // 自動判定ハンドラー（改良版：資格・患者情報を考慮）
-  const handleAutoJudge = itemId => {
-    const item = PROCEDURE_ITEMS_MASTER.find(i => i.id === itemId)
-    if (!item || !item.categories?.length) return
-
-    let categoryId = item.categories[0].id
-
-    // 資格に基づく自動判定
-    if (['clinicKoukankyou', 'clinicQualification', 'clinicDxSetting', 'patientTeethCount'].includes(item.autoJudgeCondition)) {
-      const autoCat = autoSelectCategoryByQualification(item)
-      if (autoCat) categoryId = autoCat
-    }
-    // 施設タイプに基づく判定（同一建物患者数）
-    else if (item.autoJudgeCondition === 'facilityType' || item.autoJudgeCondition === 'patientCount') {
-      // 仮: 施設なら2-9人カテゴリを選択
-      categoryId = item.categories.length > 1 ? item.categories[1].id : item.categories[0].id
-    }
-    // 患者の居住状況に基づく判定
-    else if (item.autoJudgeCondition === 'patientResidence') {
-      // 仮: 施設入居なら2番目のカテゴリ
-      categoryId = item.categories.length > 1 ? item.categories[1].id : item.categories[0].id
-    }
-    // 時間と患者数による判定（歯訪用）
-    else if (item.autoJudgeCondition === 'timeAndPatientCount') {
-      const is20MinOver = drSeconds >= 1200
-      const timePrefix = is20MinOver ? '20over' : '20under'
-      // 仮: 施設なら2-3人カテゴリを選択
-      categoryId = item.categories.find(c => c.id === `2-${timePrefix}`)?.id || item.categories[0].id
-    }
-    // 口腔機能低下症チェック
-    else if (item.autoJudgeCondition === 'oralHypofunction') {
-      if (patient.hasOralHypofunction && hasQualification('koukukan')) {
-        categoryId = item.categories.find(c => c.requiredClinicQualification === 'koukukan')?.id || item.categories[0].id
-      }
-    }
-    // 患者疾患チェック
-    else if (item.autoJudgeCondition === 'patientDisease' || item.autoJudgeCondition === 'patientDiseaseKJ3') {
-      // 疾患がある場合のみ算定可能を確認
-      if (!hasAnyDisease()) {
-        // 注意喚起のみ（実際にはUIで表示）
-        console.log('この患者には該当する疾患が登録されていません')
-      }
-    }
-    // 糖尿病チェック
-    else if (item.autoJudgeCondition === 'patientDiabetes') {
-      if (!hasDiabetes()) {
-        // 注意喚起のみ
-        console.log('この患者には糖尿病が登録されていません')
-      }
-    }
-
-    handleSetProcedureCategory(itemId, categoryId)
+  // 手動上書きかどうか判定（警告表示用）
+  const isManualOverride = masterId => {
+    const auto = autoJudgeResult[masterId]
+    const current = procedureItems[masterId]
+    if (!auto || !current) return false
+    const autoSorted = [...(auto.selectedSubItems || [])].sort().join(',')
+    const currentSorted = [...(current.selectedSubItems || [])].sort().join(',')
+    return autoSorted !== currentSorted
   }
 
   const handleAddCustomTreatment = () => {
@@ -3391,8 +4151,9 @@ const ConsultationPage = ({
     onUpdate(examination.id, {
       vitalBefore,
       vitalAfter,
-      // treatmentItems は一旦廃止（MTG 0206決定）
       procedureItems,
+      treatmentPerformed,
+      oralFunctionRecord,
       visitCondition,
       oralFindings,
       treatment,
@@ -3543,131 +4304,144 @@ const ConsultationPage = ({
         </div>
       )}
 
-      <R_Stack className={`mb-2`}>
-        口腔機能精密検査
-        <Button>計画書を入力</Button>
-        <Button>記録用紙を入力</Button>
+      {/* 口腔機能精密検査 */}
+      <R_Stack className="mb-2">
+        <span className="text-sm font-medium text-gray-700">口腔機能精密検査</span>
+        <Button size="sm" variant="outline" onClick={() => oralPlanModal.handleOpen()}>
+          計画書を入力
+        </Button>
+        <Button size="sm" variant="outline" onClick={() => oralRecordModal.handleOpen()}>
+          記録用紙を入力
+        </Button>
+        {oralFunctionRecord && (
+          <Badge variant="success">
+            記録済（該当{countApplicableItems(oralFunctionRecord)}項目）
+          </Badge>
+        )}
       </R_Stack>
 
-      {/* 実施項目の選択（加算） */}
+      {/* 実施項目の選択（加算） - subItems対応 */}
       <Card className="mb-4">
         <div className="p-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-green-500">✓</span>
             <span className="text-sm font-medium text-gray-700">実施項目の選択（加算）</span>
           </div>
-          <div className="text-sm font-bold text-slate-700">合計: {calculateTotalPoints().toLocaleString()} 点</div>
+          <div className="flex items-center gap-3">
+            <Button size="sm" variant="outline" onClick={handleAutoSetAll}>
+              全項目自動判定
+            </Button>
+            <div className="text-sm font-bold text-slate-700">合計: {calculateTotalPoints().toLocaleString()} 点</div>
+          </div>
         </div>
 
         <div className="p-4 space-y-2">
-          {(isDhMode ? PROCEDURE_ITEMS_MASTER.filter(i => DH_ALLOWED_ITEMS.includes(i.id)) : PROCEDURE_ITEMS_MASTER).map(item => {
-            const isSelected = !!procedureItems[item.id]
-            const itemData = procedureItems[item.id]
-            const points = getItemPoints(item.id)
+          {(isDhMode ? PROCEDURE_ITEMS_MASTER.filter(i => DH_ALLOWED_ITEMS.includes(i.id)) : PROCEDURE_ITEMS_MASTER).map(
+            master => {
+              const isSelected = !!procedureItems[master.id]
+              const itemData = procedureItems[master.id]
+              const points = getItemPoints(master.id)
+              const hasOverride = isManualOverride(master.id)
 
-            return (
-              <div key={item.id} className="border rounded-lg overflow-hidden">
-                {/* ON/OFFボタン + 項目名 + インフォマーク */}
-                <div
-                  className={`flex items-center justify-between p-3 cursor-pointer transition-colors ${
-                    isSelected ? 'bg-slate-50 border-slate-300' : 'bg-white hover:bg-gray-50'
-                  }`}
-                  onClick={() => handleToggleProcedure(item.id)}
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-12 h-6 rounded-full relative transition-colors ${
-                        isSelected ? 'bg-emerald-500' : 'bg-gray-300'
-                      }`}
-                    >
+              return (
+                <div key={master.id} className="border rounded-lg overflow-hidden">
+                  {/* ON/OFFトグル + 項目名 + インフォマーク + 警告 */}
+                  <div
+                    className={`flex items-center justify-between p-3 cursor-pointer transition-colors ${
+                      isSelected ? 'bg-slate-50 border-slate-300' : 'bg-white hover:bg-gray-50'
+                    }`}
+                    onClick={() => handleToggleProcedure(master.id)}
+                  >
+                    <div className="flex items-center gap-3">
                       <div
-                        className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${
-                          isSelected ? 'translate-x-7' : 'translate-x-1'
+                        className={`w-12 h-6 rounded-full relative transition-colors ${
+                          isSelected ? 'bg-emerald-500' : 'bg-gray-300'
                         }`}
-                      />
+                      >
+                        <div
+                          className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${
+                            isSelected ? 'translate-x-7' : 'translate-x-1'
+                          }`}
+                        />
+                      </div>
+                      <span className={`font-medium ${isSelected ? 'text-slate-800' : 'text-gray-700'}`}>{master.name}</span>
+                      {hasOverride && (
+                        <span className="text-amber-500 text-sm" title="自動判定と異なります">
+                          ⚠
+                        </span>
+                      )}
+                      <button
+                        onClick={e => {
+                          e.stopPropagation()
+                          infoModal.handleOpen({name: master.fullName, text: master.infoText || ''})
+                        }}
+                        className="w-5 h-5 flex items-center justify-center rounded-full bg-gray-200 text-gray-600 hover:bg-slate-300 hover:text-slate-700 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500"
+                        aria-label={`${master.name}の解説を表示`}
+                      >
+                        i
+                      </button>
                     </div>
-                    <span className={`font-medium ${isSelected ? 'text-slate-800' : 'text-gray-700'}`}>{item.name}</span>
-                    {/* インフォマーク（テキストポップアップ） */}
-                    <button
-                      onClick={e => {
-                        e.stopPropagation()
-                        infoModal.handleOpen({name: item.fullName, text: item.infoText || item.note || ''})
-                      }}
-                      className="w-5 h-5 flex items-center justify-center rounded-full bg-gray-200 text-gray-600 hover:bg-slate-300 hover:text-slate-700 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500"
-                      aria-label={`${item.name}の解説を表示`}
-                    >
-                      i
-                    </button>
+                    {isSelected && points > 0 && (
+                      <span className="px-2 py-1 bg-red-500 text-white text-xs font-bold rounded">+{points}点</span>
+                    )}
                   </div>
-                  {isSelected && points > 0 && (
-                    <span className="px-2 py-1 bg-red-500 text-white text-xs font-bold rounded">+{points}点</span>
-                  )}
-                </div>
 
-                {/* 選択時のみ表示: 該当区分・自動判定・提供文書 */}
-                {isSelected && (
-                  <div className="p-3 bg-slate-50 border-t border-slate-200 space-y-3">
-                    {/* 該当区分（カテゴリがある場合のみ） */}
-                    {item.categories?.length > 0 && (
-                      <div>
-                        <div className="text-xs text-gray-600 mb-2 flex items-center justify-between">
-                          <span>該当区分</span>
-                          <Button size="sm" variant="outline" onClick={() => handleAutoJudge(item.id)}>
-                            自動判定
-                          </Button>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {item.categories.map(cat => (
+                  {/* 選択時: subItems表示 */}
+                  {isSelected && master.subItems?.length > 0 && (
+                    <div className="p-3 bg-slate-50 border-t border-slate-200 space-y-3">
+                      <div className="text-xs text-gray-600 mb-2">該当区分</div>
+                      <div className="flex flex-wrap gap-2">
+                        {master.subItems.map(sub => {
+                          const isSubSelected = (itemData?.selectedSubItems || []).includes(sub.id)
+                          const inputType = master.selectionMode === 'single' ? 'radio' : 'checkbox'
+                          return (
                             <label
-                              key={cat.id}
+                              key={sub.id}
                               className={`flex items-center gap-2 px-3 py-2 border rounded cursor-pointer transition-colors ${
-                                itemData?.categoryId === cat.id
+                                isSubSelected
                                   ? 'border-emerald-500 bg-emerald-50'
                                   : 'border-gray-300 bg-white hover:border-gray-400'
                               }`}
                             >
                               <input
-                                type="radio"
-                                name={`category-${item.id}`}
-                                checked={itemData?.categoryId === cat.id}
-                                onChange={() => handleSetProcedureCategory(item.id, cat.id)}
+                                type={inputType}
+                                name={`sub-${master.id}`}
+                                checked={isSubSelected}
+                                onChange={() => handleSelectSubItem(master.id, sub.id, master.selectionMode)}
                                 className="w-4 h-4 text-emerald-600 accent-emerald-600"
                               />
-                              <span className="text-sm">{cat.name}</span>
-                              <span className="text-xs text-gray-500">({cat.points}点)</span>
+                              <span className="text-sm">{sub.name}</span>
+                              <span className="text-xs text-gray-500">({sub.points}点)</span>
+                              {sub.isManualOnly && (
+                                <span className="px-1.5 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-medium rounded">
+                                  手動
+                                </span>
+                              )}
                             </label>
-                          ))}
-                        </div>
+                          )
+                        })}
                       </div>
-                    )}
-
-                    {/* 必要な提供文書 */}
-                    {item.documents?.length > 0 && (
-                      <div>
-                        <div className="text-xs text-gray-600 mb-2">必要な提供文書</div>
-                        <div className="flex flex-wrap gap-2">
-                          {item.documents.map(doc => (
-                            <Button
-                              key={doc.id}
-                              size="sm"
-                              variant="outline"
-                              onClick={() => {
-                                // 提供文書ページへ遷移（利用者ID_診察ID_テンプレートID）
-                                const url = `/dental/documents/${patient.id}_${examination.id}_${doc.id}`
-                                window.open(url, '_blank')
-                              }}
-                            >
-                              📄 {doc.name}
-                            </Button>
-                          ))}
+                      {/* 在歯管の場合: 対象の治療ボタン */}
+                      {master.id === 'zaishikan' && (
+                        <div className="mt-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={e => {
+                              e.stopPropagation()
+                              zaishikanTreatmentModal.handleOpen()
+                            }}
+                          >
+                            対象の治療を選択 {treatmentPerformed.length > 0 && `(${treatmentPerformed.length}件選択中)`}
+                          </Button>
                         </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            )
-          })}
+                      )}
+                    </div>
+                  )}
+                </div>
+              )
+            }
+          )}
         </div>
       </Card>
 
@@ -3676,18 +4450,8 @@ const ConsultationPage = ({
         procedureItems={procedureItems}
         dhSeconds={dhSeconds}
         onOpenDocument={docType => {
-          // 親コンポーネントに文書作成ページへの遷移を通知
           if (typeof onOpenDocument === 'function') {
-            onOpenDocument(docType, {
-              patient,
-              clinic,
-              examination,
-              dhSeconds,
-              visitCondition,
-              oralFindings,
-              treatment,
-              nextPlan,
-            })
+            onOpenDocument(docType, {patient, clinic, examination, dhSeconds, visitCondition, oralFindings, treatment, nextPlan})
           }
         }}
       />
@@ -3701,6 +4465,67 @@ const ConsultationPage = ({
           </Button>
         </div>
       </infoModal.Modal>
+
+      {/* 計画書モーダル */}
+      <oralPlanModal.Modal title="口腔機能精密検査 計画書">
+        <div className="p-4 text-center text-gray-500">
+          <p className="text-lg font-medium mb-2">計画書機能未実装</p>
+          <p className="text-sm">今後のバージョンアップで実装予定です。</p>
+        </div>
+        <div className="flex justify-end mt-4">
+          <Button size="sm" variant="secondary" onClick={oralPlanModal.handleClose}>
+            閉じる
+          </Button>
+        </div>
+      </oralPlanModal.Modal>
+
+      {/* 記録用紙モーダル */}
+      <oralRecordModal.Modal title="口腔機能精密検査 記録用紙">
+        <OralFunctionRecordForm
+          patient={patient}
+          initialData={oralFunctionRecord}
+          onSave={data => {
+            setOralFunctionRecord(data)
+            oralRecordModal.handleClose()
+          }}
+          onClose={oralRecordModal.handleClose}
+        />
+      </oralRecordModal.Modal>
+
+      {/* 在歯管 対象の治療選択モーダル */}
+      <zaishikanTreatmentModal.Modal title="在歯管 算定対象治療の選択">
+        <div className="p-4 space-y-4 max-h-[60vh] overflow-y-auto">
+          {ZAISHIKAN_TARGET_TREATMENTS.map(cat => (
+            <div key={cat.category}>
+              <div className="text-sm font-medium text-gray-700 mb-2">{cat.category}</div>
+              <div className="space-y-1">
+                {cat.items.map(item => (
+                  <label key={item} className="flex items-center gap-2 text-sm cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={treatmentPerformed.includes(item)}
+                      onChange={e => {
+                        if (e.target.checked) {
+                          setTreatmentPerformed(prev => [...prev, item])
+                        } else {
+                          setTreatmentPerformed(prev => prev.filter(t => t !== item))
+                        }
+                      }}
+                      className="w-4 h-4 accent-emerald-600"
+                    />
+                    <span>{item}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-end gap-2 mt-4">
+          <Button size="sm" variant="secondary" onClick={zaishikanTreatmentModal.handleClose}>
+            閉じる
+          </Button>
+        </div>
+      </zaishikanTreatmentModal.Modal>
 
       {/* 保存ボタン */}
       <div className="flex justify-end gap-2">
@@ -5075,21 +5900,7 @@ const IndividualInputPage = ({facilities, patients, staff, onStartConsultation})
 const FinalReviewPage = ({examination, patient, facility, staff, clinic, onBack, onBackToSchedule}) => {
   if (!examination || !patient) return null
 
-  // 算定点数の計算
-  const totalPoints = useMemo(() => {
-    let total = 0
-    Object.entries(examination.procedureItems || {}).forEach(([itemId, selection]) => {
-      const proc = PROCEDURE_ITEMS_MASTER.find(p => p.id === itemId)
-      if (!proc) return
-      if (selection.categoryId) {
-        const cat = proc.categories?.find(c => c.id === selection.categoryId)
-        if (cat) total += cat.points
-      } else if (proc.defaultPoints) {
-        total += proc.defaultPoints
-      }
-    })
-    return total
-  }, [examination])
+  const totalPoints = useMemo(() => calculateExamPoints(examination), [examination])
 
   const drDuration =
     examination.drStartTime && examination.drEndTime
@@ -5169,16 +5980,17 @@ const FinalReviewPage = ({examination, patient, facility, staff, clinic, onBack,
           <span className="text-sm font-bold text-slate-700">合計: {totalPoints}点</span>
         </div>
         <ul className="divide-y divide-gray-200">
-          {Object.entries(examination.procedureItems || {}).map(([itemId, selection]) => {
-            const proc = PROCEDURE_ITEMS_MASTER.find(p => p.id === itemId)
-            if (!proc) return null
-            const cat = proc.categories?.find(c => c.id === selection.categoryId)
-            const points = cat?.points || proc.defaultPoints || 0
+          {Object.entries(examination.procedureItems || {}).map(([masterId, data]) => {
+            const master = PROCEDURE_ITEMS_MASTER.find(p => p.id === masterId)
+            if (!master) return null
+            // 新構造: selectedSubItems
+            const subs = (data.selectedSubItems || []).map(subId => master.subItems?.find(s => s.id === subId)).filter(Boolean)
+            const points = subs.reduce((sum, s) => sum + s.points, 0)
             return (
-              <li key={itemId} className="px-4 py-2 flex justify-between items-center text-sm">
+              <li key={masterId} className="px-4 py-2 flex justify-between items-center text-sm">
                 <div>
-                  <span className="font-medium">{proc.name}</span>
-                  {cat && <span className="text-gray-500 ml-2">({cat.name})</span>}
+                  <span className="font-medium">{master.name}</span>
+                  {subs.length > 0 && <span className="text-gray-500 ml-2">({subs.map(s => s.name).join(', ')})</span>}
                 </div>
                 <span className="font-medium">{points}点</span>
               </li>
@@ -5246,13 +6058,22 @@ const ScoringReferencePage = () => {
                           {item.monthlyLimit && <div className="text-xs text-blue-600 mt-0.5">月{item.monthlyLimit}回まで</div>}
                         </div>
                         <div className="text-right ml-4">
-                          {item.categories && item.categories.length > 0 ? (
+                          {item.subItems && item.subItems.length > 0 ? (
+                            <div className="space-y-1">
+                              {item.subItems.map(sub => (
+                                <div key={sub.id} className="text-xs">
+                                  <span className="text-gray-600">{sub.name}: </span>
+                                  <span className="font-bold text-slate-700">{sub.points}点</span>
+                                  {sub.isManualOnly && <span className="text-amber-600 ml-1">手動</span>}
+                                </div>
+                              ))}
+                            </div>
+                          ) : item.categories && item.categories.length > 0 ? (
                             <div className="space-y-1">
                               {item.categories.map(cat => (
                                 <div key={cat.id} className="text-xs">
                                   <span className="text-gray-600">{cat.name}: </span>
                                   <span className="font-bold text-slate-700">{cat.points}点</span>
-                                  {cat.requiredClinicQualification && <span className="text-amber-600 ml-1">★</span>}
                                 </div>
                               ))}
                             </div>
@@ -5897,24 +6718,7 @@ const BatchPrintPage = ({facilities, examinations, patients, visitPlans, documen
         <Card className="p-4">
           <div className="text-sm text-gray-500">合計算定点数</div>
           <div className="text-2xl font-bold text-slate-700">
-            {filteredExams
-              .reduce((sum, e) => {
-                let pts = 0
-                if (e.procedureItems) {
-                  Object.entries(e.procedureItems).forEach(([itemId, data]) => {
-                    const item = PROCEDURE_ITEMS_MASTER.find(i => i.id === itemId)
-                    if (!item) return
-                    if (item.categories?.length > 0 && data.categoryId) {
-                      const cat = item.categories.find(c => c.id === data.categoryId)
-                      pts += cat?.points || 0
-                    } else {
-                      pts += item.defaultPoints || 0
-                    }
-                  })
-                }
-                return sum + pts
-              }, 0)
-              .toLocaleString()}{' '}
+            {filteredExams.reduce((sum, e) => sum + calculateExamPoints(e), 0).toLocaleString()}{' '}
             点
           </div>
         </Card>
@@ -5951,19 +6755,7 @@ const BatchPrintPage = ({facilities, examinations, patients, visitPlans, documen
                   const patient = patients.find(p => p.id === exam.patientId)
                   const plan = visitPlans.find(p => p.id === exam.visitPlanId)
                   const facility = facilities.find(f => f.id === plan?.facilityId)
-                  let pts = 0
-                  if (exam.procedureItems) {
-                    Object.entries(exam.procedureItems).forEach(([itemId, data]) => {
-                      const item = PROCEDURE_ITEMS_MASTER.find(i => i.id === itemId)
-                      if (!item) return
-                      if (item.categories?.length > 0 && data.categoryId) {
-                        const cat = item.categories.find(c => c.id === data.categoryId)
-                        pts += cat?.points || 0
-                      } else {
-                        pts += item.defaultPoints || 0
-                      }
-                    })
-                  }
+                  const pts = calculateExamPoints(exam)
                   const hasDoc = documents?.some(d => d.examinationId === exam.id)
                   return (
                     <tr key={exam.id} className="hover:bg-gray-50">
@@ -6002,14 +6794,16 @@ const BatchPrintPage = ({facilities, examinations, patients, visitPlans, documen
 const calculateExamPoints = exam => {
   if (!exam.procedureItems) return 0
   let total = 0
-  Object.entries(exam.procedureItems).forEach(([itemId, data]) => {
-    const item = PROCEDURE_ITEMS_MASTER.find(i => i.id === itemId)
-    if (!item) return
-    if (item.categories?.length > 0 && data.categoryId) {
-      const category = item.categories.find(c => c.id === data.categoryId)
-      total += category?.points || 0
-    } else {
-      total += item.defaultPoints || 0
+  Object.entries(exam.procedureItems).forEach(([masterId, data]) => {
+    const master = PROCEDURE_ITEMS_MASTER.find(i => i.id === masterId)
+    if (!master) return
+    if (data.selectedSubItems) {
+      data.selectedSubItems.forEach(subId => {
+        const sub = master.subItems?.find(s => s.id === subId)
+        if (sub) total += sub.points
+      })
+    } else if (master.defaultPoints) {
+      total += master.defaultPoints
     }
   })
   return total
@@ -6236,7 +7030,7 @@ export default function DentalAppMock() {
     addVisitPlan(adhocPlan)
 
     // 新しいvisitPlanのIDを推測（最大ID+1）
-    const newPlanId = Math.max(0, ...visitPlans.map(p => p.id)) + 1
+    const newPlanId = nextId(visitPlans)
     setSelectedVisitPlan({...adhocPlan, id: newPlanId})
 
     // examinationを追加
@@ -6249,7 +7043,7 @@ export default function DentalAppMock() {
     addExamination(newExam)
 
     // 新しいexaminationのIDを推測
-    const newExamId = Math.max(0, ...examinations.map(e => e.id)) + 1
+    const newExamId = nextId(examinations)
     const exam = {
       ...newExam,
       id: newExamId,
@@ -6352,6 +7146,7 @@ export default function DentalAppMock() {
           clinic={clinic}
           hasQualification={hasQualification}
           consultationMode={consultationMode}
+          allExaminations={examinations}
           onBack={handleBackFromConsultation}
           onUpdate={updateExamination}
           onOpenDocument={handleOpenDocument}
