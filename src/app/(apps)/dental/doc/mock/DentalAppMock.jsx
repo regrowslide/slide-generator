@@ -10,6 +10,7 @@
 
 import {useState, useMemo, useCallback} from 'react'
 import useModal from '@cm/components/utils/modal/useModal'
+import {R_Stack} from '@cm/components/styles/common-components/common-components'
 
 // =============================================================================
 // 定数・サンプルデータ
@@ -1734,9 +1735,7 @@ const Sidebar = ({currentPage, onNavigate}) => {
     {label: '予定・訪問', items: [{id: 'schedule', label: '訪問計画スケジュール', icon: '📅'}]},
     {
       label: '患者',
-      items: [
-        {id: 'individual-input', label: '個別入力', icon: '✏️'},
-      ],
+      items: [{id: 'individual-input', label: '個別入力', icon: '✏️'}],
     },
     {
       label: 'マスタデータ管理',
@@ -1956,16 +1955,25 @@ const FacilityMasterPage = ({facilities, onAdd, onUpdate, onDelete, onReorder}) 
                             onClick={() => togglePortal(facility.id)}
                             className={`relative w-10 h-5 rounded-full transition-colors ${portal.enabled ? 'bg-emerald-500' : 'bg-gray-300'}`}
                           >
-                            <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${portal.enabled ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                            <div
+                              className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${portal.enabled ? 'translate-x-5' : 'translate-x-0.5'}`}
+                            />
                           </button>
                           <span className="text-xs text-gray-500">{portal.enabled ? '有効' : '無効'}</span>
                           {portal.enabled && (
                             <div className="text-xs text-left mt-1 space-y-0.5">
-                              <div className="text-gray-500">ID: <span className="font-mono">{portal.loginId}</span></div>
+                              <div className="text-gray-500">
+                                ID: <span className="font-mono">{portal.loginId}</span>
+                              </div>
                               <div className="flex items-center gap-1">
                                 <span className="text-gray-500">PW:</span>
                                 <span className="font-mono text-gray-700">{portal.password}</span>
-                                <button onClick={() => regeneratePassword(facility.id)} className="text-blue-500 hover:text-blue-700 text-[10px]">再生成</button>
+                                <button
+                                  onClick={() => regeneratePassword(facility.id)}
+                                  className="text-blue-500 hover:text-blue-700 text-[10px]"
+                                >
+                                  再生成
+                                </button>
                               </div>
                               <div className="text-blue-600 break-all text-[10px]">{portal.portalUrl}</div>
                             </div>
@@ -2038,7 +2046,12 @@ const PatientForm = ({patient, onSubmit, onClose}) => {
       </div>
       <div className="grid grid-cols-2 gap-3">
         <Input label="セイ" value={formData.lastNameKana} onChange={v => setFormData({...formData, lastNameKana: v})} required />
-        <Input label="メイ" value={formData.firstNameKana} onChange={v => setFormData({...formData, firstNameKana: v})} required />
+        <Input
+          label="メイ"
+          value={formData.firstNameKana}
+          onChange={v => setFormData({...formData, firstNameKana: v})}
+          required
+        />
       </div>
       <div className="grid grid-cols-3 gap-3">
         <Input
@@ -2078,7 +2091,14 @@ const PatientMasterPage = ({facilities, patients, onAdd, onUpdate, onDelete, onS
     return patients.filter(p => {
       const fullName = getPatientName(p)
       const fullNameKana = getPatientNameKana(p)
-      const matchesSearch = !searchQuery || fullName.includes(searchQuery) || fullNameKana.includes(searchQuery) || p.lastName.includes(searchQuery) || p.firstName.includes(searchQuery) || p.lastNameKana.includes(searchQuery) || p.firstNameKana.includes(searchQuery)
+      const matchesSearch =
+        !searchQuery ||
+        fullName.includes(searchQuery) ||
+        fullNameKana.includes(searchQuery) ||
+        p.lastName.includes(searchQuery) ||
+        p.firstName.includes(searchQuery) ||
+        p.lastNameKana.includes(searchQuery) ||
+        p.firstNameKana.includes(searchQuery)
       const matchesFacility = !facilityFilter || p.facilityId === Number(facilityFilter)
       return matchesSearch && matchesFacility
     })
@@ -2161,25 +2181,16 @@ const PatientMasterPage = ({facilities, patients, onAdd, onUpdate, onDelete, onS
                       <td className="px-4 py-3 text-sm text-gray-600">{getPatientNameKana(p)}</td>
                       <td className="px-4 py-3 text-sm text-gray-600">{facility?.name || '-'}</td>
                       <td className="px-4 py-3 text-sm text-gray-600">
-                        {p.building && <Badge variant="primary">{p.building}</Badge>}
-                        {' '}{p.floor}-{p.room}
+                        {p.building && <Badge variant="primary">{p.building}</Badge>} {p.floor}-{p.room}
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-600">{p.age || '-'}歳</td>
                       <td className="px-4 py-3 text-sm text-gray-600 max-w-[120px] truncate">{p.notes || '-'}</td>
                       <td className="px-4 py-3 text-center">
                         <div className="flex gap-1 justify-center">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => onSelectPatient?.(p.id)}
-                          >
+                          <Button size="sm" variant="outline" onClick={() => onSelectPatient?.(p.id)}>
                             詳細
                           </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => onEditPatient?.(p.id)}
-                          >
+                          <Button size="sm" variant="outline" onClick={() => onEditPatient?.(p.id)}>
                             ✏️
                           </Button>
                           <button
@@ -3124,7 +3135,17 @@ const VitalDisplay = ({vital, label, onEdit}) => {
 /**
  * 診療画面
  */
-const ConsultationPage = ({examination, patient, staff, clinic, hasQualification, onBack, onUpdate, onOpenDocument, consultationMode}) => {
+const ConsultationPage = ({
+  examination,
+  patient,
+  staff,
+  clinic,
+  hasQualification,
+  onBack,
+  onUpdate,
+  onOpenDocument,
+  consultationMode,
+}) => {
   // DHモード制限: DHログイン時は訪衛指と在口衛のみ操作可能（MTG 0206決定）
   const DH_ALLOWED_ITEMS = ['houeishi', 'zaikouei']
   const isDhMode = consultationMode === 'dh'
@@ -3410,7 +3431,10 @@ const ConsultationPage = ({examination, patient, staff, clinic, hasQualification
             担当: <span className="font-medium text-gray-900">{doctor?.name || '-'}</span>
           </div>
           <div className="text-gray-500">
-            モード: <span className={`font-medium ${isDhMode ? 'text-amber-600' : 'text-slate-700'}`}>{isDhMode ? '歯科衛生士（DH）' : '歯科医師'}</span>
+            モード:{' '}
+            <span className={`font-medium ${isDhMode ? 'text-amber-600' : 'text-slate-700'}`}>
+              {isDhMode ? '歯科衛生士（DH）' : '歯科医師'}
+            </span>
           </div>
         </div>
       </div>
@@ -3519,6 +3543,12 @@ const ConsultationPage = ({examination, patient, staff, clinic, hasQualification
         </div>
       )}
 
+      <R_Stack className={`mb-2`}>
+        口腔機能精密検査
+        <Button>計画書を入力</Button>
+        <Button>記録用紙を入力</Button>
+      </R_Stack>
+
       {/* 実施項目の選択（加算） */}
       <Card className="mb-4">
         <div className="p-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
@@ -3528,6 +3558,7 @@ const ConsultationPage = ({examination, patient, staff, clinic, hasQualification
           </div>
           <div className="text-sm font-bold text-slate-700">合計: {calculateTotalPoints().toLocaleString()} 点</div>
         </div>
+
         <div className="p-4 space-y-2">
           {(isDhMode ? PROCEDURE_ITEMS_MASTER.filter(i => DH_ALLOWED_ITEMS.includes(i.id)) : PROCEDURE_ITEMS_MASTER).map(item => {
             const isSelected = !!procedureItems[item.id]
@@ -3665,7 +3696,9 @@ const ConsultationPage = ({examination, patient, staff, clinic, hasQualification
       <infoModal.Modal title={infoModal.open?.name || '解説'}>
         <p className="text-sm text-gray-700 leading-relaxed">{infoModal.open?.text}</p>
         <div className="flex justify-end mt-4">
-          <Button size="sm" variant="secondary" onClick={infoModal.handleClose}>閉じる</Button>
+          <Button size="sm" variant="secondary" onClick={infoModal.handleClose}>
+            閉じる
+          </Button>
         </div>
       </infoModal.Modal>
 
@@ -4428,7 +4461,10 @@ const PatientEditPage = ({patient, onSave, onBack}) => {
                 <div className="text-sm font-medium text-gray-700 mb-2 border-b pb-1">お薬情報</div>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {(form.assessment.medicationImages || []).map((img, i) => (
-                    <div key={i} className="relative w-20 h-20 border border-gray-300 rounded bg-gray-100 flex items-center justify-center group">
+                    <div
+                      key={i}
+                      className="relative w-20 h-20 border border-gray-300 rounded bg-gray-100 flex items-center justify-center group"
+                    >
                       <span className="text-2xl">💊</span>
                       <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-[10px] text-center py-0.5 rounded-b">
                         {i + 1}枚目
@@ -5556,16 +5592,24 @@ const FacilityPortalPage = ({facility, patients, onUpdatePatient}) => {
                       <span className="text-gray-400">👤</span>
                       <div>
                         <div className="font-medium text-gray-900">{getPatientName(patient)}</div>
-                        <div className="text-xs text-gray-500">{patient.building} {patient.floor}-{patient.room}</div>
+                        <div className="text-xs text-gray-500">
+                          {patient.building} {patient.floor}-{patient.room}
+                        </div>
                       </div>
                     </div>
                     {editingPatientId === patient.id ? (
                       <div className="flex gap-2">
-                        <Button size="sm" variant="secondary" onClick={() => setEditingPatientId(null)}>キャンセル</Button>
-                        <Button size="sm" onClick={() => handleSaveAssessment(patient.id)}>保存</Button>
+                        <Button size="sm" variant="secondary" onClick={() => setEditingPatientId(null)}>
+                          キャンセル
+                        </Button>
+                        <Button size="sm" onClick={() => handleSaveAssessment(patient.id)}>
+                          保存
+                        </Button>
                       </div>
                     ) : (
-                      <Button size="sm" variant="outline" onClick={() => setEditingPatientId(patient.id)}>アセスメント入力</Button>
+                      <Button size="sm" variant="outline" onClick={() => setEditingPatientId(patient.id)}>
+                        アセスメント入力
+                      </Button>
                     )}
                   </div>
 
@@ -5605,7 +5649,9 @@ const FacilityPortalPage = ({facility, patients, onUpdatePatient}) => {
                           >
                             <option value="">選択</option>
                             {['要支援1', '要支援2', '要介護1', '要介護2', '要介護3', '要介護4', '要介護5'].map(v => (
-                              <option key={v} value={v}>{v}</option>
+                              <option key={v} value={v}>
+                                {v}
+                              </option>
                             ))}
                           </select>
                         </div>
@@ -5621,25 +5667,90 @@ const FacilityPortalPage = ({facility, patients, onUpdatePatient}) => {
 
                       {/* 身体・口腔状況 */}
                       <div className="text-sm font-bold text-gray-900 border-b pb-1">身体・口腔状況</div>
-                      <PortalRadioGroup label="座位保持" options={ASSESSMENT_OPTIONS.seatRetention} value={data.seatRetention || ''} onChange={v => updateEditData(patient.id, 'seatRetention', v)} />
-                      <PortalRadioGroup label="口腔清掃の状況" options={ASSESSMENT_OPTIONS.oralCleaning} value={data.oralCleaning || ''} onChange={v => updateEditData(patient.id, 'oralCleaning', v)} />
-                      <PortalRadioGroup label="口腔内水分保持" options={ASSESSMENT_OPTIONS.moistureRetention} value={data.moistureRetention || ''} onChange={v => updateEditData(patient.id, 'moistureRetention', v)} />
-                      <PortalRadioGroup label="うがい" options={ASSESSMENT_OPTIONS.gargling} value={data.gargling || ''} onChange={v => updateEditData(patient.id, 'gargling', v)} />
+                      <PortalRadioGroup
+                        label="座位保持"
+                        options={ASSESSMENT_OPTIONS.seatRetention}
+                        value={data.seatRetention || ''}
+                        onChange={v => updateEditData(patient.id, 'seatRetention', v)}
+                      />
+                      <PortalRadioGroup
+                        label="口腔清掃の状況"
+                        options={ASSESSMENT_OPTIONS.oralCleaning}
+                        value={data.oralCleaning || ''}
+                        onChange={v => updateEditData(patient.id, 'oralCleaning', v)}
+                      />
+                      <PortalRadioGroup
+                        label="口腔内水分保持"
+                        options={ASSESSMENT_OPTIONS.moistureRetention}
+                        value={data.moistureRetention || ''}
+                        onChange={v => updateEditData(patient.id, 'moistureRetention', v)}
+                      />
+                      <PortalRadioGroup
+                        label="うがい"
+                        options={ASSESSMENT_OPTIONS.gargling}
+                        value={data.gargling || ''}
+                        onChange={v => updateEditData(patient.id, 'gargling', v)}
+                      />
 
                       {/* リスク・摂取 */}
                       <div className="text-sm font-bold text-gray-900 border-b pb-1">リスク・摂取</div>
-                      <PortalRadioGroup label="低栄養リスク" options={ASSESSMENT_OPTIONS.malnutritionRisk} value={data.malnutritionRisk || ''} onChange={v => updateEditData(patient.id, 'malnutritionRisk', v)} />
-                      <PortalRadioGroup label="むせ" options={ASSESSMENT_OPTIONS.choking} value={data.choking || ''} onChange={v => updateEditData(patient.id, 'choking', v)} />
-                      <PortalRadioGroup label="経口摂取の有無" options={ASSESSMENT_OPTIONS.oralIntake} value={data.oralIntake || ''} onChange={v => updateEditData(patient.id, 'oralIntake', v)} />
-                      <PortalRadioGroup label="人工栄養法" options={ASSESSMENT_OPTIONS.artificialNutrition} value={data.artificialNutrition || ''} onChange={v => updateEditData(patient.id, 'artificialNutrition', v)} />
+                      <PortalRadioGroup
+                        label="低栄養リスク"
+                        options={ASSESSMENT_OPTIONS.malnutritionRisk}
+                        value={data.malnutritionRisk || ''}
+                        onChange={v => updateEditData(patient.id, 'malnutritionRisk', v)}
+                      />
+                      <PortalRadioGroup
+                        label="むせ"
+                        options={ASSESSMENT_OPTIONS.choking}
+                        value={data.choking || ''}
+                        onChange={v => updateEditData(patient.id, 'choking', v)}
+                      />
+                      <PortalRadioGroup
+                        label="経口摂取の有無"
+                        options={ASSESSMENT_OPTIONS.oralIntake}
+                        value={data.oralIntake || ''}
+                        onChange={v => updateEditData(patient.id, 'oralIntake', v)}
+                      />
+                      <PortalRadioGroup
+                        label="人工栄養法"
+                        options={ASSESSMENT_OPTIONS.artificialNutrition}
+                        value={data.artificialNutrition || ''}
+                        onChange={v => updateEditData(patient.id, 'artificialNutrition', v)}
+                      />
 
                       {/* 食事・服薬 */}
                       <div className="text-sm font-bold text-gray-900 border-b pb-1">食事・服薬</div>
-                      <PortalRadioGroup label="水分" options={ASSESSMENT_OPTIONS.moisture} value={data.moisture || ''} onChange={v => updateEditData(patient.id, 'moisture', v)} />
-                      <PortalRadioGroup label="主食" options={ASSESSMENT_OPTIONS.mainDish} value={data.mainDish || ''} onChange={v => updateEditData(patient.id, 'mainDish', v)} />
-                      <PortalRadioGroup label="おかず" options={ASSESSMENT_OPTIONS.sideDish} value={data.sideDish || ''} onChange={v => updateEditData(patient.id, 'sideDish', v)} />
-                      <PortalRadioGroup label="飲み込み" options={ASSESSMENT_OPTIONS.swallowing} value={data.swallowing || ''} onChange={v => updateEditData(patient.id, 'swallowing', v)} />
-                      <PortalRadioGroup label="薬の服用" options={ASSESSMENT_OPTIONS.medicationSwallowing} value={data.medicationSwallowing || ''} onChange={v => updateEditData(patient.id, 'medicationSwallowing', v)} />
+                      <PortalRadioGroup
+                        label="水分"
+                        options={ASSESSMENT_OPTIONS.moisture}
+                        value={data.moisture || ''}
+                        onChange={v => updateEditData(patient.id, 'moisture', v)}
+                      />
+                      <PortalRadioGroup
+                        label="主食"
+                        options={ASSESSMENT_OPTIONS.mainDish}
+                        value={data.mainDish || ''}
+                        onChange={v => updateEditData(patient.id, 'mainDish', v)}
+                      />
+                      <PortalRadioGroup
+                        label="おかず"
+                        options={ASSESSMENT_OPTIONS.sideDish}
+                        value={data.sideDish || ''}
+                        onChange={v => updateEditData(patient.id, 'sideDish', v)}
+                      />
+                      <PortalRadioGroup
+                        label="飲み込み"
+                        options={ASSESSMENT_OPTIONS.swallowing}
+                        value={data.swallowing || ''}
+                        onChange={v => updateEditData(patient.id, 'swallowing', v)}
+                      />
+                      <PortalRadioGroup
+                        label="薬の服用"
+                        options={ASSESSMENT_OPTIONS.medicationSwallowing}
+                        value={data.medicationSwallowing || ''}
+                        onChange={v => updateEditData(patient.id, 'medicationSwallowing', v)}
+                      />
 
                       {/* 基礎疾患 */}
                       <div className="text-sm font-bold text-gray-900 border-b pb-1">基礎疾患</div>
@@ -5673,11 +5784,21 @@ const FacilityPortalPage = ({facility, patients, onUpdatePatient}) => {
                           />
                         </div>
                         <label className="flex items-center gap-2 text-xs cursor-pointer pt-4">
-                          <input type="checkbox" checked={!!data.hasDenture} onChange={() => updateEditData(patient.id, 'hasDenture', !data.hasDenture)} className="w-3 h-3" />
+                          <input
+                            type="checkbox"
+                            checked={!!data.hasDenture}
+                            onChange={() => updateEditData(patient.id, 'hasDenture', !data.hasDenture)}
+                            className="w-3 h-3"
+                          />
                           義歯あり
                         </label>
                         <label className="flex items-center gap-2 text-xs cursor-pointer pt-4">
-                          <input type="checkbox" checked={!!data.hasOralHypofunction} onChange={() => updateEditData(patient.id, 'hasOralHypofunction', !data.hasOralHypofunction)} className="w-3 h-3" />
+                          <input
+                            type="checkbox"
+                            checked={!!data.hasOralHypofunction}
+                            onChange={() => updateEditData(patient.id, 'hasOralHypofunction', !data.hasOralHypofunction)}
+                            className="w-3 h-3"
+                          />
                           口腔機能低下症
                         </label>
                       </div>
@@ -5740,7 +5861,9 @@ const BatchPrintPage = ({facilities, examinations, patients, visitPlans, documen
             >
               <option value="">すべての施設</option>
               {facilities.map(f => (
-                <option key={f.id} value={f.id}>{f.name}</option>
+                <option key={f.id} value={f.id}>
+                  {f.name}
+                </option>
               ))}
             </select>
           </div>
@@ -5774,22 +5897,25 @@ const BatchPrintPage = ({facilities, examinations, patients, visitPlans, documen
         <Card className="p-4">
           <div className="text-sm text-gray-500">合計算定点数</div>
           <div className="text-2xl font-bold text-slate-700">
-            {filteredExams.reduce((sum, e) => {
-              let pts = 0
-              if (e.procedureItems) {
-                Object.entries(e.procedureItems).forEach(([itemId, data]) => {
-                  const item = PROCEDURE_ITEMS_MASTER.find(i => i.id === itemId)
-                  if (!item) return
-                  if (item.categories?.length > 0 && data.categoryId) {
-                    const cat = item.categories.find(c => c.id === data.categoryId)
-                    pts += cat?.points || 0
-                  } else {
-                    pts += item.defaultPoints || 0
-                  }
-                })
-              }
-              return sum + pts
-            }, 0).toLocaleString()} 点
+            {filteredExams
+              .reduce((sum, e) => {
+                let pts = 0
+                if (e.procedureItems) {
+                  Object.entries(e.procedureItems).forEach(([itemId, data]) => {
+                    const item = PROCEDURE_ITEMS_MASTER.find(i => i.id === itemId)
+                    if (!item) return
+                    if (item.categories?.length > 0 && data.categoryId) {
+                      const cat = item.categories.find(c => c.id === data.categoryId)
+                      pts += cat?.points || 0
+                    } else {
+                      pts += item.defaultPoints || 0
+                    }
+                  })
+                }
+                return sum + pts
+              }, 0)
+              .toLocaleString()}{' '}
+            点
           </div>
         </Card>
         <Card className="p-4">
@@ -5988,7 +6114,9 @@ const SummaryPage = ({visitPlans, examinations, patients, facilities, documents}
                         ) : docStatus.completed >= docStatus.required ? (
                           <Badge variant="success">済</Badge>
                         ) : (
-                          <Badge variant="warning">未 ({docStatus.completed}/{docStatus.required})</Badge>
+                          <Badge variant="warning">
+                            未 ({docStatus.completed}/{docStatus.required})
+                          </Badge>
                         )}
                       </td>
                       <td className="px-4 py-3">
@@ -6340,9 +6468,25 @@ export default function DentalAppMock() {
       case 'document-list':
         return <DocumentListPage documents={documents} patients={patients} />
       case 'batch-print':
-        return <BatchPrintPage facilities={facilities} examinations={examinations} patients={patients} visitPlans={visitPlans} documents={documents} />
+        return (
+          <BatchPrintPage
+            facilities={facilities}
+            examinations={examinations}
+            patients={patients}
+            visitPlans={visitPlans}
+            documents={documents}
+          />
+        )
       case 'summary':
-        return <SummaryPage visitPlans={visitPlans} examinations={examinations} patients={patients} facilities={facilities} documents={documents} />
+        return (
+          <SummaryPage
+            visitPlans={visitPlans}
+            examinations={examinations}
+            patients={patients}
+            facilities={facilities}
+            documents={documents}
+          />
+        )
       default:
         return <DashboardPage onNavigate={handleNavigate} visitPlans={visitPlans} examinations={examinations} />
     }

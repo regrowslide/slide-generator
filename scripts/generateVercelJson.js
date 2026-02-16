@@ -1,8 +1,11 @@
 /**
  * vercel.jsonのcronジョブをbatchMaster.tsから動的に生成するスクリプト
  *
- * batchMaster.tsのBATCH_MASTERから、effectOnが'batch'のアクションを抽出し、
- * scheduleとdescriptionからcron設定を生成します。
+ * batchMaster.tsのBATCH_MASTERをテキスト解析し、effectOnが'batch'のエントリから
+ * idとscheduleを抽出してcron設定を生成します。
+ *
+ * ※ npx tsxでの実行はハンドラーの依存ツリー（CSS, ブラウザ専用モジュール等）が
+ *   Node.js環境で解決できないため、テキストパース方式を採用しています。
  *
  * 使用方法:
  *   node scripts/generateVercelJson.js
@@ -13,57 +16,62 @@
 const fs = require('fs')
 const path = require('path')
 
-async function generateVercelJson() {
+/**
+ * batchMaster.tsをテキスト解析し、effectOn: 'batch' のエントリから
+ * cron設定（path, schedule）を抽出する
+ */
+function parseBatchMasterCrons(filePath) {
+  const rawContent = fs.readFileSync(filePath, 'utf8')
+
+  // コメントアウトされた行を除外（行頭が // の行を削除）
+  const content = rawContent
+    .split('\n')
+    .filter(line => !line.trimStart().startsWith('//'))
+    .join('\n')
+
+  // BATCH_MASTERオブジェクトの各エントリブロックを抽出
+  // "key: {" から次の "}," までのブロックをマッチ
+  const entryRegex = /(\w+):\s*\{([^}]*(?:\{[^}]*\}[^}]*)*)\}/g
+  const cronJobs = []
+
+  let match
+  while ((match = entryRegex.exec(content)) !== null) {
+    const block = match[2]
+
+    // effectOn: 'batch' のエントリのみ対象
+    if (!/effectOn:\s*['"]batch['"]/.test(block)) continue
+
+    // idを抽出
+    const idMatch = block.match(/id:\s*['"]([^'"]+)['"]/)
+    if (!idMatch) continue
+
+    // scheduleを抽出
+    const scheduleMatch = block.match(/schedule:\s*['"]([^'"]+)['"]/)
+    if (!scheduleMatch) continue
+
+    cronJobs.push({
+      path: `/api/cron/execute/${idMatch[1]}`,
+      schedule: scheduleMatch[1],
+    })
+  }
+
+  // パスでソート（一貫性のため）
+  cronJobs.sort((a, b) => a.path.localeCompare(b.path))
+  return cronJobs
+}
+
+function generateVercelJson() {
   try {
     const vercelJsonPath = path.join(__dirname, '../vercel.json')
     const vercelJson = JSON.parse(fs.readFileSync(vercelJsonPath, 'utf8'))
 
-    const {execSync} = require('child_process')
+    const batchMasterPath = path.join(__dirname, '../src/non-common/cron/batchMaster.ts')
 
-    // batchMaster.tsからcronジョブを取得
     try {
-      // 一時的なTypeScriptファイルを作成
-      const tempScriptPath = path.join(__dirname, 'temp-generate-crons.ts')
-      const batchMasterCode = `import {BATCH_MASTER} from '../src/non-common/cron/batchMaster'
-
-// effectOnが'batch'のアクションを抽出し、cron設定を生成
-const cronJobs = []
-
-for (const batch of Object.values(BATCH_MASTER)) {
-  if (batch.effectOn === 'batch' && batch.schedule && batch.description) {
-    // descriptionからAPIパスを取得（前後の空白を削除）
-    const apiPath = batch.description.trim()
-    cronJobs.push({
-      path: apiPath,
-      schedule: batch.schedule,
-    })
-  }
-}
-
-// パスでソート（一貫性のため）
-cronJobs.sort((a, b) => a.path.localeCompare(b.path))
-
-console.log(JSON.stringify(cronJobs))
-`
-
-      fs.writeFileSync(tempScriptPath, batchMasterCode, 'utf8')
-
-      // DATABASE_URLが必要なモジュールがあるため、ダミー値を設定
-      const env = {...process.env, DATABASE_URL: 'postgresql://dummy:dummy@localhost:5432/dummy'}
-
-      const result = execSync(`npx tsx ${tempScriptPath}`, {
-        cwd: path.join(__dirname, '..'),
-        encoding: 'utf8',
-        env: env,
-      })
-
-      // 一時ファイルを削除
-      fs.unlinkSync(tempScriptPath)
-
-      const dynamicCrons = JSON.parse(result.trim())
+      const dynamicCrons = parseBatchMasterCrons(batchMasterPath)
 
       if (!Array.isArray(dynamicCrons) || dynamicCrons.length === 0) {
-        // console.('No cron jobs found in batch master')
+        throw new Error('No cron jobs found in batch master')
       }
 
       vercelJson.crons = dynamicCrons
