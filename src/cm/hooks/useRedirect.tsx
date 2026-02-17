@@ -1,13 +1,13 @@
 'use client'
 
 import useMyNavigation from '@cm/hooks/globalHooks/useMyNavigation'
-import {HREF} from '@cm/lib/methods/urls'
-import {redirect} from 'next/navigation'
+import { HREF } from '@cm/lib/methods/urls'
+import { redirect } from 'next/navigation'
 
-import {useEffect} from 'react'
+import { useEffect } from 'react'
 
 export default function useRedirect(mustRedirect, redirectUrl = '/404', shouldRedirect = true, replace = false) {
-  const {asPath, router, query} = useMyNavigation()
+  const { asPath, router, query } = useMyNavigation()
 
   const doRedirect = mustRedirect && shouldRedirect && redirectUrl
 
@@ -20,14 +20,14 @@ export default function useRedirect(mustRedirect, redirectUrl = '/404', shouldRe
 
         const newQuery = searchParams
           ? Object.fromEntries(
-              String(searchParams)
-                .split(`&`)
-                .filter(item => item.includes('='))
-                .map(item => {
-                  const [key, value] = item.split(`=`)
-                  return [key, decodeURIComponent(value || '')]
-                })
-            )
+            String(searchParams)
+              .split(`&`)
+              .filter(item => item.includes('='))
+              .map(item => {
+                const [key, value] = item.split(`=`)
+                return [key, decodeURIComponent(value || '')]
+              })
+          )
           : {}
 
         const newPath = HREF(path, newQuery, query)
@@ -37,6 +37,8 @@ export default function useRedirect(mustRedirect, redirectUrl = '/404', shouldRe
 
         // より確実なリダイレクトのため、わずかな遅延を追加
         await new Promise(resolve => setTimeout(resolve, 10))
+
+
 
         if (replace) {
           router.replace(newPath)

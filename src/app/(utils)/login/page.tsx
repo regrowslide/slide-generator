@@ -19,6 +19,8 @@ const AdminLogin = async props => {
     redirectRoot = rootPath
   }
 
+
+
   const REDIRECT_CON1_redirectBySession = session?.id && redirectRoot
   const REDIRECT_CON2_NO_LOGIN = process.env.NEXT_PUBLIC_NO_LOGIN === 'true' && redirectRoot
   const doRedirect = REDIRECT_CON2_NO_LOGIN || REDIRECT_CON1_redirectBySession
@@ -28,7 +30,9 @@ const AdminLogin = async props => {
   }
 
   if (doRedirect && session?.id) {
-    return <Redirector redirectPath={`/${redirectRoot}`} />
+    const path = `${process.env.NEXT_PUBLIC_BASEPATH}/${redirectRoot}`
+
+    return <Redirector redirectPath={path} />
   }
 
   return (
