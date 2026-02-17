@@ -1,6 +1,6 @@
 'use client'
 
-import {useState, useMemo, useCallback} from 'react'
+import {useState, useMemo, useCallback, useEffect} from 'react'
 import useModal from '@cm/components/utils/modal/useModal'
 import {R_Stack} from '@cm/components/styles/common-components/common-components'
 import {
@@ -681,8 +681,6 @@ export const ConsultationPage = ({
   const [vitalAfter, setVitalAfter] = useState<Vital>(examination.vitalAfter || INITIAL_VITAL)
   // procedureItems: { [masterId]: { selectedSubItems: string[], isAutoSet: boolean } }
   const [procedureItems, setProcedureItems] = useState<Record<string, ProcedureItemSelection>>(examination.procedureItems || {})
-  // 自動判定結果を保持（手動上書き警告用）
-  const [autoJudgeResult, setAutoJudgeResult] = useState<Record<string, ProcedureItemSelection>>({})
   // 在歯管の実施治療選択
   const [treatmentPerformed, setTreatmentPerformed] = useState<string[]>(examination.treatmentPerformed || [])
   // 口腔機能精密検査記録用紙データ
@@ -705,6 +703,18 @@ export const ConsultationPage = ({
   const vitalBeforeModal = useModal()
   const vitalAfterModal = useModal()
 
+  // NST2: 過去実績がある場合に初期自動チェック
+  useEffect(() => {
+    const pastClaims = INITIAL_PAST_EXAMINATIONS.filter(p => p.patientId === patient.id)
+    const hasNst2History = pastClaims.some(p => p.claimedItems?.includes('nst2'))
+    if (hasNst2History && !procedureItems['nst2']) {
+      setProcedureItems(prev => ({
+        ...prev,
+        nst2: {selectedSubItems: ['nst2-main'], isAutoSet: true},
+      }))
+    }
+  }, [])
+
   const doctor = staff.find(s => s.id === examination.doctorId)
 
   // 同一日同一施設の患者数を算出
@@ -717,38 +727,54 @@ export const ConsultationPage = ({
   // 同月の施設内診療患者数（暫定: sameDayCountと同じ扱い）
   const sameMonthCount = sameDayCount
 
+  // 操作結果が自動判定と異なる場合に確認ダイアログを表示
+  // 自動判定結果がない項目（手動のみ・任意）は確認不要
+  const confirmIfOverride = (masterId: string, willSelect: boolean): boolean => {
+    const auto = autoJudgeResult[masterId]
+    if (!auto) return true
+    if (auto && !willSelect) {
+      return window.confirm('自動条件判定を無視して切り替えますか？')
+    }
+    return true
+  }
+
   // 実施項目のON/OFF切り替え（新構造: subItems対応）
   const handleToggleProcedure = (masterId: string) => {
+    const isCurrentlySelected = !!procedureItems[masterId]
+    if (!confirmIfOverride(masterId, !isCurrentlySelected)) return
     setProcedureItems(prev => {
       if (prev[masterId]) {
         const {[masterId]: _, ...rest} = prev
         return rest
       } else {
-        const master = findMasterById(currentMaster, masterId)
-        const defaultSub = master?.subItems?.[0]?.id || null
-        return {...prev, [masterId]: {selectedSubItems: defaultSub ? [defaultSub] : [], isAutoSet: false}}
+        return {...prev, [masterId]: {selectedSubItems: [], isAutoSet: false}}
       }
     })
   }
 
   // サブアイテムの選択変更
   const handleSelectSubItem = (masterId: string, subItemId: string, selectionMode: 'single' | 'multiple') => {
-    setProcedureItems(prev => {
-      const current = prev[masterId]
-      if (!current) return prev
-      let newSelected: string[]
-      if (selectionMode === 'single') {
-        newSelected = [subItemId]
+    // 変更後のsubItemsを事前計算して自動判定と比較
+    const current = procedureItems[masterId]
+    if (!current) return
+    let newSelected: string[]
+    if (selectionMode === 'single') {
+      newSelected = [subItemId]
+    } else {
+      if (current.selectedSubItems.includes(subItemId)) {
+        newSelected = current.selectedSubItems.filter(id => id !== subItemId)
       } else {
-        // multiple: トグル
-        if (current.selectedSubItems.includes(subItemId)) {
-          newSelected = current.selectedSubItems.filter(id => id !== subItemId)
-        } else {
-          newSelected = [...current.selectedSubItems, subItemId]
-        }
+        newSelected = [...current.selectedSubItems, subItemId]
       }
-      return {...prev, [masterId]: {...current, selectedSubItems: newSelected, isAutoSet: false}}
-    })
+    }
+    // 変更後が自動判定と異なる場合に確認
+    const auto = autoJudgeResult[masterId]
+    if (auto) {
+      const autoSorted = [...(auto.selectedSubItems || [])].sort().join(',')
+      const newSorted = [...newSelected].sort().join(',')
+      if (autoSorted !== newSorted && !window.confirm('自動条件判定を無視して切り替えますか？')) return
+    }
+    setProcedureItems(prev => ({...prev, [masterId]: {...current, selectedSubItems: newSelected, isAutoSet: false}}))
   }
 
   // 合計点数の計算（subItems構造対応）
@@ -809,8 +835,8 @@ export const ConsultationPage = ({
     ]
   )
 
-  // 全項目自動判定
-  const handleAutoSetAll = () => {
+  // 自動判定結果をリアルタイム計算
+  const autoJudgeResult = useMemo(() => {
     const ctx = buildEvalContext()
     const result: Record<string, ProcedureItemSelection> = {}
     currentMaster.forEach((master: ProcedureItemMaster) => {
@@ -822,18 +848,32 @@ export const ConsultationPage = ({
         }
       }
     })
-    setAutoJudgeResult(result)
-    setProcedureItems(prev => ({...prev, ...result}))
+    return result
+  }, [buildEvalContext, currentMaster])
+
+  // 全項目自動判定
+  const handleAutoSetAll = () => {
+    setProcedureItems(prev => ({...prev, ...autoJudgeResult}))
   }
 
   // 手動上書きかどうか判定（警告表示用）
+  // 自動判定結果がない項目（手動のみ・任意）は警告不要
   const isManualOverride = (masterId: string) => {
     const auto = autoJudgeResult[masterId]
+    if (!auto) return false
     const current = procedureItems[masterId]
-    if (!auto || !current) return false
+    if (!current) return true
     const autoSorted = [...(auto.selectedSubItems || [])].sort().join(',')
     const currentSorted = [...(current.selectedSubItems || [])].sort().join(',')
     return autoSorted !== currentSorted
+  }
+
+  // 警告マークのtitleテキストを取得
+  const getOverrideTitle = (masterId: string) => {
+    const auto = autoJudgeResult[masterId]
+    const current = procedureItems[masterId]
+    if (auto && !current) return '自動条件判定では選択されます'
+    return '自動条件判定と異なる区分が選択されています'
   }
 
   const handleAddCustomTreatment = () => {
@@ -1065,7 +1105,7 @@ export const ConsultationPage = ({
                       </div>
                       <span className={`font-medium ${isSelected ? 'text-slate-800' : 'text-gray-700'}`}>{master.name}</span>
                       {hasOverride && (
-                        <span className="text-amber-500 text-sm" title="自動判定と異なります">
+                        <span className="text-amber-500 text-sm" title={getOverrideTitle(master.id)}>
                           ⚠
                         </span>
                       )}
@@ -1121,21 +1161,68 @@ export const ConsultationPage = ({
                         })}
                       </div>
                       {/* 在歯管の場合: 対象の治療ボタン */}
-                      {master.id === 'zaishikan' && (
-                        <div className="mt-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => {
-                              zaishikanTreatmentModal.handleOpen()
-                            }}
-                          >
-                            対象の治療を選択 {treatmentPerformed.length > 0 && `(${treatmentPerformed.length}件選択中)`}
-                          </Button>
-                        </div>
-                      )}
+                      {master.id === 'zaishikan' && (() => {
+                        const zaishikanHighlight = clinic.qualifications.zahoshin && Object.values(patient.diseases || {}).some(v => v)
+                        return (
+                          <div className="mt-2">
+                            <Button
+                              size="sm"
+                              variant={zaishikanHighlight ? 'primary' : 'outline'}
+                              onClick={() => {
+                                zaishikanTreatmentModal.handleOpen()
+                              }}
+                            >
+                              対象の治療を選択 {treatmentPerformed.length > 0 && `(${treatmentPerformed.length}件選択中)`}
+                            </Button>
+                          </div>
+                        )
+                      })()}
                     </div>
                   )}
+
+                  {/* 項目ごとの注意書き・補足メッセージ（大カテゴリOFF時も表示） */}
+                  {/* 訪衛指: DH時間20分未満の場合に警告 */}
+                  {master.id === 'houeishi' && dhSeconds < 1200 && (
+                    <div className="mx-3 mb-3 mt-1 p-2 bg-amber-50 border border-amber-200 rounded text-sm text-amber-700">
+                      ⚠ DH時間が20分未満です。在口衛の算定を検討してください。
+                    </div>
+                  )}
+                  {/* 口腔機能検査: 3か月経過メッセージ */}
+                  {master.id === 'koukuu_kensa' && (() => {
+                    const pastClaims = INITIAL_PAST_EXAMINATIONS.filter(p => p.patientId === patient.id)
+                    const messages = master.subItems.map(sub => {
+                      const lastClaim = pastClaims
+                        .filter(p => p.claimedItems.includes(sub.id))
+                        .sort((a, b) => b.month.localeCompare(a.month))[0]
+                      if (!lastClaim) {
+                        return <div key={sub.id} className="text-xs text-blue-600">📋 {sub.name}: 過去実績なし — 今月算定できます</div>
+                      }
+                      const lastDate = new Date(lastClaim.month + '-01')
+                      const now = new Date()
+                      const monthsElapsed = (now.getFullYear() - lastDate.getFullYear()) * 12 + (now.getMonth() - lastDate.getMonth())
+                      if (monthsElapsed >= 3) {
+                        return <div key={sub.id} className="text-xs text-blue-600">📋 今月{sub.name}が算定できます（前回: {lastClaim.month}）</div>
+                      }
+                      return null
+                    }).filter(Boolean)
+                    if (messages.length === 0) return null
+                    return <div className="mx-3 mb-3 mt-1 space-y-1">{messages}</div>
+                  })()}
+                  {/* 歯リハ3: 月2回上限メッセージ */}
+                  {master.id === 'shiriha3' && (() => {
+                    const now = new Date()
+                    const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+                    const shiriha3Count = INITIAL_PAST_EXAMINATIONS
+                      .filter(p => p.patientId === patient.id && p.month === currentMonth)
+                      .reduce((count, p) => count + p.claimedItems.filter(item => item === 'shiriha3').length, 0)
+                    return (
+                      <div className="mx-3 mb-3 mt-1 text-xs text-blue-600">
+                        {shiriha3Count === 0 && '📋 1/2回目 算定しますか？'}
+                        {shiriha3Count === 1 && '📋 2/2回目 算定しますか？'}
+                        {shiriha3Count >= 2 && <span className="text-amber-700">⚠ 今月の算定上限（2回）に達しています</span>}
+                      </div>
+                    )
+                  })()}
                 </div>
               )
             }

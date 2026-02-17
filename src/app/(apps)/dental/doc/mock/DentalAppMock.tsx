@@ -12,7 +12,7 @@ import {
   useDocumentManager,
   useClinicManager,
 } from './hooks'
-import {Sidebar} from './Sidebar'
+import {HeaderMenu} from './Sidebar'
 import {FacilityMasterPage, PatientMasterPage, StaffMasterPage, ClinicSettingsPage} from './MasterPages'
 import {SchedulePage, VisitPlanDetailPage} from './SchedulePages'
 import {ConsultationPage} from './ClinicalPages'
@@ -23,13 +23,6 @@ import {
   PatientDetailPage,
   IndividualInputPage,
   FinalReviewPage,
-  ScoringReferencePage,
-  ScoringLedgerPage,
-  DocumentListPage,
-  TemplateMasterPage,
-  FacilityPortalPage,
-  BatchPrintPage,
-  SummaryPage,
 } from './ReportPages'
 import {DOCUMENT_TEMPLATES, EXAMINATION_STATUS} from './constants'
 import {formatDate, nextId} from './helpers'
@@ -47,7 +40,7 @@ export default function DentalAppMock() {
   // 文書作成ページ用の状態
   const [documentType, setDocumentType] = useState<string | null>(null)
   const [documentData, setDocumentData] = useState<Record<string, unknown> | null>(null)
-  // 追加: 患者詳細用
+  // 患者詳細用
   const [selectedPatientId, setSelectedPatientId] = useState<number | null>(null)
 
   // データ管理
@@ -124,7 +117,6 @@ export default function DentalAppMock() {
 
   // 個別入力からの診察開始
   const handleIndividualStart = ({patientId, facilityId, doctorId, hygienistId}: {patientId: number; facilityId: number; doctorId: number | null; hygienistId: number | null}) => {
-    // アドホックなvisitPlanを作成
     const adhocPlan = {
       facilityId,
       visitDate: formatDate(new Date(2026, 0, 18)),
@@ -132,11 +124,9 @@ export default function DentalAppMock() {
     }
     addVisitPlan(adhocPlan)
 
-    // 新しいvisitPlanのIDを推測（最大ID+1）
     const newPlanId = nextId(visitPlans)
     setSelectedVisitPlan({...adhocPlan, id: newPlanId} as VisitPlan)
 
-    // examinationを追加
     const newExam = {
       visitPlanId: newPlanId,
       patientId,
@@ -145,7 +135,6 @@ export default function DentalAppMock() {
     }
     addExamination(newExam)
 
-    // 新しいexaminationのIDを推測
     const newExamId = nextId(examinations)
     const exam: Examination = {
       ...newExam,
@@ -181,7 +170,6 @@ export default function DentalAppMock() {
       const idx = facilities.findIndex(f => f.id === id)
       const swapIdx = direction === 'up' ? idx - 1 : idx + 1
       if (swapIdx < 0 || swapIdx >= facilities.length) return
-      // swap by updating both
       const swapFacility = facilities[swapIdx]
       updateFacility(id, {sortOrder: swapIdx})
       updateFacility(swapFacility.id, {sortOrder: idx})
@@ -357,44 +345,14 @@ export default function DentalAppMock() {
             onReorder={reorderStaff}
           />
         )
-      case 'admin-templates':
-        return <TemplateMasterPage />
-      case 'facility-portal':
-        return <FacilityPortalPage facility={facilities[0]} patients={patients} onUpdatePatient={updatePatient} />
-      case 'scoring-reference':
-        return <ScoringReferencePage />
-      case 'scoring-ledger':
-        return <ScoringLedgerPage patients={patients} facilities={facilities} scoringHistory={scoringHistory} />
-      case 'document-list':
-        return <DocumentListPage documents={documents} patients={patients} />
-      case 'batch-print':
-        return (
-          <BatchPrintPage
-            facilities={facilities}
-            examinations={examinations}
-            patients={patients}
-            visitPlans={visitPlans}
-            documents={documents}
-          />
-        )
-      case 'summary':
-        return (
-          <SummaryPage
-            visitPlans={visitPlans}
-            examinations={examinations}
-            patients={patients}
-            facilities={facilities}
-            documents={documents}
-          />
-        )
       default:
         return <DashboardPage onNavigate={handleNavigate} visitPlans={visitPlans} examinations={examinations} />
     }
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <Sidebar currentPage={currentPage} onNavigate={handleNavigate} />
+    <div className="flex flex-col min-h-screen bg-gray-100">
+      <HeaderMenu currentPage={currentPage} onNavigate={handleNavigate} />
       <main className="flex-1 overflow-auto">{renderContent()}</main>
     </div>
   )

@@ -1,90 +1,139 @@
-import React from 'react'
+import React, {useState, useRef, useEffect} from 'react'
 
 type NavItem = {
   id: string
   label: string
-  icon: string
 }
 
-type NavSection = {
-  label: string | null
-  items: NavItem[]
+type NavMenu = {
+  id: string
+  label: string
+  items?: NavItem[]
+  directPage?: string
 }
 
-type SidebarProps = {
+type HeaderMenuProps = {
   currentPage: string
   onNavigate: (page: string) => void
 }
 
 /**
- * サイドバーナビゲーション
+ * ヘッダーナビゲーション（メインメニュー＞サブメニュー構成）
  */
-export const Sidebar = ({currentPage, onNavigate}: SidebarProps) => {
-  const navSections: NavSection[] = [
-    {label: null, items: [{id: 'dashboard', label: 'トップ', icon: '🏠'}]},
-    {label: '予定・訪問', items: [{id: 'schedule', label: '訪問計画スケジュール', icon: '📅'}]},
+export const HeaderMenu = ({currentPage, onNavigate}: HeaderMenuProps) => {
+  const [openMenu, setOpenMenu] = useState<string | null>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  const navMenus: NavMenu[] = [
     {
-      label: '患者',
-      items: [{id: 'individual-input', label: '個別入力', icon: '✏️'}],
-    },
-    {
-      label: 'マスタデータ管理',
+      id: 'master',
+      label: 'マスタ',
       items: [
-        {id: 'admin-clinic', label: 'クリニック設定', icon: '🏥'},
-        {id: 'admin-facilities', label: '施設マスタ', icon: '🏢'},
-        {id: 'admin-patients', label: '利用者マスタ', icon: '👥'},
-        {id: 'admin-staff', label: 'スタッフマスタ', icon: '👨‍⚕️'},
-        {id: 'admin-templates', label: 'テンプレート登録', icon: '📋'},
+        {id: 'admin-clinic', label: 'クリニック'},
+        {id: 'admin-facilities', label: '施設'},
+        {id: 'admin-patients', label: '利用者'},
+        {id: 'admin-staff', label: 'スタッフ'},
       ],
     },
     {
-      label: 'レポート・参照',
-      items: [
-        {id: 'scoring-reference', label: '算定項目・点数一覧', icon: '📊'},
-        {id: 'scoring-ledger', label: '算定対象台帳', icon: '📒'},
-        {id: 'document-list', label: '提供文書一覧', icon: '📄'},
-        {id: 'summary', label: '日次報告', icon: '📈'},
-        {id: 'batch-print', label: '履歴・一括印刷', icon: '🖨️'},
-      ],
+      id: 'schedule',
+      label: '訪問計画スケジュール',
+      directPage: 'schedule',
     },
   ]
 
-  const isActive = (id: string) => currentPage === id || currentPage.startsWith(id)
+  // メニュー外クリックで閉じる
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpenMenu(null)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const isActive = (menu: NavMenu) => {
+    if (menu.directPage) return currentPage === menu.directPage
+    return menu.items?.some(item => currentPage === item.id) ?? false
+  }
+
+  const handleMenuClick = (menu: NavMenu) => {
+    if (menu.directPage) {
+      onNavigate(menu.directPage)
+      setOpenMenu(null)
+      return
+    }
+    setOpenMenu(prev => (prev === menu.id ? null : menu.id))
+  }
+
+  const handleItemClick = (itemId: string) => {
+    onNavigate(itemId)
+    setOpenMenu(null)
+  }
 
   return (
-    <aside className="w-56 bg-gray-50 border-r border-gray-200 min-h-screen overflow-y-auto">
-      <div className="p-3">
-        <h1
-          className="text-lg font-bold text-slate-700 flex items-center gap-2 cursor-pointer"
-          onClick={() => onNavigate('dashboard')}
+    <header className="bg-white border-b border-gray-200 shadow-sm" ref={menuRef}>
+      <div className="flex items-center h-12 px-4">
+        {/* ロゴ */}
+        <button
+          onClick={() => {
+            onNavigate('dashboard')
+            setOpenMenu(null)
+          }}
+          className="flex items-center gap-2 mr-8 hover:opacity-80 transition-opacity"
         >
-          <span>🦷</span>
-          <span>VisitDental Pro</span>
-        </h1>
-      </div>
-      <nav className="mt-1 pb-4">
-        {navSections.map((section, si) => (
-          <div key={si}>
-            {section.label && (
-              <div className="px-3 pt-3 pb-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">{section.label}</div>
-            )}
-            {section.items.map(item => (
+          <span className="text-lg">🦷</span>
+          <span className="text-base font-bold text-slate-700">VisitDental Pro</span>
+        </button>
+
+        {/* メインメニュー */}
+        <nav className="flex items-center gap-1">
+          {navMenus.map(menu => (
+            <div key={menu.id} className="relative">
               <button
-                key={item.id}
-                onClick={() => onNavigate(item.id)}
-                className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-slate-500 ${
-                  isActive(item.id)
-                    ? 'bg-slate-100 text-slate-900 border-r-2 border-slate-600'
-                    : 'text-gray-700 hover:bg-gray-100'
+                onClick={() => handleMenuClick(menu)}
+                className={`flex items-center gap-1 px-3 py-2 text-sm rounded transition-colors ${
+                  isActive(menu)
+                    ? 'bg-slate-100 text-slate-900 font-medium'
+                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                 }`}
               >
-                <span>{item.icon}</span>
-                <span>{item.label}</span>
+                <span>{menu.label}</span>
+                {menu.items && (
+                  <svg
+                    className={`w-3.5 h-3.5 transition-transform ${openMenu === menu.id ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                )}
               </button>
-            ))}
-          </div>
-        ))}
-      </nav>
-    </aside>
+
+              {/* サブメニュー（ドロップダウン） */}
+              {menu.items && openMenu === menu.id && (
+                <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg min-w-[160px] py-1 z-50">
+                  {menu.items.map(item => (
+                    <button
+                      key={item.id}
+                      onClick={() => handleItemClick(item.id)}
+                      className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                        currentPage === item.id
+                          ? 'bg-slate-100 text-slate-900 font-medium'
+                          : 'text-gray-700 hover:bg-gray-50'
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </nav>
+      </div>
+    </header>
   )
 }
