@@ -638,6 +638,7 @@ export const DOCUMENT_TEMPLATES: Record<string, DocumentTemplate> = {
     fullName: '歯科疾患在宅療養管理計画書',
     relatedProcedure: 'shizaikan',
     monthlyLimit: 1,
+    referenceUrl: 'https://www.houmonshika.org/dental/labo9/',
     fields: {
       auto: [
         'clinicName',
@@ -669,9 +670,46 @@ export const DOCUMENT_TEMPLATES: Record<string, DocumentTemplate> = {
     relatedProcedure: 'houeishi',
     monthlyLimit: 4,
     dhMinutesRequired: 20,
+    referenceUrl: 'https://gerodontology.dental-plaza.com/guide_02-5/',
     fields: {
       auto: ['clinicName', 'patientName', 'patientNameKana', 'dhMinutes', 'visitCondition', 'oralFindings', 'createdAt'],
       manual: ['guidanceContent', 'homeCareMethod', 'nextGuidancePlan'],
+    },
+  },
+  doc_houmon_jisseki: {
+    id: 'doc_houmon_jisseki',
+    name: '訪問診療実績表',
+    fullName: '歯科訪問診療実績表',
+    relatedProcedure: 'shihou',
+    monthlyLimit: 1,
+    referenceUrl: 'https://shirobon.net/medicalfee/latest/shika/r06_shika/r06s_ch2/r06s2_pa2/r06s22_C000.html',
+    fields: {
+      auto: ['clinicName', 'facilityName', 'visitDate', 'doctorName', 'patientList'],
+      manual: [],
+    },
+  },
+  doc_shizaikan_bunsho: {
+    id: 'doc_shizaikan_bunsho',
+    name: '文書提供（管理計画）',
+    fullName: '歯科疾患在宅療養管理計画 説明文書',
+    relatedProcedure: 'shizaikan_bunsho',
+    monthlyLimit: 1,
+    referenceUrl: 'https://www.houmonshika.org/dental/labo6/',
+    fields: {
+      auto: ['clinicName', 'patientName', 'oralFindings', 'treatment', 'managementPlan', 'createdAt'],
+      manual: ['familyExplanation'],
+    },
+  },
+  doc_zaishikan: {
+    id: 'doc_zaishikan',
+    name: '在歯管報告書',
+    fullName: '在宅患者歯科治療総合医療管理報告書',
+    relatedProcedure: 'zaishikan',
+    monthlyLimit: 1,
+    referenceUrl: 'https://dentalsupport.biz/column/column-visit/vis31/',
+    fields: {
+      auto: ['clinicName', 'patientName', 'diseases', 'treatmentPerformed', 'createdAt'],
+      manual: ['managementPolicy'],
     },
   },
 }

@@ -52,6 +52,30 @@ export const calculateDocumentRequirements = ({
         : '訪衛指選択 + DH20分以上',
   }
 
+  // 訪問診療実績表: 歯訪（shihou）がONの場合に必要
+  const shihouSelected = !!procedureItems?.shihou
+  result.doc_houmon_jisseki = {
+    ...DOCUMENT_TEMPLATES.doc_houmon_jisseki,
+    required: shihouSelected,
+    reason: shihouSelected ? '歯訪が選択されています' : '歯訪が選択されていません',
+  }
+
+  // 歯在管文書（管理計画説明文書）: 歯在管文書提供加算（shizaikan_bunsho）がONの場合に必要
+  const shizaikanBunshoSelected = !!procedureItems?.shizaikan_bunsho
+  result.doc_shizaikan_bunsho = {
+    ...DOCUMENT_TEMPLATES.doc_shizaikan_bunsho,
+    required: shizaikanBunshoSelected,
+    reason: shizaikanBunshoSelected ? '歯在管文書提供加算が選択されています' : '歯在管文書提供加算が選択されていません',
+  }
+
+  // 在歯管報告書: 在歯管（zaishikan）がONの場合に必要
+  const zaishikanSelected = !!procedureItems?.zaishikan
+  result.doc_zaishikan = {
+    ...DOCUMENT_TEMPLATES.doc_zaishikan,
+    required: zaishikanSelected,
+    reason: zaishikanSelected ? '在歯管が選択されています' : '在歯管が選択されていません',
+  }
+
   return result
 }
 

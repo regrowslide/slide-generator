@@ -1236,7 +1236,7 @@ export const ConsultationPage = ({
         dhSeconds={dhSeconds}
         onOpenDocument={docType => {
           if (typeof onOpenDocument === 'function') {
-            onOpenDocument(docType, {patient, clinic, examination, dhSeconds, visitCondition, oralFindings, treatment, nextPlan})
+            onOpenDocument(docType, {patient, clinic, examination, dhSeconds, visitCondition, oralFindings, treatment, nextPlan, doctorName: doctor?.name, treatmentPerformed})
           }
         }}
       />
@@ -1342,18 +1342,29 @@ export const DocumentSection = ({procedureItems, dhSeconds, onOpenDocument}: Doc
           {Object.entries(docRequirements).map(([docId, doc]) => {
             const isRequired = doc.required
             return (
-              <button
-                key={docId}
-                onClick={() => onOpenDocument(docId)}
-                className={`flex items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-slate-500 ${
-                  isRequired
-                    ? 'border-emerald-500 bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
-                    : 'border-gray-300 bg-gray-50 text-gray-500 hover:bg-gray-100'
-                }`}
-              >
-                {isRequired && <span className="text-emerald-600">★</span>}
-                <span className="font-medium">{doc.name}</span>
-              </button>
+              <div key={docId} className="flex flex-col items-start gap-1">
+                <button
+                  onClick={() => onOpenDocument(docId)}
+                  className={`flex items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-slate-500 ${
+                    isRequired
+                      ? 'border-emerald-500 bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
+                      : 'border-gray-300 bg-gray-50 text-gray-500 hover:bg-gray-100'
+                  }`}
+                >
+                  {isRequired && <span className="text-emerald-600">★</span>}
+                  <span className="font-medium">{doc.name}</span>
+                </button>
+                {doc.referenceUrl && (
+                  <a
+                    href={doc.referenceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[10px] text-blue-500 hover:underline flex items-center gap-0.5 ml-1"
+                  >
+                    <span>🔗</span> 参考
+                  </a>
+                )}
+              </div>
             )
           })}
         </div>

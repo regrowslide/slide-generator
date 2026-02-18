@@ -220,6 +220,7 @@ export type DocumentTemplate = {
   relatedProcedure: string
   monthlyLimit: number
   dhMinutesRequired?: number
+  referenceUrl?: string
   fields: {
     auto: string[]
     manual: string[]
@@ -332,6 +333,22 @@ export type DocumentRequirement = DocumentTemplate & {
   required: boolean
   reason: string
   dhMinutes?: number
+}
+
+/** 保存済み文書（PDF URL付き） */
+export type SavedDocumentEntry = {
+  id: string
+  clinicId: number
+  facilityId: number
+  facilityName: string
+  patientId: number
+  patientName: string
+  examinationId: number
+  documentType: string
+  documentName: string
+  pdfUrl: string
+  createdAt: string
+  visitDate: string
 }
 
 /** アセスメント選択肢 */

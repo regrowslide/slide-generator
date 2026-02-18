@@ -24,9 +24,10 @@ import {
   IndividualInputPage,
   FinalReviewPage,
 } from './ReportPages'
+import {DocumentListPage} from './DocumentPages'
 import {DOCUMENT_TEMPLATES, EXAMINATION_STATUS} from './constants'
 import {formatDate, nextId} from './helpers'
-import type {Examination, VisitPlan, Patient} from './types'
+import type {Examination, VisitPlan, Patient, SavedDocumentEntry} from './types'
 
 /**
  * 訪問歯科アプリ メインコンポーネント
@@ -42,6 +43,8 @@ export default function DentalAppMock() {
   const [documentData, setDocumentData] = useState<Record<string, unknown> | null>(null)
   // 患者詳細用
   const [selectedPatientId, setSelectedPatientId] = useState<number | null>(null)
+  // 保存済みPDF文書一覧
+  const [savedPdfDocuments, setSavedPdfDocuments] = useState<SavedDocumentEntry[]>([])
 
   // データ管理
   const {clinic, updateClinic, updateQualification, hasQualification} = useClinicManager()
@@ -200,13 +203,35 @@ export default function DentalAppMock() {
           documentData={documentData as Record<string, unknown>}
           onBack={handleBackFromDocument}
           onSave={savedDoc => {
+            const patientId = (savedDoc as Record<string, unknown>).patientId as number || currentPatient?.id || 0
+            const examinationId = (savedDoc as Record<string, unknown>).examinationId as number || selectedExamination?.id || 0
             addDocument({
-              patientId: (savedDoc as Record<string, unknown>).patientId as number || currentPatient?.id || 0,
-              examinationId: (savedDoc as Record<string, unknown>).examinationId as number || selectedExamination?.id || 0,
+              patientId,
+              examinationId,
               templateId: documentType,
               templateName: DOCUMENT_TEMPLATES[documentType]?.name || documentType,
               version: 1,
             })
+            // 保存済みPDF文書一覧に追加
+            const pat = patients.find(p => p.id === patientId)
+            const fac = currentFacility || facilities[0]
+            setSavedPdfDocuments(prev => [
+              ...prev,
+              {
+                id: `doc_${Date.now()}`,
+                clinicId: clinic.id,
+                facilityId: fac?.id || 0,
+                facilityName: fac?.name || '',
+                patientId,
+                patientName: pat ? `${pat.lastName} ${pat.firstName}` : '',
+                examinationId,
+                documentType,
+                documentName: DOCUMENT_TEMPLATES[documentType]?.name || documentType,
+                pdfUrl: '',
+                createdAt: new Date().toISOString(),
+                visitDate: selectedVisitPlan?.visitDate || new Date().toISOString().slice(0, 10),
+              },
+            ])
           }}
         />
       )
@@ -343,6 +368,13 @@ export default function DentalAppMock() {
             onUpdate={updateStaff}
             onDelete={deleteStaff}
             onReorder={reorderStaff}
+          />
+        )
+      case 'document-list':
+        return (
+          <DocumentListPage
+            documents={savedPdfDocuments}
+            facilities={facilities}
           />
         )
       default:

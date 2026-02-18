@@ -40,6 +40,16 @@ export const HeaderMenu = ({currentPage, onNavigate}: HeaderMenuProps) => {
       label: '訪問計画スケジュール',
       directPage: 'schedule',
     },
+    {
+      id: 'individual',
+      label: '個別入力',
+      directPage: 'individual-input',
+    },
+    {
+      id: 'document-list',
+      label: '文書管理',
+      directPage: 'document-list',
+    },
   ]
 
   // メニュー外クリックで閉じる

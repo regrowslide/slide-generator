@@ -176,8 +176,8 @@ export default function YamanokaiMock() {
     {id: 'member-equipment', label: '装備貸出・返却', icon: '🔄'},
     {id: 'member-my-rentals', label: '貸出履歴', icon: '📝'},
     {type: 'divider'},
-    {type: 'header', label: 'システム'},
-    {id: 'data-structure', label: 'データ構造図', icon: '🗂️'},
+    // {type: 'header', label: 'システム'},
+    // {id: 'data-structure', label: 'データ構造図', icon: '🗂️'},
   ]
 
   // フィルタされたメニュー

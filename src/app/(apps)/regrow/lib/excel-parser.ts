@@ -88,12 +88,12 @@ export const parseStaffAnalysisExcel = (file: File): Promise<ExcelParseResult> =
           const sales = Number(ws[XLSX.utils.encode_cell({r: row, c: 6})]?.v) || 0
           const newCustomerCount = Number(ws[XLSX.utils.encode_cell({r: row, c: 22})]?.v) || 0
 
-          // 行2: 客数（E列 = col 4: 対応客数、C列 = col 2: 指名数）
-          const customerCount = Number(ws[XLSX.utils.encode_cell({r: row + 1, c: 4})]?.v) || 0
+          // 行2: 客数（G列 = col 6: 対応客数、C列 = col 2: 指名数）
+          const customerCount = Number(ws[XLSX.utils.encode_cell({r: row + 1, c: 6})]?.v) || 0
           const nominationCount = Number(ws[XLSX.utils.encode_cell({r: row + 1, c: 2})]?.v) || 0
 
-          // 行3: 客単価（E列 = col 4）
-          const unitPrice = Number(ws[XLSX.utils.encode_cell({r: row + 2, c: 4})]?.v) || 0
+          // 行3: 客単価（G列 = col 6）
+          const unitPrice = Number(ws[XLSX.utils.encode_cell({r: row + 2, c: 6})]?.v) || 0
 
           staffList.push({
             rank,
@@ -126,9 +126,9 @@ export const parseStaffAnalysisExcel = (file: File): Promise<ExcelParseResult> =
         // 総合計データ抽出
         const total = {
           sales: Number(ws[XLSX.utils.encode_cell({r: totalRow, c: 6})]?.v) || 0,
-          customerCount: Number(ws[XLSX.utils.encode_cell({r: totalRow + 1, c: 4})]?.v) || 0,
+          customerCount: Number(ws[XLSX.utils.encode_cell({r: totalRow + 1, c: 6})]?.v) || 0,
           nominationCount: Number(ws[XLSX.utils.encode_cell({r: totalRow + 1, c: 2})]?.v) || 0,
-          unitPrice: Number(ws[XLSX.utils.encode_cell({r: totalRow + 2, c: 4})]?.v) || 0,
+          unitPrice: Number(ws[XLSX.utils.encode_cell({r: totalRow + 2, c: 6})]?.v) || 0,
         }
 
         resolve({

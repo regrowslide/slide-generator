@@ -48,6 +48,7 @@
     "@radix-ui/react-tabs": "^1.1.12",
     "@react-pdf/renderer": "^4.1.2",
     "@types/react-dom": "^19.2.3",
+    "@vercel/blob": "^2.2.0",
     "axios": "^1.7.9",
     "bcrypt": "^6.0.0",
     "class-variance-authority": "^0.7.1",
