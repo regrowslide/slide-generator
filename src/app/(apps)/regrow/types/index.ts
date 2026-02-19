@@ -56,9 +56,22 @@ export type StoreKpi = {
   storeName: StoreName
   utilizationRate: number | null // 稼働率 (%)
   returnRate: number | null // 再来率 (%)
-  churnRate: number | null // 失客率 (%)
   csRegistrationCount: number | null // CS登録数
   comment: string // コメント
+}
+
+/** スライド閲覧モード */
+export type SlideViewMode = 'scroll' | 'pagination'
+
+/** スタッフ権限 */
+export type StaffRole = 'admin' | 'manager' | 'viewer'
+
+/** スタッフマスタ */
+export type StaffMaster = {
+  staffName: string
+  storeName: StoreName
+  role: StaffRole
+  isActive: boolean // 退職者はfalse
 }
 
 /** スタッフ手動入力データ */

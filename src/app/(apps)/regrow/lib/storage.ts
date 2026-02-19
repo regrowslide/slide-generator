@@ -2,9 +2,10 @@
  * Regrow アプリのlocalStorage管理
  */
 
-import type {MonthlyData, YearMonth} from '../types'
+import type {MonthlyData, YearMonth, StaffMaster, StoreName} from '../types'
 
 const STORAGE_PREFIX = 'regrow_data_'
+const STAFF_MASTER_KEY = 'regrow_staff_master'
 
 /**
  * YYYY-MM単位でデータを保存
@@ -203,4 +204,56 @@ export const getNextMonth = (yearMonth: YearMonth): YearMonth => {
 export const formatYearMonth = (yearMonth: YearMonth): string => {
   const [year, month] = yearMonth.split('-')
   return `${year}年${Number(month)}月`
+}
+
+// ============================================================
+// スタッフマスタ管理
+// ============================================================
+
+/**
+ * スタッフマスタを読み込み
+ */
+export const loadStaffMaster = (): StaffMaster[] => {
+  try {
+    const stored = localStorage.getItem(STAFF_MASTER_KEY)
+    if (!stored) return []
+    return JSON.parse(stored) as StaffMaster[]
+  } catch (error) {
+    console.error('Failed to load staff master:', error)
+    return []
+  }
+}
+
+/**
+ * スタッフマスタを保存
+ */
+export const saveStaffMaster = (staff: StaffMaster[]): void => {
+  try {
+    localStorage.setItem(STAFF_MASTER_KEY, JSON.stringify(staff))
+  } catch (error) {
+    console.error('Failed to save staff master:', error)
+  }
+}
+
+/**
+ * スタッフをUPSERT（名称+店舗の完全一致）
+ * 存在しなければrole='viewer'で新規作成
+ * 戻り値: 新規作成されたスタッフ名の配列
+ */
+export const upsertStaff = (staffName: string, storeName: StoreName): boolean => {
+  const master = loadStaffMaster()
+  const exists = master.find((s) => s.staffName === staffName && s.storeName === storeName)
+
+  if (exists) {
+    return false // 既存
+  }
+
+  master.push({
+    staffName,
+    storeName,
+    role: 'viewer',
+    isActive: true,
+  })
+  saveStaffMaster(master)
+  return true // 新規作成
 }

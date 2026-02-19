@@ -6,7 +6,7 @@
  */
 
 import React, {createContext, useContext, useState, useCallback, useEffect} from 'react'
-import type {MonthlyData, YearMonth, ExcelParseResult, StoreName, StoreKpi, StaffManualData} from '../types'
+import type {MonthlyData, YearMonth, ExcelParseResult, StoreName, StoreKpi, StaffManualData, StaffMaster} from '../types'
 import {
   loadMonthlyData,
   saveMonthlyData,
@@ -15,6 +15,8 @@ import {
   getCurrentYearMonth,
   getPreviousMonth,
   getNextMonth,
+  loadStaffMaster,
+  upsertStaff,
 } from '../lib/storage'
 
 // ============================================================
@@ -46,6 +48,10 @@ type DataContextType = {
   updateStaffManualData: (staffName: string, storeName: StoreName, updates: Partial<StaffManualData>) => void
   updateCustomerVoice: (content: string) => void
 
+  // スタッフマスタ
+  staffMaster: StaffMaster[]
+  refreshStaffMaster: () => void
+
   // ナビゲーション
   goToPreviousMonth: () => void
   goToNextMonth: () => void
@@ -68,17 +74,22 @@ export const DataContextProvider = ({children}: {children: React.ReactNode}) => 
   const [currentYearMonth, setCurrentYearMonth] = useState<YearMonth>('')
   const [availableMonths, setAvailableMonths] = useState<YearMonth[]>([])
   const [monthlyData, setMonthlyData] = useState<MonthlyData | null>(null)
+  const [staffMaster, setStaffMaster] = useState<StaffMaster[]>([])
+
+  // スタッフマスタを再読み込み
+  const refreshStaffMaster = useCallback(() => {
+    setStaffMaster(loadStaffMaster())
+  }, [])
 
   // 初期化: 利用可能な月リストを取得し、最新月を選択
   useEffect(() => {
     const months = getAllMonths()
     setAvailableMonths(months)
+    setStaffMaster(loadStaffMaster())
 
     if (months.length > 0) {
-      // 最新月を選択
       setCurrentYearMonth(months[0])
     } else {
-      // データがない場合、当月を選択
       const current = getCurrentYearMonth()
       setCurrentYearMonth(current)
     }
@@ -132,9 +143,15 @@ export const DataContextProvider = ({children}: {children: React.ReactNode}) => 
     [monthlyData, currentYearMonth]
   )
 
-  // インポートデータ追加
+  // インポートデータ追加 + スタッフマスタUPSERT
   const addImportedData = useCallback(
     (parseResult: ExcelParseResult) => {
+      // スタッフマスタに未登録のスタッフをUPSERT
+      parseResult.staffList.forEach((staff) => {
+        upsertStaff(staff.staffName, parseResult.storeShortName)
+      })
+      refreshStaffMaster()
+
       updateMonthlyData((prev) => {
         const existingRecords = prev.importedData?.staffRecords || []
         const existingTotals = prev.importedData?.storeTotals || []
@@ -166,7 +183,7 @@ export const DataContextProvider = ({children}: {children: React.ReactNode}) => 
         }
       })
     },
-    [updateMonthlyData]
+    [updateMonthlyData, refreshStaffMaster]
   )
 
   // インポートデータクリア
@@ -207,7 +224,6 @@ export const DataContextProvider = ({children}: {children: React.ReactNode}) => 
                   storeName,
                   utilizationRate: null,
                   returnRate: null,
-                  churnRate: null,
                   csRegistrationCount: null,
                   comment: '',
                   ...updates,
@@ -318,6 +334,8 @@ export const DataContextProvider = ({children}: {children: React.ReactNode}) => 
         updateStoreKpi,
         updateStaffManualData,
         updateCustomerVoice,
+        staffMaster,
+        refreshStaffMaster,
         goToPreviousMonth,
         goToNextMonth,
         createNewMonth,

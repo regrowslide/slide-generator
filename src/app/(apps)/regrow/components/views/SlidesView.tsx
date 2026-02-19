@@ -2,11 +2,17 @@
 
 /**
  * スライド資料閲覧ビュー
- * 15スライド構成で表示
+ * 14スライド構成で表示
+ * Phase1: 失客率削除（16→14枚）
+ * Phase2: 店舗稼働率のスタッフ平均自動計算
+ * Phase3: 累計平均との比較トグル
+ * Phase4: 統合グラフの複合グラフ化（棒+折れ線、2軸）
+ * Phase5: スライド閲覧モード拡充（スクロール/ページ切替/全画面）
+ * Phase6: スタッフフィルタ機能
  */
 
-import React, { useState } from 'react'
-import { useDataContext } from '../../context/DataContext'
+import React, {useState, useEffect, useCallback, useRef} from 'react'
+import {useDataContext} from '../../context/DataContext'
 import {
   BarChart,
   Bar,
@@ -20,15 +26,27 @@ import {
   ComposedChart,
   Line,
 } from 'recharts'
-import type { StoreName, YearMonth, StaffRecord } from '../../types'
-import { loadMonthlyData, getPreviousMonth, formatYearMonth } from '../../lib/storage'
-import { MOCK_DATA } from '../../lib/mockData'
+import type {StoreName, YearMonth, StaffRecord, SlideViewMode} from '../../types'
+import {loadMonthlyData, formatYearMonth} from '../../lib/storage'
+import {MOCK_DATA} from '../../lib/mockData'
 
-const TOTAL_SLIDES = 16
+const TOTAL_SLIDES = 10
 
 // ============================================================
 // ヘルパー関数
 // ============================================================
+
+/**
+ * 店舗の稼働率をスタッフ平均から自動計算
+ */
+const calculateStoreUtilizationFromStaff = (monthData: any, storeName: StoreName): number => {
+  const staffData = monthData?.manualData?.staffManualData?.filter(
+    (s: any) => s.storeName === storeName && s.utilizationRate !== null && s.utilizationRate !== undefined
+  ) || []
+  if (staffData.length === 0) return 0
+  const total = staffData.reduce((sum: number, s: any) => sum + (s.utilizationRate || 0), 0)
+  return Math.round((total / staffData.length) * 10) / 10
+}
 
 /**
  * 指定された月データから店舗の指標値を取得
@@ -36,18 +54,17 @@ const TOTAL_SLIDES = 16
 const getStoreMetricFromMonthlyData = (
   monthData: any,
   storeName: StoreName,
-  metric: '客単価' | '稼働率' | '再来率' | '失客率'
+  metric: '客単価' | '稼働率' | '再来率'
 ): number => {
   if (!monthData) return 0
 
   if (metric === '客単価') {
     const storeTotal = monthData.importedData?.storeTotals.find((t: any) => t.storeName === storeName)
     return storeTotal?.unitPrice || 0
-  } else if (metric === '稼働率' || metric === '失客率') {
-    const storeKpi = monthData.manualData.storeKpis?.find((k: any) => k.storeName === storeName)
-    return metric === '稼働率' ? storeKpi?.utilizationRate || 0 : storeKpi?.churnRate || 0
+  } else if (metric === '稼働率') {
+    // スタッフ平均から自動計算
+    return calculateStoreUtilizationFromStaff(monthData, storeName)
   } else if (metric === '再来率') {
-    // 再来率を計算
     const storeRecords = monthData.importedData?.staffRecords.filter((r: any) => r.storeName === storeName) || []
     if (storeRecords.length === 0) return 0
     const totalCustomers = storeRecords.reduce((sum: number, r: any) => sum + r.customerCount, 0)
@@ -73,14 +90,91 @@ const calculateStaffReturnRate = (staff: StaffRecord): number => {
  * 月次データを取得（モックデータ優先）
  */
 const getMonthlyData = (yearMonth: YearMonth) => {
-  // モックデータを優先的に使用
   return MOCK_DATA[yearMonth] || loadMonthlyData(yearMonth)
 }
 
+/**
+ * スタッフの累計平均を算出
+ * 当月含む過去全月データからスタッフ指標の平均を計算
+ */
+const calculateStaffCumulativeAverage = (
+  staffName: string,
+  storeName: StoreName,
+  currentYearMonth: YearMonth,
+  metric: 'sales' | 'nominationCount' | 'unitPrice' | 'returnRate' | 'utilizationRate'
+): number => {
+  const currentYear = currentYearMonth.split('-')[0]
+  const currentMonth = parseInt(currentYearMonth.split('-')[1])
+  let total = 0
+  let count = 0
+
+  for (let m = 1; m <= currentMonth; m++) {
+    const ym = `${currentYear}-${String(m).padStart(2, '0')}` as YearMonth
+    const monthData = getMonthlyData(ym)
+    if (!monthData) continue
+
+    if (metric === 'utilizationRate') {
+      const staffManual = monthData.manualData?.staffManualData?.find(
+        (s: any) => s.staffName === staffName && s.storeName === storeName
+      )
+      if (staffManual?.utilizationRate !== null && staffManual?.utilizationRate !== undefined) {
+        total += staffManual.utilizationRate
+        count++
+      }
+    } else if (metric === 'returnRate') {
+      const staffRecord = monthData.importedData?.staffRecords.find(
+        (r: any) => r.staffName === staffName && r.storeName === storeName
+      )
+      if (staffRecord) {
+        total += calculateStaffReturnRate(staffRecord)
+        count++
+      }
+    } else {
+      const staffRecord = monthData.importedData?.staffRecords.find(
+        (r: any) => r.staffName === staffName && r.storeName === storeName
+      )
+      if (staffRecord) {
+        total += staffRecord[metric] || 0
+        count++
+      }
+    }
+  }
+
+  return count > 0 ? Math.round((total / count) * 10) / 10 : 0
+}
+
+// ============================================================
+// メインコンポーネント
+// ============================================================
+
 export const SlidesView = () => {
-  // グローバルな店舗フィルタ状態
+  const {monthlyData} = useDataContext()
+
+  // グローバルな店舗フィルタ
   const allStores: StoreName[] = ['新潟西店', '三条店', '新潟中央店']
   const [selectedStores, setSelectedStores] = useState<StoreName[]>(allStores)
+
+  // スタッフフィルタ
+  const [selectedStaffNames, setSelectedStaffNames] = useState<string[]>([])
+  const [isStaffFilterOpen, setIsStaffFilterOpen] = useState(false)
+
+  // 当月/累計平均トグル
+  const [showCurrentMonth, setShowCurrentMonth] = useState(true)
+  const [showCumulativeAvg, setShowCumulativeAvg] = useState(false)
+
+  // 閲覧モード
+  const [viewMode, setViewMode] = useState<SlideViewMode>('scroll')
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  // 選択された店舗のスタッフ一覧
+  const availableStaff = monthlyData.importedData?.staffRecords
+    .filter((r) => selectedStores.includes(r.storeName))
+    .map((r) => ({staffName: r.staffName, storeName: r.storeName})) || []
+
+  // ユニークなスタッフリスト
+  const uniqueStaffNames = [...new Set(availableStaff.map((s) => s.staffName))]
 
   // 店舗チェックボックスの切り替え
   const toggleStore = (storeName: StoreName) => {
@@ -91,114 +185,284 @@ export const SlidesView = () => {
     }
   }
 
+  // スタッフフィルタの切り替え
+  const toggleStaff = (staffName: string) => {
+    if (selectedStaffNames.includes(staffName)) {
+      setSelectedStaffNames(selectedStaffNames.filter((s) => s !== staffName))
+    } else {
+      setSelectedStaffNames([...selectedStaffNames, staffName])
+    }
+  }
+
+  // 全画面トグル
+  const toggleFullscreen = useCallback(() => {
+    if (!document.fullscreenElement && containerRef.current) {
+      containerRef.current.requestFullscreen().then(() => setIsFullscreen(true))
+    } else if (document.fullscreenElement) {
+      document.exitFullscreen().then(() => setIsFullscreen(false))
+    }
+  }, [])
+
+  // 全画面解除の検知
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement)
+    }
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
+  }, [])
+
+  // ページ切替モードのキーボード対応
+  useEffect(() => {
+    if (viewMode !== 'pagination') return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault()
+        setCurrentSlide((prev) => Math.min(prev + 1, TOTAL_SLIDES - 1))
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault()
+        setCurrentSlide((prev) => Math.max(prev - 1, 0))
+      } else if (e.key === 'Escape' && isFullscreen) {
+        document.exitFullscreen()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [viewMode, isFullscreen])
+
+  // 共通props
+  const commonProps = {selectedStores, selectedStaffNames}
+  const toggleProps = {showCurrentMonth, showCumulativeAvg}
+
+  // スライド配列を定義（10枚構成）
+  const slides = [
+    <Slide1TitleSlide key="s1" />,
+    <Slide2TableOfContents key="s2" />,
+    <Slide3OverallSummary key="s3" {...commonProps} />,
+    <Slide4MetricComparison key="s4" metric="客単価" {...commonProps} />,
+    <Slide5MetricComparison key="s5" metric="稼働率" {...commonProps} />,
+    <Slide6MetricComparison key="s6" metric="再来率" {...commonProps} />,
+    <Slide7AllMetricsComparison key="s7" {...commonProps} />,
+    <Slide8StaffPerformanceTable key="s8" {...commonProps} />,
+    <Slide9StaffUtilizationChart key="s9" {...commonProps} {...toggleProps} />,
+    <Slide10CustomerVoice key="s10" />,
+  ]
+
   return (
-    <div className="w-full bg-gray-100 py-8 pb-24">
-      {/* グローバル店舗フィルタ（画面下部固定） */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white shadow-2xl border-t-2 border-purple-600 p-4 z-50">
-        <div className="max-w-6xl mx-auto flex items-center justify-center gap-4">
-          <span className="text-sm font-bold text-gray-700">店舗フィルタ:</span>
-          <div className="flex gap-4 items-center">
-            {allStores.map((storeName) => (
-              <label key={storeName} className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-3 py-2 rounded">
-                <input
-                  type="checkbox"
-                  checked={selectedStores.includes(storeName)}
-                  onChange={() => toggleStore(storeName)}
-                  className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
-                />
-                <span className="text-sm font-medium text-gray-700">{storeName}</span>
-              </label>
+    <div
+      ref={containerRef}
+      className={`w-full bg-gray-100 ${isFullscreen ? 'overflow-auto' : ''}`}
+      style={isFullscreen ? {padding: '0'} : {}}
+    >
+      {/* コントロールバー（上部） */}
+      {!isFullscreen && (
+        <div className="sticky top-0 z-40 bg-white shadow-sm border-b px-4 py-2">
+          <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
+            {/* モード切替 */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold text-gray-700">表示:</span>
+              <button
+                onClick={() => setViewMode('scroll')}
+                className={`px-3 py-1.5 text-sm rounded ${
+                  viewMode === 'scroll' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                スクロール
+              </button>
+              <button
+                onClick={() => setViewMode('pagination')}
+                className={`px-3 py-1.5 text-sm rounded ${
+                  viewMode === 'pagination' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                ページ切替
+              </button>
+            </div>
+
+            {/* 全画面ボタン */}
+            <button
+              onClick={toggleFullscreen}
+              className="px-3 py-1.5 text-sm bg-gray-800 text-white rounded hover:bg-gray-700"
+            >
+              全画面
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 全画面中のコントロール */}
+      {isFullscreen && (
+        <div className="fixed top-0 left-0 right-0 z-50 bg-black/80 text-white px-4 py-2 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setViewMode('scroll')}
+              className={`px-3 py-1 text-sm rounded ${viewMode === 'scroll' ? 'bg-purple-600' : 'bg-gray-700 hover:bg-gray-600'}`}
+            >
+              スクロール
+            </button>
+            <button
+              onClick={() => setViewMode('pagination')}
+              className={`px-3 py-1 text-sm rounded ${viewMode === 'pagination' ? 'bg-purple-600' : 'bg-gray-700 hover:bg-gray-600'}`}
+            >
+              ページ切替
+            </button>
+          </div>
+          {viewMode === 'pagination' && (
+            <span className="text-sm">
+              {currentSlide + 1} / {TOTAL_SLIDES}
+            </span>
+          )}
+          <button onClick={toggleFullscreen} className="px-3 py-1 text-sm bg-red-600 rounded hover:bg-red-500">
+            全画面解除 (Esc)
+          </button>
+        </div>
+      )}
+
+      {/* スライドコンテンツ */}
+      <div className={`${isFullscreen ? 'pt-12' : 'py-8 pb-24'}`}>
+        {viewMode === 'scroll' ? (
+          // スクロールモード
+          <div className="max-w-6xl mx-auto space-y-8">
+            {slides.map((slide, i) => (
+              <SlideContainer key={i} slideNumber={i + 1}>
+                {slide}
+              </SlideContainer>
             ))}
           </div>
-          {selectedStores.length === 0 && (
-            <span className="text-sm text-red-500 font-medium">※ 店舗を選択してください</span>
-          )}
+        ) : (
+          // ページ切替モード
+          <div className="max-w-6xl mx-auto">
+            <SlideContainer slideNumber={currentSlide + 1}>
+              {slides[currentSlide]}
+            </SlideContainer>
+
+            {/* ナビゲーション */}
+            <div className="flex items-center justify-center gap-4 mt-4">
+              <button
+                onClick={() => setCurrentSlide((prev) => Math.max(prev - 1, 0))}
+                disabled={currentSlide === 0}
+                className="px-4 py-2 bg-white rounded shadow disabled:opacity-50 hover:bg-gray-50"
+              >
+                前へ
+              </button>
+
+              {/* スライド番号インジケータ */}
+              <div className="flex gap-1">
+                {slides.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentSlide(i)}
+                    className={`w-3 h-3 rounded-full ${
+                      i === currentSlide ? 'bg-purple-600' : 'bg-gray-300 hover:bg-gray-400'
+                    }`}
+                  />
+                ))}
+              </div>
+
+              <button
+                onClick={() => setCurrentSlide((prev) => Math.min(prev + 1, TOTAL_SLIDES - 1))}
+                disabled={currentSlide === TOTAL_SLIDES - 1}
+                className="px-4 py-2 bg-white rounded shadow disabled:opacity-50 hover:bg-gray-50"
+              >
+                次へ
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* グローバルフィルタバー（画面下部固定、全画面時は非表示） */}
+      {!isFullscreen && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white shadow-2xl border-t-2 border-purple-600 p-3 z-50">
+          <div className="max-w-6xl mx-auto flex items-center justify-center gap-4 flex-wrap">
+            {/* 店舗フィルタ */}
+            <span className="text-sm font-bold text-gray-700">店舗:</span>
+            <div className="flex gap-3 items-center">
+              {allStores.map((storeName) => (
+                <label key={storeName} className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded">
+                  <input
+                    type="checkbox"
+                    checked={selectedStores.includes(storeName)}
+                    onChange={() => toggleStore(storeName)}
+                    className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
+                  />
+                  <span className="text-sm font-medium text-gray-700">{storeName}</span>
+                </label>
+              ))}
+            </div>
+
+            <div className="w-px h-6 bg-gray-300" />
+
+            {/* スタッフフィルタ */}
+            <div className="relative">
+              <button
+                onClick={() => setIsStaffFilterOpen(!isStaffFilterOpen)}
+                className="text-sm font-bold text-gray-700 flex items-center gap-1 hover:text-purple-600"
+              >
+                スタッフ: {selectedStaffNames.length === 0 ? '全員' : `${selectedStaffNames.length}名`}
+                <span className="text-xs">{isStaffFilterOpen ? '▲' : '▼'}</span>
+              </button>
+              {isStaffFilterOpen && (
+                <div className="absolute bottom-full mb-2 left-0 bg-white border rounded-lg shadow-xl p-3 max-h-60 overflow-y-auto min-w-[200px]">
+                  <button
+                    onClick={() => setSelectedStaffNames([])}
+                    className="text-xs text-purple-600 hover:underline mb-2 block"
+                  >
+                    全員表示にリセット
+                  </button>
+                  {uniqueStaffNames.map((name) => (
+                    <label key={name} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 px-2 py-1 rounded text-sm">
+                      <input
+                        type="checkbox"
+                        checked={selectedStaffNames.includes(name)}
+                        onChange={() => toggleStaff(name)}
+                        className="w-3.5 h-3.5 text-purple-600 rounded"
+                      />
+                      <span>{name}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="w-px h-6 bg-gray-300" />
+
+            {/* 当月/累計平均トグル */}
+            <span className="text-sm font-bold text-gray-700">表示:</span>
+            <label className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded">
+              <input
+                type="checkbox"
+                checked={showCurrentMonth}
+                onChange={(e) => setShowCurrentMonth(e.target.checked)}
+                className="w-4 h-4 text-red-600 rounded focus:ring-red-500"
+              />
+              <span className="text-sm font-medium text-gray-700">当月</span>
+            </label>
+            <label className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded">
+              <input
+                type="checkbox"
+                checked={showCumulativeAvg}
+                onChange={(e) => setShowCumulativeAvg(e.target.checked)}
+                className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
+              />
+              <span className="text-sm font-medium text-gray-700">累計平均</span>
+            </label>
+
+            {selectedStores.length === 0 && (
+              <span className="text-sm text-red-500 font-medium">※ 店舗を選択してください</span>
+            )}
+          </div>
         </div>
-      </div>
-
-      <div className="max-w-6xl mx-auto space-y-8">
-        {/* スライド1 */}
-        <SlideContainer slideNumber={1}>
-          <Slide1TitleSlide />
-        </SlideContainer>
-
-        {/* スライド2 */}
-        <SlideContainer slideNumber={2}>
-          <Slide2TableOfContents />
-        </SlideContainer>
-
-        {/* スライド3 */}
-        <SlideContainer slideNumber={3}>
-          <Slide3OverallSummary selectedStores={selectedStores} />
-        </SlideContainer>
-
-        {/* スライド4-7: 指標別比較 */}
-        <SlideContainer slideNumber={4}>
-          <Slide4MetricComparison metric="客単価" selectedStores={selectedStores} />
-        </SlideContainer>
-
-        <SlideContainer slideNumber={5}>
-          <Slide5MetricComparison metric="稼働率" selectedStores={selectedStores} />
-        </SlideContainer>
-
-        <SlideContainer slideNumber={6}>
-          <Slide6MetricComparison metric="再来率" selectedStores={selectedStores} />
-        </SlideContainer>
-
-        <SlideContainer slideNumber={7}>
-          <Slide7MetricComparison metric="失客率" selectedStores={selectedStores} />
-        </SlideContainer>
-
-        {/* スライド8: 全指標統合 */}
-        <SlideContainer slideNumber={8}>
-          <Slide7_1AllMetricsComparison selectedStores={selectedStores} />
-        </SlideContainer>
-
-        {/* スライド9 */}
-        <SlideContainer slideNumber={9}>
-          <Slide8StaffPerformanceTable selectedStores={selectedStores} />
-        </SlideContainer>
-
-        {/* スライド10 */}
-        <SlideContainer slideNumber={10}>
-          <Slide9StaffUtilizationChart selectedStores={selectedStores} />
-        </SlideContainer>
-
-        {/* スライド11-14: 先月比 */}
-        <SlideContainer slideNumber={11}>
-          <Slide10PreviousMonthComparison1Table selectedStores={selectedStores} />
-        </SlideContainer>
-
-        <SlideContainer slideNumber={12}>
-          <Slide11PreviousMonthComparison1Chart selectedStores={selectedStores} />
-        </SlideContainer>
-
-        <SlideContainer slideNumber={13}>
-          <Slide12PreviousMonthComparison2Table selectedStores={selectedStores} />
-        </SlideContainer>
-
-        <SlideContainer slideNumber={14}>
-          <Slide13PreviousMonthComparison2Chart selectedStores={selectedStores} />
-        </SlideContainer>
-
-        {/* スライド15 */}
-        <SlideContainer slideNumber={15}>
-          <Slide14Spare />
-        </SlideContainer>
-
-        {/* スライド16 */}
-        <SlideContainer slideNumber={16}>
-          <Slide15CustomerVoice />
-        </SlideContainer>
-      </div>
+      )}
     </div>
   )
 }
 
-// スライドコンテナ（最小高さのみ設定、縦幅は自動調整）
-const SlideContainer = ({ slideNumber, children }: { slideNumber: number; children: React.ReactNode }) => {
+// スライドコンテナ
+const SlideContainer = ({slideNumber, children}: {slideNumber: number; children: React.ReactNode}) => {
   return (
-    <div className="bg-white shadow-xl rounded-lg overflow-hidden relative" style={{ minHeight: '600px' }}>
+    <div className="bg-white shadow-xl rounded-lg overflow-hidden relative" style={{minHeight: '600px'}}>
       <div className="absolute top-4 right-4 bg-gray-800 text-white px-3 py-1 rounded text-sm font-medium z-10">
         {slideNumber} / {TOTAL_SLIDES}
       </div>
@@ -208,14 +472,45 @@ const SlideContainer = ({ slideNumber, children }: { slideNumber: number; childr
 }
 
 // ============================================================
+// 共通Props型
+// ============================================================
+
+type StoreFilterProps = {
+  selectedStores: StoreName[]
+  selectedStaffNames: string[]
+}
+
+type ToggleProps = {
+  showCurrentMonth: boolean
+  showCumulativeAvg: boolean
+}
+
+// スタッフリストをフィルタリングするヘルパー
+const filterStaffList = (
+  staffRecords: StaffRecord[],
+  selectedStores: StoreName[],
+  selectedStaffNames: string[]
+): StaffRecord[] => {
+  let filtered = staffRecords.filter((s) => selectedStores.includes(s.storeName))
+  if (selectedStaffNames.length > 0) {
+    filtered = filtered.filter((s) => selectedStaffNames.includes(s.staffName))
+  }
+  return filtered
+}
+
+// ============================================================
 // 個別スライドコンポーネント
 // ============================================================
 
 const Slide1TitleSlide = () => {
+  const {currentYearMonth} = useDataContext()
+  const year = currentYearMonth.split('-')[0]
+  const month = parseInt(currentYearMonth.split('-')[1])
+
   return (
     <div className="h-full min-h-[600px] flex flex-col items-center justify-center bg-gradient-to-br from-red-500 to-pink-600 text-white">
       <h1 className="text-5xl font-bold mb-4">月次業績レポート</h1>
-      <p className="text-2xl">2026年2月</p>
+      <p className="text-2xl">{year}年{month}月</p>
       <p className="text-lg mt-8">asian relaxation villa</p>
     </div>
   )
@@ -232,15 +527,15 @@ const Slide2TableOfContents = () => {
         </div>
         <div className="flex items-center gap-3">
           <span className="font-bold text-red-500">2.</span>
-          <span>店舗別業績比較（客単価・稼働率・再来率・失客率）</span>
+          <span>店舗別業績比較（客単価・稼働率・再来率）</span>
         </div>
         <div className="flex items-center gap-3">
           <span className="font-bold text-red-500">3.</span>
-          <span>スタッフ別パフォーマンス</span>
+          <span>全指標統合グラフ</span>
         </div>
         <div className="flex items-center gap-3">
           <span className="font-bold text-red-500">4.</span>
-          <span>先月比分析</span>
+          <span>スタッフ別パフォーマンス・稼働率</span>
         </div>
         <div className="flex items-center gap-3">
           <span className="font-bold text-red-500">5.</span>
@@ -251,23 +546,30 @@ const Slide2TableOfContents = () => {
   )
 }
 
-const Slide3OverallSummary = ({ selectedStores }: { selectedStores: StoreName[] }) => {
-  const { monthlyData } = useDataContext()
+const Slide3OverallSummary = ({selectedStores}: StoreFilterProps) => {
+  const {monthlyData} = useDataContext()
   const stores = monthlyData.importedData?.storeTotals || []
   const storesNames: StoreName[] = ['新潟西店', '三条店', '新潟中央店']
-
-  // 選択された店舗でフィルタリング
   const filteredStores = storesNames.filter((s) => selectedStores.includes(s))
 
-  // 店舗別の再来率を計算する関数
-  const calculateStoreReturnRate = (storeName: StoreName): number => {
+  // 店舗別の再来率を計算
+  const calcStoreReturnRate = (storeName: StoreName): number => {
     const storeRecords = monthlyData.importedData?.staffRecords.filter((r) => r.storeName === storeName) || []
     if (storeRecords.length === 0) return 0
     const totalCustomers = storeRecords.reduce((sum, r) => sum + r.customerCount, 0)
     const totalNewCustomers = storeRecords.reduce((sum, r) => sum + r.newCustomerCount, 0)
     if (totalCustomers === 0) return 0
-    const returningCustomers = totalCustomers - totalNewCustomers
-    return Math.round((returningCustomers / totalCustomers) * 100 * 10) / 10
+    return Math.round(((totalCustomers - totalNewCustomers) / totalCustomers) * 100 * 10) / 10
+  }
+
+  // 店舗稼働率をスタッフ平均で算出
+  const calcStoreUtilization = (storeName: StoreName): number => {
+    const staffData = monthlyData.manualData.staffManualData?.filter(
+      (s) => s.storeName === storeName && s.utilizationRate !== null && s.utilizationRate !== undefined
+    ) || []
+    if (staffData.length === 0) return 0
+    const total = staffData.reduce((sum, s) => sum + (s.utilizationRate || 0), 0)
+    return Math.round((total / staffData.length) * 10) / 10
   }
 
   return (
@@ -285,32 +587,24 @@ const Slide3OverallSummary = ({ selectedStores }: { selectedStores: StoreName[] 
                 <tr>
                   <th className="p-2.5 border">店舗</th>
                   <th className="p-2.5 border">売上</th>
-                  <th className="p-2.5 border">稼働率</th>
+                  <th className="p-2.5 border">稼働率 <span className="text-xs font-normal">※スタッフ平均</span></th>
                   <th className="p-2.5 border">客単価</th>
                   <th className="p-2.5 border">再来率</th>
-                  <th className="p-2.5 border">失客率</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredStores.map((storeName, i) => {
                   const store = stores.find((s) => s.storeName === storeName)
-                  const kpi = monthlyData.manualData.storeKpis?.find((k) => k.storeName === storeName)
-                  const returnRate = calculateStoreReturnRate(storeName)
+                  const returnRate = calcStoreReturnRate(storeName)
+                  const utilization = calcStoreUtilization(storeName)
 
                   return (
                     <tr key={i} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
                       <td className="p-2.5 border font-medium">{storeName}</td>
                       <td className="p-2.5 border text-right">¥{(store?.sales || 0).toLocaleString()}</td>
-                      <td className="p-2.5 border text-right">
-                        {kpi?.utilizationRate !== null && kpi?.utilizationRate !== undefined
-                          ? `${kpi.utilizationRate}%`
-                          : '-'}
-                      </td>
+                      <td className="p-2.5 border text-right">{utilization > 0 ? `${utilization}%` : '-'}</td>
                       <td className="p-2.5 border text-right">¥{(store?.unitPrice || 0).toLocaleString()}</td>
                       <td className="p-2.5 border text-right">{returnRate}%</td>
-                      <td className="p-2.5 border text-right">
-                        {kpi?.churnRate !== null && kpi?.churnRate !== undefined ? `${kpi.churnRate}%` : '-'}
-                      </td>
                     </tr>
                   )
                 })}
@@ -336,54 +630,35 @@ const Slide3OverallSummary = ({ selectedStores }: { selectedStores: StoreName[] 
   )
 }
 
-// 指標別3店舗年間推移グラフ（スライド4-7）
-const Slide4MetricComparison = ({
+// 指標別3店舗年間推移グラフ（スライド4-6）
+const MetricComparisonSlide = ({
   metric,
   selectedStores,
 }: {
-  metric: '客単価' | '稼働率' | '再来率' | '失客率'
+  metric: '客単価' | '稼働率' | '再来率'
   selectedStores: StoreName[]
 }) => {
-  const { currentYearMonth } = useDataContext()
-
-  // 現在の年を取得
+  const {currentYearMonth} = useDataContext()
   const currentYear = currentYearMonth.split('-')[0]
 
-  // 1-12月のデータを全て取得
-  const data = Array.from({ length: 12 }, (_, i) => {
+  const data = Array.from({length: 12}, (_, i) => {
     const month = String(i + 1).padStart(2, '0')
     const yearMonth = `${currentYear}-${month}` as YearMonth
     const monthData = getMonthlyData(yearMonth)
 
-    const result: any = {
-      month: `${i + 1}月`,
-    }
-
-    // 選択された店舗のみ指標値を取得
+    const result: any = {month: `${i + 1}月`}
     selectedStores.forEach((storeName) => {
-      const value = getStoreMetricFromMonthlyData(monthData, storeName, metric)
-      result[storeName] = value
-
-      // デバッグ用（最初の月のみ）
-      if (i === 0 && value) {
-        console.log(`[${metric}] 1月 ${storeName}: ${value}`)
-      }
+      result[storeName] = getStoreMetricFromMonthlyData(monthData, storeName, metric)
     })
-
     return result
   })
 
-  // 全データが0かどうか確認
-  const hasData = data.some((d) => selectedStores.some((store) => {
-    const value = d[store]
-    return value !== undefined && value !== null && value > 0
-  }))
-
-  // デバッグ用：最初の月のデータをログ出力
-  if (data.length > 0 && selectedStores.length > 0) {
-    console.log(`[${metric}] 1月のデータ:`, data[0], 'hasData:', hasData)
-  }
-
+  const hasData = data.some((d) =>
+    selectedStores.some((store) => {
+      const value = d[store]
+      return value !== undefined && value !== null && value > 0
+    })
+  )
 
   return (
     <div className="p-12">
@@ -400,8 +675,8 @@ const Slide4MetricComparison = ({
         <ResponsiveContainer width="100%" height={500}>
           <ComposedChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" style={{ fontSize: '14px' }} />
-            <YAxis style={{ fontSize: '14px' }} />
+            <XAxis dataKey="month" style={{fontSize: '14px'}} />
+            <YAxis style={{fontSize: '14px'}} />
             <Tooltip />
             <Legend />
             {selectedStores.includes('新潟西店') && (
@@ -420,129 +695,133 @@ const Slide4MetricComparison = ({
   )
 }
 
-const Slide5MetricComparison = ({
-  metric,
-  selectedStores,
-}: {
-  metric: '客単価' | '稼働率' | '再来率' | '失客率'
-  selectedStores: StoreName[]
-}) => <Slide4MetricComparison metric={metric} selectedStores={selectedStores} />
-const Slide6MetricComparison = ({
-  metric,
-  selectedStores,
-}: {
-  metric: '客単価' | '稼働率' | '再来率' | '失客率'
-  selectedStores: StoreName[]
-}) => <Slide4MetricComparison metric={metric} selectedStores={selectedStores} />
-const Slide7MetricComparison = ({
-  metric,
-  selectedStores,
-}: {
-  metric: '客単価' | '稼働率' | '再来率' | '失客率'
-  selectedStores: StoreName[]
-}) => <Slide4MetricComparison metric={metric} selectedStores={selectedStores} />
+const Slide4MetricComparison = ({metric, selectedStores}: StoreFilterProps & {metric: '客単価' | '稼働率' | '再来率'}) => (
+  <MetricComparisonSlide metric={metric} selectedStores={selectedStores} />
+)
+const Slide5MetricComparison = ({metric, selectedStores}: StoreFilterProps & {metric: '客単価' | '稼働率' | '再来率'}) => (
+  <MetricComparisonSlide metric={metric} selectedStores={selectedStores} />
+)
+const Slide6MetricComparison = ({metric, selectedStores}: StoreFilterProps & {metric: '客単価' | '稼働率' | '再来率'}) => (
+  <MetricComparisonSlide metric={metric} selectedStores={selectedStores} />
+)
 
-const Slide7_1AllMetricsComparison = ({ selectedStores }: { selectedStores: StoreName[] }) => {
-  const { currentYearMonth } = useDataContext()
-
-  // 現在の年を取得
+// Phase4: 統合グラフ（ComposedChart: 客単価=Bar左軸円、稼働率/再来率=Line右軸%）
+const Slide7AllMetricsComparison = ({selectedStores}: StoreFilterProps) => {
+  const {currentYearMonth} = useDataContext()
   const currentYear = currentYearMonth.split('-')[0]
-  const metrics: Array<'客単価' | '稼働率' | '再来率' | '失客率'> = ['客単価', '稼働率', '再来率', '失客率']
+  const metrics: Array<'客単価' | '稼働率' | '再来率'> = ['客単価', '稼働率', '再来率']
 
-  // 各店舗の各指標の年間データを取得
-  const data = Array.from({ length: 12 }, (_, i) => {
+  const data = Array.from({length: 12}, (_, i) => {
     const month = String(i + 1).padStart(2, '0')
     const yearMonth = `${currentYear}-${month}` as YearMonth
     const monthData = getMonthlyData(yearMonth)
 
-    const result: any = {
-      month: `${i + 1}月`,
-    }
-
-    // 選択された店舗のみ、各指標を取得
+    const result: any = {month: `${i + 1}月`}
     selectedStores.forEach((storeName) => {
       metrics.forEach((metric) => {
-        const value = getStoreMetricFromMonthlyData(monthData, storeName, metric)
-        // 店舗名_指標名の形式でキーを作成
-        result[`${storeName}_${metric}`] = value
+        result[`${storeName}_${metric}`] = getStoreMetricFromMonthlyData(monthData, storeName, metric)
       })
     })
-
     return result
   })
 
-  // データが存在するか確認
   const hasData = data.some((d) =>
     selectedStores.some((store) =>
       metrics.some((metric) => {
-        const key = `${store}_${metric}`
-        const value = d[key]
+        const value = d[`${store}_${metric}`]
         return value !== undefined && value !== null && value > 0
       })
     )
   )
 
-  // 各指標の色定義
-  const metricColors: Record<string, string> = {
-    客単価: '#DC3545', // 赤
-    稼働率: '#4285F4', // 青
-    再来率: '#34A853', // 緑
-    失客率: '#FFA500', // オレンジ
+  // 店舗の色定義
+  const storeColors: Record<StoreName, string> = {
+    新潟西店: '#DC3545',
+    三条店: '#4285F4',
+    新潟中央店: '#34A853',
+  }
+
+  // 稼働率/再来率のダッシュパターン
+  const metricDash: Record<string, string> = {
+    稼働率: '5 5',
+    再来率: '10 3',
   }
 
   return (
     <div className="p-12">
       <h2 className="text-3xl font-bold mb-8 text-gray-800">全指標 年間推移（統合）</h2>
       {selectedStores.length === 0 ? (
-        <div className="flex items-center justify-center" style={{ height: '500px' }}>
+        <div className="flex items-center justify-center" style={{height: '500px'}}>
           <p className="text-gray-500 text-lg">店舗を選択してください</p>
         </div>
       ) : !hasData ? (
-        <div className="flex items-center justify-center" style={{ height: '500px' }}>
+        <div className="flex items-center justify-center" style={{height: '500px'}}>
           <p className="text-gray-500 text-lg">データがありません。モックデータを読み込んでください。</p>
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={500}>
           <ComposedChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" style={{ fontSize: '14px' }} />
-            <YAxis style={{ fontSize: '14px' }} />
+            <XAxis dataKey="month" style={{fontSize: '14px'}} />
+            <YAxis yAxisId="left" label={{value: '円', angle: -90, position: 'insideLeft'}} style={{fontSize: '12px'}} />
+            <YAxis yAxisId="right" orientation="right" label={{value: '%', angle: 90, position: 'insideRight'}} style={{fontSize: '12px'}} />
             <Tooltip />
-            <Legend wrapperStyle={{ fontSize: '12px' }} />
-            {/* 選択された店舗 × 4指標のLineを全て描画 */}
-            {selectedStores.map((storeName) =>
-              metrics.map((metric) => {
-                const dataKey = `${storeName}_${metric}`
-                const color = metricColors[metric]
-                return (
-                  <Line
-                    key={dataKey}
-                    type="monotone"
-                    dataKey={dataKey}
-                    stroke={color}
-                    strokeWidth={2}
-                    name={`${storeName} - ${metric}`}
-                    dot={{ r: 3 }}
-                  />
-                )
-              })
-            )}
+            <Legend wrapperStyle={{fontSize: '11px'}} />
+            {/* 客単価 = Bar（左軸・円） */}
+            {selectedStores.map((storeName) => (
+              <Bar
+                key={`${storeName}_客単価`}
+                yAxisId="left"
+                dataKey={`${storeName}_客単価`}
+                fill={storeColors[storeName]}
+                name={`${storeName} 客単価`}
+                opacity={0.6}
+              />
+            ))}
+            {/* 稼働率 = Line（右軸・%） */}
+            {selectedStores.map((storeName) => (
+              <Line
+                key={`${storeName}_稼働率`}
+                yAxisId="right"
+                type="monotone"
+                dataKey={`${storeName}_稼働率`}
+                stroke={storeColors[storeName]}
+                strokeWidth={2}
+                strokeDasharray={metricDash['稼働率']}
+                name={`${storeName} 稼働率`}
+                dot={{r: 3}}
+              />
+            ))}
+            {/* 再来率 = Line（右軸・%） */}
+            {selectedStores.map((storeName) => (
+              <Line
+                key={`${storeName}_再来率`}
+                yAxisId="right"
+                type="monotone"
+                dataKey={`${storeName}_再来率`}
+                stroke={storeColors[storeName]}
+                strokeWidth={2}
+                strokeDasharray={metricDash['再来率']}
+                name={`${storeName} 再来率`}
+                dot={{r: 3, strokeWidth: 2, fill: '#fff'}}
+              />
+            ))}
           </ComposedChart>
         </ResponsiveContainer>
       )}
-      <div className="mt-4 text-xs text-gray-500">
-        <p>※ 各指標の単位は異なります（客単価: 円、稼働率/再来率/失客率: %）</p>
+      <div className="mt-4 text-xs text-gray-500 flex gap-6">
+        <p>棒グラフ: 客単価（左軸・円）</p>
+        <p>破線: 稼働率（右軸・%）</p>
+        <p>点線: 再来率（右軸・%）</p>
       </div>
     </div>
   )
 }
 
-const Slide8StaffPerformanceTable = ({ selectedStores }: { selectedStores: StoreName[] }) => {
-  const { monthlyData } = useDataContext()
+const Slide8StaffPerformanceTable = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
+  const {monthlyData} = useDataContext()
   const allStaffList = monthlyData.importedData?.staffRecords || []
-
-  // 選択された店舗のスタッフでフィルタリング
-  const staffList = allStaffList.filter((s) => selectedStores.includes(s.storeName)).slice(0, 10)
+  const staffList = filterStaffList(allStaffList, selectedStores, selectedStaffNames).slice(0, 15)
 
   return (
     <div className="h-full p-8 overflow-y-auto">
@@ -570,21 +849,12 @@ const Slide8StaffPerformanceTable = ({ selectedStores }: { selectedStores: Store
             </thead>
             <tbody>
               {staffList.map((staff, i) => {
-                // 手動入力データを取得
                 const manualData = monthlyData.manualData.staffManualData?.find(
                   (m) => m.staffName === staff.staffName && m.storeName === staff.storeName
                 )
-
-                // 指名割合を計算
                 const nominationRate =
-                  staff.customerCount > 0
-                    ? ((staff.nominationCount / staff.customerCount) * 100).toFixed(1)
-                    : '-'
-
-                // 再来率を計算
+                  staff.customerCount > 0 ? ((staff.nominationCount / staff.customerCount) * 100).toFixed(1) : '-'
                 const returnRate = calculateStaffReturnRate(staff)
-
-                // CS登録率を計算
                 const csRate =
                   staff.customerCount > 0 && manualData?.csRegistrationCount
                     ? (((manualData.csRegistrationCount || 0) / staff.customerCount) * 100).toFixed(1)
@@ -617,30 +887,36 @@ const Slide8StaffPerformanceTable = ({ selectedStores }: { selectedStores: Store
   )
 }
 
-// スタッフ稼働率縦棒グラフ（スライド9）
-const Slide9StaffUtilizationChart = ({ selectedStores }: { selectedStores: StoreName[] }) => {
-  const { currentYearMonth, availableMonths } = useDataContext()
+// スタッフ稼働率（当月/累計平均はグローバルトグル）
+const Slide9StaffUtilizationChart = ({selectedStores, selectedStaffNames, showCurrentMonth, showCumulativeAvg}: StoreFilterProps & ToggleProps) => {
+  const {currentYearMonth, availableMonths} = useDataContext()
   const [selectedMonth, setSelectedMonth] = useState<YearMonth>(currentYearMonth)
 
-  // 選択された月のデータを取得
   const selectedMonthData = getMonthlyData(selectedMonth)
 
-  // スタッフ稼働率データ準備（選択された店舗のみ）
-  const utilizationData =
+  // スタッフ稼働率データ
+  let utilizationData =
     selectedMonthData?.manualData.staffManualData
       ?.filter((u) => u.utilizationRate !== null && u.utilizationRate !== undefined)
       .filter((u) => selectedStores.includes(u.storeName))
       .map((u) => ({
         name: u.staffName,
-        稼働率: u.utilizationRate || 0,
+        ...(showCurrentMonth ? {稼働率: u.utilizationRate || 0} : {}),
         store: u.storeName,
+        ...(showCumulativeAvg
+          ? {累計平均: calculateStaffCumulativeAverage(u.staffName, u.storeName, selectedMonth, 'utilizationRate')}
+          : {}),
       })) || []
+
+  // スタッフフィルタ適用
+  if (selectedStaffNames.length > 0) {
+    utilizationData = utilizationData.filter((u) => selectedStaffNames.includes(u.name))
+  }
 
   return (
     <div className="p-12">
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex justify-between items-center mb-4">
         <h2 className="text-3xl font-bold text-gray-800">スタッフ稼働率</h2>
-        {/* スライド内月選択UI */}
         <select
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(e.target.value as YearMonth)}
@@ -653,22 +929,27 @@ const Slide9StaffUtilizationChart = ({ selectedStores }: { selectedStores: Store
           ))}
         </select>
       </div>
+
       {utilizationData.length === 0 ? (
-        <div className="flex items-center justify-center" style={{height: '500px'}}>
+        <div className="flex items-center justify-center" style={{height: '450px'}}>
           <p className="text-gray-500">
             {selectedStores.length === 0 ? '店舗を選択してください' : 'スタッフ稼働率データがありません'}
           </p>
         </div>
       ) : (
-        <ResponsiveContainer width="100%" height={500}>
+        <ResponsiveContainer width="100%" height={450}>
           <BarChart data={utilizationData}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" style={{ fontSize: '12px' }} angle={-45} textAnchor="end" height={100} />
-            <YAxis label={{ value: '稼働率 (%)', angle: -90, position: 'insideLeft' }} style={{ fontSize: '12px' }} />
+            <XAxis dataKey="name" style={{fontSize: '12px'}} angle={-45} textAnchor="end" height={100} />
+            <YAxis label={{value: '稼働率 (%)', angle: -90, position: 'insideLeft'}} style={{fontSize: '12px'}} />
             <Tooltip />
-            <Bar dataKey="稼働率" fill="#DC3545">
-              <LabelList dataKey="稼働率" position="top" style={{ fontSize: '11px' }} />
-            </Bar>
+            <Legend />
+            {showCurrentMonth && (
+              <Bar dataKey="稼働率" fill="#DC3545" name="当月">
+                <LabelList dataKey="稼働率" position="top" style={{fontSize: '11px'}} />
+              </Bar>
+            )}
+            {showCumulativeAvg && <Bar dataKey="累計平均" fill="#87CEEB" name="累計平均" />}
           </BarChart>
         </ResponsiveContainer>
       )}
@@ -676,296 +957,8 @@ const Slide9StaffUtilizationChart = ({ selectedStores }: { selectedStores: Store
   )
 }
 
-const Slide10PreviousMonthComparison1Table = ({ selectedStores }: { selectedStores: StoreName[] }) => {
-  const { monthlyData, currentYearMonth } = useDataContext()
-  const previousMonth = getPreviousMonth(currentYearMonth)
-  const previousMonthData = getMonthlyData(previousMonth)
-
-  const allStaffList = monthlyData.importedData?.staffRecords || []
-  // 選択された店舗のスタッフでフィルタリング
-  const staffList = allStaffList.filter((s) => selectedStores.includes(s.storeName))
-
-  return (
-    <div className="h-full p-8 overflow-y-auto">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">スタッフ別先月比①（売上金額/指名件数）</h2>
-      {!previousMonthData ? (
-        <div className="flex items-center justify-center" style={{height: '400px'}}>
-          <p className="text-gray-500 text-lg">前月データがありません</p>
-        </div>
-      ) : staffList.length === 0 ? (
-        <div className="flex items-center justify-center" style={{height: '400px'}}>
-          <p className="text-gray-500 text-lg">選択した店舗にスタッフデータがありません</p>
-        </div>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-xs">
-            <thead className="bg-purple-600 text-white">
-              <tr>
-                <th className="p-1.5 border">スタッフ</th>
-                <th className="p-1.5 border">店舗</th>
-                <th className="p-1.5 border">売上_今月</th>
-                <th className="p-1.5 border">売上_先月</th>
-                <th className="p-1.5 border">売上_差分</th>
-                <th className="p-1.5 border">指名_今月</th>
-                <th className="p-1.5 border">指名_先月</th>
-                <th className="p-1.5 border">指名_差分</th>
-              </tr>
-            </thead>
-            <tbody>
-              {staffList.map((staff, i) => {
-                const prevStaff = previousMonthData.importedData?.staffRecords.find(
-                  (s) => s.staffName === staff.staffName && s.storeName === staff.storeName
-                )
-                const salesDiff = staff.sales - (prevStaff?.sales || 0)
-                const nominationDiff = staff.nominationCount - (prevStaff?.nominationCount || 0)
-
-                return (
-                  <tr key={`${staff.staffName}-${staff.storeName}-${i}`} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                    <td className="p-1.5 border font-medium">{staff.staffName}</td>
-                    <td className="p-1.5 border text-xs">{staff.storeName}</td>
-                    <td className="p-1.5 border text-right">¥{staff.sales.toLocaleString()}</td>
-                    <td className="p-1.5 border text-right">¥{(prevStaff?.sales || 0).toLocaleString()}</td>
-                    <td
-                      className={`p-1.5 border text-right font-semibold ${salesDiff >= 0 ? 'text-green-600' : 'text-red-600'
-                        }`}
-                    >
-                      {salesDiff >= 0 ? '+' : ''}¥{salesDiff.toLocaleString()}
-                    </td>
-                    <td className="p-1.5 border text-right">{staff.nominationCount}</td>
-                    <td className="p-1.5 border text-right">{prevStaff?.nominationCount || 0}</td>
-                    <td
-                      className={`p-1.5 border text-right font-semibold ${nominationDiff >= 0 ? 'text-green-600' : 'text-red-600'
-                        }`}
-                    >
-                      {nominationDiff >= 0 ? '+' : ''}
-                      {nominationDiff}
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
-  )
-}
-
-const Slide11PreviousMonthComparison1Chart = ({ selectedStores }: { selectedStores: StoreName[] }) => {
-  const { monthlyData, currentYearMonth } = useDataContext()
-  const previousMonth = getPreviousMonth(currentYearMonth)
-  const previousMonthData = getMonthlyData(previousMonth)
-
-  // 選択された店舗のスタッフのみフィルタリング
-  const allStaffList = monthlyData.importedData?.staffRecords || []
-  const filteredStaffList =
-    selectedStores.length > 0
-      ? allStaffList.filter((staff) => selectedStores.includes(staff.storeName)).slice(0, 8)
-      : []
-
-  const data = filteredStaffList.map((staff) => {
-    const prevStaff = previousMonthData?.importedData?.staffRecords.find(
-      (s) => s.staffName === staff.staffName && s.storeName === staff.storeName
-    )
-    return {
-      name: staff.staffName,
-      売上_今月: staff.sales,
-      売上_先月: prevStaff?.sales || 0,
-      指名_今月: staff.nominationCount,
-      指名_先月: prevStaff?.nominationCount || 0,
-    }
-  })
-
-  return (
-    <div className="p-8">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">スタッフ別先月比グラフ①（売上金額/指名件数）</h2>
-
-      {!previousMonthData ? (
-        <div className="flex items-center justify-center" style={{height: '500px'}}>
-          <p className="text-gray-500 text-lg">前月データがありません</p>
-        </div>
-      ) : selectedStores.length === 0 ? (
-        <div className="flex items-center justify-center" style={{height: '500px'}}>
-          <p className="text-gray-500 text-lg">店舗を選択してください</p>
-        </div>
-      ) : (
-        <ResponsiveContainer width="100%" height={500}>
-          <ComposedChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} style={{ fontSize: '11px' }} />
-            <YAxis yAxisId="left" label={{ value: '売上金額', angle: -90, position: 'insideLeft' }} style={{ fontSize: '11px' }} />
-            <YAxis
-              yAxisId="right"
-              orientation="right"
-              label={{ value: '指名件数', angle: 90, position: 'insideRight' }}
-              style={{ fontSize: '11px' }}
-            />
-            <Tooltip />
-            <Legend />
-            <Bar yAxisId="left" dataKey="売上_今月" fill="#DC3545" name="売上（今月）" />
-            <Bar yAxisId="left" dataKey="売上_先月" fill="#FFA07A" name="売上（先月）" />
-            <Line yAxisId="right" type="monotone" dataKey="指名_今月" stroke="#4285F4" strokeWidth={2} name="指名（今月）" />
-            <Line yAxisId="right" type="monotone" dataKey="指名_先月" stroke="#87CEEB" strokeWidth={2} name="指名（先月）" />
-          </ComposedChart>
-        </ResponsiveContainer>
-      )}
-    </div>
-  )
-}
-
-const Slide12PreviousMonthComparison2Table = ({ selectedStores }: { selectedStores: StoreName[] }) => {
-  const { monthlyData, currentYearMonth } = useDataContext()
-  const previousMonth = getPreviousMonth(currentYearMonth)
-  const previousMonthData = getMonthlyData(previousMonth)
-
-  const allStaffList = monthlyData.importedData?.staffRecords || []
-  // 選択された店舗のスタッフでフィルタリング
-  const staffList = allStaffList.filter((s) => selectedStores.includes(s.storeName))
-
-  return (
-    <div className="h-full p-8 overflow-y-auto">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">スタッフ別先月比②（再来率/客単価）</h2>
-      {!previousMonthData ? (
-        <div className="flex items-center justify-center" style={{height: '400px'}}>
-          <p className="text-gray-500 text-lg">前月データがありません</p>
-        </div>
-      ) : staffList.length === 0 ? (
-        <div className="flex items-center justify-center" style={{height: '400px'}}>
-          <p className="text-gray-500 text-lg">選択した店舗にスタッフデータがありません</p>
-        </div>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-xs">
-            <thead className="bg-purple-600 text-white">
-              <tr>
-                <th className="p-1.5 border">スタッフ</th>
-                <th className="p-1.5 border">店舗</th>
-                <th className="p-1.5 border">再来率_今月</th>
-                <th className="p-1.5 border">再来率_先月</th>
-                <th className="p-1.5 border">再来率_差分</th>
-                <th className="p-1.5 border">客単価_今月</th>
-                <th className="p-1.5 border">客単価_先月</th>
-                <th className="p-1.5 border">客単価_差分</th>
-              </tr>
-            </thead>
-            <tbody>
-              {staffList.map((staff, i) => {
-                const prevStaff = previousMonthData.importedData?.staffRecords.find(
-                  (s) => s.staffName === staff.staffName && s.storeName === staff.storeName
-                )
-                const returnRateCurrent = calculateStaffReturnRate(staff)
-                const returnRatePrev = prevStaff ? calculateStaffReturnRate(prevStaff) : 0
-                const returnRateDiff = returnRateCurrent - returnRatePrev
-                const unitPriceDiff = staff.unitPrice - (prevStaff?.unitPrice || 0)
-
-                return (
-                  <tr key={`${staff.staffName}-${staff.storeName}-${i}`} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                    <td className="p-1.5 border font-medium">{staff.staffName}</td>
-                    <td className="p-1.5 border text-xs">{staff.storeName}</td>
-                    <td className="p-1.5 border text-right">{returnRateCurrent}%</td>
-                    <td className="p-1.5 border text-right">{returnRatePrev}%</td>
-                    <td
-                      className={`p-1.5 border text-right font-semibold ${returnRateDiff >= 0 ? 'text-green-600' : 'text-red-600'
-                        }`}
-                    >
-                      {returnRateDiff >= 0 ? '+' : ''}
-                      {returnRateDiff.toFixed(1)}%
-                    </td>
-                    <td className="p-1.5 border text-right">¥{staff.unitPrice.toLocaleString()}</td>
-                    <td className="p-1.5 border text-right">¥{(prevStaff?.unitPrice || 0).toLocaleString()}</td>
-                    <td
-                      className={`p-1.5 border text-right font-semibold ${unitPriceDiff >= 0 ? 'text-green-600' : 'text-red-600'
-                        }`}
-                    >
-                      {unitPriceDiff >= 0 ? '+' : ''}¥{unitPriceDiff.toLocaleString()}
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
-  )
-}
-
-const Slide13PreviousMonthComparison2Chart = ({ selectedStores }: { selectedStores: StoreName[] }) => {
-  const { monthlyData, currentYearMonth } = useDataContext()
-  const previousMonth = getPreviousMonth(currentYearMonth)
-  const previousMonthData = getMonthlyData(previousMonth)
-
-  // 選択された店舗のスタッフのみフィルタリング
-  const allStaffList = monthlyData.importedData?.staffRecords || []
-  const filteredStaffList =
-    selectedStores.length > 0
-      ? allStaffList.filter((staff) => selectedStores.includes(staff.storeName)).slice(0, 8)
-      : []
-
-  const data = filteredStaffList.map((staff) => {
-    const prevStaff = previousMonthData?.importedData?.staffRecords.find(
-      (s) => s.staffName === staff.staffName && s.storeName === staff.storeName
-    )
-    const returnRateCurrent = calculateStaffReturnRate(staff)
-    const returnRatePrev = prevStaff ? calculateStaffReturnRate(prevStaff) : 0
-
-    return {
-      name: staff.staffName,
-      客単価_今月: staff.unitPrice,
-      客単価_先月: prevStaff?.unitPrice || 0,
-      再来率_今月: returnRateCurrent,
-      再来率_先月: returnRatePrev,
-    }
-  })
-
-  return (
-    <div className="p-8">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">スタッフ別先月比グラフ②（再来率/客単価）</h2>
-
-      {!previousMonthData ? (
-        <div className="flex items-center justify-center" style={{height: '500px'}}>
-          <p className="text-gray-500 text-lg">前月データがありません</p>
-        </div>
-      ) : selectedStores.length === 0 ? (
-        <div className="flex items-center justify-center" style={{height: '500px'}}>
-          <p className="text-gray-500 text-lg">店舗を選択してください</p>
-        </div>
-      ) : (
-        <ResponsiveContainer width="100%" height={500}>
-          <ComposedChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} style={{ fontSize: '11px' }} />
-            <YAxis yAxisId="left" label={{ value: '客単価', angle: -90, position: 'insideLeft' }} style={{ fontSize: '11px' }} />
-            <YAxis
-              yAxisId="right"
-              orientation="right"
-              label={{ value: '再来率(%)', angle: 90, position: 'insideRight' }}
-              style={{ fontSize: '11px' }}
-            />
-            <Tooltip />
-            <Legend />
-            <Bar yAxisId="left" dataKey="客単価_今月" fill="#DC3545" name="客単価（今月）" />
-            <Bar yAxisId="left" dataKey="客単価_先月" fill="#FFA07A" name="客単価（先月）" />
-            <Line yAxisId="right" type="monotone" dataKey="再来率_今月" stroke="#4285F4" strokeWidth={2} name="再来率（今月）" />
-            <Line yAxisId="right" type="monotone" dataKey="再来率_先月" stroke="#87CEEB" strokeWidth={2} name="再来率（先月）" />
-          </ComposedChart>
-        </ResponsiveContainer>
-      )}
-    </div>
-  )
-}
-
-const Slide14Spare = () => {
-  return (
-    <div className="h-full p-12">
-      <h2 className="text-3xl font-bold mb-8 text-gray-800">予備ページ</h2>
-      <p className="text-gray-500">このページは予備用です</p>
-    </div>
-  )
-}
-
-const Slide15CustomerVoice = () => {
-  const { monthlyData } = useDataContext()
+const Slide10CustomerVoice = () => {
+  const {monthlyData} = useDataContext()
   const customerVoice = monthlyData.manualData.customerVoice.content
 
   return (

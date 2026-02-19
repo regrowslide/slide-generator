@@ -259,5 +259,32 @@ export const useDocumentManager = () => {
 
   const getDocumentsByPatient = useCallback((patientId: number) => documents.filter(d => d.patientId === patientId), [documents])
 
-  return {documents, addDocument, getDocumentsByPatient}
+  /** 複数のPDF URLを結合して1つのPDFとしてダウンロード */
+  const mergePdfsAndDownload = useCallback(async (pdfUrls: string[], fileName: string) => {
+    const {PDFDocument} = await import('pdf-lib')
+    const mergedPdf = await PDFDocument.create()
+
+    for (const url of pdfUrls) {
+      try {
+        const response = await fetch(url)
+        const pdfBytes = await response.arrayBuffer()
+        const pdf = await PDFDocument.load(pdfBytes)
+        const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices())
+        pages.forEach(page => mergedPdf.addPage(page))
+      } catch (e) {
+        console.error(`PDF読み込み失敗: ${url}`, e)
+      }
+    }
+
+    const mergedBytes = await mergedPdf.save()
+    const blob = new Blob([mergedBytes], {type: 'application/pdf'})
+    const downloadUrl = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = downloadUrl
+    a.download = fileName
+    a.click()
+    URL.revokeObjectURL(downloadUrl)
+  }, [])
+
+  return {documents, addDocument, getDocumentsByPatient, mergePdfsAndDownload}
 }

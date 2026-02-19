@@ -55,7 +55,7 @@ export default function DentalAppMock() {
     useExaminationManager()
   const {staff, addStaff, updateStaff, deleteStaff, reorderStaff} = useStaffManager()
   const {scoringHistory} = useScoringHistoryManager()
-  const {documents, addDocument} = useDocumentManager()
+  const {documents, addDocument, mergePdfsAndDownload} = useDocumentManager()
 
   // ナビゲーション
   const handleNavigate = (page: string) => {
@@ -375,6 +375,7 @@ export default function DentalAppMock() {
           <DocumentListPage
             documents={savedPdfDocuments}
             facilities={facilities}
+            onMergePdfs={mergePdfsAndDownload}
           />
         )
       default:

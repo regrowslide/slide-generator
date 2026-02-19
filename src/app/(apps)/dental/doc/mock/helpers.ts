@@ -76,6 +76,35 @@ export const calculateDocumentRequirements = ({
     reason: zaishikanSelected ? '在歯管が選択されています' : '在歯管が選択されていません',
   }
 
+  // 訪問歯科診療治療内容説明書: 歯訪（shihou）がONの場合に必要
+  result.doc_houmon_chiryou = {
+    ...DOCUMENT_TEMPLATES.doc_houmon_chiryou,
+    required: shihouSelected,
+    reason: shihouSelected ? '歯訪が選択されています' : '歯訪が選択されていません',
+  }
+
+  // 口腔機能精密検査記録用紙: 口腔機能低下症検査（koukuu_kensa）がONの場合に必要
+  const koukuuKensaSelected = !!procedureItems?.koukuu_kensa
+  result.doc_seimitsu_kensa = {
+    ...DOCUMENT_TEMPLATES.doc_seimitsu_kensa,
+    required: koukuuKensaSelected,
+    reason: koukuuKensaSelected ? '口腔機能低下症検査が選択されています' : '口腔機能低下症検査が選択されていません',
+  }
+
+  // 口腔機能管理計画書: 口腔機能低下症検査（koukuu_kensa）がONの場合に必要
+  result.doc_koukuu_kanri = {
+    ...DOCUMENT_TEMPLATES.doc_koukuu_kanri,
+    required: koukuuKensaSelected,
+    reason: koukuuKensaSelected ? '口腔機能低下症検査が選択されています' : '口腔機能低下症検査が選択されていません',
+  }
+
+  // 口腔衛生管理加算: 手動追加のため常にオプション表示
+  result.doc_kouei_kanri = {
+    ...DOCUMENT_TEMPLATES.doc_kouei_kanri,
+    required: false,
+    reason: '必要に応じて手動で作成してください',
+  }
+
   return result
 }
 

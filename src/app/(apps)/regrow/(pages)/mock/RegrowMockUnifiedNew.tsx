@@ -59,8 +59,8 @@ const RegrowMockContent = ({
     const stores: ('新潟西店' | '三条店' | '新潟中央店')[] = ['新潟西店', '三条店', '新潟中央店']
     stores.forEach((storeName) => {
       const kpi = monthlyData.manualData.storeKpis?.find((k) => k.storeName === storeName)
-      // 稼働率または失客率が未入力
-      if (!kpi || kpi.utilizationRate === null || kpi.churnRate === null) {
+      // 稼働率が未入力
+      if (!kpi || kpi.utilizationRate === null) {
         missingCount++
       }
     })

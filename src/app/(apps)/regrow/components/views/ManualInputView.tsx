@@ -139,24 +139,23 @@ export const ManualInputView = () => {
                   <h3 className="font-bold text-lg mb-3 text-gray-800">{store}</h3>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">稼働率 (%)</label>
-                      <input
-                        type="number"
-                        value={kpi?.utilizationRate ?? ''}
-                        onBlur={(e) =>
-                          handleSave(() =>
-                            updateStoreKpi(store, {
-                              utilizationRate: e.target.value ? Number(e.target.value) : null,
-                            })
-                          )
-                        }
-                        onChange={(e) =>
-                          updateStoreKpi(store, {
-                            utilizationRate: e.target.value ? Number(e.target.value) : null,
-                          })
-                        }
-                        className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-red-500"
-                      />
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        稼働率 (%) <span className="text-xs text-gray-500">※スタッフ平均で自動計算</span>
+                      </label>
+                      <div className="w-full px-3 py-2 border rounded bg-gray-50 text-gray-700 font-medium">
+                        {(() => {
+                          const staffData = monthlyData.manualData.staffManualData?.filter(
+                            (s) =>
+                              s.storeName === store &&
+                              s.utilizationRate !== null &&
+                              s.utilizationRate !== undefined
+                          ) || []
+                          if (staffData.length === 0) return '-'
+                          const avg =
+                            staffData.reduce((sum, s) => sum + (s.utilizationRate || 0), 0) / staffData.length
+                          return `${(Math.round(avg * 10) / 10).toFixed(1)}`
+                        })()}
+                      </div>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -165,26 +164,6 @@ export const ManualInputView = () => {
                       <div className="w-full px-3 py-2 border rounded bg-gray-50 text-gray-700 font-medium">
                         {calculateStoreReturnRate(store)}
                       </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">失客率 (%)</label>
-                      <input
-                        type="number"
-                        value={kpi?.churnRate ?? ''}
-                        onBlur={(e) =>
-                          handleSave(() =>
-                            updateStoreKpi(store, {
-                              churnRate: e.target.value ? Number(e.target.value) : null,
-                            })
-                          )
-                        }
-                        onChange={(e) =>
-                          updateStoreKpi(store, {
-                            churnRate: e.target.value ? Number(e.target.value) : null,
-                          })
-                        }
-                        className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-red-500"
-                      />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -304,7 +283,7 @@ export const ManualInputView = () => {
             className="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
           />
           <p className="text-sm text-gray-500 mt-2">
-            ※ この内容はスライド15「お客様の声」に表示されます
+            ※ この内容はスライド10「お客様の声」に表示されます
           </p>
         </div>
       )}

@@ -573,7 +573,7 @@ export const PatientEditPage = ({ patient, onSave, onBack }: PatientEditPageProp
 
               {/* 食事・服薬 */}
               <div className="text-sm font-bold text-gray-900 mb-2 border-b pb-1 mt-4">食事・服薬</div>
-              <div className="text-xs text-gray-500 mb-1">食形態</div>
+              <div className="text-xs text-gray-500 mb-1">食事形態</div>
               <RadioGroup
                 label="主食"
                 code="JZ12-1/JZ12-2/JZ12-3"

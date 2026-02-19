@@ -163,7 +163,7 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
         requiredRole: 'doctor',
         requiredQualification: null,
         conditionLabel: '同一日かつ同一施設で1人のみ診療',
-        infoText: '',
+        infoText: '「同一日かつ同一施設」の中で1人のみ診療した場合の点数。',
         evaluate: (ctx: EvalContext) => ctx.hasDoctor && ctx.drSeconds >= 1200 && ctx.sameDayCount === 1,
       },
       {
@@ -174,9 +174,8 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
         requiredRole: 'doctor',
         requiredQualification: null,
         conditionLabel: '同一日かつ同一施設で2～3人を診療',
-        infoText: '',
-        evaluate: (ctx: EvalContext) =>
-          ctx.hasDoctor && ctx.drSeconds >= 1200 && ctx.sameDayCount >= 2 && ctx.sameDayCount <= 3,
+        infoText: '「同一日かつ同一施設」の中で2～3人を診療した場合の点数。',
+        evaluate: (ctx: EvalContext) => ctx.hasDoctor && ctx.drSeconds >= 1200 && ctx.sameDayCount >= 2 && ctx.sameDayCount <= 3,
       },
       {
         id: 'shihou-3-20over',
@@ -186,9 +185,8 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
         requiredRole: 'doctor',
         requiredQualification: null,
         conditionLabel: '同一日かつ同一施設で4～9人を診療',
-        infoText: '',
-        evaluate: (ctx: EvalContext) =>
-          ctx.hasDoctor && ctx.drSeconds >= 1200 && ctx.sameDayCount >= 4 && ctx.sameDayCount <= 9,
+        infoText: '「同一日かつ同一施設」の中で4~9人のみ診療した場合の点数。',
+        evaluate: (ctx: EvalContext) => ctx.hasDoctor && ctx.drSeconds >= 1200 && ctx.sameDayCount >= 4 && ctx.sameDayCount <= 9,
       },
       {
         id: 'shihou-4-20over',
@@ -198,7 +196,7 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
         requiredRole: 'doctor',
         requiredQualification: null,
         conditionLabel: '同一日かつ同一施設で10～19人を診療',
-        infoText: '',
+        infoText: '「同一日かつ同一施設」の中で10~19人を診療した場合の点数。',
         evaluate: (ctx: EvalContext) =>
           ctx.hasDoctor && ctx.drSeconds >= 1200 && ctx.sameDayCount >= 10 && ctx.sameDayCount <= 19,
       },
@@ -210,7 +208,7 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
         requiredRole: 'doctor',
         requiredQualification: null,
         conditionLabel: '同一日かつ同一施設で20人以上を診療',
-        infoText: '',
+        infoText: '「同一日かつ同一施設」の中で20人以上を診療した場合の点数。',
         evaluate: (ctx: EvalContext) => ctx.hasDoctor && ctx.drSeconds >= 1200 && ctx.sameDayCount >= 20,
       },
       {
@@ -221,9 +219,8 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
         requiredRole: 'doctor',
         requiredQualification: null,
         conditionLabel: '同一日かつ同一施設で1人のみ診療',
-        infoText: '',
-        evaluate: (ctx: EvalContext) =>
-          ctx.hasDoctor && ctx.drSeconds > 0 && ctx.drSeconds < 1200 && ctx.sameDayCount === 1,
+        infoText: '「同一日かつ同一施設」の中で1人のみ診療した場合の点数。',
+        evaluate: (ctx: EvalContext) => ctx.hasDoctor && ctx.drSeconds > 0 && ctx.drSeconds < 1200 && ctx.sameDayCount === 1,
       },
       {
         id: 'shihou-2-20under',
@@ -233,7 +230,7 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
         requiredRole: 'doctor',
         requiredQualification: null,
         conditionLabel: '同一日かつ同一施設で2～3人を診療',
-        infoText: '',
+        infoText: '「同一日かつ同一施設」の中で2～3人を診療した場合の点数。',
         evaluate: (ctx: EvalContext) =>
           ctx.hasDoctor && ctx.drSeconds > 0 && ctx.drSeconds < 1200 && ctx.sameDayCount >= 2 && ctx.sameDayCount <= 3,
       },
@@ -245,7 +242,7 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
         requiredRole: 'doctor',
         requiredQualification: null,
         conditionLabel: '同一日かつ同一施設で4～9人を診療',
-        infoText: '',
+        infoText: '「同一日かつ同一施設」の中で4~9人のみ診療した場合の点数。',
         evaluate: (ctx: EvalContext) =>
           ctx.hasDoctor && ctx.drSeconds > 0 && ctx.drSeconds < 1200 && ctx.sameDayCount >= 4 && ctx.sameDayCount <= 9,
       },
@@ -257,13 +254,9 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
         requiredRole: 'doctor',
         requiredQualification: null,
         conditionLabel: '同一日かつ同一施設で10～19人を診療',
-        infoText: '',
+        infoText: '「同一日かつ同一施設」の中で10~19人を診療した場合の点数。',
         evaluate: (ctx: EvalContext) =>
-          ctx.hasDoctor &&
-          ctx.drSeconds > 0 &&
-          ctx.drSeconds < 1200 &&
-          ctx.sameDayCount >= 10 &&
-          ctx.sameDayCount <= 19,
+          ctx.hasDoctor && ctx.drSeconds > 0 && ctx.drSeconds < 1200 && ctx.sameDayCount >= 10 && ctx.sameDayCount <= 19,
       },
       {
         id: 'shihou-5-20under',
@@ -273,9 +266,8 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
         requiredRole: 'doctor',
         requiredQualification: null,
         conditionLabel: '同一日かつ同一施設で20人以上を診療',
-        infoText: '',
-        evaluate: (ctx: EvalContext) =>
-          ctx.hasDoctor && ctx.drSeconds > 0 && ctx.drSeconds < 1200 && ctx.sameDayCount >= 20,
+        infoText: '「同一日かつ同一施設」の中で20人以上を診療した場合の点数。',
+        evaluate: (ctx: EvalContext) => ctx.hasDoctor && ctx.drSeconds > 0 && ctx.drSeconds < 1200 && ctx.sameDayCount >= 20,
       },
     ],
   },
@@ -408,7 +400,7 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
     fullName: '文書提供加算（在宅・訪問関連）',
     selectionMode: 'single',
     infoText:
-      '歯在管を算定して、患者さんや家族へ管理計画の内容を文章にして提供した場合に算定。歯在管とセットでなければ算定不可。',
+      '歯在管を算定して、患者さんや家族へ、管理計画の内容を文章にして提供した場合に算定できる点数。文章提供するかしないかは医院によって違うので、歯在管を算定するから必ず算定するものではない。算定した場合は管理計画書を作成して施設からご家族さんに渡してもらう。',
     subItems: [
       {
         id: 'shizaikan-bunsho-main',
@@ -430,7 +422,8 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
     fullName: '在宅患者歯科治療総合医療管理料',
     selectionMode: 'single',
     infoText:
-      '以下の3条件に全て当てはまるときに算定可能。1.医院に在歯管の届出あり。2.患者に基礎疾患あり。3.該当する治療を実施。',
+      '以下の3条件に全て当てはまるときに算定可能。\n1. 医院マスターに在歯管の届出にチェックが入っている。\n2. 患者さんマスターの中で、基礎疾患に一個でもチェックが入っている。\n3. その日にDrの診療があり、該当する診療を行った場合。',
+    note: '算定項目の入力欄の横に「対象の治療」ボタンを表示。条件1と2が揃っている時にはボタンをハイライト。',
     subItems: [
       {
         id: 'zaishikan-main',
@@ -458,6 +451,7 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
     selectionMode: 'single',
     infoText:
       'DHがDrと一緒、または単独で、その利用者さんに対して20分以上の診療を行った場合に算定。その施設で、1月に何人見たかで点数が変わる。',
+    note: '20分未満で算定しようとしたときは「在口衛の算定をしますか？」のコメントを表示。',
     subItems: [
       {
         id: 'houeishi-1',
@@ -501,8 +495,7 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
     name: '在口衛',
     fullName: '在宅等療養患者専門的口腔衛生処置',
     selectionMode: 'single',
-    infoText:
-      '月1回のみ算定可能。Dr同席必須。訪衛指とっている場合はNG。SPT、P重防、訪問口腔リハを算定した日以降は算定できない。',
+    infoText: '月1回のみ算定可能。Dr同席必須。訪衛指とっている場合はNG。SPT、P重防、訪問口腔リハを算定した日以降は算定できない。',
     subItems: [
       {
         id: 'zaikouei-main',
@@ -524,18 +517,18 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
     fullName: '在宅歯科栄養サポートチーム等連携指導料',
     selectionMode: 'single',
     infoText:
-      '一度入力したら毎月算定するもの。Drの月初めの診療の時に標準でチェックが入ると良い。ミールラウンドや会議への参加。',
+      '一度入力したら毎月算定するもの。Drの月初めの診療の時に標準でチェックが入ると良い。2か月に1度は多職種会議に参加する事。口腔機能低下などにかかわることに対して、訪問している利用者さん全員分のコメントを行う事。',
     subItems: [
       {
         id: 'nst2-main',
         name: 'NST2',
         points: 100,
-        isManualOnly: true,
+        isManualOnly: false,
         requiredRole: null,
         requiredQualification: null,
         conditionLabel: '手動入力のみ（過去実績あれば初期チェック）',
-        infoText: '同一患者で過去に入力がある場合、最初からチェック',
-        evaluate: () => false,
+        infoText: '同一患者で過去に入力がある場合、月初めの診療時に自動チェック。',
+        evaluate: (ctx: EvalContext) => ctx.pastClaims.some(p => p.claimedItems.includes('nst2')),
       },
     ],
   },
@@ -545,7 +538,8 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
     name: '口腔機能低下症（検査）',
     fullName: '口腔機能低下症に係る検査',
     selectionMode: 'multiple',
-    infoText: '3ヶ月毎に1回算定可能。前回の取得日から3ヶ月経過している場合にメッセージを表示。',
+    infoText: '3ヶ月毎に1回算定可能。口腔機能管理計画書を立てて、カルテに保存する必要がある。管理計画見直しは半年に1回は必要。',
+    note: '一度算定したら「次回の算定はMM月になります」とメッセージを表示。',
     subItems: [
       {
         id: 'koukuu_kensa_zetsuatsu',
@@ -555,7 +549,7 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
         requiredRole: null,
         requiredQualification: null,
         conditionLabel: '3ヶ月毎に1回',
-        infoText: '前回の取得日から3ヶ月経過している場合、「今月舌圧検査が算定できます」とメッセージを表示',
+        infoText: '一度算定したら「次回の算定はMM月になります」とメッセージを表示。',
         evaluate: () => false,
       },
       {
@@ -566,7 +560,7 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
         requiredRole: null,
         requiredQualification: null,
         conditionLabel: '3ヶ月毎に1回・届出必要',
-        infoText: '前回の取得日から3ヶ月経過している場合にメッセージを表示',
+        infoText: '一度算定したら「次回の算定はMM月になります」とメッセージを表示。',
         evaluate: () => false,
       },
       {
@@ -578,7 +572,7 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
         requiredQualification: null,
         conditionLabel: '3ヶ月毎に1回・届出必要',
         infoText:
-          '口腔機能低下症の判定のための口菌検は2番の方。1番：130点は口腔バイオフィルム感染症の診断をするときの点数。',
+          '口腔機能低下症の判定のための口菌検は2番の方。1番：130点は口腔バイオフィルム感染症の診断をするときの点数。一度算定したら「次回の算定はMM月になります」とメッセージを表示。',
         evaluate: () => false,
       },
       {
@@ -589,7 +583,7 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
         requiredRole: null,
         requiredQualification: null,
         conditionLabel: '3ヶ月毎に1回・届出必要',
-        infoText: '前回の取得日から3ヶ月経過している場合にメッセージを表示',
+        infoText: '一度算定したら「次回の算定はMM月になります」とメッセージを表示。',
         evaluate: () => false,
       },
     ],
@@ -600,7 +594,9 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
     name: '歯リハ3',
     fullName: '歯科口腔リハビリテーション料３',
     selectionMode: 'multiple',
-    infoText: 'Drの診療必須。月に2回まで算定可能。口腔機能精密検査記録用紙に記入があった場合に算定。',
+    infoText: 'Drの診療必須。月に2回まで算定可能。口腔機能精密検査記録用紙に記入があった場合に算定。訪衛指のみでは算定不可。',
+    note: 'Drの診療があった場合、月に2回まで算定可能なため、1度算定したらその後は「1/2回目算定しますか？」「2/2回目算定しますか？」とコメント。',
+    monthlyLimit: 2,
     subItems: [
       {
         id: 'shiriha3-main',
@@ -623,8 +619,7 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
         requiredQualification: 'koukukan',
         conditionLabel: '口管強の届出があれば＋50点',
         infoText: '',
-        evaluate: (ctx: EvalContext) =>
-          ctx.hasDoctor && !!ctx.oralFunctionRecord && ctx.clinic.qualifications.koukukan,
+        evaluate: (ctx: EvalContext) => ctx.hasDoctor && !!ctx.oralFunctionRecord && ctx.clinic.qualifications.koukukan,
       },
     ],
   },
@@ -632,35 +627,37 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
 
 /** 提供文書テンプレート定義 */
 export const DOCUMENT_TEMPLATES: Record<string, DocumentTemplate> = {
+  doc_houmon_chiryou: {
+    id: 'doc_houmon_chiryou',
+    name: '訪問歯科診療治療内容説明書',
+    fullName: '訪問歯科診療治療内容説明書',
+    relatedProcedure: 'shihou',
+    monthlyLimit: 0,
+    fields: {
+      auto: ['clinicName', 'clinicAddress', 'clinicPhone', 'doctorName', 'patientName', 'visitDate', 'drStartTime', 'drEndTime'],
+      manual: ['treatmentChecks', 'contactNotes', 'careNotes'],
+    },
+  },
   doc_kanrikeikaku: {
     id: 'doc_kanrikeikaku',
-    name: '管理計画書',
-    fullName: '歯科疾患在宅療養管理計画書',
+    name: '歯在管管理計画書',
+    fullName: '歯在管管理計画書',
     relatedProcedure: 'shizaikan',
     monthlyLimit: 1,
     referenceUrl: 'https://www.houmonshika.org/dental/labo9/',
     fields: {
       auto: [
         'clinicName',
-        'clinicAddress',
-        'clinicPhone',
-        'representative',
-        'facilityName',
-        'facilityAddress',
+        'doctorName',
         'patientName',
         'patientNameKana',
-        'patientBuilding',
-        'patientRoom',
-        'teethCount',
-        'hasDenture',
-        'hasOralHypofunction',
-        'visitCondition',
+        'diseases',
+        'medications',
+        'assessment',
         'oralFindings',
-        'treatment',
-        'nextPlan',
-        'createdAt',
+        'oralFunctionRecord',
       ],
-      manual: ['managementPlan', 'oralHygieneGoal'],
+      manual: ['cleaningStatus', 'oralDryness', 'periodontalStatus', 'dentureStatus', 'oralFunctionStatus', 'managementPolicy'],
     },
   },
   doc_houeishi: {
@@ -672,44 +669,51 @@ export const DOCUMENT_TEMPLATES: Record<string, DocumentTemplate> = {
     dhMinutesRequired: 20,
     referenceUrl: 'https://gerodontology.dental-plaza.com/guide_02-5/',
     fields: {
-      auto: ['clinicName', 'patientName', 'patientNameKana', 'dhMinutes', 'visitCondition', 'oralFindings', 'createdAt'],
-      manual: ['guidanceContent', 'homeCareMethod', 'nextGuidancePlan'],
+      auto: ['clinicName', 'clinicAddress', 'clinicPhone', 'patientName', 'facilityName', 'dhStartTime', 'dhEndTime'],
+      manual: ['oralCondition', 'cleaningGuidance', 'dentureGuidance', 'careNotes'],
     },
   },
-  doc_houmon_jisseki: {
-    id: 'doc_houmon_jisseki',
-    name: '訪問診療実績表',
-    fullName: '歯科訪問診療実績表',
-    relatedProcedure: 'shihou',
-    monthlyLimit: 1,
-    referenceUrl: 'https://shirobon.net/medicalfee/latest/shika/r06_shika/r06s_ch2/r06s2_pa2/r06s22_C000.html',
+  doc_seimitsu_kensa: {
+    id: 'doc_seimitsu_kensa',
+    name: '口腔機能精密検査表',
+    fullName: '口腔機能精密検査表',
+    relatedProcedure: 'koukuu_kensa',
+    monthlyLimit: 0,
     fields: {
-      auto: ['clinicName', 'facilityName', 'visitDate', 'doctorName', 'patientList'],
-      manual: [],
+      auto: ['clinicName', 'patientName', 'patientNameKana', 'birthDate', 'age', 'gender', 'oralFunctionRecord'],
+      manual: ['measureDate'],
     },
   },
-  doc_shizaikan_bunsho: {
-    id: 'doc_shizaikan_bunsho',
-    name: '文書提供（管理計画）',
-    fullName: '歯科疾患在宅療養管理計画 説明文書',
-    relatedProcedure: 'shizaikan_bunsho',
-    monthlyLimit: 1,
-    referenceUrl: 'https://www.houmonshika.org/dental/labo6/',
+  doc_kouei_kanri: {
+    id: 'doc_kouei_kanri',
+    name: '口腔衛生管理加算',
+    fullName: '口腔衛生管理加算',
+    relatedProcedure: '',
+    monthlyLimit: 0,
     fields: {
-      auto: ['clinicName', 'patientName', 'oralFindings', 'treatment', 'managementPlan', 'createdAt'],
-      manual: ['familyExplanation'],
+      auto: ['patientName', 'patientNameKana', 'birthDate', 'gender', 'careLevel', 'diseases', 'assessment'],
+      manual: ['oralHealthAssessment', 'managementContent', 'implementationRecords'],
     },
   },
-  doc_zaishikan: {
-    id: 'doc_zaishikan',
-    name: '在歯管報告書',
-    fullName: '在宅患者歯科治療総合医療管理報告書',
-    relatedProcedure: 'zaishikan',
-    monthlyLimit: 1,
-    referenceUrl: 'https://dentalsupport.biz/column/column-visit/vis31/',
+  doc_koukuu_kanri: {
+    id: 'doc_koukuu_kanri',
+    name: '口腔機能管理計画書',
+    fullName: '口腔機能管理計画書',
+    relatedProcedure: 'koukuu_kensa',
+    monthlyLimit: 0,
     fields: {
-      auto: ['clinicName', 'patientName', 'diseases', 'treatmentPerformed', 'createdAt'],
-      manual: ['managementPolicy'],
+      auto: [
+        'clinicName',
+        'patientName',
+        'patientNameKana',
+        'age',
+        'gender',
+        'diseases',
+        'medications',
+        'assessment',
+        'oralFunctionRecord',
+      ],
+      manual: ['bodyCondition', 'oralFunctionPlan', 'managementGoal', 'reevaluation'],
     },
   },
 }

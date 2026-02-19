@@ -1182,9 +1182,9 @@ export const ConsultationPage = ({
 
                   {/* 項目ごとの注意書き・補足メッセージ（大カテゴリOFF時も表示） */}
                   {/* 訪衛指: DH時間20分未満の場合に警告 */}
-                  {master.id === 'houeishi' && dhSeconds < 1200 && (
+                  {master.id === 'houeishi' && dhSeconds < 1200 && dhSeconds > 0 && (
                     <div className="mx-3 mb-3 mt-1 p-2 bg-amber-50 border border-amber-200 rounded text-sm text-amber-700">
-                      ⚠ DH時間が20分未満です。在口衛の算定を検討してください。
+                      ⚠ DH時間が20分未満です。在口衛の算定をしますか？
                     </div>
                   )}
                   {/* 口腔機能検査: 3か月経過メッセージ */}
@@ -1203,7 +1203,10 @@ export const ConsultationPage = ({
                       if (monthsElapsed >= 3) {
                         return <div key={sub.id} className="text-xs text-blue-600">📋 今月{sub.name}が算定できます（前回: {lastClaim.month}）</div>
                       }
-                      return null
+                      // 次回の算定可能月を計算して表示
+                      const nextDate = new Date(lastDate.getFullYear(), lastDate.getMonth() + 3, 1)
+                      const nextMonth = `${nextDate.getFullYear()}年${nextDate.getMonth() + 1}月`
+                      return <div key={sub.id} className="text-xs text-gray-500">⏳ {sub.name}: 次回の算定は{nextMonth}になります（前回: {lastClaim.month}）</div>
                     }).filter(Boolean)
                     if (messages.length === 0) return null
                     return <div className="mx-3 mb-3 mt-1 space-y-1">{messages}</div>
@@ -1236,7 +1239,7 @@ export const ConsultationPage = ({
         dhSeconds={dhSeconds}
         onOpenDocument={docType => {
           if (typeof onOpenDocument === 'function') {
-            onOpenDocument(docType, {patient, clinic, examination, dhSeconds, visitCondition, oralFindings, treatment, nextPlan, doctorName: doctor?.name, treatmentPerformed})
+            onOpenDocument(docType, {patient, clinic, examination, dhSeconds, visitCondition, oralFindings, treatment, nextPlan, doctorName: doctor?.name, treatmentPerformed, drStartTime: examination?.drStartTime, drEndTime: examination?.drEndTime, dhStartTime: examination?.dhStartTime, dhEndTime: examination?.dhEndTime, oralFunctionRecord: examination?.oralFunctionRecord})
           }
         }}
       />

@@ -353,7 +353,6 @@ export const generateMockMonthlyData = (yearMonth: YearMonth): MonthlyData => {
     storeName,
     utilizationRate: randomFloat(75, 95), // 稼働率 75-95%
     returnRate: null, // 自動計算のためnull
-    churnRate: randomFloat(5, 15), // 失客率 5-15%
     csRegistrationCount: randomInt(10, 30), // CS登録数
     comment: storeComments[storeName],
   }))
@@ -431,7 +430,7 @@ export const loadMockData = (): void => {
   console.log('✅ モックデータを12ヶ月分（2026-01〜12）生成しました')
   console.log('   - 各店舗5名のスタッフデータ')
   console.log('   - 季節変動を反映した売上データ')
-  console.log('   - 店舗KPI（稼働率、失客率、月別コメント）')
+  console.log('   - 店舗KPI（稼働率、月別コメント）')
   console.log('   - スタッフ稼働率とCS登録数')
   console.log('   - 月別のお客様の声')
 }
