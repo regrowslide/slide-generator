@@ -30,7 +30,7 @@ import type {StoreName, YearMonth, StaffRecord, SlideViewMode} from '../../types
 import {loadMonthlyData, formatYearMonth} from '../../lib/storage'
 import {MOCK_DATA} from '../../lib/mockData'
 
-const TOTAL_SLIDES = 10
+const TOTAL_SLIDES = 14
 
 // ============================================================
 // ヘルパー関数
@@ -158,10 +158,6 @@ export const SlidesView = () => {
   const [selectedStaffNames, setSelectedStaffNames] = useState<string[]>([])
   const [isStaffFilterOpen, setIsStaffFilterOpen] = useState(false)
 
-  // 当月/累計平均トグル
-  const [showCurrentMonth, setShowCurrentMonth] = useState(true)
-  const [showCumulativeAvg, setShowCumulativeAvg] = useState(false)
-
   // 閲覧モード
   const [viewMode, setViewMode] = useState<SlideViewMode>('scroll')
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -233,7 +229,6 @@ export const SlidesView = () => {
 
   // 共通props
   const commonProps = {selectedStores, selectedStaffNames}
-  const toggleProps = {showCurrentMonth, showCumulativeAvg}
 
   // スライド配列を定義（10枚構成）
   const slides = [
@@ -245,8 +240,12 @@ export const SlidesView = () => {
     <Slide6MetricComparison key="s6" metric="再来率" {...commonProps} />,
     <Slide7AllMetricsComparison key="s7" {...commonProps} />,
     <Slide8StaffPerformanceTable key="s8" {...commonProps} />,
-    <Slide9StaffUtilizationChart key="s9" {...commonProps} {...toggleProps} />,
-    <Slide10CustomerVoice key="s10" />,
+    <Slide9StaffUtilizationChart key="s9" {...commonProps} />,
+    <Slide10StaffMomTable1 key="s10" {...commonProps} />,
+    <Slide11StaffMomChart1 key="s11" {...commonProps} />,
+    <Slide12StaffMomTable2 key="s12" {...commonProps} />,
+    <Slide13StaffMomChart2 key="s13" {...commonProps} />,
+    <Slide14CustomerVoice key="s14" />,
   ]
 
   return (
@@ -426,29 +425,6 @@ export const SlidesView = () => {
               )}
             </div>
 
-            <div className="w-px h-6 bg-gray-300" />
-
-            {/* 当月/累計平均トグル */}
-            <span className="text-sm font-bold text-gray-700">表示:</span>
-            <label className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded">
-              <input
-                type="checkbox"
-                checked={showCurrentMonth}
-                onChange={(e) => setShowCurrentMonth(e.target.checked)}
-                className="w-4 h-4 text-red-600 rounded focus:ring-red-500"
-              />
-              <span className="text-sm font-medium text-gray-700">当月</span>
-            </label>
-            <label className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded">
-              <input
-                type="checkbox"
-                checked={showCumulativeAvg}
-                onChange={(e) => setShowCumulativeAvg(e.target.checked)}
-                className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
-              />
-              <span className="text-sm font-medium text-gray-700">累計平均</span>
-            </label>
-
             {selectedStores.length === 0 && (
               <span className="text-sm text-red-500 font-medium">※ 店舗を選択してください</span>
             )}
@@ -478,11 +454,6 @@ const SlideContainer = ({slideNumber, children}: {slideNumber: number; children:
 type StoreFilterProps = {
   selectedStores: StoreName[]
   selectedStaffNames: string[]
-}
-
-type ToggleProps = {
-  showCurrentMonth: boolean
-  showCumulativeAvg: boolean
 }
 
 // スタッフリストをフィルタリングするヘルパー
@@ -539,6 +510,10 @@ const Slide2TableOfContents = () => {
         </div>
         <div className="flex items-center gap-3">
           <span className="font-bold text-red-500">5.</span>
+          <span>スタッフ別先月比（売上金額/指名件数・再来率/客単価）</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="font-bold text-red-500">6.</span>
           <span>お客様の声</span>
         </div>
       </div>
@@ -887,10 +862,48 @@ const Slide8StaffPerformanceTable = ({selectedStores, selectedStaffNames}: Store
   )
 }
 
-// スタッフ稼働率（当月/累計平均はグローバルトグル）
-const Slide9StaffUtilizationChart = ({selectedStores, selectedStaffNames, showCurrentMonth, showCumulativeAvg}: StoreFilterProps & ToggleProps) => {
+/**
+ * グラフ内チェックボックス（当月/累計平均）
+ */
+const ChartToggle = ({
+  showCurrent,
+  showCumulative,
+  onCurrentChange,
+  onCumulativeChange,
+}: {
+  showCurrent: boolean
+  showCumulative: boolean
+  onCurrentChange: (v: boolean) => void
+  onCumulativeChange: (v: boolean) => void
+}) => (
+  <div className="flex items-center gap-4">
+    <label className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded">
+      <input
+        type="checkbox"
+        checked={showCurrent}
+        onChange={(e) => onCurrentChange(e.target.checked)}
+        className="w-4 h-4 text-red-600 rounded focus:ring-red-500"
+      />
+      <span className="text-sm font-medium text-gray-700">当月</span>
+    </label>
+    <label className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded">
+      <input
+        type="checkbox"
+        checked={showCumulative}
+        onChange={(e) => onCumulativeChange(e.target.checked)}
+        className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
+      />
+      <span className="text-sm font-medium text-gray-700">累計平均</span>
+    </label>
+  </div>
+)
+
+// スタッフ稼働率（各グラフ内にローカルトグル）
+const Slide9StaffUtilizationChart = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
   const {currentYearMonth, availableMonths} = useDataContext()
   const [selectedMonth, setSelectedMonth] = useState<YearMonth>(currentYearMonth)
+  const [showCurrent, setShowCurrent] = useState(true)
+  const [showCumulative, setShowCumulative] = useState(false)
 
   const selectedMonthData = getMonthlyData(selectedMonth)
 
@@ -901,9 +914,9 @@ const Slide9StaffUtilizationChart = ({selectedStores, selectedStaffNames, showCu
       .filter((u) => selectedStores.includes(u.storeName))
       .map((u) => ({
         name: u.staffName,
-        ...(showCurrentMonth ? {稼働率: u.utilizationRate || 0} : {}),
+        ...(showCurrent ? {当月: u.utilizationRate || 0} : {}),
         store: u.storeName,
-        ...(showCumulativeAvg
+        ...(showCumulative
           ? {累計平均: calculateStaffCumulativeAverage(u.staffName, u.storeName, selectedMonth, 'utilizationRate')}
           : {}),
       })) || []
@@ -917,17 +930,25 @@ const Slide9StaffUtilizationChart = ({selectedStores, selectedStaffNames, showCu
     <div className="p-12">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-3xl font-bold text-gray-800">スタッフ稼働率</h2>
-        <select
-          value={selectedMonth}
-          onChange={(e) => setSelectedMonth(e.target.value as YearMonth)}
-          className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500"
-        >
-          {availableMonths.map((month) => (
-            <option key={month} value={month}>
-              {formatYearMonth(month)}
-            </option>
-          ))}
-        </select>
+        <div className="flex items-center gap-4">
+          <ChartToggle
+            showCurrent={showCurrent}
+            showCumulative={showCumulative}
+            onCurrentChange={setShowCurrent}
+            onCumulativeChange={setShowCumulative}
+          />
+          <select
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(e.target.value as YearMonth)}
+            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          >
+            {availableMonths.map((month) => (
+              <option key={month} value={month}>
+                {formatYearMonth(month)}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {utilizationData.length === 0 ? (
@@ -944,12 +965,12 @@ const Slide9StaffUtilizationChart = ({selectedStores, selectedStaffNames, showCu
             <YAxis label={{value: '稼働率 (%)', angle: -90, position: 'insideLeft'}} style={{fontSize: '12px'}} />
             <Tooltip />
             <Legend />
-            {showCurrentMonth && (
-              <Bar dataKey="稼働率" fill="#DC3545" name="当月">
-                <LabelList dataKey="稼働率" position="top" style={{fontSize: '11px'}} />
+            {showCurrent && (
+              <Bar dataKey="当月" fill="#DC3545" name="当月">
+                <LabelList dataKey="当月" position="top" style={{fontSize: '11px'}} />
               </Bar>
             )}
-            {showCumulativeAvg && <Bar dataKey="累計平均" fill="#87CEEB" name="累計平均" />}
+            {showCumulative && <Bar dataKey="累計平均" fill="#87CEEB" name="累計平均" />}
           </BarChart>
         </ResponsiveContainer>
       )}
@@ -957,7 +978,262 @@ const Slide9StaffUtilizationChart = ({selectedStores, selectedStaffNames, showCu
   )
 }
 
-const Slide10CustomerVoice = () => {
+// ============================================================
+// スタッフ別先月比 共通ヘルパー
+// ============================================================
+
+/**
+ * 先月比テーブル・グラフ用のスタッフデータを生成
+ * 当月値と累計平均値の両方を返す
+ */
+const buildStaffMomData = (
+  currentYearMonth: YearMonth,
+  monthlyData: any,
+  selectedStores: StoreName[],
+  selectedStaffNames: string[]
+) => {
+  const currentStaff = monthlyData.importedData?.staffRecords || []
+  const filtered = filterStaffList(currentStaff, selectedStores, selectedStaffNames)
+
+  return filtered.map((staff) => {
+    const cumSales = calculateStaffCumulativeAverage(staff.staffName, staff.storeName, currentYearMonth, 'sales')
+    const cumNomination = calculateStaffCumulativeAverage(staff.staffName, staff.storeName, currentYearMonth, 'nominationCount')
+    const cumUnitPrice = calculateStaffCumulativeAverage(staff.staffName, staff.storeName, currentYearMonth, 'unitPrice')
+    const cumReturnRate = calculateStaffCumulativeAverage(staff.staffName, staff.storeName, currentYearMonth, 'returnRate')
+
+    return {
+      staffName: staff.staffName,
+      storeName: staff.storeName,
+      // 当月
+      currentSales: staff.sales,
+      currentNomination: staff.nominationCount,
+      currentUnitPrice: staff.unitPrice,
+      currentReturnRate: Number(calculateStaffReturnRate(staff).toFixed(1)),
+      // 累計平均
+      cumSales: Math.round(cumSales),
+      cumNomination: Math.round(cumNomination),
+      cumUnitPrice: Math.round(cumUnitPrice),
+      cumReturnRate: Number(cumReturnRate.toFixed(1)),
+    }
+  })
+}
+
+/** 差分セルの色付け */
+const DiffCell = ({value, prefix = '', suffix = ''}: {value: number; prefix?: string; suffix?: string}) => {
+  const color = value > 0 ? 'text-green-600' : value < 0 ? 'text-red-600' : 'text-gray-500'
+  const sign = value > 0 ? '+' : ''
+  return <span className={`font-medium ${color}`}>{sign}{prefix}{value.toLocaleString()}{suffix}</span>
+}
+
+// ============================================================
+// スライド10: スタッフ別先月比① テーブル（売上金額/指名件数）
+// ============================================================
+
+const Slide10StaffMomTable1 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
+  const {monthlyData, currentYearMonth} = useDataContext()
+  const rows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames)
+
+  return (
+    <div className="h-full p-8 overflow-y-auto">
+      <h2 className="text-2xl font-bold mb-4 text-gray-800">
+        スタッフ別先月比①（売上金額/指名件数）
+      </h2>
+      {rows.length === 0 ? (
+        <div className="flex items-center justify-center" style={{height: '400px'}}>
+          <p className="text-gray-500 text-lg">スタッフデータがありません</p>
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-xs">
+            <thead className="bg-purple-600 text-white">
+              <tr>
+                <th className="p-2 border">スタッフ</th>
+                <th className="p-2 border">店舗</th>
+                <th className="p-2 border">売上_当月</th>
+                <th className="p-2 border">売上_累計平均</th>
+                <th className="p-2 border">売上_差分</th>
+                <th className="p-2 border">指名_当月</th>
+                <th className="p-2 border">指名_累計平均</th>
+                <th className="p-2 border">指名_差分</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, i) => (
+                <tr key={i} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                  <td className="p-2 border font-medium">{row.staffName}</td>
+                  <td className="p-2 border text-xs">{row.storeName}</td>
+                  <td className="p-2 border text-right">¥{row.currentSales.toLocaleString()}</td>
+                  <td className="p-2 border text-right">¥{row.cumSales.toLocaleString()}</td>
+                  <td className="p-2 border text-right"><DiffCell value={row.currentSales - row.cumSales} prefix="¥" /></td>
+                  <td className="p-2 border text-right">{row.currentNomination}</td>
+                  <td className="p-2 border text-right">{row.cumNomination}</td>
+                  <td className="p-2 border text-right"><DiffCell value={row.currentNomination - row.cumNomination} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============================================================
+// スライド11: スタッフ別先月比① グラフ（売上金額/指名件数）
+// ============================================================
+
+const Slide11StaffMomChart1 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
+  const {monthlyData, currentYearMonth} = useDataContext()
+  const [showCurrent, setShowCurrent] = useState(true)
+  const [showCumulative, setShowCumulative] = useState(false)
+  const rows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames)
+
+  const chartData = rows.map((row) => ({
+    name: row.staffName,
+    ...(showCurrent ? {'売上（当月）': row.currentSales, '指名（当月）': row.currentNomination} : {}),
+    ...(showCumulative ? {'売上（累計平均）': row.cumSales, '指名（累計平均）': row.cumNomination} : {}),
+  }))
+
+  return (
+    <div className="p-8">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-gray-800">スタッフ別先月比グラフ①（売上金額/指名件数）</h2>
+        <ChartToggle showCurrent={showCurrent} showCumulative={showCumulative} onCurrentChange={setShowCurrent} onCumulativeChange={setShowCumulative} />
+      </div>
+      {chartData.length === 0 ? (
+        <div className="flex items-center justify-center" style={{height: '450px'}}>
+          <p className="text-gray-500 text-lg">スタッフデータがありません</p>
+        </div>
+      ) : (
+        <ResponsiveContainer width="100%" height={480}>
+          <ComposedChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" style={{fontSize: '11px'}} angle={-30} textAnchor="end" height={80} />
+            <YAxis yAxisId="left" label={{value: '売上金額', angle: -90, position: 'insideLeft'}} style={{fontSize: '11px'}} />
+            <YAxis yAxisId="right" orientation="right" label={{value: '指名件数', angle: 90, position: 'insideRight'}} style={{fontSize: '11px'}} />
+            <Tooltip formatter={(value: number, name: string) => {
+              if (name.includes('売上')) return [`¥${value.toLocaleString()}`, name]
+              return [value, name]
+            }} />
+            <Legend wrapperStyle={{fontSize: '12px'}} />
+            {showCurrent && <Bar yAxisId="left" dataKey="売上（当月）" fill="#DC3545" barSize={20} />}
+            {showCumulative && <Bar yAxisId="left" dataKey="売上（累計平均）" fill="#F4A460" barSize={20} />}
+            {showCurrent && <Line yAxisId="right" type="monotone" dataKey="指名（当月）" stroke="#1a3a5c" strokeWidth={2} dot={{r: 4}} />}
+            {showCumulative && <Line yAxisId="right" type="monotone" dataKey="指名（累計平均）" stroke="#87CEEB" strokeWidth={2} dot={{r: 4, fill: '#fff'}} />}
+          </ComposedChart>
+        </ResponsiveContainer>
+      )}
+    </div>
+  )
+}
+
+// ============================================================
+// スライド12: スタッフ別先月比② テーブル（再来率/客単価）
+// ============================================================
+
+const Slide12StaffMomTable2 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
+  const {monthlyData, currentYearMonth} = useDataContext()
+  const rows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames)
+
+  return (
+    <div className="h-full p-8 overflow-y-auto">
+      <h2 className="text-2xl font-bold mb-4 text-gray-800">
+        スタッフ別先月比②（再来率/客単価）
+      </h2>
+      {rows.length === 0 ? (
+        <div className="flex items-center justify-center" style={{height: '400px'}}>
+          <p className="text-gray-500 text-lg">スタッフデータがありません</p>
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-xs">
+            <thead className="bg-purple-600 text-white">
+              <tr>
+                <th className="p-2 border">スタッフ</th>
+                <th className="p-2 border">店舗</th>
+                <th className="p-2 border">再来率_当月</th>
+                <th className="p-2 border">再来率_累計平均</th>
+                <th className="p-2 border">再来率_差分</th>
+                <th className="p-2 border">客単価_当月</th>
+                <th className="p-2 border">客単価_累計平均</th>
+                <th className="p-2 border">客単価_差分</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, i) => (
+                <tr key={i} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                  <td className="p-2 border font-medium">{row.staffName}</td>
+                  <td className="p-2 border text-xs">{row.storeName}</td>
+                  <td className="p-2 border text-right">{row.currentReturnRate}%</td>
+                  <td className="p-2 border text-right">{row.cumReturnRate}%</td>
+                  <td className="p-2 border text-right"><DiffCell value={Number((row.currentReturnRate - row.cumReturnRate).toFixed(1))} suffix="%" /></td>
+                  <td className="p-2 border text-right">¥{row.currentUnitPrice.toLocaleString()}</td>
+                  <td className="p-2 border text-right">¥{row.cumUnitPrice.toLocaleString()}</td>
+                  <td className="p-2 border text-right"><DiffCell value={row.currentUnitPrice - row.cumUnitPrice} prefix="¥" /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============================================================
+// スライド13: スタッフ別先月比② グラフ（再来率/客単価）
+// ============================================================
+
+const Slide13StaffMomChart2 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
+  const {monthlyData, currentYearMonth} = useDataContext()
+  const [showCurrent, setShowCurrent] = useState(true)
+  const [showCumulative, setShowCumulative] = useState(false)
+  const rows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames)
+
+  const chartData = rows.map((row) => ({
+    name: row.staffName,
+    ...(showCurrent ? {'客単価（当月）': row.currentUnitPrice, '再来率（当月）': row.currentReturnRate} : {}),
+    ...(showCumulative ? {'客単価（累計平均）': row.cumUnitPrice, '再来率（累計平均）': row.cumReturnRate} : {}),
+  }))
+
+  return (
+    <div className="p-8">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-gray-800">スタッフ別先月比グラフ②（再来率/客単価）</h2>
+        <ChartToggle showCurrent={showCurrent} showCumulative={showCumulative} onCurrentChange={setShowCurrent} onCumulativeChange={setShowCumulative} />
+      </div>
+      {chartData.length === 0 ? (
+        <div className="flex items-center justify-center" style={{height: '450px'}}>
+          <p className="text-gray-500 text-lg">スタッフデータがありません</p>
+        </div>
+      ) : (
+        <ResponsiveContainer width="100%" height={480}>
+          <ComposedChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" style={{fontSize: '11px'}} angle={-30} textAnchor="end" height={80} />
+            <YAxis yAxisId="left" label={{value: '客単価', angle: -90, position: 'insideLeft'}} style={{fontSize: '11px'}} />
+            <YAxis yAxisId="right" orientation="right" label={{value: '再来率（%）', angle: 90, position: 'insideRight'}} style={{fontSize: '11px'}} />
+            <Tooltip formatter={(value: number, name: string) => {
+              if (name.includes('客単価')) return [`¥${value.toLocaleString()}`, name]
+              return [`${value}%`, name]
+            }} />
+            <Legend wrapperStyle={{fontSize: '12px'}} />
+            {showCurrent && <Bar yAxisId="left" dataKey="客単価（当月）" fill="#DC3545" barSize={20} />}
+            {showCumulative && <Bar yAxisId="left" dataKey="客単価（累計平均）" fill="#F4A460" barSize={20} />}
+            {showCurrent && <Line yAxisId="right" type="monotone" dataKey="再来率（当月）" stroke="#1a3a5c" strokeWidth={2} dot={{r: 4}} />}
+            {showCumulative && <Line yAxisId="right" type="monotone" dataKey="再来率（累計平均）" stroke="#87CEEB" strokeWidth={2} dot={{r: 4, fill: '#fff'}} />}
+          </ComposedChart>
+        </ResponsiveContainer>
+      )}
+    </div>
+  )
+}
+
+// ============================================================
+// スライド14: お客様の声
+// ============================================================
+
+const Slide14CustomerVoice = () => {
   const {monthlyData} = useDataContext()
   const customerVoice = monthlyData.manualData.customerVoice.content
 

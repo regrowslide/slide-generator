@@ -420,24 +420,31 @@ export type KanriKeikakuData = {
   medicationNames: string
   pneumoniaHistory: 'none' | 'once' | 'repeat'
   malnutritionRisk: 'none' | 'mild' | 'unknown'
+  dietCategory: 'normal' | 'care' | 'nonOral'
   dietType: string
   dietSubType: string
   isNonOral: boolean
+  // 経管栄養
+  tubeFeeding: 'none' | 'gastric' | 'nasal' | 'other'
   // 歯と口の状態
   cleaningStatus: 'good' | 'poor' | 'veryPoor'
   oralDryness: 'none' | 'mild' | 'severe'
   hasCavity: boolean
+  cavityUrgency: boolean
   hasPeriodontal: boolean
   periodontalInflammation: boolean
   periodontalMobility: boolean
+  periodontalMobilityUrgency: boolean
   periodontalUrgency: boolean
   hasSoftTissueDisease: boolean
+  softTissueDiseaseUrgency: boolean
   softTissueUrgency: boolean
   dentureUpperUsed: boolean
   dentureUpperNotUsed: boolean
   dentureLowerUsed: boolean
   dentureLowerNotUsed: boolean
   biteStability: boolean
+  biteStabilitySide: 'unilateral' | 'bilateral'
   dentureNeeded: boolean
   // 特記事項（歯牙図用: 将来的にSVG）
   specialNotes: string
@@ -448,7 +455,6 @@ export type KanriKeikakuData = {
   tongueMovement: 'good' | 'slightlyPoor' | 'poor'
   // 治療と口腔ケアの難しさ
   cleaningSelf: 'independent' | 'partial' | 'full'
-  tubeFeeding: boolean
   seatRetention: 'good' | 'slightlyPoor' | 'poor'
   mouthOpening: 'possible' | 'difficult' | 'impossible'
   gargling: 'possible' | 'difficult' | 'impossibleSwallow'
@@ -500,6 +506,16 @@ export type HygieneGuidanceData = {
   dentureSleepOptions: {waterStorage: boolean; cleanserStorage: boolean; wearing: boolean}
   // 注意事項
   careNotes: string
+  // 介護職員への技術的助言等の内容
+  technicalAdvice: {
+    riskBasedCleaning: boolean
+    cleaningKnowledge: boolean
+    oralFunctionImprovement: boolean
+    dietConfirmation: boolean
+    continueCurrent: boolean
+    other: boolean
+    otherText: string
+  }
   // フッター
   hygienistName: string
   startTime: string
@@ -558,6 +574,14 @@ export type OralFunctionPlanData = {
     reference: string
     status: 'normal' | 'decreased'
   }>
+  // 歯・歯肉の状態
+  toothGumStatus: {
+    plaque: boolean
+    gumInflammation: boolean
+    toothMobility: boolean
+  }
+  // 口腔内・義歯の状態（記述欄）
+  oralDentureNote: string
   // 口腔機能管理計画（9機能領域）
   oralFunctionPlan: Array<{
     label: string
@@ -590,6 +614,9 @@ export type OralHygieneManagementData = {
   dentureUse: 'yes_partial' | 'yes_full' | 'none'
   nutritionMethod: 'oral' | 'partialOral' | 'tube' | 'iv'
   dietForm: string
+  // 誤嚥性肺炎・訪問歯科衛生指導
+  aspirationPneumoniaHistory: boolean
+  hasHygieneGuidanceSameMonth: boolean
   // 口腔の健康状態の評価
   oralHealthAssessment: {
     oralHygiene: boolean

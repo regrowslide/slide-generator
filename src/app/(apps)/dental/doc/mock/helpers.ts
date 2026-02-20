@@ -9,6 +9,45 @@ import type {
 } from './types'
 import {DOCUMENT_TEMPLATES, getProcedureMaster, findMasterById} from './constants'
 
+// =============================================================================
+// プルダウン＋自由入力用の定型文選択肢
+// =============================================================================
+
+/** 訪問歯科治療内容説明書: 連絡事項の定型文 */
+export const CONTACT_NOTES_PRESETS = [
+  '口腔周囲の筋肉が硬いのでマッサージも行いました',
+  '磨き残しが多く、全体のお掃除を行いました',
+  'いつもと変わりなく、安定しています',
+]
+
+/** 訪問歯科治療内容説明書: 療養上の注意点の定型文 */
+export const CARE_NOTES_PRESETS = [
+  '磨き終わったころに見て、磨き残しがあったならば再度磨く指示を出してあげて下さい',
+  '義歯の着脱は職員の方にお願いいたします',
+  '食後のブラッシングを継続してください',
+]
+
+/** 歯在管管理計画書: 管理方針・治療方針の定型文 */
+export const MANAGEMENT_POLICY_PRESETS = [
+  '口腔機能の維持・改善のため、トレーニングもしていきます',
+  '定期的に管理し、口腔衛生の維持と口腔機能の低下防止を目標とします',
+  '歯周病の管理を継続し、残存歯の保全に努めます',
+]
+
+/** 訪問歯科衛生指導説明書: 注意事項の定型文 */
+export const HYGIENE_CARE_NOTES_PRESETS = [
+  'あいうべ体操が上手にできます。お口の状態はいつも通りです',
+  '食後の歯磨きを継続してください',
+  '口腔周囲筋のストレッチを日常的に行ってください',
+]
+
+/** 口腔機能管理計画書: 管理方針の定型文 */
+export const ORAL_FUNCTION_MANAGEMENT_PRESETS = [
+  '口腔機能の維持を目標に、定期的な管理とトレーニングを実施',
+  '口腔衛生の改善と嚥下機能の維持を目指す',
+  '残存歯の保全と咀嚼機能の回復を図る',
+]
+
 /** 患者名ヘルパー関数 */
 export const getPatientName = (p: Patient): string => `${p.lastName} ${p.firstName}`
 
@@ -52,31 +91,8 @@ export const calculateDocumentRequirements = ({
         : '訪衛指選択 + DH20分以上',
   }
 
-  // 訪問診療実績表: 歯訪（shihou）がONの場合に必要
-  const shihouSelected = !!procedureItems?.shihou
-  result.doc_houmon_jisseki = {
-    ...DOCUMENT_TEMPLATES.doc_houmon_jisseki,
-    required: shihouSelected,
-    reason: shihouSelected ? '歯訪が選択されています' : '歯訪が選択されていません',
-  }
-
-  // 歯在管文書（管理計画説明文書）: 歯在管文書提供加算（shizaikan_bunsho）がONの場合に必要
-  const shizaikanBunshoSelected = !!procedureItems?.shizaikan_bunsho
-  result.doc_shizaikan_bunsho = {
-    ...DOCUMENT_TEMPLATES.doc_shizaikan_bunsho,
-    required: shizaikanBunshoSelected,
-    reason: shizaikanBunshoSelected ? '歯在管文書提供加算が選択されています' : '歯在管文書提供加算が選択されていません',
-  }
-
-  // 在歯管報告書: 在歯管（zaishikan）がONの場合に必要
-  const zaishikanSelected = !!procedureItems?.zaishikan
-  result.doc_zaishikan = {
-    ...DOCUMENT_TEMPLATES.doc_zaishikan,
-    required: zaishikanSelected,
-    reason: zaishikanSelected ? '在歯管が選択されています' : '在歯管が選択されていません',
-  }
-
   // 訪問歯科診療治療内容説明書: 歯訪（shihou）がONの場合に必要
+  const shihouSelected = !!procedureItems?.shihou
   result.doc_houmon_chiryou = {
     ...DOCUMENT_TEMPLATES.doc_houmon_chiryou,
     required: shihouSelected,
