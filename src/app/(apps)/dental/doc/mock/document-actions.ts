@@ -47,7 +47,8 @@ type DocumentFilter = {
 export const uploadDocumentPdf = async (pdfBase64: string, metadata: DocumentMetadata): Promise<SavedDocumentRecord> => {
   const now = new Date()
   const dateStr = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`
-  const pathname = `dental/${metadata.clinicId}/${metadata.facilityId}/${metadata.patientId}/${metadata.examinationId}/${metadata.documentType}_${dateStr}.pdf`
+  const timeStr = `${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`
+  const pathname = `dental/${metadata.clinicId}/${dateStr}_${metadata.patientId}_${metadata.examinationId}_${metadata.documentType}_${timeStr}.pdf`
 
   // Base64をBufferに変換
   const buffer = Buffer.from(pdfBase64, 'base64')
@@ -55,6 +56,7 @@ export const uploadDocumentPdf = async (pdfBase64: string, metadata: DocumentMet
   const blob = await put(pathname, buffer, {
     access: 'public',
     contentType: 'application/pdf',
+    allowOverwrite: true,
   })
 
   return {

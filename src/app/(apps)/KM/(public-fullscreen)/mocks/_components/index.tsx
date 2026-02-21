@@ -15,7 +15,7 @@ import {
 // Types
 // ==========================================
 
-export type ThemeColor = 'rose' | 'teal'
+export type ThemeColor = 'rose' | 'teal' | 'blue' | 'violet' | 'amber' | 'emerald'
 
 export interface Feature {
   icon: LucideIcon
@@ -86,6 +86,70 @@ const themeConfig = {
     subtitleText: 'text-slate-500',
     loadingBg: 'bg-slate-200',
   },
+  blue: {
+    gradient: 'from-blue-500 to-sky-600',
+    gradientLight: 'from-blue-50 via-white to-sky-50',
+    shadow: 'shadow-blue-500/30',
+    text: 'from-blue-600 to-sky-600',
+    bg: 'bg-blue-50',
+    border: 'border-blue-100',
+    textDark: 'text-blue-800',
+    textMedium: 'text-blue-700',
+    textLight: 'text-blue-600',
+    iconBg: 'from-blue-100 to-blue-50',
+    hoverBorder: 'hover:border-blue-200',
+    progressBg: 'from-blue-400 to-blue-500',
+    subtitleText: 'text-slate-500',
+    loadingBg: 'bg-slate-200',
+  },
+  violet: {
+    gradient: 'from-violet-500 to-purple-600',
+    gradientLight: 'from-violet-50 via-white to-purple-50',
+    shadow: 'shadow-violet-500/30',
+    text: 'from-violet-600 to-purple-600',
+    bg: 'bg-violet-50',
+    border: 'border-violet-100',
+    textDark: 'text-violet-800',
+    textMedium: 'text-violet-700',
+    textLight: 'text-violet-600',
+    iconBg: 'from-violet-100 to-violet-50',
+    hoverBorder: 'hover:border-violet-200',
+    progressBg: 'from-violet-400 to-violet-500',
+    subtitleText: 'text-slate-500',
+    loadingBg: 'bg-slate-200',
+  },
+  amber: {
+    gradient: 'from-amber-500 to-orange-500',
+    gradientLight: 'from-amber-50 via-white to-orange-50',
+    shadow: 'shadow-amber-500/30',
+    text: 'from-amber-600 to-orange-600',
+    bg: 'bg-amber-50',
+    border: 'border-amber-100',
+    textDark: 'text-amber-800',
+    textMedium: 'text-amber-700',
+    textLight: 'text-amber-600',
+    iconBg: 'from-amber-100 to-amber-50',
+    hoverBorder: 'hover:border-amber-200',
+    progressBg: 'from-amber-400 to-amber-500',
+    subtitleText: 'text-stone-500',
+    loadingBg: 'bg-stone-200',
+  },
+  emerald: {
+    gradient: 'from-emerald-500 to-green-600',
+    gradientLight: 'from-emerald-50 via-white to-green-50',
+    shadow: 'shadow-emerald-500/30',
+    text: 'from-emerald-600 to-green-600',
+    bg: 'bg-emerald-50',
+    border: 'border-emerald-100',
+    textDark: 'text-emerald-800',
+    textMedium: 'text-emerald-700',
+    textLight: 'text-emerald-600',
+    iconBg: 'from-emerald-100 to-emerald-50',
+    hoverBorder: 'hover:border-emerald-200',
+    progressBg: 'from-emerald-400 to-emerald-500',
+    subtitleText: 'text-slate-500',
+    loadingBg: 'bg-slate-200',
+  },
 }
 
 // ==========================================
@@ -115,6 +179,58 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         </div>
       </div>
     </div>
+  )
+}
+
+// ==========================================
+// InfoSidebar Component
+// ==========================================
+
+// ==========================================
+// Modal Component
+// ==========================================
+
+export interface ModalProps {
+  isOpen: boolean
+  onClose: () => void
+  title: string
+  children: React.ReactNode
+  maxWidth?: string
+}
+
+export const Modal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  title,
+  children,
+  maxWidth = 'max-w-lg',
+}) => {
+  if (!isOpen) return null
+
+  return (
+    <>
+      <div
+        className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50"
+        onClick={onClose}
+      />
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div
+          className={`bg-white rounded-2xl shadow-2xl w-full ${maxWidth} max-h-[85vh] overflow-y-auto`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-between px-6 py-4 border-b border-stone-200">
+            <h3 className="font-bold text-stone-800 text-lg">{title}</h3>
+            <button
+              onClick={onClose}
+              className="p-1.5 hover:bg-stone-100 rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5 text-stone-500" />
+            </button>
+          </div>
+          <div className="p-6">{children}</div>
+        </div>
+      </div>
+    </>
   )
 }
 

@@ -60,6 +60,7 @@ type SavedDocData = {
   createdAt: string
   patientId?: number
   examinationId?: number
+  pdfUrl?: string
 }
 
 type DocumentCreatePageProps = {
@@ -322,7 +323,13 @@ export const DocumentCreatePage = ({documentType, documentData, onBack, onSave}:
       }
       const blob = await generatePdfBlobFromHtml(previewRef.current)
       const arrayBuffer = await blob.arrayBuffer()
-      const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)))
+      const bytes = new Uint8Array(arrayBuffer)
+      let binary = ''
+      const chunkSize = 8192
+      for (let i = 0; i < bytes.length; i += chunkSize) {
+        binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize))
+      }
+      const base64 = btoa(binary)
       await uploadDocumentPdf(base64, {
         clinicId: 1,
         facilityId: facility?.id || 0,
@@ -339,16 +346,47 @@ export const DocumentCreatePage = ({documentType, documentData, onBack, onSave}:
     }
   }
 
-  // 保存処理
-  const handleSaveDocument = () => {
-    if (onSave) {
-      onSave({
-        documentType,
-        content: getContentForSave(),
-        createdAt: new Date().toISOString(),
-      })
+  // 保存処理（PDF生成→Blobアップロード→onSaveにURL付きで返す）
+  const handleSaveDocument = async () => {
+    if (pdfGenerating) return
+    setPdfGenerating(true)
+    try {
+      let pdfUrl = ''
+      if (previewRef.current) {
+        const blob = await generatePdfBlobFromHtml(previewRef.current)
+        const arrayBuffer = await blob.arrayBuffer()
+        const bytes = new Uint8Array(arrayBuffer)
+        let binary = ''
+        const chunkSize = 8192
+        for (let i = 0; i < bytes.length; i += chunkSize) {
+          binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize))
+        }
+        const base64 = btoa(binary)
+        const result = await uploadDocumentPdf(base64, {
+          clinicId: 1,
+          facilityId: facility?.id || 0,
+          patientId: patient?.id || 0,
+          examinationId: 0,
+          documentType,
+          documentName: template?.name || '',
+          visitDate: new Date().toISOString().slice(0, 10),
+        })
+        pdfUrl = result.url
+      }
+      if (onSave) {
+        onSave({
+          documentType,
+          content: getContentForSave(),
+          createdAt: new Date().toISOString(),
+          pdfUrl,
+        })
+      }
+      onBack()
+    } catch (e) {
+      console.error('PDF保存失敗:', e)
+    } finally {
+      setPdfGenerating(false)
     }
-    onBack()
   }
 
   if (!template) {
@@ -399,8 +437,8 @@ export const DocumentCreatePage = ({documentType, documentData, onBack, onSave}:
           <Button variant="outline" onClick={handlePrint}>
             印刷
           </Button>
-          <Button variant="success" onClick={handleSaveDocument}>
-            保存して閉じる
+          <Button variant="success" onClick={handleSaveDocument} disabled={pdfGenerating}>
+            {pdfGenerating ? 'PDF保存中...' : '保存して閉じる'}
           </Button>
         </div>
       </div>

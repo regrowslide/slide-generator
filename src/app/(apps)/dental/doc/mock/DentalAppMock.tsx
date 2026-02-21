@@ -227,7 +227,7 @@ export default function DentalAppMock() {
                 examinationId,
                 documentType,
                 documentName: DOCUMENT_TEMPLATES[documentType]?.name || documentType,
-                pdfUrl: '',
+                pdfUrl: (savedDoc as Record<string, unknown>).pdfUrl as string || '',
                 createdAt: new Date().toISOString(),
                 visitDate: selectedVisitPlan?.visitDate || new Date().toISOString().slice(0, 10),
               },
