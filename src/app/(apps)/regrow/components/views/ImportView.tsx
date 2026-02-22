@@ -161,8 +161,8 @@ export const ImportView = () => {
       <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
         <p className="text-blue-800 font-medium mb-2">📝 ファイル要件</p>
         <ul className="text-blue-700 text-sm space-y-1 list-disc list-inside">
-          <li>ファイル名: 担当者別分析表_asian relaxation villa[店舗名]_YYYYMMDD.xlsx</li>
-          <li>3店舗分（新潟西店、三条店、新潟中央店）をアップロードしてください</li>
+          <li>ファイル名: 担当者別分析表_Relaxation Salon SAMPLE[店舗名]_YYYYMMDD.xlsx</li>
+          <li>3店舗分（港北店、青葉店、中央店）をアップロードしてください</li>
           <li>同じ店舗のファイルを再度アップロードすると上書きされます</li>
         </ul>
       </div>

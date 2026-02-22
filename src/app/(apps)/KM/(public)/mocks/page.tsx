@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { LayoutDashboard, Factory, Stethoscope, BarChart3, UtensilsCrossed, Calculator, ArrowRight, Monitor, Tablet, Smartphone } from 'lucide-react'
+import { LayoutDashboard, Factory, Stethoscope, BarChart3, UtensilsCrossed, Calculator, Building2, Car, ArrowRight, Monitor, Tablet, Smartphone } from 'lucide-react'
 
 // ==========================================
 // モック一覧ページ
@@ -77,6 +77,28 @@ const mockups = [
     gradient: 'from-emerald-500 to-green-600',
     bgGradient: 'from-emerald-50 to-green-50',
     accentColor: 'emerald',
+  },
+  {
+    id: 'earth',
+    title: '不動産業務管理システム',
+    description:
+      '不動産仲介・賃貸管理・建築工事を一元管理。物件・顧客・現場・仲介の情報を有機的に連携し、業務効率を大幅に向上。',
+    features: ['物件管理', '賃貸管理', '現場管理', '仲介管理'],
+    icon: Building2,
+    gradient: 'from-indigo-500 to-blue-600',
+    bgGradient: 'from-indigo-50 to-blue-50',
+    accentColor: 'indigo',
+  },
+  {
+    id: 'sales-auto',
+    title: '自動車ディーラー営業管理システム',
+    description:
+      '商談管理・見積書作成・納車スケジュール・売上分析を統合した営業管理ツール。ABC判定やパイプライン可視化で成約率を向上。',
+    features: ['商談管理', '見積書作成', '納車管理', '売上分析'],
+    icon: Car,
+    gradient: 'from-sky-500 to-blue-600',
+    bgGradient: 'from-sky-50 to-blue-50',
+    accentColor: 'sky',
   },
 ]
 

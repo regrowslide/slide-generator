@@ -143,7 +143,7 @@ export const GuidanceView = ({onNavigate}: GuidanceViewProps) => {
           <div>
             <p className="text-sm font-medium text-gray-700 mb-1">インポート済み店舗:</p>
             <div className="flex gap-2 flex-wrap">
-              {['新潟西店', '三条店', '新潟中央店'].map((storeName) => {
+              {['港北店', '青葉店', '中央店'].map((storeName) => {
                 const hasData = monthlyData.importedData?.storeTotals.some((t) => t.storeName === storeName)
                 return (
                   <span
@@ -192,7 +192,7 @@ export const GuidanceView = ({onNavigate}: GuidanceViewProps) => {
           デモ用のサンプルデータを読み込みます。2026年1月〜12月の通年データが生成されます。
         </p>
         <ul className="text-sm text-blue-700 mb-4 space-y-1 list-disc list-inside">
-          <li>全店舗（新潟西店、三条店、新潟中央店）の12ヶ月分データ</li>
+          <li>全店舗（港北店、青葉店、中央店）の12ヶ月分データ</li>
           <li>各店舗5名のスタッフデータ（売上、客数、指名数など）</li>
           <li>季節変動を反映した売上データ（春秋繁忙期、年末ピーク）</li>
           <li>店舗KPI（稼働率、失客率、月別コメント）</li>

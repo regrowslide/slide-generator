@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
 import {
   Calculator,
   Search,
@@ -16,9 +16,13 @@ import {
   Brain,
   Camera,
   DollarSign,
+  RotateCcw,
+  Trash2,
+  Save,
+  BookOpen,
   LucideIcon,
 } from 'lucide-react'
-import {SplashScreen, InfoSidebar, type Feature, type TimeEfficiencyItem} from '../_components'
+import {SplashScreen, InfoSidebar, Modal, type Feature, type TimeEfficiencyItem} from '../_components'
 
 // ==========================================
 // 機能説明データ
@@ -71,7 +75,7 @@ const CHALLENGES = [
 ]
 
 // ==========================================
-// ダミーデータ
+// 型定義
 // ==========================================
 
 interface Ingredient {
@@ -100,7 +104,21 @@ interface AnalyzedItem {
   cost: number
 }
 
-const INGREDIENTS: Ingredient[] = [
+interface SavedRecipe {
+  id: string
+  name: string
+  sellingPrice: number
+  totalCost: number
+  grossMargin: number
+  items: AnalyzedItem[]
+  savedAt: string
+}
+
+// ==========================================
+// 初期データ
+// ==========================================
+
+const INITIAL_INGREDIENTS: Ingredient[] = [
   {id: 'I001', name: '鶏もも肉', category: '肉類', unit: 'g', unitPrice: 0.25, supplier: 'A食品', lastUpdated: '2026-02-20'},
   {id: 'I002', name: '豚バラ肉', category: '肉類', unit: 'g', unitPrice: 0.30, supplier: 'A食品', lastUpdated: '2026-02-20'},
   {id: 'I003', name: 'サーモン', category: '魚介類', unit: 'g', unitPrice: 0.50, supplier: 'B水産', lastUpdated: '2026-02-19'},
@@ -115,7 +133,7 @@ const INGREDIENTS: Ingredient[] = [
   {id: 'I012', name: 'オリーブオイル', category: '調味料', unit: 'ml', unitPrice: 0.50, supplier: 'G商事', lastUpdated: '2026-02-17'},
 ]
 
-const PROFIT_STANDARDS: ProfitStandard[] = [
+const INITIAL_PROFIT_STANDARDS: ProfitStandard[] = [
   {id: 'PS001', category: 'メイン料理', targetGrossMargin: 65, currentAvgMargin: 62, menuCount: 24, alertCount: 3},
   {id: 'PS002', category: 'サラダ・前菜', targetGrossMargin: 70, currentAvgMargin: 72, menuCount: 16, alertCount: 0},
   {id: 'PS003', category: 'スープ', targetGrossMargin: 75, currentAvgMargin: 78, menuCount: 8, alertCount: 0},
@@ -123,6 +141,8 @@ const PROFIT_STANDARDS: ProfitStandard[] = [
   {id: 'PS005', category: 'ドリンク', targetGrossMargin: 80, currentAvgMargin: 82, menuCount: 20, alertCount: 0},
   {id: 'PS006', category: 'セットメニュー', targetGrossMargin: 60, currentAvgMargin: 57, menuCount: 6, alertCount: 2},
 ]
+
+const INITIAL_SAVED_RECIPES: SavedRecipe[] = []
 
 // AI解析のダミー結果
 const AI_RESULT: AnalyzedItem[] = [
@@ -135,6 +155,30 @@ const AI_RESULT: AnalyzedItem[] = [
   {name: '牛乳', amount: '100ml', unitPrice: 0.20, cost: 20},
   {name: '塩・胡椒', amount: '適量', unitPrice: 0, cost: 2},
 ]
+
+// ==========================================
+// ユーティリティ
+// ==========================================
+
+const generateId = (prefix: string) => `${prefix}${Date.now().toString(36).toUpperCase()}`
+
+const usePersistedState = <T,>(key: string, initialData: T): [T, React.Dispatch<React.SetStateAction<T>>] => {
+  const [state, setState] = useState<T>(() => {
+    if (typeof window === 'undefined') return initialData
+    const stored = localStorage.getItem(key)
+    return stored ? JSON.parse(stored) : initialData
+  })
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(state))
+  }, [key, state])
+  return [state, setState]
+}
+
+const STORAGE_KEYS = {
+  ingredients: 'mock-recipe-calculator-ingredients',
+  profitStandards: 'mock-recipe-calculator-profit-standards',
+  savedRecipes: 'mock-recipe-calculator-saved-recipes',
+}
 
 // ==========================================
 // タブ定義
@@ -155,10 +199,32 @@ const TABS: Tab[] = [
 ]
 
 // ==========================================
-// タブビュー
+// フォーム入力ヘルパー
 // ==========================================
 
-const CalculatorView = () => {
+const FormField = ({label, children}: {label: string; children: React.ReactNode}) => (
+  <div>
+    <label className="text-xs text-stone-500 block mb-1">{label}</label>
+    {children}
+  </div>
+)
+
+const inputClass = 'w-full px-3 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent'
+const selectClass = inputClass
+
+const INGREDIENT_CATEGORIES = ['肉類', '魚介類', '野菜', '穀類', '卵・乳', '調味料']
+
+// ==========================================
+// 原価計算ビュー
+// ==========================================
+
+const CalculatorView = ({
+  savedRecipes,
+  setSavedRecipes,
+}: {
+  savedRecipes: SavedRecipe[]
+  setSavedRecipes: React.Dispatch<React.SetStateAction<SavedRecipe[]>>
+}) => {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [result, setResult] = useState<AnalyzedItem[] | null>(null)
   const [recipeName, setRecipeName] = useState('')
@@ -167,10 +233,9 @@ const CalculatorView = () => {
   const handleAnalyze = () => {
     setIsAnalyzing(true)
     setResult(null)
-    // 2秒のシミュレーション
     setTimeout(() => {
       setIsAnalyzing(false)
-      setResult(AI_RESULT)
+      setResult(AI_RESULT.map((item) => ({...item})))
       setRecipeName('チキンクリームシチュー')
       setSellingPrice('980')
     }, 2000)
@@ -179,6 +244,44 @@ const CalculatorView = () => {
   const totalCost = result ? result.reduce((sum, item) => sum + item.cost, 0) : 0
   const selling = parseFloat(sellingPrice) || 0
   const grossMargin = selling > 0 ? ((selling - totalCost) / selling) * 100 : 0
+
+  const handleUpdateItem = (idx: number, field: 'amount' | 'cost', value: string) => {
+    if (!result) return
+    setResult((prev) => {
+      if (!prev) return prev
+      const updated = [...prev]
+      if (field === 'amount') {
+        updated[idx] = {...updated[idx], amount: value}
+      } else {
+        updated[idx] = {...updated[idx], cost: Number(value) || 0}
+      }
+      return updated
+    })
+  }
+
+  const handleSaveRecipe = () => {
+    if (!result || !recipeName) return
+    const newRecipe: SavedRecipe = {
+      id: generateId('SR'),
+      name: recipeName,
+      sellingPrice: selling,
+      totalCost,
+      grossMargin,
+      items: result,
+      savedAt: new Date().toISOString().slice(0, 10),
+    }
+    setSavedRecipes((prev) => [newRecipe, ...prev])
+  }
+
+  const handleDeleteRecipe = (recipeId: string) => {
+    setSavedRecipes((prev) => prev.filter((r) => r.id !== recipeId))
+  }
+
+  const handleLoadRecipe = (recipe: SavedRecipe) => {
+    setResult(recipe.items.map((item) => ({...item})))
+    setRecipeName(recipe.name)
+    setSellingPrice(String(recipe.sellingPrice))
+  }
 
   return (
     <div className="space-y-6">
@@ -189,24 +292,22 @@ const CalculatorView = () => {
           <h3 className="font-bold text-stone-800">AI原価解析</h3>
         </div>
 
-        {/* アップロードエリア */}
         <div className="border-2 border-dashed border-emerald-200 rounded-xl p-8 text-center bg-emerald-50/30 mb-4">
           <Upload className="w-10 h-10 text-emerald-400 mx-auto mb-3" />
           <p className="text-stone-600 mb-1">レシピ画像をドラッグ＆ドロップ</p>
           <p className="text-xs text-stone-400 mb-4">または クリックしてファイルを選択</p>
           <div className="flex justify-center gap-3">
-            <button className="px-4 py-2 bg-white border border-stone-300 rounded-lg text-sm text-stone-600 hover:border-emerald-400 transition-colors">
+            <button onClick={handleAnalyze} className="px-4 py-2 bg-white border border-stone-300 rounded-lg text-sm text-stone-600 hover:border-emerald-400 transition-colors">
               <Camera className="w-4 h-4 inline mr-1" />
               写真を撮影
             </button>
-            <button className="px-4 py-2 bg-white border border-stone-300 rounded-lg text-sm text-stone-600 hover:border-emerald-400 transition-colors">
+            <button onClick={handleAnalyze} className="px-4 py-2 bg-white border border-stone-300 rounded-lg text-sm text-stone-600 hover:border-emerald-400 transition-colors">
               <Upload className="w-4 h-4 inline mr-1" />
               ファイル選択
             </button>
           </div>
         </div>
 
-        {/* AI解析ボタン */}
         <button
           onClick={handleAnalyze}
           disabled={isAnalyzing}
@@ -233,9 +334,17 @@ const CalculatorView = () => {
       {/* 解析結果 */}
       {result && (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          {/* レシピ情報 */}
           <div className="bg-white rounded-xl border border-stone-200 p-6">
-            <h3 className="font-bold text-stone-800 mb-4">解析結果</h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-bold text-stone-800">解析結果</h3>
+              <button
+                onClick={handleSaveRecipe}
+                className="flex items-center gap-1 px-3 py-1.5 bg-emerald-500 text-white rounded-lg text-sm hover:bg-emerald-600 transition-colors"
+              >
+                <Save size={14} />
+                レシピを保存
+              </button>
+            </div>
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <label className="text-xs text-stone-500 block mb-1">レシピ名</label>
@@ -243,7 +352,7 @@ const CalculatorView = () => {
                   type="text"
                   value={recipeName}
                   onChange={(e) => setRecipeName(e.target.value)}
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className={inputClass}
                 />
               </div>
               <div>
@@ -252,13 +361,12 @@ const CalculatorView = () => {
                   type="number"
                   value={sellingPrice}
                   onChange={(e) => setSellingPrice(e.target.value)}
-                  className="w-full px-3 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className={inputClass}
                   placeholder="0"
                 />
               </div>
             </div>
 
-            {/* 食材リスト */}
             <div className="bg-stone-50 rounded-xl overflow-hidden border border-stone-200">
               <table className="w-full text-sm">
                 <thead className="bg-stone-100 text-stone-500">
@@ -273,9 +381,23 @@ const CalculatorView = () => {
                   {result.map((item, idx) => (
                     <tr key={idx} className="hover:bg-emerald-50/30 transition-colors">
                       <td className="px-4 py-2 text-stone-700">{item.name}</td>
-                      <td className="px-4 py-2 text-right text-stone-600">{item.amount}</td>
+                      <td className="px-4 py-2 text-right">
+                        <input
+                          type="text"
+                          value={item.amount}
+                          onChange={(e) => handleUpdateItem(idx, 'amount', e.target.value)}
+                          className="w-20 text-right px-2 py-1 border border-stone-200 rounded text-sm focus:outline-none focus:ring-1 focus:ring-emerald-400"
+                        />
+                      </td>
                       <td className="px-4 py-2 text-right text-stone-600">{item.unitPrice > 0 ? `¥${item.unitPrice}` : '-'}</td>
-                      <td className="px-4 py-2 text-right font-medium text-stone-800">¥{item.cost.toFixed(1)}</td>
+                      <td className="px-4 py-2 text-right">
+                        <input
+                          type="number"
+                          value={item.cost}
+                          onChange={(e) => handleUpdateItem(idx, 'cost', e.target.value)}
+                          className="w-20 text-right px-2 py-1 border border-stone-200 rounded text-sm focus:outline-none focus:ring-1 focus:ring-emerald-400"
+                        />
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -289,7 +411,6 @@ const CalculatorView = () => {
             </div>
           </div>
 
-          {/* 粗利分析 */}
           <div className="grid grid-cols-3 gap-4">
             <div className="bg-white rounded-xl border border-stone-200 p-4 text-center">
               <p className="text-xs text-stone-500 mb-1">原価率</p>
@@ -310,32 +431,109 @@ const CalculatorView = () => {
           </div>
         </div>
       )}
+
+      {/* 保存済みレシピ一覧 */}
+      {savedRecipes.length > 0 && (
+        <div className="bg-white rounded-xl border border-stone-200 p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <BookOpen className="w-5 h-5 text-emerald-600" />
+            <h3 className="font-bold text-stone-800">保存済みレシピ ({savedRecipes.length}件)</h3>
+          </div>
+          <div className="space-y-3">
+            {savedRecipes.map((recipe) => (
+              <div key={recipe.id} className="flex items-center justify-between p-3 bg-stone-50 rounded-lg border border-stone-100 hover:border-emerald-200 transition-colors">
+                <div className="flex items-center gap-4 cursor-pointer flex-1" onClick={() => handleLoadRecipe(recipe)}>
+                  <div>
+                    <p className="font-medium text-stone-800">{recipe.name}</p>
+                    <p className="text-xs text-stone-500">{recipe.savedAt} 保存</p>
+                  </div>
+                  <div className="flex gap-4 text-sm">
+                    <span className="text-stone-600">原価: ¥{recipe.totalCost.toFixed(0)}</span>
+                    <span className="text-stone-600">販売: ¥{recipe.sellingPrice}</span>
+                    <span className={`font-medium ${recipe.grossMargin >= 65 ? 'text-emerald-600' : recipe.grossMargin >= 60 ? 'text-amber-600' : 'text-red-600'}`}>
+                      粗利: {recipe.grossMargin.toFixed(1)}%
+                    </span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleDeleteRecipe(recipe.id)}
+                  className="p-2 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors ml-2"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
 
-const IngredientsView = () => {
+// ==========================================
+// 食材マスタビュー
+// ==========================================
+
+const IngredientsView = ({
+  ingredients,
+  setIngredients,
+}: {
+  ingredients: Ingredient[]
+  setIngredients: React.Dispatch<React.SetStateAction<Ingredient[]>>
+}) => {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [editingItem, setEditingItem] = useState<Ingredient | null>(null)
 
-  const categories = [...new Set(INGREDIENTS.map((i) => i.category))]
-  const filtered = INGREDIENTS.filter(
+  const categories = [...new Set(ingredients.map((i) => i.category))]
+  const filtered = ingredients.filter(
     (i) =>
       (!searchTerm || i.name.includes(searchTerm) || i.supplier.includes(searchTerm)) &&
       (!selectedCategory || i.category === selectedCategory)
   )
 
+  const emptyIngredient = {name: '', category: INGREDIENT_CATEGORIES[0], unit: 'g', unitPrice: 0, supplier: ''}
+  const [form, setForm] = useState(emptyIngredient)
+
+  const openNew = () => {
+    setEditingItem(null)
+    setForm(emptyIngredient)
+    setModalOpen(true)
+  }
+
+  const openEdit = (item: Ingredient) => {
+    setEditingItem(item)
+    setForm({name: item.name, category: item.category, unit: item.unit, unitPrice: item.unitPrice, supplier: item.supplier})
+    setModalOpen(true)
+  }
+
+  const handleSave = () => {
+    const today = new Date().toISOString().slice(0, 10)
+    if (editingItem) {
+      setIngredients((prev) => prev.map((i) => (i.id === editingItem.id ? {...i, ...form, lastUpdated: today} : i)))
+    } else {
+      setIngredients((prev) => [...prev, {id: generateId('I'), ...form, lastUpdated: today}])
+    }
+    setModalOpen(false)
+  }
+
+  const handleDelete = () => {
+    if (!editingItem) return
+    setIngredients((prev) => prev.filter((i) => i.id !== editingItem.id))
+    setModalOpen(false)
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="font-bold text-stone-800">食材マスタ ({INGREDIENTS.length}件)</h3>
-        <button className="flex items-center gap-1 px-3 py-1.5 bg-emerald-500 text-white rounded-lg text-sm hover:bg-emerald-600 transition-colors">
+        <h3 className="font-bold text-stone-800">食材マスタ ({ingredients.length}件)</h3>
+        <button onClick={openNew} className="flex items-center gap-1 px-3 py-1.5 bg-emerald-500 text-white rounded-lg text-sm hover:bg-emerald-600 transition-colors">
           <Plus size={14} />
           食材追加
         </button>
       </div>
 
-      {/* フィルター */}
       <div className="flex gap-3 items-center">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-2.5 text-stone-400" size={16} />
@@ -370,7 +568,6 @@ const IngredientsView = () => {
         </div>
       </div>
 
-      {/* テーブル */}
       <div className="bg-white rounded-xl border border-stone-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -386,7 +583,7 @@ const IngredientsView = () => {
             </thead>
             <tbody className="divide-y divide-stone-100">
               {filtered.map((item) => (
-                <tr key={item.id} className="hover:bg-emerald-50/30 transition-colors cursor-pointer">
+                <tr key={item.id} className="hover:bg-emerald-50/30 transition-colors cursor-pointer" onClick={() => openEdit(item)}>
                   <td className="px-4 py-3 font-medium text-stone-800">{item.name}</td>
                   <td className="px-4 py-3">
                     <span className="px-2 py-0.5 rounded-full text-xs bg-emerald-50 text-emerald-700 border border-emerald-200">{item.category}</span>
@@ -401,78 +598,194 @@ const IngredientsView = () => {
           </table>
         </div>
       </div>
+
+      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editingItem ? '食材編集' : '食材追加'}>
+        <div className="space-y-4">
+          <FormField label="食材名">
+            <input type="text" className={inputClass} value={form.name} onChange={(e) => setForm((p) => ({...p, name: e.target.value}))} />
+          </FormField>
+          <div className="grid grid-cols-2 gap-4">
+            <FormField label="カテゴリ">
+              <select className={selectClass} value={form.category} onChange={(e) => setForm((p) => ({...p, category: e.target.value}))}>
+                {INGREDIENT_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </FormField>
+            <FormField label="単位">
+              <input type="text" className={inputClass} value={form.unit} onChange={(e) => setForm((p) => ({...p, unit: e.target.value}))} placeholder="g, ml, 個" />
+            </FormField>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <FormField label="単価（円）">
+              <input type="number" step="0.01" className={inputClass} value={form.unitPrice} onChange={(e) => setForm((p) => ({...p, unitPrice: Number(e.target.value)}))} />
+            </FormField>
+            <FormField label="仕入先">
+              <input type="text" className={inputClass} value={form.supplier} onChange={(e) => setForm((p) => ({...p, supplier: e.target.value}))} />
+            </FormField>
+          </div>
+          <div className="flex justify-between pt-2">
+            {editingItem ? (
+              <button onClick={handleDelete} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
+                <Trash2 size={14} />
+                削除
+              </button>
+            ) : <div />}
+            <div className="flex gap-2">
+              <button onClick={() => setModalOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
+              <button onClick={handleSave} className="px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm hover:bg-emerald-600 transition-colors">保存</button>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }
 
-const ProfitStandardsView = () => (
-  <div className="space-y-4">
-    <div className="flex items-center justify-between">
-      <h3 className="font-bold text-stone-800">粗利基準マスタ</h3>
-      <button className="flex items-center gap-1 px-3 py-1.5 bg-emerald-500 text-white rounded-lg text-sm hover:bg-emerald-600 transition-colors">
-        <Plus size={14} />
-        カテゴリ追加
-      </button>
-    </div>
+// ==========================================
+// 粗利基準マスタビュー
+// ==========================================
 
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {PROFIT_STANDARDS.map((standard) => {
-        const isBelow = standard.currentAvgMargin < standard.targetGrossMargin
-        return (
-          <div
-            key={standard.id}
-            className={`bg-white rounded-xl border p-5 hover:shadow-md transition-all cursor-pointer ${
-              isBelow ? 'border-red-200 hover:border-red-300' : 'border-stone-200 hover:border-emerald-200'
-            }`}
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <h4 className="font-bold text-stone-800">{standard.category}</h4>
-                <span className="text-xs text-stone-500">{standard.menuCount}メニュー</span>
+const ProfitStandardsView = ({
+  profitStandards,
+  setProfitStandards,
+}: {
+  profitStandards: ProfitStandard[]
+  setProfitStandards: React.Dispatch<React.SetStateAction<ProfitStandard[]>>
+}) => {
+  const [modalOpen, setModalOpen] = useState(false)
+  const [editingItem, setEditingItem] = useState<ProfitStandard | null>(null)
+
+  const emptyStandard = {category: '', targetGrossMargin: 65, currentAvgMargin: 65, menuCount: 0, alertCount: 0}
+  const [form, setForm] = useState(emptyStandard)
+
+  const openNew = () => {
+    setEditingItem(null)
+    setForm(emptyStandard)
+    setModalOpen(true)
+  }
+
+  const openEdit = (item: ProfitStandard) => {
+    setEditingItem(item)
+    setForm({category: item.category, targetGrossMargin: item.targetGrossMargin, currentAvgMargin: item.currentAvgMargin, menuCount: item.menuCount, alertCount: item.alertCount})
+    setModalOpen(true)
+  }
+
+  const handleSave = () => {
+    if (editingItem) {
+      setProfitStandards((prev) => prev.map((p) => (p.id === editingItem.id ? {...p, ...form} : p)))
+    } else {
+      setProfitStandards((prev) => [...prev, {id: generateId('PS'), ...form}])
+    }
+    setModalOpen(false)
+  }
+
+  const handleDelete = () => {
+    if (!editingItem) return
+    setProfitStandards((prev) => prev.filter((p) => p.id !== editingItem.id))
+    setModalOpen(false)
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h3 className="font-bold text-stone-800">粗利基準マスタ</h3>
+        <button onClick={openNew} className="flex items-center gap-1 px-3 py-1.5 bg-emerald-500 text-white rounded-lg text-sm hover:bg-emerald-600 transition-colors">
+          <Plus size={14} />
+          カテゴリ追加
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {profitStandards.map((standard) => {
+          const isBelow = standard.currentAvgMargin < standard.targetGrossMargin
+          return (
+            <div
+              key={standard.id}
+              onClick={() => openEdit(standard)}
+              className={`bg-white rounded-xl border p-5 hover:shadow-md transition-all cursor-pointer ${
+                isBelow ? 'border-red-200 hover:border-red-300' : 'border-stone-200 hover:border-emerald-200'
+              }`}
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h4 className="font-bold text-stone-800">{standard.category}</h4>
+                  <span className="text-xs text-stone-500">{standard.menuCount}メニュー</span>
+                </div>
+                <ChevronRight className="w-5 h-5 text-stone-400" />
               </div>
-              <ChevronRight className="w-5 h-5 text-stone-400" />
+
+              <div className="mb-3">
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-stone-500">現在の平均粗利率</span>
+                  <span className={`font-bold ${isBelow ? 'text-red-600' : 'text-emerald-600'}`}>
+                    {standard.currentAvgMargin}%
+                  </span>
+                </div>
+                <div className="w-full h-3 bg-stone-100 rounded-full overflow-hidden relative">
+                  <div
+                    className="absolute top-0 h-full w-0.5 bg-stone-400 z-10"
+                    style={{left: `${standard.targetGrossMargin}%`}}
+                  />
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${isBelow ? 'bg-gradient-to-r from-red-400 to-red-500' : 'bg-gradient-to-r from-emerald-400 to-emerald-500'}`}
+                    style={{width: `${standard.currentAvgMargin}%`}}
+                  />
+                </div>
+                <div className="flex justify-between text-[10px] text-stone-400 mt-0.5">
+                  <span>0%</span>
+                  <span>目標: {standard.targetGrossMargin}%</span>
+                  <span>100%</span>
+                </div>
+              </div>
+
+              {standard.alertCount > 0 && (
+                <div className="bg-red-50 border border-red-100 rounded-lg px-3 py-2 text-xs text-red-700 flex items-center gap-1">
+                  <TrendingUp className="w-3 h-3" />
+                  基準未達メニュー: {standard.alertCount}件
+                </div>
+              )}
             </div>
+          )
+        })}
+      </div>
 
-            {/* 粗利バー */}
-            <div className="mb-3">
-              <div className="flex justify-between text-xs mb-1">
-                <span className="text-stone-500">現在の平均粗利率</span>
-                <span className={`font-bold ${isBelow ? 'text-red-600' : 'text-emerald-600'}`}>
-                  {standard.currentAvgMargin}%
-                </span>
-              </div>
-              <div className="w-full h-3 bg-stone-100 rounded-full overflow-hidden relative">
-                {/* 目標ライン */}
-                <div
-                  className="absolute top-0 h-full w-0.5 bg-stone-400 z-10"
-                  style={{left: `${standard.targetGrossMargin}%`}}
-                />
-                {/* 現在値バー */}
-                <div
-                  className={`h-full rounded-full transition-all duration-500 ${isBelow ? 'bg-gradient-to-r from-red-400 to-red-500' : 'bg-gradient-to-r from-emerald-400 to-emerald-500'}`}
-                  style={{width: `${standard.currentAvgMargin}%`}}
-                />
-              </div>
-              <div className="flex justify-between text-[10px] text-stone-400 mt-0.5">
-                <span>0%</span>
-                <span>目標: {standard.targetGrossMargin}%</span>
-                <span>100%</span>
-              </div>
-            </div>
-
-            {/* アラート */}
-            {standard.alertCount > 0 && (
-              <div className="bg-red-50 border border-red-100 rounded-lg px-3 py-2 text-xs text-red-700 flex items-center gap-1">
-                <TrendingUp className="w-3 h-3" />
-                基準未達メニュー: {standard.alertCount}件
-              </div>
-            )}
+      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editingItem ? 'カテゴリ編集' : 'カテゴリ追加'}>
+        <div className="space-y-4">
+          <FormField label="カテゴリ名">
+            <input type="text" className={inputClass} value={form.category} onChange={(e) => setForm((p) => ({...p, category: e.target.value}))} />
+          </FormField>
+          <div className="grid grid-cols-2 gap-4">
+            <FormField label="目標粗利率（%）">
+              <input type="number" className={inputClass} value={form.targetGrossMargin} onChange={(e) => setForm((p) => ({...p, targetGrossMargin: Number(e.target.value)}))} />
+            </FormField>
+            <FormField label="現在の平均粗利率（%）">
+              <input type="number" className={inputClass} value={form.currentAvgMargin} onChange={(e) => setForm((p) => ({...p, currentAvgMargin: Number(e.target.value)}))} />
+            </FormField>
           </div>
-        )
-      })}
+          <div className="grid grid-cols-2 gap-4">
+            <FormField label="メニュー数">
+              <input type="number" className={inputClass} value={form.menuCount} onChange={(e) => setForm((p) => ({...p, menuCount: Number(e.target.value)}))} />
+            </FormField>
+            <FormField label="基準未達メニュー数">
+              <input type="number" className={inputClass} value={form.alertCount} onChange={(e) => setForm((p) => ({...p, alertCount: Number(e.target.value)}))} />
+            </FormField>
+          </div>
+          <div className="flex justify-between pt-2">
+            {editingItem ? (
+              <button onClick={handleDelete} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
+                <Trash2 size={14} />
+                削除
+              </button>
+            ) : <div />}
+            <div className="flex gap-2">
+              <button onClick={() => setModalOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
+              <button onClick={handleSave} className="px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm hover:bg-emerald-600 transition-colors">保存</button>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </div>
-  </div>
-)
+  )
+}
 
 // ==========================================
 // メインコンポーネント
@@ -483,9 +796,19 @@ export default function RecipeCalculatorMockPage() {
   const [showSplash, setShowSplash] = useState(true)
   const [showInfoSidebar, setShowInfoSidebar] = useState(false)
 
+  const [ingredients, setIngredients] = usePersistedState<Ingredient[]>(STORAGE_KEYS.ingredients, INITIAL_INGREDIENTS)
+  const [profitStandards, setProfitStandards] = usePersistedState<ProfitStandard[]>(STORAGE_KEYS.profitStandards, INITIAL_PROFIT_STANDARDS)
+  const [savedRecipes, setSavedRecipes] = usePersistedState<SavedRecipe[]>(STORAGE_KEYS.savedRecipes, INITIAL_SAVED_RECIPES)
+
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 1500)
     return () => clearTimeout(timer)
+  }, [])
+
+  const handleReset = useCallback(() => {
+    if (!window.confirm('データを初期状態に戻しますか？')) return
+    Object.values(STORAGE_KEYS).forEach((key) => localStorage.removeItem(key))
+    window.location.reload()
   }, [])
 
   if (showSplash) {
@@ -493,14 +816,13 @@ export default function RecipeCalculatorMockPage() {
   }
 
   const TAB_VIEWS: Record<TabId, React.ReactNode> = {
-    calculator: <CalculatorView />,
-    ingredients: <IngredientsView />,
-    'profit-standards': <ProfitStandardsView />,
+    calculator: <CalculatorView savedRecipes={savedRecipes} setSavedRecipes={setSavedRecipes} />,
+    ingredients: <IngredientsView ingredients={ingredients} setIngredients={setIngredients} />,
+    'profit-standards': <ProfitStandardsView profitStandards={profitStandards} setProfitStandards={setProfitStandards} />,
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-stone-50 via-white to-emerald-50/30 font-sans">
-      {/* ヘッダー */}
       <header className="bg-white/80 backdrop-blur-md border-b border-stone-200 sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -516,6 +838,13 @@ export default function RecipeCalculatorMockPage() {
           </div>
 
           <div className="flex items-center gap-2">
+            <button
+              onClick={handleReset}
+              className="p-2 text-stone-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+              title="データ初期化"
+            >
+              <RotateCcw size={16} />
+            </button>
             {TABS.map((tab) => (
               <button
                 key={tab.id}
@@ -534,12 +863,10 @@ export default function RecipeCalculatorMockPage() {
         </div>
       </header>
 
-      {/* メインコンテンツ */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {TAB_VIEWS[activeTab]}
       </main>
 
-      {/* フローティング「機能説明」ボタン */}
       <button
         onClick={() => setShowInfoSidebar(true)}
         className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl shadow-lg shadow-emerald-500/30 hover:from-emerald-600 hover:to-green-700 transition-all duration-200"
@@ -548,7 +875,6 @@ export default function RecipeCalculatorMockPage() {
         <span className="text-sm font-medium">機能説明</span>
       </button>
 
-      {/* 機能説明サイドバー */}
       <InfoSidebar
         isOpen={showInfoSidebar}
         onClose={() => setShowInfoSidebar(false)}

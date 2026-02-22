@@ -7,23 +7,23 @@ import type {ExcelParseResult, StoreName, StaffRecord} from '../types'
 
 /**
  * ファイル名から店舗名を抽出
- * 例: "担当者別分析表_asian relaxation villa新潟西店_20260209.xlsx" → "新潟西店"
+ * 例: "担当者別分析表_Relaxation Salon SAMPLE港北店_20260209.xlsx" → "港北店"
  */
 export const extractStoreName = (filename: string): StoreName => {
-  const match = filename.match(/villa(.*?)_/)
+  const match = filename.match(/SAMPLE(.*?)_/)
   if (!match) {
     // フォールバック: ファイル名に店舗名が含まれているか確認
-    if (filename.includes('新潟西店')) return '新潟西店'
-    if (filename.includes('三条店')) return '三条店'
-    if (filename.includes('新潟中央店')) return '新潟中央店'
+    if (filename.includes('港北店')) return '港北店'
+    if (filename.includes('青葉店')) return '青葉店'
+    if (filename.includes('中央店')) return '中央店'
     throw new Error('ファイル名から店舗名を抽出できませんでした')
   }
 
   const extracted = match[1].trim()
   // 店舗名マッピング
-  if (extracted.includes('新潟西') || extracted === '新潟西店') return '新潟西店'
-  if (extracted.includes('三条') || extracted === '三条店') return '三条店'
-  if (extracted.includes('新潟中央') || extracted === '新潟中央店') return '新潟中央店'
+  if (extracted.includes('港北') || extracted === '港北店') return '港北店'
+  if (extracted.includes('青葉') || extracted === '青葉店') return '青葉店'
+  if (extracted.includes('中央') || extracted === '中央店') return '中央店'
 
   throw new Error(`未知の店舗名: ${extracted}`)
 }

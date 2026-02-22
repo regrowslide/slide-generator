@@ -151,7 +151,7 @@ export const SlidesView = () => {
   const {monthlyData} = useDataContext()
 
   // グローバルな店舗フィルタ
-  const allStores: StoreName[] = ['新潟西店', '三条店', '新潟中央店']
+  const allStores: StoreName[] = ['港北店', '青葉店', '中央店']
   const [selectedStores, setSelectedStores] = useState<StoreName[]>(allStores)
 
   // スタッフフィルタ
@@ -482,7 +482,7 @@ const Slide1TitleSlide = () => {
     <div className="h-full min-h-[600px] flex flex-col items-center justify-center bg-gradient-to-br from-red-500 to-pink-600 text-white">
       <h1 className="text-5xl font-bold mb-4">月次業績レポート</h1>
       <p className="text-2xl">{year}年{month}月</p>
-      <p className="text-lg mt-8">asian relaxation villa</p>
+      <p className="text-lg mt-8">Relaxation Salon SAMPLE</p>
     </div>
   )
 }
@@ -524,7 +524,7 @@ const Slide2TableOfContents = () => {
 const Slide3OverallSummary = ({selectedStores}: StoreFilterProps) => {
   const {monthlyData} = useDataContext()
   const stores = monthlyData.importedData?.storeTotals || []
-  const storesNames: StoreName[] = ['新潟西店', '三条店', '新潟中央店']
+  const storesNames: StoreName[] = ['港北店', '青葉店', '中央店']
   const filteredStores = storesNames.filter((s) => selectedStores.includes(s))
 
   // 店舗別の再来率を計算
@@ -654,14 +654,14 @@ const MetricComparisonSlide = ({
             <YAxis style={{fontSize: '14px'}} />
             <Tooltip />
             <Legend />
-            {selectedStores.includes('新潟西店') && (
-              <Line type="monotone" dataKey="新潟西店" stroke="#DC3545" strokeWidth={2} name="新潟西店" />
+            {selectedStores.includes('港北店') && (
+              <Line type="monotone" dataKey="港北店" stroke="#DC3545" strokeWidth={2} name="港北店" />
             )}
-            {selectedStores.includes('三条店') && (
-              <Line type="monotone" dataKey="三条店" stroke="#4285F4" strokeWidth={2} name="三条店" />
+            {selectedStores.includes('青葉店') && (
+              <Line type="monotone" dataKey="青葉店" stroke="#4285F4" strokeWidth={2} name="青葉店" />
             )}
-            {selectedStores.includes('新潟中央店') && (
-              <Line type="monotone" dataKey="新潟中央店" stroke="#34A853" strokeWidth={2} name="新潟中央店" />
+            {selectedStores.includes('中央店') && (
+              <Line type="monotone" dataKey="中央店" stroke="#34A853" strokeWidth={2} name="中央店" />
             )}
           </ComposedChart>
         </ResponsiveContainer>
@@ -711,9 +711,9 @@ const Slide7AllMetricsComparison = ({selectedStores}: StoreFilterProps) => {
 
   // 店舗の色定義
   const storeColors: Record<StoreName, string> = {
-    新潟西店: '#DC3545',
-    三条店: '#4285F4',
-    新潟中央店: '#34A853',
+    港北店: '#DC3545',
+    青葉店: '#4285F4',
+    中央店: '#34A853',
   }
 
   // 稼働率/再来率のダッシュパターン

@@ -25,7 +25,7 @@ export const ManualInputView = () => {
     }, 300)
   }
 
-  const stores: StoreName[] = ['新潟西店', '三条店', '新潟中央店']
+  const stores: StoreName[] = ['港北店', '青葉店', '中央店']
 
   // スタッフリストを取得（インポートデータから）
   const allStaff =

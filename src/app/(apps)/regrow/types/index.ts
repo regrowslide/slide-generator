@@ -10,7 +10,7 @@
 export type YearMonth = string
 
 /** 店舗名 */
-export type StoreName = '新潟西店' | '三条店' | '新潟中央店'
+export type StoreName = '港北店' | '青葉店' | '中央店'
 
 // ABCD評価は不要のため削除
 
@@ -113,8 +113,8 @@ export type MonthlyData = {
 
 /** Excelファイル解析結果 */
 export type ExcelParseResult = {
-  storeName: string // フルネーム（例: "asian relaxation villa新潟西店"）
-  storeShortName: StoreName // 短縮名（例: "新潟西店"）
+  storeName: string // フルネーム（例: "Relaxation Salon SAMPLE港北店"）
+  storeShortName: StoreName // 短縮名（例: "港北店"）
   periodStart: string // 集計期間開始（例: "2026-02-01"）
   periodEnd: string // 集計期間終了（例: "2026-02-28"）
   staffList: StaffRecord[]

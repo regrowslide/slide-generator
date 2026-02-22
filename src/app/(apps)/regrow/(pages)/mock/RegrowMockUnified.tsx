@@ -89,7 +89,7 @@ type SectionKey = 'import' | 'data' | 'slides' | 'store' | 'staff' | 'input'
 // 定数・カラー
 // ============================================================
 
-const STORE_NAMES_LOCAL = ['新潟西店', '三条店', '新潟中央店'] as const
+const STORE_NAMES_LOCAL = ['港北店', '青葉店', '中央店'] as const
 const GRADE_OPTIONS = ['A', 'B', 'C', 'D'] as const
 const ROW_COLORS = ['bg-pink-50', 'bg-amber-50', 'bg-green-50'] as const
 const PURPLE_HEADER = '#8B78B5'
@@ -99,9 +99,9 @@ const TOTAL_SLIDES = 15
 
 // 店舗ごとのグラフカラー
 const STORE_COLORS: Record<string, {current: string; prev: string}> = {
-  新潟西店: {current: '#DC3545', prev: '#F5A0A8'},
-  三条店: {current: '#4285F4', prev: '#A4C2F4'},
-  新潟中央店: {current: '#34A853', prev: '#A8DAB5'},
+  港北店: {current: '#DC3545', prev: '#F5A0A8'},
+  青葉店: {current: '#4285F4', prev: '#A4C2F4'},
+  中央店: {current: '#34A853', prev: '#A8DAB5'},
 }
 
 const CHART_COLORS = {
@@ -113,9 +113,9 @@ const CHART_COLORS = {
 
 // サンプル先月データ
 const SAMPLE_PREV_STORE_KPI: Record<string, StoreKpiInput> = {
-  新潟西店: {storeName: '新潟西店', sales: 420000, utilizationRate: 68, avgUnitPrice: 5100, returnRate: 42, churnRate: 15, comment: ''},
-  三条店: {storeName: '三条店', sales: 380000, utilizationRate: 62, avgUnitPrice: 4800, returnRate: 38, churnRate: 18, comment: ''},
-  新潟中央店: {storeName: '新潟中央店', sales: 350000, utilizationRate: 58, avgUnitPrice: 4600, returnRate: 35, churnRate: 20, comment: ''},
+  港北店: {storeName: '港北店', sales: 420000, utilizationRate: 68, avgUnitPrice: 5100, returnRate: 42, churnRate: 15, comment: ''},
+  青葉店: {storeName: '青葉店', sales: 380000, utilizationRate: 62, avgUnitPrice: 4800, returnRate: 38, churnRate: 18, comment: ''},
+  中央店: {storeName: '中央店', sales: 350000, utilizationRate: 58, avgUnitPrice: 4600, returnRate: 35, churnRate: 20, comment: ''},
 }
 
 const SAMPLE_PREV_STAFF: Record<string, {sales: number; nominationCount: number; returnRate: number; unitPrice: number}> = {}
@@ -527,9 +527,9 @@ const SectionTitleSlide = ({periodLabel}: {periodLabel: string}) => (
     <p className="text-sm text-gray-500 italic">アジアンリラクゼーションヴィラ</p>
     <h1 className="text-3xl font-bold mt-1" style={{color: NAVY}}>月次定例ミーティング資料</h1>
     <div className="mt-4 text-sm text-gray-600 space-y-1">
-      <p>・Asian relaxation villa 新潟西店</p>
-      <p>・Asian relaxation villa 三条店</p>
-      <p>・Asian relaxation villa 新潟中央店</p>
+      <p>・Relaxation Salon SAMPLE 港北店</p>
+      <p>・Relaxation Salon SAMPLE 青葉店</p>
+      <p>・Relaxation Salon SAMPLE 中央店</p>
     </div>
     {periodLabel && <p className="mt-3 text-lg font-semibold text-gray-700">{periodLabel}</p>}
   </div>
