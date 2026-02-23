@@ -17,7 +17,6 @@ import {
   Check,
   Clock,
   AlertTriangle,
-  PanelRightOpen,
   Users,
   RotateCcw,
   Trash2,
@@ -35,9 +34,6 @@ import {
   ArrowRight,
   ChevronDown,
   Filter,
-  Star,
-  Phone,
-  Mail,
   Printer,
   LucideIcon,
 } from 'lucide-react'
@@ -47,7 +43,12 @@ import {
   Modal,
   GuidanceOverlay,
   GuidanceStartButton,
+  MockHeader,
+  MockHeaderTitle,
+  MockHeaderTab,
+  MockHeaderInfoButton,
   usePersistedState,
+  useEditModal,
   generateId,
   resetPersistedData,
   type Feature,
@@ -803,8 +804,6 @@ const DealsView = ({
   const [filterStatus, setFilterStatus] = useState<string>('')
   const [filterRank, setFilterRank] = useState<string>('')
   const [filterSP, setFilterSP] = useState<string>('')
-  const [modalOpen, setModalOpen] = useState(false)
-  const [editingItem, setEditingItem] = useState<Deal | null>(null)
 
   const filtered = deals.filter((d) => {
     const customerName = getCustomerName(d.customerId, customers)
@@ -816,7 +815,7 @@ const DealsView = ({
     return matchSearch && matchStatus && matchRank && matchSP
   })
 
-  const emptyDeal: Omit<Deal, 'id'> = {
+  const emptyDealForm: Omit<Deal, 'id'> = {
     customerId: customers[0]?.id ?? '',
     salesPersonId: SALES_PERSONS[0].id,
     carModelId: CAR_MODELS[0].id,
@@ -831,46 +830,32 @@ const DealsView = ({
     updatedAt: '2026-02-22',
   }
 
-  const [form, setForm] = useState(emptyDeal)
+  const toForm = (deal: Deal): Omit<Deal, 'id'> => ({
+    customerId: deal.customerId,
+    salesPersonId: deal.salesPersonId,
+    carModelId: deal.carModelId,
+    status: deal.status,
+    rank: deal.rank,
+    amount: deal.amount,
+    nextAction: deal.nextAction,
+    nextActionDate: deal.nextActionDate,
+    tasks: [...deal.tasks],
+    note: deal.note,
+    createdAt: deal.createdAt,
+    updatedAt: deal.updatedAt,
+  })
 
-  const openNew = () => {
-    setEditingItem(null)
-    setForm(emptyDeal)
-    setModalOpen(true)
-  }
+  const modal = useEditModal<Deal, Omit<Deal, 'id'>>(emptyDealForm, toForm)
+  const {form, setForm} = modal
 
-  const openEdit = (deal: Deal) => {
-    setEditingItem(deal)
-    setForm({
-      customerId: deal.customerId,
-      salesPersonId: deal.salesPersonId,
-      carModelId: deal.carModelId,
-      status: deal.status,
-      rank: deal.rank,
-      amount: deal.amount,
-      nextAction: deal.nextAction,
-      nextActionDate: deal.nextActionDate,
-      tasks: [...deal.tasks],
-      note: deal.note,
-      createdAt: deal.createdAt,
-      updatedAt: deal.updatedAt,
-    })
-    setModalOpen(true)
-  }
-
+  // updatedAtを付与するカスタム保存
   const handleSave = () => {
-    if (editingItem) {
-      setDeals((prev) => prev.map((d) => (d.id === editingItem.id ? {...d, ...form, updatedAt: '2026-02-22'} : d)))
+    if (modal.editingItem) {
+      setDeals((prev) => prev.map((d) => (d.id === modal.editingItem!.id ? {...d, ...form, updatedAt: '2026-02-22'} : d)))
     } else {
       setDeals((prev) => [...prev, {id: generateId('DEAL'), ...form} as Deal])
     }
-    setModalOpen(false)
-  }
-
-  const handleDelete = () => {
-    if (!editingItem) return
-    setDeals((prev) => prev.filter((d) => d.id !== editingItem.id))
-    setModalOpen(false)
+    modal.close()
   }
 
   const cycleDealStatus = (dealId: string) => {
@@ -928,7 +913,7 @@ const DealsView = ({
           <option value="">全担当</option>
           {SALES_PERSONS.map((sp) => <option key={sp.id} value={sp.id}>{sp.name}</option>)}
         </select>
-        <button data-guidance="add-deal-button" onClick={openNew} className="flex items-center gap-1 px-3 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition-colors">
+        <button data-guidance="add-deal-button" onClick={modal.openNew} className="flex items-center gap-1 px-3 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition-colors">
           <Plus size={14} />
           商談追加
         </button>
@@ -952,7 +937,7 @@ const DealsView = ({
           </thead>
           <tbody>
             {filtered.slice(0, 50).map((deal, idx) => (
-              <tr key={deal.id} {...(idx === 0 ? {'data-guidance': 'deal-row'} : {})} className="border-b border-stone-100 hover:bg-blue-50/50 cursor-pointer transition-colors" onClick={() => openEdit(deal)}>
+              <tr key={deal.id} {...(idx === 0 ? {'data-guidance': 'deal-row'} : {})} className="border-b border-stone-100 hover:bg-blue-50/50 cursor-pointer transition-colors" onClick={() => modal.openEdit(deal)}>
                 <td className="py-2 px-3 font-medium text-stone-800">{getCustomerName(deal.customerId, customers)}</td>
                 <td className="py-2 px-3 text-stone-600">{getCarModelName(deal.carModelId)}</td>
                 <td className="py-2 px-3 text-stone-600">{getSalesPersonName(deal.salesPersonId)}</td>
@@ -967,7 +952,7 @@ const DealsView = ({
       </div>
 
       {/* 商談モーダル */}
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editingItem ? '商談編集' : '商談追加'} maxWidth="max-w-2xl">
+      <Modal isOpen={modal.modalOpen} onClose={modal.close} title={modal.editingItem ? '商談編集' : '商談追加'} maxWidth="max-w-2xl">
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <FormField label="顧客">
@@ -1052,13 +1037,13 @@ const DealsView = ({
           </div>
 
           <div className="flex justify-between pt-2">
-            {editingItem ? (
-              <button onClick={handleDelete} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
+            {modal.editingItem ? (
+              <button onClick={() => modal.remove(setDeals)} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
                 <Trash2 size={14} />削除
               </button>
             ) : <div />}
             <div className="flex gap-2">
-              <button onClick={() => setModalOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
+              <button onClick={modal.close} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
               <button onClick={handleSave} className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition-colors">保存</button>
             </div>
           </div>
@@ -1087,8 +1072,6 @@ const DailyReportView = ({
 }) => {
   const [selectedDate, setSelectedDate] = useState('2026-02-22')
   const [selectedSP, setSelectedSP] = useState('')
-  const [modalOpen, setModalOpen] = useState(false)
-  const [editingItem, setEditingItem] = useState<DailyReport | null>(null)
 
   const filteredReports = dailyReports.filter((r) => {
     const matchDate = r.date === selectedDate
@@ -1098,7 +1081,7 @@ const DailyReportView = ({
 
   const dayAttendance = attendance.filter((a) => a.date === selectedDate)
 
-  const emptyReport: Omit<DailyReport, 'id'> = {
+  const emptyReportForm: Omit<DailyReport, 'id'> = {
     salesPersonId: SALES_PERSONS[0].id,
     date: selectedDate,
     activities: [{type: '電話', customerName: '', content: ''}],
@@ -1106,39 +1089,21 @@ const DailyReportView = ({
     nextDayPlan: '',
   }
 
-  const [form, setForm] = useState(emptyReport)
+  const toForm = (report: DailyReport): Omit<DailyReport, 'id'> => ({
+    salesPersonId: report.salesPersonId,
+    date: report.date,
+    activities: [...report.activities],
+    summary: report.summary,
+    nextDayPlan: report.nextDayPlan,
+  })
 
+  const modal = useEditModal<DailyReport, Omit<DailyReport, 'id'>>(emptyReportForm, toForm)
+  const {form, setForm} = modal
+
+  // openNewをオーバーライド: selectedDateを反映
   const openNew = () => {
-    setEditingItem(null)
-    setForm({...emptyReport, date: selectedDate})
-    setModalOpen(true)
-  }
-
-  const openEdit = (report: DailyReport) => {
-    setEditingItem(report)
-    setForm({
-      salesPersonId: report.salesPersonId,
-      date: report.date,
-      activities: [...report.activities],
-      summary: report.summary,
-      nextDayPlan: report.nextDayPlan,
-    })
-    setModalOpen(true)
-  }
-
-  const handleSave = () => {
-    if (editingItem) {
-      setDailyReports((prev) => prev.map((r) => (r.id === editingItem.id ? {...r, ...form} : r)))
-    } else {
-      setDailyReports((prev) => [...prev, {id: generateId('DR'), ...form} as DailyReport])
-    }
-    setModalOpen(false)
-  }
-
-  const handleDelete = () => {
-    if (!editingItem) return
-    setDailyReports((prev) => prev.filter((r) => r.id !== editingItem.id))
-    setModalOpen(false)
+    modal.openNew()
+    modal.setForm((prev) => ({...prev, date: selectedDate}))
   }
 
   const addActivity = () => {
@@ -1226,7 +1191,7 @@ const DailyReportView = ({
       <div className="space-y-3">
         {filteredReports.length === 0 && <p className="text-sm text-stone-400 text-center py-4">この日の日報はありません</p>}
         {filteredReports.map((report) => (
-          <div key={report.id} className="bg-white rounded-xl border border-stone-200 p-4 hover:shadow-md transition-all cursor-pointer" onClick={() => openEdit(report)}>
+          <div key={report.id} className="bg-white rounded-xl border border-stone-200 p-4 hover:shadow-md transition-all cursor-pointer" onClick={() => modal.openEdit(report)}>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <Users className="w-4 h-4 text-blue-500" />
@@ -1251,7 +1216,7 @@ const DailyReportView = ({
       </div>
 
       {/* 日報モーダル */}
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editingItem ? '日報編集' : '日報作成'} maxWidth="max-w-2xl">
+      <Modal isOpen={modal.modalOpen} onClose={modal.close} title={modal.editingItem ? '日報編集' : '日報作成'} maxWidth="max-w-2xl">
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <FormField label="担当営業">
@@ -1311,14 +1276,14 @@ const DailyReportView = ({
           </FormField>
 
           <div className="flex justify-between pt-2">
-            {editingItem ? (
-              <button onClick={handleDelete} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
+            {modal.editingItem ? (
+              <button onClick={() => modal.remove(setDailyReports)} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
                 <Trash2 size={14} />削除
               </button>
             ) : <div />}
             <div className="flex gap-2">
-              <button onClick={() => setModalOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
-              <button onClick={handleSave} className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition-colors">保存</button>
+              <button onClick={modal.close} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
+              <button onClick={() => modal.save(setDailyReports, 'DR')} className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition-colors">保存</button>
             </div>
           </div>
         </div>
@@ -1342,30 +1307,64 @@ const formatDateJP = (dateStr: string) => {
 }
 
 // ==========================================
-// 見積書プレビューコンポーネント
+// 帳票共通定数
 // ==========================================
 
-const EstimatePreview = ({
+const DEALER_INFO = {
+  name: 'オートプラザ信頼モータース',
+  address: '〒100-0001 東京都千代田区千代田1-1-1',
+  tel: 'TEL: 03-1234-5678 / FAX: 03-1234-5679',
+  bank: '三菱UFJ銀行 千代田支店 普通 1234567',
+} as const
+
+// ==========================================
+// 帳票プレビュー共通コンポーネント
+// ==========================================
+
+const DocumentPreview = ({
+  type,
   estimate,
+  invoice,
   customers,
   onClose,
 }: {
-  estimate: Estimate
+  type: 'estimate' | 'invoice'
+  estimate: Estimate | undefined
+  invoice?: Invoice
   customers: Customer[]
   onClose: () => void
 }) => {
-  const customer = customers.find((c) => c.id === estimate.customerId)
-  const car = CAR_MODELS.find((c) => c.id === estimate.carModelId)
-  const dealerName = 'オートプラザ信頼モータース'
-  const dealerAddress = '〒100-0001 東京都千代田区千代田1-1-1'
-  const dealerTel = 'TEL: 03-1234-5678 / FAX: 03-1234-5679'
+  const isEstimate = type === 'estimate'
+  const customerId = isEstimate ? estimate!.customerId : invoice!.customerId
+  const customer = customers.find((c) => c.id === customerId)
+  const car = estimate ? CAR_MODELS.find((c) => c.id === estimate.carModelId) : undefined
 
   const handlePrint = () => {
     window.print()
   }
 
+  // 金額計算
   const basePrice = car?.basePrice ?? 0
-  const optionTotal = estimate.options.reduce((s, o) => s + o.price, 0)
+  const optionTotal = estimate?.options.reduce((s, o) => s + o.price, 0) ?? 0
+  const taxRate = estimate?.taxRate ?? 0.1
+
+  // 見積の場合はestimateの値を直接使用、請求の場合はinvoice.amountから逆算
+  const totalWithTax = isEstimate ? estimate!.totalWithTax : invoice!.amount
+  const totalBeforeTax = isEstimate ? estimate!.totalBeforeTax : Math.round(invoice!.amount / (1 + taxRate))
+  const taxAmount = totalWithTax - totalBeforeTax
+
+  // 帳票種別に応じたラベル
+  const documentTitle = isEstimate ? '御 見 積 書' : '請 求 書'
+  const toolbarTitle = isEstimate ? '見積書プレビュー' : '請求書プレビュー'
+  const numberLabel = isEstimate ? '見積番号' : '請求番号'
+  const documentId = isEstimate ? estimate!.id : invoice!.id
+  const issuedDate = isEstimate ? estimate!.createdAt : invoice!.issuedAt
+  const totalLabel = isEstimate ? '御見積金額（税込）' : 'ご請求金額（税込）'
+  const detailLabel = isEstimate ? '御見積明細' : 'ご請求明細'
+  const grandTotalLabel = isEstimate ? '税込合計' : 'ご請求金額（税込）'
+  const footerText = isEstimate
+    ? `このお見積書は${DEALER_INFO.name}が発行いたしました。ご不明点はお気軽にお問い合わせください。`
+    : `この請求書は${DEALER_INFO.name}が発行いたしました。`
 
   return (
     <div className="fixed inset-0 z-[60] bg-stone-100 overflow-auto">
@@ -1375,7 +1374,8 @@ const EstimatePreview = ({
           <button onClick={onClose} className="flex items-center gap-1 px-3 py-2 text-stone-600 hover:bg-stone-100 rounded-lg text-sm transition-colors">
             <ChevronLeft size={16} />戻る
           </button>
-          <h2 className="font-bold text-stone-800">見積書プレビュー</h2>
+          <h2 className="font-bold text-stone-800">{toolbarTitle}</h2>
+          {!isEstimate && invoice && <StatusBadge status={invoice.status} />}
         </div>
         <button onClick={handlePrint} className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition-colors">
           <Printer size={16} />印刷
@@ -1385,10 +1385,10 @@ const EstimatePreview = ({
       {/* A4用紙 */}
       <div className="py-8 px-4 print:p-0 print:m-0">
         <div className={`${paperStyle} ${paperWidth} p-[15mm] print:shadow-none print:w-full`}>
-          {/* ヘッダー: 見積書タイトル */}
+          {/* ヘッダー: 帳票タイトル */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold tracking-[0.3em] text-stone-800 border-b-4 border-stone-800 inline-block pb-2 px-8">
-              御 見 積 書
+              {documentTitle}
             </h1>
           </div>
 
@@ -1407,13 +1407,17 @@ const EstimatePreview = ({
 
             {/* 発行元（右） */}
             <div className="text-right text-sm">
-              <p className="text-stone-600">見積番号: <span className="font-mono font-bold">{estimate.id}</span></p>
-              <p className="text-stone-600">発行日: {formatDateJP(estimate.createdAt)}</p>
-              <p className="text-stone-600">有効期限: {formatDateJP(estimate.validUntil)}</p>
+              <p className="text-stone-600">{numberLabel}: <span className="font-mono font-bold">{documentId}</span></p>
+              <p className="text-stone-600">発行日: {formatDateJP(issuedDate)}</p>
+              {isEstimate ? (
+                <p className="text-stone-600">有効期限: {formatDateJP(estimate!.validUntil)}</p>
+              ) : (
+                <p className="text-stone-600">お支払期限: <span className="font-bold text-red-600">{formatDateJP(invoice!.dueDate)}</span></p>
+              )}
               <div className="mt-4 text-stone-700">
-                <p className="font-bold text-base">{dealerName}</p>
-                <p>{dealerAddress}</p>
-                <p>{dealerTel}</p>
+                <p className="font-bold text-base">{DEALER_INFO.name}</p>
+                <p>{DEALER_INFO.address}</p>
+                <p>{DEALER_INFO.tel}</p>
               </div>
               {/* 角印エリア */}
               <div className="mt-2 inline-block border-2 border-red-400 rounded-sm w-16 h-16 flex items-center justify-center">
@@ -1426,220 +1430,48 @@ const EstimatePreview = ({
 
           {/* 合計金額 */}
           <div className="bg-stone-50 border-2 border-stone-800 rounded-lg p-4 mb-8 text-center">
-            <p className="text-sm text-stone-600 mb-1">御見積金額（税込）</p>
+            <p className="text-sm text-stone-600 mb-1">{totalLabel}</p>
             <p className="text-3xl font-bold text-stone-800">
-              {formatCurrency(estimate.totalWithTax)}
-              <span className="text-base font-normal ml-1">（税抜 {formatCurrency(estimate.totalBeforeTax)}）</span>
+              {formatCurrency(totalWithTax)}
+              {isEstimate && (
+                <span className="text-base font-normal ml-1">（税抜 {formatCurrency(totalBeforeTax)}）</span>
+              )}
             </p>
           </div>
 
-          {/* 車両情報 */}
-          <div className="mb-6">
-            <h3 className="text-sm font-bold text-stone-700 bg-stone-100 px-3 py-2 border-l-4 border-stone-800 mb-0">車両情報</h3>
-            <table className="w-full text-sm border-collapse">
-              <tbody>
-                <tr className="border-b border-stone-200">
-                  <td className="py-2 px-3 w-32 text-stone-500 bg-stone-50 font-medium">車種名</td>
-                  <td className="py-2 px-3 text-stone-800 font-medium">{car?.name ?? '不明'}</td>
-                </tr>
-                <tr className="border-b border-stone-200">
-                  <td className="py-2 px-3 text-stone-500 bg-stone-50 font-medium">メーカー</td>
-                  <td className="py-2 px-3 text-stone-800">{car?.maker ?? ''}</td>
-                </tr>
-                <tr className="border-b border-stone-200">
-                  <td className="py-2 px-3 text-stone-500 bg-stone-50 font-medium">カテゴリ</td>
-                  <td className="py-2 px-3 text-stone-800">{car?.category ?? ''}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          {/* 明細テーブル */}
-          <div className="mb-6">
-            <h3 className="text-sm font-bold text-stone-700 bg-stone-100 px-3 py-2 border-l-4 border-stone-800 mb-0">御見積明細</h3>
-            <table className="w-full text-sm border-collapse">
-              <thead>
-                <tr className="bg-stone-800 text-white">
-                  <th className="py-2 px-3 text-left font-medium w-12">No</th>
-                  <th className="py-2 px-3 text-left font-medium">品目</th>
-                  <th className="py-2 px-3 text-right font-medium w-32">数量</th>
-                  <th className="py-2 px-3 text-right font-medium w-40">金額（税抜）</th>
-                </tr>
-              </thead>
-              <tbody>
-                {/* 車両本体 */}
-                <tr className="border-b border-stone-200">
-                  <td className="py-2 px-3 text-stone-600">1</td>
-                  <td className="py-2 px-3 text-stone-800 font-medium">{car?.name ?? ''} 車両本体</td>
-                  <td className="py-2 px-3 text-right text-stone-600">1</td>
-                  <td className="py-2 px-3 text-right text-stone-800">{formatCurrency(basePrice)}</td>
-                </tr>
-                {/* オプション */}
-                {estimate.options.map((opt, idx) => (
-                  <tr key={opt.name} className="border-b border-stone-200">
-                    <td className="py-2 px-3 text-stone-600">{idx + 2}</td>
-                    <td className="py-2 px-3 text-stone-800">{opt.name}</td>
-                    <td className="py-2 px-3 text-right text-stone-600">1</td>
-                    <td className="py-2 px-3 text-right text-stone-800">{formatCurrency(opt.price)}</td>
-                  </tr>
-                ))}
-                {/* 小計行 */}
-                <tr className="border-b border-stone-300 bg-stone-50">
-                  <td colSpan={3} className="py-2 px-3 text-right font-medium text-stone-600">小計</td>
-                  <td className="py-2 px-3 text-right font-medium text-stone-800">{formatCurrency(basePrice + optionTotal)}</td>
-                </tr>
-                {/* 値引き */}
-                {estimate.discount > 0 && (
-                  <tr className="border-b border-stone-300 bg-stone-50">
-                    <td colSpan={3} className="py-2 px-3 text-right font-medium text-red-600">値引き</td>
-                    <td className="py-2 px-3 text-right font-medium text-red-600">-{formatCurrency(estimate.discount)}</td>
-                  </tr>
-                )}
-                {/* 税抜合計 */}
-                <tr className="border-b border-stone-300 bg-stone-50">
-                  <td colSpan={3} className="py-2 px-3 text-right font-medium text-stone-700">税抜合計</td>
-                  <td className="py-2 px-3 text-right font-bold text-stone-800">{formatCurrency(estimate.totalBeforeTax)}</td>
-                </tr>
-                {/* 消費税 */}
-                <tr className="border-b border-stone-300 bg-stone-50">
-                  <td colSpan={3} className="py-2 px-3 text-right font-medium text-stone-600">消費税（{Math.round(estimate.taxRate * 100)}%）</td>
-                  <td className="py-2 px-3 text-right text-stone-800">{formatCurrency(estimate.totalWithTax - estimate.totalBeforeTax)}</td>
-                </tr>
-                {/* 税込合計 */}
-                <tr className="bg-stone-100">
-                  <td colSpan={3} className="py-3 px-3 text-right font-bold text-stone-800 text-base">税込合計</td>
-                  <td className="py-3 px-3 text-right font-bold text-stone-800 text-lg">{formatCurrency(estimate.totalWithTax)}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          {/* 備考欄 */}
-          <div className="mb-8">
-            <h3 className="text-sm font-bold text-stone-700 bg-stone-100 px-3 py-2 border-l-4 border-stone-800 mb-0">備考</h3>
-            <div className="border border-stone-200 p-3 min-h-[60px] text-sm text-stone-600">
-              <p>・本見積書の有効期限は発行日より14日間です。</p>
-              <p>・車両の在庫状況により納期が変動する場合がございます。</p>
-              <p>・下取車がある場合は別途査定の上、お見積りいたします。</p>
-            </div>
-          </div>
-
-          {/* フッター */}
-          <div className="text-center text-xs text-stone-400 mt-auto pt-4 border-t border-stone-200">
-            <p>このお見積書は{dealerName}が発行いたしました。ご不明点はお気軽にお問い合わせください。</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// ==========================================
-// 請求書プレビューコンポーネント
-// ==========================================
-
-const InvoicePreview = ({
-  invoice,
-  estimate,
-  customers,
-  onClose,
-}: {
-  invoice: Invoice
-  estimate: Estimate | undefined
-  customers: Customer[]
-  onClose: () => void
-}) => {
-  const customer = customers.find((c) => c.id === invoice.customerId)
-  const car = estimate ? CAR_MODELS.find((c) => c.id === estimate.carModelId) : undefined
-  const dealerName = 'オートプラザ信頼モータース'
-  const dealerAddress = '〒100-0001 東京都千代田区千代田1-1-1'
-  const dealerTel = 'TEL: 03-1234-5678 / FAX: 03-1234-5679'
-  const dealerBank = '三菱UFJ銀行 千代田支店 普通 1234567'
-
-  const handlePrint = () => {
-    window.print()
-  }
-
-  const taxRate = estimate?.taxRate ?? 0.1
-  const amountBeforeTax = Math.round(invoice.amount / (1 + taxRate))
-  const taxAmount = invoice.amount - amountBeforeTax
-
-  return (
-    <div className="fixed inset-0 z-[60] bg-stone-100 overflow-auto">
-      {/* ツールバー */}
-      <div className="sticky top-0 z-10 bg-white border-b border-stone-200 px-4 py-3 flex items-center justify-between print:hidden">
-        <div className="flex items-center gap-3">
-          <button onClick={onClose} className="flex items-center gap-1 px-3 py-2 text-stone-600 hover:bg-stone-100 rounded-lg text-sm transition-colors">
-            <ChevronLeft size={16} />戻る
-          </button>
-          <h2 className="font-bold text-stone-800">請求書プレビュー</h2>
-          <StatusBadge status={invoice.status} />
-        </div>
-        <button onClick={handlePrint} className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition-colors">
-          <Printer size={16} />印刷
-        </button>
-      </div>
-
-      {/* A4用紙 */}
-      <div className="py-8 px-4 print:p-0 print:m-0">
-        <div className={`${paperStyle} ${paperWidth} p-[15mm] print:shadow-none print:w-full`}>
-          {/* ヘッダー: 請求書タイトル */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold tracking-[0.3em] text-stone-800 border-b-4 border-stone-800 inline-block pb-2 px-8">
-              請 求 書
-            </h1>
-          </div>
-
-          {/* 発行情報 */}
-          <div className="flex justify-between mb-8">
-            {/* 宛先（左） */}
-            <div className="flex-1">
-              <div className="border-b-2 border-stone-800 pb-1 mb-3 inline-block">
-                <p className="text-lg font-bold text-stone-800">
-                  {customer?.name ?? '不明'} 様
-                </p>
-              </div>
-              <p className="text-sm text-stone-600 mt-1">{customer?.address ?? ''}</p>
-              <p className="text-sm text-stone-600">{customer?.phone ? `TEL: ${customer.phone}` : ''}</p>
-            </div>
-
-            {/* 発行元（右） */}
-            <div className="text-right text-sm">
-              <p className="text-stone-600">請求番号: <span className="font-mono font-bold">{invoice.id}</span></p>
-              <p className="text-stone-600">発行日: {formatDateJP(invoice.issuedAt)}</p>
-              <p className="text-stone-600">お支払期限: <span className="font-bold text-red-600">{formatDateJP(invoice.dueDate)}</span></p>
-              <div className="mt-4 text-stone-700">
-                <p className="font-bold text-base">{dealerName}</p>
-                <p>{dealerAddress}</p>
-                <p>{dealerTel}</p>
-              </div>
-              {/* 角印 */}
-              <div className="mt-2 inline-block border-2 border-red-400 rounded-sm w-16 h-16 flex items-center justify-center">
-                <span className="text-red-400 text-[10px] font-bold leading-tight text-center">
-                  信頼<br />モータース
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* 請求金額 */}
-          <div className="bg-stone-50 border-2 border-stone-800 rounded-lg p-4 mb-8 text-center">
-            <p className="text-sm text-stone-600 mb-1">ご請求金額（税込）</p>
-            <p className="text-3xl font-bold text-stone-800">
-              {formatCurrency(invoice.amount)}
-            </p>
-          </div>
-
-          {/* ステータス表示 */}
-          {invoice.status === '入金済' && invoice.paidAt && (
+          {/* 入金ステータス表示（請求書のみ） */}
+          {!isEstimate && invoice?.status === '入金済' && invoice.paidAt && (
             <div className="mb-6 bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-center">
               <p className="text-emerald-700 font-bold text-sm">入金確認済み（{formatDateJP(invoice.paidAt)}）</p>
             </div>
           )}
 
+          {/* 車両情報（見積書のみ） */}
+          {isEstimate && car && (
+            <div className="mb-6">
+              <h3 className="text-sm font-bold text-stone-700 bg-stone-100 px-3 py-2 border-l-4 border-stone-800 mb-0">車両情報</h3>
+              <table className="w-full text-sm border-collapse">
+                <tbody>
+                  <tr className="border-b border-stone-200">
+                    <td className="py-2 px-3 w-32 text-stone-500 bg-stone-50 font-medium">車種名</td>
+                    <td className="py-2 px-3 text-stone-800 font-medium">{car.name}</td>
+                  </tr>
+                  <tr className="border-b border-stone-200">
+                    <td className="py-2 px-3 text-stone-500 bg-stone-50 font-medium">メーカー</td>
+                    <td className="py-2 px-3 text-stone-800">{car.maker}</td>
+                  </tr>
+                  <tr className="border-b border-stone-200">
+                    <td className="py-2 px-3 text-stone-500 bg-stone-50 font-medium">カテゴリ</td>
+                    <td className="py-2 px-3 text-stone-800">{car.category}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          )}
+
           {/* 明細テーブル */}
           <div className="mb-6">
-            <h3 className="text-sm font-bold text-stone-700 bg-stone-100 px-3 py-2 border-l-4 border-stone-800 mb-0">ご請求明細</h3>
+            <h3 className="text-sm font-bold text-stone-700 bg-stone-100 px-3 py-2 border-l-4 border-stone-800 mb-0">{detailLabel}</h3>
             <table className="w-full text-sm border-collapse">
               <thead>
                 <tr className="bg-stone-800 text-white">
@@ -1657,7 +1489,7 @@ const InvoicePreview = ({
                       <td className="py-2 px-3 text-stone-600">1</td>
                       <td className="py-2 px-3 text-stone-800 font-medium">{car?.name ?? ''} 車両本体</td>
                       <td className="py-2 px-3 text-right text-stone-600">1</td>
-                      <td className="py-2 px-3 text-right text-stone-800">{formatCurrency(car?.basePrice ?? 0)}</td>
+                      <td className="py-2 px-3 text-right text-stone-800">{formatCurrency(basePrice)}</td>
                     </tr>
                     {/* オプション */}
                     {estimate.options.map((opt, idx) => (
@@ -1668,6 +1500,13 @@ const InvoicePreview = ({
                         <td className="py-2 px-3 text-right text-stone-800">{formatCurrency(opt.price)}</td>
                       </tr>
                     ))}
+                    {/* 小計行（見積書のみ） */}
+                    {isEstimate && (
+                      <tr className="border-b border-stone-300 bg-stone-50">
+                        <td colSpan={3} className="py-2 px-3 text-right font-medium text-stone-600">小計</td>
+                        <td className="py-2 px-3 text-right font-medium text-stone-800">{formatCurrency(basePrice + optionTotal)}</td>
+                      </tr>
+                    )}
                     {/* 値引き */}
                     {estimate.discount > 0 && (
                       <tr className="border-b border-stone-300 bg-stone-50">
@@ -1677,17 +1516,18 @@ const InvoicePreview = ({
                     )}
                   </>
                 ) : (
+                  // 見積データなし（請求書のみ）: 一式表示
                   <tr className="border-b border-stone-200">
                     <td className="py-2 px-3 text-stone-600">1</td>
                     <td className="py-2 px-3 text-stone-800 font-medium">車両代金一式</td>
                     <td className="py-2 px-3 text-right text-stone-600">1</td>
-                    <td className="py-2 px-3 text-right text-stone-800">{formatCurrency(amountBeforeTax)}</td>
+                    <td className="py-2 px-3 text-right text-stone-800">{formatCurrency(totalBeforeTax)}</td>
                   </tr>
                 )}
                 {/* 税抜合計 */}
                 <tr className="border-b border-stone-300 bg-stone-50">
                   <td colSpan={3} className="py-2 px-3 text-right font-medium text-stone-700">税抜合計</td>
-                  <td className="py-2 px-3 text-right font-bold text-stone-800">{formatCurrency(amountBeforeTax)}</td>
+                  <td className="py-2 px-3 text-right font-bold text-stone-800">{formatCurrency(totalBeforeTax)}</td>
                 </tr>
                 {/* 消費税 */}
                 <tr className="border-b border-stone-300 bg-stone-50">
@@ -1696,45 +1536,57 @@ const InvoicePreview = ({
                 </tr>
                 {/* 税込合計 */}
                 <tr className="bg-stone-100">
-                  <td colSpan={3} className="py-3 px-3 text-right font-bold text-stone-800 text-base">ご請求金額（税込）</td>
-                  <td className="py-3 px-3 text-right font-bold text-stone-800 text-lg">{formatCurrency(invoice.amount)}</td>
+                  <td colSpan={3} className="py-3 px-3 text-right font-bold text-stone-800 text-base">{grandTotalLabel}</td>
+                  <td className="py-3 px-3 text-right font-bold text-stone-800 text-lg">{formatCurrency(totalWithTax)}</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          {/* 振込先情報 */}
-          <div className="mb-8">
-            <h3 className="text-sm font-bold text-stone-700 bg-stone-100 px-3 py-2 border-l-4 border-stone-800 mb-0">お振込先</h3>
-            <div className="border border-stone-200 p-4 text-sm">
-              <table className="text-stone-700">
-                <tbody>
-                  <tr>
-                    <td className="pr-4 py-1 text-stone-500 font-medium">金融機関</td>
-                    <td className="py-1">{dealerBank}</td>
-                  </tr>
-                  <tr>
-                    <td className="pr-4 py-1 text-stone-500 font-medium">口座名義</td>
-                    <td className="py-1">オートプラザシンライモータース（カ</td>
-                  </tr>
-                </tbody>
-              </table>
-              <p className="text-xs text-stone-500 mt-2">※ 恐れ入りますが、振込手数料はお客様のご負担にてお願い申し上げます。</p>
+          {/* 振込先情報（請求書のみ） */}
+          {!isEstimate && (
+            <div className="mb-8">
+              <h3 className="text-sm font-bold text-stone-700 bg-stone-100 px-3 py-2 border-l-4 border-stone-800 mb-0">お振込先</h3>
+              <div className="border border-stone-200 p-4 text-sm">
+                <table className="text-stone-700">
+                  <tbody>
+                    <tr>
+                      <td className="pr-4 py-1 text-stone-500 font-medium">金融機関</td>
+                      <td className="py-1">{DEALER_INFO.bank}</td>
+                    </tr>
+                    <tr>
+                      <td className="pr-4 py-1 text-stone-500 font-medium">口座名義</td>
+                      <td className="py-1">オートプラザシンライモータース（カ</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p className="text-xs text-stone-500 mt-2">※ 恐れ入りますが、振込手数料はお客様のご負担にてお願い申し上げます。</p>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* 備考欄 */}
           <div className="mb-8">
             <h3 className="text-sm font-bold text-stone-700 bg-stone-100 px-3 py-2 border-l-4 border-stone-800 mb-0">備考</h3>
-            <div className="border border-stone-200 p-3 min-h-[40px] text-sm text-stone-600">
-              <p>・お支払期限までにお振込みをお願いいたします。</p>
-              <p>・ご不明な点がございましたら担当営業までお問い合わせください。</p>
+            <div className={`border border-stone-200 p-3 ${isEstimate ? 'min-h-[60px]' : 'min-h-[40px]'} text-sm text-stone-600`}>
+              {isEstimate ? (
+                <>
+                  <p>・本見積書の有効期限は発行日より14日間です。</p>
+                  <p>・車両の在庫状況により納期が変動する場合がございます。</p>
+                  <p>・下取車がある場合は別途査定の上、お見積りいたします。</p>
+                </>
+              ) : (
+                <>
+                  <p>・お支払期限までにお振込みをお願いいたします。</p>
+                  <p>・ご不明な点がございましたら担当営業までお問い合わせください。</p>
+                </>
+              )}
             </div>
           </div>
 
           {/* フッター */}
           <div className="text-center text-xs text-stone-400 mt-auto pt-4 border-t border-stone-200">
-            <p>この請求書は{dealerName}が発行いたしました。</p>
+            <p>{footerText}</p>
           </div>
         </div>
       </div>
@@ -1762,12 +1614,10 @@ const EstimatesView = ({
   customers: Customer[]
 }) => {
   const [subTab, setSubTab] = useState<'estimates' | 'invoices'>('estimates')
-  const [modalOpen, setModalOpen] = useState(false)
-  const [editingItem, setEditingItem] = useState<Estimate | null>(null)
   const [previewEstimate, setPreviewEstimate] = useState<Estimate | null>(null)
   const [previewInvoice, setPreviewInvoice] = useState<Invoice | null>(null)
 
-  const emptyEstimate: Omit<Estimate, 'id'> = {
+  const emptyEstimateForm: Omit<Estimate, 'id'> = {
     dealId: deals[0]?.id ?? '',
     customerId: deals[0]?.customerId ?? '',
     carModelId: deals[0]?.carModelId ?? '',
@@ -1780,7 +1630,21 @@ const EstimatesView = ({
     validUntil: '2026-03-08',
   }
 
-  const [form, setForm] = useState(emptyEstimate)
+  const toForm = (est: Estimate): Omit<Estimate, 'id'> => ({
+    dealId: est.dealId,
+    customerId: est.customerId,
+    carModelId: est.carModelId,
+    options: [...est.options],
+    discount: est.discount,
+    taxRate: est.taxRate,
+    totalBeforeTax: est.totalBeforeTax,
+    totalWithTax: est.totalWithTax,
+    createdAt: est.createdAt,
+    validUntil: est.validUntil,
+  })
+
+  const modal = useEditModal<Estimate, Omit<Estimate, 'id'>>(emptyEstimateForm, toForm)
+  const {form, setForm} = modal
 
   const calcTotals = (carModelId: string, options: EstimateOption[], discount: number, taxRate: number) => {
     const car = CAR_MODELS.find((c) => c.id === carModelId)
@@ -1791,33 +1655,14 @@ const EstimatesView = ({
     return {totalBeforeTax, totalWithTax}
   }
 
+  // openNewをオーバーライド: 商談に基づく合計額計算
   const openNew = () => {
-    setEditingItem(null)
+    modal.openNew()
     const deal = deals[0]
     if (deal) {
       const totals = calcTotals(deal.carModelId, [], 0, 0.1)
-      setForm({...emptyEstimate, dealId: deal.id, customerId: deal.customerId, carModelId: deal.carModelId, ...totals})
-    } else {
-      setForm(emptyEstimate)
+      modal.setForm((prev) => ({...prev, dealId: deal.id, customerId: deal.customerId, carModelId: deal.carModelId, ...totals}))
     }
-    setModalOpen(true)
-  }
-
-  const openEdit = (est: Estimate) => {
-    setEditingItem(est)
-    setForm({
-      dealId: est.dealId,
-      customerId: est.customerId,
-      carModelId: est.carModelId,
-      options: [...est.options],
-      discount: est.discount,
-      taxRate: est.taxRate,
-      totalBeforeTax: est.totalBeforeTax,
-      totalWithTax: est.totalWithTax,
-      createdAt: est.createdAt,
-      validUntil: est.validUntil,
-    })
-    setModalOpen(true)
   }
 
   const handleDealChange = (dealId: string) => {
@@ -1842,21 +1687,6 @@ const EstimatesView = ({
       const totals = calcTotals(prev.carModelId, prev.options, discount, prev.taxRate)
       return {...prev, discount, ...totals}
     })
-  }
-
-  const handleSave = () => {
-    if (editingItem) {
-      setEstimates((prev) => prev.map((e) => (e.id === editingItem.id ? {...e, ...form} : e)))
-    } else {
-      setEstimates((prev) => [...prev, {id: generateId('EST'), ...form} as Estimate])
-    }
-    setModalOpen(false)
-  }
-
-  const handleDelete = () => {
-    if (!editingItem) return
-    setEstimates((prev) => prev.filter((e) => e.id !== editingItem.id))
-    setModalOpen(false)
   }
 
   const cycleInvoiceStatus = (invId: string) => {
@@ -1911,7 +1741,7 @@ const EstimatesView = ({
             </thead>
             <tbody>
               {estimates.slice(0, 50).map((est) => (
-                <tr key={est.id} className="border-b border-stone-100 hover:bg-blue-50/50 cursor-pointer transition-colors" onClick={() => openEdit(est)}>
+                <tr key={est.id} className="border-b border-stone-100 hover:bg-blue-50/50 cursor-pointer transition-colors" onClick={() => modal.openEdit(est)}>
                   <td className="py-2 px-3 font-mono text-stone-600">{est.id}</td>
                   <td className="py-2 px-3 text-stone-800">{getCustomerName(est.customerId, customers)}</td>
                   <td className="py-2 px-3 text-stone-600">{getCarModelName(est.carModelId)}</td>
@@ -1977,7 +1807,7 @@ const EstimatesView = ({
       )}
 
       {/* 見積モーダル */}
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editingItem ? '見積編集' : '見積作成'} maxWidth="max-w-2xl">
+      <Modal isOpen={modal.modalOpen} onClose={modal.close} title={modal.editingItem ? '見積編集' : '見積作成'} maxWidth="max-w-2xl">
         <div className="space-y-4">
           <FormField label="商談">
             <select className={selectClass} value={form.dealId} onChange={(e) => handleDealChange(e.target.value)}>
@@ -2065,13 +1895,13 @@ const EstimatesView = ({
           </div>
 
           <div className="flex justify-between pt-2">
-            {editingItem ? (
+            {modal.editingItem ? (
               <div className="flex items-center gap-2">
-                <button onClick={handleDelete} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
+                <button onClick={() => modal.remove(setEstimates)} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
                   <Trash2 size={14} />削除
                 </button>
                 <button
-                  onClick={() => { setModalOpen(false); setPreviewEstimate(editingItem) }}
+                  onClick={() => { modal.close(); setPreviewEstimate(modal.editingItem) }}
                   className="flex items-center gap-1 px-3 py-2 text-blue-600 hover:bg-blue-50 rounded-lg text-sm transition-colors"
                 >
                   <Eye size={14} />見積書を閲覧
@@ -2079,8 +1909,8 @@ const EstimatesView = ({
               </div>
             ) : <div />}
             <div className="flex gap-2">
-              <button onClick={() => setModalOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
-              <button onClick={handleSave} className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition-colors">保存</button>
+              <button onClick={modal.close} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
+              <button onClick={() => modal.save(setEstimates, 'EST')} className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition-colors">保存</button>
             </div>
           </div>
         </div>
@@ -2088,7 +1918,8 @@ const EstimatesView = ({
 
       {/* 見積書プレビュー */}
       {previewEstimate && (
-        <EstimatePreview
+        <DocumentPreview
+          type="estimate"
           estimate={previewEstimate}
           customers={customers}
           onClose={() => setPreviewEstimate(null)}
@@ -2097,9 +1928,10 @@ const EstimatesView = ({
 
       {/* 請求書プレビュー */}
       {previewInvoice && (
-        <InvoicePreview
-          invoice={previewInvoice}
+        <DocumentPreview
+          type="invoice"
           estimate={estimates.find((e) => e.id === previewInvoice.estimateId)}
+          invoice={previewInvoice}
           customers={customers}
           onClose={() => setPreviewInvoice(null)}
         />
@@ -2132,11 +1964,7 @@ const CalendarView = ({
   const [selectedDay, setSelectedDay] = useState<number | null>(null)
   const [showCategories, setShowCategories] = useState<Record<CalendarCategory, boolean>>({deals: true, delivery: true})
 
-  // 納車CRUD用ステート
-  const [deliveryModalOpen, setDeliveryModalOpen] = useState(false)
-  const [editingDelivery, setEditingDelivery] = useState<DeliverySchedule | null>(null)
-
-  const emptyDelivery: Omit<DeliverySchedule, 'id'> = {
+  const emptyDeliveryForm: Omit<DeliverySchedule, 'id'> = {
     dealId: '',
     customerId: customers[0]?.id ?? '',
     carModelId: CAR_MODELS[0].id,
@@ -2147,7 +1975,19 @@ const CalendarView = ({
     note: '',
   }
 
-  const [deliveryForm, setDeliveryForm] = useState(emptyDelivery)
+  const toDeliveryForm = (item: DeliverySchedule): Omit<DeliverySchedule, 'id'> => ({
+    dealId: item.dealId,
+    customerId: item.customerId,
+    carModelId: item.carModelId,
+    salesPersonId: item.salesPersonId,
+    status: item.status,
+    scheduledDate: item.scheduledDate,
+    documents: [...item.documents.map((d) => ({...d}))],
+    note: item.note,
+  })
+
+  const deliveryModal = useEditModal<DeliverySchedule, Omit<DeliverySchedule, 'id'>>(emptyDeliveryForm, toDeliveryForm)
+  const {form: deliveryForm, setForm: setDeliveryForm} = deliveryModal
 
   const toggleCategory = (cat: CalendarCategory) => {
     setShowCategories((prev) => ({...prev, [cat]: !prev[cat]}))
@@ -2184,42 +2024,11 @@ const CalendarView = ({
 
   // 納車CRUD
   const openNewDelivery = () => {
-    setEditingDelivery(null)
-    setDeliveryForm({
-      ...emptyDelivery,
+    deliveryModal.openNew()
+    deliveryModal.setForm((prev) => ({
+      ...prev,
       scheduledDate: `${monthStr}-${String(selectedDay ?? 15).padStart(2, '0')}`,
-    })
-    setDeliveryModalOpen(true)
-  }
-
-  const openEditDelivery = (item: DeliverySchedule) => {
-    setEditingDelivery(item)
-    setDeliveryForm({
-      dealId: item.dealId,
-      customerId: item.customerId,
-      carModelId: item.carModelId,
-      salesPersonId: item.salesPersonId,
-      status: item.status,
-      scheduledDate: item.scheduledDate,
-      documents: [...item.documents.map((d) => ({...d}))],
-      note: item.note,
-    })
-    setDeliveryModalOpen(true)
-  }
-
-  const handleSaveDelivery = () => {
-    if (editingDelivery) {
-      setDeliveries((prev) => prev.map((d) => (d.id === editingDelivery.id ? {...d, ...deliveryForm} : d)))
-    } else {
-      setDeliveries((prev) => [...prev, {id: generateId('DEL'), ...deliveryForm} as DeliverySchedule])
-    }
-    setDeliveryModalOpen(false)
-  }
-
-  const handleDeleteDelivery = () => {
-    if (!editingDelivery) return
-    setDeliveries((prev) => prev.filter((d) => d.id !== editingDelivery.id))
-    setDeliveryModalOpen(false)
+    }))
   }
 
   const cycleDeliveryStatus = (itemId: string) => {
@@ -2413,7 +2222,7 @@ const CalendarView = ({
                 {selectedDayDeliveries.map((item) => {
                   const collectedCount = item.documents.filter((d) => d.collected).length
                   return (
-                    <div key={item.id} className="flex items-center justify-between text-sm p-3 bg-blue-50/50 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => openEditDelivery(item)}>
+                    <div key={item.id} className="flex items-center justify-between text-sm p-3 bg-blue-50/50 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors" onClick={() => deliveryModal.openEdit(item)}>
                       <div className="flex items-center gap-3">
                         <Car className="w-4 h-4 text-blue-500" />
                         <div>
@@ -2436,7 +2245,7 @@ const CalendarView = ({
       )}
 
       {/* 納車モーダル */}
-      <Modal isOpen={deliveryModalOpen} onClose={() => setDeliveryModalOpen(false)} title={editingDelivery ? '納車編集' : '納車追加'} maxWidth="max-w-lg">
+      <Modal isOpen={deliveryModal.modalOpen} onClose={deliveryModal.close} title={deliveryModal.editingItem ? '納車編集' : '納車追加'} maxWidth="max-w-lg">
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <FormField label="顧客">
@@ -2490,14 +2299,14 @@ const CalendarView = ({
           </FormField>
 
           <div className="flex justify-between pt-2">
-            {editingDelivery ? (
-              <button onClick={handleDeleteDelivery} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
+            {deliveryModal.editingItem ? (
+              <button onClick={() => deliveryModal.remove(setDeliveries)} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
                 <Trash2 size={14} />削除
               </button>
             ) : <div />}
             <div className="flex gap-2">
-              <button onClick={() => setDeliveryModalOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
-              <button onClick={handleSaveDelivery} className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition-colors">保存</button>
+              <button onClick={deliveryModal.close} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
+              <button onClick={() => deliveryModal.save(setDeliveries, 'DEL')} className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition-colors">保存</button>
             </div>
           </div>
         </div>
@@ -2735,56 +2544,32 @@ export default function SalesAutoMockPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-stone-50 via-white to-sky-50/30 font-sans">
-      <header className="bg-white/80 backdrop-blur-md border-b border-stone-200 sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-r from-sky-500 to-blue-600 rounded-xl shadow-lg shadow-blue-500/20">
-              <Car className="text-white w-5 h-5" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-600 to-blue-600">
-                自動車ディーラー営業管理
-              </h1>
-              <p className="text-xs text-stone-400 -mt-0.5">Auto Dealer Sales Management</p>
-            </div>
-          </div>
+      <MockHeader>
+        <MockHeaderTitle icon={Car} title="自動車ディーラー営業管理" subtitle="Auto Dealer Sales Management" theme="blue" />
 
-          <div className="flex items-center gap-2">
-            <GuidanceStartButton onClick={() => setShowGuidance(true)} theme="blue" />
-            <button
-              onClick={handleReset}
-              className="p-2 text-stone-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-              title="データ初期化"
-            >
-              <RotateCcw size={16} />
-            </button>
-            {TABS.map((tab) => (
-              <button
-                key={tab.id}
-                data-guidance={`${tab.id}-tab`}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                  activeTab === tab.id
-                    ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-lg shadow-blue-500/25'
-                    : 'text-stone-600 hover:bg-stone-50 border border-transparent hover:border-blue-200'
-                }`}
-              >
-                <tab.icon size={16} />
-                <span className="hidden md:inline">{tab.label}</span>
-              </button>
-            ))}
-            <button
-              data-guidance="info-button"
-              onClick={() => setShowInfoSidebar(true)}
-              className="ml-2 p-2.5 bg-gradient-to-r from-sky-500 to-blue-600 text-white rounded-xl hover:from-sky-600 hover:to-blue-700 transition-all duration-200 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 flex items-center gap-2"
-              title="このシステムでできること"
-            >
-              <PanelRightOpen className="w-4 h-4" />
-              <span className="text-sm font-medium hidden sm:inline">機能説明</span>
-            </button>
-          </div>
+        <div className="flex items-center gap-2">
+          <GuidanceStartButton onClick={() => setShowGuidance(true)} theme="blue" />
+          <button
+            onClick={handleReset}
+            className="p-2 text-stone-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            title="データ初期化"
+          >
+            <RotateCcw size={16} />
+          </button>
+          {TABS.map((tab) => (
+            <MockHeaderTab
+              key={tab.id}
+              active={activeTab === tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              icon={tab.icon}
+              label={tab.label}
+              theme="blue"
+              data-guidance={`${tab.id}-tab`}
+            />
+          ))}
+          <MockHeaderInfoButton onClick={() => setShowInfoSidebar(true)} theme="blue" />
         </div>
-      </header>
+      </MockHeader>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {TAB_VIEWS[activeTab]}

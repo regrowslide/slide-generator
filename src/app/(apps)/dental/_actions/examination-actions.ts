@@ -1,0 +1,113 @@
+'use server'
+
+import type {Prisma} from '@prisma/generated/prisma/client'
+import prisma from 'src/lib/prisma'
+
+// 共通include
+const examinationInclude = {
+  DentalPatient: true,
+  Doctor: true,
+  Hygienist: true,
+  DentalVisitPlan: {include: {DentalFacility: true}},
+  DentalSavedDocument: true,
+} satisfies Prisma.DentalExaminationInclude
+
+// 診察一覧取得
+export const getDentalExaminations = async (params?: {
+  where?: Prisma.DentalExaminationWhereInput
+  orderBy?: Prisma.DentalExaminationOrderByWithRelationInput
+  take?: number
+  skip?: number
+}) => {
+  const {where, orderBy, take, skip} = params ?? {}
+  return await prisma.dentalExamination.findMany({
+    where,
+    orderBy: orderBy ?? {sortOrder: 'asc'},
+    include: examinationInclude,
+    take,
+    skip,
+  })
+}
+
+// 診察取得
+export const getDentalExamination = async (id: number) => {
+  return await prisma.dentalExamination.findUnique({
+    where: {id},
+    include: examinationInclude,
+  })
+}
+
+// 診察作成
+export const createDentalExamination = async (data: {
+  dentalVisitPlanId: number
+  dentalPatientId: number
+  doctorId?: number | null
+  hygienistId?: number | null
+  status?: string
+  sortOrder?: number
+}) => {
+  return await prisma.dentalExamination.create({
+    data,
+    include: examinationInclude,
+  })
+}
+
+// 診察更新
+export const updateDentalExamination = async (
+  id: number,
+  data: {
+    status?: string
+    vitalBefore?: Record<string, unknown> | null
+    vitalAfter?: Record<string, unknown> | null
+    treatmentItems?: unknown[]
+    procedureItems?: Record<string, unknown>
+    visitCondition?: string
+    oralFindings?: string
+    treatment?: string
+    nextPlan?: string
+    drStartTime?: string | null
+    drEndTime?: string | null
+    dhStartTime?: string | null
+    dhEndTime?: string | null
+    doctorId?: number | null
+    hygienistId?: number | null
+    treatmentPerformed?: unknown[]
+    oralFunctionRecord?: Record<string, unknown> | null
+    sortOrder?: number
+  }
+) => {
+  return await prisma.dentalExamination.update({
+    where: {id},
+    data: {
+      ...data,
+      vitalBefore: data.vitalBefore as Prisma.InputJsonValue,
+      vitalAfter: data.vitalAfter as Prisma.InputJsonValue,
+      treatmentItems: data.treatmentItems as Prisma.InputJsonValue,
+      procedureItems: data.procedureItems as Prisma.InputJsonValue,
+      treatmentPerformed: data.treatmentPerformed as Prisma.InputJsonValue,
+      oralFunctionRecord: data.oralFunctionRecord as Prisma.InputJsonValue,
+    },
+    include: examinationInclude,
+  })
+}
+
+// 診察削除
+export const deleteDentalExamination = async (id: number) => {
+  return await prisma.dentalExamination.delete({where: {id}})
+}
+
+// 診察並び替え
+export const reorderDentalExaminations = async (items: Array<{id: number; sortOrder: number}>) => {
+  await Promise.all(
+    items.map(item => prisma.dentalExamination.update({where: {id: item.id}, data: {sortOrder: item.sortOrder}}))
+  )
+}
+
+// 診察完了処理
+export const completeDentalExamination = async (id: number) => {
+  return await prisma.dentalExamination.update({
+    where: {id},
+    data: {status: 'done'},
+    include: examinationInclude,
+  })
+}

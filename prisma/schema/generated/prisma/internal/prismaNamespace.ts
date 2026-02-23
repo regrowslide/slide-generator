@@ -402,6 +402,14 @@ export const ModelName = {
   CounselingClient: 'CounselingClient',
   CounselingReservation: 'CounselingReservation',
   CounselingSlot: 'CounselingSlot',
+  DentalClinic: 'DentalClinic',
+  DentalFacility: 'DentalFacility',
+  DentalPatient: 'DentalPatient',
+  DentalStaff: 'DentalStaff',
+  DentalVisitPlan: 'DentalVisitPlan',
+  DentalExamination: 'DentalExamination',
+  DentalScoringHistory: 'DentalScoringHistory',
+  DentalSavedDocument: 'DentalSavedDocument',
   KgFacilityMaster: 'KgFacilityMaster',
   KgDietTypeMaster: 'KgDietTypeMaster',
   KgDailyMenu: 'KgDailyMenu',
@@ -490,7 +498,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "kgFacilityMaster" | "kgDietTypeMaster" | "kgDailyMenu" | "kgMealSlot" | "kgMenuRecipe" | "kgRecipeIngredient" | "kgOrder" | "kgOrderLine" | "kgProductionBatch" | "kgProductionItem" | "kgRequiredIngredient" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "rcIngredientMaster" | "rcRecipe" | "rcRecipeIngredient" | "rcProfitMarginStandard" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "store" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "cronExecutionLog" | "stockConfig" | "stock" | "stockHistory" | "exerciseMaster" | "workoutLog" | "yamanokaiDepartment" | "yamanokaiRole" | "yamanokaiCourse" | "yamanokaiEquipment" | "yamanokaiInsuranceGrade" | "yamanokaiStaminaGrade" | "yamanokaiSkillGrade" | "yamanokaiRockCategory" | "yamanokaiMember" | "yamanokaiMemberRole" | "yamanokaiCourseCompletion" | "yamanokaiEvent" | "yamanokaiEventRequiredCourse" | "yamanokaiEventPlan" | "yamanokaiEventPlanParticipant" | "yamanokaiAttendance" | "yamanokaiRecord" | "yamanokaiRecordFile" | "yamanokaiEquipmentLoan"
+    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "dentalClinic" | "dentalFacility" | "dentalPatient" | "dentalStaff" | "dentalVisitPlan" | "dentalExamination" | "dentalScoringHistory" | "dentalSavedDocument" | "kgFacilityMaster" | "kgDietTypeMaster" | "kgDailyMenu" | "kgMealSlot" | "kgMenuRecipe" | "kgRecipeIngredient" | "kgOrder" | "kgOrderLine" | "kgProductionBatch" | "kgProductionItem" | "kgRequiredIngredient" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "rcIngredientMaster" | "rcRecipe" | "rcRecipeIngredient" | "rcProfitMarginStandard" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "store" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "cronExecutionLog" | "stockConfig" | "stock" | "stockHistory" | "exerciseMaster" | "workoutLog" | "yamanokaiDepartment" | "yamanokaiRole" | "yamanokaiCourse" | "yamanokaiEquipment" | "yamanokaiInsuranceGrade" | "yamanokaiStaminaGrade" | "yamanokaiSkillGrade" | "yamanokaiRockCategory" | "yamanokaiMember" | "yamanokaiMemberRole" | "yamanokaiCourseCompletion" | "yamanokaiEvent" | "yamanokaiEventRequiredCourse" | "yamanokaiEventPlan" | "yamanokaiEventPlanParticipant" | "yamanokaiAttendance" | "yamanokaiRecord" | "yamanokaiRecordFile" | "yamanokaiEquipmentLoan"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1823,6 +1831,598 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CounselingSlotCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CounselingSlotCountAggregateOutputType> | number
+        }
+      }
+    }
+    DentalClinic: {
+      payload: Prisma.$DentalClinicPayload<ExtArgs>
+      fields: Prisma.DentalClinicFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DentalClinicFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalClinicPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DentalClinicFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalClinicPayload>
+        }
+        findFirst: {
+          args: Prisma.DentalClinicFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalClinicPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DentalClinicFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalClinicPayload>
+        }
+        findMany: {
+          args: Prisma.DentalClinicFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalClinicPayload>[]
+        }
+        create: {
+          args: Prisma.DentalClinicCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalClinicPayload>
+        }
+        createMany: {
+          args: Prisma.DentalClinicCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DentalClinicCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalClinicPayload>[]
+        }
+        delete: {
+          args: Prisma.DentalClinicDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalClinicPayload>
+        }
+        update: {
+          args: Prisma.DentalClinicUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalClinicPayload>
+        }
+        deleteMany: {
+          args: Prisma.DentalClinicDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DentalClinicUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DentalClinicUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalClinicPayload>[]
+        }
+        upsert: {
+          args: Prisma.DentalClinicUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalClinicPayload>
+        }
+        aggregate: {
+          args: Prisma.DentalClinicAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDentalClinic>
+        }
+        groupBy: {
+          args: Prisma.DentalClinicGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalClinicGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DentalClinicCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalClinicCountAggregateOutputType> | number
+        }
+      }
+    }
+    DentalFacility: {
+      payload: Prisma.$DentalFacilityPayload<ExtArgs>
+      fields: Prisma.DentalFacilityFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DentalFacilityFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalFacilityPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DentalFacilityFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalFacilityPayload>
+        }
+        findFirst: {
+          args: Prisma.DentalFacilityFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalFacilityPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DentalFacilityFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalFacilityPayload>
+        }
+        findMany: {
+          args: Prisma.DentalFacilityFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalFacilityPayload>[]
+        }
+        create: {
+          args: Prisma.DentalFacilityCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalFacilityPayload>
+        }
+        createMany: {
+          args: Prisma.DentalFacilityCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DentalFacilityCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalFacilityPayload>[]
+        }
+        delete: {
+          args: Prisma.DentalFacilityDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalFacilityPayload>
+        }
+        update: {
+          args: Prisma.DentalFacilityUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalFacilityPayload>
+        }
+        deleteMany: {
+          args: Prisma.DentalFacilityDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DentalFacilityUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DentalFacilityUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalFacilityPayload>[]
+        }
+        upsert: {
+          args: Prisma.DentalFacilityUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalFacilityPayload>
+        }
+        aggregate: {
+          args: Prisma.DentalFacilityAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDentalFacility>
+        }
+        groupBy: {
+          args: Prisma.DentalFacilityGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalFacilityGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DentalFacilityCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalFacilityCountAggregateOutputType> | number
+        }
+      }
+    }
+    DentalPatient: {
+      payload: Prisma.$DentalPatientPayload<ExtArgs>
+      fields: Prisma.DentalPatientFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DentalPatientFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalPatientPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DentalPatientFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalPatientPayload>
+        }
+        findFirst: {
+          args: Prisma.DentalPatientFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalPatientPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DentalPatientFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalPatientPayload>
+        }
+        findMany: {
+          args: Prisma.DentalPatientFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalPatientPayload>[]
+        }
+        create: {
+          args: Prisma.DentalPatientCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalPatientPayload>
+        }
+        createMany: {
+          args: Prisma.DentalPatientCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DentalPatientCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalPatientPayload>[]
+        }
+        delete: {
+          args: Prisma.DentalPatientDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalPatientPayload>
+        }
+        update: {
+          args: Prisma.DentalPatientUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalPatientPayload>
+        }
+        deleteMany: {
+          args: Prisma.DentalPatientDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DentalPatientUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DentalPatientUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalPatientPayload>[]
+        }
+        upsert: {
+          args: Prisma.DentalPatientUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalPatientPayload>
+        }
+        aggregate: {
+          args: Prisma.DentalPatientAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDentalPatient>
+        }
+        groupBy: {
+          args: Prisma.DentalPatientGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalPatientGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DentalPatientCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalPatientCountAggregateOutputType> | number
+        }
+      }
+    }
+    DentalStaff: {
+      payload: Prisma.$DentalStaffPayload<ExtArgs>
+      fields: Prisma.DentalStaffFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DentalStaffFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalStaffPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DentalStaffFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalStaffPayload>
+        }
+        findFirst: {
+          args: Prisma.DentalStaffFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalStaffPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DentalStaffFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalStaffPayload>
+        }
+        findMany: {
+          args: Prisma.DentalStaffFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalStaffPayload>[]
+        }
+        create: {
+          args: Prisma.DentalStaffCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalStaffPayload>
+        }
+        createMany: {
+          args: Prisma.DentalStaffCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DentalStaffCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalStaffPayload>[]
+        }
+        delete: {
+          args: Prisma.DentalStaffDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalStaffPayload>
+        }
+        update: {
+          args: Prisma.DentalStaffUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalStaffPayload>
+        }
+        deleteMany: {
+          args: Prisma.DentalStaffDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DentalStaffUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DentalStaffUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalStaffPayload>[]
+        }
+        upsert: {
+          args: Prisma.DentalStaffUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalStaffPayload>
+        }
+        aggregate: {
+          args: Prisma.DentalStaffAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDentalStaff>
+        }
+        groupBy: {
+          args: Prisma.DentalStaffGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalStaffGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DentalStaffCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalStaffCountAggregateOutputType> | number
+        }
+      }
+    }
+    DentalVisitPlan: {
+      payload: Prisma.$DentalVisitPlanPayload<ExtArgs>
+      fields: Prisma.DentalVisitPlanFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DentalVisitPlanFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalVisitPlanPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DentalVisitPlanFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalVisitPlanPayload>
+        }
+        findFirst: {
+          args: Prisma.DentalVisitPlanFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalVisitPlanPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DentalVisitPlanFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalVisitPlanPayload>
+        }
+        findMany: {
+          args: Prisma.DentalVisitPlanFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalVisitPlanPayload>[]
+        }
+        create: {
+          args: Prisma.DentalVisitPlanCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalVisitPlanPayload>
+        }
+        createMany: {
+          args: Prisma.DentalVisitPlanCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DentalVisitPlanCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalVisitPlanPayload>[]
+        }
+        delete: {
+          args: Prisma.DentalVisitPlanDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalVisitPlanPayload>
+        }
+        update: {
+          args: Prisma.DentalVisitPlanUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalVisitPlanPayload>
+        }
+        deleteMany: {
+          args: Prisma.DentalVisitPlanDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DentalVisitPlanUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DentalVisitPlanUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalVisitPlanPayload>[]
+        }
+        upsert: {
+          args: Prisma.DentalVisitPlanUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalVisitPlanPayload>
+        }
+        aggregate: {
+          args: Prisma.DentalVisitPlanAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDentalVisitPlan>
+        }
+        groupBy: {
+          args: Prisma.DentalVisitPlanGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalVisitPlanGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DentalVisitPlanCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalVisitPlanCountAggregateOutputType> | number
+        }
+      }
+    }
+    DentalExamination: {
+      payload: Prisma.$DentalExaminationPayload<ExtArgs>
+      fields: Prisma.DentalExaminationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DentalExaminationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalExaminationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DentalExaminationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalExaminationPayload>
+        }
+        findFirst: {
+          args: Prisma.DentalExaminationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalExaminationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DentalExaminationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalExaminationPayload>
+        }
+        findMany: {
+          args: Prisma.DentalExaminationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalExaminationPayload>[]
+        }
+        create: {
+          args: Prisma.DentalExaminationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalExaminationPayload>
+        }
+        createMany: {
+          args: Prisma.DentalExaminationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DentalExaminationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalExaminationPayload>[]
+        }
+        delete: {
+          args: Prisma.DentalExaminationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalExaminationPayload>
+        }
+        update: {
+          args: Prisma.DentalExaminationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalExaminationPayload>
+        }
+        deleteMany: {
+          args: Prisma.DentalExaminationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DentalExaminationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DentalExaminationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalExaminationPayload>[]
+        }
+        upsert: {
+          args: Prisma.DentalExaminationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalExaminationPayload>
+        }
+        aggregate: {
+          args: Prisma.DentalExaminationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDentalExamination>
+        }
+        groupBy: {
+          args: Prisma.DentalExaminationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalExaminationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DentalExaminationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalExaminationCountAggregateOutputType> | number
+        }
+      }
+    }
+    DentalScoringHistory: {
+      payload: Prisma.$DentalScoringHistoryPayload<ExtArgs>
+      fields: Prisma.DentalScoringHistoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DentalScoringHistoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalScoringHistoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DentalScoringHistoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalScoringHistoryPayload>
+        }
+        findFirst: {
+          args: Prisma.DentalScoringHistoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalScoringHistoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DentalScoringHistoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalScoringHistoryPayload>
+        }
+        findMany: {
+          args: Prisma.DentalScoringHistoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalScoringHistoryPayload>[]
+        }
+        create: {
+          args: Prisma.DentalScoringHistoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalScoringHistoryPayload>
+        }
+        createMany: {
+          args: Prisma.DentalScoringHistoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DentalScoringHistoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalScoringHistoryPayload>[]
+        }
+        delete: {
+          args: Prisma.DentalScoringHistoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalScoringHistoryPayload>
+        }
+        update: {
+          args: Prisma.DentalScoringHistoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalScoringHistoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.DentalScoringHistoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DentalScoringHistoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DentalScoringHistoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalScoringHistoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.DentalScoringHistoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalScoringHistoryPayload>
+        }
+        aggregate: {
+          args: Prisma.DentalScoringHistoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDentalScoringHistory>
+        }
+        groupBy: {
+          args: Prisma.DentalScoringHistoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalScoringHistoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DentalScoringHistoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalScoringHistoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    DentalSavedDocument: {
+      payload: Prisma.$DentalSavedDocumentPayload<ExtArgs>
+      fields: Prisma.DentalSavedDocumentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DentalSavedDocumentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalSavedDocumentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DentalSavedDocumentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalSavedDocumentPayload>
+        }
+        findFirst: {
+          args: Prisma.DentalSavedDocumentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalSavedDocumentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DentalSavedDocumentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalSavedDocumentPayload>
+        }
+        findMany: {
+          args: Prisma.DentalSavedDocumentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalSavedDocumentPayload>[]
+        }
+        create: {
+          args: Prisma.DentalSavedDocumentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalSavedDocumentPayload>
+        }
+        createMany: {
+          args: Prisma.DentalSavedDocumentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DentalSavedDocumentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalSavedDocumentPayload>[]
+        }
+        delete: {
+          args: Prisma.DentalSavedDocumentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalSavedDocumentPayload>
+        }
+        update: {
+          args: Prisma.DentalSavedDocumentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalSavedDocumentPayload>
+        }
+        deleteMany: {
+          args: Prisma.DentalSavedDocumentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DentalSavedDocumentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DentalSavedDocumentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalSavedDocumentPayload>[]
+        }
+        upsert: {
+          args: Prisma.DentalSavedDocumentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalSavedDocumentPayload>
+        }
+        aggregate: {
+          args: Prisma.DentalSavedDocumentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDentalSavedDocument>
+        }
+        groupBy: {
+          args: Prisma.DentalSavedDocumentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalSavedDocumentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DentalSavedDocumentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalSavedDocumentCountAggregateOutputType> | number
         }
       }
     }
@@ -7566,6 +8166,149 @@ export const CounselingSlotScalarFieldEnum = {
 export type CounselingSlotScalarFieldEnum = (typeof CounselingSlotScalarFieldEnum)[keyof typeof CounselingSlotScalarFieldEnum]
 
 
+export const DentalClinicScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  address: 'address',
+  phone: 'phone',
+  representative: 'representative',
+  qualifications: 'qualifications'
+} as const
+
+export type DentalClinicScalarFieldEnum = (typeof DentalClinicScalarFieldEnum)[keyof typeof DentalClinicScalarFieldEnum]
+
+
+export const DentalFacilityScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  address: 'address',
+  facilityType: 'facilityType',
+  dentalClinicId: 'dentalClinicId'
+} as const
+
+export type DentalFacilityScalarFieldEnum = (typeof DentalFacilityScalarFieldEnum)[keyof typeof DentalFacilityScalarFieldEnum]
+
+
+export const DentalPatientScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  lastName: 'lastName',
+  firstName: 'firstName',
+  lastNameKana: 'lastNameKana',
+  firstNameKana: 'firstNameKana',
+  gender: 'gender',
+  birthDate: 'birthDate',
+  careLevel: 'careLevel',
+  building: 'building',
+  floor: 'floor',
+  room: 'room',
+  notes: 'notes',
+  diseases: 'diseases',
+  teethCount: 'teethCount',
+  hasDenture: 'hasDenture',
+  hasOralHypofunction: 'hasOralHypofunction',
+  assessment: 'assessment',
+  dentalFacilityId: 'dentalFacilityId'
+} as const
+
+export type DentalPatientScalarFieldEnum = (typeof DentalPatientScalarFieldEnum)[keyof typeof DentalPatientScalarFieldEnum]
+
+
+export const DentalStaffScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  role: 'role',
+  dentalClinicId: 'dentalClinicId'
+} as const
+
+export type DentalStaffScalarFieldEnum = (typeof DentalStaffScalarFieldEnum)[keyof typeof DentalStaffScalarFieldEnum]
+
+
+export const DentalVisitPlanScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  visitDate: 'visitDate',
+  status: 'status',
+  dentalClinicId: 'dentalClinicId',
+  dentalFacilityId: 'dentalFacilityId'
+} as const
+
+export type DentalVisitPlanScalarFieldEnum = (typeof DentalVisitPlanScalarFieldEnum)[keyof typeof DentalVisitPlanScalarFieldEnum]
+
+
+export const DentalExaminationScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  status: 'status',
+  vitalBefore: 'vitalBefore',
+  vitalAfter: 'vitalAfter',
+  treatmentItems: 'treatmentItems',
+  procedureItems: 'procedureItems',
+  visitCondition: 'visitCondition',
+  oralFindings: 'oralFindings',
+  treatment: 'treatment',
+  nextPlan: 'nextPlan',
+  drStartTime: 'drStartTime',
+  drEndTime: 'drEndTime',
+  dhStartTime: 'dhStartTime',
+  dhEndTime: 'dhEndTime',
+  treatmentPerformed: 'treatmentPerformed',
+  oralFunctionRecord: 'oralFunctionRecord',
+  dentalVisitPlanId: 'dentalVisitPlanId',
+  dentalPatientId: 'dentalPatientId',
+  doctorId: 'doctorId',
+  hygienistId: 'hygienistId'
+} as const
+
+export type DentalExaminationScalarFieldEnum = (typeof DentalExaminationScalarFieldEnum)[keyof typeof DentalExaminationScalarFieldEnum]
+
+
+export const DentalScoringHistoryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  procedureId: 'procedureId',
+  lastScoredAt: 'lastScoredAt',
+  points: 'points',
+  dentalPatientId: 'dentalPatientId'
+} as const
+
+export type DentalScoringHistoryScalarFieldEnum = (typeof DentalScoringHistoryScalarFieldEnum)[keyof typeof DentalScoringHistoryScalarFieldEnum]
+
+
+export const DentalSavedDocumentScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  templateId: 'templateId',
+  templateName: 'templateName',
+  pdfUrl: 'pdfUrl',
+  version: 'version',
+  dentalClinicId: 'dentalClinicId',
+  dentalPatientId: 'dentalPatientId',
+  dentalExaminationId: 'dentalExaminationId'
+} as const
+
+export type DentalSavedDocumentScalarFieldEnum = (typeof DentalSavedDocumentScalarFieldEnum)[keyof typeof DentalSavedDocumentScalarFieldEnum]
+
+
 export const KgFacilityMasterScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -9136,6 +9879,14 @@ export type GlobalOmitConfig = {
   counselingClient?: Prisma.CounselingClientOmit
   counselingReservation?: Prisma.CounselingReservationOmit
   counselingSlot?: Prisma.CounselingSlotOmit
+  dentalClinic?: Prisma.DentalClinicOmit
+  dentalFacility?: Prisma.DentalFacilityOmit
+  dentalPatient?: Prisma.DentalPatientOmit
+  dentalStaff?: Prisma.DentalStaffOmit
+  dentalVisitPlan?: Prisma.DentalVisitPlanOmit
+  dentalExamination?: Prisma.DentalExaminationOmit
+  dentalScoringHistory?: Prisma.DentalScoringHistoryOmit
+  dentalSavedDocument?: Prisma.DentalSavedDocumentOmit
   kgFacilityMaster?: Prisma.KgFacilityMasterOmit
   kgDietTypeMaster?: Prisma.KgDietTypeMasterOmit
   kgDailyMenu?: Prisma.KgDailyMenuOmit

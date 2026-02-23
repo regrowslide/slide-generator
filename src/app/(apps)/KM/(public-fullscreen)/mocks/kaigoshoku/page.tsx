@@ -15,7 +15,6 @@ import {
   Check,
   Clock,
   AlertTriangle,
-  PanelRightOpen,
   Truck,
   Users,
   RotateCcw,
@@ -31,7 +30,13 @@ import {
   Modal,
   GuidanceOverlay,
   GuidanceStartButton,
+  MockHeader,
+  MockHeaderTitle,
+  MockHeaderTab,
+  MockHeaderInfoButton,
   usePersistedState,
+  useEditModal,
+  useCsvImport,
   generateId,
   resetPersistedData,
   type Feature,
@@ -302,6 +307,11 @@ const StatusBadge = ({ status, onClick }: { status: string; onClick?: () => void
 // 受注管理ビュー
 // ==========================================
 
+type OrderForm = Omit<Order, 'id'>
+
+const EMPTY_ORDER_FORM: OrderForm = { facilityId: '', facilityName: '', date: '2026-02-23', mealType: '昼食', normalCount: 0, softCount: 0, mixerCount: 0, status: '未確認', note: '' }
+const toOrderForm = (o: Order): OrderForm => ({ facilityId: o.facilityId, facilityName: o.facilityName, date: o.date, mealType: o.mealType, normalCount: o.normalCount, softCount: o.softCount, mixerCount: o.mixerCount, status: o.status, note: o.note })
+
 const OrdersView = ({
   orders,
   setOrders,
@@ -312,43 +322,9 @@ const OrdersView = ({
   facilities: Facility[]
 }) => {
   const [searchTerm, setSearchTerm] = useState('')
-  const [modalOpen, setModalOpen] = useState(false)
-  const [editingItem, setEditingItem] = useState<Order | null>(null)
-  const [csvConfirmOpen, setCsvConfirmOpen] = useState(false)
-  const [csvImporting, setCsvImporting] = useState(false)
-  const [csvDone, setCsvDone] = useState(false)
+  const modal = useEditModal<Order, OrderForm>(EMPTY_ORDER_FORM, toOrderForm)
 
-  const filtered = orders.filter(
-    (o) => !searchTerm || o.facilityName.includes(searchTerm) || o.mealType.includes(searchTerm)
-  )
-  const totalMeals = filtered.reduce((sum, o) => sum + o.normalCount + o.softCount + o.mixerCount, 0)
-
-  const openEdit = (order: Order) => {
-    setEditingItem(order)
-    setModalOpen(true)
-  }
-
-  const handleSave = () => {
-    if (!editingItem) return
-    setOrders((prev) => prev.map((o) => (o.id === editingItem.id ? { ...o, facilityId: editingItem.facilityId, facilityName: editingItem.facilityName, date: editingItem.date, mealType: editingItem.mealType, normalCount: editingItem.normalCount, softCount: editingItem.softCount, mixerCount: editingItem.mixerCount, status: editingItem.status, note: editingItem.note } : o)))
-    setModalOpen(false)
-  }
-
-  const handleDelete = () => {
-    if (!editingItem) return
-    setOrders((prev) => prev.filter((o) => o.id !== editingItem.id))
-    setModalOpen(false)
-  }
-
-  const cycleOrderStatus = (orderId: string) => {
-    const cycle: Record<string, Order['status']> = { '未確認': '確認済', '確認済': '変更あり', '変更あり': '未確認' }
-    setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: cycle[o.status] ?? '未確認' } : o)))
-  }
-
-  // CSV取り込み（デモ用ランダムデータ生成）
-  const handleCsvImport = () => {
-    setCsvImporting(true)
-    setCsvDone(false)
+  const generateOrderCsvData = useCallback((): Order[] => {
     const mealTypes = ['朝食', '昼食', '夕食']
     const statuses: Order['status'][] = ['確認済', '未確認', '変更あり']
     const notes = ['', '', '', '1名追加', '2名欠食', 'アレルギー対応あり', '食事形態変更']
@@ -372,15 +348,19 @@ const OrdersView = ({
         note: notes[Math.floor(Math.random() * notes.length)],
       })
     }
-    setTimeout(() => {
-      setOrders((prev) => [...prev, ...newOrders])
-      setCsvImporting(false)
-      setCsvDone(true)
-      setTimeout(() => {
-        setCsvConfirmOpen(false)
-        setCsvDone(false)
-      }, 1200)
-    }, 1500)
+    return newOrders
+  }, [facilities])
+
+  const csv = useCsvImport<Order>(generateOrderCsvData, setOrders)
+
+  const filtered = orders.filter(
+    (o) => !searchTerm || o.facilityName.includes(searchTerm) || o.mealType.includes(searchTerm)
+  )
+  const totalMeals = filtered.reduce((sum, o) => sum + o.normalCount + o.softCount + o.mixerCount, 0)
+
+  const cycleOrderStatus = (orderId: string) => {
+    const cycle: Record<string, Order['status']> = { '未確認': '確認済', '確認済': '変更あり', '変更あり': '未確認' }
+    setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: cycle[o.status] ?? '未確認' } : o)))
   }
 
   return (
@@ -415,7 +395,7 @@ const OrdersView = ({
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <button onClick={() => { setCsvConfirmOpen(true); setCsvDone(false); setCsvImporting(false) }} className="flex items-center gap-1 px-3 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors whitespace-nowrap">
+        <button onClick={csv.open} className="flex items-center gap-1 px-3 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors whitespace-nowrap">
           <Upload size={14} />
           CSV取り込み
         </button>
@@ -438,7 +418,7 @@ const OrdersView = ({
             </thead>
             <tbody className="divide-y divide-stone-100">
               {filtered.map((order, idx) => (
-                <tr key={idx} {...(idx === 0 ? { 'data-guidance': 'order-row' } : {})} className="hover:bg-amber-50/30 transition-colors cursor-pointer" onClick={() => openEdit(order)}>
+                <tr key={idx} {...(idx === 0 ? { 'data-guidance': 'order-row' } : {})} className="hover:bg-amber-50/30 transition-colors cursor-pointer" onClick={() => modal.openEdit(order)}>
                   <td className="px-4 py-3 font-medium text-stone-800">{order.facilityName}</td>
                   <td className="px-4 py-3 text-stone-600">{order.mealType}</td>
                   <td className="px-4 py-3 text-right text-stone-700">{order.normalCount}</td>
@@ -456,58 +436,56 @@ const OrdersView = ({
         </div>
       </div>
 
-      {editingItem && (
-        <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="受注編集">
-          <div className="space-y-4">
-            <FormField label="施設">
-              <select className={selectClass} value={editingItem.facilityId} onChange={(e) => {
-                const facility = facilities.find((f) => f.id === e.target.value)
-                setEditingItem((prev) => prev ? { ...prev, facilityId: e.target.value, facilityName: facility?.name ?? '' } : prev)
-              }}>
-                {facilities.map((f) => (
-                  <option key={f.id} value={f.id}>{f.name}</option>
-                ))}
+      <Modal isOpen={modal.modalOpen} onClose={modal.close} title="受注編集">
+        <div className="space-y-4">
+          <FormField label="施設">
+            <select className={selectClass} value={modal.form.facilityId} onChange={(e) => {
+              const facility = facilities.find((f) => f.id === e.target.value)
+              modal.setForm((prev) => ({ ...prev, facilityId: e.target.value, facilityName: facility?.name ?? '' }))
+            }}>
+              {facilities.map((f) => (
+                <option key={f.id} value={f.id}>{f.name}</option>
+              ))}
+            </select>
+          </FormField>
+          <div className="grid grid-cols-2 gap-4">
+            <FormField label="日付">
+              <input type="date" className={inputClass} value={modal.form.date} onChange={(e) => modal.setForm((p) => ({ ...p, date: e.target.value }))} />
+            </FormField>
+            <FormField label="食事タイプ">
+              <select className={selectClass} value={modal.form.mealType} onChange={(e) => modal.setForm((p) => ({ ...p, mealType: e.target.value }))}>
+                {['朝食', '昼食', '夕食'].map((t) => <option key={t} value={t}>{t}</option>)}
               </select>
             </FormField>
-            <div className="grid grid-cols-2 gap-4">
-              <FormField label="日付">
-                <input type="date" className={inputClass} value={editingItem.date} onChange={(e) => setEditingItem((p) => p ? { ...p, date: e.target.value } : p)} />
-              </FormField>
-              <FormField label="食事タイプ">
-                <select className={selectClass} value={editingItem.mealType} onChange={(e) => setEditingItem((p) => p ? { ...p, mealType: e.target.value } : p)}>
-                  {['朝食', '昼食', '夕食'].map((t) => <option key={t} value={t}>{t}</option>)}
-                </select>
-              </FormField>
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              <FormField label="常食">
-                <input type="number" className={inputClass} value={editingItem.normalCount} onChange={(e) => setEditingItem((p) => p ? { ...p, normalCount: Number(e.target.value) } : p)} />
-              </FormField>
-              <FormField label="刻み食">
-                <input type="number" className={inputClass} value={editingItem.softCount} onChange={(e) => setEditingItem((p) => p ? { ...p, softCount: Number(e.target.value) } : p)} />
-              </FormField>
-              <FormField label="ミキサー食">
-                <input type="number" className={inputClass} value={editingItem.mixerCount} onChange={(e) => setEditingItem((p) => p ? { ...p, mixerCount: Number(e.target.value) } : p)} />
-              </FormField>
-            </div>
-            <FormField label="備考">
-              <input type="text" className={inputClass} value={editingItem.note} onChange={(e) => setEditingItem((p) => p ? { ...p, note: e.target.value } : p)} placeholder="任意" />
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <FormField label="常食">
+              <input type="number" className={inputClass} value={modal.form.normalCount} onChange={(e) => modal.setForm((p) => ({ ...p, normalCount: Number(e.target.value) }))} />
             </FormField>
-            <div className="flex justify-between pt-2">
-              <button onClick={handleDelete} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
-                <Trash2 size={14} />
-                削除
-              </button>
-              <div className="flex gap-2">
-                <button onClick={() => setModalOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
-                <button onClick={handleSave} className="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">保存</button>
-              </div>
+            <FormField label="刻み食">
+              <input type="number" className={inputClass} value={modal.form.softCount} onChange={(e) => modal.setForm((p) => ({ ...p, softCount: Number(e.target.value) }))} />
+            </FormField>
+            <FormField label="ミキサー食">
+              <input type="number" className={inputClass} value={modal.form.mixerCount} onChange={(e) => modal.setForm((p) => ({ ...p, mixerCount: Number(e.target.value) }))} />
+            </FormField>
+          </div>
+          <FormField label="備考">
+            <input type="text" className={inputClass} value={modal.form.note} onChange={(e) => modal.setForm((p) => ({ ...p, note: e.target.value }))} placeholder="任意" />
+          </FormField>
+          <div className="flex justify-between pt-2">
+            <button onClick={() => modal.remove(setOrders)} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
+              <Trash2 size={14} />
+              削除
+            </button>
+            <div className="flex gap-2">
+              <button onClick={modal.close} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
+              <button onClick={() => modal.save(setOrders, 'ORD')} className="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">保存</button>
             </div>
           </div>
-        </Modal>
-      )}
+        </div>
+      </Modal>
 
-      <Modal isOpen={csvConfirmOpen} onClose={() => !csvImporting && setCsvConfirmOpen(false)} title="CSV取り込み">
+      <Modal isOpen={csv.confirmOpen} onClose={() => !csv.importing && csv.cancel()} title="CSV取り込み">
         <div className="space-y-4">
           <div className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
             <FileSpreadsheet className="w-8 h-8 text-amber-600 flex-shrink-0" />
@@ -516,20 +494,20 @@ const OrdersView = ({
               <p className="text-xs text-amber-600 mt-1">デモのため、自動でデータをランダムに追加します。</p>
             </div>
           </div>
-          {csvDone ? (
+          {csv.done ? (
             <div className="flex items-center gap-2 justify-center py-4 text-emerald-600">
               <CheckCircle2 className="w-5 h-5" />
               <span className="text-sm font-medium">取り込み完了</span>
             </div>
-          ) : csvImporting ? (
+          ) : csv.importing ? (
             <div className="flex flex-col items-center gap-3 py-4">
               <div className="w-8 h-8 border-3 border-amber-200 border-t-amber-500 rounded-full animate-spin" />
               <span className="text-sm text-stone-500">CSVデータを読み込み中...</span>
             </div>
           ) : (
             <div className="flex justify-end gap-2 pt-2">
-              <button onClick={() => setCsvConfirmOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
-              <button onClick={handleCsvImport} className="flex items-center gap-1 px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
+              <button onClick={csv.cancel} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
+              <button onClick={csv.execute} className="flex items-center gap-1 px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
                 <Upload size={14} />
                 取り込み開始
               </button>
@@ -545,6 +523,11 @@ const OrdersView = ({
 // 献立管理ビュー
 // ==========================================
 
+type MenuForm = Omit<MenuItem, 'id'>
+
+const EMPTY_MENU_FORM: MenuForm = { day: '', date: '', breakfast: '', lunch: '', dinner: '' }
+const toMenuForm = (m: MenuItem): MenuForm => ({ day: m.day, date: m.date, breakfast: m.breakfast, lunch: m.lunch, dinner: m.dinner })
+
 const MenuView = ({
   menu,
   setMenu,
@@ -553,33 +536,9 @@ const MenuView = ({
   setMenu: React.Dispatch<React.SetStateAction<MenuItem[]>>
 }) => {
   const [selectedDay, setSelectedDay] = useState<string | null>(null)
-  const [modalOpen, setModalOpen] = useState(false)
-  const [editingItem, setEditingItem] = useState<MenuItem | null>(null)
-  const [csvConfirmOpen, setCsvConfirmOpen] = useState(false)
-  const [csvImporting, setCsvImporting] = useState(false)
-  const [csvDone, setCsvDone] = useState(false)
+  const modal = useEditModal<MenuItem, MenuForm>(EMPTY_MENU_FORM, toMenuForm)
 
-  const openEdit = (item: MenuItem) => {
-    setEditingItem(item)
-    setModalOpen(true)
-  }
-
-  const handleSave = () => {
-    if (!editingItem) return
-    setMenu((prev) => prev.map((m) => (m.id === editingItem.id ? { ...editingItem } : m)))
-    setModalOpen(false)
-  }
-
-  const handleDelete = () => {
-    if (!editingItem) return
-    setMenu((prev) => prev.filter((m) => m.id !== editingItem.id))
-    setModalOpen(false)
-  }
-
-  // CSV取り込み（デモ用ランダムデータ生成）
-  const handleCsvImport = () => {
-    setCsvImporting(true)
-    setCsvDone(false)
+  const generateMenuCsvData = useCallback((): MenuItem[] => {
     const breakfasts = [
       'ご飯・味噌汁・焼き魚・おひたし', 'パン・コーンスープ・目玉焼き', 'おかゆ・梅干し・卵焼き・漬物',
       'ご飯・豚汁・納豆・のり', 'トースト・ミネストローネ・サラダ', 'ご飯・味噌汁・肉じゃが',
@@ -607,16 +566,10 @@ const MenuView = ({
         dinner: dinners[Math.floor(Math.random() * dinners.length)],
       })
     }
-    setTimeout(() => {
-      setMenu((prev) => [...prev, ...newMenus])
-      setCsvImporting(false)
-      setCsvDone(true)
-      setTimeout(() => {
-        setCsvConfirmOpen(false)
-        setCsvDone(false)
-      }, 1200)
-    }, 1500)
-  }
+    return newMenus
+  }, [menu.length])
+
+  const csv = useCsvImport<MenuItem>(generateMenuCsvData, setMenu)
 
   return (
     <div className="space-y-4">
@@ -625,7 +578,7 @@ const MenuView = ({
           <Calendar className="w-5 h-5 text-amber-600" />
           <h3 className="font-bold text-stone-800">2026年2月 第4週</h3>
         </div>
-        <button onClick={() => { setCsvConfirmOpen(true); setCsvDone(false); setCsvImporting(false) }} className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
+        <button onClick={csv.open} className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
           <Upload size={14} />
           CSV取り込み
         </button>
@@ -648,7 +601,7 @@ const MenuView = ({
                   key={idx}
                   {...(idx === 0 ? { 'data-guidance': 'menu-row' } : {})}
                   className={`cursor-pointer transition-colors ${selectedDay === item.day ? 'bg-amber-50' : 'hover:bg-amber-50/30'}`}
-                  onClick={() => openEdit(item)}
+                  onClick={() => modal.openEdit(item)}
                 >
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
@@ -689,41 +642,39 @@ const MenuView = ({
         </div>
       )}
 
-      {editingItem && (
-        <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="献立編集">
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <FormField label="曜日">
-                <input type="text" className={inputClass} value={editingItem.day} onChange={(e) => setEditingItem((p) => p ? { ...p, day: e.target.value } : p)} placeholder="月" />
-              </FormField>
-              <FormField label="日付">
-                <input type="text" className={inputClass} value={editingItem.date} onChange={(e) => setEditingItem((p) => p ? { ...p, date: e.target.value } : p)} placeholder="2/23" />
-              </FormField>
-            </div>
-            <FormField label="朝食">
-              <input type="text" className={inputClass} value={editingItem.breakfast} onChange={(e) => setEditingItem((p) => p ? { ...p, breakfast: e.target.value } : p)} />
+      <Modal isOpen={modal.modalOpen} onClose={modal.close} title="献立編集">
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <FormField label="曜日">
+              <input type="text" className={inputClass} value={modal.form.day} onChange={(e) => modal.setForm((p) => ({ ...p, day: e.target.value }))} placeholder="月" />
             </FormField>
-            <FormField label="昼食">
-              <input type="text" className={inputClass} value={editingItem.lunch} onChange={(e) => setEditingItem((p) => p ? { ...p, lunch: e.target.value } : p)} />
+            <FormField label="日付">
+              <input type="text" className={inputClass} value={modal.form.date} onChange={(e) => modal.setForm((p) => ({ ...p, date: e.target.value }))} placeholder="2/23" />
             </FormField>
-            <FormField label="夕食">
-              <input type="text" className={inputClass} value={editingItem.dinner} onChange={(e) => setEditingItem((p) => p ? { ...p, dinner: e.target.value } : p)} />
-            </FormField>
-            <div className="flex justify-between pt-2">
-              <button onClick={handleDelete} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
-                <Trash2 size={14} />
-                削除
-              </button>
-              <div className="flex gap-2">
-                <button onClick={() => setModalOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
-                <button onClick={handleSave} className="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">保存</button>
-              </div>
+          </div>
+          <FormField label="朝食">
+            <input type="text" className={inputClass} value={modal.form.breakfast} onChange={(e) => modal.setForm((p) => ({ ...p, breakfast: e.target.value }))} />
+          </FormField>
+          <FormField label="昼食">
+            <input type="text" className={inputClass} value={modal.form.lunch} onChange={(e) => modal.setForm((p) => ({ ...p, lunch: e.target.value }))} />
+          </FormField>
+          <FormField label="夕食">
+            <input type="text" className={inputClass} value={modal.form.dinner} onChange={(e) => modal.setForm((p) => ({ ...p, dinner: e.target.value }))} />
+          </FormField>
+          <div className="flex justify-between pt-2">
+            <button onClick={() => modal.remove(setMenu)} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
+              <Trash2 size={14} />
+              削除
+            </button>
+            <div className="flex gap-2">
+              <button onClick={modal.close} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
+              <button onClick={() => modal.save(setMenu, 'M')} className="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">保存</button>
             </div>
           </div>
-        </Modal>
-      )}
+        </div>
+      </Modal>
 
-      <Modal isOpen={csvConfirmOpen} onClose={() => !csvImporting && setCsvConfirmOpen(false)} title="CSV取り込み">
+      <Modal isOpen={csv.confirmOpen} onClose={() => !csv.importing && csv.cancel()} title="CSV取り込み">
         <div className="space-y-4">
           <div className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
             <FileSpreadsheet className="w-8 h-8 text-amber-600 flex-shrink-0" />
@@ -732,20 +683,20 @@ const MenuView = ({
               <p className="text-xs text-amber-600 mt-1">デモのため、自動でデータをランダムに追加します。</p>
             </div>
           </div>
-          {csvDone ? (
+          {csv.done ? (
             <div className="flex items-center gap-2 justify-center py-4 text-emerald-600">
               <CheckCircle2 className="w-5 h-5" />
               <span className="text-sm font-medium">取り込み完了</span>
             </div>
-          ) : csvImporting ? (
+          ) : csv.importing ? (
             <div className="flex flex-col items-center gap-3 py-4">
               <div className="w-8 h-8 border-3 border-amber-200 border-t-amber-500 rounded-full animate-spin" />
               <span className="text-sm text-stone-500">CSVデータを読み込み中...</span>
             </div>
           ) : (
             <div className="flex justify-end gap-2 pt-2">
-              <button onClick={() => setCsvConfirmOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
-              <button onClick={handleCsvImport} className="flex items-center gap-1 px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
+              <button onClick={csv.cancel} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
+              <button onClick={csv.execute} className="flex items-center gap-1 px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
                 <Upload size={14} />
                 取り込み開始
               </button>
@@ -761,6 +712,11 @@ const MenuView = ({
 // 製造指示ビュー
 // ==========================================
 
+type ProductionForm = { menuName: string; normalServings: number; softServings: number; mixerServings: number; startTime: string }
+
+const EMPTY_PRODUCTION_FORM: ProductionForm = { menuName: '', normalServings: 0, softServings: 0, mixerServings: 0, startTime: '08:00' }
+const toProductionForm = (p: ProductionItem): ProductionForm => ({ menuName: p.menuName, normalServings: p.normalServings, softServings: p.softServings, mixerServings: p.mixerServings, startTime: p.startTime })
+
 const ProductionView = ({
   production,
   setProduction,
@@ -768,38 +724,17 @@ const ProductionView = ({
   production: ProductionItem[]
   setProduction: React.Dispatch<React.SetStateAction<ProductionItem[]>>
 }) => {
-  const [modalOpen, setModalOpen] = useState(false)
-  const [editingItem, setEditingItem] = useState<ProductionItem | null>(null)
+  const modal = useEditModal<ProductionItem, ProductionForm>(EMPTY_PRODUCTION_FORM, toProductionForm)
 
-  const emptyProduction = { menuName: '', normalServings: 0, softServings: 0, mixerServings: 0, startTime: '08:00' }
-  const [form, setForm] = useState(emptyProduction)
-
-  const openNew = () => {
-    setEditingItem(null)
-    setForm(emptyProduction)
-    setModalOpen(true)
-  }
-
-  const openEdit = (item: ProductionItem) => {
-    setEditingItem(item)
-    setForm({ menuName: item.menuName, normalServings: item.normalServings, softServings: item.softServings, mixerServings: item.mixerServings, startTime: item.startTime })
-    setModalOpen(true)
-  }
-
+  // save時にtotalServingsを計算して付加する
   const handleSave = () => {
-    const totalServings = (form.normalServings || 0) + (form.softServings || 0) + (form.mixerServings || 0)
-    if (editingItem) {
-      setProduction((prev) => prev.map((p) => (p.id === editingItem.id ? { ...p, ...form, totalServings } : p)))
+    const totalServings = (modal.form.normalServings || 0) + (modal.form.softServings || 0) + (modal.form.mixerServings || 0)
+    if (modal.editingItem) {
+      setProduction((prev) => prev.map((p) => (p.id === modal.editingItem!.id ? { ...p, ...modal.form, totalServings } : p)))
     } else {
-      setProduction((prev) => [...prev, { id: generateId('P'), ...form, totalServings, status: '未着手' as const }])
+      setProduction((prev) => [...prev, { id: generateId('P'), ...modal.form, totalServings, status: '未着手' as const }])
     }
-    setModalOpen(false)
-  }
-
-  const handleDelete = () => {
-    if (!editingItem) return
-    setProduction((prev) => prev.filter((p) => p.id !== editingItem.id))
-    setModalOpen(false)
+    modal.close()
   }
 
   const cycleProductionStatus = (itemId: string) => {
@@ -814,7 +749,7 @@ const ProductionView = ({
           <Clock className="w-5 h-5 text-amber-600" />
           <h3 className="font-bold text-stone-800">本日の製造指示 — 2026/02/23 昼食</h3>
         </div>
-        <button data-guidance="add-production-button" onClick={openNew} className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
+        <button data-guidance="add-production-button" onClick={modal.openNew} className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
           <Plus size={14} />
           製造追加
         </button>
@@ -840,7 +775,7 @@ const ProductionView = ({
 
       <div className="space-y-3">
         {production.map((item) => (
-          <div key={item.id} className="bg-white rounded-xl border border-stone-200 p-4 hover:shadow-md transition-all cursor-pointer" onClick={() => openEdit(item)}>
+          <div key={item.id} className="bg-white rounded-xl border border-stone-200 p-4 hover:shadow-md transition-all cursor-pointer" onClick={() => modal.openEdit(item)}>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-3">
                 <h4 className="font-bold text-stone-800">{item.menuName}</h4>
@@ -870,37 +805,37 @@ const ProductionView = ({
         ))}
       </div>
 
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editingItem ? '製造指示編集' : '製造指示追加'}>
+      <Modal isOpen={modal.modalOpen} onClose={modal.close} title={modal.editingItem ? '製造指示編集' : '製造指示追加'}>
         <div className="space-y-4">
           <FormField label="メニュー名">
-            <input type="text" className={inputClass} value={form.menuName} onChange={(e) => setForm((p) => ({ ...p, menuName: e.target.value }))} />
+            <input type="text" className={inputClass} value={modal.form.menuName} onChange={(e) => modal.setForm((p) => ({ ...p, menuName: e.target.value }))} />
           </FormField>
           <div className="grid grid-cols-3 gap-4">
             <FormField label="常食（食数）">
-              <input type="number" className={inputClass} value={form.normalServings} onChange={(e) => setForm((p) => ({ ...p, normalServings: Number(e.target.value) }))} />
+              <input type="number" className={inputClass} value={modal.form.normalServings} onChange={(e) => modal.setForm((p) => ({ ...p, normalServings: Number(e.target.value) }))} />
             </FormField>
             <FormField label="刻み食（食数）">
-              <input type="number" className={inputClass} value={form.softServings} onChange={(e) => setForm((p) => ({ ...p, softServings: Number(e.target.value) }))} />
+              <input type="number" className={inputClass} value={modal.form.softServings} onChange={(e) => modal.setForm((p) => ({ ...p, softServings: Number(e.target.value) }))} />
             </FormField>
             <FormField label="ミキサー食（食数）">
-              <input type="number" className={inputClass} value={form.mixerServings} onChange={(e) => setForm((p) => ({ ...p, mixerServings: Number(e.target.value) }))} />
+              <input type="number" className={inputClass} value={modal.form.mixerServings} onChange={(e) => modal.setForm((p) => ({ ...p, mixerServings: Number(e.target.value) }))} />
             </FormField>
           </div>
           <div className="text-sm text-stone-500">
-            合計: <span className="font-bold text-stone-800">{(form.normalServings || 0) + (form.softServings || 0) + (form.mixerServings || 0)}食</span>
+            合計: <span className="font-bold text-stone-800">{(modal.form.normalServings || 0) + (modal.form.softServings || 0) + (modal.form.mixerServings || 0)}食</span>
           </div>
           <FormField label="開始時間">
-            <input type="time" className={inputClass} value={form.startTime} onChange={(e) => setForm((p) => ({ ...p, startTime: e.target.value }))} />
+            <input type="time" className={inputClass} value={modal.form.startTime} onChange={(e) => modal.setForm((p) => ({ ...p, startTime: e.target.value }))} />
           </FormField>
           <div className="flex justify-between pt-2">
-            {editingItem ? (
-              <button onClick={handleDelete} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
+            {modal.editingItem ? (
+              <button onClick={() => modal.remove(setProduction)} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
                 <Trash2 size={14} />
                 削除
               </button>
             ) : <div />}
             <div className="flex gap-2">
-              <button onClick={() => setModalOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
+              <button onClick={modal.close} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
               <button onClick={handleSave} className="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">保存</button>
             </div>
           </div>
@@ -914,6 +849,11 @@ const ProductionView = ({
 // 梱包・配送ビュー
 // ==========================================
 
+type DeliveryForm = { facilityName: string; itemCount: number; departureTime: string; driver: string }
+
+const EMPTY_DELIVERY_FORM: DeliveryForm = { facilityName: '', itemCount: 0, departureTime: '10:00', driver: '' }
+const toDeliveryForm = (d: DeliveryItem): DeliveryForm => ({ facilityName: d.facilityName, itemCount: d.itemCount, departureTime: d.departureTime, driver: d.driver })
+
 const DeliveryView = ({
   delivery,
   setDelivery,
@@ -921,37 +861,16 @@ const DeliveryView = ({
   delivery: DeliveryItem[]
   setDelivery: React.Dispatch<React.SetStateAction<DeliveryItem[]>>
 }) => {
-  const [modalOpen, setModalOpen] = useState(false)
-  const [editingItem, setEditingItem] = useState<DeliveryItem | null>(null)
+  const modal = useEditModal<DeliveryItem, DeliveryForm>(EMPTY_DELIVERY_FORM, toDeliveryForm)
 
-  const emptyDelivery = { facilityName: '', itemCount: 0, departureTime: '10:00', driver: '' }
-  const [form, setForm] = useState(emptyDelivery)
-
-  const openNew = () => {
-    setEditingItem(null)
-    setForm(emptyDelivery)
-    setModalOpen(true)
-  }
-
-  const openEdit = (item: DeliveryItem) => {
-    setEditingItem(item)
-    setForm({ facilityName: item.facilityName, itemCount: item.itemCount, departureTime: item.departureTime, driver: item.driver })
-    setModalOpen(true)
-  }
-
+  // save時にstatusのデフォルト値を付加する
   const handleSave = () => {
-    if (editingItem) {
-      setDelivery((prev) => prev.map((d) => (d.id === editingItem.id ? { ...d, ...form } : d)))
+    if (modal.editingItem) {
+      setDelivery((prev) => prev.map((d) => (d.id === modal.editingItem!.id ? { ...d, ...modal.form } : d)))
     } else {
-      setDelivery((prev) => [...prev, { id: generateId('D'), ...form, status: '準備中' as const }])
+      setDelivery((prev) => [...prev, { id: generateId('D'), ...modal.form, status: '準備中' as const }])
     }
-    setModalOpen(false)
-  }
-
-  const handleDelete = () => {
-    if (!editingItem) return
-    setDelivery((prev) => prev.filter((d) => d.id !== editingItem.id))
-    setModalOpen(false)
+    modal.close()
   }
 
   const cycleDeliveryStatus = (itemId: string) => {
@@ -966,7 +885,7 @@ const DeliveryView = ({
           <Truck className="w-5 h-5 text-amber-600" />
           <h3 className="font-bold text-stone-800">本日の配送状況</h3>
         </div>
-        <button data-guidance="add-delivery-button" onClick={openNew} className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
+        <button data-guidance="add-delivery-button" onClick={modal.openNew} className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
           <Plus size={14} />
           配送追加
         </button>
@@ -974,7 +893,7 @@ const DeliveryView = ({
 
       <div className="space-y-3">
         {delivery.map((item, idx) => (
-          <div key={item.id} className="bg-white rounded-xl border border-stone-200 p-4 hover:shadow-md transition-all cursor-pointer" onClick={() => openEdit(item)}>
+          <div key={item.id} className="bg-white rounded-xl border border-stone-200 p-4 hover:shadow-md transition-all cursor-pointer" onClick={() => modal.openEdit(item)}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${item.status === '配送完了' ? 'bg-emerald-100 text-emerald-700' :
@@ -997,31 +916,31 @@ const DeliveryView = ({
         ))}
       </div>
 
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editingItem ? '配送編集' : '配送追加'}>
+      <Modal isOpen={modal.modalOpen} onClose={modal.close} title={modal.editingItem ? '配送編集' : '配送追加'}>
         <div className="space-y-4">
           <FormField label="施設名">
-            <input type="text" className={inputClass} value={form.facilityName} onChange={(e) => setForm((p) => ({ ...p, facilityName: e.target.value }))} />
+            <input type="text" className={inputClass} value={modal.form.facilityName} onChange={(e) => modal.setForm((p) => ({ ...p, facilityName: e.target.value }))} />
           </FormField>
           <div className="grid grid-cols-2 gap-4">
             <FormField label="食数">
-              <input type="number" className={inputClass} value={form.itemCount} onChange={(e) => setForm((p) => ({ ...p, itemCount: Number(e.target.value) }))} />
+              <input type="number" className={inputClass} value={modal.form.itemCount} onChange={(e) => modal.setForm((p) => ({ ...p, itemCount: Number(e.target.value) }))} />
             </FormField>
             <FormField label="出発時間">
-              <input type="time" className={inputClass} value={form.departureTime} onChange={(e) => setForm((p) => ({ ...p, departureTime: e.target.value }))} />
+              <input type="time" className={inputClass} value={modal.form.departureTime} onChange={(e) => modal.setForm((p) => ({ ...p, departureTime: e.target.value }))} />
             </FormField>
           </div>
           <FormField label="ドライバー">
-            <input type="text" className={inputClass} value={form.driver} onChange={(e) => setForm((p) => ({ ...p, driver: e.target.value }))} />
+            <input type="text" className={inputClass} value={modal.form.driver} onChange={(e) => modal.setForm((p) => ({ ...p, driver: e.target.value }))} />
           </FormField>
           <div className="flex justify-between pt-2">
-            {editingItem ? (
-              <button onClick={handleDelete} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
+            {modal.editingItem ? (
+              <button onClick={() => modal.remove(setDelivery)} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
                 <Trash2 size={14} />
                 削除
               </button>
             ) : <div />}
             <div className="flex gap-2">
-              <button onClick={() => setModalOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
+              <button onClick={modal.close} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
               <button onClick={handleSave} className="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">保存</button>
             </div>
           </div>
@@ -1037,6 +956,11 @@ const DeliveryView = ({
 
 const FACILITY_TYPES = ['グループホーム', '特別養護老人ホーム', 'デイサービス', '介護付き有料老人ホーム', 'サービス付き高齢者向け住宅']
 
+type FacilityForm = { name: string; type: string; mealCount: number; contact: string; address: string }
+
+const EMPTY_FACILITY_FORM: FacilityForm = { name: '', type: FACILITY_TYPES[0], mealCount: 0, contact: '', address: '' }
+const toFacilityForm = (f: Facility): FacilityForm => ({ name: f.name, type: f.type, mealCount: f.mealCount, contact: f.contact, address: f.address })
+
 const FacilitiesView = ({
   facilities,
   setFacilities,
@@ -1044,38 +968,7 @@ const FacilitiesView = ({
   facilities: Facility[]
   setFacilities: React.Dispatch<React.SetStateAction<Facility[]>>
 }) => {
-  const [modalOpen, setModalOpen] = useState(false)
-  const [editingItem, setEditingItem] = useState<Facility | null>(null)
-
-  const emptyFacility = { name: '', type: FACILITY_TYPES[0], mealCount: 0, contact: '', address: '' }
-  const [form, setForm] = useState(emptyFacility)
-
-  const openNew = () => {
-    setEditingItem(null)
-    setForm(emptyFacility)
-    setModalOpen(true)
-  }
-
-  const openEdit = (item: Facility) => {
-    setEditingItem(item)
-    setForm({ name: item.name, type: item.type, mealCount: item.mealCount, contact: item.contact, address: item.address })
-    setModalOpen(true)
-  }
-
-  const handleSave = () => {
-    if (editingItem) {
-      setFacilities((prev) => prev.map((f) => (f.id === editingItem.id ? { ...f, ...form } : f)))
-    } else {
-      setFacilities((prev) => [...prev, { id: generateId('F'), ...form }])
-    }
-    setModalOpen(false)
-  }
-
-  const handleDelete = () => {
-    if (!editingItem) return
-    setFacilities((prev) => prev.filter((f) => f.id !== editingItem.id))
-    setModalOpen(false)
-  }
+  const modal = useEditModal<Facility, FacilityForm>(EMPTY_FACILITY_FORM, toFacilityForm)
 
   return (
     <div className="space-y-4">
@@ -1084,7 +977,7 @@ const FacilitiesView = ({
           <Users className="w-5 h-5 text-amber-600" />
           <h3 className="font-bold text-stone-800">登録施設一覧</h3>
         </div>
-        <button data-guidance="add-facility-button" onClick={openNew} className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
+        <button data-guidance="add-facility-button" onClick={modal.openNew} className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
           <Plus size={14} />
           施設追加
         </button>
@@ -1092,7 +985,7 @@ const FacilitiesView = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {facilities.map((facility) => (
-          <div key={facility.id} className="bg-white rounded-xl border border-stone-200 p-5 hover:shadow-md hover:border-amber-200 transition-all group cursor-pointer" onClick={() => openEdit(facility)}>
+          <div key={facility.id} className="bg-white rounded-xl border border-stone-200 p-5 hover:shadow-md hover:border-amber-200 transition-all group cursor-pointer" onClick={() => modal.openEdit(facility)}>
             <div className="flex items-start justify-between mb-3">
               <div>
                 <h4 className="font-bold text-stone-800 group-hover:text-amber-700 transition-colors">{facility.name}</h4>
@@ -1118,37 +1011,37 @@ const FacilitiesView = ({
         ))}
       </div>
 
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editingItem ? '施設編集' : '施設追加'}>
+      <Modal isOpen={modal.modalOpen} onClose={modal.close} title={modal.editingItem ? '施設編集' : '施設追加'}>
         <div className="space-y-4">
           <FormField label="施設名">
-            <input type="text" className={inputClass} value={form.name} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))} />
+            <input type="text" className={inputClass} value={modal.form.name} onChange={(e) => modal.setForm((p) => ({ ...p, name: e.target.value }))} />
           </FormField>
           <FormField label="施設タイプ">
-            <select className={selectClass} value={form.type} onChange={(e) => setForm((p) => ({ ...p, type: e.target.value }))}>
+            <select className={selectClass} value={modal.form.type} onChange={(e) => modal.setForm((p) => ({ ...p, type: e.target.value }))}>
               {FACILITY_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
             </select>
           </FormField>
           <div className="grid grid-cols-2 gap-4">
             <FormField label="契約食数（食/日）">
-              <input type="number" className={inputClass} value={form.mealCount} onChange={(e) => setForm((p) => ({ ...p, mealCount: Number(e.target.value) }))} />
+              <input type="number" className={inputClass} value={modal.form.mealCount} onChange={(e) => modal.setForm((p) => ({ ...p, mealCount: Number(e.target.value) }))} />
             </FormField>
             <FormField label="担当者">
-              <input type="text" className={inputClass} value={form.contact} onChange={(e) => setForm((p) => ({ ...p, contact: e.target.value }))} />
+              <input type="text" className={inputClass} value={modal.form.contact} onChange={(e) => modal.setForm((p) => ({ ...p, contact: e.target.value }))} />
             </FormField>
           </div>
           <FormField label="住所">
-            <input type="text" className={inputClass} value={form.address} onChange={(e) => setForm((p) => ({ ...p, address: e.target.value }))} />
+            <input type="text" className={inputClass} value={modal.form.address} onChange={(e) => modal.setForm((p) => ({ ...p, address: e.target.value }))} />
           </FormField>
           <div className="flex justify-between pt-2">
-            {editingItem ? (
-              <button onClick={handleDelete} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
+            {modal.editingItem ? (
+              <button onClick={() => modal.remove(setFacilities)} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
                 <Trash2 size={14} />
                 削除
               </button>
             ) : <div />}
             <div className="flex gap-2">
-              <button onClick={() => setModalOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
-              <button onClick={handleSave} className="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">保存</button>
+              <button onClick={modal.close} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
+              <button onClick={() => modal.save(setFacilities, 'F')} className="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">保存</button>
             </div>
           </div>
         </div>
@@ -1196,55 +1089,32 @@ export default function KaigoshokuMockPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-stone-50 via-white to-amber-50/30 font-sans">
-      <header className="bg-white/80 backdrop-blur-md border-b border-stone-200 sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl shadow-lg shadow-amber-500/20">
-              <UtensilsCrossed className="text-white w-5 h-5" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-orange-600">
-                介護食管理システム
-              </h1>
-              <p className="text-xs text-stone-400 -mt-0.5">Care Meal Management</p>
-            </div>
-          </div>
+      <MockHeader>
+        <MockHeaderTitle icon={UtensilsCrossed} title="介護食管理システム" subtitle="Care Meal Management" theme="amber" />
 
-          <div className="flex items-center gap-2">
-            <GuidanceStartButton onClick={() => setShowGuidance(true)} theme="amber" />
-            <button
-              onClick={handleReset}
-              className="p-2 text-stone-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
-              title="データ初期化"
-            >
-              <RotateCcw size={16} />
-            </button>
-            {TABS.map((tab) => (
-              <button
-                key={tab.id}
-                data-guidance={`${tab.id}-tab`}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${activeTab === tab.id
-                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/25'
-                  : 'text-stone-600 hover:bg-stone-50 border border-transparent hover:border-amber-200'
-                  }`}
-              >
-                <tab.icon size={16} />
-                <span className="hidden md:inline">{tab.label}</span>
-              </button>
-            ))}
-            <button
-              data-guidance="info-button"
-              onClick={() => setShowInfoSidebar(true)}
-              className="ml-2 p-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all duration-200 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/30 flex items-center gap-2"
-              title="このシステムでできること"
-            >
-              <PanelRightOpen className="w-4 h-4" />
-              <span className="text-sm font-medium hidden sm:inline">機能説明</span>
-            </button>
-          </div>
+        <div className="flex items-center gap-2">
+          <GuidanceStartButton onClick={() => setShowGuidance(true)} theme="amber" />
+          <button
+            onClick={handleReset}
+            className="p-2 text-stone-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
+            title="データ初期化"
+          >
+            <RotateCcw size={16} />
+          </button>
+          {TABS.map((tab) => (
+            <MockHeaderTab
+              key={tab.id}
+              active={activeTab === tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              icon={tab.icon}
+              label={tab.label}
+              theme="amber"
+              data-guidance={`${tab.id}-tab`}
+            />
+          ))}
+          <MockHeaderInfoButton onClick={() => setShowInfoSidebar(true)} theme="amber" />
         </div>
-      </header>
+      </MockHeader>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {TAB_VIEWS[activeTab]}

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { LayoutDashboard, Factory, Stethoscope, BarChart3, UtensilsCrossed, Calculator, Building2, Car, ArrowRight, Monitor, Tablet, Smartphone } from 'lucide-react'
+import { LayoutDashboard, Factory, Stethoscope, BarChart3, Calculator, Car, ArrowRight, Monitor, Tablet, Smartphone } from 'lucide-react'
 
 // ==========================================
 // モック一覧ページ
@@ -41,9 +41,9 @@ const mockups = [
       '訪問歯科診療の患者管理・診療記録・スケジュール管理を統合。訪問先施設ごとの患者一覧やドキュメント管理を効率化。',
     features: ['患者管理', '診療記録', '訪問スケジュール', 'ドキュメント管理'],
     icon: Stethoscope,
-    gradient: 'from-blue-500 to-sky-600',
-    bgGradient: 'from-blue-50 to-sky-50',
-    accentColor: 'blue',
+    gradient: 'from-gray-500 to-gray-600',
+    bgGradient: 'from-gray-50 to-gray-50',
+    accentColor: 'gray',
   },
   {
     id: 'regrow',
@@ -56,17 +56,17 @@ const mockups = [
     bgGradient: 'from-violet-50 to-purple-50',
     accentColor: 'violet',
   },
-  {
-    id: 'kaigoshoku',
-    title: '介護食管理システム',
-    description:
-      '介護施設向けの給食管理・献立作成・製造指示・配送管理を一元化。施設ごとの食事形態や個別対応にも柔軟に対応。',
-    features: ['受注管理', '献立管理', '製造指示', '梱包・配送'],
-    icon: UtensilsCrossed,
-    gradient: 'from-amber-500 to-orange-500',
-    bgGradient: 'from-amber-50 to-orange-50',
-    accentColor: 'amber',
-  },
+  // {
+  //   id: 'kaigoshoku',
+  //   title: '介護食管理システム',
+  //   description:
+  //     '介護施設向けの給食管理・献立作成・製造指示・配送管理を一元化。施設ごとの食事形態や個別対応にも柔軟に対応。',
+  //   features: ['受注管理', '献立管理', '製造指示', '梱包・配送'],
+  //   icon: UtensilsCrossed,
+  //   gradient: 'from-amber-500 to-orange-500',
+  //   bgGradient: 'from-amber-50 to-orange-50',
+  //   accentColor: 'amber',
+  // },
   {
     id: 'recipe-calculator',
     title: 'AI食品原価計算システム',
@@ -74,9 +74,9 @@ const mockups = [
       'AIでレシピ画像や手書きメモから食材を自動認識し、原価を瞬時に算出。食材マスタと粗利基準の管理で収益性を可視化。',
     features: ['AI原価解析', '食材マスタ', '粗利基準管理', '自動原価算出'],
     icon: Calculator,
-    gradient: 'from-emerald-500 to-green-600',
-    bgGradient: 'from-emerald-50 to-green-50',
-    accentColor: 'emerald',
+    gradient: 'from-amber-500 to-orange-500',
+    bgGradient: 'from-amber-50 to-orange-50',
+    accentColor: 'amber',
   },
 
   {

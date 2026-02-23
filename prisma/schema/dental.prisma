@@ -1,0 +1,192 @@
+// 訪問歯科アプリ（VisitDental Pro）スキーマ
+
+// DentalClinic - クリニック（1件のみ想定）
+model DentalClinic {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  name           String  @db.VarChar(200)
+  address        String? @db.Text
+  phone          String? @db.VarChar(50)
+  representative String? @db.VarChar(200)
+  qualifications Json? // ClinicQualifications型をJSON格納
+
+  // リレーション
+  DentalFacility      DentalFacility[]
+  DentalStaff         DentalStaff[]
+  DentalVisitPlan     DentalVisitPlan[]
+  DentalSavedDocument DentalSavedDocument[]
+
+  @@map("dental_clinics")
+}
+
+// DentalFacility - 施設
+model DentalFacility {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  name         String  @db.VarChar(200)
+  address      String? @db.Text
+  facilityType String  @db.VarChar(50) // NURSING_HOME, GROUP_HOME, RESIDENTIAL
+
+  DentalClinic   DentalClinic @relation(fields: [dentalClinicId], references: [id], onDelete: Cascade)
+  dentalClinicId Int
+
+  DentalPatient   DentalPatient[]
+  DentalVisitPlan DentalVisitPlan[]
+
+  @@map("dental_facilities")
+}
+
+// DentalPatient - 患者
+model DentalPatient {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  lastName            String   @db.VarChar(100)
+  firstName           String   @db.VarChar(100)
+  lastNameKana        String?  @db.VarChar(100)
+  firstNameKana       String?  @db.VarChar(100)
+  gender              String?  @db.VarChar(20)
+  birthDate           DateTime?
+  careLevel           String?  @db.VarChar(50)
+  building            String?  @db.VarChar(100)
+  floor               String?  @db.VarChar(50)
+  room                String?  @db.VarChar(50)
+  notes               String?  @db.Text
+  diseases            Json? // PatientDiseases型をJSON格納
+  teethCount          Int      @default(0)
+  hasDenture          Boolean  @default(false)
+  hasOralHypofunction Boolean  @default(false)
+  assessment          Json? // Assessment型をJSON格納
+
+  DentalFacility   DentalFacility @relation(fields: [dentalFacilityId], references: [id], onDelete: Cascade)
+  dentalFacilityId Int
+
+  DentalExamination    DentalExamination[]
+  DentalScoringHistory DentalScoringHistory[]
+  DentalSavedDocument  DentalSavedDocument[]
+
+  @@map("dental_patients")
+}
+
+// DentalStaff - スタッフ
+model DentalStaff {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  name String @db.VarChar(200)
+  role String @db.VarChar(50) // DOCTOR, HYGIENIST
+
+  DentalClinic   DentalClinic @relation(fields: [dentalClinicId], references: [id], onDelete: Cascade)
+  dentalClinicId Int
+
+  DentalExaminationDoctor    DentalExamination[] @relation("ExaminationDoctor")
+  DentalExaminationHygienist DentalExamination[] @relation("ExaminationHygienist")
+
+  @@map("dental_staff")
+}
+
+// DentalVisitPlan - 訪問計画
+model DentalVisitPlan {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  visitDate DateTime
+  status    String   @default("scheduled") @db.VarChar(50)
+
+  DentalClinic     DentalClinic   @relation(fields: [dentalClinicId], references: [id], onDelete: Cascade)
+  dentalClinicId   Int
+  DentalFacility   DentalFacility @relation(fields: [dentalFacilityId], references: [id], onDelete: Cascade)
+  dentalFacilityId Int
+
+  DentalExamination DentalExamination[]
+
+  @@map("dental_visit_plans")
+}
+
+// DentalExamination - 診察
+model DentalExamination {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  status             String  @default("waiting") @db.VarChar(50)
+  vitalBefore        Json? // Vital型
+  vitalAfter         Json? // Vital型
+  treatmentItems     Json? // string[]
+  procedureItems     Json? // Record<string, ProcedureItemSelection>
+  visitCondition     String? @db.Text
+  oralFindings       String? @db.Text
+  treatment          String? @db.Text
+  nextPlan           String? @db.Text
+  drStartTime        String? @db.VarChar(20)
+  drEndTime          String? @db.VarChar(20)
+  dhStartTime        String? @db.VarChar(20)
+  dhEndTime          String? @db.VarChar(20)
+  treatmentPerformed Json? // string[]
+  oralFunctionRecord Json? // OralFunctionRecord型
+
+  DentalVisitPlan   DentalVisitPlan @relation(fields: [dentalVisitPlanId], references: [id], onDelete: Cascade)
+  dentalVisitPlanId Int
+  DentalPatient     DentalPatient   @relation(fields: [dentalPatientId], references: [id], onDelete: Cascade)
+  dentalPatientId   Int
+  Doctor            DentalStaff?    @relation("ExaminationDoctor", fields: [doctorId], references: [id])
+  doctorId          Int?
+  Hygienist         DentalStaff?    @relation("ExaminationHygienist", fields: [hygienistId], references: [id])
+  hygienistId       Int?
+
+  DentalSavedDocument DentalSavedDocument[]
+
+  @@map("dental_examinations")
+}
+
+// DentalScoringHistory - 算定履歴
+model DentalScoringHistory {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  procedureId  String   @db.VarChar(100)
+  lastScoredAt DateTime
+  points       Int      @default(0)
+
+  DentalPatient   DentalPatient @relation(fields: [dentalPatientId], references: [id], onDelete: Cascade)
+  dentalPatientId Int
+
+  @@map("dental_scoring_histories")
+}
+
+// DentalSavedDocument - 保存済み文書
+model DentalSavedDocument {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  templateId   String  @db.VarChar(100)
+  templateName String  @db.VarChar(200)
+  pdfUrl       String? @db.Text
+  version      Int     @default(1)
+
+  DentalClinic        DentalClinic?     @relation(fields: [dentalClinicId], references: [id])
+  dentalClinicId      Int?
+  DentalPatient       DentalPatient     @relation(fields: [dentalPatientId], references: [id], onDelete: Cascade)
+  dentalPatientId     Int
+  DentalExamination   DentalExamination @relation(fields: [dentalExaminationId], references: [id], onDelete: Cascade)
+  dentalExaminationId Int
+
+  @@map("dental_saved_documents")
+}

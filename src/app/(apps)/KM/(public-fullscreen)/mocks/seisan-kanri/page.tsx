@@ -22,7 +22,6 @@ import {
   Loader2,
   BarChart3,
   Package,
-  PanelRightOpen,
   Info,
 } from 'lucide-react'
 import {
@@ -30,6 +29,10 @@ import {
   InfoSidebar,
   GuidanceOverlay,
   GuidanceStartButton,
+  MockHeader,
+  MockHeaderTitle,
+  MockHeaderTab,
+  MockHeaderInfoButton,
   type Feature,
   type TimeEfficiencyItem,
   type OverviewInfo,
@@ -1576,61 +1579,41 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({activePage, setActivePage, onOpenInfo, onStartGuidance}) => {
   const [isOpen, setIsOpen] = useState(false)
   return (
-    <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-r from-teal-500 to-teal-600 rounded-xl shadow-lg shadow-teal-500/20">
-              <Factory className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h1 className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-teal-600 to-cyan-600">
-                Production Manager
-              </h1>
-              <p className="text-xs text-slate-400 -mt-0.5">生産管理システム</p>
-            </div>
-          </div>
-          <nav className="hidden md:flex space-x-1 items-center">
-            <GuidanceStartButton onClick={onStartGuidance} theme="teal" />
-            {navItems.map(item => (
-              <button
-                key={item.name}
-                data-guidance={`${item.page}-nav`}
-                onClick={() => setActivePage(item.page)}
-                className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300
-                  ${activePage === item.page
-                    ? 'bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-lg shadow-teal-500/25'
-                    : 'text-slate-600 hover:bg-slate-100'
-                  }`}
-              >
-                <item.icon className="w-4 h-4 mr-2" />
-                <span>{item.name}</span>
-              </button>
-            ))}
-            <button
-              data-guidance="info-button"
-              onClick={onOpenInfo}
-              className="ml-2 p-2.5 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-xl hover:from-teal-600 hover:to-teal-700 transition-all duration-200 shadow-lg shadow-teal-500/20 hover:shadow-teal-500/30 flex items-center gap-2"
-              title="このシステムでできること"
-            >
-              <PanelRightOpen className="w-4 h-4" />
-              <span className="text-sm font-medium">機能説明</span>
-            </button>
-          </nav>
-          <div className="md:hidden flex items-center gap-2">
-            <button
-              onClick={onOpenInfo}
-              className="p-2 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-lg"
-              title="機能説明"
-            >
-              <Info className="w-5 h-5" />
-            </button>
-            <button onClick={() => setIsOpen(!isOpen)} className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
-              <Menu className="w-6 h-6 text-slate-700" />
-            </button>
-          </div>
+    <>
+      <MockHeader>
+        <MockHeaderTitle icon={Factory} title="Production Manager" subtitle="生産管理システム" theme="teal" />
+
+        {/* デスクトップナビ */}
+        <nav className="hidden md:flex space-x-1 items-center">
+          <GuidanceStartButton onClick={onStartGuidance} theme="teal" />
+          {navItems.map(item => (
+            <MockHeaderTab
+              key={item.name}
+              active={activePage === item.page}
+              onClick={() => setActivePage(item.page)}
+              icon={item.icon}
+              label={item.name}
+              theme="teal"
+              data-guidance={`${item.page}-nav`}
+            />
+          ))}
+          <MockHeaderInfoButton onClick={onOpenInfo} theme="teal" />
+        </nav>
+
+        {/* モバイルメニュー */}
+        <div className="md:hidden flex items-center gap-2">
+          <button
+            onClick={onOpenInfo}
+            className="p-2 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-lg"
+            title="機能説明"
+          >
+            <Info className="w-5 h-5" />
+          </button>
+          <button onClick={() => setIsOpen(!isOpen)} className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
+            <Menu className="w-6 h-6 text-slate-700" />
+          </button>
         </div>
-      </div>
+      </MockHeader>
       {isOpen && (
         <div className="md:hidden border-t border-slate-200 bg-white animate-in slide-in-from-top-2 duration-200">
           <nav className="p-2 flex flex-col space-y-1">
@@ -1654,7 +1637,7 @@ const Header: React.FC<HeaderProps> = ({activePage, setActivePage, onOpenInfo, o
           </nav>
         </div>
       )}
-    </header>
+    </>
   )
 }
 

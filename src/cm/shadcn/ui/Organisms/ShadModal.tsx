@@ -2,24 +2,13 @@
 
 import { useIsMobile } from '@shadcn/hooks/use-mobile'
 import { Dialog, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@shadcn/ui/dialog'
-import {
-  Drawer,
-  // DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@shadcn/ui/drawer'
+
 
 import dynamic from 'next/dynamic'
 const DialogContent = dynamic(() => import('@shadcn/ui/dialog').then(mod => mod.DialogContent), {
   loading: () => <></>,
 })
 
-const DrawerContent = dynamic(() => import('@shadcn/ui/drawer').then(mod => mod.DrawerContent), {
-  loading: () => <></>,
-})
 
 import { cn } from '@shadcn/lib/utils'
 

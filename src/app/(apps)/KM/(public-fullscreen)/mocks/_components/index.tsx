@@ -14,13 +14,14 @@ import {
   FileText,
   ListOrdered,
   HelpCircle,
+  PanelRightOpen,
 } from 'lucide-react'
 
 // ==========================================
 // Types
 // ==========================================
 
-export type ThemeColor = 'rose' | 'teal' | 'blue' | 'violet' | 'amber' | 'emerald'
+export type ThemeColor = 'rose' | 'teal' | 'blue' | 'violet' | 'amber' | 'emerald' | 'slate'
 
 export interface Feature {
   icon: LucideIcon
@@ -175,6 +176,22 @@ const themeConfig = {
     hoverBorder: 'hover:border-emerald-200',
     progressBg: 'from-emerald-400 to-emerald-500',
     subtitleText: 'text-slate-500',
+    loadingBg: 'bg-slate-200',
+  },
+  slate: {
+    gradient: 'from-slate-700 to-slate-900',
+    gradientLight: 'from-slate-50 via-white to-stone-50',
+    shadow: 'shadow-slate-500/30',
+    text: 'from-slate-700 to-slate-900',
+    bg: 'bg-slate-50',
+    border: 'border-slate-200',
+    textDark: 'text-slate-900',
+    textMedium: 'text-slate-700',
+    textLight: 'text-slate-600',
+    iconBg: 'from-slate-200 to-slate-100',
+    hoverBorder: 'hover:border-slate-300',
+    progressBg: 'from-slate-500 to-slate-600',
+    subtitleText: 'text-slate-400',
     loadingBg: 'bg-slate-200',
   },
 }
@@ -735,6 +752,195 @@ export const GuidanceStartButton: React.FC<GuidanceStartButtonProps> = ({ onClic
       title="ガイダンス開始"
     >
       <HelpCircle size={16} />
+    </button>
+  )
+}
+
+// ==========================================
+// useEditModal Hook
+// ==========================================
+
+/** モーダル + 編集対象 + フォームの状態管理を共通化 */
+export const useEditModal = <T extends {id: string}, F>(
+  emptyForm: F,
+  toForm: (item: T) => F,
+) => {
+  const [modalOpen, setModalOpen] = useState(false)
+  const [editingItem, setEditingItem] = useState<T | null>(null)
+  const [form, setForm] = useState<F>(emptyForm)
+
+  const openNew = () => {
+    setEditingItem(null)
+    setForm(emptyForm)
+    setModalOpen(true)
+  }
+
+  const openEdit = (item: T) => {
+    setEditingItem(item)
+    setForm(toForm(item))
+    setModalOpen(true)
+  }
+
+  const close = () => setModalOpen(false)
+
+  /** データ配列に対して upsert + モーダル閉じ */
+  const save = (setData: React.Dispatch<React.SetStateAction<T[]>>, idPrefix: string) => {
+    if (editingItem) {
+      setData((prev) => prev.map((d) => (d.id === editingItem.id ? {...d, ...form} : d)))
+    } else {
+      setData((prev) => [...prev, {id: generateId(idPrefix), ...form} as unknown as T])
+    }
+    close()
+  }
+
+  /** データ配列から削除 + モーダル閉じ */
+  const remove = (setData: React.Dispatch<React.SetStateAction<T[]>>) => {
+    if (!editingItem) return
+    setData((prev) => prev.filter((d) => d.id !== editingItem.id))
+    close()
+  }
+
+  return {modalOpen, editingItem, form, setForm, openNew, openEdit, close, save, remove}
+}
+
+// ==========================================
+// useCsvImport Hook
+// ==========================================
+
+/** CSV取込シミュレーション（確認モーダル + ローディング + 完了表示） */
+export const useCsvImport = <T,>(
+  generateData: () => T[],
+  setData: React.Dispatch<React.SetStateAction<T[]>>,
+) => {
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [importing, setImporting] = useState(false)
+  const [done, setDone] = useState(false)
+
+  const open = () => {
+    setDone(false)
+    setConfirmOpen(true)
+  }
+
+  const execute = () => {
+    setImporting(true)
+    setDone(false)
+    setTimeout(() => {
+      setData((prev) => [...prev, ...generateData()])
+      setImporting(false)
+      setDone(true)
+      setTimeout(() => {
+        setConfirmOpen(false)
+        setDone(false)
+      }, 1200)
+    }, 1500)
+  }
+
+  const cancel = () => {
+    setConfirmOpen(false)
+    setDone(false)
+  }
+
+  return {confirmOpen, importing, done, open, execute, cancel}
+}
+
+// ==========================================
+// MockHeader Components
+// ==========================================
+
+/** ヘッダー外枠（glass morphism + sticky） */
+export const MockHeader = React.forwardRef<HTMLElement, {children: React.ReactNode}>(
+  ({children}, ref) => (
+    <header ref={ref} className="bg-white/80 backdrop-blur-md border-b border-stone-200 sticky top-0 z-30">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        {children}
+      </div>
+    </header>
+  ),
+)
+MockHeader.displayName = 'MockHeader'
+
+/** ヘッダー左側: アイコン + タイトル + サブタイトル */
+export const MockHeaderTitle = ({
+  icon: Icon,
+  title,
+  subtitle,
+  theme,
+  children,
+}: {
+  icon: LucideIcon
+  title: string
+  subtitle: string
+  theme: ThemeColor
+  children?: React.ReactNode
+}) => {
+  const colors = themeConfig[theme]
+  return (
+    <div className="flex items-center gap-3">
+      <div className={`p-2 bg-gradient-to-r ${colors.gradient} rounded-xl shadow-lg ${colors.shadow}`}>
+        <Icon className="text-white w-5 h-5" />
+      </div>
+      <div>
+        <h1 className={`text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${colors.text}`}>
+          {title}
+        </h1>
+        <p className="text-xs text-stone-400 -mt-0.5">{subtitle}</p>
+      </div>
+      {children}
+    </div>
+  )
+}
+
+/** ヘッダータブボタン */
+export const MockHeaderTab = ({
+  active,
+  onClick,
+  icon: Icon,
+  label,
+  theme,
+  ...rest
+}: {
+  active: boolean
+  onClick: () => void
+  icon: LucideIcon
+  label: string
+  theme: ThemeColor
+  'data-guidance'?: string
+}) => {
+  const colors = themeConfig[theme]
+  return (
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+        active
+          ? `bg-gradient-to-r ${colors.gradient} text-white shadow-lg ${colors.shadow}`
+          : `text-stone-600 hover:bg-stone-50 border border-transparent ${colors.hoverBorder}`
+      }`}
+      {...rest}
+    >
+      <Icon size={16} />
+      <span className="hidden md:inline">{label}</span>
+    </button>
+  )
+}
+
+/** ヘッダー機能説明ボタン */
+export const MockHeaderInfoButton = ({
+  onClick,
+  theme,
+}: {
+  onClick: () => void
+  theme: ThemeColor
+}) => {
+  const colors = themeConfig[theme]
+  return (
+    <button
+      data-guidance="info-button"
+      onClick={onClick}
+      className={`ml-2 p-2.5 bg-gradient-to-r ${colors.gradient} text-white rounded-xl hover:opacity-90 transition-all duration-200 shadow-lg ${colors.shadow} flex items-center gap-2`}
+      title="このシステムでできること"
+    >
+      <PanelRightOpen className="w-4 h-4" />
+      <span className="text-sm font-medium hidden sm:inline">機能説明</span>
     </button>
   )
 }

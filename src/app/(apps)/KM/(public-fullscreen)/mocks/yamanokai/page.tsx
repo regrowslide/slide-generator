@@ -1,13 +1,12 @@
 'use client'
 
-import React, {useState, useEffect, useMemo, useCallback} from 'react'
+import React, {useState, useEffect} from 'react'
 import {
   Mountain,
   CalendarDays,
   ClipboardList,
   Users,
   Backpack,
-  PanelRightOpen,
   Plus,
   Search,
   ChevronLeft,
@@ -24,6 +23,10 @@ import {
   GuidanceOverlay,
   GuidanceStartButton,
   ResetButton,
+  MockHeader,
+  MockHeaderTitle,
+  MockHeaderTab,
+  MockHeaderInfoButton,
   usePersistedState,
   generateId,
   type Feature,
@@ -1147,48 +1150,28 @@ const YamanokaiMock = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* ヘッダー */}
-      <header className="bg-white shadow-sm border-b sticky top-0 z-40">
-        <div className="px-4 py-3">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <Mountain className="w-6 h-6 text-emerald-600" />
-              <h1 className="text-lg font-bold text-gray-900">サンプル山岳会</h1>
-            </div>
-            <div className="flex items-center gap-2">
-              <GuidanceStartButton onClick={() => setShowGuidance(true)} theme="emerald" />
-              <ResetButton storageKeys={STORAGE_KEYS} theme="emerald" />
-            </div>
-          </div>
-          {/* タブナビゲーション */}
-          <div className="flex gap-1 overflow-x-auto pb-1 -mb-3">
-            {TABS.map((tab) => {
-              const Icon = tab.icon
-              return (
-                <button
-                  key={tab.id}
-                  data-guidance={`${tab.id}-tab`}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-t-lg whitespace-nowrap transition-colors ${
-                    activeTab === tab.id ? 'bg-emerald-50 text-emerald-700 border-b-2 border-emerald-600' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {tab.label}
-                </button>
-              )
-            })}
-            <button
-              data-guidance="info-button"
-              onClick={() => setShowInfoSidebar(true)}
-              className="ml-2 p-2.5 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl hover:from-emerald-600 hover:to-green-700 transition-all duration-200 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 flex items-center gap-2"
-              title="このシステムでできること"
-            >
-              <PanelRightOpen className="w-4 h-4" />
-              <span className="text-sm font-medium hidden sm:inline">機能説明</span>
-            </button>
-          </div>
+      <MockHeader>
+        <MockHeaderTitle icon={Mountain} title="Alpine Club Manager" subtitle="山岳会管理システム" theme="emerald" />
+
+        <div className="flex items-center gap-2">
+          <GuidanceStartButton onClick={() => setShowGuidance(true)} theme="emerald" />
+          <ResetButton storageKeys={STORAGE_KEYS} theme="emerald" />
+
+          {TABS.map((tab) => (
+            <MockHeaderTab
+              key={tab.id}
+              active={activeTab === tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              icon={tab.icon}
+              label={tab.label}
+              theme="emerald"
+              data-guidance={`${tab.id}-tab`}
+            />
+          ))}
+
+          <MockHeaderInfoButton onClick={() => setShowInfoSidebar(true)} theme="emerald" />
         </div>
-      </header>
+      </MockHeader>
 
       {/* メインコンテンツ */}
       <main className="p-4 md:p-6">

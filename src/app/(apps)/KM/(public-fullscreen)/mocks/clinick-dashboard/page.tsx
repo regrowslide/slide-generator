@@ -21,7 +21,6 @@ import {
   LineChart,
   Target,
   Heart,
-  PanelRightOpen,
   LucideIcon,
 } from 'lucide-react';
 import {
@@ -29,6 +28,10 @@ import {
   InfoSidebar,
   GuidanceOverlay,
   GuidanceStartButton,
+  MockHeader,
+  MockHeaderTitle,
+  MockHeaderTab,
+  MockHeaderInfoButton,
   type Feature,
   type TimeEfficiencyItem,
   type OverviewInfo,
@@ -1098,51 +1101,30 @@ export default function MarketingDashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-stone-50 via-white to-rose-50/30 font-sans text-stone-900 flex flex-col">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-stone-200 sticky top-0 z-30 shrink-0">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-r from-rose-500 to-rose-600 rounded-xl shadow-lg shadow-rose-500/20">
-              <LayoutDashboard className="text-white w-5 h-5" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-rose-600 to-pink-600">
-                Beauty Clinic Hub
-              </h1>
-              <p className="text-xs text-stone-400 -mt-0.5">Marketing Dashboard</p>
-            </div>
-          </div>
+      <MockHeader>
+        <MockHeaderTitle icon={LayoutDashboard} title="Beauty Clinic Hub" subtitle="Marketing Dashboard" theme="rose" />
 
-          {/* Main Navigation Tabs */}
-          <div className="flex items-center gap-2">
-            <GuidanceStartButton onClick={() => setShowGuidance(true)} theme="rose" />
-            <div data-guidance="dashboard-tab">
-              <TabButton
-                active={activeTab === 'dashboard'}
-                label="ダッシュボード"
-                icon={LayoutDashboard}
-                onClick={() => setActiveTab('dashboard')}
-              />
-            </div>
-            <div data-guidance="tables-tab">
-              <TabButton
-                active={activeTab === 'tables'}
-                label="データソース確認"
-                icon={TableIcon}
-                onClick={() => setActiveTab('tables')}
-              />
-            </div>
-            <button
-              data-guidance="info-button"
-              onClick={() => setShowInfoSidebar(true)}
-              className="ml-2 p-2.5 bg-gradient-to-r from-rose-500 to-rose-600 text-white rounded-xl hover:from-rose-600 hover:to-rose-700 transition-all duration-200 shadow-lg shadow-rose-500/20 hover:shadow-rose-500/30 flex items-center gap-2"
-              title="このシステムでできること"
-            >
-              <PanelRightOpen className="w-4 h-4" />
-              <span className="text-sm font-medium hidden sm:inline">機能説明</span>
-            </button>
-          </div>
+        <div className="flex items-center gap-2">
+          <GuidanceStartButton onClick={() => setShowGuidance(true)} theme="rose" />
+          <MockHeaderTab
+            active={activeTab === 'dashboard'}
+            onClick={() => setActiveTab('dashboard')}
+            icon={LayoutDashboard}
+            label="ダッシュボード"
+            theme="rose"
+            data-guidance="dashboard-tab"
+          />
+          <MockHeaderTab
+            active={activeTab === 'tables'}
+            onClick={() => setActiveTab('tables')}
+            icon={TableIcon}
+            label="データソース確認"
+            theme="rose"
+            data-guidance="tables-tab"
+          />
+          <MockHeaderInfoButton onClick={() => setShowInfoSidebar(true)} theme="rose" />
         </div>
-      </header>
+      </MockHeader>
 
       {/* Info Sidebar */}
       <InfoSidebar

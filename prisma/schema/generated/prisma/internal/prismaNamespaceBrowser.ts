@@ -69,6 +69,14 @@ export const ModelName = {
   CounselingClient: 'CounselingClient',
   CounselingReservation: 'CounselingReservation',
   CounselingSlot: 'CounselingSlot',
+  DentalClinic: 'DentalClinic',
+  DentalFacility: 'DentalFacility',
+  DentalPatient: 'DentalPatient',
+  DentalStaff: 'DentalStaff',
+  DentalVisitPlan: 'DentalVisitPlan',
+  DentalExamination: 'DentalExamination',
+  DentalScoringHistory: 'DentalScoringHistory',
+  DentalSavedDocument: 'DentalSavedDocument',
   KgFacilityMaster: 'KgFacilityMaster',
   KgDietTypeMaster: 'KgDietTypeMaster',
   KgDailyMenu: 'KgDailyMenu',
@@ -457,6 +465,149 @@ export const CounselingSlotScalarFieldEnum = {
 } as const
 
 export type CounselingSlotScalarFieldEnum = (typeof CounselingSlotScalarFieldEnum)[keyof typeof CounselingSlotScalarFieldEnum]
+
+
+export const DentalClinicScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  address: 'address',
+  phone: 'phone',
+  representative: 'representative',
+  qualifications: 'qualifications'
+} as const
+
+export type DentalClinicScalarFieldEnum = (typeof DentalClinicScalarFieldEnum)[keyof typeof DentalClinicScalarFieldEnum]
+
+
+export const DentalFacilityScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  address: 'address',
+  facilityType: 'facilityType',
+  dentalClinicId: 'dentalClinicId'
+} as const
+
+export type DentalFacilityScalarFieldEnum = (typeof DentalFacilityScalarFieldEnum)[keyof typeof DentalFacilityScalarFieldEnum]
+
+
+export const DentalPatientScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  lastName: 'lastName',
+  firstName: 'firstName',
+  lastNameKana: 'lastNameKana',
+  firstNameKana: 'firstNameKana',
+  gender: 'gender',
+  birthDate: 'birthDate',
+  careLevel: 'careLevel',
+  building: 'building',
+  floor: 'floor',
+  room: 'room',
+  notes: 'notes',
+  diseases: 'diseases',
+  teethCount: 'teethCount',
+  hasDenture: 'hasDenture',
+  hasOralHypofunction: 'hasOralHypofunction',
+  assessment: 'assessment',
+  dentalFacilityId: 'dentalFacilityId'
+} as const
+
+export type DentalPatientScalarFieldEnum = (typeof DentalPatientScalarFieldEnum)[keyof typeof DentalPatientScalarFieldEnum]
+
+
+export const DentalStaffScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  role: 'role',
+  dentalClinicId: 'dentalClinicId'
+} as const
+
+export type DentalStaffScalarFieldEnum = (typeof DentalStaffScalarFieldEnum)[keyof typeof DentalStaffScalarFieldEnum]
+
+
+export const DentalVisitPlanScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  visitDate: 'visitDate',
+  status: 'status',
+  dentalClinicId: 'dentalClinicId',
+  dentalFacilityId: 'dentalFacilityId'
+} as const
+
+export type DentalVisitPlanScalarFieldEnum = (typeof DentalVisitPlanScalarFieldEnum)[keyof typeof DentalVisitPlanScalarFieldEnum]
+
+
+export const DentalExaminationScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  status: 'status',
+  vitalBefore: 'vitalBefore',
+  vitalAfter: 'vitalAfter',
+  treatmentItems: 'treatmentItems',
+  procedureItems: 'procedureItems',
+  visitCondition: 'visitCondition',
+  oralFindings: 'oralFindings',
+  treatment: 'treatment',
+  nextPlan: 'nextPlan',
+  drStartTime: 'drStartTime',
+  drEndTime: 'drEndTime',
+  dhStartTime: 'dhStartTime',
+  dhEndTime: 'dhEndTime',
+  treatmentPerformed: 'treatmentPerformed',
+  oralFunctionRecord: 'oralFunctionRecord',
+  dentalVisitPlanId: 'dentalVisitPlanId',
+  dentalPatientId: 'dentalPatientId',
+  doctorId: 'doctorId',
+  hygienistId: 'hygienistId'
+} as const
+
+export type DentalExaminationScalarFieldEnum = (typeof DentalExaminationScalarFieldEnum)[keyof typeof DentalExaminationScalarFieldEnum]
+
+
+export const DentalScoringHistoryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  procedureId: 'procedureId',
+  lastScoredAt: 'lastScoredAt',
+  points: 'points',
+  dentalPatientId: 'dentalPatientId'
+} as const
+
+export type DentalScoringHistoryScalarFieldEnum = (typeof DentalScoringHistoryScalarFieldEnum)[keyof typeof DentalScoringHistoryScalarFieldEnum]
+
+
+export const DentalSavedDocumentScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  templateId: 'templateId',
+  templateName: 'templateName',
+  pdfUrl: 'pdfUrl',
+  version: 'version',
+  dentalClinicId: 'dentalClinicId',
+  dentalPatientId: 'dentalPatientId',
+  dentalExaminationId: 'dentalExaminationId'
+} as const
+
+export type DentalSavedDocumentScalarFieldEnum = (typeof DentalSavedDocumentScalarFieldEnum)[keyof typeof DentalSavedDocumentScalarFieldEnum]
 
 
 export const KgFacilityMasterScalarFieldEnum = {

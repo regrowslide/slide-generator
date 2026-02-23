@@ -12,7 +12,6 @@ import {
   TrendingUp,
   Package,
   Settings,
-  PanelRightOpen,
   Brain,
   Camera,
   DollarSign,
@@ -28,7 +27,12 @@ import {
   Modal,
   GuidanceOverlay,
   GuidanceStartButton,
+  MockHeader,
+  MockHeaderTitle,
+  MockHeaderTab,
+  MockHeaderInfoButton,
   usePersistedState,
+  useEditModal,
   generateId,
   resetPersistedData,
   type Feature,
@@ -279,7 +283,7 @@ const FormField = ({label, children}: {label: string; children: React.ReactNode}
   </div>
 )
 
-const inputClass = 'w-full px-3 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent'
+const inputClass = 'w-full px-3 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent'
 const selectClass = inputClass
 
 const INGREDIENT_CATEGORIES = ['肉類', '魚介類', '野菜', '穀類', '卵・乳', '調味料']
@@ -386,20 +390,20 @@ const CalculatorView = ({
       {/* AI解析エリア */}
       <div className="bg-white rounded-xl border border-stone-200 p-6">
         <div className="flex items-center gap-2 mb-4">
-          <Sparkles className="w-5 h-5 text-emerald-600" />
+          <Sparkles className="w-5 h-5 text-amber-600" />
           <h3 className="font-bold text-stone-800">AI原価解析</h3>
         </div>
 
-        <div data-guidance="upload-area" className="border-2 border-dashed border-emerald-200 rounded-xl p-8 text-center bg-emerald-50/30 mb-4">
-          <Upload className="w-10 h-10 text-emerald-400 mx-auto mb-3" />
+        <div data-guidance="upload-area" className="border-2 border-dashed border-amber-200 rounded-xl p-8 text-center bg-amber-50/30 mb-4">
+          <Upload className="w-10 h-10 text-amber-400 mx-auto mb-3" />
           <p className="text-stone-600 mb-1">レシピ画像をドラッグ＆ドロップ</p>
           <p className="text-xs text-stone-400 mb-4">または クリックしてファイルを選択</p>
           <div className="flex justify-center gap-3">
-            <button onClick={handleAnalyze} className="px-4 py-2 bg-white border border-stone-300 rounded-lg text-sm text-stone-600 hover:border-emerald-400 transition-colors">
+            <button onClick={handleAnalyze} className="px-4 py-2 bg-white border border-stone-300 rounded-lg text-sm text-stone-600 hover:border-amber-400 transition-colors">
               <Camera className="w-4 h-4 inline mr-1" />
               写真を撮影
             </button>
-            <button onClick={handleAnalyze} className="px-4 py-2 bg-white border border-stone-300 rounded-lg text-sm text-stone-600 hover:border-emerald-400 transition-colors">
+            <button onClick={handleAnalyze} className="px-4 py-2 bg-white border border-stone-300 rounded-lg text-sm text-stone-600 hover:border-amber-400 transition-colors">
               <Upload className="w-4 h-4 inline mr-1" />
               ファイル選択
             </button>
@@ -413,7 +417,7 @@ const CalculatorView = ({
           className={`w-full py-3 rounded-xl text-white font-medium flex items-center justify-center gap-2 transition-all duration-200 ${
             isAnalyzing
               ? 'bg-stone-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-lg shadow-emerald-500/25'
+              : 'bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 shadow-lg shadow-amber-500/25'
           }`}
         >
           {isAnalyzing ? (
@@ -434,7 +438,7 @@ const CalculatorView = ({
       {isAnalyzing && (
         <div className="bg-white rounded-xl border border-stone-200 p-6 space-y-4 animate-in fade-in duration-300">
           <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="w-5 h-5 text-emerald-600 animate-pulse" />
+            <Sparkles className="w-5 h-5 text-amber-600 animate-pulse" />
             <h3 className="font-bold text-stone-800">食材価格を検索中...</h3>
           </div>
 
@@ -541,7 +545,7 @@ const CalculatorView = ({
               <h3 className="font-bold text-stone-800">解析結果</h3>
               <button
                 onClick={handleSaveRecipe}
-                className="flex items-center gap-1 px-3 py-1.5 bg-emerald-500 text-white rounded-lg text-sm hover:bg-emerald-600 transition-colors"
+                className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors"
               >
                 <Save size={14} />
                 レシピを保存
@@ -582,7 +586,7 @@ const CalculatorView = ({
                 </thead>
                 <tbody className="divide-y divide-stone-200">
                   {result.map((item, idx) => (
-                    <tr key={idx} className="hover:bg-emerald-50/30 transition-colors">
+                    <tr key={idx} className="hover:bg-amber-50/30 transition-colors">
                       <td className="px-4 py-2 text-stone-700">{item.name}</td>
                       <td className="px-4 py-2">
                         <SourceBadge source={item.source} />
@@ -592,7 +596,7 @@ const CalculatorView = ({
                           type="text"
                           value={item.amount}
                           onChange={(e) => handleUpdateItem(idx, 'amount', e.target.value)}
-                          className="w-20 text-right px-2 py-1 border border-stone-200 rounded text-sm focus:outline-none focus:ring-1 focus:ring-emerald-400"
+                          className="w-20 text-right px-2 py-1 border border-stone-200 rounded text-sm focus:outline-none focus:ring-1 focus:ring-amber-400"
                         />
                       </td>
                       <td className="px-4 py-2 text-right text-stone-600">{item.unitPrice > 0 ? `¥${item.unitPrice}` : '-'}</td>
@@ -601,16 +605,16 @@ const CalculatorView = ({
                           type="number"
                           value={item.cost}
                           onChange={(e) => handleUpdateItem(idx, 'cost', e.target.value)}
-                          className="w-20 text-right px-2 py-1 border border-stone-200 rounded text-sm focus:outline-none focus:ring-1 focus:ring-emerald-400"
+                          className="w-20 text-right px-2 py-1 border border-stone-200 rounded text-sm focus:outline-none focus:ring-1 focus:ring-amber-400"
                         />
                       </td>
                     </tr>
                   ))}
                 </tbody>
-                <tfoot className="bg-emerald-50 border-t-2 border-emerald-200">
+                <tfoot className="bg-amber-50 border-t-2 border-amber-200">
                   <tr>
-                    <td colSpan={4} className="px-4 py-3 font-bold text-emerald-800">原価合計</td>
-                    <td className="px-4 py-3 text-right font-bold text-emerald-800 text-lg">¥{totalCost.toFixed(1)}</td>
+                    <td colSpan={4} className="px-4 py-3 font-bold text-amber-800">原価合計</td>
+                    <td className="px-4 py-3 text-right font-bold text-amber-800 text-lg">¥{totalCost.toFixed(1)}</td>
                   </tr>
                 </tfoot>
               </table>
@@ -620,7 +624,7 @@ const CalculatorView = ({
           <div className="grid grid-cols-3 gap-4">
             <div className="bg-white rounded-xl border border-stone-200 p-4 text-center">
               <p className="text-xs text-stone-500 mb-1">原価率</p>
-              <p className={`text-2xl font-bold ${selling > 0 && (totalCost / selling) * 100 > 35 ? 'text-red-600' : 'text-emerald-600'}`}>
+              <p className={`text-2xl font-bold ${selling > 0 && (totalCost / selling) * 100 > 35 ? 'text-red-600' : 'text-green-600'}`}>
                 {selling > 0 ? ((totalCost / selling) * 100).toFixed(1) : '---'}%
               </p>
             </div>
@@ -630,7 +634,7 @@ const CalculatorView = ({
             </div>
             <div className="bg-white rounded-xl border border-stone-200 p-4 text-center">
               <p className="text-xs text-stone-500 mb-1">粗利率</p>
-              <p className={`text-2xl font-bold ${grossMargin >= 65 ? 'text-emerald-600' : grossMargin >= 60 ? 'text-amber-600' : 'text-red-600'}`}>
+              <p className={`text-2xl font-bold ${grossMargin >= 65 ? 'text-green-600' : grossMargin >= 60 ? 'text-orange-600' : 'text-red-600'}`}>
                 {selling > 0 ? grossMargin.toFixed(1) : '---'}%
               </p>
             </div>
@@ -642,12 +646,12 @@ const CalculatorView = ({
       {savedRecipes.length > 0 && (
         <div className="bg-white rounded-xl border border-stone-200 p-6">
           <div className="flex items-center gap-2 mb-4">
-            <BookOpen className="w-5 h-5 text-emerald-600" />
+            <BookOpen className="w-5 h-5 text-amber-600" />
             <h3 className="font-bold text-stone-800">保存済みレシピ ({savedRecipes.length}件)</h3>
           </div>
           <div className="space-y-3">
             {savedRecipes.map((recipe) => (
-              <div key={recipe.id} className="flex items-center justify-between p-3 bg-stone-50 rounded-lg border border-stone-100 hover:border-emerald-200 transition-colors">
+              <div key={recipe.id} className="flex items-center justify-between p-3 bg-stone-50 rounded-lg border border-stone-100 hover:border-amber-200 transition-colors">
                 <div className="flex items-center gap-4 cursor-pointer flex-1" onClick={() => handleLoadRecipe(recipe)}>
                   <div>
                     <p className="font-medium text-stone-800">{recipe.name}</p>
@@ -656,7 +660,7 @@ const CalculatorView = ({
                   <div className="flex gap-4 text-sm">
                     <span className="text-stone-600">原価: ¥{recipe.totalCost.toFixed(0)}</span>
                     <span className="text-stone-600">販売: ¥{recipe.sellingPrice}</span>
-                    <span className={`font-medium ${recipe.grossMargin >= 65 ? 'text-emerald-600' : recipe.grossMargin >= 60 ? 'text-amber-600' : 'text-red-600'}`}>
+                    <span className={`font-medium ${recipe.grossMargin >= 65 ? 'text-green-600' : recipe.grossMargin >= 60 ? 'text-orange-600' : 'text-red-600'}`}>
                       粗利: {recipe.grossMargin.toFixed(1)}%
                     </span>
                   </div>
@@ -689,8 +693,6 @@ const IngredientsView = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [modalOpen, setModalOpen] = useState(false)
-  const [editingItem, setEditingItem] = useState<Ingredient | null>(null)
 
   const categories = [...new Set(ingredients.map((i) => i.category))]
   const filtered = ingredients.filter(
@@ -699,42 +701,28 @@ const IngredientsView = ({
       (!selectedCategory || i.category === selectedCategory)
   )
 
-  const emptyIngredient = {name: '', category: INGREDIENT_CATEGORIES[0], unit: 'g', unitPrice: 0, supplier: ''}
-  const [form, setForm] = useState(emptyIngredient)
-
-  const openNew = () => {
-    setEditingItem(null)
-    setForm(emptyIngredient)
-    setModalOpen(true)
-  }
-
-  const openEdit = (item: Ingredient) => {
-    setEditingItem(item)
-    setForm({name: item.name, category: item.category, unit: item.unit, unitPrice: item.unitPrice, supplier: item.supplier})
-    setModalOpen(true)
-  }
+  const modal = useEditModal<Ingredient, {name: string; category: string; unit: string; unitPrice: number; supplier: string; lastUpdated: string}>(
+    {name: '', category: INGREDIENT_CATEGORIES[0], unit: 'g', unitPrice: 0, supplier: '', lastUpdated: ''},
+    (item) => ({name: item.name, category: item.category, unit: item.unit, unitPrice: item.unitPrice, supplier: item.supplier, lastUpdated: item.lastUpdated}),
+  )
 
   const handleSave = () => {
     const today = new Date().toISOString().slice(0, 10)
-    if (editingItem) {
-      setIngredients((prev) => prev.map((i) => (i.id === editingItem.id ? {...i, ...form, lastUpdated: today} : i)))
+    modal.setForm((p) => ({...p, lastUpdated: today}))
+    // setFormは非同期のため、直接saveの前にlastUpdatedをセットする代わりに手動でupsert
+    if (modal.editingItem) {
+      setIngredients((prev) => prev.map((i) => (i.id === modal.editingItem!.id ? {...i, ...modal.form, lastUpdated: today} : i)))
     } else {
-      setIngredients((prev) => [...prev, {id: generateId('I'), ...form, lastUpdated: today}])
+      setIngredients((prev) => [...prev, {id: generateId('I'), ...modal.form, lastUpdated: today}])
     }
-    setModalOpen(false)
-  }
-
-  const handleDelete = () => {
-    if (!editingItem) return
-    setIngredients((prev) => prev.filter((i) => i.id !== editingItem.id))
-    setModalOpen(false)
+    modal.close()
   }
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="font-bold text-stone-800">食材マスタ ({ingredients.length}件)</h3>
-        <button data-guidance="add-ingredient-button" onClick={openNew} className="flex items-center gap-1 px-3 py-1.5 bg-emerald-500 text-white rounded-lg text-sm hover:bg-emerald-600 transition-colors">
+        <button data-guidance="add-ingredient-button" onClick={modal.openNew} className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
           <Plus size={14} />
           食材追加
         </button>
@@ -746,7 +734,7 @@ const IngredientsView = ({
           <input
             type="text"
             placeholder="食材名・仕入先で検索..."
-            className="w-full pl-9 pr-4 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+            className="w-full pl-9 pr-4 py-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -755,7 +743,7 @@ const IngredientsView = ({
           <button
             onClick={() => setSelectedCategory(null)}
             className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
-              !selectedCategory ? 'bg-emerald-500 text-white border-transparent' : 'bg-white text-stone-500 border-stone-200 hover:border-emerald-200'
+              !selectedCategory ? 'bg-amber-500 text-white border-transparent' : 'bg-white text-stone-500 border-stone-200 hover:border-amber-200'
             }`}
           >
             全て
@@ -765,7 +753,7 @@ const IngredientsView = ({
               key={cat}
               onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)}
               className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
-                selectedCategory === cat ? 'bg-emerald-500 text-white border-transparent' : 'bg-white text-stone-500 border-stone-200 hover:border-emerald-200'
+                selectedCategory === cat ? 'bg-amber-500 text-white border-transparent' : 'bg-white text-stone-500 border-stone-200 hover:border-amber-200'
               }`}
             >
               {cat}
@@ -789,10 +777,10 @@ const IngredientsView = ({
             </thead>
             <tbody className="divide-y divide-stone-100">
               {filtered.map((item) => (
-                <tr key={item.id} className="hover:bg-emerald-50/30 transition-colors cursor-pointer" onClick={() => openEdit(item)}>
+                <tr key={item.id} className="hover:bg-amber-50/30 transition-colors cursor-pointer" onClick={() => modal.openEdit(item)}>
                   <td className="px-4 py-3 font-medium text-stone-800">{item.name}</td>
                   <td className="px-4 py-3">
-                    <span className="px-2 py-0.5 rounded-full text-xs bg-emerald-50 text-emerald-700 border border-emerald-200">{item.category}</span>
+                    <span className="px-2 py-0.5 rounded-full text-xs bg-amber-50 text-amber-700 border border-amber-200">{item.category}</span>
                   </td>
                   <td className="px-4 py-3 text-right font-medium text-stone-800">¥{item.unitPrice}</td>
                   <td className="px-4 py-3 text-stone-600">/{item.unit}</td>
@@ -805,39 +793,39 @@ const IngredientsView = ({
         </div>
       </div>
 
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editingItem ? '食材編集' : '食材追加'}>
+      <Modal isOpen={modal.modalOpen} onClose={modal.close} title={modal.editingItem ? '食材編集' : '食材追加'}>
         <div className="space-y-4">
           <FormField label="食材名">
-            <input type="text" className={inputClass} value={form.name} onChange={(e) => setForm((p) => ({...p, name: e.target.value}))} />
+            <input type="text" className={inputClass} value={modal.form.name} onChange={(e) => modal.setForm((p) => ({...p, name: e.target.value}))} />
           </FormField>
           <div className="grid grid-cols-2 gap-4">
             <FormField label="カテゴリ">
-              <select className={selectClass} value={form.category} onChange={(e) => setForm((p) => ({...p, category: e.target.value}))}>
+              <select className={selectClass} value={modal.form.category} onChange={(e) => modal.setForm((p) => ({...p, category: e.target.value}))}>
                 {INGREDIENT_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </FormField>
             <FormField label="単位">
-              <input type="text" className={inputClass} value={form.unit} onChange={(e) => setForm((p) => ({...p, unit: e.target.value}))} placeholder="g, ml, 個" />
+              <input type="text" className={inputClass} value={modal.form.unit} onChange={(e) => modal.setForm((p) => ({...p, unit: e.target.value}))} placeholder="g, ml, 個" />
             </FormField>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <FormField label="単価（円）">
-              <input type="number" step="0.01" className={inputClass} value={form.unitPrice} onChange={(e) => setForm((p) => ({...p, unitPrice: Number(e.target.value)}))} />
+              <input type="number" step="0.01" className={inputClass} value={modal.form.unitPrice} onChange={(e) => modal.setForm((p) => ({...p, unitPrice: Number(e.target.value)}))} />
             </FormField>
             <FormField label="仕入先">
-              <input type="text" className={inputClass} value={form.supplier} onChange={(e) => setForm((p) => ({...p, supplier: e.target.value}))} />
+              <input type="text" className={inputClass} value={modal.form.supplier} onChange={(e) => modal.setForm((p) => ({...p, supplier: e.target.value}))} />
             </FormField>
           </div>
           <div className="flex justify-between pt-2">
-            {editingItem ? (
-              <button onClick={handleDelete} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
+            {modal.editingItem ? (
+              <button onClick={() => modal.remove(setIngredients)} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
                 <Trash2 size={14} />
                 削除
               </button>
             ) : <div />}
             <div className="flex gap-2">
-              <button onClick={() => setModalOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
-              <button onClick={handleSave} className="px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm hover:bg-emerald-600 transition-colors">保存</button>
+              <button onClick={modal.close} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
+              <button onClick={handleSave} className="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">保存</button>
             </div>
           </div>
         </div>
@@ -857,44 +845,16 @@ const ProfitStandardsView = ({
   profitStandards: ProfitStandard[]
   setProfitStandards: React.Dispatch<React.SetStateAction<ProfitStandard[]>>
 }) => {
-  const [modalOpen, setModalOpen] = useState(false)
-  const [editingItem, setEditingItem] = useState<ProfitStandard | null>(null)
-
-  const emptyStandard = {category: '', targetGrossMargin: 65, currentAvgMargin: 65, menuCount: 0, alertCount: 0}
-  const [form, setForm] = useState(emptyStandard)
-
-  const openNew = () => {
-    setEditingItem(null)
-    setForm(emptyStandard)
-    setModalOpen(true)
-  }
-
-  const openEdit = (item: ProfitStandard) => {
-    setEditingItem(item)
-    setForm({category: item.category, targetGrossMargin: item.targetGrossMargin, currentAvgMargin: item.currentAvgMargin, menuCount: item.menuCount, alertCount: item.alertCount})
-    setModalOpen(true)
-  }
-
-  const handleSave = () => {
-    if (editingItem) {
-      setProfitStandards((prev) => prev.map((p) => (p.id === editingItem.id ? {...p, ...form} : p)))
-    } else {
-      setProfitStandards((prev) => [...prev, {id: generateId('PS'), ...form}])
-    }
-    setModalOpen(false)
-  }
-
-  const handleDelete = () => {
-    if (!editingItem) return
-    setProfitStandards((prev) => prev.filter((p) => p.id !== editingItem.id))
-    setModalOpen(false)
-  }
+  const modal = useEditModal<ProfitStandard, {category: string; targetGrossMargin: number; currentAvgMargin: number; menuCount: number; alertCount: number}>(
+    {category: '', targetGrossMargin: 65, currentAvgMargin: 65, menuCount: 0, alertCount: 0},
+    (item) => ({category: item.category, targetGrossMargin: item.targetGrossMargin, currentAvgMargin: item.currentAvgMargin, menuCount: item.menuCount, alertCount: item.alertCount}),
+  )
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="font-bold text-stone-800">粗利基準マスタ</h3>
-        <button data-guidance="add-standard-button" onClick={openNew} className="flex items-center gap-1 px-3 py-1.5 bg-emerald-500 text-white rounded-lg text-sm hover:bg-emerald-600 transition-colors">
+        <button data-guidance="add-standard-button" onClick={modal.openNew} className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
           <Plus size={14} />
           カテゴリ追加
         </button>
@@ -906,9 +866,9 @@ const ProfitStandardsView = ({
           return (
             <div
               key={standard.id}
-              onClick={() => openEdit(standard)}
+              onClick={() => modal.openEdit(standard)}
               className={`bg-white rounded-xl border p-5 hover:shadow-md transition-all cursor-pointer ${
-                isBelow ? 'border-red-200 hover:border-red-300' : 'border-stone-200 hover:border-emerald-200'
+                isBelow ? 'border-red-200 hover:border-red-300' : 'border-stone-200 hover:border-amber-200'
               }`}
             >
               <div className="flex items-start justify-between mb-4">
@@ -922,7 +882,7 @@ const ProfitStandardsView = ({
               <div className="mb-3">
                 <div className="flex justify-between text-xs mb-1">
                   <span className="text-stone-500">現在の平均粗利率</span>
-                  <span className={`font-bold ${isBelow ? 'text-red-600' : 'text-emerald-600'}`}>
+                  <span className={`font-bold ${isBelow ? 'text-red-600' : 'text-green-600'}`}>
                     {standard.currentAvgMargin}%
                   </span>
                 </div>
@@ -932,7 +892,7 @@ const ProfitStandardsView = ({
                     style={{left: `${standard.targetGrossMargin}%`}}
                   />
                   <div
-                    className={`h-full rounded-full transition-all duration-500 ${isBelow ? 'bg-gradient-to-r from-red-400 to-red-500' : 'bg-gradient-to-r from-emerald-400 to-emerald-500'}`}
+                    className={`h-full rounded-full transition-all duration-500 ${isBelow ? 'bg-gradient-to-r from-red-400 to-red-500' : 'bg-gradient-to-r from-green-400 to-green-500'}`}
                     style={{width: `${standard.currentAvgMargin}%`}}
                   />
                 </div>
@@ -954,37 +914,37 @@ const ProfitStandardsView = ({
         })}
       </div>
 
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editingItem ? 'カテゴリ編集' : 'カテゴリ追加'}>
+      <Modal isOpen={modal.modalOpen} onClose={modal.close} title={modal.editingItem ? 'カテゴリ編集' : 'カテゴリ追加'}>
         <div className="space-y-4">
           <FormField label="カテゴリ名">
-            <input type="text" className={inputClass} value={form.category} onChange={(e) => setForm((p) => ({...p, category: e.target.value}))} />
+            <input type="text" className={inputClass} value={modal.form.category} onChange={(e) => modal.setForm((p) => ({...p, category: e.target.value}))} />
           </FormField>
           <div className="grid grid-cols-2 gap-4">
             <FormField label="目標粗利率（%）">
-              <input type="number" className={inputClass} value={form.targetGrossMargin} onChange={(e) => setForm((p) => ({...p, targetGrossMargin: Number(e.target.value)}))} />
+              <input type="number" className={inputClass} value={modal.form.targetGrossMargin} onChange={(e) => modal.setForm((p) => ({...p, targetGrossMargin: Number(e.target.value)}))} />
             </FormField>
             <FormField label="現在の平均粗利率（%）">
-              <input type="number" className={inputClass} value={form.currentAvgMargin} onChange={(e) => setForm((p) => ({...p, currentAvgMargin: Number(e.target.value)}))} />
+              <input type="number" className={inputClass} value={modal.form.currentAvgMargin} onChange={(e) => modal.setForm((p) => ({...p, currentAvgMargin: Number(e.target.value)}))} />
             </FormField>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <FormField label="メニュー数">
-              <input type="number" className={inputClass} value={form.menuCount} onChange={(e) => setForm((p) => ({...p, menuCount: Number(e.target.value)}))} />
+              <input type="number" className={inputClass} value={modal.form.menuCount} onChange={(e) => modal.setForm((p) => ({...p, menuCount: Number(e.target.value)}))} />
             </FormField>
             <FormField label="基準未達メニュー数">
-              <input type="number" className={inputClass} value={form.alertCount} onChange={(e) => setForm((p) => ({...p, alertCount: Number(e.target.value)}))} />
+              <input type="number" className={inputClass} value={modal.form.alertCount} onChange={(e) => modal.setForm((p) => ({...p, alertCount: Number(e.target.value)}))} />
             </FormField>
           </div>
           <div className="flex justify-between pt-2">
-            {editingItem ? (
-              <button onClick={handleDelete} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
+            {modal.editingItem ? (
+              <button onClick={() => modal.remove(setProfitStandards)} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
                 <Trash2 size={14} />
                 削除
               </button>
             ) : <div />}
             <div className="flex gap-2">
-              <button onClick={() => setModalOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
-              <button onClick={handleSave} className="px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm hover:bg-emerald-600 transition-colors">保存</button>
+              <button onClick={modal.close} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
+              <button onClick={() => modal.save(setProfitStandards, 'PS')} className="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">保存</button>
             </div>
           </div>
         </div>
@@ -1017,7 +977,7 @@ export default function RecipeCalculatorMockPage() {
   }, [])
 
   if (showSplash) {
-    return <SplashScreen theme="emerald" systemName="AI食品原価計算システム" subtitle="Smart Recipe Cost Calculator" />
+    return <SplashScreen theme="amber" systemName="AI食品原価計算システム" subtitle="Smart Recipe Cost Calculator" />
   }
 
   const TAB_VIEWS: Record<TabId, React.ReactNode> = {
@@ -1027,57 +987,33 @@ export default function RecipeCalculatorMockPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-stone-50 via-white to-emerald-50/30 font-sans">
-      <header className="bg-white/80 backdrop-blur-md border-b border-stone-200 sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl shadow-lg shadow-emerald-500/20">
-              <Calculator className="text-white w-5 h-5" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-green-600">
-                AI食品原価計算
-              </h1>
-              <p className="text-xs text-stone-400 -mt-0.5">Smart Recipe Cost Calculator</p>
-            </div>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-stone-50 via-white to-amber-50/30 font-sans">
+      <MockHeader>
+        <MockHeaderTitle icon={Calculator} title="AI食品原価計算" subtitle="Smart Recipe Cost Calculator" theme="amber" />
 
-          <div className="flex items-center gap-2">
-            <GuidanceStartButton onClick={() => setShowGuidance(true)} theme="emerald" />
-            <button
-              onClick={handleReset}
-              className="p-2 text-stone-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
-              title="データ初期化"
-            >
-              <RotateCcw size={16} />
-            </button>
-            {TABS.map((tab) => (
-              <button
-                key={tab.id}
-                data-guidance={`${tab.id}-tab`}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                  activeTab === tab.id
-                    ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg shadow-emerald-500/25'
-                    : 'text-stone-600 hover:bg-stone-50 border border-transparent hover:border-emerald-200'
-                }`}
-              >
-                <tab.icon size={16} />
-                <span className="hidden md:inline">{tab.label}</span>
-              </button>
-            ))}
-            <button
-              data-guidance="info-button"
-              onClick={() => setShowInfoSidebar(true)}
-              className="ml-2 p-2.5 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl hover:from-emerald-600 hover:to-green-700 transition-all duration-200 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 flex items-center gap-2"
-              title="このシステムでできること"
-            >
-              <PanelRightOpen className="w-4 h-4" />
-              <span className="text-sm font-medium hidden sm:inline">機能説明</span>
-            </button>
-          </div>
+        <div className="flex items-center gap-2">
+          <GuidanceStartButton onClick={() => setShowGuidance(true)} theme="amber" />
+          <button
+            onClick={handleReset}
+            className="p-2 text-stone-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
+            title="データ初期化"
+          >
+            <RotateCcw size={16} />
+          </button>
+          {TABS.map((tab) => (
+            <MockHeaderTab
+              key={tab.id}
+              active={activeTab === tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              icon={tab.icon}
+              label={tab.label}
+              theme="amber"
+              data-guidance={`${tab.id}-tab`}
+            />
+          ))}
+          <MockHeaderInfoButton onClick={() => setShowInfoSidebar(true)} theme="amber" />
         </div>
-      </header>
+      </MockHeader>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {TAB_VIEWS[activeTab]}
@@ -1086,7 +1022,7 @@ export default function RecipeCalculatorMockPage() {
       <InfoSidebar
         isOpen={showInfoSidebar}
         onClose={() => setShowInfoSidebar(false)}
-        theme="emerald"
+        theme="amber"
         systemIcon={Calculator}
         systemName="AI食品原価計算システム"
         systemDescription="AIでレシピ画像や手書きメモから食材を自動認識し、原価を瞬時に算出するシステムです。食材マスタと粗利基準の管理で収益性の向上を支援します。"
@@ -1101,7 +1037,7 @@ export default function RecipeCalculatorMockPage() {
         steps={getGuidanceSteps(setActiveTab)}
         isActive={showGuidance}
         onClose={() => setShowGuidance(false)}
-        theme="emerald"
+        theme="amber"
       />
     </div>
   )

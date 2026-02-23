@@ -108,6 +108,46 @@ export type CounselingReservation = Prisma.CounselingReservationModel
  */
 export type CounselingSlot = Prisma.CounselingSlotModel
 /**
+ * Model DentalClinic
+ * 
+ */
+export type DentalClinic = Prisma.DentalClinicModel
+/**
+ * Model DentalFacility
+ * 
+ */
+export type DentalFacility = Prisma.DentalFacilityModel
+/**
+ * Model DentalPatient
+ * 
+ */
+export type DentalPatient = Prisma.DentalPatientModel
+/**
+ * Model DentalStaff
+ * 
+ */
+export type DentalStaff = Prisma.DentalStaffModel
+/**
+ * Model DentalVisitPlan
+ * 
+ */
+export type DentalVisitPlan = Prisma.DentalVisitPlanModel
+/**
+ * Model DentalExamination
+ * 
+ */
+export type DentalExamination = Prisma.DentalExaminationModel
+/**
+ * Model DentalScoringHistory
+ * 
+ */
+export type DentalScoringHistory = Prisma.DentalScoringHistoryModel
+/**
+ * Model DentalSavedDocument
+ * 
+ */
+export type DentalSavedDocument = Prisma.DentalSavedDocumentModel
+/**
  * Model KgFacilityMaster
  * 
  */

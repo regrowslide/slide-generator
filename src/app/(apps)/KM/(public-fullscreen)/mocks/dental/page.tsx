@@ -7,13 +7,10 @@ import {
   ClipboardList,
   MapPin,
   FileText,
-  Users,
   Settings,
   PanelRightOpen,
   HelpCircle,
   RotateCcw,
-  UserRound,
-  Building2,
   ChevronDown,
   LucideIcon,
 } from 'lucide-react'
@@ -122,7 +119,7 @@ const getGuidanceSteps = (navigateTo: (page: PageId) => void): GuidanceStep[] =>
   {targetSelector: '[data-guidance="nav-dashboard"]', title: 'ダッシュボード', description: '今日の訪問予定・診療状況・アラートを一目で確認できます。', position: 'bottom', action: () => navigateTo('dashboard')},
   {targetSelector: '[data-guidance="nav-schedule"]', title: '訪問計画', description: '施設ごとの訪問予定を一覧管理します。訪問計画の追加や詳細確認ができます。', position: 'bottom', action: () => navigateTo('dashboard')},
   {targetSelector: '[data-guidance="nav-master"]', title: 'マスタ管理', description: 'クリニック・施設・利用者・スタッフの基本情報を管理します。ドロップダウンで各マスタにアクセス。', position: 'bottom', action: () => navigateTo('schedule')},
-  {targetSelector: '[data-guidance="nav-document-list"]', title: '文書管理', description: '生成した診療文書の一覧と管理を行います。PDF結合出力も可能。', position: 'bottom', action: () => navigateTo('admin-patients')},
+  {targetSelector: '[data-guidance="nav-document-list"]', title: '文書管理', description: '生成した診療文書の一覧と管理を行います。PDF結合出力も可能。', position: 'bottom', action: () => navigateTo('admin-clinic')},
   {targetSelector: '[data-guidance="info-button"]', title: '機能説明', description: 'システムの概要・操作手順・時間削減効果を確認できます。', position: 'top', action: () => navigateTo('document-list')},
 ]
 
@@ -177,7 +174,7 @@ const DentalMockPage = () => {
   }
 
   if (showSplash) {
-    return <SplashScreen theme="blue" systemName="訪問歯科管理システム" subtitle="VisitDental Pro" />
+    return <SplashScreen theme="slate" systemName="訪問歯科管理システム" subtitle="VisitDental Pro" />
   }
 
   return (
@@ -187,16 +184,16 @@ const DentalMockPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* 左: アイコン + タイトル + 対象月 */}
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-r from-blue-500 to-sky-600 rounded-xl shadow-lg shadow-blue-500/20">
+            <div className="p-2 bg-gradient-to-r from-slate-700 to-slate-900 rounded-xl shadow-lg shadow-slate-500/20">
               <Stethoscope className="text-white w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-sky-600">
+              <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-700 to-slate-900">
                 VisitDental Pro
               </h1>
-              <p className="text-xs text-stone-400 -mt-0.5">訪問歯科管理システム</p>
+              <p className="text-xs text-slate-400 -mt-0.5">訪問歯科管理システム</p>
             </div>
-            <span className="ml-2 px-2.5 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-lg border border-blue-200">
+            <span className="ml-2 px-2.5 py-1 bg-slate-50 text-slate-700 text-xs font-medium rounded-lg border border-slate-200">
               2026年1月
             </span>
           </div>
@@ -205,7 +202,7 @@ const DentalMockPage = () => {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowGuidance(true)}
-              className="p-2 text-stone-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+              className="p-2 text-stone-400 hover:text-slate-700 hover:bg-slate-50 rounded-lg transition-colors"
               title="ガイダンス開始"
             >
               <HelpCircle size={16} />
@@ -215,7 +212,7 @@ const DentalMockPage = () => {
                 if (!window.confirm('データを初期状態に戻しますか？')) return
                 window.location.reload()
               }}
-              className="p-2 text-stone-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+              className="p-2 text-stone-400 hover:text-slate-700 hover:bg-slate-50 rounded-lg transition-colors"
               title="初期値に戻す"
             >
               <RotateCcw size={16} />
@@ -231,8 +228,8 @@ const DentalMockPage = () => {
                     onClick={() => handleMenuClick(menu)}
                     className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                       active
-                        ? 'bg-gradient-to-r from-blue-500 to-sky-600 text-white shadow-lg shadow-blue-500/25'
-                        : 'text-stone-600 hover:bg-stone-50 border border-transparent hover:border-blue-200'
+                        ? 'bg-gradient-to-r from-slate-700 to-slate-900 text-white shadow-lg shadow-slate-500/25'
+                        : 'text-stone-600 hover:bg-stone-50 border border-transparent hover:border-slate-300'
                     }`}
                   >
                     <Icon size={16} />
@@ -251,7 +248,7 @@ const DentalMockPage = () => {
                           onClick={() => handleSubMenuClick(item.id)}
                           className={`w-full text-left px-4 py-2 text-sm transition-colors ${
                             activePage === item.id
-                              ? 'bg-blue-50 text-blue-700 font-medium'
+                              ? 'bg-slate-100 text-slate-900 font-medium'
                               : 'text-stone-700 hover:bg-stone-50'
                           }`}
                         >
@@ -267,7 +264,7 @@ const DentalMockPage = () => {
             <button
               data-guidance="info-button"
               onClick={() => setShowInfoSidebar(true)}
-              className="ml-2 p-2.5 bg-gradient-to-r from-blue-500 to-sky-600 text-white rounded-xl hover:from-blue-600 hover:to-sky-700 transition-all duration-200 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 flex items-center gap-2"
+              className="ml-2 p-2.5 bg-gradient-to-r from-slate-700 to-slate-900 text-white rounded-xl hover:from-slate-800 hover:to-slate-950 transition-all duration-200 shadow-lg shadow-slate-500/20 hover:shadow-slate-500/30 flex items-center gap-2"
               title="このシステムでできること"
             >
               <PanelRightOpen className="w-4 h-4" />
@@ -293,7 +290,7 @@ const DentalMockPage = () => {
       <InfoSidebar
         isOpen={showInfoSidebar}
         onClose={() => setShowInfoSidebar(false)}
-        theme="blue"
+        theme="slate"
         systemIcon={Stethoscope}
         systemName="訪問歯科管理システム"
         systemDescription="訪問歯科診療に特化した業務管理システムです。患者管理・診療記録・スケジュール管理・ドキュメント生成を統合し、訪問診療の効率を大幅に向上させます。"
@@ -309,7 +306,7 @@ const DentalMockPage = () => {
         steps={getGuidanceSteps(setActivePage)}
         isActive={showGuidance}
         onClose={() => setShowGuidance(false)}
-        theme="blue"
+        theme="slate"
       />
     </div>
   )
