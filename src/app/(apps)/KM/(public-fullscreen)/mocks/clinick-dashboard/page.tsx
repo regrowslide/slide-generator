@@ -24,7 +24,17 @@ import {
   PanelRightOpen,
   LucideIcon,
 } from 'lucide-react';
-import { SplashScreen, InfoSidebar, Feature, TimeEfficiencyItem } from '../_components';
+import {
+  SplashScreen,
+  InfoSidebar,
+  GuidanceOverlay,
+  GuidanceStartButton,
+  type Feature,
+  type TimeEfficiencyItem,
+  type OverviewInfo,
+  type OperationStep,
+  type GuidanceStep,
+} from '../_components';
 
 /* <aside>
   💡
@@ -616,7 +626,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ reservations, treatments 
     <div className="space-y-6 animate-in fade-in duration-500">
 
       {/* Filter Section */}
-      <div className="bg-white p-5 rounded-xl shadow-sm border border-stone-200 space-y-5">
+      <div data-guidance="filter-section" className="bg-white p-5 rounded-xl shadow-sm border border-stone-200 space-y-5">
         <div className="flex items-center gap-2 border-b border-stone-100 pb-3">
           <div className="p-2 bg-rose-100 rounded-lg">
             <ListFilter size={18} className="text-rose-600" />
@@ -702,7 +712,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ reservations, treatments 
       </div>
 
       {/* KPI Section: Visit Types */}
-      <h3 className="font-bold text-stone-700 mt-8 mb-2 flex items-center gap-2">
+      <h3 data-guidance="kpi-section" className="font-bold text-stone-700 mt-8 mb-2 flex items-center gap-2">
         <div className="p-1.5 bg-amber-100 rounded-lg">
           <Users size={18} className="text-amber-600" />
         </div>
@@ -767,7 +777,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ reservations, treatments 
         </div>
 
         {/* Source Analysis Table (Hierarchical) */}
-        <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-stone-100 flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg">
+        <div data-guidance="source-analysis" className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-stone-100 flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg">
           <div className="p-4 border-b border-stone-100 bg-gradient-to-r from-stone-50 to-rose-50/50 flex items-center gap-2">
             <div className="p-1.5 bg-rose-100 rounded-lg">
               <TrendingUp size={16} className="text-rose-500" />
@@ -943,7 +953,7 @@ const DataTablesView: React.FC<DataTablesViewProps> = ({ customers, reservations
   return (
     <div className="space-y-4 h-[calc(100vh-200px)] flex flex-col">
       {/* Sub-tabs for tables */}
-      <div className="flex space-x-2 bg-stone-100 p-1 rounded-lg w-fit">
+      <div data-guidance="data-sub-tabs" className="flex space-x-2 bg-stone-100 p-1 rounded-lg w-fit">
         {[
           { id: 'customers', label: '顧客マスタ', icon: Users },
           { id: 'reservations', label: '予約一覧', icon: Calendar },
@@ -1026,12 +1036,45 @@ const CLINIC_CHALLENGES = [
   'リピート率を改善したい',
 ];
 
+const CLINIC_OVERVIEW: OverviewInfo = {
+  description: '美容医療業界特有のKPI管理・顧客分析に最適化されたダッシュボードです。複数院の一元管理にも対応しています。',
+  automationPoints: [
+    'SNS・Web・紹介など流入経路別の効果を自動分析',
+    '新規/リピート・スタッフ別・院別の売上を自動集計',
+    '顧客の来院履歴・施術履歴の自動追跡',
+    '予約状況のリアルタイム可視化',
+  ],
+  userBenefits: [
+    '広告費の最適配分でROIを大幅改善',
+    'データに基づく経営判断で売上向上',
+    'スタッフ教育・評価の客観的指標を提供',
+  ],
+};
+
+const CLINIC_OPERATION_STEPS: OperationStep[] = [
+  {step: 1, action: 'ダッシュボードを確認', detail: '新規数・売上・リピート率など主要KPIを即座に把握'},
+  {step: 2, action: '流入経路を分析', detail: 'SNS・紹介・広告など経路別の効果を確認し広告費を最適化'},
+  {step: 3, action: 'スタッフ実績を確認', detail: 'スタッフ別・院別の売上と施術件数を比較分析'},
+  {step: 4, action: 'データソースを確認', detail: '顧客マスタ・予約・施術の生データを直接確認'},
+];
+
+const getClinicGuidanceSteps = (setActiveTab: (tab: string) => void): GuidanceStep[] => [
+  {targetSelector: '[data-guidance="dashboard-tab"]', title: 'ダッシュボード', description: '主要KPI・売上推移・流入経路分析をリアルタイムで確認できます。', position: 'bottom', action: () => setActiveTab('dashboard')},
+  {targetSelector: '[data-guidance="filter-section"]', title: '集計フィルター', description: '期間・店舗・スタッフを選んで集計対象を絞り込めます。', position: 'bottom', action: () => setActiveTab('dashboard')},
+  {targetSelector: '[data-guidance="kpi-section"]', title: 'KPI指標', description: '新規・再診・リタッチの区分別実施件数を確認できます。', position: 'top', action: () => setActiveTab('dashboard')},
+  {targetSelector: '[data-guidance="source-analysis"]', title: '流入経路分析', description: 'SNS・Web・紹介など経路別のパフォーマンスを比較分析できます。', position: 'top', action: () => setActiveTab('dashboard')},
+  {targetSelector: '[data-guidance="tables-tab"]', title: 'データソース確認', description: '顧客・予約・施術の生データを一覧で確認・検索できます。', position: 'bottom', action: () => setActiveTab('dashboard')},
+  {targetSelector: '[data-guidance="data-sub-tabs"]', title: 'データの切替', description: '顧客マスタ・予約一覧・施術記録の各テーブルを切り替えて閲覧できます。', position: 'bottom', action: () => setActiveTab('tables')},
+  {targetSelector: '[data-guidance="info-button"]', title: '機能説明', description: 'システムの概要や操作手順、時間削減効果を確認できます。右下のボタンからいつでも開けます。', position: 'bottom', action: () => setActiveTab('tables')},
+];
+
 export default function MarketingDashboard() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [data, setData] = useState<MockData>({ customers: [], reservations: [], treatments: [] });
   const [isGenerated, setIsGenerated] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const [showInfoSidebar, setShowInfoSidebar] = useState(false);
+  const [showGuidance, setShowGuidance] = useState(false);
 
   // Initial Data Seeding
   useEffect(() => {
@@ -1071,19 +1114,25 @@ export default function MarketingDashboard() {
 
           {/* Main Navigation Tabs */}
           <div className="flex items-center gap-2">
-            <TabButton
-              active={activeTab === 'dashboard'}
-              label="ダッシュボード"
-              icon={LayoutDashboard}
-              onClick={() => setActiveTab('dashboard')}
-            />
-            <TabButton
-              active={activeTab === 'tables'}
-              label="データソース確認"
-              icon={TableIcon}
-              onClick={() => setActiveTab('tables')}
-            />
+            <GuidanceStartButton onClick={() => setShowGuidance(true)} theme="rose" />
+            <div data-guidance="dashboard-tab">
+              <TabButton
+                active={activeTab === 'dashboard'}
+                label="ダッシュボード"
+                icon={LayoutDashboard}
+                onClick={() => setActiveTab('dashboard')}
+              />
+            </div>
+            <div data-guidance="tables-tab">
+              <TabButton
+                active={activeTab === 'tables'}
+                label="データソース確認"
+                icon={TableIcon}
+                onClick={() => setActiveTab('tables')}
+              />
+            </div>
             <button
+              data-guidance="info-button"
               onClick={() => setShowInfoSidebar(true)}
               className="ml-2 p-2.5 bg-gradient-to-r from-rose-500 to-rose-600 text-white rounded-xl hover:from-rose-600 hover:to-rose-700 transition-all duration-200 shadow-lg shadow-rose-500/20 hover:shadow-rose-500/30 flex items-center gap-2"
               title="このシステムでできること"
@@ -1106,6 +1155,14 @@ export default function MarketingDashboard() {
         features={CLINIC_FEATURES}
         timeEfficiency={CLINIC_TIME_EFFICIENCY}
         challenges={CLINIC_CHALLENGES}
+        overview={CLINIC_OVERVIEW}
+        operationSteps={CLINIC_OPERATION_STEPS}
+      />
+      <GuidanceOverlay
+        steps={getClinicGuidanceSteps(setActiveTab)}
+        isActive={showGuidance}
+        onClose={() => setShowGuidance(false)}
+        theme="rose"
       />
 
       {/* Main Content */}

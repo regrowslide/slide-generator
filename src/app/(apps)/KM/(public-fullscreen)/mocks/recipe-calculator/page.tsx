@@ -22,7 +22,21 @@ import {
   BookOpen,
   LucideIcon,
 } from 'lucide-react'
-import {SplashScreen, InfoSidebar, Modal, type Feature, type TimeEfficiencyItem} from '../_components'
+import {
+  SplashScreen,
+  InfoSidebar,
+  Modal,
+  GuidanceOverlay,
+  GuidanceStartButton,
+  usePersistedState,
+  generateId,
+  resetPersistedData,
+  type Feature,
+  type TimeEfficiencyItem,
+  type OverviewInfo,
+  type OperationStep,
+  type GuidanceStep,
+} from '../_components'
 
 // ==========================================
 // 機能説明データ
@@ -74,6 +88,40 @@ const CHALLENGES = [
   '手書きレシピのデジタル化ができていない',
 ]
 
+const OVERVIEW: OverviewInfo = {
+  description: 'AIでレシピ画像や手書きメモから食材を自動認識し、原価を瞬時に算出するシステムです。食材マスタと粗利基準の管理で収益性の向上を支援します。',
+  automationPoints: [
+    'レシピ画像・テキストからAIが食材を自動認識',
+    '食材マスタと照合して原価を瞬時に算出',
+    'カテゴリ別の粗利基準と連動した自動アラート',
+    '保存レシピの原価変動を自動追跡',
+  ],
+  userBenefits: [
+    '原価計算時間を1品30分→30秒に大幅短縮',
+    'データに基づくメニュー価格設定が可能に',
+    '粗利率の可視化で利益率を改善',
+  ],
+}
+
+const OPERATION_STEPS: OperationStep[] = [
+  {step: 1, action: 'AI原価計算を実行', detail: 'レシピ画像やテキストをアップロードしてAIに解析させる'},
+  {step: 2, action: '解析結果を確認・保存', detail: '食材と原価の解析結果を確認し、レシピとして保存'},
+  {step: 3, action: '食材マスタを管理', detail: '食材の単価・仕入先情報を更新して原価精度を向上'},
+  {step: 4, action: '粗利基準を設定', detail: 'カテゴリ別の目標粗利率を設定してアラートを管理'},
+]
+
+const getGuidanceSteps = (setActiveTab: (tab: TabId) => void): GuidanceStep[] => [
+  {targetSelector: '[data-guidance="calculator-tab"]', title: 'AI原価計算', description: 'レシピ画像やテキストをAIに解析させ、食材と原価を自動算出します。', position: 'bottom', action: () => setActiveTab('calculator')},
+  {targetSelector: '[data-guidance="upload-area"]', title: 'レシピのアップロード', description: 'レシピ画像をドラッグ＆ドロップ、またはファイル選択でアップロードします。', position: 'bottom', action: () => setActiveTab('calculator')},
+  {targetSelector: '[data-guidance="analyze-button"]', title: 'AI解析の実行', description: '「AI解析を実行」ボタンでAIがレシピを分析し、食材・分量・原価を自動算出します。', position: 'top', action: () => setActiveTab('calculator')},
+  {targetSelector: '[data-guidance="ingredients-tab"]', title: '食材マスタ', description: '食材の単価・仕入先情報を管理。原価計算の基礎データです。', position: 'bottom', action: () => setActiveTab('calculator')},
+  {targetSelector: '[data-guidance="add-ingredient-button"]', title: '食材の追加', description: '「食材追加」ボタンで新しい食材を登録します。単価・カテゴリ・仕入先を入力。', position: 'bottom', action: () => setActiveTab('ingredients')},
+  {targetSelector: '[data-guidance="category-filter"]', title: 'カテゴリ絞り込み', description: 'カテゴリを選択して食材を絞り込めます。', position: 'bottom', action: () => setActiveTab('ingredients')},
+  {targetSelector: '[data-guidance="profit-standards-tab"]', title: '粗利基準', description: 'カテゴリ別の目標粗利率を設定し、基準を下回るメニューを検知。', position: 'bottom', action: () => setActiveTab('ingredients')},
+  {targetSelector: '[data-guidance="add-standard-button"]', title: 'カテゴリの追加', description: '「カテゴリ追加」ボタンで粗利基準カテゴリを登録します。', position: 'bottom', action: () => setActiveTab('profit-standards')},
+  {targetSelector: '[data-guidance="info-button"]', title: '機能説明', description: 'システムの概要や操作手順、時間削減効果を確認できます。右下のボタンからいつでも開けます。', position: 'top', action: () => setActiveTab('profit-standards')},
+]
+
 // ==========================================
 // 型定義
 // ==========================================
@@ -97,11 +145,14 @@ interface ProfitStandard {
   alertCount: number
 }
 
+type DataSource = '食材マスタ' | 'A-Price' | '楽天市場'
+
 interface AnalyzedItem {
   name: string
   amount: string
   unitPrice: number
   cost: number
+  source: DataSource
 }
 
 interface SavedRecipe {
@@ -144,35 +195,54 @@ const INITIAL_PROFIT_STANDARDS: ProfitStandard[] = [
 
 const INITIAL_SAVED_RECIPES: SavedRecipe[] = []
 
-// AI解析のダミー結果
+// AI解析のダミー結果（3つのデータソースに分散）
 const AI_RESULT: AnalyzedItem[] = [
-  {name: '鶏もも肉', amount: '200g', unitPrice: 0.25, cost: 50},
-  {name: '玉ねぎ', amount: '150g', unitPrice: 0.05, cost: 7.5},
-  {name: 'にんじん', amount: '100g', unitPrice: 0.06, cost: 6},
-  {name: 'じゃがいも', amount: '200g', unitPrice: 0.04, cost: 8},
-  {name: 'バター', amount: '20g', unitPrice: 0.80, cost: 16},
-  {name: '小麦粉', amount: '30g', unitPrice: 0.03, cost: 0.9},
-  {name: '牛乳', amount: '100ml', unitPrice: 0.20, cost: 20},
-  {name: '塩・胡椒', amount: '適量', unitPrice: 0, cost: 2},
+  {name: '鶏もも肉', amount: '200g', unitPrice: 0.25, cost: 50, source: '食材マスタ'},
+  {name: '玉ねぎ', amount: '150g', unitPrice: 0.05, cost: 7.5, source: '食材マスタ'},
+  {name: 'にんじん', amount: '100g', unitPrice: 0.06, cost: 6, source: '食材マスタ'},
+  {name: 'じゃがいも', amount: '200g', unitPrice: 0.04, cost: 8, source: 'A-Price'},
+  {name: 'バター', amount: '20g', unitPrice: 0.80, cost: 16, source: 'A-Price'},
+  {name: '小麦粉', amount: '30g', unitPrice: 0.03, cost: 0.9, source: '食材マスタ'},
+  {name: '牛乳', amount: '100ml', unitPrice: 0.20, cost: 20, source: 'A-Price'},
+  {name: '塩・胡椒', amount: '適量', unitPrice: 0, cost: 2, source: '楽天市場'},
 ]
 
-// ==========================================
-// ユーティリティ
-// ==========================================
-
-const generateId = (prefix: string) => `${prefix}${Date.now().toString(36).toUpperCase()}`
-
-const usePersistedState = <T,>(key: string, initialData: T): [T, React.Dispatch<React.SetStateAction<T>>] => {
-  const [state, setState] = useState<T>(() => {
-    if (typeof window === 'undefined') return initialData
-    const stored = localStorage.getItem(key)
-    return stored ? JSON.parse(stored) : initialData
-  })
-  useEffect(() => {
-    localStorage.setItem(key, JSON.stringify(state))
-  }, [key, state])
-  return [state, setState]
+// データソース検索フェーズ定義
+interface SearchPhase {
+  source: DataSource
+  label: string
+  description: string
+  icon: 'database' | 'store' | 'globe'
+  color: string
+  bgColor: string
+  borderColor: string
+  duration: number
 }
+
+const SEARCH_PHASES: SearchPhase[] = [
+  {source: '食材マスタ', label: '食材マスタ', description: '自社登録食材データベースを検索中...', icon: 'database', color: 'text-emerald-600', bgColor: 'bg-emerald-50', borderColor: 'border-emerald-200', duration: 3000},
+  {source: 'A-Price', label: 'A-Price', description: '業務用食品スーパーの価格情報を取得中...', icon: 'store', color: 'text-blue-600', bgColor: 'bg-blue-50', borderColor: 'border-blue-200', duration: 3500},
+  {source: '楽天市場', label: '楽天市場', description: 'オンラインマーケットの最安値を検索中...', icon: 'globe', color: 'text-red-600', bgColor: 'bg-red-50', borderColor: 'border-red-200', duration: 3500},
+]
+
+// データソースバッジ
+const SourceBadge = ({source}: {source: DataSource}) => {
+  const config: Record<DataSource, {bg: string; text: string; border: string}> = {
+    '食材マスタ': {bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200'},
+    'A-Price': {bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200'},
+    '楽天市場': {bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200'},
+  }
+  const c = config[source]
+  return (
+    <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium border ${c.bg} ${c.text} ${c.border}`}>
+      {source}
+    </span>
+  )
+}
+
+// ==========================================
+// ストレージキー
+// ==========================================
 
 const STORAGE_KEYS = {
   ingredients: 'mock-recipe-calculator-ingredients',
@@ -226,6 +296,8 @@ const CalculatorView = ({
   setSavedRecipes: React.Dispatch<React.SetStateAction<SavedRecipe[]>>
 }) => {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [currentPhase, setCurrentPhase] = useState(-1)
+  const [phaseResults, setPhaseResults] = useState<{source: DataSource; count: number; done: boolean}[]>([])
   const [result, setResult] = useState<AnalyzedItem[] | null>(null)
   const [recipeName, setRecipeName] = useState('')
   const [sellingPrice, setSellingPrice] = useState('')
@@ -233,12 +305,38 @@ const CalculatorView = ({
   const handleAnalyze = () => {
     setIsAnalyzing(true)
     setResult(null)
+    setCurrentPhase(0)
+    setPhaseResults(SEARCH_PHASES.map((p) => ({source: p.source, count: 0, done: false})))
+
+    // フェーズ1: 食材マスタ
+    const phase1Items = AI_RESULT.filter((i) => i.source === '食材マスタ')
+    const phase2Items = AI_RESULT.filter((i) => i.source === 'A-Price')
+    const phase3Items = AI_RESULT.filter((i) => i.source === '楽天市場')
+
     setTimeout(() => {
-      setIsAnalyzing(false)
-      setResult(AI_RESULT.map((item) => ({...item})))
-      setRecipeName('チキンクリームシチュー')
-      setSellingPrice('980')
-    }, 2000)
+      setPhaseResults((prev) => prev.map((p) => p.source === '食材マスタ' ? {...p, count: phase1Items.length, done: true} : p))
+      setCurrentPhase(1)
+
+      // フェーズ2: A-Price
+      setTimeout(() => {
+        setPhaseResults((prev) => prev.map((p) => p.source === 'A-Price' ? {...p, count: phase2Items.length, done: true} : p))
+        setCurrentPhase(2)
+
+        // フェーズ3: 楽天市場
+        setTimeout(() => {
+          setPhaseResults((prev) => prev.map((p) => p.source === '楽天市場' ? {...p, count: phase3Items.length, done: true} : p))
+
+          // 完了表示後に結果を出す
+          setTimeout(() => {
+            setIsAnalyzing(false)
+            setCurrentPhase(-1)
+            setResult(AI_RESULT.map((item) => ({...item})))
+            setRecipeName('チキンクリームシチュー')
+            setSellingPrice('980')
+          }, 800)
+        }, SEARCH_PHASES[2].duration)
+      }, SEARCH_PHASES[1].duration)
+    }, SEARCH_PHASES[0].duration)
   }
 
   const totalCost = result ? result.reduce((sum, item) => sum + item.cost, 0) : 0
@@ -292,7 +390,7 @@ const CalculatorView = ({
           <h3 className="font-bold text-stone-800">AI原価解析</h3>
         </div>
 
-        <div className="border-2 border-dashed border-emerald-200 rounded-xl p-8 text-center bg-emerald-50/30 mb-4">
+        <div data-guidance="upload-area" className="border-2 border-dashed border-emerald-200 rounded-xl p-8 text-center bg-emerald-50/30 mb-4">
           <Upload className="w-10 h-10 text-emerald-400 mx-auto mb-3" />
           <p className="text-stone-600 mb-1">レシピ画像をドラッグ＆ドロップ</p>
           <p className="text-xs text-stone-400 mb-4">または クリックしてファイルを選択</p>
@@ -309,6 +407,7 @@ const CalculatorView = ({
         </div>
 
         <button
+          data-guidance="analyze-button"
           onClick={handleAnalyze}
           disabled={isAnalyzing}
           className={`w-full py-3 rounded-xl text-white font-medium flex items-center justify-center gap-2 transition-all duration-200 ${
@@ -330,6 +429,109 @@ const CalculatorView = ({
           )}
         </button>
       </div>
+
+      {/* 検索アニメーション */}
+      {isAnalyzing && (
+        <div className="bg-white rounded-xl border border-stone-200 p-6 space-y-4 animate-in fade-in duration-300">
+          <div className="flex items-center gap-2 mb-2">
+            <Sparkles className="w-5 h-5 text-emerald-600 animate-pulse" />
+            <h3 className="font-bold text-stone-800">食材価格を検索中...</h3>
+          </div>
+
+          <div className="space-y-3">
+            {SEARCH_PHASES.map((phase, idx) => {
+              const phaseResult = phaseResults[idx]
+              const isActive = currentPhase === idx
+              const isDone = phaseResult?.done
+              const isPending = currentPhase < idx
+
+              return (
+                <div
+                  key={phase.source}
+                  className={`rounded-xl border p-4 transition-all duration-500 ${
+                    isActive ? `${phase.bgColor} ${phase.borderColor} shadow-md` :
+                    isDone ? `${phase.bgColor} ${phase.borderColor} opacity-80` :
+                    'bg-stone-50 border-stone-200 opacity-50'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                        isActive || isDone ? phase.bgColor : 'bg-stone-100'
+                      }`}>
+                        {phase.icon === 'database' && (
+                          <Package className={`w-4 h-4 ${isActive || isDone ? phase.color : 'text-stone-400'}`} />
+                        )}
+                        {phase.icon === 'store' && (
+                          <DollarSign className={`w-4 h-4 ${isActive || isDone ? phase.color : 'text-stone-400'}`} />
+                        )}
+                        {phase.icon === 'globe' && (
+                          <Search className={`w-4 h-4 ${isActive || isDone ? phase.color : 'text-stone-400'}`} />
+                        )}
+                      </div>
+                      <div>
+                        <p className={`text-sm font-bold ${isActive || isDone ? phase.color : 'text-stone-400'}`}>
+                          {phase.label}
+                        </p>
+                        <p className="text-xs text-stone-500">
+                          {isDone ? `${phaseResult.count}件の食材がヒット` :
+                           isActive ? phase.description :
+                           '待機中...'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center">
+                      {isDone && (
+                        <div className="flex items-center gap-1 text-emerald-600 animate-in fade-in duration-300">
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                          </svg>
+                          <span className="text-xs font-bold">{phaseResult.count}件</span>
+                        </div>
+                      )}
+                      {isActive && (
+                        <Loader2 className={`w-5 h-5 animate-spin ${phase.color}`} />
+                      )}
+                      {isPending && (
+                        <div className="w-5 h-5 rounded-full border-2 border-stone-300" />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* プログレスバー */}
+                  {isActive && (
+                    <div className="mt-3 w-full h-1.5 bg-white/60 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full ${
+                          phase.source === '食材マスタ' ? 'bg-emerald-500' :
+                          phase.source === 'A-Price' ? 'bg-blue-500' : 'bg-red-500'
+                        }`}
+                        style={{
+                          animation: `progressBar ${phase.duration}ms ease-in-out forwards`,
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+
+          {/* 進捗サマリ */}
+          <div className="flex items-center justify-center gap-4 pt-2 text-xs text-stone-500">
+            <span>検索データソース: {phaseResults.filter((p) => p.done).length} / {SEARCH_PHASES.length}</span>
+            <span>|</span>
+            <span>発見食材: {phaseResults.reduce((sum, p) => sum + p.count, 0)}件</span>
+          </div>
+
+          <style>{`
+            @keyframes progressBar {
+              0% { width: 0%; }
+              100% { width: 100%; }
+            }
+          `}</style>
+        </div>
+      )}
 
       {/* 解析結果 */}
       {result && (
@@ -372,6 +574,7 @@ const CalculatorView = ({
                 <thead className="bg-stone-100 text-stone-500">
                   <tr>
                     <th className="px-4 py-2 text-left">食材名</th>
+                    <th className="px-4 py-2 text-left">データソース</th>
                     <th className="px-4 py-2 text-right">使用量</th>
                     <th className="px-4 py-2 text-right">単価</th>
                     <th className="px-4 py-2 text-right">原価</th>
@@ -381,6 +584,9 @@ const CalculatorView = ({
                   {result.map((item, idx) => (
                     <tr key={idx} className="hover:bg-emerald-50/30 transition-colors">
                       <td className="px-4 py-2 text-stone-700">{item.name}</td>
+                      <td className="px-4 py-2">
+                        <SourceBadge source={item.source} />
+                      </td>
                       <td className="px-4 py-2 text-right">
                         <input
                           type="text"
@@ -403,7 +609,7 @@ const CalculatorView = ({
                 </tbody>
                 <tfoot className="bg-emerald-50 border-t-2 border-emerald-200">
                   <tr>
-                    <td colSpan={3} className="px-4 py-3 font-bold text-emerald-800">原価合計</td>
+                    <td colSpan={4} className="px-4 py-3 font-bold text-emerald-800">原価合計</td>
                     <td className="px-4 py-3 text-right font-bold text-emerald-800 text-lg">¥{totalCost.toFixed(1)}</td>
                   </tr>
                 </tfoot>
@@ -528,7 +734,7 @@ const IngredientsView = ({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="font-bold text-stone-800">食材マスタ ({ingredients.length}件)</h3>
-        <button onClick={openNew} className="flex items-center gap-1 px-3 py-1.5 bg-emerald-500 text-white rounded-lg text-sm hover:bg-emerald-600 transition-colors">
+        <button data-guidance="add-ingredient-button" onClick={openNew} className="flex items-center gap-1 px-3 py-1.5 bg-emerald-500 text-white rounded-lg text-sm hover:bg-emerald-600 transition-colors">
           <Plus size={14} />
           食材追加
         </button>
@@ -545,7 +751,7 @@ const IngredientsView = ({
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <div className="flex gap-1">
+        <div data-guidance="category-filter" className="flex gap-1">
           <button
             onClick={() => setSelectedCategory(null)}
             className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
@@ -688,7 +894,7 @@ const ProfitStandardsView = ({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="font-bold text-stone-800">粗利基準マスタ</h3>
-        <button onClick={openNew} className="flex items-center gap-1 px-3 py-1.5 bg-emerald-500 text-white rounded-lg text-sm hover:bg-emerald-600 transition-colors">
+        <button data-guidance="add-standard-button" onClick={openNew} className="flex items-center gap-1 px-3 py-1.5 bg-emerald-500 text-white rounded-lg text-sm hover:bg-emerald-600 transition-colors">
           <Plus size={14} />
           カテゴリ追加
         </button>
@@ -795,6 +1001,7 @@ export default function RecipeCalculatorMockPage() {
   const [activeTab, setActiveTab] = useState<TabId>('calculator')
   const [showSplash, setShowSplash] = useState(true)
   const [showInfoSidebar, setShowInfoSidebar] = useState(false)
+  const [showGuidance, setShowGuidance] = useState(false)
 
   const [ingredients, setIngredients] = usePersistedState<Ingredient[]>(STORAGE_KEYS.ingredients, INITIAL_INGREDIENTS)
   const [profitStandards, setProfitStandards] = usePersistedState<ProfitStandard[]>(STORAGE_KEYS.profitStandards, INITIAL_PROFIT_STANDARDS)
@@ -806,9 +1013,7 @@ export default function RecipeCalculatorMockPage() {
   }, [])
 
   const handleReset = useCallback(() => {
-    if (!window.confirm('データを初期状態に戻しますか？')) return
-    Object.values(STORAGE_KEYS).forEach((key) => localStorage.removeItem(key))
-    window.location.reload()
+    resetPersistedData(STORAGE_KEYS)
   }, [])
 
   if (showSplash) {
@@ -838,6 +1043,7 @@ export default function RecipeCalculatorMockPage() {
           </div>
 
           <div className="flex items-center gap-2">
+            <GuidanceStartButton onClick={() => setShowGuidance(true)} theme="emerald" />
             <button
               onClick={handleReset}
               className="p-2 text-stone-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
@@ -848,6 +1054,7 @@ export default function RecipeCalculatorMockPage() {
             {TABS.map((tab) => (
               <button
                 key={tab.id}
+                data-guidance={`${tab.id}-tab`}
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                   activeTab === tab.id
@@ -859,6 +1066,15 @@ export default function RecipeCalculatorMockPage() {
                 <span className="hidden md:inline">{tab.label}</span>
               </button>
             ))}
+            <button
+              data-guidance="info-button"
+              onClick={() => setShowInfoSidebar(true)}
+              className="ml-2 p-2.5 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl hover:from-emerald-600 hover:to-green-700 transition-all duration-200 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 flex items-center gap-2"
+              title="このシステムでできること"
+            >
+              <PanelRightOpen className="w-4 h-4" />
+              <span className="text-sm font-medium hidden sm:inline">機能説明</span>
+            </button>
           </div>
         </div>
       </header>
@@ -866,14 +1082,6 @@ export default function RecipeCalculatorMockPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {TAB_VIEWS[activeTab]}
       </main>
-
-      <button
-        onClick={() => setShowInfoSidebar(true)}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl shadow-lg shadow-emerald-500/30 hover:from-emerald-600 hover:to-green-700 transition-all duration-200"
-      >
-        <PanelRightOpen className="w-4 h-4" />
-        <span className="text-sm font-medium">機能説明</span>
-      </button>
 
       <InfoSidebar
         isOpen={showInfoSidebar}
@@ -885,6 +1093,15 @@ export default function RecipeCalculatorMockPage() {
         features={FEATURES}
         timeEfficiency={TIME_EFFICIENCY}
         challenges={CHALLENGES}
+        overview={OVERVIEW}
+        operationSteps={OPERATION_STEPS}
+      />
+
+      <GuidanceOverlay
+        steps={getGuidanceSteps(setActiveTab)}
+        isActive={showGuidance}
+        onClose={() => setShowGuidance(false)}
+        theme="emerald"
       />
     </div>
   )

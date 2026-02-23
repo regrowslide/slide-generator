@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import {
   Info,
   X,
@@ -9,6 +9,11 @@ import {
   TrendingUp,
   Check,
   LucideIcon,
+  RotateCcw,
+  ChevronRight,
+  FileText,
+  ListOrdered,
+  HelpCircle,
 } from 'lucide-react'
 
 // ==========================================
@@ -31,6 +36,26 @@ export interface TimeEfficiencyItem {
   saved: string
 }
 
+export interface OverviewInfo {
+  description: string
+  automationPoints: string[]
+  userBenefits: string[]
+}
+
+export interface OperationStep {
+  step: number
+  action: string
+  detail: string
+}
+
+export interface GuidanceStep {
+  targetSelector: string
+  title: string
+  description: string
+  position?: 'top' | 'bottom' | 'left' | 'right'
+  action?: () => void // ステップ表示前に実行（タブ切り替え等）
+}
+
 export interface InfoSidebarProps {
   isOpen: boolean
   onClose: () => void
@@ -41,6 +66,8 @@ export interface InfoSidebarProps {
   features: Feature[]
   timeEfficiency: TimeEfficiencyItem[]
   challenges: string[]
+  overview?: OverviewInfo
+  operationSteps?: OperationStep[]
 }
 
 export interface SplashScreenProps {
@@ -152,6 +179,36 @@ const themeConfig = {
   },
 }
 
+export { themeConfig }
+
+// ==========================================
+// Hooks & Utilities
+// ==========================================
+
+/** localStorage永続化付きuseState */
+export const usePersistedState = <T,>(key: string, initialData: T): [T, React.Dispatch<React.SetStateAction<T>>] => {
+  const [state, setState] = useState<T>(() => {
+    if (typeof window === 'undefined') return initialData
+    const stored = localStorage.getItem(key)
+    return stored ? JSON.parse(stored) : initialData
+  })
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(state))
+  }, [key, state])
+  return [state, setState]
+}
+
+/** 一意なID生成 */
+export const generateId = (prefix: string) => `${prefix}${Date.now().toString(36).toUpperCase()}`
+
+/** STORAGE_KEYSに基づくlocalStorageリセット + リロード */
+export const resetPersistedData = (storageKeys: Record<string, string>, extraKeys?: string[]) => {
+  if (!window.confirm('データを初期状態に戻しますか？')) return
+  Object.values(storageKeys).forEach((key) => localStorage.removeItem(key))
+  extraKeys?.forEach((key) => localStorage.removeItem(key))
+  window.location.reload()
+}
+
 // ==========================================
 // SplashScreen Component
 // ==========================================
@@ -181,10 +238,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
     </div>
   )
 }
-
-// ==========================================
-// InfoSidebar Component
-// ==========================================
 
 // ==========================================
 // Modal Component
@@ -235,6 +288,29 @@ export const Modal: React.FC<ModalProps> = ({
 }
 
 // ==========================================
+// ResetButton Component
+// ==========================================
+
+export interface ResetButtonProps {
+  storageKeys: Record<string, string>
+  extraKeys?: string[]
+  theme: ThemeColor
+}
+
+export const ResetButton: React.FC<ResetButtonProps> = ({ storageKeys, extraKeys, theme }) => {
+  const colors = themeConfig[theme]
+  return (
+    <button
+      onClick={() => resetPersistedData(storageKeys, extraKeys)}
+      className={`p-2 text-stone-400 hover:${colors.textLight} hover:${colors.bg} rounded-lg transition-colors`}
+      title="初期値に戻す"
+    >
+      <RotateCcw size={16} />
+    </button>
+  )
+}
+
+// ==========================================
 // InfoSidebar Component
 // ==========================================
 
@@ -248,128 +324,417 @@ export const InfoSidebar: React.FC<InfoSidebarProps> = ({
   features,
   timeEfficiency,
   challenges,
+  overview,
+  operationSteps,
 }) => {
   const colors = themeConfig[theme]
+
+  if (!isOpen) return null
 
   return (
     <>
       {/* オーバーレイ */}
       <div
-        className={`fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}
+        className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
         onClick={onClose}
       />
 
-      {/* サイドバー */}
-      <aside
-        className={`fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-out overflow-y-auto ${isOpen ? 'translate-x-0' : 'translate-x-full'
-          }`}
-      >
-        {/* ヘッダー */}
-        <div className={`sticky top-0 bg-gradient-to-r ${colors.gradient} px-6 py-4 flex items-center justify-between`}>
-          <div className="flex items-center gap-3">
-            <Info className="w-6 h-6 text-white" />
-            <h2 className="text-lg font-bold text-white">このシステムでできること</h2>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-white/20 rounded-lg transition-colors"
-          >
-            <X className="w-5 h-5 text-white" />
-          </button>
-        </div>
-
-        <div className="p-6 space-y-8">
-          {/* イントロ */}
-          <div className={`${colors.bg} rounded-xl p-4 border ${colors.border}`}>
-            <div className="flex items-start gap-3">
-              <SystemIcon className={`w-5 h-5 ${colors.textLight} mt-0.5 shrink-0`} />
+      {/* フルスクリーンモーダル */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-6 md:p-12">
+        <div
+          className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[85vh] flex flex-col overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* ヘッダー */}
+          <div className={`bg-gradient-to-r ${colors.gradient} px-8 py-5 flex items-center justify-between shrink-0`}>
+            <div className="flex items-center gap-3">
+              <SystemIcon className="w-6 h-6 text-white" />
               <div>
-                <h3 className={`font-semibold ${colors.textDark} mb-1`}>{systemName}</h3>
-                <p className={`text-sm ${colors.textMedium} leading-relaxed`}>
-                  {systemDescription}
-                </p>
+                <h2 className="text-lg font-bold text-white">{systemName}</h2>
+                <p className="text-white/80 text-xs mt-0.5">{systemDescription}</p>
+              </div>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5 text-white" />
+            </button>
+          </div>
+
+          {/* コンテンツ（スクロール領域） */}
+          <div className="flex-1 overflow-y-auto p-8 md:p-10">
+
+            {/* 2カラムレイアウト */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+              {/* 左カラム */}
+              <div className="space-y-10">
+                {/* 主要機能 */}
+                <div>
+                  <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-5 flex items-center gap-2">
+                    <Zap className="w-3.5 h-3.5" />
+                    主要機能
+                  </h3>
+                  <div className="space-y-3">
+                    {features.map((feature, idx) => (
+                      <div key={idx} className="flex items-start gap-3">
+                        <div className={`p-2 bg-gradient-to-br ${colors.iconBg} rounded-lg shrink-0`}>
+                          <feature.icon className={`w-4 h-4 ${colors.textLight}`} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-medium text-slate-800 text-sm">{feature.title}</h4>
+                          <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{feature.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 概要（overview） */}
+                {overview && (
+                  <div>
+                    <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-5 flex items-center gap-2">
+                      <TrendingUp className="w-3.5 h-3.5" />
+                      導入メリット
+                    </h3>
+                    <ul className="space-y-2">
+                      {overview.userBenefits.map((benefit, idx) => (
+                        <li key={idx} className="flex items-start gap-2.5 text-sm text-slate-700">
+                          <Check className={`w-4 h-4 ${colors.textLight} mt-0.5 shrink-0`} />
+                          <span>{benefit}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+
+              {/* 右カラム */}
+              <div className="space-y-10">
+                {/* 操作手順（operationSteps） */}
+                {operationSteps && operationSteps.length > 0 && (
+                  <div>
+                    <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-5 flex items-center gap-2">
+                      <ListOrdered className="w-3.5 h-3.5" />
+                      操作手順
+                    </h3>
+                    <div className="space-y-3">
+                      {operationSteps.map((s) => (
+                        <div key={s.step} className="flex items-start gap-3">
+                          <div className={`w-6 h-6 rounded-full bg-gradient-to-br ${colors.gradient} flex items-center justify-center text-white text-xs font-bold shrink-0`}>
+                            {s.step}
+                          </div>
+                          <div className="flex-1 pt-0.5">
+                            <p className="font-medium text-slate-800 text-sm">{s.action}</p>
+                            <p className="text-xs text-slate-500 mt-0.5">{s.detail}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* 時間効率化 */}
+                <div>
+                  <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-5 flex items-center gap-2">
+                    <Clock className="w-3.5 h-3.5" />
+                    時間削減効果
+                  </h3>
+                  <div className="bg-slate-50 rounded-xl overflow-hidden border border-slate-100">
+                    <table className="w-full text-sm">
+                      <thead className="bg-slate-100/80">
+                        <tr>
+                          <th className="px-4 py-2.5 text-left font-medium text-slate-500 text-xs">業務</th>
+                          <th className="px-4 py-2.5 text-center font-medium text-slate-500 text-xs">導入前</th>
+                          <th className="px-4 py-2.5 text-center font-medium text-slate-500 text-xs">導入後</th>
+                          <th className="px-4 py-2.5 text-right font-medium text-emerald-600 text-xs">削減</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {timeEfficiency.map((item, idx) => (
+                          <tr key={idx}>
+                            <td className="px-4 py-2.5 text-slate-700 text-sm">{item.task}</td>
+                            <td className="px-4 py-2.5 text-center text-slate-400 text-sm">{item.before}</td>
+                            <td className={`px-4 py-2.5 text-center ${colors.textLight} font-medium text-sm`}>{item.after}</td>
+                            <td className="px-4 py-2.5 text-right text-emerald-600 font-semibold text-sm">{item.saved}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </>
+  )
+}
 
-          {/* 主要機能 */}
-          <div>
-            <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
-              <Zap className="w-4 h-4" />
-              主要機能
-            </h3>
-            <div className="space-y-4">
-              {features.map((feature, idx) => (
-                <div
-                  key={idx}
-                  className={`bg-white border border-slate-200 rounded-xl p-4 ${colors.hoverBorder} hover:shadow-md transition-all duration-300`}
+// ==========================================
+// GuidanceOverlay Component
+// ==========================================
+
+interface GuidanceOverlayProps {
+  steps: GuidanceStep[]
+  isActive: boolean
+  onClose: () => void
+  theme: ThemeColor
+}
+
+export const GuidanceOverlay: React.FC<GuidanceOverlayProps> = ({
+  steps,
+  isActive,
+  onClose,
+  theme,
+}) => {
+  const [currentStep, setCurrentStep] = useState(0)
+  const [tooltipStyle, setTooltipStyle] = useState<React.CSSProperties>({})
+  const [highlightStyle, setHighlightStyle] = useState<React.CSSProperties>({})
+  const overlayRef = useRef<HTMLDivElement>(null)
+  const tooltipRef = useRef<HTMLDivElement>(null)
+  const colors = themeConfig[theme]
+
+  // ツールチップ位置をDOM描画後に補正
+  const clampTooltipPosition = useCallback(() => {
+    const tooltipEl = tooltipRef.current
+    if (!tooltipEl) return
+
+    const tooltipRect = tooltipEl.getBoundingClientRect()
+    const margin = 16
+    const vh = window.innerHeight
+    const vw = window.innerWidth
+
+    let needsUpdate = false
+    const fix: React.CSSProperties = {}
+
+    // 下端はみ出し → topを補正
+    if (tooltipRect.bottom > vh - margin) {
+      fix.top = vh - tooltipRect.height - margin
+      fix.bottom = 'auto'
+      needsUpdate = true
+    }
+    // 上端はみ出し
+    if (tooltipRect.top < margin) {
+      fix.top = margin
+      fix.bottom = 'auto'
+      needsUpdate = true
+    }
+    // 右端はみ出し
+    if (tooltipRect.right > vw - margin) {
+      fix.left = vw - tooltipRect.width - margin
+      fix.right = 'auto'
+      needsUpdate = true
+    }
+    // 左端はみ出し
+    if (tooltipRect.left < margin) {
+      fix.left = margin
+      fix.right = 'auto'
+      needsUpdate = true
+    }
+
+    if (needsUpdate) {
+      setTooltipStyle((prev) => ({ ...prev, ...fix }))
+    }
+  }, [])
+
+  // 対象要素の位置を計算してハイライト・ツールチップを配置
+  const positionTooltip = useCallback((step: GuidanceStep) => {
+    const el = document.querySelector(step.targetSelector)
+    if (!el) {
+      setHighlightStyle({ display: 'none' })
+      setTooltipStyle({
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+      })
+      return
+    }
+
+    // instantスクロールで即座に位置確定させる
+    el.scrollIntoView({ behavior: 'instant', block: 'center' })
+
+    requestAnimationFrame(() => {
+      const rect = el.getBoundingClientRect()
+      const padding = 8
+
+      setHighlightStyle({
+        position: 'fixed',
+        top: rect.top - padding,
+        left: rect.left - padding,
+        width: rect.width + padding * 2,
+        height: rect.height + padding * 2,
+        borderRadius: '8px',
+      })
+
+      const tooltipWidth = 320
+      const gap = 12
+      const margin = 16
+
+      const tooltip: React.CSSProperties = { position: 'fixed' }
+      const pos = step.position || 'bottom'
+
+      if (pos === 'bottom') {
+        tooltip.top = rect.bottom + gap
+        tooltip.left = Math.max(margin, Math.min(rect.left, window.innerWidth - tooltipWidth - margin))
+      } else if (pos === 'top') {
+        tooltip.bottom = window.innerHeight - rect.top + gap
+        tooltip.left = Math.max(margin, Math.min(rect.left, window.innerWidth - tooltipWidth - margin))
+      } else if (pos === 'left') {
+        tooltip.top = rect.top
+        tooltip.right = window.innerWidth - rect.left + gap
+      } else {
+        tooltip.top = rect.top
+        tooltip.left = rect.right + gap
+      }
+
+      setTooltipStyle(tooltip)
+
+      // 描画後に実際のサイズで位置補正
+      requestAnimationFrame(() => clampTooltipPosition())
+    })
+  }, [clampTooltipPosition])
+
+  // ステップ遷移: action実行 → DOM更新待ち → 位置計算
+  const goToStep = useCallback((index: number) => {
+    const step = steps[index]
+    if (!step) return
+    setCurrentStep(index)
+
+    if (step.action) {
+      step.action()
+      // action（タブ切替等）後のDOM更新を待ってから位置計算
+      setTimeout(() => positionTooltip(step), 150)
+    } else {
+      positionTooltip(step)
+    }
+  }, [steps, positionTooltip])
+
+  // 位置の再計算（リサイズ時）
+  const updatePosition = useCallback(() => {
+    if (!isActive || steps.length === 0) return
+    const step = steps[currentStep]
+    if (!step) return
+    positionTooltip(step)
+  }, [isActive, currentStep, steps, positionTooltip])
+
+  useEffect(() => {
+    updatePosition()
+    window.addEventListener('resize', updatePosition)
+    return () => window.removeEventListener('resize', updatePosition)
+  }, [updatePosition])
+
+  // ガイダンス開始時に最初のステップへ（isActiveがtrueになった時のみ）
+  const prevIsActiveRef = useRef(false)
+  useEffect(() => {
+    if (isActive && !prevIsActiveRef.current) {
+      goToStep(0)
+    }
+    prevIsActiveRef.current = isActive
+  }, [isActive, goToStep])
+
+  if (!isActive || steps.length === 0) return null
+
+  const step = steps[currentStep]
+  const isLast = currentStep === steps.length - 1
+
+  return (
+    <div ref={overlayRef} className="fixed inset-0 z-[9999]">
+      {/* 半透明オーバーレイ（box-shadowでハイライト切り抜き） */}
+      <div className="fixed inset-0 bg-black/50" />
+
+      {/* ハイライト（対象要素をくり抜く） */}
+      <div
+        style={highlightStyle}
+        className="z-[10000] pointer-events-none border-2 border-white/80"
+        // box-shadowで大きな影を使い、対象部分だけ見えるようにする
+      />
+
+      {/* ツールチップ */}
+      <div
+        ref={tooltipRef}
+        style={{ ...tooltipStyle, width: 320 }}
+        className="z-[10001] bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden"
+      >
+        {/* ステップヘッダー */}
+        <div className={`bg-gradient-to-r ${colors.gradient} px-4 py-2.5 flex items-center justify-between`}>
+          <span className="text-white text-xs font-medium">
+            ステップ {currentStep + 1} / {steps.length}
+          </span>
+          <button onClick={onClose} className="text-white/80 hover:text-white">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="p-4">
+          <h4 className="font-bold text-slate-800 mb-1.5">{step?.title}</h4>
+          <p className="text-sm text-slate-600 leading-relaxed mb-4">{step?.description}</p>
+
+          <div className="flex items-center justify-between">
+            <button
+              onClick={onClose}
+              className="text-xs text-slate-400 hover:text-slate-600 transition-colors"
+            >
+              スキップ
+            </button>
+            <div className="flex gap-2">
+              {currentStep > 0 && (
+                <button
+                  onClick={() => goToStep(currentStep - 1)}
+                  className="px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
                 >
-                  <div className="flex items-start gap-3">
-                    <div className={`p-2 bg-gradient-to-br ${colors.iconBg} rounded-lg`}>
-                      <feature.icon className={`w-5 h-5 ${colors.textLight}`} />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-slate-800 mb-1">{feature.title}</h4>
-                      <p className="text-sm text-slate-600 mb-2 leading-relaxed">{feature.description}</p>
-                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-medium">
-                        <TrendingUp className="w-3 h-3" />
-                        {feature.benefit}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                  戻る
+                </button>
+              )}
+              <button
+                onClick={() => {
+                  if (isLast) {
+                    onClose()
+                  } else {
+                    goToStep(currentStep + 1)
+                  }
+                }}
+                className={`px-3 py-1.5 text-xs font-medium text-white bg-gradient-to-r ${colors.gradient} rounded-lg hover:opacity-90 transition-opacity flex items-center gap-1`}
+              >
+                {isLast ? '完了' : '次へ'}
+                {!isLast && <ChevronRight className="w-3 h-3" />}
+              </button>
             </div>
-          </div>
-
-          {/* 時間効率化 */}
-          <div>
-            <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
-              <Clock className="w-4 h-4" />
-              導入による時間削減効果
-            </h3>
-            <div className="bg-slate-50 rounded-xl overflow-hidden border border-slate-200">
-              <table className="w-full text-sm">
-                <thead className="bg-slate-100">
-                  <tr>
-                    <th className="px-3 py-2 text-left font-medium text-slate-600">業務</th>
-                    <th className="px-3 py-2 text-center font-medium text-slate-600">導入前</th>
-                    <th className="px-3 py-2 text-center font-medium text-slate-600">導入後</th>
-                    <th className="px-3 py-2 text-right font-medium text-emerald-600">削減</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200">
-                  {timeEfficiency.map((item, idx) => (
-                    <tr key={idx} className="hover:bg-white transition-colors">
-                      <td className="px-3 py-2 text-slate-700">{item.task}</td>
-                      <td className="px-3 py-2 text-center text-slate-500">{item.before}</td>
-                      <td className={`px-3 py-2 text-center ${colors.textLight} font-medium`}>{item.after}</td>
-                      <td className="px-3 py-2 text-right text-emerald-600 font-semibold">{item.saved}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <p className="mt-3 text-xs text-slate-500 text-center">
-              ※ 効果は導入事例に基づく参考値です
-            </p>
-          </div>
-
-          {/* こんな課題を解決 */}
-          <div className={`bg-gradient-to-br ${colors.gradientLight} rounded-xl p-4 border ${colors.border}`}>
-            <h3 className="font-semibold text-slate-800 mb-3">こんな課題をお持ちの方へ</h3>
-            <ul className="space-y-2">
-              {challenges.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
-                  <Check className={`w-4 h-4 ${colors.textLight} mt-0.5 shrink-0`} />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
-      </aside>
-    </>
+
+        {/* プログレスバー */}
+        <div className="h-1 bg-slate-100">
+          <div
+            className={`h-full bg-gradient-to-r ${colors.progressBg} transition-all duration-300`}
+            style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ==========================================
+// GuidanceStartButton (ヘッダー用)
+// ==========================================
+
+export interface GuidanceStartButtonProps {
+  onClick: () => void
+  theme: ThemeColor
+}
+
+export const GuidanceStartButton: React.FC<GuidanceStartButtonProps> = ({ onClick, theme }) => {
+  const colors = themeConfig[theme]
+  return (
+    <button
+      onClick={onClick}
+      className={`p-2 text-stone-400 hover:${colors.textLight} hover:${colors.bg} rounded-lg transition-colors`}
+      title="ガイダンス開始"
+    >
+      <HelpCircle size={16} />
+    </button>
   )
 }

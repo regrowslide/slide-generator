@@ -31,7 +31,7 @@ export const ImportDataView = () => {
       <h1 className="text-2xl font-bold mb-6 text-gray-800">インポートデータ確認</h1>
 
       {/* 店舗タブ */}
-      <div className="flex border-b mb-6">
+      <div data-guidance="store-tabs" className="flex border-b mb-6">
         {stores.map((store) => {
           const hasData = monthlyData.importedData?.storeTotals.some((t) => t.storeName === store)
           return (
@@ -58,7 +58,7 @@ export const ImportDataView = () => {
         </div>
       ) : (
         <>
-          <div className="overflow-x-auto">
+          <div data-guidance="data-table" className="overflow-x-auto">
             <table className="w-full border-collapse bg-white shadow-sm rounded-lg overflow-hidden">
               <thead className="bg-purple-600 text-white">
                 <tr>

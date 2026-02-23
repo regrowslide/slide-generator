@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useState, useEffect, useCallback} from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
   UtensilsCrossed,
   ShoppingCart,
@@ -25,7 +25,21 @@ import {
   FileSpreadsheet,
   CheckCircle2,
 } from 'lucide-react'
-import {SplashScreen, InfoSidebar, Modal, type Feature, type TimeEfficiencyItem} from '../_components'
+import {
+  SplashScreen,
+  InfoSidebar,
+  Modal,
+  GuidanceOverlay,
+  GuidanceStartButton,
+  usePersistedState,
+  generateId,
+  resetPersistedData,
+  type Feature,
+  type TimeEfficiencyItem,
+  type OverviewInfo,
+  type OperationStep,
+  type GuidanceStep,
+} from '../_components'
 
 // ==========================================
 // 機能説明データ
@@ -63,10 +77,10 @@ const FEATURES: Feature[] = [
 ]
 
 const TIME_EFFICIENCY: TimeEfficiencyItem[] = [
-  {task: '受注集計', before: '2時間', after: '自動集計', saved: '2時間/日'},
-  {task: '献立作成', before: '3時間/週', after: '30分/週', saved: '2.5時間/週'},
-  {task: '製造指示書作成', before: '1時間', after: '5分', saved: '55分/日'},
-  {task: '配送伝票作成', before: '45分', after: '自動生成', saved: '45分/日'},
+  { task: '受注集計', before: '2時間', after: '自動集計', saved: '2時間/日' },
+  { task: '献立作成', before: '3時間/週', after: '30分/週', saved: '2.5時間/週' },
+  { task: '製造指示書作成', before: '1時間', after: '5分', saved: '55分/日' },
+  { task: '配送伝票作成', before: '45分', after: '自動生成', saved: '45分/日' },
 ]
 
 const CHALLENGES = [
@@ -75,6 +89,43 @@ const CHALLENGES = [
   '急な食数変更への対応が間に合わない',
   '食材の発注量が不安定でロスが多い',
   '配送先の間違いが時々起こる',
+]
+
+const OVERVIEW: OverviewInfo = {
+  description: '介護施設向けの給食管理を一元化するシステムです。受注から献立作成、製造、配送まで全工程をデジタル管理し、安全で効率的な食事提供を実現します。',
+  automationPoints: [
+    '施設別の食数・食事形態を自動集計',
+    '献立からの製造指示書自動生成',
+    '配送リスト・伝票の自動作成',
+    '栄養基準に基づく献立チェック',
+  ],
+  userBenefits: [
+    '手作業の集計ミスを根絶し食の安全を確保',
+    '急な食数変更にもリアルタイムで対応可能',
+    '配送ミスゼロで施設との信頼関係を構築',
+  ],
+}
+
+const OPERATION_STEPS: OperationStep[] = [
+  { step: 1, action: '受注を確認・登録', detail: '施設ごとの注文内容（食数・食事形態・アレルギー）を登録' },
+  { step: 2, action: '献立を管理', detail: '日別の献立と食事形態ごとのバリエーションを管理' },
+  { step: 3, action: '製造指示を確認', detail: '受注データから製造指示書を自動生成、製造進捗を管理' },
+  { step: 4, action: '配送を管理', detail: '配送リストの自動生成と配送ステータスの追跡' },
+  { step: 5, action: '施設情報を管理', detail: '取引先施設の基本情報・連絡先・契約内容を管理' },
+]
+
+const getGuidanceSteps = (setActiveTab: (tab: TabId) => void): GuidanceStep[] => [
+  { targetSelector: '[data-guidance="orders-tab"]', title: '受注管理', description: '施設ごとの発注内容を一覧管理。食数変更や特別対応もここから。', position: 'bottom', action: () => setActiveTab('orders') },
+  { targetSelector: '[data-guidance="order-row"]', title: '受注の編集', description: '受注の行をクリックすると編集モーダルが開きます。食数・特別対応を変更可能。', position: 'bottom', action: () => setActiveTab('orders') },
+  { targetSelector: '[data-guidance="menu-tab"]', title: '献立管理', description: '日別の献立作成と食事形態ごとの自動変換を管理します。', position: 'bottom', action: () => setActiveTab('orders') },
+  { targetSelector: '[data-guidance="menu-row"]', title: '献立の編集', description: '献立の行をクリックすると編集画面が開きます。メニュー内容を変更可能。', position: 'bottom', action: () => setActiveTab('menu') },
+  { targetSelector: '[data-guidance="production-tab"]', title: '製造管理', description: '受注データから製造指示書を自動生成。製造進捗を追跡。', position: 'bottom', action: () => setActiveTab('menu') },
+  { targetSelector: '[data-guidance="add-production-button"]', title: '製造指示の追加', description: '「製造追加」ボタンで新しい製造指示を登録します。', position: 'bottom', action: () => setActiveTab('production') },
+  { targetSelector: '[data-guidance="delivery-tab"]', title: '配送管理', description: '配送リストの自動生成と配送ステータスをリアルタイム追跡。', position: 'bottom', action: () => setActiveTab('production') },
+  { targetSelector: '[data-guidance="add-delivery-button"]', title: '配送の追加', description: '「配送追加」ボタンで新しい配送を登録します。', position: 'bottom', action: () => setActiveTab('delivery') },
+  { targetSelector: '[data-guidance="facilities-tab"]', title: '施設管理', description: '施設の基本情報・食事形態・連絡先を管理します。', position: 'bottom', action: () => setActiveTab('delivery') },
+  { targetSelector: '[data-guidance="add-facility-button"]', title: '施設の追加', description: '「施設追加」ボタンで新しい施設を登録します。', position: 'bottom', action: () => setActiveTab('facilities') },
+  { targetSelector: '[data-guidance="info-button"]', title: '機能説明', description: 'システムの概要や操作手順、時間削減効果を確認できます。右下のボタンからいつでも開けます。', position: 'top', action: () => setActiveTab('facilities') },
 ]
 
 // ==========================================
@@ -137,61 +188,47 @@ interface DeliveryItem {
 // ==========================================
 
 const INITIAL_FACILITIES: Facility[] = [
-  {id: 'F001', name: 'グループホームA', type: 'グループホーム', mealCount: 18, contact: '担当者A', address: 'XX県XX市1-2-3'},
-  {id: 'F002', name: '老人ホームB', type: '特別養護老人ホーム', mealCount: 60, contact: '担当者B', address: 'XX県XX市4-5-6'},
-  {id: 'F003', name: 'デイサービスC', type: 'デイサービス', mealCount: 25, contact: '担当者C', address: 'XX県XX市7-8-9'},
-  {id: 'F004', name: '介護付き有料D', type: '介護付き有料老人ホーム', mealCount: 45, contact: '担当者D', address: 'XX県XX市10-11-12'},
+  { id: 'F001', name: 'グループホームA', type: 'グループホーム', mealCount: 18, contact: '担当者A', address: 'XX県XX市1-2-3' },
+  { id: 'F002', name: '老人ホームB', type: '特別養護老人ホーム', mealCount: 60, contact: '担当者B', address: 'XX県XX市4-5-6' },
+  { id: 'F003', name: 'デイサービスC', type: 'デイサービス', mealCount: 25, contact: '担当者C', address: 'XX県XX市7-8-9' },
+  { id: 'F004', name: '介護付き有料D', type: '介護付き有料老人ホーム', mealCount: 45, contact: '担当者D', address: 'XX県XX市10-11-12' },
 ]
 
 const INITIAL_ORDERS: Order[] = [
-  {id: 'ORD001', facilityId: 'F001', facilityName: 'グループホームA', date: '2026-02-23', mealType: '昼食', normalCount: 12, softCount: 4, mixerCount: 2, status: '確認済', note: ''},
-  {id: 'ORD002', facilityId: 'F002', facilityName: '老人ホームB', date: '2026-02-23', mealType: '昼食', normalCount: 35, softCount: 15, mixerCount: 10, status: '確認済', note: ''},
-  {id: 'ORD003', facilityId: 'F003', facilityName: 'デイサービスC', date: '2026-02-23', mealType: '昼食', normalCount: 18, softCount: 5, mixerCount: 2, status: '変更あり', note: '2名追加'},
-  {id: 'ORD004', facilityId: 'F004', facilityName: '介護付き有料D', date: '2026-02-23', mealType: '昼食', normalCount: 25, softCount: 12, mixerCount: 8, status: '未確認', note: ''},
-  {id: 'ORD005', facilityId: 'F001', facilityName: 'グループホームA', date: '2026-02-23', mealType: '夕食', normalCount: 12, softCount: 4, mixerCount: 2, status: '確認済', note: ''},
-  {id: 'ORD006', facilityId: 'F002', facilityName: '老人ホームB', date: '2026-02-23', mealType: '夕食', normalCount: 34, softCount: 16, mixerCount: 10, status: '確認済', note: '1名欠食'},
+  { id: 'ORD001', facilityId: 'F001', facilityName: 'グループホームA', date: '2026-02-23', mealType: '昼食', normalCount: 12, softCount: 4, mixerCount: 2, status: '確認済', note: '' },
+  { id: 'ORD002', facilityId: 'F002', facilityName: '老人ホームB', date: '2026-02-23', mealType: '昼食', normalCount: 35, softCount: 15, mixerCount: 10, status: '確認済', note: '' },
+  { id: 'ORD003', facilityId: 'F003', facilityName: 'デイサービスC', date: '2026-02-23', mealType: '昼食', normalCount: 18, softCount: 5, mixerCount: 2, status: '変更あり', note: '2名追加' },
+  { id: 'ORD004', facilityId: 'F004', facilityName: '介護付き有料D', date: '2026-02-23', mealType: '昼食', normalCount: 25, softCount: 12, mixerCount: 8, status: '未確認', note: '' },
+  { id: 'ORD005', facilityId: 'F001', facilityName: 'グループホームA', date: '2026-02-23', mealType: '夕食', normalCount: 12, softCount: 4, mixerCount: 2, status: '確認済', note: '' },
+  { id: 'ORD006', facilityId: 'F002', facilityName: '老人ホームB', date: '2026-02-23', mealType: '夕食', normalCount: 34, softCount: 16, mixerCount: 10, status: '確認済', note: '1名欠食' },
 ]
 
 const INITIAL_MENU: MenuItem[] = [
-  {id: 'M001', day: '月', date: '2/23', breakfast: 'ご飯・味噌汁・焼鮭・ほうれん草のお浸し', lunch: '親子丼・小松菜の煮浸し・フルーツ', dinner: 'ハンバーグ・ポテトサラダ・コンソメスープ'},
-  {id: 'M002', day: '火', date: '2/24', breakfast: 'パン・コーンスープ・スクランブルエッグ', lunch: '焼きそば・春雨サラダ・杏仁豆腐', dinner: 'さばの味噌煮・きんぴらごぼう・けんちん汁'},
-  {id: 'M003', day: '水', date: '2/25', breakfast: 'ご飯・わかめスープ・卵焼き・漬物', lunch: 'カレーライス・福神漬け・サラダ', dinner: '豚の生姜焼き・ひじきの煮物・味噌汁'},
-  {id: 'M004', day: '木', date: '2/26', breakfast: 'ご飯・味噌汁・納豆・切り干し大根', lunch: 'うどん・天ぷら・フルーツゼリー', dinner: '鶏の照り焼き・おかか和え・すまし汁'},
-  {id: 'M005', day: '金', date: '2/27', breakfast: 'パン・ミネストローネ・ヨーグルト', lunch: '五目ちらし寿司・茶碗蒸し・吸い物', dinner: 'えびフライ・コールスロー・味噌汁'},
-  {id: 'M006', day: '土', date: '2/28', breakfast: 'ご飯・豚汁・焼きのり・おひたし', lunch: 'チャーハン・餃子・中華スープ', dinner: '肉じゃが・酢の物・味噌汁'},
-  {id: 'M007', day: '日', date: '3/1', breakfast: 'パン・ポタージュ・フルーツ', lunch: 'オムライス・グリーンサラダ・デザート', dinner: '刺身定食・茶碗蒸し・味噌汁'},
+  { id: 'M001', day: '月', date: '2/23', breakfast: 'ご飯・味噌汁・焼鮭・ほうれん草のお浸し', lunch: '親子丼・小松菜の煮浸し・フルーツ', dinner: 'ハンバーグ・ポテトサラダ・コンソメスープ' },
+  { id: 'M002', day: '火', date: '2/24', breakfast: 'パン・コーンスープ・スクランブルエッグ', lunch: '焼きそば・春雨サラダ・杏仁豆腐', dinner: 'さばの味噌煮・きんぴらごぼう・けんちん汁' },
+  { id: 'M003', day: '水', date: '2/25', breakfast: 'ご飯・わかめスープ・卵焼き・漬物', lunch: 'カレーライス・福神漬け・サラダ', dinner: '豚の生姜焼き・ひじきの煮物・味噌汁' },
+  { id: 'M004', day: '木', date: '2/26', breakfast: 'ご飯・味噌汁・納豆・切り干し大根', lunch: 'うどん・天ぷら・フルーツゼリー', dinner: '鶏の照り焼き・おかか和え・すまし汁' },
+  { id: 'M005', day: '金', date: '2/27', breakfast: 'パン・ミネストローネ・ヨーグルト', lunch: '五目ちらし寿司・茶碗蒸し・吸い物', dinner: 'えびフライ・コールスロー・味噌汁' },
+  { id: 'M006', day: '土', date: '2/28', breakfast: 'ご飯・豚汁・焼きのり・おひたし', lunch: 'チャーハン・餃子・中華スープ', dinner: '肉じゃが・酢の物・味噌汁' },
+  { id: 'M007', day: '日', date: '3/1', breakfast: 'パン・ポタージュ・フルーツ', lunch: 'オムライス・グリーンサラダ・デザート', dinner: '刺身定食・茶碗蒸し・味噌汁' },
 ]
 
 const INITIAL_PRODUCTION: ProductionItem[] = [
-  {id: 'P001', menuName: '親子丼', totalServings: 148, normalServings: 90, softServings: 36, mixerServings: 22, status: '製造中', startTime: '08:00'},
-  {id: 'P002', menuName: '小松菜の煮浸し', totalServings: 148, normalServings: 90, softServings: 36, mixerServings: 22, status: '完了', startTime: '07:30'},
-  {id: 'P003', menuName: 'フルーツ盛り合わせ', totalServings: 148, normalServings: 90, softServings: 36, mixerServings: 22, status: '未着手', startTime: '09:00'},
+  { id: 'P001', menuName: '親子丼', totalServings: 148, normalServings: 90, softServings: 36, mixerServings: 22, status: '製造中', startTime: '08:00' },
+  { id: 'P002', menuName: '小松菜の煮浸し', totalServings: 148, normalServings: 90, softServings: 36, mixerServings: 22, status: '完了', startTime: '07:30' },
+  { id: 'P003', menuName: 'フルーツ盛り合わせ', totalServings: 148, normalServings: 90, softServings: 36, mixerServings: 22, status: '未着手', startTime: '09:00' },
 ]
 
 const INITIAL_DELIVERY: DeliveryItem[] = [
-  {id: 'D001', facilityName: 'グループホームA', itemCount: 18, departureTime: '10:30', status: '配送完了', driver: 'ドライバーA'},
-  {id: 'D002', facilityName: '老人ホームB', itemCount: 60, departureTime: '10:45', status: '配送中', driver: 'ドライバーB'},
-  {id: 'D003', facilityName: 'デイサービスC', itemCount: 25, departureTime: '11:00', status: '準備中', driver: 'ドライバーA'},
-  {id: 'D004', facilityName: '介護付き有料D', itemCount: 45, departureTime: '11:15', status: '準備中', driver: 'ドライバーB'},
+  { id: 'D001', facilityName: 'グループホームA', itemCount: 18, departureTime: '10:30', status: '配送完了', driver: 'ドライバーA' },
+  { id: 'D002', facilityName: '老人ホームB', itemCount: 60, departureTime: '10:45', status: '配送中', driver: 'ドライバーB' },
+  { id: 'D003', facilityName: 'デイサービスC', itemCount: 25, departureTime: '11:00', status: '準備中', driver: 'ドライバーA' },
+  { id: 'D004', facilityName: '介護付き有料D', itemCount: 45, departureTime: '11:15', status: '準備中', driver: 'ドライバーB' },
 ]
 
 // ==========================================
-// ユーティリティ
+// ストレージキー
 // ==========================================
-
-const generateId = (prefix: string) => `${prefix}${Date.now().toString(36).toUpperCase()}`
-
-const usePersistedState = <T,>(key: string, initialData: T): [T, React.Dispatch<React.SetStateAction<T>>] => {
-  const [state, setState] = useState<T>(() => {
-    if (typeof window === 'undefined') return initialData
-    const stored = localStorage.getItem(key)
-    return stored ? JSON.parse(stored) : initialData
-  })
-  useEffect(() => {
-    localStorage.setItem(key, JSON.stringify(state))
-  }, [key, state])
-  return [state, setState]
-}
 
 const STORAGE_KEYS = {
   facilities: 'mock-kaigoshoku-facilities',
@@ -214,18 +251,18 @@ interface Tab {
 }
 
 const TABS: Tab[] = [
-  {id: 'orders', label: '受注管理', icon: ShoppingCart},
-  {id: 'menu', label: '献立管理', icon: BookOpen},
-  {id: 'production', label: '製造指示', icon: Factory},
-  {id: 'delivery', label: '梱包・配送', icon: Package},
-  {id: 'facilities', label: '施設マスタ', icon: Building2},
+  { id: 'orders', label: '受注管理', icon: ShoppingCart },
+  { id: 'menu', label: '献立管理', icon: BookOpen },
+  { id: 'production', label: '製造指示', icon: Factory },
+  { id: 'delivery', label: '梱包・配送', icon: Package },
+  { id: 'facilities', label: '施設マスタ', icon: Building2 },
 ]
 
 // ==========================================
 // フォーム入力ヘルパー
 // ==========================================
 
-const FormField = ({label, children}: {label: string; children: React.ReactNode}) => (
+const FormField = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <div>
     <label className="text-xs text-stone-500 block mb-1">{label}</label>
     {children}
@@ -239,7 +276,7 @@ const selectClass = inputClass
 // StatusBadge（クリック可能版）
 // ==========================================
 
-const StatusBadge = ({status, onClick}: {status: string; onClick?: () => void}) => {
+const StatusBadge = ({ status, onClick }: { status: string; onClick?: () => void }) => {
   const config: Record<string, string> = {
     '確認済': 'bg-emerald-50 text-emerald-700 border-emerald-200',
     '未確認': 'bg-slate-50 text-slate-600 border-slate-200',
@@ -277,54 +314,23 @@ const OrdersView = ({
   const [searchTerm, setSearchTerm] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<Order | null>(null)
+  const [csvConfirmOpen, setCsvConfirmOpen] = useState(false)
+  const [csvImporting, setCsvImporting] = useState(false)
+  const [csvDone, setCsvDone] = useState(false)
 
   const filtered = orders.filter(
     (o) => !searchTerm || o.facilityName.includes(searchTerm) || o.mealType.includes(searchTerm)
   )
   const totalMeals = filtered.reduce((sum, o) => sum + o.normalCount + o.softCount + o.mixerCount, 0)
 
-  const emptyOrder: Omit<Order, 'id'> = {
-    facilityId: facilities[0]?.id ?? '',
-    facilityName: facilities[0]?.name ?? '',
-    date: '2026-02-23',
-    mealType: '昼食',
-    normalCount: 0,
-    softCount: 0,
-    mixerCount: 0,
-    status: '未確認',
-    note: '',
-  }
-
-  const [form, setForm] = useState(emptyOrder)
-
-  const openNew = () => {
-    setEditingItem(null)
-    setForm(emptyOrder)
-    setModalOpen(true)
-  }
-
   const openEdit = (order: Order) => {
     setEditingItem(order)
-    setForm({
-      facilityId: order.facilityId,
-      facilityName: order.facilityName,
-      date: order.date,
-      mealType: order.mealType,
-      normalCount: order.normalCount,
-      softCount: order.softCount,
-      mixerCount: order.mixerCount,
-      status: order.status,
-      note: order.note,
-    })
     setModalOpen(true)
   }
 
   const handleSave = () => {
-    if (editingItem) {
-      setOrders((prev) => prev.map((o) => (o.id === editingItem.id ? {...o, ...form} : o)))
-    } else {
-      setOrders((prev) => [...prev, {id: generateId('ORD'), ...form} as Order])
-    }
+    if (!editingItem) return
+    setOrders((prev) => prev.map((o) => (o.id === editingItem.id ? { ...o, facilityId: editingItem.facilityId, facilityName: editingItem.facilityName, date: editingItem.date, mealType: editingItem.mealType, normalCount: editingItem.normalCount, softCount: editingItem.softCount, mixerCount: editingItem.mixerCount, status: editingItem.status, note: editingItem.note } : o)))
     setModalOpen(false)
   }
 
@@ -335,13 +341,46 @@ const OrdersView = ({
   }
 
   const cycleOrderStatus = (orderId: string) => {
-    const cycle: Record<string, Order['status']> = {'未確認': '確認済', '確認済': '変更あり', '変更あり': '未確認'}
-    setOrders((prev) => prev.map((o) => (o.id === orderId ? {...o, status: cycle[o.status] ?? '未確認'} : o)))
+    const cycle: Record<string, Order['status']> = { '未確認': '確認済', '確認済': '変更あり', '変更あり': '未確認' }
+    setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: cycle[o.status] ?? '未確認' } : o)))
   }
 
-  const handleFacilityChange = (facilityId: string) => {
-    const facility = facilities.find((f) => f.id === facilityId)
-    setForm((prev) => ({...prev, facilityId, facilityName: facility?.name ?? ''}))
+  // CSV取り込み（デモ用ランダムデータ生成）
+  const handleCsvImport = () => {
+    setCsvImporting(true)
+    setCsvDone(false)
+    const mealTypes = ['朝食', '昼食', '夕食']
+    const statuses: Order['status'][] = ['確認済', '未確認', '変更あり']
+    const notes = ['', '', '', '1名追加', '2名欠食', 'アレルギー対応あり', '食事形態変更']
+    const count = Math.floor(Math.random() * 4) + 3
+    const newOrders: Order[] = []
+    for (let i = 0; i < count; i++) {
+      const facility = facilities[Math.floor(Math.random() * facilities.length)]
+      const normalCount = Math.floor(Math.random() * 30) + 5
+      const softCount = Math.floor(Math.random() * 15) + 1
+      const mixerCount = Math.floor(Math.random() * 10) + 1
+      newOrders.push({
+        id: generateId('ORD'),
+        facilityId: facility.id,
+        facilityName: facility.name,
+        date: '2026-02-23',
+        mealType: mealTypes[Math.floor(Math.random() * mealTypes.length)],
+        normalCount,
+        softCount,
+        mixerCount,
+        status: statuses[Math.floor(Math.random() * statuses.length)],
+        note: notes[Math.floor(Math.random() * notes.length)],
+      })
+    }
+    setTimeout(() => {
+      setOrders((prev) => [...prev, ...newOrders])
+      setCsvImporting(false)
+      setCsvDone(true)
+      setTimeout(() => {
+        setCsvConfirmOpen(false)
+        setCsvDone(false)
+      }, 1200)
+    }, 1500)
   }
 
   return (
@@ -376,9 +415,9 @@ const OrdersView = ({
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <button onClick={openNew} className="flex items-center gap-1 px-3 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors whitespace-nowrap">
-          <Plus size={14} />
-          受注追加
+        <button onClick={() => { setCsvConfirmOpen(true); setCsvDone(false); setCsvImporting(false) }} className="flex items-center gap-1 px-3 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors whitespace-nowrap">
+          <Upload size={14} />
+          CSV取り込み
         </button>
       </div>
 
@@ -398,8 +437,8 @@ const OrdersView = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100">
-              {filtered.map((order) => (
-                <tr key={order.id} className="hover:bg-amber-50/30 transition-colors cursor-pointer" onClick={() => openEdit(order)}>
+              {filtered.map((order, idx) => (
+                <tr key={idx} {...(idx === 0 ? { 'data-guidance': 'order-row' } : {})} className="hover:bg-amber-50/30 transition-colors cursor-pointer" onClick={() => openEdit(order)}>
                   <td className="px-4 py-3 font-medium text-stone-800">{order.facilityName}</td>
                   <td className="px-4 py-3 text-stone-600">{order.mealType}</td>
                   <td className="px-4 py-3 text-right text-stone-700">{order.normalCount}</td>
@@ -417,51 +456,85 @@ const OrdersView = ({
         </div>
       </div>
 
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editingItem ? '受注編集' : '受注追加'}>
-        <div className="space-y-4">
-          <FormField label="施設">
-            <select className={selectClass} value={form.facilityId} onChange={(e) => handleFacilityChange(e.target.value)}>
-              {facilities.map((f) => (
-                <option key={f.id} value={f.id}>{f.name}</option>
-              ))}
-            </select>
-          </FormField>
-          <div className="grid grid-cols-2 gap-4">
-            <FormField label="日付">
-              <input type="date" className={inputClass} value={form.date} onChange={(e) => setForm((p) => ({...p, date: e.target.value}))} />
-            </FormField>
-            <FormField label="食事タイプ">
-              <select className={selectClass} value={form.mealType} onChange={(e) => setForm((p) => ({...p, mealType: e.target.value}))}>
-                {['朝食', '昼食', '夕食'].map((t) => <option key={t} value={t}>{t}</option>)}
+      {editingItem && (
+        <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="受注編集">
+          <div className="space-y-4">
+            <FormField label="施設">
+              <select className={selectClass} value={editingItem.facilityId} onChange={(e) => {
+                const facility = facilities.find((f) => f.id === e.target.value)
+                setEditingItem((prev) => prev ? { ...prev, facilityId: e.target.value, facilityName: facility?.name ?? '' } : prev)
+              }}>
+                {facilities.map((f) => (
+                  <option key={f.id} value={f.id}>{f.name}</option>
+                ))}
               </select>
             </FormField>
-          </div>
-          <div className="grid grid-cols-3 gap-4">
-            <FormField label="常食">
-              <input type="number" className={inputClass} value={form.normalCount} onChange={(e) => setForm((p) => ({...p, normalCount: Number(e.target.value)}))} />
+            <div className="grid grid-cols-2 gap-4">
+              <FormField label="日付">
+                <input type="date" className={inputClass} value={editingItem.date} onChange={(e) => setEditingItem((p) => p ? { ...p, date: e.target.value } : p)} />
+              </FormField>
+              <FormField label="食事タイプ">
+                <select className={selectClass} value={editingItem.mealType} onChange={(e) => setEditingItem((p) => p ? { ...p, mealType: e.target.value } : p)}>
+                  {['朝食', '昼食', '夕食'].map((t) => <option key={t} value={t}>{t}</option>)}
+                </select>
+              </FormField>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <FormField label="常食">
+                <input type="number" className={inputClass} value={editingItem.normalCount} onChange={(e) => setEditingItem((p) => p ? { ...p, normalCount: Number(e.target.value) } : p)} />
+              </FormField>
+              <FormField label="刻み食">
+                <input type="number" className={inputClass} value={editingItem.softCount} onChange={(e) => setEditingItem((p) => p ? { ...p, softCount: Number(e.target.value) } : p)} />
+              </FormField>
+              <FormField label="ミキサー食">
+                <input type="number" className={inputClass} value={editingItem.mixerCount} onChange={(e) => setEditingItem((p) => p ? { ...p, mixerCount: Number(e.target.value) } : p)} />
+              </FormField>
+            </div>
+            <FormField label="備考">
+              <input type="text" className={inputClass} value={editingItem.note} onChange={(e) => setEditingItem((p) => p ? { ...p, note: e.target.value } : p)} placeholder="任意" />
             </FormField>
-            <FormField label="刻み食">
-              <input type="number" className={inputClass} value={form.softCount} onChange={(e) => setForm((p) => ({...p, softCount: Number(e.target.value)}))} />
-            </FormField>
-            <FormField label="ミキサー食">
-              <input type="number" className={inputClass} value={form.mixerCount} onChange={(e) => setForm((p) => ({...p, mixerCount: Number(e.target.value)}))} />
-            </FormField>
-          </div>
-          <FormField label="備考">
-            <input type="text" className={inputClass} value={form.note} onChange={(e) => setForm((p) => ({...p, note: e.target.value}))} placeholder="任意" />
-          </FormField>
-          <div className="flex justify-between pt-2">
-            {editingItem ? (
+            <div className="flex justify-between pt-2">
               <button onClick={handleDelete} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
                 <Trash2 size={14} />
                 削除
               </button>
-            ) : <div />}
-            <div className="flex gap-2">
-              <button onClick={() => setModalOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
-              <button onClick={handleSave} className="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">保存</button>
+              <div className="flex gap-2">
+                <button onClick={() => setModalOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
+                <button onClick={handleSave} className="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">保存</button>
+              </div>
             </div>
           </div>
+        </Modal>
+      )}
+
+      <Modal isOpen={csvConfirmOpen} onClose={() => !csvImporting && setCsvConfirmOpen(false)} title="CSV取り込み">
+        <div className="space-y-4">
+          <div className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+            <FileSpreadsheet className="w-8 h-8 text-amber-600 flex-shrink-0" />
+            <div>
+              <p className="text-sm font-medium text-amber-800">受注データCSV取り込み</p>
+              <p className="text-xs text-amber-600 mt-1">デモのため、自動でデータをランダムに追加します。</p>
+            </div>
+          </div>
+          {csvDone ? (
+            <div className="flex items-center gap-2 justify-center py-4 text-emerald-600">
+              <CheckCircle2 className="w-5 h-5" />
+              <span className="text-sm font-medium">取り込み完了</span>
+            </div>
+          ) : csvImporting ? (
+            <div className="flex flex-col items-center gap-3 py-4">
+              <div className="w-8 h-8 border-3 border-amber-200 border-t-amber-500 rounded-full animate-spin" />
+              <span className="text-sm text-stone-500">CSVデータを読み込み中...</span>
+            </div>
+          ) : (
+            <div className="flex justify-end gap-2 pt-2">
+              <button onClick={() => setCsvConfirmOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
+              <button onClick={handleCsvImport} className="flex items-center gap-1 px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
+                <Upload size={14} />
+                取り込み開始
+              </button>
+            </div>
+          )}
         </div>
       </Modal>
     </div>
@@ -482,28 +555,18 @@ const MenuView = ({
   const [selectedDay, setSelectedDay] = useState<string | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null)
-
-  const emptyMenu = {day: '', date: '', breakfast: '', lunch: '', dinner: ''}
-  const [form, setForm] = useState(emptyMenu)
-
-  const openNew = () => {
-    setEditingItem(null)
-    setForm(emptyMenu)
-    setModalOpen(true)
-  }
+  const [csvConfirmOpen, setCsvConfirmOpen] = useState(false)
+  const [csvImporting, setCsvImporting] = useState(false)
+  const [csvDone, setCsvDone] = useState(false)
 
   const openEdit = (item: MenuItem) => {
     setEditingItem(item)
-    setForm({day: item.day, date: item.date, breakfast: item.breakfast, lunch: item.lunch, dinner: item.dinner})
     setModalOpen(true)
   }
 
   const handleSave = () => {
-    if (editingItem) {
-      setMenu((prev) => prev.map((m) => (m.id === editingItem.id ? {...m, ...form} : m)))
-    } else {
-      setMenu((prev) => [...prev, {id: generateId('M'), ...form} as MenuItem])
-    }
+    if (!editingItem) return
+    setMenu((prev) => prev.map((m) => (m.id === editingItem.id ? { ...editingItem } : m)))
     setModalOpen(false)
   }
 
@@ -513,6 +576,48 @@ const MenuView = ({
     setModalOpen(false)
   }
 
+  // CSV取り込み（デモ用ランダムデータ生成）
+  const handleCsvImport = () => {
+    setCsvImporting(true)
+    setCsvDone(false)
+    const breakfasts = [
+      'ご飯・味噌汁・焼き魚・おひたし', 'パン・コーンスープ・目玉焼き', 'おかゆ・梅干し・卵焼き・漬物',
+      'ご飯・豚汁・納豆・のり', 'トースト・ミネストローネ・サラダ', 'ご飯・味噌汁・肉じゃが',
+    ]
+    const lunches = [
+      '天ぷらうどん・おにぎり・フルーツ', 'ビーフシチュー・パン・サラダ', '五目炊き込みご飯・豚汁・漬物',
+      'ナポリタン・コンソメスープ・ゼリー', '鯖の塩焼き定食・けんちん汁', 'チキンカツ・キャベツ・味噌汁',
+    ]
+    const dinners = [
+      '鶏の唐揚げ・ポテトサラダ・味噌汁', '麻婆豆腐・春雨サラダ・ご飯', '煮魚・ひじき煮・お吸い物',
+      'ロールキャベツ・コンソメスープ・ご飯', 'すき焼き風煮物・酢の物・ご飯', '豚しゃぶサラダ・味噌汁・ご飯',
+    ]
+    const days = ['月', '火', '水', '木', '金', '土', '日']
+    const baseDate = menu.length + 1
+    const count = Math.floor(Math.random() * 3) + 3
+    const newMenus: MenuItem[] = []
+    for (let i = 0; i < count; i++) {
+      const dayIdx = (baseDate + i) % 7
+      newMenus.push({
+        id: generateId('M'),
+        day: days[dayIdx],
+        date: `3/${baseDate + i}`,
+        breakfast: breakfasts[Math.floor(Math.random() * breakfasts.length)],
+        lunch: lunches[Math.floor(Math.random() * lunches.length)],
+        dinner: dinners[Math.floor(Math.random() * dinners.length)],
+      })
+    }
+    setTimeout(() => {
+      setMenu((prev) => [...prev, ...newMenus])
+      setCsvImporting(false)
+      setCsvDone(true)
+      setTimeout(() => {
+        setCsvConfirmOpen(false)
+        setCsvDone(false)
+      }, 1200)
+    }, 1500)
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -520,9 +625,9 @@ const MenuView = ({
           <Calendar className="w-5 h-5 text-amber-600" />
           <h3 className="font-bold text-stone-800">2026年2月 第4週</h3>
         </div>
-        <button onClick={openNew} className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
-          <Plus size={14} />
-          献立追加
+        <button onClick={() => { setCsvConfirmOpen(true); setCsvDone(false); setCsvImporting(false) }} className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
+          <Upload size={14} />
+          CSV取り込み
         </button>
       </div>
 
@@ -538,17 +643,17 @@ const MenuView = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100">
-              {menu.map((item) => (
+              {menu.map((item, idx) => (
                 <tr
-                  key={item.id}
+                  key={idx}
+                  {...(idx === 0 ? { 'data-guidance': 'menu-row' } : {})}
                   className={`cursor-pointer transition-colors ${selectedDay === item.day ? 'bg-amber-50' : 'hover:bg-amber-50/30'}`}
                   onClick={() => openEdit(item)}
                 >
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
-                        item.day === '土' ? 'bg-blue-100 text-blue-700' : item.day === '日' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'
-                      }`}>
+                      <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${item.day === '土' ? 'bg-blue-100 text-blue-700' : item.day === '日' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'
+                        }`}>
                         {item.day}
                       </span>
                       <span className="text-xs text-stone-400">{item.date}</span>
@@ -584,37 +689,68 @@ const MenuView = ({
         </div>
       )}
 
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editingItem ? '献立編集' : '献立追加'}>
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <FormField label="曜日">
-              <input type="text" className={inputClass} value={form.day} onChange={(e) => setForm((p) => ({...p, day: e.target.value}))} placeholder="月" />
+      {editingItem && (
+        <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="献立編集">
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <FormField label="曜日">
+                <input type="text" className={inputClass} value={editingItem.day} onChange={(e) => setEditingItem((p) => p ? { ...p, day: e.target.value } : p)} placeholder="月" />
+              </FormField>
+              <FormField label="日付">
+                <input type="text" className={inputClass} value={editingItem.date} onChange={(e) => setEditingItem((p) => p ? { ...p, date: e.target.value } : p)} placeholder="2/23" />
+              </FormField>
+            </div>
+            <FormField label="朝食">
+              <input type="text" className={inputClass} value={editingItem.breakfast} onChange={(e) => setEditingItem((p) => p ? { ...p, breakfast: e.target.value } : p)} />
             </FormField>
-            <FormField label="日付">
-              <input type="text" className={inputClass} value={form.date} onChange={(e) => setForm((p) => ({...p, date: e.target.value}))} placeholder="2/23" />
+            <FormField label="昼食">
+              <input type="text" className={inputClass} value={editingItem.lunch} onChange={(e) => setEditingItem((p) => p ? { ...p, lunch: e.target.value } : p)} />
             </FormField>
-          </div>
-          <FormField label="朝食">
-            <input type="text" className={inputClass} value={form.breakfast} onChange={(e) => setForm((p) => ({...p, breakfast: e.target.value}))} />
-          </FormField>
-          <FormField label="昼食">
-            <input type="text" className={inputClass} value={form.lunch} onChange={(e) => setForm((p) => ({...p, lunch: e.target.value}))} />
-          </FormField>
-          <FormField label="夕食">
-            <input type="text" className={inputClass} value={form.dinner} onChange={(e) => setForm((p) => ({...p, dinner: e.target.value}))} />
-          </FormField>
-          <div className="flex justify-between pt-2">
-            {editingItem ? (
+            <FormField label="夕食">
+              <input type="text" className={inputClass} value={editingItem.dinner} onChange={(e) => setEditingItem((p) => p ? { ...p, dinner: e.target.value } : p)} />
+            </FormField>
+            <div className="flex justify-between pt-2">
               <button onClick={handleDelete} className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg text-sm transition-colors">
                 <Trash2 size={14} />
                 削除
               </button>
-            ) : <div />}
-            <div className="flex gap-2">
-              <button onClick={() => setModalOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
-              <button onClick={handleSave} className="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">保存</button>
+              <div className="flex gap-2">
+                <button onClick={() => setModalOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
+                <button onClick={handleSave} className="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">保存</button>
+              </div>
             </div>
           </div>
+        </Modal>
+      )}
+
+      <Modal isOpen={csvConfirmOpen} onClose={() => !csvImporting && setCsvConfirmOpen(false)} title="CSV取り込み">
+        <div className="space-y-4">
+          <div className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+            <FileSpreadsheet className="w-8 h-8 text-amber-600 flex-shrink-0" />
+            <div>
+              <p className="text-sm font-medium text-amber-800">献立データCSV取り込み</p>
+              <p className="text-xs text-amber-600 mt-1">デモのため、自動でデータをランダムに追加します。</p>
+            </div>
+          </div>
+          {csvDone ? (
+            <div className="flex items-center gap-2 justify-center py-4 text-emerald-600">
+              <CheckCircle2 className="w-5 h-5" />
+              <span className="text-sm font-medium">取り込み完了</span>
+            </div>
+          ) : csvImporting ? (
+            <div className="flex flex-col items-center gap-3 py-4">
+              <div className="w-8 h-8 border-3 border-amber-200 border-t-amber-500 rounded-full animate-spin" />
+              <span className="text-sm text-stone-500">CSVデータを読み込み中...</span>
+            </div>
+          ) : (
+            <div className="flex justify-end gap-2 pt-2">
+              <button onClick={() => setCsvConfirmOpen(false)} className="px-4 py-2 border border-stone-300 rounded-lg text-sm text-stone-600 hover:bg-stone-50 transition-colors">キャンセル</button>
+              <button onClick={handleCsvImport} className="flex items-center gap-1 px-4 py-2 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
+                <Upload size={14} />
+                取り込み開始
+              </button>
+            </div>
+          )}
         </div>
       </Modal>
     </div>
@@ -635,7 +771,7 @@ const ProductionView = ({
   const [modalOpen, setModalOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<ProductionItem | null>(null)
 
-  const emptyProduction = {menuName: '', normalServings: 0, softServings: 0, mixerServings: 0, startTime: '08:00'}
+  const emptyProduction = { menuName: '', normalServings: 0, softServings: 0, mixerServings: 0, startTime: '08:00' }
   const [form, setForm] = useState(emptyProduction)
 
   const openNew = () => {
@@ -646,16 +782,16 @@ const ProductionView = ({
 
   const openEdit = (item: ProductionItem) => {
     setEditingItem(item)
-    setForm({menuName: item.menuName, normalServings: item.normalServings, softServings: item.softServings, mixerServings: item.mixerServings, startTime: item.startTime})
+    setForm({ menuName: item.menuName, normalServings: item.normalServings, softServings: item.softServings, mixerServings: item.mixerServings, startTime: item.startTime })
     setModalOpen(true)
   }
 
   const handleSave = () => {
     const totalServings = (form.normalServings || 0) + (form.softServings || 0) + (form.mixerServings || 0)
     if (editingItem) {
-      setProduction((prev) => prev.map((p) => (p.id === editingItem.id ? {...p, ...form, totalServings} : p)))
+      setProduction((prev) => prev.map((p) => (p.id === editingItem.id ? { ...p, ...form, totalServings } : p)))
     } else {
-      setProduction((prev) => [...prev, {id: generateId('P'), ...form, totalServings, status: '未着手' as const}])
+      setProduction((prev) => [...prev, { id: generateId('P'), ...form, totalServings, status: '未着手' as const }])
     }
     setModalOpen(false)
   }
@@ -667,8 +803,8 @@ const ProductionView = ({
   }
 
   const cycleProductionStatus = (itemId: string) => {
-    const cycle: Record<string, ProductionItem['status']> = {'未着手': '製造中', '製造中': '完了', '完了': '未着手'}
-    setProduction((prev) => prev.map((p) => (p.id === itemId ? {...p, status: cycle[p.status] ?? '未着手'} : p)))
+    const cycle: Record<string, ProductionItem['status']> = { '未着手': '製造中', '製造中': '完了', '完了': '未着手' }
+    setProduction((prev) => prev.map((p) => (p.id === itemId ? { ...p, status: cycle[p.status] ?? '未着手' } : p)))
   }
 
   return (
@@ -678,7 +814,7 @@ const ProductionView = ({
           <Clock className="w-5 h-5 text-amber-600" />
           <h3 className="font-bold text-stone-800">本日の製造指示 — 2026/02/23 昼食</h3>
         </div>
-        <button onClick={openNew} className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
+        <button data-guidance="add-production-button" onClick={openNew} className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
           <Plus size={14} />
           製造追加
         </button>
@@ -737,24 +873,24 @@ const ProductionView = ({
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editingItem ? '製造指示編集' : '製造指示追加'}>
         <div className="space-y-4">
           <FormField label="メニュー名">
-            <input type="text" className={inputClass} value={form.menuName} onChange={(e) => setForm((p) => ({...p, menuName: e.target.value}))} />
+            <input type="text" className={inputClass} value={form.menuName} onChange={(e) => setForm((p) => ({ ...p, menuName: e.target.value }))} />
           </FormField>
           <div className="grid grid-cols-3 gap-4">
             <FormField label="常食（食数）">
-              <input type="number" className={inputClass} value={form.normalServings} onChange={(e) => setForm((p) => ({...p, normalServings: Number(e.target.value)}))} />
+              <input type="number" className={inputClass} value={form.normalServings} onChange={(e) => setForm((p) => ({ ...p, normalServings: Number(e.target.value) }))} />
             </FormField>
             <FormField label="刻み食（食数）">
-              <input type="number" className={inputClass} value={form.softServings} onChange={(e) => setForm((p) => ({...p, softServings: Number(e.target.value)}))} />
+              <input type="number" className={inputClass} value={form.softServings} onChange={(e) => setForm((p) => ({ ...p, softServings: Number(e.target.value) }))} />
             </FormField>
             <FormField label="ミキサー食（食数）">
-              <input type="number" className={inputClass} value={form.mixerServings} onChange={(e) => setForm((p) => ({...p, mixerServings: Number(e.target.value)}))} />
+              <input type="number" className={inputClass} value={form.mixerServings} onChange={(e) => setForm((p) => ({ ...p, mixerServings: Number(e.target.value) }))} />
             </FormField>
           </div>
           <div className="text-sm text-stone-500">
             合計: <span className="font-bold text-stone-800">{(form.normalServings || 0) + (form.softServings || 0) + (form.mixerServings || 0)}食</span>
           </div>
           <FormField label="開始時間">
-            <input type="time" className={inputClass} value={form.startTime} onChange={(e) => setForm((p) => ({...p, startTime: e.target.value}))} />
+            <input type="time" className={inputClass} value={form.startTime} onChange={(e) => setForm((p) => ({ ...p, startTime: e.target.value }))} />
           </FormField>
           <div className="flex justify-between pt-2">
             {editingItem ? (
@@ -788,7 +924,7 @@ const DeliveryView = ({
   const [modalOpen, setModalOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<DeliveryItem | null>(null)
 
-  const emptyDelivery = {facilityName: '', itemCount: 0, departureTime: '10:00', driver: ''}
+  const emptyDelivery = { facilityName: '', itemCount: 0, departureTime: '10:00', driver: '' }
   const [form, setForm] = useState(emptyDelivery)
 
   const openNew = () => {
@@ -799,15 +935,15 @@ const DeliveryView = ({
 
   const openEdit = (item: DeliveryItem) => {
     setEditingItem(item)
-    setForm({facilityName: item.facilityName, itemCount: item.itemCount, departureTime: item.departureTime, driver: item.driver})
+    setForm({ facilityName: item.facilityName, itemCount: item.itemCount, departureTime: item.departureTime, driver: item.driver })
     setModalOpen(true)
   }
 
   const handleSave = () => {
     if (editingItem) {
-      setDelivery((prev) => prev.map((d) => (d.id === editingItem.id ? {...d, ...form} : d)))
+      setDelivery((prev) => prev.map((d) => (d.id === editingItem.id ? { ...d, ...form } : d)))
     } else {
-      setDelivery((prev) => [...prev, {id: generateId('D'), ...form, status: '準備中' as const}])
+      setDelivery((prev) => [...prev, { id: generateId('D'), ...form, status: '準備中' as const }])
     }
     setModalOpen(false)
   }
@@ -819,8 +955,8 @@ const DeliveryView = ({
   }
 
   const cycleDeliveryStatus = (itemId: string) => {
-    const cycle: Record<string, DeliveryItem['status']> = {'準備中': '配送中', '配送中': '配送完了', '配送完了': '準備中'}
-    setDelivery((prev) => prev.map((d) => (d.id === itemId ? {...d, status: cycle[d.status] ?? '準備中'} : d)))
+    const cycle: Record<string, DeliveryItem['status']> = { '準備中': '配送中', '配送中': '配送完了', '配送完了': '準備中' }
+    setDelivery((prev) => prev.map((d) => (d.id === itemId ? { ...d, status: cycle[d.status] ?? '準備中' } : d)))
   }
 
   return (
@@ -830,7 +966,7 @@ const DeliveryView = ({
           <Truck className="w-5 h-5 text-amber-600" />
           <h3 className="font-bold text-stone-800">本日の配送状況</h3>
         </div>
-        <button onClick={openNew} className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
+        <button data-guidance="add-delivery-button" onClick={openNew} className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
           <Plus size={14} />
           配送追加
         </button>
@@ -841,11 +977,10 @@ const DeliveryView = ({
           <div key={item.id} className="bg-white rounded-xl border border-stone-200 p-4 hover:shadow-md transition-all cursor-pointer" onClick={() => openEdit(item)}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${
-                  item.status === '配送完了' ? 'bg-emerald-100 text-emerald-700' :
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${item.status === '配送完了' ? 'bg-emerald-100 text-emerald-700' :
                   item.status === '配送中' ? 'bg-blue-100 text-blue-700' :
-                  'bg-amber-100 text-amber-700'
-                }`}>
+                    'bg-amber-100 text-amber-700'
+                  }`}>
                   {idx + 1}
                 </div>
                 <div>
@@ -865,18 +1000,18 @@ const DeliveryView = ({
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editingItem ? '配送編集' : '配送追加'}>
         <div className="space-y-4">
           <FormField label="施設名">
-            <input type="text" className={inputClass} value={form.facilityName} onChange={(e) => setForm((p) => ({...p, facilityName: e.target.value}))} />
+            <input type="text" className={inputClass} value={form.facilityName} onChange={(e) => setForm((p) => ({ ...p, facilityName: e.target.value }))} />
           </FormField>
           <div className="grid grid-cols-2 gap-4">
             <FormField label="食数">
-              <input type="number" className={inputClass} value={form.itemCount} onChange={(e) => setForm((p) => ({...p, itemCount: Number(e.target.value)}))} />
+              <input type="number" className={inputClass} value={form.itemCount} onChange={(e) => setForm((p) => ({ ...p, itemCount: Number(e.target.value) }))} />
             </FormField>
             <FormField label="出発時間">
-              <input type="time" className={inputClass} value={form.departureTime} onChange={(e) => setForm((p) => ({...p, departureTime: e.target.value}))} />
+              <input type="time" className={inputClass} value={form.departureTime} onChange={(e) => setForm((p) => ({ ...p, departureTime: e.target.value }))} />
             </FormField>
           </div>
           <FormField label="ドライバー">
-            <input type="text" className={inputClass} value={form.driver} onChange={(e) => setForm((p) => ({...p, driver: e.target.value}))} />
+            <input type="text" className={inputClass} value={form.driver} onChange={(e) => setForm((p) => ({ ...p, driver: e.target.value }))} />
           </FormField>
           <div className="flex justify-between pt-2">
             {editingItem ? (
@@ -912,7 +1047,7 @@ const FacilitiesView = ({
   const [modalOpen, setModalOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<Facility | null>(null)
 
-  const emptyFacility = {name: '', type: FACILITY_TYPES[0], mealCount: 0, contact: '', address: ''}
+  const emptyFacility = { name: '', type: FACILITY_TYPES[0], mealCount: 0, contact: '', address: '' }
   const [form, setForm] = useState(emptyFacility)
 
   const openNew = () => {
@@ -923,15 +1058,15 @@ const FacilitiesView = ({
 
   const openEdit = (item: Facility) => {
     setEditingItem(item)
-    setForm({name: item.name, type: item.type, mealCount: item.mealCount, contact: item.contact, address: item.address})
+    setForm({ name: item.name, type: item.type, mealCount: item.mealCount, contact: item.contact, address: item.address })
     setModalOpen(true)
   }
 
   const handleSave = () => {
     if (editingItem) {
-      setFacilities((prev) => prev.map((f) => (f.id === editingItem.id ? {...f, ...form} : f)))
+      setFacilities((prev) => prev.map((f) => (f.id === editingItem.id ? { ...f, ...form } : f)))
     } else {
-      setFacilities((prev) => [...prev, {id: generateId('F'), ...form}])
+      setFacilities((prev) => [...prev, { id: generateId('F'), ...form }])
     }
     setModalOpen(false)
   }
@@ -949,7 +1084,7 @@ const FacilitiesView = ({
           <Users className="w-5 h-5 text-amber-600" />
           <h3 className="font-bold text-stone-800">登録施設一覧</h3>
         </div>
-        <button onClick={openNew} className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
+        <button data-guidance="add-facility-button" onClick={openNew} className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg text-sm hover:bg-amber-600 transition-colors">
           <Plus size={14} />
           施設追加
         </button>
@@ -986,23 +1121,23 @@ const FacilitiesView = ({
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={editingItem ? '施設編集' : '施設追加'}>
         <div className="space-y-4">
           <FormField label="施設名">
-            <input type="text" className={inputClass} value={form.name} onChange={(e) => setForm((p) => ({...p, name: e.target.value}))} />
+            <input type="text" className={inputClass} value={form.name} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))} />
           </FormField>
           <FormField label="施設タイプ">
-            <select className={selectClass} value={form.type} onChange={(e) => setForm((p) => ({...p, type: e.target.value}))}>
+            <select className={selectClass} value={form.type} onChange={(e) => setForm((p) => ({ ...p, type: e.target.value }))}>
               {FACILITY_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
             </select>
           </FormField>
           <div className="grid grid-cols-2 gap-4">
             <FormField label="契約食数（食/日）">
-              <input type="number" className={inputClass} value={form.mealCount} onChange={(e) => setForm((p) => ({...p, mealCount: Number(e.target.value)}))} />
+              <input type="number" className={inputClass} value={form.mealCount} onChange={(e) => setForm((p) => ({ ...p, mealCount: Number(e.target.value) }))} />
             </FormField>
             <FormField label="担当者">
-              <input type="text" className={inputClass} value={form.contact} onChange={(e) => setForm((p) => ({...p, contact: e.target.value}))} />
+              <input type="text" className={inputClass} value={form.contact} onChange={(e) => setForm((p) => ({ ...p, contact: e.target.value }))} />
             </FormField>
           </div>
           <FormField label="住所">
-            <input type="text" className={inputClass} value={form.address} onChange={(e) => setForm((p) => ({...p, address: e.target.value}))} />
+            <input type="text" className={inputClass} value={form.address} onChange={(e) => setForm((p) => ({ ...p, address: e.target.value }))} />
           </FormField>
           <div className="flex justify-between pt-2">
             {editingItem ? (
@@ -1030,6 +1165,7 @@ export default function KaigoshokuMockPage() {
   const [activeTab, setActiveTab] = useState<TabId>('orders')
   const [showSplash, setShowSplash] = useState(true)
   const [showInfoSidebar, setShowInfoSidebar] = useState(false)
+  const [showGuidance, setShowGuidance] = useState(false)
 
   const [facilities, setFacilities] = usePersistedState<Facility[]>(STORAGE_KEYS.facilities, INITIAL_FACILITIES)
   const [orders, setOrders] = usePersistedState<Order[]>(STORAGE_KEYS.orders, INITIAL_ORDERS)
@@ -1043,9 +1179,7 @@ export default function KaigoshokuMockPage() {
   }, [])
 
   const handleReset = useCallback(() => {
-    if (!window.confirm('データを初期状態に戻しますか？')) return
-    Object.values(STORAGE_KEYS).forEach((key) => localStorage.removeItem(key))
-    window.location.reload()
+    resetPersistedData(STORAGE_KEYS)
   }, [])
 
   if (showSplash) {
@@ -1077,6 +1211,7 @@ export default function KaigoshokuMockPage() {
           </div>
 
           <div className="flex items-center gap-2">
+            <GuidanceStartButton onClick={() => setShowGuidance(true)} theme="amber" />
             <button
               onClick={handleReset}
               className="p-2 text-stone-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
@@ -1087,17 +1222,26 @@ export default function KaigoshokuMockPage() {
             {TABS.map((tab) => (
               <button
                 key={tab.id}
+                data-guidance={`${tab.id}-tab`}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-                  activeTab === tab.id
-                    ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/25'
-                    : 'text-stone-600 hover:bg-stone-50 border border-transparent hover:border-amber-200'
-                }`}
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${activeTab === tab.id
+                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/25'
+                  : 'text-stone-600 hover:bg-stone-50 border border-transparent hover:border-amber-200'
+                  }`}
               >
                 <tab.icon size={16} />
                 <span className="hidden md:inline">{tab.label}</span>
               </button>
             ))}
+            <button
+              data-guidance="info-button"
+              onClick={() => setShowInfoSidebar(true)}
+              className="ml-2 p-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all duration-200 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/30 flex items-center gap-2"
+              title="このシステムでできること"
+            >
+              <PanelRightOpen className="w-4 h-4" />
+              <span className="text-sm font-medium hidden sm:inline">機能説明</span>
+            </button>
           </div>
         </div>
       </header>
@@ -1105,14 +1249,6 @@ export default function KaigoshokuMockPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {TAB_VIEWS[activeTab]}
       </main>
-
-      <button
-        onClick={() => setShowInfoSidebar(true)}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl shadow-lg shadow-amber-500/30 hover:from-amber-600 hover:to-orange-600 transition-all duration-200"
-      >
-        <PanelRightOpen className="w-4 h-4" />
-        <span className="text-sm font-medium">機能説明</span>
-      </button>
 
       <InfoSidebar
         isOpen={showInfoSidebar}
@@ -1124,6 +1260,15 @@ export default function KaigoshokuMockPage() {
         features={FEATURES}
         timeEfficiency={TIME_EFFICIENCY}
         challenges={CHALLENGES}
+        overview={OVERVIEW}
+        operationSteps={OPERATION_STEPS}
+      />
+
+      <GuidanceOverlay
+        steps={getGuidanceSteps(setActiveTab)}
+        isActive={showGuidance}
+        onClose={() => setShowGuidance(false)}
+        theme="amber"
       />
     </div>
   )

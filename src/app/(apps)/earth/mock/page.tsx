@@ -3,7 +3,7 @@
 // このファイルはモックであり、単一ファイルに収まるよう構築されています。
 // 本番プロジェクトでは、プロジェクトの設計やルールに従ってページやコンポーネントを分割してください。
 
-import React, {useState, useEffect, useMemo} from 'react'
+import React, {useState, useEffect, useMemo, useContext, createContext, useCallback} from 'react'
 import {
   Building2,
   Users,
@@ -15,9 +15,7 @@ import {
   Mail,
   MapPin,
   FileText,
-  CheckCircle,
   AlertTriangle,
-  Clock,
   MessageCircle,
   Send,
   Wrench,
@@ -26,9 +24,11 @@ import {
   AlertOctagon,
   Zap,
   ChevronDown,
-  Filter,
   Home,
   Shield,
+  Plus,
+  Pencil,
+  Trash2,
 } from 'lucide-react'
 
 // =============================================================================
@@ -196,19 +196,40 @@ const CHAT_MESSAGES: ChatMessage[] = [
 ]
 
 // =============================================================================
+// データContext（CRUD用）
+// =============================================================================
+
+type DataContextType = {
+  owners: Owner[]
+  setOwners: React.Dispatch<React.SetStateAction<Owner[]>>
+  properties: Property[]
+  setProperties: React.Dispatch<React.SetStateAction<Property[]>>
+}
+
+const DataContext = createContext<DataContextType>({
+  owners: OWNERS,
+  setOwners: () => {},
+  properties: PROPERTIES,
+  setProperties: () => {},
+})
+
+const useData = () => useContext(DataContext)
+
+// =============================================================================
 // 共通UIコンポーネント
 // =============================================================================
 
 const Button = ({children, onClick, variant = 'primary', className = '', size = 'sm'}: {
   children: React.ReactNode
   onClick?: () => void
-  variant?: 'primary' | 'secondary'
+  variant?: 'primary' | 'secondary' | 'danger'
   className?: string
   size?: 'sm' | 'md'
 }) => {
   const variantClasses = {
     primary: 'bg-gradient-to-r from-indigo-500 to-blue-600 text-white hover:from-indigo-600 hover:to-blue-700 shadow-lg shadow-indigo-500/25',
     secondary: 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200',
+    danger: 'bg-red-500 text-white hover:bg-red-600',
   }
   const sizeClasses = {sm: 'px-3 py-1.5 text-sm', md: 'px-4 py-2 text-sm'}
   return (
@@ -217,6 +238,43 @@ const Button = ({children, onClick, variant = 'primary', className = '', size = 
     </button>
   )
 }
+
+// フォーム用入力フィールド
+const FormField = ({label, children}: {label: string; children: React.ReactNode}) => (
+  <div>
+    <label className="block text-sm font-medium text-slate-700 mb-1">{label}</label>
+    {children}
+  </div>
+)
+
+const FormInput = ({value, onChange, placeholder, type = 'text'}: {
+  value: string | number
+  onChange: (v: string) => void
+  placeholder?: string
+  type?: string
+}) => (
+  <input
+    type={type}
+    value={value}
+    onChange={e => onChange(e.target.value)}
+    placeholder={placeholder}
+    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+  />
+)
+
+const FormSelect = ({value, onChange, options}: {
+  value: string
+  onChange: (v: string) => void
+  options: {value: string; label: string}[]
+}) => (
+  <select
+    value={value}
+    onChange={e => onChange(e.target.value)}
+    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+  >
+    {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+  </select>
+)
 
 const Modal = ({isOpen, onClose, title, children}: {
   isOpen: boolean
@@ -331,24 +389,57 @@ const SplashScreen = ({onComplete}: {onComplete: () => void}) => {
 // タブ1: オーナー一覧
 // =============================================================================
 
+const EMPTY_OWNER: Owner = {id: '', name: '', category: '個人', phone: '', email: '', contractType: '受託管理', propertyCount: 0}
+
 const OwnerListTab = () => {
+  const {owners, setOwners, properties} = useData()
   const [search, setSearch] = useState('')
   const [filterType, setFilterType] = useState('')
   const [selectedOwner, setSelectedOwner] = useState<Owner | null>(null)
+  const [editOwner, setEditOwner] = useState<Owner | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<Owner | null>(null)
 
   const filtered = useMemo(() =>
-    OWNERS.filter(o =>
+    owners.filter(o =>
       (o.name.includes(search) || o.phone.includes(search) || o.email.includes(search)) &&
       (!filterType || o.contractType === filterType)
-    ), [search, filterType])
+    ), [owners, search, filterType])
 
   const ownerProperties = useMemo(() =>
-    selectedOwner ? PROPERTIES.filter(p => p.ownerId === selectedOwner.id) : [],
-    [selectedOwner])
+    selectedOwner ? properties.filter(p => p.ownerId === selectedOwner.id) : [],
+    [selectedOwner, properties])
+
+  // ID採番
+  const nextId = useCallback(() => {
+    const max = owners.reduce((m, o) => Math.max(m, parseInt(o.id.replace('O', ''), 10)), 0)
+    return `O${String(max + 1).padStart(3, '0')}`
+  }, [owners])
+
+  // 保存（新規 / 更新）
+  const handleSave = () => {
+    if (!editOwner || !editOwner.name.trim()) return
+    if (editOwner.id) {
+      // 更新
+      setOwners(prev => prev.map(o => o.id === editOwner.id ? {...editOwner, propertyCount: properties.filter(p => p.ownerId === editOwner.id).length} : o))
+    } else {
+      // 新規
+      const newOwner = {...editOwner, id: nextId(), propertyCount: 0}
+      setOwners(prev => [...prev, newOwner])
+    }
+    setEditOwner(null)
+  }
+
+  // 削除
+  const handleDelete = () => {
+    if (!deleteTarget) return
+    setOwners(prev => prev.filter(o => o.id !== deleteTarget.id))
+    setDeleteTarget(null)
+    setSelectedOwner(null)
+  }
 
   return (
     <div>
-      {/* フィルタ */}
+      {/* フィルタ + 新規追加 */}
       <div className="flex flex-col sm:flex-row gap-3 mb-4">
         <div className="flex-1">
           <SearchBar value={search} onChange={setSearch} placeholder="オーナー名・電話番号で検索..." />
@@ -357,9 +448,12 @@ const OwnerListTab = () => {
           value={filterType}
           onChange={setFilterType}
           options={[{value: '受託管理', label: '受託管理'}, {value: 'サブリース', label: 'サブリース'}]}
-          placeholder="契約タイプ"
+          placeholder="すべての契約タイプ"
           className="w-full sm:w-44"
         />
+        <Button onClick={() => setEditOwner({...EMPTY_OWNER})}>
+          <Plus className="w-4 h-4 mr-1" />新規追加
+        </Button>
       </div>
 
       {/* テーブル */}
@@ -373,16 +467,27 @@ const OwnerListTab = () => {
                 <th className="text-left px-4 py-3 font-semibold text-slate-600 hidden md:table-cell">電話番号</th>
                 <th className="text-left px-4 py-3 font-semibold text-slate-600">契約タイプ</th>
                 <th className="text-center px-4 py-3 font-semibold text-slate-600">物件数</th>
+                <th className="text-center px-4 py-3 font-semibold text-slate-600 w-24">操作</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map(owner => (
-                <tr key={owner.id} onClick={() => setSelectedOwner(owner)} className="border-b border-slate-100 hover:bg-indigo-50/50 cursor-pointer transition-colors">
-                  <td className="px-4 py-3 font-medium text-slate-800">{owner.name}</td>
+                <tr key={owner.id} className="border-b border-slate-100 hover:bg-indigo-50/50 transition-colors">
+                  <td className="px-4 py-3 font-medium text-slate-800 cursor-pointer" onClick={() => setSelectedOwner(owner)}>{owner.name}</td>
                   <td className="px-4 py-3 hidden sm:table-cell"><StatusBadge status={owner.category} /></td>
                   <td className="px-4 py-3 text-slate-600 hidden md:table-cell">{owner.phone}</td>
                   <td className="px-4 py-3"><StatusBadge status={owner.contractType} /></td>
-                  <td className="px-4 py-3 text-center text-slate-700 font-medium">{owner.propertyCount}</td>
+                  <td className="px-4 py-3 text-center text-slate-700 font-medium">{properties.filter(p => p.ownerId === owner.id).length}</td>
+                  <td className="px-4 py-3 text-center">
+                    <div className="flex items-center justify-center gap-1">
+                      <button onClick={() => setEditOwner({...owner})} className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
+                        <Pencil className="w-3.5 h-3.5" />
+                      </button>
+                      <button onClick={() => setDeleteTarget(owner)} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -394,7 +499,6 @@ const OwnerListTab = () => {
       <Modal isOpen={!!selectedOwner} onClose={() => setSelectedOwner(null)} title={selectedOwner?.name ?? ''}>
         {selectedOwner && (
           <div className="space-y-6">
-            {/* 基本情報 */}
             <div>
               <h4 className="text-sm font-bold text-slate-500 mb-3">基本情報</h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -418,8 +522,6 @@ const OwnerListTab = () => {
                 </div>
               </div>
             </div>
-
-            {/* 紐づく物件一覧 */}
             <div>
               <h4 className="text-sm font-bold text-slate-500 mb-3">所有物件（{ownerProperties.length}件）</h4>
               <div className="space-y-2">
@@ -430,18 +532,62 @@ const OwnerListTab = () => {
                       <span className="text-xs text-slate-500">{prop.type}</span>
                     </div>
                     <div className="flex items-center gap-1 text-xs text-slate-500 mb-1">
-                      <MapPin className="w-3 h-3" />
-                      {prop.address}
+                      <MapPin className="w-3 h-3" />{prop.address}
                     </div>
                     <div className="flex items-center gap-3 text-xs">
                       <span className="text-slate-600">総戸数: <b>{prop.totalUnits}</b></span>
-                      <span className={prop.vacantUnits > 0 ? 'text-red-600 font-medium' : 'text-green-600'}>
-                        空室: {prop.vacantUnits}
-                      </span>
+                      <span className={prop.vacantUnits > 0 ? 'text-red-600 font-medium' : 'text-green-600'}>空室: {prop.vacantUnits}</span>
                     </div>
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* オーナー編集モーダル */}
+      <Modal isOpen={!!editOwner} onClose={() => setEditOwner(null)} title={editOwner?.id ? 'オーナー編集' : 'オーナー新規追加'}>
+        {editOwner && (
+          <div className="space-y-4">
+            <FormField label="オーナー名">
+              <FormInput value={editOwner.name} onChange={v => setEditOwner({...editOwner, name: v})} placeholder="例: 山田太郎" />
+            </FormField>
+            <div className="grid grid-cols-2 gap-4">
+              <FormField label="区分">
+                <FormSelect value={editOwner.category} onChange={v => setEditOwner({...editOwner, category: v as Owner['category']})}
+                  options={[{value: '個人', label: '個人'}, {value: '法人', label: '法人'}]} />
+              </FormField>
+              <FormField label="契約タイプ">
+                <FormSelect value={editOwner.contractType} onChange={v => setEditOwner({...editOwner, contractType: v as Owner['contractType']})}
+                  options={[{value: '受託管理', label: '受託管理'}, {value: 'サブリース', label: 'サブリース'}]} />
+              </FormField>
+            </div>
+            <FormField label="電話番号">
+              <FormInput value={editOwner.phone} onChange={v => setEditOwner({...editOwner, phone: v})} placeholder="例: 090-1234-5678" />
+            </FormField>
+            <FormField label="メールアドレス">
+              <FormInput value={editOwner.email} onChange={v => setEditOwner({...editOwner, email: v})} placeholder="例: owner@example.com" />
+            </FormField>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button variant="secondary" onClick={() => setEditOwner(null)}>キャンセル</Button>
+              <Button onClick={handleSave}>{editOwner.id ? '更新' : '追加'}</Button>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* 削除確認モーダル */}
+      <Modal isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)} title="オーナー削除の確認">
+        {deleteTarget && (
+          <div>
+            <p className="text-sm text-slate-700 mb-4">
+              <b>{deleteTarget.name}</b> を削除しますか？<br />
+              <span className="text-red-500 text-xs">紐づく物件データとの関連が解除されます。</span>
+            </p>
+            <div className="flex justify-end gap-2">
+              <Button variant="secondary" onClick={() => setDeleteTarget(null)}>キャンセル</Button>
+              <Button variant="danger" onClick={handleDelete}>削除</Button>
             </div>
           </div>
         )}
@@ -454,24 +600,52 @@ const OwnerListTab = () => {
 // タブ2: 物件管理
 // =============================================================================
 
+const EMPTY_PROPERTY: Property = {id: '', ownerId: '', name: '', address: '', type: 'マンション', totalUnits: 0, vacantUnits: 0}
+const PROPERTY_TYPES = [{value: 'マンション', label: 'マンション'}, {value: 'アパート', label: 'アパート'}, {value: 'ビル', label: 'ビル'}, {value: '戸建', label: '戸建'}]
+
 const PropertyTab = () => {
+  const {owners, properties, setProperties} = useData()
   const [ownerFilter, setOwnerFilter] = useState('')
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null)
+  const [editProperty, setEditProperty] = useState<Property | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<Property | null>(null)
 
-  const ownerOptions = OWNERS.map(o => ({value: o.id, label: o.name}))
+  const ownerOptions = owners.map(o => ({value: o.id, label: o.name}))
 
   const filtered = useMemo(() =>
-    PROPERTIES.filter(p => !ownerFilter || p.ownerId === ownerFilter),
-    [ownerFilter])
+    properties.filter(p => !ownerFilter || p.ownerId === ownerFilter),
+    [properties, ownerFilter])
 
   const propertyTenants = useMemo(() =>
     selectedProperty ? TENANTS.filter(t => t.propertyId === selectedProperty.id) : [],
     [selectedProperty])
 
+  const nextId = useCallback(() => {
+    const max = properties.reduce((m, p) => Math.max(m, parseInt(p.id.replace('P', ''), 10)), 0)
+    return `P${String(max + 1).padStart(3, '0')}`
+  }, [properties])
+
+  const handleSave = () => {
+    if (!editProperty || !editProperty.name.trim() || !editProperty.ownerId) return
+    if (editProperty.id) {
+      setProperties(prev => prev.map(p => p.id === editProperty.id ? editProperty : p))
+    } else {
+      setProperties(prev => [...prev, {...editProperty, id: nextId()}])
+    }
+    setEditProperty(null)
+  }
+
+  const handleDelete = () => {
+    if (!deleteTarget) return
+    setProperties(prev => prev.filter(p => p.id !== deleteTarget.id))
+    setDeleteTarget(null)
+    setSelectedProperty(null)
+  }
+
   return (
     <div>
-      {/* フィルタ */}
-      <div className="mb-4">
+      {/* フィルタ + 新規追加 */}
+      <div className="flex flex-col sm:flex-row gap-3 mb-4">
         <SelectBox
           value={ownerFilter}
           onChange={setOwnerFilter}
@@ -479,6 +653,10 @@ const PropertyTab = () => {
           placeholder="すべてのオーナー"
           className="w-full sm:w-64"
         />
+        <div className="flex-1" />
+        <Button onClick={() => setEditProperty({...EMPTY_PROPERTY, ownerId: owners[0]?.id ?? ''})}>
+          <Plus className="w-4 h-4 mr-1" />新規追加
+        </Button>
       </div>
 
       {/* テーブル */}
@@ -492,14 +670,15 @@ const PropertyTab = () => {
                 <th className="text-left px-4 py-3 font-semibold text-slate-600 hidden sm:table-cell">種別</th>
                 <th className="text-center px-4 py-3 font-semibold text-slate-600">総戸数</th>
                 <th className="text-center px-4 py-3 font-semibold text-slate-600">空室</th>
+                <th className="text-center px-4 py-3 font-semibold text-slate-600 w-24">操作</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map(prop => {
-                const owner = OWNERS.find(o => o.id === prop.ownerId)
+                const owner = owners.find(o => o.id === prop.ownerId)
                 return (
-                  <tr key={prop.id} onClick={() => setSelectedProperty(prop)} className="border-b border-slate-100 hover:bg-indigo-50/50 cursor-pointer transition-colors">
-                    <td className="px-4 py-3">
+                  <tr key={prop.id} className="border-b border-slate-100 hover:bg-indigo-50/50 transition-colors">
+                    <td className="px-4 py-3 cursor-pointer" onClick={() => setSelectedProperty(prop)}>
                       <div className="font-medium text-slate-800">{prop.name}</div>
                       <div className="text-xs text-slate-500 md:hidden">{prop.address}</div>
                       <div className="text-xs text-slate-400 mt-0.5">{owner?.name}</div>
@@ -509,6 +688,16 @@ const PropertyTab = () => {
                     <td className="px-4 py-3 text-center text-slate-700">{prop.totalUnits}</td>
                     <td className="px-4 py-3 text-center">
                       <span className={`font-medium ${prop.vacantUnits > 0 ? 'text-red-600' : 'text-green-600'}`}>{prop.vacantUnits}</span>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        <button onClick={() => setEditProperty({...prop})} className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
+                          <Pencil className="w-3.5 h-3.5" />
+                        </button>
+                        <button onClick={() => setDeleteTarget(prop)} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 )
@@ -522,7 +711,6 @@ const PropertyTab = () => {
       <Modal isOpen={!!selectedProperty} onClose={() => setSelectedProperty(null)} title={selectedProperty?.name ?? ''}>
         {selectedProperty && (
           <div className="space-y-6">
-            {/* 基本情報 */}
             <div>
               <h4 className="text-sm font-bold text-slate-500 mb-3">物件情報</h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
@@ -536,12 +724,10 @@ const PropertyTab = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <Users className="w-4 h-4 text-slate-400" />
-                  <span className="text-slate-600">オーナー: {OWNERS.find(o => o.id === selectedProperty.ownerId)?.name}</span>
+                  <span className="text-slate-600">オーナー: {owners.find(o => o.id === selectedProperty.ownerId)?.name}</span>
                 </div>
               </div>
             </div>
-
-            {/* 部屋一覧 */}
             <div>
               <h4 className="text-sm font-bold text-slate-500 mb-3">部屋一覧</h4>
               <div className="space-y-2">
@@ -559,16 +745,60 @@ const PropertyTab = () => {
                         <span>契約終了: {tenant.contractEnd}</span>
                       </div>
                     ) : (
-                      <div className="text-xs text-slate-400 mt-1">
-                        募集家賃: ¥{tenant.rent.toLocaleString()}/月
-                      </div>
+                      <div className="text-xs text-slate-400 mt-1">募集家賃: ¥{tenant.rent.toLocaleString()}/月</div>
                     )}
                   </div>
                 ))}
-                {propertyTenants.length === 0 && (
-                  <p className="text-sm text-slate-400 text-center py-4">部屋データがありません</p>
-                )}
+                {propertyTenants.length === 0 && <p className="text-sm text-slate-400 text-center py-4">部屋データがありません</p>}
               </div>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* 物件編集モーダル */}
+      <Modal isOpen={!!editProperty} onClose={() => setEditProperty(null)} title={editProperty?.id ? '物件編集' : '物件新規追加'}>
+        {editProperty && (
+          <div className="space-y-4">
+            <FormField label="物件名">
+              <FormInput value={editProperty.name} onChange={v => setEditProperty({...editProperty, name: v})} placeholder="例: サンプルマンションA" />
+            </FormField>
+            <FormField label="オーナー">
+              <FormSelect value={editProperty.ownerId} onChange={v => setEditProperty({...editProperty, ownerId: v})}
+                options={ownerOptions} />
+            </FormField>
+            <FormField label="住所">
+              <FormInput value={editProperty.address} onChange={v => setEditProperty({...editProperty, address: v})} placeholder="例: 東京都渋谷区神南1-1-1" />
+            </FormField>
+            <div className="grid grid-cols-3 gap-4">
+              <FormField label="種別">
+                <FormSelect value={editProperty.type} onChange={v => setEditProperty({...editProperty, type: v})} options={PROPERTY_TYPES} />
+              </FormField>
+              <FormField label="総戸数">
+                <FormInput type="number" value={editProperty.totalUnits} onChange={v => setEditProperty({...editProperty, totalUnits: parseInt(v, 10) || 0})} />
+              </FormField>
+              <FormField label="空室数">
+                <FormInput type="number" value={editProperty.vacantUnits} onChange={v => setEditProperty({...editProperty, vacantUnits: parseInt(v, 10) || 0})} />
+              </FormField>
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button variant="secondary" onClick={() => setEditProperty(null)}>キャンセル</Button>
+              <Button onClick={handleSave}>{editProperty.id ? '更新' : '追加'}</Button>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* 削除確認モーダル */}
+      <Modal isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)} title="物件削除の確認">
+        {deleteTarget && (
+          <div>
+            <p className="text-sm text-slate-700 mb-4">
+              <b>{deleteTarget.name}</b> を削除しますか？
+            </p>
+            <div className="flex justify-end gap-2">
+              <Button variant="secondary" onClick={() => setDeleteTarget(null)}>キャンセル</Button>
+              <Button variant="danger" onClick={handleDelete}>削除</Button>
             </div>
           </div>
         )}
@@ -581,39 +811,35 @@ const PropertyTab = () => {
 // タブ3: 管理ページ（サブタブ4つ） - 全件表示 + 絞り込み対応
 // =============================================================================
 
-// ownerPropertyKeyからオーナー名・物件名を解決するヘルパー
-const resolveOwnerProperty = (key: string) => {
-  const [ownerId, propertyId] = key.split('-')
-  const owner = OWNERS.find(o => o.id === ownerId)
-  const property = PROPERTIES.find(p => p.id === propertyId)
-  return {ownerName: owner?.name ?? '', propertyName: property?.name ?? ''}
+// ownerPropertyKeyからオーナー名・物件名を解決するヘルパー（Context使用版）
+const useResolveOwnerProperty = () => {
+  const {owners, properties} = useData()
+  return useCallback((key: string) => {
+    const [ownerId, propertyId] = key.split('-')
+    const owner = owners.find(o => o.id === ownerId)
+    const property = properties.find(p => p.id === propertyId)
+    return {ownerName: owner?.name ?? '', propertyName: property?.name ?? ''}
+  }, [owners, properties])
 }
 
 // 共通フィルタバー
-const ManagementFilterBar = ({ownerId, onOwnerChange, propertyId, onPropertyChange, search, onSearchChange, searchPlaceholder}: {
+const ManagementFilterBar = ({ownerId, onOwnerChange, propertyId, onPropertyChange}: {
   ownerId: string
   onOwnerChange: (v: string) => void
   propertyId: string
   onPropertyChange: (v: string) => void
-  search?: string
-  onSearchChange?: (v: string) => void
-  searchPlaceholder?: string
 }) => {
+  const {owners, properties} = useData()
   const availableProperties = useMemo(() =>
-    ownerId ? PROPERTIES.filter(p => p.ownerId === ownerId) : PROPERTIES,
-    [ownerId])
+    ownerId ? properties.filter(p => p.ownerId === ownerId) : properties,
+    [ownerId, properties])
 
   return (
     <div className="flex flex-col sm:flex-row gap-2 mb-4">
-      {onSearchChange && (
-        <div className="flex-1">
-          <SearchBar value={search ?? ''} onChange={onSearchChange} placeholder={searchPlaceholder ?? '検索...'} />
-        </div>
-      )}
       <SelectBox
         value={ownerId}
         onChange={(v) => {onOwnerChange(v); onPropertyChange('')}}
-        options={OWNERS.map(o => ({value: o.id, label: o.name}))}
+        options={owners.map(o => ({value: o.id, label: o.name}))}
         placeholder="すべてのオーナー"
         className="w-full sm:w-48"
       />
@@ -639,7 +865,8 @@ const matchesOwnerProperty = (key: string, ownerId: string, propertyId: string) 
 
 // オーナー・物件ラベル
 const OwnerPropertyLabel = ({ownerPropertyKey}: {ownerPropertyKey: string}) => {
-  const {ownerName, propertyName} = resolveOwnerProperty(ownerPropertyKey)
+  const resolve = useResolveOwnerProperty()
+  const {ownerName, propertyName} = resolve(ownerPropertyKey)
   return (
     <div className="flex items-center gap-1.5 text-[11px] text-slate-400 mt-1">
       <Users className="w-3 h-3" />
@@ -845,6 +1072,7 @@ const CommunicationSubTab = ({ownerId, propertyId}: {ownerId: string; propertyId
 // --- サブタブ4: チャットルーム ---
 const ChatSubTab = ({ownerId, propertyId}: {ownerId: string; propertyId: string}) => {
   const [inputMessage, setInputMessage] = useState('')
+  const resolve = useResolveOwnerProperty()
 
   const messages = useMemo(() =>
     CHAT_MESSAGES.filter(m => matchesOwnerProperty(m.ownerPropertyKey, ownerId, propertyId)),
@@ -867,7 +1095,7 @@ const ChatSubTab = ({ownerId, propertyId}: {ownerId: string; propertyId: string}
   return (
     <div className="space-y-6">
       {groupKeys.map(key => {
-        const {ownerName, propertyName} = resolveOwnerProperty(key)
+        const {ownerName, propertyName} = resolve(key)
         const msgs = groupedMessages[key]
         return (
           <div key={key} className="border border-slate-200 rounded-xl overflow-hidden">
@@ -984,77 +1212,81 @@ const EarthOwnerManagementPage = () => {
   const [showSplash, setShowSplash] = useState(true)
   const [activeTab, setActiveTab] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [owners, setOwners] = useState<Owner[]>(OWNERS)
+  const [properties, setProperties] = useState<Property[]>(PROPERTIES)
 
   if (showSplash) return <SplashScreen onComplete={() => setShowSplash(false)} />
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30">
-      {/* ヘッダー */}
-      <header className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-lg sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-14">
-            {/* ロゴ */}
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                <Building2 className="w-5 h-5" />
+    <DataContext.Provider value={{owners, setOwners, properties, setProperties}}>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30">
+        {/* ヘッダー */}
+        <header className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-lg sticky top-0 z-40">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="flex items-center justify-between h-14">
+              {/* ロゴ */}
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                  <Building2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <h1 className="text-base font-bold leading-tight">Earth Design</h1>
+                  <p className="text-[10px] text-indigo-200 leading-tight">賃貸オーナー管理</p>
+                </div>
               </div>
-              <div>
-                <h1 className="text-base font-bold leading-tight">Earth Design</h1>
-                <p className="text-[10px] text-indigo-200 leading-tight">賃貸オーナー管理</p>
-              </div>
-            </div>
 
-            {/* デスクトップタブ */}
-            <nav className="hidden md:flex items-center gap-1">
+              {/* デスクトップタブ */}
+              <nav className="hidden md:flex items-center gap-1">
+                {MAIN_TABS.map((tab, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveTab(i)}
+                    className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                      activeTab === i
+                        ? 'bg-white/20 text-white'
+                        : 'text-indigo-200 hover:bg-white/10 hover:text-white'
+                    }`}
+                  >
+                    {tab.icon}
+                    {tab.label}
+                  </button>
+                ))}
+              </nav>
+
+              {/* モバイルメニュー */}
+              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 hover:bg-white/10 rounded-lg">
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
+
+          {/* モバイルメニュードロップダウン */}
+          {mobileMenuOpen && (
+            <div className="md:hidden border-t border-white/20 px-4 py-2 bg-indigo-700/50 backdrop-blur-sm">
               {MAIN_TABS.map((tab, i) => (
                 <button
                   key={i}
-                  onClick={() => setActiveTab(i)}
-                  className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                    activeTab === i
-                      ? 'bg-white/20 text-white'
-                      : 'text-indigo-200 hover:bg-white/10 hover:text-white'
+                  onClick={() => {setActiveTab(i); setMobileMenuOpen(false)}}
+                  className={`flex items-center gap-2 w-full px-3 py-2.5 text-sm rounded-lg mb-1 transition-colors ${
+                    activeTab === i ? 'bg-white/20 text-white' : 'text-indigo-200 hover:bg-white/10'
                   }`}
                 >
                   {tab.icon}
                   {tab.label}
                 </button>
               ))}
-            </nav>
+            </div>
+          )}
+        </header>
 
-            {/* モバイルメニュー */}
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 hover:bg-white/10 rounded-lg">
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
-        </div>
-
-        {/* モバイルメニュードロップダウン */}
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-white/20 px-4 py-2 bg-indigo-700/50 backdrop-blur-sm">
-            {MAIN_TABS.map((tab, i) => (
-              <button
-                key={i}
-                onClick={() => {setActiveTab(i); setMobileMenuOpen(false)}}
-                className={`flex items-center gap-2 w-full px-3 py-2.5 text-sm rounded-lg mb-1 transition-colors ${
-                  activeTab === i ? 'bg-white/20 text-white' : 'text-indigo-200 hover:bg-white/10'
-                }`}
-              >
-                {tab.icon}
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        )}
-      </header>
-
-      {/* メインコンテンツ */}
-      <main className="max-w-7xl mx-auto px-4 py-6">
-        {activeTab === 0 && <OwnerListTab />}
-        {activeTab === 1 && <PropertyTab />}
-        {activeTab === 2 && <ManagementTab />}
-      </main>
-    </div>
+        {/* メインコンテンツ */}
+        <main className="max-w-7xl mx-auto px-4 py-6">
+          {activeTab === 0 && <OwnerListTab />}
+          {activeTab === 1 && <PropertyTab />}
+          {activeTab === 2 && <ManagementTab />}
+        </main>
+      </div>
+    </DataContext.Provider>
   )
 }
 

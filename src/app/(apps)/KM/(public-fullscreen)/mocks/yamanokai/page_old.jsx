@@ -8,7 +8,24 @@
  * プロジェクトの設計やルールに従ってページやコンポーネントを分割してください。
  */
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import {
+  SplashScreen,
+  InfoSidebar,
+  GuidanceOverlay,
+  GuidanceStartButton,
+} from "../_components";
+import {
+  Mountain,
+  CalendarDays,
+  ClipboardList,
+  Megaphone,
+  FileText,
+  BookOpen,
+  Users,
+  Backpack,
+  PanelRightOpen,
+} from "lucide-react";
 
 // =============================================================================
 // 定数・サンプルデータ
@@ -2187,12 +2204,77 @@ const EquipmentManagement = ({ equipment, members, rentEquipment, returnEquipmen
 };
 
 // =============================================================================
+// InfoSidebar・ガイダンスデータ
+// =============================================================================
+
+const YAMANOKAI_FEATURES = [
+  {icon: CalendarDays, title: '例会企画・カレンダー管理', description: '月次の例会企画をカレンダー形式で管理。参加予定者の集計と装備リストの自動生成を行います。', benefit: '企画立案時間を60%短縮'},
+  {icon: ClipboardList, title: '計画書管理', description: '登山計画書の作成・提出を一元管理。緊急連絡先やルート情報を含む計画書を自動生成します。', benefit: '計画書作成時間を80%短縮'},
+  {icon: Users, title: '会員管理', description: '会員の基本情報・体力ランク・保険情報を一元管理。緊急連絡先も即座に確認できます。', benefit: '会員情報の検索時間を90%削減'},
+  {icon: Backpack, title: '装備管理', description: '共有装備の貸出・返却を管理。装備の使用状況と次回点検日も追跡します。', benefit: '装備紛失ゼロを実現'},
+];
+
+const YAMANOKAI_TIME_EFFICIENCY = [
+  {task: '例会企画の作成', before: '1時間', after: '15分', saved: '45分/件'},
+  {task: '計画書の作成', before: '2時間', after: '20分', saved: '100分/件'},
+  {task: '会員情報の確認', before: '10分', after: '即時表示', saved: '10分/回'},
+  {task: '装備の在庫確認', before: '30分', after: '即時表示', saved: '30分/回'},
+];
+
+const YAMANOKAI_CHALLENGES = [
+  '例会の企画・案内がメールやLINEでバラバラ',
+  '計画書が紙やExcelで管理されていて探しにくい',
+  '会員の体力ランクや保険情報が把握しきれない',
+  '共有装備の貸出状況が分からない',
+  '例会記録が残らず活動の振り返りができない',
+];
+
+const YAMANOKAI_OVERVIEW = {
+  description: '山岳会の活動全体をデジタル管理するシステムです。例会の企画から案内、計画書作成、記録、会員・装備管理まで一気通貫で運用できます。',
+  automationPoints: [
+    '例会企画のカレンダー管理と参加者集計',
+    '計画書テンプレートによる自動生成',
+    '会員の体力ランク・保険情報の一元管理',
+    '共有装備の貸出・返却追跡',
+  ],
+  userBenefits: [
+    '紙やExcelでの管理から脱却し情報を一元化',
+    '安全管理の強化（緊急連絡先・保険情報の即時確認）',
+    '活動記録の蓄積で山岳会の知見を共有',
+  ],
+};
+
+const YAMANOKAI_OPERATION_STEPS = [
+  {step: 1, action: 'ダッシュボードを確認', detail: '直近の例会予定・参加状況・アラートを一目で把握'},
+  {step: 2, action: '例会企画を作成', detail: '山行の日程・ルート・難易度・集合場所を登録'},
+  {step: 3, action: '例会案内を配信', detail: '企画から案内を自動生成し、参加募集を開始'},
+  {step: 4, action: '計画書を作成', detail: '参加者・ルート・装備リストから計画書を自動生成'},
+  {step: 5, action: '例会記録を残す', detail: '活動の写真・ルートGPS・振り返りを記録'},
+];
+
+const YAMANOKAI_GUIDANCE_STEPS = [
+  {targetSelector: '[data-guidance="dashboard-menu"]', title: 'ダッシュボード', description: '直近の例会予定と参加状況を一目で確認できます。', position: 'right'},
+  {targetSelector: '[data-guidance="event-plan-menu"]', title: '例会企画', description: '月間カレンダーで例会の企画を管理します。', position: 'right'},
+  {targetSelector: '[data-guidance="member-menu"]', title: '会員管理', description: '会員の基本情報・体力ランク・保険情報を管理します。', position: 'right'},
+  {targetSelector: '[data-guidance="equipment-menu"]', title: '装備管理', description: '共有装備の貸出・返却と在庫を管理します。', position: 'right'},
+  {targetSelector: '[data-guidance="info-button"]', title: '機能説明', description: 'システムの概要や操作手順、時間削減効果を確認できます。', position: 'top'},
+];
+
+// =============================================================================
 // メインコンポーネント
 // =============================================================================
 
 const YamanokaiMockApp = () => {
   const [currentPage, setCurrentPage] = useState("dashboard");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
+  const [showInfoSidebar, setShowInfoSidebar] = useState(false);
+  const [showGuidance, setShowGuidance] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSplash(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   // カスタムフックの初期化
   const memberManager = useMemberManager();
@@ -2288,6 +2370,10 @@ const YamanokaiMockApp = () => {
     }
   };
 
+  if (showSplash) {
+    return <SplashScreen theme="emerald" systemName="山岳会管理システム" subtitle="Alpine Club Manager" />;
+  }
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* モバイルヘッダー */}
@@ -2326,6 +2412,7 @@ const YamanokaiMockApp = () => {
           {menuItems.map((item) => (
             <button
               key={item.id}
+              data-guidance={`${item.id}-menu`}
               onClick={() => {
                 setCurrentPage(item.id);
                 setIsSidebarOpen(false);
@@ -2340,6 +2427,9 @@ const YamanokaiMockApp = () => {
               <span className="font-medium">{item.label}</span>
             </button>
           ))}
+          <div className="border-t mt-2 pt-2">
+            <GuidanceStartButton onClick={() => setShowGuidance(true)} theme="emerald" />
+          </div>
         </nav>
       </aside>
 
@@ -2347,6 +2437,37 @@ const YamanokaiMockApp = () => {
       <main className="md:ml-64 pt-16 md:pt-0 min-h-screen">
         <div className="p-4 md:p-6">{renderPage()}</div>
       </main>
+
+      {/* 機能説明フローティングボタン */}
+      <button
+        data-guidance="info-button"
+        onClick={() => setShowInfoSidebar(true)}
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl shadow-lg shadow-emerald-500/30 hover:from-emerald-600 hover:to-green-700 transition-all duration-200"
+      >
+        <PanelRightOpen className="w-4 h-4" />
+        <span className="text-sm font-medium">機能説明</span>
+      </button>
+
+      <InfoSidebar
+        isOpen={showInfoSidebar}
+        onClose={() => setShowInfoSidebar(false)}
+        theme="emerald"
+        systemIcon={Mountain}
+        systemName="山岳会管理システム"
+        systemDescription="山岳会の活動全体をデジタル管理するシステムです。例会の企画から案内、計画書、記録、会員・装備管理まで一気通貫で運用できます。"
+        features={YAMANOKAI_FEATURES}
+        timeEfficiency={YAMANOKAI_TIME_EFFICIENCY}
+        challenges={YAMANOKAI_CHALLENGES}
+        overview={YAMANOKAI_OVERVIEW}
+        operationSteps={YAMANOKAI_OPERATION_STEPS}
+      />
+
+      <GuidanceOverlay
+        steps={YAMANOKAI_GUIDANCE_STEPS}
+        isActive={showGuidance}
+        onClose={() => setShowGuidance(false)}
+        theme="emerald"
+      />
     </div>
   );
 };

@@ -96,7 +96,7 @@ export const GuidanceView = ({onNavigate}: GuidanceViewProps) => {
       </div>
 
       {/* ステップ一覧 */}
-      <div className="space-y-4 mb-8">
+      <div data-guidance="guidance-steps" className="space-y-4 mb-8">
         {steps.map((step) => (
           <div key={step.step} className="bg-white border rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-start gap-4">
@@ -200,6 +200,7 @@ export const GuidanceView = ({onNavigate}: GuidanceViewProps) => {
           <li>月別のお客様の声</li>
         </ul>
         <button
+          data-guidance="load-mock-button"
           onClick={handleLoadMockData}
           disabled={isLoadingMock}
           className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg font-medium transition-colors shadow-md hover:shadow-lg"

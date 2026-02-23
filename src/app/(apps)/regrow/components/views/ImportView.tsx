@@ -57,6 +57,7 @@ export const ImportView = () => {
 
       {/* ドラッグ&ドロップエリア */}
       <div
+        data-guidance="upload-area"
         className={`border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-all ${
           isDragging ? 'border-red-400 bg-red-50' : 'border-gray-300 hover:border-red-300 hover:bg-gray-50'
         }`}
@@ -121,7 +122,7 @@ export const ImportView = () => {
 
       {/* 取込済みデータ一覧 */}
       {importedStores.length > 0 && (
-        <div className="mt-6">
+        <div data-guidance="imported-list" className="mt-6">
           <h2 className="text-lg font-bold mb-3 text-gray-800">取込済みデータ</h2>
           <div className="space-y-3">
             {monthlyData.importedData?.storeTotals.map((total, i) => {

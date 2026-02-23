@@ -25,7 +25,17 @@ import {
   PanelRightOpen,
   Info,
 } from 'lucide-react'
-import { SplashScreen, InfoSidebar, Feature, TimeEfficiencyItem } from '../_components'
+import {
+  SplashScreen,
+  InfoSidebar,
+  GuidanceOverlay,
+  GuidanceStartButton,
+  type Feature,
+  type TimeEfficiencyItem,
+  type OverviewInfo,
+  type OperationStep,
+  type GuidanceStep,
+} from '../_components'
 
 // --- Sample Data --------------------------------------------------
 // 製品名・原材料名を一般化
@@ -894,8 +904,7 @@ const ProductMasterPage = ({appData}) => {
         title="商品マスター"
         actions={
           <Button onClick={() => handleOpenModal()}>
-            <Plus className="w-4 h-4 mr-1" />
-            新規登録
+            <span data-guidance="add-product-button" className="flex items-center"><Plus className="w-4 h-4 mr-1" />新規登録</span>
           </Button>
         }
       />
@@ -1108,8 +1117,7 @@ const RawMaterialMasterPage = ({appData}: {appData: AppData}) => {
         title="原材料マスター"
         actions={
           <Button onClick={() => handleOpenFormModal()}>
-            <Plus className="w-4 h-4 mr-1" />
-            新規登録
+            <span data-guidance="add-material-button" className="flex items-center"><Plus className="w-4 h-4 mr-1" />新規登録</span>
           </Button>
         }
       />
@@ -1274,8 +1282,7 @@ const OrderDataPage = ({appData}) => {
         title="受注データ"
         actions={
           <Button onClick={() => handleOpenModal()}>
-            <Plus className="w-4 h-4 mr-1" />
-            新規登録
+            <span data-guidance="add-order-button" className="flex items-center"><Plus className="w-4 h-4 mr-1" />新規登録</span>
           </Button>
         }
       />
@@ -1524,13 +1531,49 @@ const PRODUCTION_CHALLENGES = [
   '過去の生産データを活用できていない',
 ]
 
+const PRODUCTION_OVERVIEW: OverviewInfo = {
+  description: '中小製造業の現場に最適化された生産管理システムです。Excelでの管理から脱却し、リアルタイムな情報共有を実現します。',
+  automationPoints: [
+    'カレンダー形式で生産計画を自動生成・可視化',
+    '原材料在庫の自動計算と安全在庫アラート',
+    '受注データから必要生産量を自動算出',
+    '日別・製品別の生産実績を自動集計',
+  ],
+  userBenefits: [
+    '在庫切れによる生産停止をゼロに',
+    '生産計画の立案時間を70%短縮',
+    'データに基づく生産効率の改善',
+  ],
+}
+
+const PRODUCTION_OPERATION_STEPS: OperationStep[] = [
+  {step: 1, action: 'ダッシュボードを確認', detail: '生産カレンダー・在庫アラート・受注状況を一目で把握'},
+  {step: 2, action: '商品マスターを管理', detail: '製品情報・レシピ（原材料構成）・製造能力を登録'},
+  {step: 3, action: '原材料マスターを管理', detail: '原材料の単価・安全在庫・カテゴリを管理'},
+  {step: 4, action: '受注データを管理', detail: '受注の登録と過去の受注傾向を確認'},
+  {step: 5, action: '生産データを記録', detail: '日別の生産実績を記録し進捗を追跡'},
+]
+
+const getProductionGuidanceSteps = (setActivePage: (page: string) => void): GuidanceStep[] => [
+  {targetSelector: '[data-guidance="dashboard-nav"]', title: 'ダッシュボード', description: '生産カレンダー・在庫状況・受注状況を一目で確認できます。', position: 'bottom', action: () => setActivePage('dashboard')},
+  {targetSelector: '[data-guidance="products-nav"]', title: '商品マスター', description: '製品情報とレシピ（原材料構成）を管理します。', position: 'bottom', action: () => setActivePage('dashboard')},
+  {targetSelector: '[data-guidance="add-product-button"]', title: '商品の登録', description: '「新規登録」ボタンで新しい商品とレシピを登録します。', position: 'bottom', action: () => setActivePage('products')},
+  {targetSelector: '[data-guidance="materials-nav"]', title: '原材料マスター', description: '原材料の単価・在庫・安全在庫を管理します。', position: 'bottom', action: () => setActivePage('products')},
+  {targetSelector: '[data-guidance="add-material-button"]', title: '原材料の登録', description: '「新規登録」ボタンで新しい原材料を登録します。', position: 'bottom', action: () => setActivePage('materials')},
+  {targetSelector: '[data-guidance="orders-nav"]', title: '受注データ', description: '受注の登録と過去の受注傾向を確認できます。', position: 'bottom', action: () => setActivePage('materials')},
+  {targetSelector: '[data-guidance="add-order-button"]', title: '注文の登録', description: '「新規登録」ボタンで新しい受注を登録します。', position: 'bottom', action: () => setActivePage('orders')},
+  {targetSelector: '[data-guidance="productions-nav"]', title: '生産データ', description: '生産実績の記録と管理を行います。', position: 'bottom', action: () => setActivePage('orders')},
+  {targetSelector: '[data-guidance="info-button"]', title: '機能説明', description: 'システムの概要や時間削減効果を確認できます。右下のボタンからいつでも開けます。', position: 'bottom', action: () => setActivePage('productions')},
+]
+
 interface HeaderProps {
   activePage: string
   setActivePage: (page: string) => void
   onOpenInfo: () => void
+  onStartGuidance: () => void
 }
 
-const Header: React.FC<HeaderProps> = ({activePage, setActivePage, onOpenInfo}) => {
+const Header: React.FC<HeaderProps> = ({activePage, setActivePage, onOpenInfo, onStartGuidance}) => {
   const [isOpen, setIsOpen] = useState(false)
   return (
     <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30">
@@ -1548,9 +1591,11 @@ const Header: React.FC<HeaderProps> = ({activePage, setActivePage, onOpenInfo}) 
             </div>
           </div>
           <nav className="hidden md:flex space-x-1 items-center">
+            <GuidanceStartButton onClick={onStartGuidance} theme="teal" />
             {navItems.map(item => (
               <button
                 key={item.name}
+                data-guidance={`${item.page}-nav`}
                 onClick={() => setActivePage(item.page)}
                 className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300
                   ${activePage === item.page
@@ -1563,6 +1608,7 @@ const Header: React.FC<HeaderProps> = ({activePage, setActivePage, onOpenInfo}) 
               </button>
             ))}
             <button
+              data-guidance="info-button"
               onClick={onOpenInfo}
               className="ml-2 p-2.5 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-xl hover:from-teal-600 hover:to-teal-700 transition-all duration-200 shadow-lg shadow-teal-500/20 hover:shadow-teal-500/30 flex items-center gap-2"
               title="このシステムでできること"
@@ -1617,6 +1663,7 @@ export default function App() {
   const [activePage, setActivePage] = useState('dashboard')
   const [showSplash, setShowSplash] = useState(true)
   const [showInfoSidebar, setShowInfoSidebar] = useState(false)
+  const [showGuidance, setShowGuidance] = useState(false)
 
   const {
     items: products,
@@ -1699,7 +1746,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50/30 font-sans text-slate-800">
-      <Header activePage={activePage} setActivePage={setActivePage} onOpenInfo={() => setShowInfoSidebar(true)} />
+      <Header activePage={activePage} setActivePage={setActivePage} onOpenInfo={() => setShowInfoSidebar(true)} onStartGuidance={() => setShowGuidance(true)} />
       <InfoSidebar
         isOpen={showInfoSidebar}
         onClose={() => setShowInfoSidebar(false)}
@@ -1710,6 +1757,14 @@ export default function App() {
         features={PRODUCTION_FEATURES}
         timeEfficiency={PRODUCTION_TIME_EFFICIENCY}
         challenges={PRODUCTION_CHALLENGES}
+        overview={PRODUCTION_OVERVIEW}
+        operationSteps={PRODUCTION_OPERATION_STEPS}
+      />
+      <GuidanceOverlay
+        steps={getProductionGuidanceSteps(setActivePage)}
+        isActive={showGuidance}
+        onClose={() => setShowGuidance(false)}
+        theme="teal"
       />
       <main className="p-4 md:p-6 container mx-auto">{renderPage()}</main>
       <footer className="bg-white/80 backdrop-blur-md border-t border-slate-200 py-4 mt-8">

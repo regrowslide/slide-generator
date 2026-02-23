@@ -1,6 +1,6 @@
 'use client'
 
-import {useState, useCallback} from 'react'
+import {useState, useCallback, useEffect} from 'react'
 
 import {
   useFacilityManager,
@@ -29,10 +29,26 @@ import {DOCUMENT_TEMPLATES, EXAMINATION_STATUS} from './constants'
 import {formatDate, nextId} from './helpers'
 import type {Examination, VisitPlan, Patient, SavedDocumentEntry} from './types'
 
+interface DentalAppMockProps {
+  hideHeader?: boolean // 外部ヘッダー使用時に内部HeaderMenuを非表示
+  onPageChange?: (page: string) => void // ページ変更通知
+  externalPage?: string // 外部からのページ指定
+}
+
 /**
  * 訪問歯科アプリ メインコンポーネント
  */
-export default function DentalAppMock() {
+export default function DentalAppMock({hideHeader, onPageChange, externalPage}: DentalAppMockProps = {}) {
+  // 外部からのページ制御
+  useEffect(() => {
+    if (externalPage && externalPage !== currentPage) {
+      setCurrentPage(externalPage)
+      setSelectedVisitPlan(null)
+      setSelectedExamination(null)
+      setSelectedPatientId(null)
+    }
+  }, [externalPage])
+
   // ページ状態
   const [currentPage, setCurrentPage] = useState('dashboard')
   const [selectedVisitPlan, setSelectedVisitPlan] = useState<VisitPlan | null>(null)
@@ -63,6 +79,7 @@ export default function DentalAppMock() {
     setSelectedVisitPlan(null)
     setSelectedExamination(null)
     setSelectedPatientId(null)
+    onPageChange?.(page)
   }
 
   const handleSelectVisitPlan = (plan: VisitPlan) => {
@@ -384,9 +401,9 @@ export default function DentalAppMock() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
-      <HeaderMenu currentPage={currentPage} onNavigate={handleNavigate} />
-      <main className="flex-1 overflow-auto">{renderContent()}</main>
+    <div className={hideHeader ? '' : 'flex flex-col min-h-screen bg-gray-100'}>
+      {!hideHeader && <HeaderMenu currentPage={currentPage} onNavigate={handleNavigate} />}
+      <main className={hideHeader ? '' : 'flex-1 overflow-auto'}>{renderContent()}</main>
     </div>
   )
 }

@@ -94,7 +94,7 @@ export const ManualInputView = () => {
       </div>
 
       {/* タブ */}
-      <div className="flex border-b mb-6">
+      <div data-guidance="manual-tabs" className="flex border-b mb-6">
         <button
           onClick={() => setActiveTab('store-kpi')}
           className={`px-6 py-3 font-medium transition-colors ${
@@ -116,6 +116,7 @@ export const ManualInputView = () => {
           スタッフ稼働率・CS登録数
         </button>
         <button
+          data-guidance="customer-voice-tab"
           onClick={() => setActiveTab('customer-voice')}
           className={`px-6 py-3 font-medium transition-colors ${
             activeTab === 'customer-voice'
@@ -129,7 +130,7 @@ export const ManualInputView = () => {
 
       {/* 店舗KPIタブ */}
       {activeTab === 'store-kpi' && (
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div data-guidance="store-kpi-form" className="bg-white rounded-lg shadow-sm p-6">
           <h2 className="text-lg font-bold mb-4">店舗月次KPI</h2>
           <div className="space-y-6">
             {stores.map((store) => {
@@ -272,7 +273,7 @@ export const ManualInputView = () => {
 
       {/* お客様の声タブ */}
       {activeTab === 'customer-voice' && (
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div data-guidance="customer-voice" className="bg-white rounded-lg shadow-sm p-6">
           <h2 className="text-lg font-bold mb-4">お客様の声</h2>
           <textarea
             value={monthlyData.manualData.customerVoice.content}

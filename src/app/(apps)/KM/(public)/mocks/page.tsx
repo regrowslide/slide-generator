@@ -78,17 +78,7 @@ const mockups = [
     bgGradient: 'from-emerald-50 to-green-50',
     accentColor: 'emerald',
   },
-  {
-    id: 'earth',
-    title: '不動産業務管理システム',
-    description:
-      '不動産仲介・賃貸管理・建築工事を一元管理。物件・顧客・現場・仲介の情報を有機的に連携し、業務効率を大幅に向上。',
-    features: ['物件管理', '賃貸管理', '現場管理', '仲介管理'],
-    icon: Building2,
-    gradient: 'from-indigo-500 to-blue-600',
-    bgGradient: 'from-indigo-50 to-blue-50',
-    accentColor: 'indigo',
-  },
+
   {
     id: 'sales-auto',
     title: '自動車ディーラー営業管理システム',

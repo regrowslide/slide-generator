@@ -259,7 +259,7 @@ export const SlidesView = () => {
         <div className="sticky top-0 z-40 bg-white shadow-sm border-b px-4 py-2">
           <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
             {/* モード切替 */}
-            <div className="flex items-center gap-2">
+            <div data-guidance="view-mode-toggle" className="flex items-center gap-2">
               <span className="text-sm font-bold text-gray-700">表示:</span>
               <button
                 onClick={() => setViewMode('scroll')}
@@ -319,7 +319,7 @@ export const SlidesView = () => {
       )}
 
       {/* スライドコンテンツ */}
-      <div className={`${isFullscreen ? 'pt-12' : 'py-8 pb-24'}`}>
+      <div data-guidance="slides-container" className={`${isFullscreen ? 'pt-12' : 'py-8 pb-24'}`}>
         {viewMode === 'scroll' ? (
           // スクロールモード
           <div className="max-w-6xl mx-auto space-y-8">
@@ -373,7 +373,7 @@ export const SlidesView = () => {
 
       {/* グローバルフィルタバー（画面下部固定、全画面時は非表示） */}
       {!isFullscreen && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white shadow-2xl border-t-2 border-purple-600 p-3 z-50">
+        <div data-guidance="filter-bar" className="fixed bottom-0 left-0 right-0 bg-white shadow-2xl border-t-2 border-purple-600 p-3 z-50">
           <div className="max-w-6xl mx-auto flex items-center justify-center gap-4 flex-wrap">
             {/* 店舗フィルタ */}
             <span className="text-sm font-bold text-gray-700">店舗:</span>
