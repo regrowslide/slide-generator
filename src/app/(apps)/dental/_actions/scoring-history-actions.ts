@@ -7,10 +7,11 @@ import type {Prisma} from '@prisma/generated/prisma/client'
 export const getDentalScoringHistories = async (params?: {
   where?: Prisma.DentalScoringHistoryWhereInput
   orderBy?: Prisma.DentalScoringHistoryOrderByWithRelationInput
+  dentalClinicId?: number
 }) => {
-  const {where, orderBy} = params ?? {}
+  const {where, orderBy, dentalClinicId} = params ?? {}
   return await prisma.dentalScoringHistory.findMany({
-    where,
+    where: {...where, ...(dentalClinicId ? {DentalPatient: {DentalFacility: {dentalClinicId}}} : {})},
     orderBy: orderBy ?? {lastScoredAt: 'desc'},
   })
 }

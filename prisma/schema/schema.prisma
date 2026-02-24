@@ -104,6 +104,12 @@ model User {
   YamanokaiAttendanceAsApprover YamanokaiAttendance[] @relation("AttendanceApprover")
   department                    Department?           @relation(fields: [departmentId], references: [id])
   departmentId                  Int?
+
+  // dental
+  DentalClinic               DentalClinic?       @relation(fields: [dentalClinicId], references: [id])
+  dentalClinicId             Int?
+  DentalExaminationDoctor    DentalExamination[] @relation("ExaminationDoctor")
+  DentalExaminationHygienist DentalExamination[] @relation("ExaminationHygienist")
 }
 
 model ReleaseNotes {

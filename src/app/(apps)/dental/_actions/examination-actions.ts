@@ -18,10 +18,11 @@ export const getDentalExaminations = async (params?: {
   orderBy?: Prisma.DentalExaminationOrderByWithRelationInput
   take?: number
   skip?: number
+  dentalClinicId?: number
 }) => {
-  const {where, orderBy, take, skip} = params ?? {}
+  const {where, orderBy, take, skip, dentalClinicId} = params ?? {}
   return await prisma.dentalExamination.findMany({
-    where,
+    where: {...where, ...(dentalClinicId ? {DentalVisitPlan: {dentalClinicId}} : {})},
     orderBy: orderBy ?? {sortOrder: 'asc'},
     include: examinationInclude,
     take,

@@ -60,7 +60,11 @@ export const getScopes = (session: anyObject, options: getScopeOptionsProps) => 
       return { userId, isSystemAdmin, isCL, canEdit }
     },
 
-
+    getDentalScopes: () => {
+      const isSystemAdmin = !!arr__findCommonValues([`管理者`], roleNames) || admin
+      const userId = !admin ? session?.id : Number(query?.[globalIds.globalUserId] ?? session?.id ?? 0)
+      return { userId, isSystemAdmin }
+    },
 
   }
 

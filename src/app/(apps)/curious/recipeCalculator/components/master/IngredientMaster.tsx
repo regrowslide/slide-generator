@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useTransition } from 'react'
 import { Database, Plus, Search, Loader2 } from 'lucide-react'
-import { Button } from '@shadcn/ui/button'
+import { Button } from '@cm/components/styles/common-components/Button'
 import useModal from '@cm/components/utils/modal/useModal'
 import type { RcIngredientMaster } from '../../types'
 import {
@@ -11,7 +11,7 @@ import {
   updateIngredientMaster,
   deleteIngredientMaster,
 } from '../../server-actions/ingredient-master-actions'
-import {seedIngredientMasters} from '../../server-actions/seed-ingredient-master'
+import { seedIngredientMasters } from '../../server-actions/seed-ingredient-master'
 import { IngredientMasterTable } from './IngredientTable'
 import { IngredientForm } from './IngredientForm'
 
@@ -117,7 +117,7 @@ export const IngredientMaster = () => {
             />
           </div>
           {masterData.length === 0 && (
-            <Button onClick={handleSeed} disabled={isPending} variant="outline" className="text-emerald-700 border-emerald-300 hover:bg-emerald-50">
+            <Button onClick={handleSeed} disabled={isPending} color="green" className="text-emerald-700 border-emerald-300 hover:bg-emerald-50">
               初期データ投入
             </Button>
           )}

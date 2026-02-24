@@ -249,7 +249,7 @@ export type DentalClinicWhereInput = {
   representative?: Prisma.StringNullableFilter<"DentalClinic"> | string | null
   qualifications?: Prisma.JsonNullableFilter<"DentalClinic">
   DentalFacility?: Prisma.DentalFacilityListRelationFilter
-  DentalStaff?: Prisma.DentalStaffListRelationFilter
+  User?: Prisma.UserListRelationFilter
   DentalVisitPlan?: Prisma.DentalVisitPlanListRelationFilter
   DentalSavedDocument?: Prisma.DentalSavedDocumentListRelationFilter
 }
@@ -265,7 +265,7 @@ export type DentalClinicOrderByWithRelationInput = {
   representative?: Prisma.SortOrderInput | Prisma.SortOrder
   qualifications?: Prisma.SortOrderInput | Prisma.SortOrder
   DentalFacility?: Prisma.DentalFacilityOrderByRelationAggregateInput
-  DentalStaff?: Prisma.DentalStaffOrderByRelationAggregateInput
+  User?: Prisma.UserOrderByRelationAggregateInput
   DentalVisitPlan?: Prisma.DentalVisitPlanOrderByRelationAggregateInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentOrderByRelationAggregateInput
 }
@@ -284,7 +284,7 @@ export type DentalClinicWhereUniqueInput = Prisma.AtLeast<{
   representative?: Prisma.StringNullableFilter<"DentalClinic"> | string | null
   qualifications?: Prisma.JsonNullableFilter<"DentalClinic">
   DentalFacility?: Prisma.DentalFacilityListRelationFilter
-  DentalStaff?: Prisma.DentalStaffListRelationFilter
+  User?: Prisma.UserListRelationFilter
   DentalVisitPlan?: Prisma.DentalVisitPlanListRelationFilter
   DentalSavedDocument?: Prisma.DentalSavedDocumentListRelationFilter
 }, "id">
@@ -331,7 +331,7 @@ export type DentalClinicCreateInput = {
   representative?: string | null
   qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   DentalFacility?: Prisma.DentalFacilityCreateNestedManyWithoutDentalClinicInput
-  DentalStaff?: Prisma.DentalStaffCreateNestedManyWithoutDentalClinicInput
+  User?: Prisma.UserCreateNestedManyWithoutDentalClinicInput
   DentalVisitPlan?: Prisma.DentalVisitPlanCreateNestedManyWithoutDentalClinicInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentCreateNestedManyWithoutDentalClinicInput
 }
@@ -347,7 +347,7 @@ export type DentalClinicUncheckedCreateInput = {
   representative?: string | null
   qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   DentalFacility?: Prisma.DentalFacilityUncheckedCreateNestedManyWithoutDentalClinicInput
-  DentalStaff?: Prisma.DentalStaffUncheckedCreateNestedManyWithoutDentalClinicInput
+  User?: Prisma.UserUncheckedCreateNestedManyWithoutDentalClinicInput
   DentalVisitPlan?: Prisma.DentalVisitPlanUncheckedCreateNestedManyWithoutDentalClinicInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedCreateNestedManyWithoutDentalClinicInput
 }
@@ -362,7 +362,7 @@ export type DentalClinicUpdateInput = {
   representative?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   DentalFacility?: Prisma.DentalFacilityUpdateManyWithoutDentalClinicNestedInput
-  DentalStaff?: Prisma.DentalStaffUpdateManyWithoutDentalClinicNestedInput
+  User?: Prisma.UserUpdateManyWithoutDentalClinicNestedInput
   DentalVisitPlan?: Prisma.DentalVisitPlanUpdateManyWithoutDentalClinicNestedInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentUpdateManyWithoutDentalClinicNestedInput
 }
@@ -378,7 +378,7 @@ export type DentalClinicUncheckedUpdateInput = {
   representative?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   DentalFacility?: Prisma.DentalFacilityUncheckedUpdateManyWithoutDentalClinicNestedInput
-  DentalStaff?: Prisma.DentalStaffUncheckedUpdateManyWithoutDentalClinicNestedInput
+  User?: Prisma.UserUncheckedUpdateManyWithoutDentalClinicNestedInput
   DentalVisitPlan?: Prisma.DentalVisitPlanUncheckedUpdateManyWithoutDentalClinicNestedInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedUpdateManyWithoutDentalClinicNestedInput
 }
@@ -486,20 +486,6 @@ export type DentalClinicUpdateOneRequiredWithoutDentalFacilityNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DentalClinicUpdateToOneWithWhereWithoutDentalFacilityInput, Prisma.DentalClinicUpdateWithoutDentalFacilityInput>, Prisma.DentalClinicUncheckedUpdateWithoutDentalFacilityInput>
 }
 
-export type DentalClinicCreateNestedOneWithoutDentalStaffInput = {
-  create?: Prisma.XOR<Prisma.DentalClinicCreateWithoutDentalStaffInput, Prisma.DentalClinicUncheckedCreateWithoutDentalStaffInput>
-  connectOrCreate?: Prisma.DentalClinicCreateOrConnectWithoutDentalStaffInput
-  connect?: Prisma.DentalClinicWhereUniqueInput
-}
-
-export type DentalClinicUpdateOneRequiredWithoutDentalStaffNestedInput = {
-  create?: Prisma.XOR<Prisma.DentalClinicCreateWithoutDentalStaffInput, Prisma.DentalClinicUncheckedCreateWithoutDentalStaffInput>
-  connectOrCreate?: Prisma.DentalClinicCreateOrConnectWithoutDentalStaffInput
-  upsert?: Prisma.DentalClinicUpsertWithoutDentalStaffInput
-  connect?: Prisma.DentalClinicWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.DentalClinicUpdateToOneWithWhereWithoutDentalStaffInput, Prisma.DentalClinicUpdateWithoutDentalStaffInput>, Prisma.DentalClinicUncheckedUpdateWithoutDentalStaffInput>
-}
-
 export type DentalClinicCreateNestedOneWithoutDentalVisitPlanInput = {
   create?: Prisma.XOR<Prisma.DentalClinicCreateWithoutDentalVisitPlanInput, Prisma.DentalClinicUncheckedCreateWithoutDentalVisitPlanInput>
   connectOrCreate?: Prisma.DentalClinicCreateOrConnectWithoutDentalVisitPlanInput
@@ -530,6 +516,22 @@ export type DentalClinicUpdateOneWithoutDentalSavedDocumentNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DentalClinicUpdateToOneWithWhereWithoutDentalSavedDocumentInput, Prisma.DentalClinicUpdateWithoutDentalSavedDocumentInput>, Prisma.DentalClinicUncheckedUpdateWithoutDentalSavedDocumentInput>
 }
 
+export type DentalClinicCreateNestedOneWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.DentalClinicCreateWithoutUserInput, Prisma.DentalClinicUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.DentalClinicCreateOrConnectWithoutUserInput
+  connect?: Prisma.DentalClinicWhereUniqueInput
+}
+
+export type DentalClinicUpdateOneWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.DentalClinicCreateWithoutUserInput, Prisma.DentalClinicUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.DentalClinicCreateOrConnectWithoutUserInput
+  upsert?: Prisma.DentalClinicUpsertWithoutUserInput
+  disconnect?: Prisma.DentalClinicWhereInput | boolean
+  delete?: Prisma.DentalClinicWhereInput | boolean
+  connect?: Prisma.DentalClinicWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DentalClinicUpdateToOneWithWhereWithoutUserInput, Prisma.DentalClinicUpdateWithoutUserInput>, Prisma.DentalClinicUncheckedUpdateWithoutUserInput>
+}
+
 export type DentalClinicCreateWithoutDentalFacilityInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
@@ -539,7 +541,7 @@ export type DentalClinicCreateWithoutDentalFacilityInput = {
   phone?: string | null
   representative?: string | null
   qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  DentalStaff?: Prisma.DentalStaffCreateNestedManyWithoutDentalClinicInput
+  User?: Prisma.UserCreateNestedManyWithoutDentalClinicInput
   DentalVisitPlan?: Prisma.DentalVisitPlanCreateNestedManyWithoutDentalClinicInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentCreateNestedManyWithoutDentalClinicInput
 }
@@ -554,7 +556,7 @@ export type DentalClinicUncheckedCreateWithoutDentalFacilityInput = {
   phone?: string | null
   representative?: string | null
   qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  DentalStaff?: Prisma.DentalStaffUncheckedCreateNestedManyWithoutDentalClinicInput
+  User?: Prisma.UserUncheckedCreateNestedManyWithoutDentalClinicInput
   DentalVisitPlan?: Prisma.DentalVisitPlanUncheckedCreateNestedManyWithoutDentalClinicInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedCreateNestedManyWithoutDentalClinicInput
 }
@@ -584,7 +586,7 @@ export type DentalClinicUpdateWithoutDentalFacilityInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   representative?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  DentalStaff?: Prisma.DentalStaffUpdateManyWithoutDentalClinicNestedInput
+  User?: Prisma.UserUpdateManyWithoutDentalClinicNestedInput
   DentalVisitPlan?: Prisma.DentalVisitPlanUpdateManyWithoutDentalClinicNestedInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentUpdateManyWithoutDentalClinicNestedInput
 }
@@ -599,81 +601,7 @@ export type DentalClinicUncheckedUpdateWithoutDentalFacilityInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   representative?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  DentalStaff?: Prisma.DentalStaffUncheckedUpdateManyWithoutDentalClinicNestedInput
-  DentalVisitPlan?: Prisma.DentalVisitPlanUncheckedUpdateManyWithoutDentalClinicNestedInput
-  DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedUpdateManyWithoutDentalClinicNestedInput
-}
-
-export type DentalClinicCreateWithoutDentalStaffInput = {
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  name: string
-  address?: string | null
-  phone?: string | null
-  representative?: string | null
-  qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  DentalFacility?: Prisma.DentalFacilityCreateNestedManyWithoutDentalClinicInput
-  DentalVisitPlan?: Prisma.DentalVisitPlanCreateNestedManyWithoutDentalClinicInput
-  DentalSavedDocument?: Prisma.DentalSavedDocumentCreateNestedManyWithoutDentalClinicInput
-}
-
-export type DentalClinicUncheckedCreateWithoutDentalStaffInput = {
-  id?: number
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  name: string
-  address?: string | null
-  phone?: string | null
-  representative?: string | null
-  qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  DentalFacility?: Prisma.DentalFacilityUncheckedCreateNestedManyWithoutDentalClinicInput
-  DentalVisitPlan?: Prisma.DentalVisitPlanUncheckedCreateNestedManyWithoutDentalClinicInput
-  DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedCreateNestedManyWithoutDentalClinicInput
-}
-
-export type DentalClinicCreateOrConnectWithoutDentalStaffInput = {
-  where: Prisma.DentalClinicWhereUniqueInput
-  create: Prisma.XOR<Prisma.DentalClinicCreateWithoutDentalStaffInput, Prisma.DentalClinicUncheckedCreateWithoutDentalStaffInput>
-}
-
-export type DentalClinicUpsertWithoutDentalStaffInput = {
-  update: Prisma.XOR<Prisma.DentalClinicUpdateWithoutDentalStaffInput, Prisma.DentalClinicUncheckedUpdateWithoutDentalStaffInput>
-  create: Prisma.XOR<Prisma.DentalClinicCreateWithoutDentalStaffInput, Prisma.DentalClinicUncheckedCreateWithoutDentalStaffInput>
-  where?: Prisma.DentalClinicWhereInput
-}
-
-export type DentalClinicUpdateToOneWithWhereWithoutDentalStaffInput = {
-  where?: Prisma.DentalClinicWhereInput
-  data: Prisma.XOR<Prisma.DentalClinicUpdateWithoutDentalStaffInput, Prisma.DentalClinicUncheckedUpdateWithoutDentalStaffInput>
-}
-
-export type DentalClinicUpdateWithoutDentalStaffInput = {
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  representative?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  DentalFacility?: Prisma.DentalFacilityUpdateManyWithoutDentalClinicNestedInput
-  DentalVisitPlan?: Prisma.DentalVisitPlanUpdateManyWithoutDentalClinicNestedInput
-  DentalSavedDocument?: Prisma.DentalSavedDocumentUpdateManyWithoutDentalClinicNestedInput
-}
-
-export type DentalClinicUncheckedUpdateWithoutDentalStaffInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  representative?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  DentalFacility?: Prisma.DentalFacilityUncheckedUpdateManyWithoutDentalClinicNestedInput
+  User?: Prisma.UserUncheckedUpdateManyWithoutDentalClinicNestedInput
   DentalVisitPlan?: Prisma.DentalVisitPlanUncheckedUpdateManyWithoutDentalClinicNestedInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedUpdateManyWithoutDentalClinicNestedInput
 }
@@ -688,7 +616,7 @@ export type DentalClinicCreateWithoutDentalVisitPlanInput = {
   representative?: string | null
   qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   DentalFacility?: Prisma.DentalFacilityCreateNestedManyWithoutDentalClinicInput
-  DentalStaff?: Prisma.DentalStaffCreateNestedManyWithoutDentalClinicInput
+  User?: Prisma.UserCreateNestedManyWithoutDentalClinicInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentCreateNestedManyWithoutDentalClinicInput
 }
 
@@ -703,7 +631,7 @@ export type DentalClinicUncheckedCreateWithoutDentalVisitPlanInput = {
   representative?: string | null
   qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   DentalFacility?: Prisma.DentalFacilityUncheckedCreateNestedManyWithoutDentalClinicInput
-  DentalStaff?: Prisma.DentalStaffUncheckedCreateNestedManyWithoutDentalClinicInput
+  User?: Prisma.UserUncheckedCreateNestedManyWithoutDentalClinicInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedCreateNestedManyWithoutDentalClinicInput
 }
 
@@ -733,7 +661,7 @@ export type DentalClinicUpdateWithoutDentalVisitPlanInput = {
   representative?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   DentalFacility?: Prisma.DentalFacilityUpdateManyWithoutDentalClinicNestedInput
-  DentalStaff?: Prisma.DentalStaffUpdateManyWithoutDentalClinicNestedInput
+  User?: Prisma.UserUpdateManyWithoutDentalClinicNestedInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentUpdateManyWithoutDentalClinicNestedInput
 }
 
@@ -748,7 +676,7 @@ export type DentalClinicUncheckedUpdateWithoutDentalVisitPlanInput = {
   representative?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   DentalFacility?: Prisma.DentalFacilityUncheckedUpdateManyWithoutDentalClinicNestedInput
-  DentalStaff?: Prisma.DentalStaffUncheckedUpdateManyWithoutDentalClinicNestedInput
+  User?: Prisma.UserUncheckedUpdateManyWithoutDentalClinicNestedInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedUpdateManyWithoutDentalClinicNestedInput
 }
 
@@ -762,7 +690,7 @@ export type DentalClinicCreateWithoutDentalSavedDocumentInput = {
   representative?: string | null
   qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   DentalFacility?: Prisma.DentalFacilityCreateNestedManyWithoutDentalClinicInput
-  DentalStaff?: Prisma.DentalStaffCreateNestedManyWithoutDentalClinicInput
+  User?: Prisma.UserCreateNestedManyWithoutDentalClinicInput
   DentalVisitPlan?: Prisma.DentalVisitPlanCreateNestedManyWithoutDentalClinicInput
 }
 
@@ -777,7 +705,7 @@ export type DentalClinicUncheckedCreateWithoutDentalSavedDocumentInput = {
   representative?: string | null
   qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   DentalFacility?: Prisma.DentalFacilityUncheckedCreateNestedManyWithoutDentalClinicInput
-  DentalStaff?: Prisma.DentalStaffUncheckedCreateNestedManyWithoutDentalClinicInput
+  User?: Prisma.UserUncheckedCreateNestedManyWithoutDentalClinicInput
   DentalVisitPlan?: Prisma.DentalVisitPlanUncheckedCreateNestedManyWithoutDentalClinicInput
 }
 
@@ -807,7 +735,7 @@ export type DentalClinicUpdateWithoutDentalSavedDocumentInput = {
   representative?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   DentalFacility?: Prisma.DentalFacilityUpdateManyWithoutDentalClinicNestedInput
-  DentalStaff?: Prisma.DentalStaffUpdateManyWithoutDentalClinicNestedInput
+  User?: Prisma.UserUpdateManyWithoutDentalClinicNestedInput
   DentalVisitPlan?: Prisma.DentalVisitPlanUpdateManyWithoutDentalClinicNestedInput
 }
 
@@ -822,8 +750,82 @@ export type DentalClinicUncheckedUpdateWithoutDentalSavedDocumentInput = {
   representative?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   DentalFacility?: Prisma.DentalFacilityUncheckedUpdateManyWithoutDentalClinicNestedInput
-  DentalStaff?: Prisma.DentalStaffUncheckedUpdateManyWithoutDentalClinicNestedInput
+  User?: Prisma.UserUncheckedUpdateManyWithoutDentalClinicNestedInput
   DentalVisitPlan?: Prisma.DentalVisitPlanUncheckedUpdateManyWithoutDentalClinicNestedInput
+}
+
+export type DentalClinicCreateWithoutUserInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  name: string
+  address?: string | null
+  phone?: string | null
+  representative?: string | null
+  qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  DentalFacility?: Prisma.DentalFacilityCreateNestedManyWithoutDentalClinicInput
+  DentalVisitPlan?: Prisma.DentalVisitPlanCreateNestedManyWithoutDentalClinicInput
+  DentalSavedDocument?: Prisma.DentalSavedDocumentCreateNestedManyWithoutDentalClinicInput
+}
+
+export type DentalClinicUncheckedCreateWithoutUserInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  name: string
+  address?: string | null
+  phone?: string | null
+  representative?: string | null
+  qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  DentalFacility?: Prisma.DentalFacilityUncheckedCreateNestedManyWithoutDentalClinicInput
+  DentalVisitPlan?: Prisma.DentalVisitPlanUncheckedCreateNestedManyWithoutDentalClinicInput
+  DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedCreateNestedManyWithoutDentalClinicInput
+}
+
+export type DentalClinicCreateOrConnectWithoutUserInput = {
+  where: Prisma.DentalClinicWhereUniqueInput
+  create: Prisma.XOR<Prisma.DentalClinicCreateWithoutUserInput, Prisma.DentalClinicUncheckedCreateWithoutUserInput>
+}
+
+export type DentalClinicUpsertWithoutUserInput = {
+  update: Prisma.XOR<Prisma.DentalClinicUpdateWithoutUserInput, Prisma.DentalClinicUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.DentalClinicCreateWithoutUserInput, Prisma.DentalClinicUncheckedCreateWithoutUserInput>
+  where?: Prisma.DentalClinicWhereInput
+}
+
+export type DentalClinicUpdateToOneWithWhereWithoutUserInput = {
+  where?: Prisma.DentalClinicWhereInput
+  data: Prisma.XOR<Prisma.DentalClinicUpdateWithoutUserInput, Prisma.DentalClinicUncheckedUpdateWithoutUserInput>
+}
+
+export type DentalClinicUpdateWithoutUserInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  representative?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  DentalFacility?: Prisma.DentalFacilityUpdateManyWithoutDentalClinicNestedInput
+  DentalVisitPlan?: Prisma.DentalVisitPlanUpdateManyWithoutDentalClinicNestedInput
+  DentalSavedDocument?: Prisma.DentalSavedDocumentUpdateManyWithoutDentalClinicNestedInput
+}
+
+export type DentalClinicUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  representative?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qualifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  DentalFacility?: Prisma.DentalFacilityUncheckedUpdateManyWithoutDentalClinicNestedInput
+  DentalVisitPlan?: Prisma.DentalVisitPlanUncheckedUpdateManyWithoutDentalClinicNestedInput
+  DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedUpdateManyWithoutDentalClinicNestedInput
 }
 
 
@@ -833,14 +835,14 @@ export type DentalClinicUncheckedUpdateWithoutDentalSavedDocumentInput = {
 
 export type DentalClinicCountOutputType = {
   DentalFacility: number
-  DentalStaff: number
+  User: number
   DentalVisitPlan: number
   DentalSavedDocument: number
 }
 
 export type DentalClinicCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   DentalFacility?: boolean | DentalClinicCountOutputTypeCountDentalFacilityArgs
-  DentalStaff?: boolean | DentalClinicCountOutputTypeCountDentalStaffArgs
+  User?: boolean | DentalClinicCountOutputTypeCountUserArgs
   DentalVisitPlan?: boolean | DentalClinicCountOutputTypeCountDentalVisitPlanArgs
   DentalSavedDocument?: boolean | DentalClinicCountOutputTypeCountDentalSavedDocumentArgs
 }
@@ -865,8 +867,8 @@ export type DentalClinicCountOutputTypeCountDentalFacilityArgs<ExtArgs extends r
 /**
  * DentalClinicCountOutputType without action
  */
-export type DentalClinicCountOutputTypeCountDentalStaffArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.DentalStaffWhereInput
+export type DentalClinicCountOutputTypeCountUserArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserWhereInput
 }
 
 /**
@@ -895,7 +897,7 @@ export type DentalClinicSelect<ExtArgs extends runtime.Types.Extensions.Internal
   representative?: boolean
   qualifications?: boolean
   DentalFacility?: boolean | Prisma.DentalClinic$DentalFacilityArgs<ExtArgs>
-  DentalStaff?: boolean | Prisma.DentalClinic$DentalStaffArgs<ExtArgs>
+  User?: boolean | Prisma.DentalClinic$UserArgs<ExtArgs>
   DentalVisitPlan?: boolean | Prisma.DentalClinic$DentalVisitPlanArgs<ExtArgs>
   DentalSavedDocument?: boolean | Prisma.DentalClinic$DentalSavedDocumentArgs<ExtArgs>
   _count?: boolean | Prisma.DentalClinicCountOutputTypeDefaultArgs<ExtArgs>
@@ -940,7 +942,7 @@ export type DentalClinicSelectScalar = {
 export type DentalClinicOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "name" | "address" | "phone" | "representative" | "qualifications", ExtArgs["result"]["dentalClinic"]>
 export type DentalClinicInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   DentalFacility?: boolean | Prisma.DentalClinic$DentalFacilityArgs<ExtArgs>
-  DentalStaff?: boolean | Prisma.DentalClinic$DentalStaffArgs<ExtArgs>
+  User?: boolean | Prisma.DentalClinic$UserArgs<ExtArgs>
   DentalVisitPlan?: boolean | Prisma.DentalClinic$DentalVisitPlanArgs<ExtArgs>
   DentalSavedDocument?: boolean | Prisma.DentalClinic$DentalSavedDocumentArgs<ExtArgs>
   _count?: boolean | Prisma.DentalClinicCountOutputTypeDefaultArgs<ExtArgs>
@@ -952,7 +954,7 @@ export type $DentalClinicPayload<ExtArgs extends runtime.Types.Extensions.Intern
   name: "DentalClinic"
   objects: {
     DentalFacility: Prisma.$DentalFacilityPayload<ExtArgs>[]
-    DentalStaff: Prisma.$DentalStaffPayload<ExtArgs>[]
+    User: Prisma.$UserPayload<ExtArgs>[]
     DentalVisitPlan: Prisma.$DentalVisitPlanPayload<ExtArgs>[]
     DentalSavedDocument: Prisma.$DentalSavedDocumentPayload<ExtArgs>[]
   }
@@ -1361,7 +1363,7 @@ readonly fields: DentalClinicFieldRefs;
 export interface Prisma__DentalClinicClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   DentalFacility<T extends Prisma.DentalClinic$DentalFacilityArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DentalClinic$DentalFacilityArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DentalFacilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  DentalStaff<T extends Prisma.DentalClinic$DentalStaffArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DentalClinic$DentalStaffArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DentalStaffPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  User<T extends Prisma.DentalClinic$UserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DentalClinic$UserArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   DentalVisitPlan<T extends Prisma.DentalClinic$DentalVisitPlanArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DentalClinic$DentalVisitPlanArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DentalVisitPlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   DentalSavedDocument<T extends Prisma.DentalClinic$DentalSavedDocumentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DentalClinic$DentalSavedDocumentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DentalSavedDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1814,27 +1816,27 @@ export type DentalClinic$DentalFacilityArgs<ExtArgs extends runtime.Types.Extens
 }
 
 /**
- * DentalClinic.DentalStaff
+ * DentalClinic.User
  */
-export type DentalClinic$DentalStaffArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type DentalClinic$UserArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the DentalStaff
+   * Select specific fields to fetch from the User
    */
-  select?: Prisma.DentalStaffSelect<ExtArgs> | null
+  select?: Prisma.UserSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the DentalStaff
+   * Omit specific fields from the User
    */
-  omit?: Prisma.DentalStaffOmit<ExtArgs> | null
+  omit?: Prisma.UserOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.DentalStaffInclude<ExtArgs> | null
-  where?: Prisma.DentalStaffWhereInput
-  orderBy?: Prisma.DentalStaffOrderByWithRelationInput | Prisma.DentalStaffOrderByWithRelationInput[]
-  cursor?: Prisma.DentalStaffWhereUniqueInput
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+  orderBy?: Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[]
+  cursor?: Prisma.UserWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.DentalStaffScalarFieldEnum | Prisma.DentalStaffScalarFieldEnum[]
+  distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
 }
 
 /**

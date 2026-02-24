@@ -1,8 +1,8 @@
 'use client'
 
-import {Edit, Trash2} from 'lucide-react'
-import {Button} from '@shadcn/ui/button'
-import type {RcIngredientMaster} from '../../types'
+import { Edit, Trash2 } from 'lucide-react'
+import { Button } from '@cm/components/styles/common-components/Button'
+import type { RcIngredientMaster } from '../../types'
 
 interface IngredientTableProps {
   data: RcIngredientMaster[]
@@ -10,7 +10,7 @@ interface IngredientTableProps {
   onDelete: (id: number) => void
 }
 
-export const IngredientMasterTable = ({data, onEdit, onDelete}: IngredientTableProps) => {
+export const IngredientMasterTable = ({ data, onEdit, onDelete }: IngredientTableProps) => {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm text-left">

@@ -72,7 +72,6 @@ export const ModelName = {
   DentalClinic: 'DentalClinic',
   DentalFacility: 'DentalFacility',
   DentalPatient: 'DentalPatient',
-  DentalStaff: 'DentalStaff',
   DentalVisitPlan: 'DentalVisitPlan',
   DentalExamination: 'DentalExamination',
   DentalScoringHistory: 'DentalScoringHistory',
@@ -521,19 +520,6 @@ export const DentalPatientScalarFieldEnum = {
 } as const
 
 export type DentalPatientScalarFieldEnum = (typeof DentalPatientScalarFieldEnum)[keyof typeof DentalPatientScalarFieldEnum]
-
-
-export const DentalStaffScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  name: 'name',
-  role: 'role',
-  dentalClinicId: 'dentalClinicId'
-} as const
-
-export type DentalStaffScalarFieldEnum = (typeof DentalStaffScalarFieldEnum)[keyof typeof DentalStaffScalarFieldEnum]
 
 
 export const DentalVisitPlanScalarFieldEnum = {
@@ -1318,7 +1304,8 @@ export const UserScalarFieldEnum = {
   counselingStoreId: 'counselingStoreId',
   aidocumentCompanyId: 'aidocumentCompanyId',
   storeId: 'storeId',
-  departmentId: 'departmentId'
+  departmentId: 'departmentId',
+  dentalClinicId: 'dentalClinicId'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]

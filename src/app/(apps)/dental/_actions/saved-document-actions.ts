@@ -7,10 +7,11 @@ import prisma from 'src/lib/prisma'
 export const getDentalSavedDocuments = async (params?: {
   where?: Prisma.DentalSavedDocumentWhereInput
   orderBy?: Prisma.DentalSavedDocumentOrderByWithRelationInput
+  dentalClinicId?: number
 }) => {
-  const {where, orderBy} = params ?? {}
+  const {where, orderBy, dentalClinicId} = params ?? {}
   return await prisma.dentalSavedDocument.findMany({
-    where,
+    where: {...where, ...(dentalClinicId ? {dentalClinicId} : {})},
     orderBy: orderBy ?? {createdAt: 'desc'},
     include: {
       DentalPatient: true,

@@ -242,6 +242,43 @@ UserEditModalReturn.handleClose()
 - Minimize features, prioritize speed and simplicity
 - Keep UI intuitive and uncluttered
 
+### 必須パターン
+
+**モーダル: `useModal`を必ず使用する**:
+
+- shadcn/uiの`Dialog`コンポーネントを直接使わない
+- 必ず`useModal`フック（`@cm/components/utils/modal/useModal`）を使用する
+
+```tsx
+const myModal = useModal()
+
+myModal.handleOpen()   // 開く
+myModal.handleClose()  // 閉じる
+
+<myModal.Modal title="タイトル">
+  {/* モーダル内コンテンツ */}
+</myModal.Modal>
+```
+
+**リンク・ナビゲーション: `HREF`関数を必ず使用する**:
+
+- `router.push('/path')` や `href="/path"` のように直接文字列でURLを指定しない
+- 必ず`HREF`関数（`@cm/lib/methods/urls`）でURLを生成し、グローバルクエリパラメータを引き継ぐ
+
+```tsx
+import {HREF} from '@cm/lib/methods/urls'
+import useGlobal from '@cm/hooks/globalHooks/useGlobal'
+
+const {query} = useGlobal()
+
+// router.push
+router.push(HREF('/dental/schedule', {}, query))
+router.push(HREF('/dental/consultation', {examinationId: exam.id}, query))
+
+// Link href
+<Link href={HREF('/dental/admin/patients', {}, query)}>
+```
+
 ## Coding Standards
 
 ### Naming Conventions

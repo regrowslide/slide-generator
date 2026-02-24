@@ -3,41 +3,59 @@
 import type {Prisma} from '@prisma/generated/prisma/client'
 import prisma from 'src/lib/prisma'
 
-// スタッフ一覧取得
+// スタッフ一覧取得（dentalClinicIdが紐づいているUser）
 export const getDentalStaffList = async (params?: {
-  where?: Prisma.DentalStaffWhereInput
-  orderBy?: Prisma.DentalStaffOrderByWithRelationInput
+  where?: Prisma.UserWhereInput
+  orderBy?: Prisma.UserOrderByWithRelationInput
+  dentalClinicId?: number
 }) => {
-  const {where, orderBy} = params ?? {}
-  return await prisma.dentalStaff.findMany({
-    where,
+  const {where, orderBy, dentalClinicId} = params ?? {}
+  return await prisma.user.findMany({
+    where: {
+      ...where,
+      ...(dentalClinicId ? {dentalClinicId} : {}),
+      type: {in: ['doctor', 'hygienist']},
+    },
     orderBy: orderBy ?? {sortOrder: 'asc'},
   })
 }
 
-// スタッフ取得
-export const getDentalStaff = async (id: number) => {
-  return await prisma.dentalStaff.findUnique({where: {id}})
+// スタッフ新規作成（Userを作成してクリニックに紐づけ）
+export const createDentalStaff = async (data: {name: string; dentalClinicId: number; type: string}) => {
+  return await prisma.user.create({
+    data: {
+      name: data.name,
+      dentalClinicId: data.dentalClinicId,
+      type: data.type,
+    },
+  })
 }
 
-// スタッフ作成
-export const createDentalStaff = async (data: {dentalClinicId: number; name: string; role: string}) => {
-  return await prisma.dentalStaff.create({data})
+// スタッフ（ユーザー）のクリニック・タイプ設定
+export const assignDentalStaff = async (data: {userId: number; dentalClinicId: number; type: string}) => {
+  return await prisma.user.update({
+    where: {id: data.userId},
+    data: {dentalClinicId: data.dentalClinicId, type: data.type},
+  })
 }
 
-// スタッフ更新
-export const updateDentalStaff = async (id: number, data: {name?: string; role?: string}) => {
-  return await prisma.dentalStaff.update({where: {id}, data})
+// スタッフのタイプ更新
+export const updateDentalStaffType = async (userId: number, type: string) => {
+  return await prisma.user.update({
+    where: {id: userId},
+    data: {type},
+  })
 }
 
-// スタッフ削除
-export const deleteDentalStaff = async (id: number) => {
-  return await prisma.dentalStaff.delete({where: {id}})
+// スタッフのクリニック紐づけ解除
+export const removeDentalStaff = async (userId: number) => {
+  return await prisma.user.update({
+    where: {id: userId},
+    data: {dentalClinicId: null, type: null},
+  })
 }
 
 // スタッフ並び替え
 export const reorderDentalStaff = async (items: Array<{id: number; sortOrder: number}>) => {
-  await Promise.all(
-    items.map(item => prisma.dentalStaff.update({where: {id: item.id}, data: {sortOrder: item.sortOrder}}))
-  )
+  await Promise.all(items.map(item => prisma.user.update({where: {id: item.id}, data: {sortOrder: item.sortOrder}})))
 }

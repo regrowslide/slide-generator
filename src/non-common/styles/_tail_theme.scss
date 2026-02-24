@@ -11,6 +11,13 @@
  --color-primary: 222 100% 60%; /* fallback HSL */
  --color-primary-foreground: 0 0% 100%;
 
+ --color-secondary-main: #6c757d;
+ --color-secondary-light: #f8f9fa;
+ --color-secondary-text: white;
+
+ --color-secondary: 204 10% 50%; /* fallback HSL */
+ --color-secondary-foreground: 0 0% 100%;
+
  --color-kaizen-cool-main: #175793;
  --color-kaizen-cool-light: #ebf5fb;
 
@@ -58,6 +65,13 @@
 
  --color-primary: hsl(var(--primary));
  --color-primary-foreground: hsl(var(--primary-foreground));
+
+ --color-secondary-main: var(--color-secondary-main);
+ --color-secondary-light: var(--color-secondary-light);
+ --color-secondary-text: var(--color-secondary-text);
+
+ --color-secondary: hsl(var(--secondary));
+ --color-secondary-foreground: hsl(var(--secondary-foreground));
 
  --color-kaizen-cool-main: var(--color-kaizen-cool-main);
  --color-kaizen-cool-light: var(--color-kaizen-cool-light);

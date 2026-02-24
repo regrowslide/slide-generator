@@ -1,9 +1,9 @@
 'use client'
 
-import {Bot, Loader2, FileText, FileImage, FileType} from 'lucide-react'
-import {Button} from '@shadcn/ui/button'
-import type {AiProvider} from '../../server-actions/ai-analysis-actions'
-import type {AnalysisPhase, InputMode} from '../../hooks'
+import { Bot, Loader2, FileText, FileImage, FileType } from 'lucide-react'
+import { Button } from '@cm/components/styles/common-components/Button'
+import type { AiProvider } from '../../server-actions/ai-analysis-actions'
+import type { AnalysisPhase, InputMode } from '../../hooks'
 
 interface RecipeInputPanelProps {
   inputMode: InputMode
@@ -158,11 +158,10 @@ export const RecipeInputPanel = ({
             (inputMode === 'image' && !selectedImageName) ||
             (inputMode === 'pdf' && !selectedPdfName)
           }
-          className={`flex items-center gap-2 ${
-            analysisPhase === 'step1_running'
+          className={`flex items-center gap-2 ${analysisPhase === 'step1_running'
               ? 'bg-slate-400 cursor-not-allowed'
               : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700'
-          }`}
+            }`}
         >
           {analysisPhase === 'step1_running' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bot className="w-4 h-4" />}
           <span>Step 1: 材料を抽出</span>
@@ -173,11 +172,10 @@ export const RecipeInputPanel = ({
           <Button
             onClick={onStep2Matching}
             disabled={analysisPhase === 'step2_running' || analysisPhase === 'step1_running'}
-            className={`flex items-center gap-2 ${
-              analysisPhase === 'step2_running' || analysisPhase === 'step1_running'
+            className={`flex items-center gap-2 ${analysisPhase === 'step2_running' || analysisPhase === 'step1_running'
                 ? 'bg-slate-400 cursor-not-allowed'
                 : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700'
-            }`}
+              }`}
           >
             {analysisPhase === 'step2_running' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bot className="w-4 h-4" />}
             <span>全材料を一括照合（やり直し可）</span>

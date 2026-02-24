@@ -1,15 +1,15 @@
 'use client'
 
-import {Button} from '@shadcn/ui/button'
-import type {RcIngredientMaster} from '../../types'
+import { Button } from '@cm/components/styles/common-components/Button'
+import type { RcIngredientMaster } from '../../types'
 
 interface IngredientFormProps {
   editingItem: RcIngredientMaster | null
-  onSave: (item: {name: string; price: number; yield: number; category: string; supplier: string}) => void
+  onSave: (item: { name: string; price: number; yield: number; category: string; supplier: string }) => void
   onClose: () => void
 }
 
-export const IngredientForm = ({editingItem, onSave, onClose}: IngredientFormProps) => {
+export const IngredientForm = ({ editingItem, onSave, onClose }: IngredientFormProps) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)

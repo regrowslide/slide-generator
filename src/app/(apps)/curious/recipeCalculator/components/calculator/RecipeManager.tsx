@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { Save, Loader2, FileImage, Plus } from 'lucide-react'
-import { Button } from '@shadcn/ui/button'
+import { Button } from '@cm/components/styles/common-components/Button'
 import type { RecipeWithIngredients, CostCalculationResult, IngredientMaster, RecipeSettings } from '../../types'
 import { getRecipes } from '../../server-actions/recipe-actions'
 import { getIngredientMasters } from '../../server-actions/ingredient-master-actions'
@@ -147,7 +147,7 @@ export const RecipeManager = () => {
             </div>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" className="flex items-center gap-2" disabled>
+            <Button color="sub" className="flex items-center gap-2" disabled>
               <Save className="w-4 h-4" />
               保存済
             </Button>
@@ -201,7 +201,7 @@ export const RecipeManager = () => {
         <>
           {/* 原材料追加ボタン */}
           <div className="flex justify-end">
-            <Button onClick={editor.handleAddIngredient} variant="outline" size="sm" className="flex items-center gap-2">
+            <Button onClick={editor.handleAddIngredient} size="sm" className="flex items-center gap-2">
               <Plus className="w-4 h-4" />
               原材料を手動追加
             </Button>
@@ -244,7 +244,7 @@ export const RecipeManager = () => {
           <h3 className="font-bold text-slate-700 mb-3">過去のレシピ</h3>
           <div className="flex flex-wrap gap-2">
             {recipes.map((r) => (
-              <Button key={r.id} variant={recipe?.id === r.id ? 'default' : 'outline'} size="sm" onClick={() => setRecipe(r)}>
+              <Button key={r.id} color={recipe?.id === r.id ? 'primary' : 'sub'} size="sm" onClick={() => setRecipe(r)}>
                 {r.name}
               </Button>
             ))}

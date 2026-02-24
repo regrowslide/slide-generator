@@ -100,7 +100,7 @@ export const ZAISHIKAN_TARGET_TREATMENTS: TreatmentCategory[] = [
 export const CLINIC_QUALIFICATIONS: ClinicQualificationMaster[] = [
   {id: 'shiensin1', name: '①歯援診1', description: '在宅療養支援歯科診療所1'},
   {id: 'shiensin2', name: '①歯援診2', description: '在宅療養支援歯科診療所2'},
-  {id: 'shiensin2', name: '①歯援診（その他）', description: '在宅療養支援歯科診療所2'},
+  {id: 'shizaikanOther', name: '①歯援診（その他）', description: '在宅療養支援歯科診療所その他'},
   {id: 'zahoshin', name: '②在歯管', description: '在宅歯科疾患診療管理料'},
   {id: 'koukukan', name: '③口管強', description: '（歯科口腔リハビリテーション料2の注6に規定する施設基準）'},
   {id: 'baseup', name: '④ベースアップ加算', description: ''},
@@ -380,7 +380,7 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
           ctx.hasDoctor && ctx.clinic.qualifications.shiensin2 && !ctx.clinic.qualifications.shiensin1,
       },
       {
-        id: 'shizaikan-other',
+        id: 'shizaikanOther',
         name: '歯援診なし / その他',
         points: 200,
         isManualOnly: false,

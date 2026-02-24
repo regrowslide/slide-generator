@@ -145,11 +145,6 @@ export type DentalFacility = Prisma.DentalFacilityModel
  */
 export type DentalPatient = Prisma.DentalPatientModel
 /**
- * Model DentalStaff
- * 
- */
-export type DentalStaff = Prisma.DentalStaffModel
-/**
  * Model DentalVisitPlan
  * 
  */

@@ -2,9 +2,10 @@
 
 import { useMemo } from 'react'
 import { Trash2, Loader2, Database, Globe, Search, ChevronDown, ExternalLink, Package } from 'lucide-react'
-import { Button } from '@shadcn/ui/button'
+
 import type { RcRecipeIngredient, IngredientMaster } from '../../types'
 import { UNIT_OPTIONS } from '../../constants/unit-options'
+import { Button } from '@cm/components/styles/common-components/Button'
 
 interface IngredientTableProps {
   ingredients: RcRecipeIngredient[]
@@ -220,14 +221,14 @@ export const IngredientTable = ({
                     <Loader2 className="w-4 h-4 animate-spin text-blue-500 mx-auto" />
                   ) : (
                     <Button
-                      variant="ghost"
+
                       size="sm"
                       onClick={() => onAiSearch?.(idx)}
                       className={`text-xs px-2 py-1 h-7 ${ing.status === 'pending' || ing.status === 'error' || ing.pricePerKg === 0
                         ? 'text-blue-600 hover:text-blue-700 hover:bg-blue-50'
                         : 'text-slate-400 hover:text-slate-500'
                         }`}
-                      title="AIで価格を検索"
+
                     >
                       <Search className="w-3 h-3 mr-1" />
                       照合
@@ -261,8 +262,8 @@ export const IngredientTable = ({
                 {/* 削除ボタン */}
                 <td className="px-4 py-3 text-center">
                   <Button
-                    variant="ghost"
-                    size="icon"
+                    color="red"
+                    size="sm"
                     onClick={() => onDeleteIngredient(idx)}
                     className="text-slate-300 hover:text-red-500"
                   >

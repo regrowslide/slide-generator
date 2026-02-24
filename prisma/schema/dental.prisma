@@ -15,7 +15,7 @@ model DentalClinic {
 
   // リレーション
   DentalFacility      DentalFacility[]
-  DentalStaff         DentalStaff[]
+  User                User[]
   DentalVisitPlan     DentalVisitPlan[]
   DentalSavedDocument DentalSavedDocument[]
 
@@ -76,25 +76,6 @@ model DentalPatient {
   @@map("dental_patients")
 }
 
-// DentalStaff - スタッフ
-model DentalStaff {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
-  sortOrder Float     @default(0)
-
-  name String @db.VarChar(200)
-  role String @db.VarChar(50) // DOCTOR, HYGIENIST
-
-  DentalClinic   DentalClinic @relation(fields: [dentalClinicId], references: [id], onDelete: Cascade)
-  dentalClinicId Int
-
-  DentalExaminationDoctor    DentalExamination[] @relation("ExaminationDoctor")
-  DentalExaminationHygienist DentalExamination[] @relation("ExaminationHygienist")
-
-  @@map("dental_staff")
-}
-
 // DentalVisitPlan - 訪問計画
 model DentalVisitPlan {
   id        Int       @id @default(autoincrement())
@@ -142,9 +123,9 @@ model DentalExamination {
   dentalVisitPlanId Int
   DentalPatient     DentalPatient   @relation(fields: [dentalPatientId], references: [id], onDelete: Cascade)
   dentalPatientId   Int
-  Doctor            DentalStaff?    @relation("ExaminationDoctor", fields: [doctorId], references: [id])
+  Doctor            User?    @relation("ExaminationDoctor", fields: [doctorId], references: [id])
   doctorId          Int?
-  Hygienist         DentalStaff?    @relation("ExaminationHygienist", fields: [hygienistId], references: [id])
+  Hygienist         User?    @relation("ExaminationHygienist", fields: [hygienistId], references: [id])
   hygienistId       Int?
 
   DentalSavedDocument DentalSavedDocument[]

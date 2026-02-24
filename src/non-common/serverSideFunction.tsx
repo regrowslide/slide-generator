@@ -10,6 +10,7 @@ import { Prisma } from '@prisma/generated/prisma/client'
 import { authOptions } from '@app/api/auth/[...nextauth]/constants/authOptions'
 import { FakeOrKeepSession } from 'src/non-common/scope-lib/FakeOrKeepSession'
 import { headers } from 'next/headers'
+import { UserCl } from '@cm/class/UserCl'
 
 export const getUrlInfoInServer = async pathname => {
   const rootPath = pathname?.replace(basePath ?? '', '').split('/')[1] ?? ''
@@ -78,6 +79,7 @@ export const sessionOnServer = async () => {
 export const initServerComopnent = async ({ query }) => {
   const { session: realSession } = await sessionOnServer()
 
+
   const session = await FakeOrKeepSession({ query, realSession: realSession })
 
 
@@ -90,8 +92,15 @@ export const initServerComopnent = async ({ query }) => {
 
   // const userClData = new UserCl({user: session, roles, scopes})
 
+  const User = new UserCl({
+    user: session,
+    roles,
+    scopes: getScopes(session, { query, roles }),
+  })
+
+
   return {
-    session,
+    session: User.data,
     query,
     scopes,
   }

@@ -1,16 +1,16 @@
 'use client'
 
-import {useState, useEffect, useCallback, useRef} from 'react'
-import {Tabs, TabsList, TabsTrigger, TabsContent} from '@shadcn/ui/tabs'
-import {Button} from '@shadcn/ui/button'
-import {Progress} from '@shadcn/ui/progress'
-import {Card, CardContent} from '@shadcn/ui/card'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@shadcn/ui/tabs'
+import { Button } from '@cm/components/styles/common-components/Button'
+import { Progress } from '@shadcn/ui/progress'
+import { Card, CardContent } from '@shadcn/ui/card'
 
 import CharacterDisplay from './CharacterDisplay'
 import ColorPalette from './ColorPalette'
 import TextVisualizer from './TextVisualizer'
-import {generateCharacterSet} from './characters'
-import {loadColorMappings, saveColorMapping, clearColorMappings, type ColorMappings} from './storage'
+import { generateCharacterSet } from './characters'
+import { loadColorMappings, saveColorMapping, clearColorMappings, type ColorMappings } from './storage'
 
 const SET_SIZE = 20
 
@@ -95,9 +95,9 @@ const SynesthesiaApp = () => {
   // セット完了時の統計
   const completedStats = setCompleted
     ? {
-        total: queue.length,
-        mapped: queue.filter(c => colorMappings[c]).length,
-      }
+      total: queue.length,
+      mapped: queue.filter(c => colorMappings[c]).length,
+    }
     : null
 
   return (

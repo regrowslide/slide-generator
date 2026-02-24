@@ -17,7 +17,8 @@
     "lint-fix": "eslint --fix './src/**/*.{js,ts}' && prettier --write './src/**/*.{js,ts}'",
     "format": "prettier --write --ignore-path .gitignore './**/*.{js,jsx,ts,tsx,json,css}'",
     "css:dev": "TAILWIND_MODE=watch postcss src/styles/tailwind.css -o src/styles/globals.css --watch",
-    "css:build": "postcss src/styles/tailwind.css -o src/styles/globals.css"
+    "css:build": "postcss src/styles/tailwind.css -o src/styles/globals.css",
+    "seedDental": "npx tsx prisma/seedDental.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",

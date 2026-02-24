@@ -3,12 +3,12 @@
 import type {
   DentalPatient,
   DentalFacility,
-  DentalStaff,
   DentalExamination,
   DentalVisitPlan,
   DentalClinic,
   DentalScoringHistory,
   DentalSavedDocument,
+  User,
 } from '@prisma/generated/prisma/client'
 
 // =============================================================================
@@ -110,12 +110,12 @@ export const toPatient = (p: DentalPatient): Patient => ({
   assessment: (p.assessment as unknown as Assessment) || DEFAULT_ASSESSMENT_VALUE,
 })
 
-/** Prisma DentalStaff → アプリ Staff */
-export const toStaff = (s: DentalStaff): Staff => ({
-  id: s.id,
-  name: s.name,
-  role: s.role,
-  sortOrder: s.sortOrder,
+/** Prisma User → アプリ Staff */
+export const toStaff = (u: User): Staff => ({
+  id: u.id,
+  name: u.name,
+  role: u.type || '',
+  sortOrder: u.sortOrder,
 })
 
 /** Prisma DentalExamination → アプリ Examination */
@@ -277,7 +277,7 @@ export type Patient = {
   assessment: Assessment
 }
 
-/** スタッフ */
+/** スタッフ（User.typeで医師/衛生士を区別） */
 export type Staff = {
   id: number
   name: string
