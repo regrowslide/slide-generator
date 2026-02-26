@@ -258,10 +258,55 @@ export type RcRecipe = Prisma.RcRecipeModel
  */
 export type RcRecipeIngredient = Prisma.RcRecipeIngredientModel
 /**
+ * Model RcCategoryYieldMaster
+ * 
+ */
+export type RcCategoryYieldMaster = Prisma.RcCategoryYieldMasterModel
+/**
  * Model RcProfitMarginStandard
  * 
  */
 export type RcProfitMarginStandard = Prisma.RcProfitMarginStandardModel
+/**
+ * Model RgStore
+ * 
+ */
+export type RgStore = Prisma.RgStoreModel
+/**
+ * Model RgStaff
+ * 
+ */
+export type RgStaff = Prisma.RgStaffModel
+/**
+ * Model RgMonthlyReport
+ * 
+ */
+export type RgMonthlyReport = Prisma.RgMonthlyReportModel
+/**
+ * Model RgStaffRecord
+ * 
+ */
+export type RgStaffRecord = Prisma.RgStaffRecordModel
+/**
+ * Model RgStoreTotals
+ * 
+ */
+export type RgStoreTotals = Prisma.RgStoreTotalsModel
+/**
+ * Model RgStoreKpi
+ * 
+ */
+export type RgStoreKpi = Prisma.RgStoreKpiModel
+/**
+ * Model RgStaffManualData
+ * 
+ */
+export type RgStaffManualData = Prisma.RgStaffManualDataModel
+/**
+ * Model RgCustomerVoice
+ * 
+ */
+export type RgCustomerVoice = Prisma.RgCustomerVoiceModel
 /**
  * Model SbmCustomer
  * 

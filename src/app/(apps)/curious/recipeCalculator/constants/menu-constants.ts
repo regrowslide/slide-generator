@@ -25,4 +25,11 @@ export const MENU_ITEMS: MenuItem[] = [
     icon: 'settings',
     adminOnly: isDev ? false : true,
   },
+  {
+    id: 'category-yield',
+    label: 'カテゴリ歩留率マスタ',
+    href: '/curious/recipeCalculator/category-yield-master',
+    icon: 'percent',
+    adminOnly: isDev ? false : true,
+  },
 ]

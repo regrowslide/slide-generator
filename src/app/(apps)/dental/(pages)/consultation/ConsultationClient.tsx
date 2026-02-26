@@ -392,17 +392,15 @@ const ConsultationClient = ({
   const handleToggleProcedure = (masterId: string) => {
     const isCurrentlySelected = !!procedureItems[masterId]
     if (!confirmIfOverride(masterId, !isCurrentlySelected)) return
-    setProcedureItems(prev => {
-      let next: Record<string, ProcedureItemSelection>
-      if (prev[masterId]) {
-        const {[masterId]: _, ...rest} = prev
-        next = rest
-      } else {
-        next = {...prev, [masterId]: {selectedSubItems: [], isAutoSet: false}}
-      }
-      saveField({procedureItems: next as Record<string, unknown>})
-      return next
-    })
+    let next: Record<string, ProcedureItemSelection>
+    if (procedureItems[masterId]) {
+      const {[masterId]: _, ...rest} = procedureItems
+      next = rest
+    } else {
+      next = {...procedureItems, [masterId]: {selectedSubItems: [], isAutoSet: false}}
+    }
+    setProcedureItems(next)
+    saveField({procedureItems: next as Record<string, unknown>})
   }
 
   const handleSelectSubItem = (masterId: string, subItemId: string, selectionMode: 'single' | 'multiple') => {
@@ -418,19 +416,15 @@ const ConsultationClient = ({
         newSelected = [...current.selectedSubItems, subItemId]
       }
     }
-    setProcedureItems(prev => {
-      const next = {...prev, [masterId]: {...current, selectedSubItems: newSelected, isAutoSet: false}}
-      saveField({procedureItems: next as Record<string, unknown>})
-      return next
-    })
+    const next = {...procedureItems, [masterId]: {...current, selectedSubItems: newSelected, isAutoSet: false}}
+    setProcedureItems(next)
+    saveField({procedureItems: next as Record<string, unknown>})
   }
 
   const handleAutoSetAll = () => {
-    setProcedureItems(prev => {
-      const next = {...prev, ...autoJudgeResult}
-      saveField({procedureItems: next as Record<string, unknown>})
-      return next
-    })
+    const next = {...procedureItems, ...autoJudgeResult}
+    setProcedureItems(next)
+    saveField({procedureItems: next as Record<string, unknown>})
   }
 
   const calculateTotalPoints = () => {
@@ -681,7 +675,7 @@ const ConsultationClient = ({
             {Object.entries(docRequirements).map(([docId, doc]) => (
               <div key={docId} className="flex flex-col items-start gap-1">
                 <button
-                  onClick={() => router.push(HREF(`/dental/document-create`, {examinationId: examination.id, docType: docId}, query))}
+                  onClick={() => router.push(HREF(`/dental/document-create`, {examinationId: examination.id, templateId: docId}, query))}
                   className={`flex items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
                     doc.required ? 'border-emerald-500 bg-emerald-50 text-emerald-800' : 'border-gray-300 bg-gray-50 text-gray-500'
                   }`}
@@ -733,19 +727,11 @@ const ConsultationClient = ({
                       type="checkbox"
                       checked={treatmentPerformed.includes(item)}
                       onChange={e => {
-                        if (e.target.checked) {
-                          setTreatmentPerformed(prev => {
-                            const next = [...prev, item]
-                            saveField({treatmentPerformed: next as unknown[]})
-                            return next
-                          })
-                        } else {
-                          setTreatmentPerformed(prev => {
-                            const next = prev.filter(t => t !== item)
-                            saveField({treatmentPerformed: next as unknown[]})
-                            return next
-                          })
-                        }
+                        const next = e.target.checked
+                          ? [...treatmentPerformed, item]
+                          : treatmentPerformed.filter(t => t !== item)
+                        setTreatmentPerformed(next)
+                        saveField({treatmentPerformed: next as unknown[]})
                       }}
                       className="w-4 h-4 accent-emerald-600"
                     />

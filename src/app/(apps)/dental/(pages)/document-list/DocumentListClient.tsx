@@ -185,8 +185,12 @@ const DocumentListClient = ({ documents, facilities }: Props) => {
               </thead>
               <tbody>
                 {filtered.map(doc => (
-                  <tr key={doc.id} className="border-b border-gray-100 hover:bg-gray-50">
-                    <td className="px-3 py-2">
+                  <tr
+                    key={doc.id}
+                    className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                    onClick={() => router.push(HREF('/dental/document-create', {savedDocumentId: doc.id}, query))}
+                  >
+                    <td className="px-3 py-2" onClick={e => e.stopPropagation()}>
                       <input
                         type="checkbox"
                         checked={selectedIds.has(doc.id)}
@@ -199,7 +203,7 @@ const DocumentListClient = ({ documents, facilities }: Props) => {
                     <td className="px-3 py-2">{doc.facilityName}</td>
                     <td className="px-3 py-2">{doc.visitDate}</td>
                     <td className="px-3 py-2 text-gray-500">{new Date(doc.createdAt).toLocaleString('ja-JP')}</td>
-                    <td className="px-3 py-2">
+                    <td className="px-3 py-2" onClick={e => e.stopPropagation()}>
                       <div className="flex gap-1">
                         {doc.pdfUrl ? (
                           <a

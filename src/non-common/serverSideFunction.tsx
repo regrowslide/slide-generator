@@ -7,10 +7,9 @@ import { getScopes } from 'src/non-common/scope-lib/getScopes'
 import { anyObject } from '@cm/types/utility-types'
 import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
 import { Prisma } from '@prisma/generated/prisma/client'
-import { authOptions } from '@app/api/auth/[...nextauth]/constants/authOptions'
 import { FakeOrKeepSession } from 'src/non-common/scope-lib/FakeOrKeepSession'
 import { headers } from 'next/headers'
-import { UserCl } from '@cm/class/UserCl'
+import { authOptions } from '@app/api/auth/[...nextauth]/constants/authOptions'
 
 export const getUrlInfoInServer = async pathname => {
   const rootPath = pathname?.replace(basePath ?? '', '').split('/')[1] ?? ''
@@ -45,10 +44,19 @@ export const fetchUserRole = async ({ session }) => {
         },
       },
     },
-    where: { userId: typeof session?.id === `string` ? 0 : (session?.id ?? 0) },
+    where: {
+      userId: typeof session?.id === `string` ? 0 : (session?.id ?? 0),
+    },
   }
+
   let { result: roles } = await doStandardPrisma(`userRole`, `findMany`, args)
-  roles = roles?.map(v => ({ ...v, name: v.RoleMaster.name, color: v.RoleMaster.color }))
+  roles = roles?.map(v => {
+    return {
+      ...v,
+      name: v.RoleMaster.name,
+      color: v.RoleMaster.color,
+    }
+  })
 
   return { roles }
 }
@@ -79,31 +87,12 @@ export const sessionOnServer = async () => {
 export const initServerComopnent = async ({ query }) => {
   const { session: realSession } = await sessionOnServer()
 
-
   const session = await FakeOrKeepSession({ query, realSession: realSession })
-
-
-
-
 
   const { roles } = await fetchUserRole({ session })
 
   const scopes = getScopes(session, { query, roles })
-
-  // const userClData = new UserCl({user: session, roles, scopes})
-
-  const User = new UserCl({
-    user: session,
-    roles,
-    scopes: getScopes(session, { query, roles }),
-  })
-
-
-  return {
-    session: User.data,
-    query,
-    scopes,
-  }
+  return { session, query, scopes }
 }
 
 export const getItem = async () => {
@@ -140,3 +129,4 @@ export const isApiAccessAllowed = async props => {
   }
   return true
 }
+

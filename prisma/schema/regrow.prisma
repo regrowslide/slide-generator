@@ -1,0 +1,133 @@
+// Regrowアプリ用スキーマ
+// 月次業績レポート管理（店舗・スタッフ・KPI）
+
+model RgStore {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+  name      String // '港北店', '青葉店', '中央店'
+  fullName  String? // 'asian relaxation villa新潟西店'
+  isActive  Boolean   @default(true)
+
+  RgStaff       RgStaff[]
+  RgStoreKpi    RgStoreKpi[]
+  RgStoreTotals RgStoreTotals[]
+  RgStaffRecord RgStaffRecord[]
+}
+
+model RgStaff {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+  staffName String
+  storeId   Int
+  role      String    @default("viewer") // admin, manager, viewer
+  isActive  Boolean   @default(true)
+
+  RgStore           RgStore             @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  RgStaffRecord     RgStaffRecord[]
+  RgStaffManualData RgStaffManualData[]
+}
+
+model RgMonthlyReport {
+  id               Int       @id @default(autoincrement())
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime? @updatedAt
+  sortOrder        Float     @default(0)
+  yearMonth        String // "2026-02"
+  importedAt       DateTime?
+  importedFileName String?
+
+  RgStaffRecord     RgStaffRecord[]
+  RgStoreTotals     RgStoreTotals[]
+  RgStoreKpi        RgStoreKpi[]
+  RgStaffManualData RgStaffManualData[]
+  RgCustomerVoice   RgCustomerVoice[]
+
+  @@unique([yearMonth])
+}
+
+model RgStaffRecord {
+  id              Int       @id @default(autoincrement())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime? @updatedAt
+  sortOrder       Float     @default(0)
+  monthlyReportId Int
+  staffId         Int
+  storeId         Int
+  rank            Int
+  sales           Float
+  customerCount   Int
+  newCustomerCount Int
+  nominationCount Int
+  unitPrice       Float
+
+  RgMonthlyReport RgMonthlyReport @relation(fields: [monthlyReportId], references: [id], onDelete: Cascade)
+  RgStaff         RgStaff         @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  RgStore         RgStore         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+}
+
+model RgStoreTotals {
+  id              Int       @id @default(autoincrement())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime? @updatedAt
+  sortOrder       Float     @default(0)
+  monthlyReportId Int
+  storeId         Int
+  sales           Float
+  customerCount   Int
+  nominationCount Int
+  unitPrice       Float
+
+  RgMonthlyReport RgMonthlyReport @relation(fields: [monthlyReportId], references: [id], onDelete: Cascade)
+  RgStore         RgStore         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+}
+
+model RgStoreKpi {
+  id                  Int       @id @default(autoincrement())
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime? @updatedAt
+  sortOrder           Float     @default(0)
+  monthlyReportId     Int
+  storeId             Int
+  utilizationRate     Float?
+  returnRate          Float?
+  csRegistrationCount Int?
+  comment             String    @default("")
+
+  RgMonthlyReport RgMonthlyReport @relation(fields: [monthlyReportId], references: [id], onDelete: Cascade)
+  RgStore         RgStore         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@unique([monthlyReportId, storeId])
+}
+
+model RgStaffManualData {
+  id                  Int       @id @default(autoincrement())
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime? @updatedAt
+  sortOrder           Float     @default(0)
+  monthlyReportId     Int
+  staffId             Int
+  utilizationRate     Float?
+  csRegistrationCount Int?
+
+  RgMonthlyReport RgMonthlyReport @relation(fields: [monthlyReportId], references: [id], onDelete: Cascade)
+  RgStaff         RgStaff         @relation(fields: [staffId], references: [id], onDelete: Cascade)
+
+  @@unique([monthlyReportId, staffId])
+}
+
+model RgCustomerVoice {
+  id              Int       @id @default(autoincrement())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime? @updatedAt
+  sortOrder       Float     @default(0)
+  monthlyReportId Int
+  content         String    @default("")
+
+  RgMonthlyReport RgMonthlyReport @relation(fields: [monthlyReportId], references: [id], onDelete: Cascade)
+
+  @@unique([monthlyReportId])
+}

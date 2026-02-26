@@ -26,8 +26,9 @@ import {
 import type { KgFacilityMaster, KgFacilityFormData } from '../../../types'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import useModal from '@cm/components/utils/modal/useModal'
-import { Button } from '@cm/shadcn/ui/button'
-import { Badge } from '@cm/shadcn/ui/badge'
+
+import { Button } from '@cm/components/styles/common-components/Button'
+
 
 type Props = {
   initialFacilities: KgFacilityMaster[]
@@ -180,7 +181,7 @@ export const FacilityMasterClient = ({ initialFacilities }: Props) => {
                       <div className="flex items-center gap-2">
                         <Button
 
-                          variant="ghost"
+
                           onClick={() => handleOpenEdit(facility)}
                         >
                           <Pencil className="w-4 h-4" />
@@ -188,7 +189,7 @@ export const FacilityMasterClient = ({ initialFacilities }: Props) => {
                         {facility.isActive && (
                           <Button
 
-                            variant="ghost"
+
                             onClick={() => handleDelete(facility.id)}
                           >
                             <Trash2 className="w-4 h-4 text-red-500" />

@@ -99,7 +99,16 @@ export const ModelName = {
   RcIngredientMaster: 'RcIngredientMaster',
   RcRecipe: 'RcRecipe',
   RcRecipeIngredient: 'RcRecipeIngredient',
+  RcCategoryYieldMaster: 'RcCategoryYieldMaster',
   RcProfitMarginStandard: 'RcProfitMarginStandard',
+  RgStore: 'RgStore',
+  RgStaff: 'RgStaff',
+  RgMonthlyReport: 'RgMonthlyReport',
+  RgStaffRecord: 'RgStaffRecord',
+  RgStoreTotals: 'RgStoreTotals',
+  RgStoreKpi: 'RgStoreKpi',
+  RgStaffManualData: 'RgStaffManualData',
+  RgCustomerVoice: 'RgCustomerVoice',
   SbmCustomer: 'SbmCustomer',
   SbmCustomerPhone: 'SbmCustomerPhone',
   SbmProduct: 'SbmProduct',
@@ -586,6 +595,7 @@ export const DentalSavedDocumentScalarFieldEnum = {
   sortOrder: 'sortOrder',
   templateId: 'templateId',
   templateName: 'templateName',
+  templateData: 'templateData',
   pdfUrl: 'pdfUrl',
   version: 'version',
   dentalClinicId: 'dentalClinicId',
@@ -999,6 +1009,19 @@ export const RcRecipeIngredientScalarFieldEnum = {
 export type RcRecipeIngredientScalarFieldEnum = (typeof RcRecipeIngredientScalarFieldEnum)[keyof typeof RcRecipeIngredientScalarFieldEnum]
 
 
+export const RcCategoryYieldMasterScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  categoryName: 'categoryName',
+  yieldRate: 'yieldRate',
+  isFallback: 'isFallback'
+} as const
+
+export type RcCategoryYieldMasterScalarFieldEnum = (typeof RcCategoryYieldMasterScalarFieldEnum)[keyof typeof RcCategoryYieldMasterScalarFieldEnum]
+
+
 export const RcProfitMarginStandardScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -1011,6 +1034,123 @@ export const RcProfitMarginStandardScalarFieldEnum = {
 } as const
 
 export type RcProfitMarginStandardScalarFieldEnum = (typeof RcProfitMarginStandardScalarFieldEnum)[keyof typeof RcProfitMarginStandardScalarFieldEnum]
+
+
+export const RgStoreScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  fullName: 'fullName',
+  isActive: 'isActive'
+} as const
+
+export type RgStoreScalarFieldEnum = (typeof RgStoreScalarFieldEnum)[keyof typeof RgStoreScalarFieldEnum]
+
+
+export const RgStaffScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  staffName: 'staffName',
+  storeId: 'storeId',
+  role: 'role',
+  isActive: 'isActive'
+} as const
+
+export type RgStaffScalarFieldEnum = (typeof RgStaffScalarFieldEnum)[keyof typeof RgStaffScalarFieldEnum]
+
+
+export const RgMonthlyReportScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  yearMonth: 'yearMonth',
+  importedAt: 'importedAt',
+  importedFileName: 'importedFileName'
+} as const
+
+export type RgMonthlyReportScalarFieldEnum = (typeof RgMonthlyReportScalarFieldEnum)[keyof typeof RgMonthlyReportScalarFieldEnum]
+
+
+export const RgStaffRecordScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  monthlyReportId: 'monthlyReportId',
+  staffId: 'staffId',
+  storeId: 'storeId',
+  rank: 'rank',
+  sales: 'sales',
+  customerCount: 'customerCount',
+  newCustomerCount: 'newCustomerCount',
+  nominationCount: 'nominationCount',
+  unitPrice: 'unitPrice'
+} as const
+
+export type RgStaffRecordScalarFieldEnum = (typeof RgStaffRecordScalarFieldEnum)[keyof typeof RgStaffRecordScalarFieldEnum]
+
+
+export const RgStoreTotalsScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  monthlyReportId: 'monthlyReportId',
+  storeId: 'storeId',
+  sales: 'sales',
+  customerCount: 'customerCount',
+  nominationCount: 'nominationCount',
+  unitPrice: 'unitPrice'
+} as const
+
+export type RgStoreTotalsScalarFieldEnum = (typeof RgStoreTotalsScalarFieldEnum)[keyof typeof RgStoreTotalsScalarFieldEnum]
+
+
+export const RgStoreKpiScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  monthlyReportId: 'monthlyReportId',
+  storeId: 'storeId',
+  utilizationRate: 'utilizationRate',
+  returnRate: 'returnRate',
+  csRegistrationCount: 'csRegistrationCount',
+  comment: 'comment'
+} as const
+
+export type RgStoreKpiScalarFieldEnum = (typeof RgStoreKpiScalarFieldEnum)[keyof typeof RgStoreKpiScalarFieldEnum]
+
+
+export const RgStaffManualDataScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  monthlyReportId: 'monthlyReportId',
+  staffId: 'staffId',
+  utilizationRate: 'utilizationRate',
+  csRegistrationCount: 'csRegistrationCount'
+} as const
+
+export type RgStaffManualDataScalarFieldEnum = (typeof RgStaffManualDataScalarFieldEnum)[keyof typeof RgStaffManualDataScalarFieldEnum]
+
+
+export const RgCustomerVoiceScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  monthlyReportId: 'monthlyReportId',
+  content: 'content'
+} as const
+
+export type RgCustomerVoiceScalarFieldEnum = (typeof RgCustomerVoiceScalarFieldEnum)[keyof typeof RgCustomerVoiceScalarFieldEnum]
 
 
 export const SbmCustomerScalarFieldEnum = {

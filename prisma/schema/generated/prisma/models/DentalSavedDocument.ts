@@ -79,6 +79,7 @@ export type DentalSavedDocumentCountAggregateOutputType = {
   sortOrder: number
   templateId: number
   templateName: number
+  templateData: number
   pdfUrl: number
   version: number
   dentalClinicId: number
@@ -141,6 +142,7 @@ export type DentalSavedDocumentCountAggregateInputType = {
   sortOrder?: true
   templateId?: true
   templateName?: true
+  templateData?: true
   pdfUrl?: true
   version?: true
   dentalClinicId?: true
@@ -242,6 +244,7 @@ export type DentalSavedDocumentGroupByOutputType = {
   sortOrder: number
   templateId: string
   templateName: string
+  templateData: runtime.JsonValue | null
   pdfUrl: string | null
   version: number
   dentalClinicId: number | null
@@ -279,6 +282,7 @@ export type DentalSavedDocumentWhereInput = {
   sortOrder?: Prisma.FloatFilter<"DentalSavedDocument"> | number
   templateId?: Prisma.StringFilter<"DentalSavedDocument"> | string
   templateName?: Prisma.StringFilter<"DentalSavedDocument"> | string
+  templateData?: Prisma.JsonNullableFilter<"DentalSavedDocument">
   pdfUrl?: Prisma.StringNullableFilter<"DentalSavedDocument"> | string | null
   version?: Prisma.IntFilter<"DentalSavedDocument"> | number
   dentalClinicId?: Prisma.IntNullableFilter<"DentalSavedDocument"> | number | null
@@ -296,6 +300,7 @@ export type DentalSavedDocumentOrderByWithRelationInput = {
   sortOrder?: Prisma.SortOrder
   templateId?: Prisma.SortOrder
   templateName?: Prisma.SortOrder
+  templateData?: Prisma.SortOrderInput | Prisma.SortOrder
   pdfUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   version?: Prisma.SortOrder
   dentalClinicId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -316,6 +321,7 @@ export type DentalSavedDocumentWhereUniqueInput = Prisma.AtLeast<{
   sortOrder?: Prisma.FloatFilter<"DentalSavedDocument"> | number
   templateId?: Prisma.StringFilter<"DentalSavedDocument"> | string
   templateName?: Prisma.StringFilter<"DentalSavedDocument"> | string
+  templateData?: Prisma.JsonNullableFilter<"DentalSavedDocument">
   pdfUrl?: Prisma.StringNullableFilter<"DentalSavedDocument"> | string | null
   version?: Prisma.IntFilter<"DentalSavedDocument"> | number
   dentalClinicId?: Prisma.IntNullableFilter<"DentalSavedDocument"> | number | null
@@ -333,6 +339,7 @@ export type DentalSavedDocumentOrderByWithAggregationInput = {
   sortOrder?: Prisma.SortOrder
   templateId?: Prisma.SortOrder
   templateName?: Prisma.SortOrder
+  templateData?: Prisma.SortOrderInput | Prisma.SortOrder
   pdfUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   version?: Prisma.SortOrder
   dentalClinicId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -355,6 +362,7 @@ export type DentalSavedDocumentScalarWhereWithAggregatesInput = {
   sortOrder?: Prisma.FloatWithAggregatesFilter<"DentalSavedDocument"> | number
   templateId?: Prisma.StringWithAggregatesFilter<"DentalSavedDocument"> | string
   templateName?: Prisma.StringWithAggregatesFilter<"DentalSavedDocument"> | string
+  templateData?: Prisma.JsonNullableWithAggregatesFilter<"DentalSavedDocument">
   pdfUrl?: Prisma.StringNullableWithAggregatesFilter<"DentalSavedDocument"> | string | null
   version?: Prisma.IntWithAggregatesFilter<"DentalSavedDocument"> | number
   dentalClinicId?: Prisma.IntNullableWithAggregatesFilter<"DentalSavedDocument"> | number | null
@@ -368,6 +376,7 @@ export type DentalSavedDocumentCreateInput = {
   sortOrder?: number
   templateId: string
   templateName: string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: string | null
   version?: number
   DentalClinic?: Prisma.DentalClinicCreateNestedOneWithoutDentalSavedDocumentInput
@@ -382,6 +391,7 @@ export type DentalSavedDocumentUncheckedCreateInput = {
   sortOrder?: number
   templateId: string
   templateName: string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: string | null
   version?: number
   dentalClinicId?: number | null
@@ -395,6 +405,7 @@ export type DentalSavedDocumentUpdateInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   templateId?: Prisma.StringFieldUpdateOperationsInput | string
   templateName?: Prisma.StringFieldUpdateOperationsInput | string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   DentalClinic?: Prisma.DentalClinicUpdateOneWithoutDentalSavedDocumentNestedInput
@@ -409,6 +420,7 @@ export type DentalSavedDocumentUncheckedUpdateInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   templateId?: Prisma.StringFieldUpdateOperationsInput | string
   templateName?: Prisma.StringFieldUpdateOperationsInput | string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -423,6 +435,7 @@ export type DentalSavedDocumentCreateManyInput = {
   sortOrder?: number
   templateId: string
   templateName: string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: string | null
   version?: number
   dentalClinicId?: number | null
@@ -436,6 +449,7 @@ export type DentalSavedDocumentUpdateManyMutationInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   templateId?: Prisma.StringFieldUpdateOperationsInput | string
   templateName?: Prisma.StringFieldUpdateOperationsInput | string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -447,6 +461,7 @@ export type DentalSavedDocumentUncheckedUpdateManyInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   templateId?: Prisma.StringFieldUpdateOperationsInput | string
   templateName?: Prisma.StringFieldUpdateOperationsInput | string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -471,6 +486,7 @@ export type DentalSavedDocumentCountOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
   templateId?: Prisma.SortOrder
   templateName?: Prisma.SortOrder
+  templateData?: Prisma.SortOrder
   pdfUrl?: Prisma.SortOrder
   version?: Prisma.SortOrder
   dentalClinicId?: Prisma.SortOrder
@@ -656,6 +672,7 @@ export type DentalSavedDocumentCreateWithoutDentalClinicInput = {
   sortOrder?: number
   templateId: string
   templateName: string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: string | null
   version?: number
   DentalPatient: Prisma.DentalPatientCreateNestedOneWithoutDentalSavedDocumentInput
@@ -669,6 +686,7 @@ export type DentalSavedDocumentUncheckedCreateWithoutDentalClinicInput = {
   sortOrder?: number
   templateId: string
   templateName: string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: string | null
   version?: number
   dentalPatientId: number
@@ -711,6 +729,7 @@ export type DentalSavedDocumentScalarWhereInput = {
   sortOrder?: Prisma.FloatFilter<"DentalSavedDocument"> | number
   templateId?: Prisma.StringFilter<"DentalSavedDocument"> | string
   templateName?: Prisma.StringFilter<"DentalSavedDocument"> | string
+  templateData?: Prisma.JsonNullableFilter<"DentalSavedDocument">
   pdfUrl?: Prisma.StringNullableFilter<"DentalSavedDocument"> | string | null
   version?: Prisma.IntFilter<"DentalSavedDocument"> | number
   dentalClinicId?: Prisma.IntNullableFilter<"DentalSavedDocument"> | number | null
@@ -724,6 +743,7 @@ export type DentalSavedDocumentCreateWithoutDentalPatientInput = {
   sortOrder?: number
   templateId: string
   templateName: string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: string | null
   version?: number
   DentalClinic?: Prisma.DentalClinicCreateNestedOneWithoutDentalSavedDocumentInput
@@ -737,6 +757,7 @@ export type DentalSavedDocumentUncheckedCreateWithoutDentalPatientInput = {
   sortOrder?: number
   templateId: string
   templateName: string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: string | null
   version?: number
   dentalClinicId?: number | null
@@ -775,6 +796,7 @@ export type DentalSavedDocumentCreateWithoutDentalExaminationInput = {
   sortOrder?: number
   templateId: string
   templateName: string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: string | null
   version?: number
   DentalClinic?: Prisma.DentalClinicCreateNestedOneWithoutDentalSavedDocumentInput
@@ -788,6 +810,7 @@ export type DentalSavedDocumentUncheckedCreateWithoutDentalExaminationInput = {
   sortOrder?: number
   templateId: string
   templateName: string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: string | null
   version?: number
   dentalClinicId?: number | null
@@ -827,6 +850,7 @@ export type DentalSavedDocumentCreateManyDentalClinicInput = {
   sortOrder?: number
   templateId: string
   templateName: string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: string | null
   version?: number
   dentalPatientId: number
@@ -839,6 +863,7 @@ export type DentalSavedDocumentUpdateWithoutDentalClinicInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   templateId?: Prisma.StringFieldUpdateOperationsInput | string
   templateName?: Prisma.StringFieldUpdateOperationsInput | string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   DentalPatient?: Prisma.DentalPatientUpdateOneRequiredWithoutDentalSavedDocumentNestedInput
@@ -852,6 +877,7 @@ export type DentalSavedDocumentUncheckedUpdateWithoutDentalClinicInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   templateId?: Prisma.StringFieldUpdateOperationsInput | string
   templateName?: Prisma.StringFieldUpdateOperationsInput | string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   dentalPatientId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -865,6 +891,7 @@ export type DentalSavedDocumentUncheckedUpdateManyWithoutDentalClinicInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   templateId?: Prisma.StringFieldUpdateOperationsInput | string
   templateName?: Prisma.StringFieldUpdateOperationsInput | string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   dentalPatientId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -878,6 +905,7 @@ export type DentalSavedDocumentCreateManyDentalPatientInput = {
   sortOrder?: number
   templateId: string
   templateName: string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: string | null
   version?: number
   dentalClinicId?: number | null
@@ -890,6 +918,7 @@ export type DentalSavedDocumentUpdateWithoutDentalPatientInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   templateId?: Prisma.StringFieldUpdateOperationsInput | string
   templateName?: Prisma.StringFieldUpdateOperationsInput | string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   DentalClinic?: Prisma.DentalClinicUpdateOneWithoutDentalSavedDocumentNestedInput
@@ -903,6 +932,7 @@ export type DentalSavedDocumentUncheckedUpdateWithoutDentalPatientInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   templateId?: Prisma.StringFieldUpdateOperationsInput | string
   templateName?: Prisma.StringFieldUpdateOperationsInput | string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -916,6 +946,7 @@ export type DentalSavedDocumentUncheckedUpdateManyWithoutDentalPatientInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   templateId?: Prisma.StringFieldUpdateOperationsInput | string
   templateName?: Prisma.StringFieldUpdateOperationsInput | string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -929,6 +960,7 @@ export type DentalSavedDocumentCreateManyDentalExaminationInput = {
   sortOrder?: number
   templateId: string
   templateName: string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: string | null
   version?: number
   dentalClinicId?: number | null
@@ -941,6 +973,7 @@ export type DentalSavedDocumentUpdateWithoutDentalExaminationInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   templateId?: Prisma.StringFieldUpdateOperationsInput | string
   templateName?: Prisma.StringFieldUpdateOperationsInput | string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   DentalClinic?: Prisma.DentalClinicUpdateOneWithoutDentalSavedDocumentNestedInput
@@ -954,6 +987,7 @@ export type DentalSavedDocumentUncheckedUpdateWithoutDentalExaminationInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   templateId?: Prisma.StringFieldUpdateOperationsInput | string
   templateName?: Prisma.StringFieldUpdateOperationsInput | string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -967,6 +1001,7 @@ export type DentalSavedDocumentUncheckedUpdateManyWithoutDentalExaminationInput 
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   templateId?: Prisma.StringFieldUpdateOperationsInput | string
   templateName?: Prisma.StringFieldUpdateOperationsInput | string
+  templateData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   pdfUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   version?: Prisma.IntFieldUpdateOperationsInput | number
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -982,6 +1017,7 @@ export type DentalSavedDocumentSelect<ExtArgs extends runtime.Types.Extensions.I
   sortOrder?: boolean
   templateId?: boolean
   templateName?: boolean
+  templateData?: boolean
   pdfUrl?: boolean
   version?: boolean
   dentalClinicId?: boolean
@@ -999,6 +1035,7 @@ export type DentalSavedDocumentSelectCreateManyAndReturn<ExtArgs extends runtime
   sortOrder?: boolean
   templateId?: boolean
   templateName?: boolean
+  templateData?: boolean
   pdfUrl?: boolean
   version?: boolean
   dentalClinicId?: boolean
@@ -1016,6 +1053,7 @@ export type DentalSavedDocumentSelectUpdateManyAndReturn<ExtArgs extends runtime
   sortOrder?: boolean
   templateId?: boolean
   templateName?: boolean
+  templateData?: boolean
   pdfUrl?: boolean
   version?: boolean
   dentalClinicId?: boolean
@@ -1033,6 +1071,7 @@ export type DentalSavedDocumentSelectScalar = {
   sortOrder?: boolean
   templateId?: boolean
   templateName?: boolean
+  templateData?: boolean
   pdfUrl?: boolean
   version?: boolean
   dentalClinicId?: boolean
@@ -1040,7 +1079,7 @@ export type DentalSavedDocumentSelectScalar = {
   dentalExaminationId?: boolean
 }
 
-export type DentalSavedDocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "templateId" | "templateName" | "pdfUrl" | "version" | "dentalClinicId" | "dentalPatientId" | "dentalExaminationId", ExtArgs["result"]["dentalSavedDocument"]>
+export type DentalSavedDocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "templateId" | "templateName" | "templateData" | "pdfUrl" | "version" | "dentalClinicId" | "dentalPatientId" | "dentalExaminationId", ExtArgs["result"]["dentalSavedDocument"]>
 export type DentalSavedDocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   DentalClinic?: boolean | Prisma.DentalSavedDocument$DentalClinicArgs<ExtArgs>
   DentalPatient?: boolean | Prisma.DentalPatientDefaultArgs<ExtArgs>
@@ -1071,6 +1110,7 @@ export type $DentalSavedDocumentPayload<ExtArgs extends runtime.Types.Extensions
     sortOrder: number
     templateId: string
     templateName: string
+    templateData: runtime.JsonValue | null
     pdfUrl: string | null
     version: number
     dentalClinicId: number | null
@@ -1508,6 +1548,7 @@ export interface DentalSavedDocumentFieldRefs {
   readonly sortOrder: Prisma.FieldRef<"DentalSavedDocument", 'Float'>
   readonly templateId: Prisma.FieldRef<"DentalSavedDocument", 'String'>
   readonly templateName: Prisma.FieldRef<"DentalSavedDocument", 'String'>
+  readonly templateData: Prisma.FieldRef<"DentalSavedDocument", 'Json'>
   readonly pdfUrl: Prisma.FieldRef<"DentalSavedDocument", 'String'>
   readonly version: Prisma.FieldRef<"DentalSavedDocument", 'Int'>
   readonly dentalClinicId: Prisma.FieldRef<"DentalSavedDocument", 'Int'>

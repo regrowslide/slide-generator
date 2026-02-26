@@ -159,6 +159,7 @@ model DentalSavedDocument {
 
   templateId   String  @db.VarChar(100)
   templateName String  @db.VarChar(200)
+  templateData Json?
   pdfUrl       String? @db.Text
   version      Int     @default(1)
 

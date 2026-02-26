@@ -2,10 +2,10 @@
  * 食品製造原価計算システム 型定義
  */
 
-import type {RcIngredientMaster, RcRecipe, RcRecipeIngredient, RcProfitMarginStandard} from '@prisma/generated/prisma/client'
+import type {RcIngredientMaster, RcRecipe, RcRecipeIngredient, RcProfitMarginStandard, RcCategoryYieldMaster} from '@prisma/generated/prisma/client'
 
 // Prisma型のre-export
-export type {RcIngredientMaster, RcRecipe, RcRecipeIngredient, RcProfitMarginStandard}
+export type {RcIngredientMaster, RcRecipe, RcRecipeIngredient, RcProfitMarginStandard, RcCategoryYieldMaster}
 
 // エイリアス
 export type IngredientMaster = RcIngredientMaster
@@ -72,6 +72,6 @@ export interface MenuItem {
   id: string
   label: string
   href: string
-  icon: 'calculator' | 'database' | 'settings'
+  icon: 'calculator' | 'database' | 'settings' | 'percent'
   adminOnly?: boolean
 }

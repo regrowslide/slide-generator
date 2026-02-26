@@ -7,7 +7,9 @@ export const regrow_PAGES = (props: PageGetterType) => {
   const {login} = getScopes(session, {query, roles})
 
   const loginPaths = [
-    {tabId: '/mock', label: 'MTG資料'},
+    {tabId: '/report', label: 'MTG資料'},
+    {tabId: '/master', label: 'マスタ管理'},
+    {tabId: '/mock', label: 'MTG資料（モック）'},
   ].map((item) => ({
     ...item,
     ROOT: [rootPath],

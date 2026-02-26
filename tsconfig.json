@@ -62,26 +62,6 @@
     "**/*.spec.ts",
     "**/*.test.ts",
     "coverage",
-    "**/scheme-json-export.js",
-    "src/app/(apps)/KM/**/*",
-    "src/app/(apps)/aidocument/**/*",
-    "src/app/(apps)/common/**/*",
-    "src/app/(apps)/counseling/**/*",
-    "src/app/(apps)/curious/**/*",
-    "src/app/(apps)/earth/**/*",
-    "src/app/(apps)/generated/**/*",
-    "src/app/(apps)/image-captioner/**/*",
-    "src/app/(apps)/kaigoshoku/**/*",
-    "src/app/(apps)/kickswrap/**/*",
-    "src/app/(apps)/migrations/**/*",
-    "src/app/(apps)/portal/**/*",
-    "src/app/(apps)/recipeCalculator/**/*",
-    "src/app/(apps)/regrow/**/*",
-    "src/app/(apps)/sbm/**/*",
-    "src/app/(apps)/stock/**/*",
-    "src/app/(apps)/synesthesia/**/*",
-    "src/app/(apps)/tmp/**/*",
-    "src/app/(apps)/training/**/*",
-    "src/app/(apps)/yamanokai/**/*"
+    "**/scheme-json-export.js"
   ]
 }

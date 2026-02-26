@@ -23,7 +23,7 @@ import { getPatientName, getPatientNameKana, countApplicableItems } from '@app/(
 import { DOCUMENT_TEMPLATES } from '@app/(apps)/dental/lib/constants'
 import { generatePdfBlobFromHtml } from '@app/(apps)/dental/lib/pdf-generator'
 import { uploadDocumentPdf } from '@app/(apps)/dental/_actions/document-blob-actions'
-import { createDentalSavedDocument } from '@app/(apps)/dental/_actions/saved-document-actions'
+import { createDentalSavedDocument, updateDentalSavedDocument } from '@app/(apps)/dental/_actions/saved-document-actions'
 import {
   TreatmentContentTemplate,
   getDefaultTreatmentContentData,
@@ -44,6 +44,8 @@ type Props = {
   clinic: Clinic | null
   facilities: Facility[]
   initialTemplateId: string
+  savedDocumentId?: number | null
+  savedTemplateData?: Record<string, unknown> | null
 }
 
 /** 和暦日付を生成 */
@@ -52,33 +54,47 @@ const toWareki = (d: Date) => {
   return `令和${d.getFullYear() - 2018}年${d.getMonth() + 1}月${d.getDate()}日（${weekDay}）`
 }
 
-const DocumentCreateClient = ({ examination, patient, clinic, facilities, initialTemplateId }: Props) => {
+const DocumentCreateClient = ({ examination, patient, clinic, facilities, initialTemplateId, savedDocumentId, savedTemplateData }: Props) => {
+  const isEditMode = !!savedDocumentId
   const router = useRouter()
   const {query} = useGlobal()
   const [selectedType, setSelectedType] = useState(initialTemplateId || '')
   const previewRef = useRef<HTMLDivElement>(null)
   const [saving, setSaving] = useState(false)
 
-  // 各テンプレートのデータ状態
-  const [treatmentData, setTreatmentData] = useState<TreatmentContentData>(getDefaultTreatmentContentData)
-  const [kanriData, setKanriData] = useState<KanriKeikakuData>(getDefaultKanriKeikakuData)
-  const [hygieneData, setHygieneData] = useState<HygieneGuidanceData>(getDefaultHygieneGuidanceData)
-  const [oralFunctionPlanData, setOralFunctionPlanData] = useState<OralFunctionPlanData>(getDefaultOralFunctionPlanData)
-  const [oralHygieneData, setOralHygieneData] = useState<OralHygieneManagementData>(getDefaultOralHygieneManagementData)
-  const [seimitsuData, setSeimitsuData] = useState<OralExamRecordData>({
-    documentNo: '', clinicName: '', patientNameKana: '', patientName: '',
-    birthDate: '', age: 0, gender: '', measureDate: '',
-    oralFunctionRecord: {
-      tongueCoatingPercent: '', tongueCoatingApplicable: false,
-      oralMoistureValue: '', salivaAmount: '', oralDrynessApplicable: false,
-      biteForceN: '', remainingTeeth: '', biteForceApplicable: false,
-      oralDiadochoPa: '', oralDiadochoTa: '', oralDiadochoKa: '', oralMotorApplicable: false,
-      tonguePressureKPa: '', tonguePressureApplicable: false,
-      masticatoryAbilityMgDl: '', masticatoryApplicable: false,
-      swallowingEAT10Score: '', swallowingApplicable: false,
-    },
-    applicableCount: 0,
-  })
+  // 各テンプレートのデータ状態（編集モード時は保存済みデータで初期化）
+  const sd = savedTemplateData
+  const [treatmentData, setTreatmentData] = useState<TreatmentContentData>(
+    sd?.treatmentData ? (sd.treatmentData as TreatmentContentData) : getDefaultTreatmentContentData
+  )
+  const [kanriData, setKanriData] = useState<KanriKeikakuData>(
+    sd?.kanriData ? (sd.kanriData as KanriKeikakuData) : getDefaultKanriKeikakuData
+  )
+  const [hygieneData, setHygieneData] = useState<HygieneGuidanceData>(
+    sd?.hygieneData ? (sd.hygieneData as HygieneGuidanceData) : getDefaultHygieneGuidanceData
+  )
+  const [oralFunctionPlanData, setOralFunctionPlanData] = useState<OralFunctionPlanData>(
+    sd?.oralFunctionPlanData ? (sd.oralFunctionPlanData as OralFunctionPlanData) : getDefaultOralFunctionPlanData
+  )
+  const [oralHygieneData, setOralHygieneData] = useState<OralHygieneManagementData>(
+    sd?.oralHygieneData ? (sd.oralHygieneData as OralHygieneManagementData) : getDefaultOralHygieneManagementData
+  )
+  const [seimitsuData, setSeimitsuData] = useState<OralExamRecordData>(
+    sd?.seimitsuData ? (sd.seimitsuData as OralExamRecordData) : {
+      documentNo: '', clinicName: '', patientNameKana: '', patientName: '',
+      birthDate: '', age: 0, gender: '', measureDate: '',
+      oralFunctionRecord: {
+        tongueCoatingPercent: '', tongueCoatingApplicable: false,
+        oralMoistureValue: '', salivaAmount: '', oralDrynessApplicable: false,
+        biteForceN: '', remainingTeeth: '', biteForceApplicable: false,
+        oralDiadochoPa: '', oralDiadochoTa: '', oralDiadochoKa: '', oralMotorApplicable: false,
+        tonguePressureKPa: '', tonguePressureApplicable: false,
+        masticatoryAbilityMgDl: '', masticatoryApplicable: false,
+        swallowingEAT10Score: '', swallowingApplicable: false,
+      },
+      applicableCount: 0,
+    }
+  )
 
   // 自動引用データ生成
   const treatmentQuote = useMemo((): Partial<TreatmentContentData> => {
@@ -165,6 +181,19 @@ const DocumentCreateClient = ({ examination, patient, clinic, facilities, initia
     return q
   }, [patient, clinic])
 
+  // 現在のテンプレートデータを取得
+  const getCurrentTemplateData = (): Record<string, unknown> => {
+    const dataMap: Record<string, unknown> = {
+      doc_houmon_chiryou: {treatmentData},
+      doc_kanrikeikaku: {kanriData},
+      doc_houeishi: {hygieneData},
+      doc_seimitsu_kensa: {seimitsuData},
+      doc_koukuu_kanri: {oralFunctionPlanData},
+      doc_kouei_kanri: {oralHygieneData},
+    }
+    return (dataMap[selectedType] || {}) as Record<string, unknown>
+  }
+
   // PDF保存処理
   const handleSave = async () => {
     if (saving || !previewRef.current || !selectedType) return
@@ -181,6 +210,7 @@ const DocumentCreateClient = ({ examination, patient, clinic, facilities, initia
       const base64 = btoa(binary)
       const template = DOCUMENT_TEMPLATES[selectedType]
       const facility = patient ? facilities.find(f => f.id === patient.facilityId) : null
+      const templateData = getCurrentTemplateData()
 
       const result = await uploadDocumentPdf(base64, {
         clinicId: clinic?.id || 1,
@@ -192,14 +222,22 @@ const DocumentCreateClient = ({ examination, patient, clinic, facilities, initia
         visitDate: new Date().toISOString().slice(0, 10),
       })
 
-      await createDentalSavedDocument({
-        dentalClinicId: clinic?.id,
-        dentalPatientId: patient?.id || 0,
-        dentalExaminationId: examination?.id || 0,
-        templateId: selectedType,
-        templateName: template?.name || '',
-        pdfUrl: result.url,
-      })
+      if (isEditMode && savedDocumentId) {
+        await updateDentalSavedDocument(savedDocumentId, {
+          templateData,
+          pdfUrl: result.url,
+        })
+      } else {
+        await createDentalSavedDocument({
+          dentalClinicId: clinic?.id,
+          dentalPatientId: patient?.id || 0,
+          dentalExaminationId: examination?.id || 0,
+          templateId: selectedType,
+          templateName: template?.name || '',
+          templateData,
+          pdfUrl: result.url,
+        })
+      }
 
       router.refresh()
       router.push(HREF('/dental/document-list', {}, query))
@@ -222,7 +260,7 @@ const DocumentCreateClient = ({ examination, patient, clinic, facilities, initia
             ← 戻る
           </Button>
           <div>
-            <h1 className="text-lg font-bold text-gray-900">文書作成</h1>
+            <h1 className="text-lg font-bold text-gray-900">{isEditMode ? '文書編集' : '文書作成'}</h1>
             {patient && <p className="text-sm text-gray-500">患者: {getPatientName(patient)} 様</p>}
           </div>
         </div>

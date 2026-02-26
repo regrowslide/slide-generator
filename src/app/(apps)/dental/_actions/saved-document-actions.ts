@@ -38,18 +38,30 @@ export const createDentalSavedDocument = async (data: {
   dentalExaminationId: number
   templateId: string
   templateName: string
+  templateData?: Record<string, unknown>
   pdfUrl?: string
   version?: number
 }) => {
-  return await prisma.dentalSavedDocument.create({data})
+  return await prisma.dentalSavedDocument.create({
+    data: {
+      ...data,
+      templateData: data.templateData as Prisma.InputJsonValue,
+    },
+  })
 }
 
 // 保存済み文書更新
 export const updateDentalSavedDocument = async (
   id: number,
-  data: {pdfUrl?: string; version?: number}
+  data: {templateData?: Record<string, unknown>; pdfUrl?: string; version?: number}
 ) => {
-  return await prisma.dentalSavedDocument.update({where: {id}, data})
+  return await prisma.dentalSavedDocument.update({
+    where: {id},
+    data: {
+      ...data,
+      templateData: data.templateData ? (data.templateData as Prisma.InputJsonValue) : undefined,
+    },
+  })
 }
 
 // 保存済み文書削除

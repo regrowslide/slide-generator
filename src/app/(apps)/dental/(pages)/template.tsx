@@ -1,9 +1,9 @@
 'use client'
-import Admin from '@cm/components/layout/Admin/Admin'
-import { PageBuilder } from '@app/(apps)/dental/(builders)/PageBuilders/PageBuilder'
 
-import useGlobal from '@cm/hooks/globalHooks/useGlobal'
-import { redirect } from 'next/navigation'
+import useGlobal from "@cm/hooks/globalHooks/useGlobal"
+
+
+
 
 export default function Template(props: { children: React.ReactNode }) {
   const { children } = props

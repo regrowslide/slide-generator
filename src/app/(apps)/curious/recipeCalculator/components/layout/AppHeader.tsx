@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Bot, Calculator, Database, Menu, Settings } from 'lucide-react'
+import { Bot, Calculator, Database, Menu, Percent, Settings } from 'lucide-react'
 import { Button } from '@cm/components/styles/common-components/Button'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@shadcn/ui/drawer'
 import { useIsMobile } from '@shadcn/hooks/use-mobile'
@@ -16,6 +16,7 @@ const IconMap = {
   calculator: Calculator,
   database: Database,
   settings: Settings,
+  percent: Percent,
 }
 
 const NavItem = ({ item, isActive, onClick }: { item: MenuItem; isActive: boolean; onClick?: () => void }) => {

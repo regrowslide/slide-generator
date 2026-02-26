@@ -335,6 +335,65 @@ export const searchIngredientPrice = async (ingredientName: string): Promise<Pri
   }
 }
 
+// 食材をカテゴリに分類（Gemini 2.0 Flash）
+export const classifyIngredientCategory = async (ingredientName: string): Promise<string> => {
+  const {getCategoryYields} = await import('./category-yield-actions')
+  const categories = await getCategoryYields()
+
+  if (categories.length === 0) return 'その他'
+
+  const categoryNames = categories.map(c => c.categoryName)
+  const apiKey = process.env.GEMINI_API_KEY
+  if (!apiKey) {
+    const fallback = categories.find(c => c.isFallback)
+    return fallback?.categoryName ?? 'その他'
+  }
+
+  const prompt = `以下の食材を、指定されたカテゴリの中から最も適切なものに分類してください。
+
+【食材名】
+"${ingredientName}"
+
+【カテゴリ一覧】
+${categoryNames.join(', ')}
+
+【回答】
+カテゴリ名のみを返してください（説明不要）`
+
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          contents: [{parts: [{text: prompt}]}],
+          generationConfig: {temperature: 0, maxOutputTokens: 50},
+        }),
+      }
+    )
+
+    if (!response.ok) {
+      const fallback = categories.find(c => c.isFallback)
+      return fallback?.categoryName ?? 'その他'
+    }
+
+    const data = await response.json()
+    const content = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
+
+    // マスタに存在するカテゴリ名のみ受け付ける
+    if (content && categoryNames.includes(content)) {
+      return content
+    }
+
+    const fallback = categories.find(c => c.isFallback)
+    return fallback?.categoryName ?? 'その他'
+  } catch {
+    const fallback = categories.find(c => c.isFallback)
+    return fallback?.categoryName ?? 'その他'
+  }
+}
+
 // AI解析→マスタ照合→外部検索の一連のフローを実行
 export const executeFullAnalysis = async (
   input: {text?: string; imageBase64?: string},
@@ -379,6 +438,11 @@ export const executeFullAnalysis = async (
         matchReason: masterMatch.name === parsed.name ? '完全一致' : '表記揺れ照合',
       })
     } else {
+      // カテゴリ分類→歩留率を自動設定
+      const {getYieldRateByCategoryName} = await import('./category-yield-actions')
+      const category = await classifyIngredientCategory(parsed.name)
+      const yieldRate = await getYieldRateByCategoryName(category)
+
       await addRecipeIngredient({
         recipeId: recipe.id,
         ingredientMasterId: null,
@@ -387,10 +451,11 @@ export const executeFullAnalysis = async (
         amount: parsed.amount,
         unit: parsed.unit,
         pricePerKg: 0,
-        yieldRate: 100,
+        yieldRate,
         isExternal: false,
         source: '未登録',
         status: 'pending',
+        matchReason: `カテゴリ: ${category}`,
       })
       pendingIngredients.push({parsed, index: i})
     }

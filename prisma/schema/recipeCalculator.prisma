@@ -112,6 +112,18 @@ model RcRecipeIngredient {
   externalWeightText  String? // 外部検索の重量表示テキスト
 }
 
+// カテゴリ歩留率マスタ
+model RcCategoryYieldMaster {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  categoryName String  @unique // カテゴリ名
+  yieldRate    Float   // 歩留率（%）
+  isFallback   Boolean @default(false) // フォールバック用（「その他」）
+}
+
 // 粗利基準マスタ
 model RcProfitMarginStandard {
   id        Int       @id @default(autoincrement())

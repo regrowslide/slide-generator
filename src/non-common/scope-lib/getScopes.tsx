@@ -25,31 +25,6 @@ export const getScopes = (session: anyObject, options: getScopeOptionsProps) => 
     login,
     admin,
     getGlobalUserId,
-    getSanshoTouristScopes: () => {
-      const userId = !admin ? session?.id : Number(query?.[globalIds.globalUserId] ?? session?.id ?? 0)
-
-
-      const isSystemAdmin = !!arr__findCommonValues([`管理者`], roleNames)
-      const isEditor = !!arr__findCommonValues([`編集者`], roleNames)
-      const isViewer = !!arr__findCommonValues([`閲覧者`], roleNames)
-
-      return { userId, isSystemAdmin, isEditor, isViewer }
-    },
-    getGroupieScopes: () => {
-      const schoolId = !admin ? session?.schoolId : Number(query?.[globalIds.globalSchoolId] ?? 0)
-
-      const teacherId = !admin ? session?.id : Number(query?.[globalIds.globalTeacherId] ?? 0)
-      const isSchoolLeader = typeIs(['責任者'], session)
-
-      let result: GroupieScopeType = {
-        schoolId,
-        teacherId,
-        isSchoolLeader,
-      }
-
-      result = addAdminToRoles(result, session) as GroupieScopeType
-      return result
-    },
 
 
     getYamanokaiScopes: () => {

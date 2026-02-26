@@ -432,7 +432,16 @@ export const ModelName = {
   RcIngredientMaster: 'RcIngredientMaster',
   RcRecipe: 'RcRecipe',
   RcRecipeIngredient: 'RcRecipeIngredient',
+  RcCategoryYieldMaster: 'RcCategoryYieldMaster',
   RcProfitMarginStandard: 'RcProfitMarginStandard',
+  RgStore: 'RgStore',
+  RgStaff: 'RgStaff',
+  RgMonthlyReport: 'RgMonthlyReport',
+  RgStaffRecord: 'RgStaffRecord',
+  RgStoreTotals: 'RgStoreTotals',
+  RgStoreKpi: 'RgStoreKpi',
+  RgStaffManualData: 'RgStaffManualData',
+  RgCustomerVoice: 'RgCustomerVoice',
   SbmCustomer: 'SbmCustomer',
   SbmCustomerPhone: 'SbmCustomerPhone',
   SbmProduct: 'SbmProduct',
@@ -497,7 +506,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "dentalClinic" | "dentalFacility" | "dentalPatient" | "dentalVisitPlan" | "dentalExamination" | "dentalScoringHistory" | "dentalSavedDocument" | "kgFacilityMaster" | "kgDietTypeMaster" | "kgDailyMenu" | "kgMealSlot" | "kgMenuRecipe" | "kgRecipeIngredient" | "kgOrder" | "kgOrderLine" | "kgProductionBatch" | "kgProductionItem" | "kgRequiredIngredient" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "rcIngredientMaster" | "rcRecipe" | "rcRecipeIngredient" | "rcProfitMarginStandard" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "store" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "cronExecutionLog" | "stockConfig" | "stock" | "stockHistory" | "exerciseMaster" | "workoutLog" | "yamanokaiDepartment" | "yamanokaiRole" | "yamanokaiCourse" | "yamanokaiEquipment" | "yamanokaiInsuranceGrade" | "yamanokaiStaminaGrade" | "yamanokaiSkillGrade" | "yamanokaiRockCategory" | "yamanokaiMember" | "yamanokaiMemberRole" | "yamanokaiCourseCompletion" | "yamanokaiEvent" | "yamanokaiEventRequiredCourse" | "yamanokaiEventPlan" | "yamanokaiEventPlanParticipant" | "yamanokaiAttendance" | "yamanokaiRecord" | "yamanokaiRecordFile" | "yamanokaiEquipmentLoan"
+    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "dentalClinic" | "dentalFacility" | "dentalPatient" | "dentalVisitPlan" | "dentalExamination" | "dentalScoringHistory" | "dentalSavedDocument" | "kgFacilityMaster" | "kgDietTypeMaster" | "kgDailyMenu" | "kgMealSlot" | "kgMenuRecipe" | "kgRecipeIngredient" | "kgOrder" | "kgOrderLine" | "kgProductionBatch" | "kgProductionItem" | "kgRequiredIngredient" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "rcIngredientMaster" | "rcRecipe" | "rcRecipeIngredient" | "rcCategoryYieldMaster" | "rcProfitMarginStandard" | "rgStore" | "rgStaff" | "rgMonthlyReport" | "rgStaffRecord" | "rgStoreTotals" | "rgStoreKpi" | "rgStaffManualData" | "rgCustomerVoice" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "store" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "cronExecutionLog" | "stockConfig" | "stock" | "stockHistory" | "exerciseMaster" | "workoutLog" | "yamanokaiDepartment" | "yamanokaiRole" | "yamanokaiCourse" | "yamanokaiEquipment" | "yamanokaiInsuranceGrade" | "yamanokaiStaminaGrade" | "yamanokaiSkillGrade" | "yamanokaiRockCategory" | "yamanokaiMember" | "yamanokaiMemberRole" | "yamanokaiCourseCompletion" | "yamanokaiEvent" | "yamanokaiEventRequiredCourse" | "yamanokaiEventPlan" | "yamanokaiEventPlanParticipant" | "yamanokaiAttendance" | "yamanokaiRecord" | "yamanokaiRecordFile" | "yamanokaiEquipmentLoan"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -4053,6 +4062,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    RcCategoryYieldMaster: {
+      payload: Prisma.$RcCategoryYieldMasterPayload<ExtArgs>
+      fields: Prisma.RcCategoryYieldMasterFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RcCategoryYieldMasterFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcCategoryYieldMasterPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RcCategoryYieldMasterFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcCategoryYieldMasterPayload>
+        }
+        findFirst: {
+          args: Prisma.RcCategoryYieldMasterFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcCategoryYieldMasterPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RcCategoryYieldMasterFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcCategoryYieldMasterPayload>
+        }
+        findMany: {
+          args: Prisma.RcCategoryYieldMasterFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcCategoryYieldMasterPayload>[]
+        }
+        create: {
+          args: Prisma.RcCategoryYieldMasterCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcCategoryYieldMasterPayload>
+        }
+        createMany: {
+          args: Prisma.RcCategoryYieldMasterCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RcCategoryYieldMasterCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcCategoryYieldMasterPayload>[]
+        }
+        delete: {
+          args: Prisma.RcCategoryYieldMasterDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcCategoryYieldMasterPayload>
+        }
+        update: {
+          args: Prisma.RcCategoryYieldMasterUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcCategoryYieldMasterPayload>
+        }
+        deleteMany: {
+          args: Prisma.RcCategoryYieldMasterDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RcCategoryYieldMasterUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RcCategoryYieldMasterUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcCategoryYieldMasterPayload>[]
+        }
+        upsert: {
+          args: Prisma.RcCategoryYieldMasterUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RcCategoryYieldMasterPayload>
+        }
+        aggregate: {
+          args: Prisma.RcCategoryYieldMasterAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRcCategoryYieldMaster>
+        }
+        groupBy: {
+          args: Prisma.RcCategoryYieldMasterGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RcCategoryYieldMasterGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RcCategoryYieldMasterCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RcCategoryYieldMasterCountAggregateOutputType> | number
+        }
+      }
+    }
     RcProfitMarginStandard: {
       payload: Prisma.$RcProfitMarginStandardPayload<ExtArgs>
       fields: Prisma.RcProfitMarginStandardFieldRefs
@@ -4124,6 +4207,598 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.RcProfitMarginStandardCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.RcProfitMarginStandardCountAggregateOutputType> | number
+        }
+      }
+    }
+    RgStore: {
+      payload: Prisma.$RgStorePayload<ExtArgs>
+      fields: Prisma.RgStoreFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RgStoreFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStorePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RgStoreFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStorePayload>
+        }
+        findFirst: {
+          args: Prisma.RgStoreFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStorePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RgStoreFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStorePayload>
+        }
+        findMany: {
+          args: Prisma.RgStoreFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStorePayload>[]
+        }
+        create: {
+          args: Prisma.RgStoreCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStorePayload>
+        }
+        createMany: {
+          args: Prisma.RgStoreCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RgStoreCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStorePayload>[]
+        }
+        delete: {
+          args: Prisma.RgStoreDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStorePayload>
+        }
+        update: {
+          args: Prisma.RgStoreUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStorePayload>
+        }
+        deleteMany: {
+          args: Prisma.RgStoreDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RgStoreUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RgStoreUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStorePayload>[]
+        }
+        upsert: {
+          args: Prisma.RgStoreUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStorePayload>
+        }
+        aggregate: {
+          args: Prisma.RgStoreAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRgStore>
+        }
+        groupBy: {
+          args: Prisma.RgStoreGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RgStoreGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RgStoreCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RgStoreCountAggregateOutputType> | number
+        }
+      }
+    }
+    RgStaff: {
+      payload: Prisma.$RgStaffPayload<ExtArgs>
+      fields: Prisma.RgStaffFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RgStaffFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RgStaffFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload>
+        }
+        findFirst: {
+          args: Prisma.RgStaffFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RgStaffFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload>
+        }
+        findMany: {
+          args: Prisma.RgStaffFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload>[]
+        }
+        create: {
+          args: Prisma.RgStaffCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload>
+        }
+        createMany: {
+          args: Prisma.RgStaffCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RgStaffCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload>[]
+        }
+        delete: {
+          args: Prisma.RgStaffDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload>
+        }
+        update: {
+          args: Prisma.RgStaffUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload>
+        }
+        deleteMany: {
+          args: Prisma.RgStaffDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RgStaffUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RgStaffUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload>[]
+        }
+        upsert: {
+          args: Prisma.RgStaffUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload>
+        }
+        aggregate: {
+          args: Prisma.RgStaffAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRgStaff>
+        }
+        groupBy: {
+          args: Prisma.RgStaffGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RgStaffGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RgStaffCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RgStaffCountAggregateOutputType> | number
+        }
+      }
+    }
+    RgMonthlyReport: {
+      payload: Prisma.$RgMonthlyReportPayload<ExtArgs>
+      fields: Prisma.RgMonthlyReportFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RgMonthlyReportFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgMonthlyReportPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RgMonthlyReportFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgMonthlyReportPayload>
+        }
+        findFirst: {
+          args: Prisma.RgMonthlyReportFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgMonthlyReportPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RgMonthlyReportFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgMonthlyReportPayload>
+        }
+        findMany: {
+          args: Prisma.RgMonthlyReportFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgMonthlyReportPayload>[]
+        }
+        create: {
+          args: Prisma.RgMonthlyReportCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgMonthlyReportPayload>
+        }
+        createMany: {
+          args: Prisma.RgMonthlyReportCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RgMonthlyReportCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgMonthlyReportPayload>[]
+        }
+        delete: {
+          args: Prisma.RgMonthlyReportDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgMonthlyReportPayload>
+        }
+        update: {
+          args: Prisma.RgMonthlyReportUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgMonthlyReportPayload>
+        }
+        deleteMany: {
+          args: Prisma.RgMonthlyReportDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RgMonthlyReportUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RgMonthlyReportUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgMonthlyReportPayload>[]
+        }
+        upsert: {
+          args: Prisma.RgMonthlyReportUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgMonthlyReportPayload>
+        }
+        aggregate: {
+          args: Prisma.RgMonthlyReportAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRgMonthlyReport>
+        }
+        groupBy: {
+          args: Prisma.RgMonthlyReportGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RgMonthlyReportGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RgMonthlyReportCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RgMonthlyReportCountAggregateOutputType> | number
+        }
+      }
+    }
+    RgStaffRecord: {
+      payload: Prisma.$RgStaffRecordPayload<ExtArgs>
+      fields: Prisma.RgStaffRecordFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RgStaffRecordFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffRecordPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RgStaffRecordFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffRecordPayload>
+        }
+        findFirst: {
+          args: Prisma.RgStaffRecordFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffRecordPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RgStaffRecordFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffRecordPayload>
+        }
+        findMany: {
+          args: Prisma.RgStaffRecordFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffRecordPayload>[]
+        }
+        create: {
+          args: Prisma.RgStaffRecordCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffRecordPayload>
+        }
+        createMany: {
+          args: Prisma.RgStaffRecordCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RgStaffRecordCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffRecordPayload>[]
+        }
+        delete: {
+          args: Prisma.RgStaffRecordDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffRecordPayload>
+        }
+        update: {
+          args: Prisma.RgStaffRecordUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffRecordPayload>
+        }
+        deleteMany: {
+          args: Prisma.RgStaffRecordDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RgStaffRecordUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RgStaffRecordUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffRecordPayload>[]
+        }
+        upsert: {
+          args: Prisma.RgStaffRecordUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffRecordPayload>
+        }
+        aggregate: {
+          args: Prisma.RgStaffRecordAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRgStaffRecord>
+        }
+        groupBy: {
+          args: Prisma.RgStaffRecordGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RgStaffRecordGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RgStaffRecordCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RgStaffRecordCountAggregateOutputType> | number
+        }
+      }
+    }
+    RgStoreTotals: {
+      payload: Prisma.$RgStoreTotalsPayload<ExtArgs>
+      fields: Prisma.RgStoreTotalsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RgStoreTotalsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreTotalsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RgStoreTotalsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreTotalsPayload>
+        }
+        findFirst: {
+          args: Prisma.RgStoreTotalsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreTotalsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RgStoreTotalsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreTotalsPayload>
+        }
+        findMany: {
+          args: Prisma.RgStoreTotalsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreTotalsPayload>[]
+        }
+        create: {
+          args: Prisma.RgStoreTotalsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreTotalsPayload>
+        }
+        createMany: {
+          args: Prisma.RgStoreTotalsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RgStoreTotalsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreTotalsPayload>[]
+        }
+        delete: {
+          args: Prisma.RgStoreTotalsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreTotalsPayload>
+        }
+        update: {
+          args: Prisma.RgStoreTotalsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreTotalsPayload>
+        }
+        deleteMany: {
+          args: Prisma.RgStoreTotalsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RgStoreTotalsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RgStoreTotalsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreTotalsPayload>[]
+        }
+        upsert: {
+          args: Prisma.RgStoreTotalsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreTotalsPayload>
+        }
+        aggregate: {
+          args: Prisma.RgStoreTotalsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRgStoreTotals>
+        }
+        groupBy: {
+          args: Prisma.RgStoreTotalsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RgStoreTotalsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RgStoreTotalsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RgStoreTotalsCountAggregateOutputType> | number
+        }
+      }
+    }
+    RgStoreKpi: {
+      payload: Prisma.$RgStoreKpiPayload<ExtArgs>
+      fields: Prisma.RgStoreKpiFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RgStoreKpiFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreKpiPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RgStoreKpiFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreKpiPayload>
+        }
+        findFirst: {
+          args: Prisma.RgStoreKpiFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreKpiPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RgStoreKpiFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreKpiPayload>
+        }
+        findMany: {
+          args: Prisma.RgStoreKpiFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreKpiPayload>[]
+        }
+        create: {
+          args: Prisma.RgStoreKpiCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreKpiPayload>
+        }
+        createMany: {
+          args: Prisma.RgStoreKpiCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RgStoreKpiCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreKpiPayload>[]
+        }
+        delete: {
+          args: Prisma.RgStoreKpiDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreKpiPayload>
+        }
+        update: {
+          args: Prisma.RgStoreKpiUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreKpiPayload>
+        }
+        deleteMany: {
+          args: Prisma.RgStoreKpiDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RgStoreKpiUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RgStoreKpiUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreKpiPayload>[]
+        }
+        upsert: {
+          args: Prisma.RgStoreKpiUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStoreKpiPayload>
+        }
+        aggregate: {
+          args: Prisma.RgStoreKpiAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRgStoreKpi>
+        }
+        groupBy: {
+          args: Prisma.RgStoreKpiGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RgStoreKpiGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RgStoreKpiCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RgStoreKpiCountAggregateOutputType> | number
+        }
+      }
+    }
+    RgStaffManualData: {
+      payload: Prisma.$RgStaffManualDataPayload<ExtArgs>
+      fields: Prisma.RgStaffManualDataFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RgStaffManualDataFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffManualDataPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RgStaffManualDataFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffManualDataPayload>
+        }
+        findFirst: {
+          args: Prisma.RgStaffManualDataFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffManualDataPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RgStaffManualDataFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffManualDataPayload>
+        }
+        findMany: {
+          args: Prisma.RgStaffManualDataFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffManualDataPayload>[]
+        }
+        create: {
+          args: Prisma.RgStaffManualDataCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffManualDataPayload>
+        }
+        createMany: {
+          args: Prisma.RgStaffManualDataCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RgStaffManualDataCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffManualDataPayload>[]
+        }
+        delete: {
+          args: Prisma.RgStaffManualDataDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffManualDataPayload>
+        }
+        update: {
+          args: Prisma.RgStaffManualDataUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffManualDataPayload>
+        }
+        deleteMany: {
+          args: Prisma.RgStaffManualDataDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RgStaffManualDataUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RgStaffManualDataUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffManualDataPayload>[]
+        }
+        upsert: {
+          args: Prisma.RgStaffManualDataUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffManualDataPayload>
+        }
+        aggregate: {
+          args: Prisma.RgStaffManualDataAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRgStaffManualData>
+        }
+        groupBy: {
+          args: Prisma.RgStaffManualDataGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RgStaffManualDataGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RgStaffManualDataCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RgStaffManualDataCountAggregateOutputType> | number
+        }
+      }
+    }
+    RgCustomerVoice: {
+      payload: Prisma.$RgCustomerVoicePayload<ExtArgs>
+      fields: Prisma.RgCustomerVoiceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RgCustomerVoiceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgCustomerVoicePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RgCustomerVoiceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgCustomerVoicePayload>
+        }
+        findFirst: {
+          args: Prisma.RgCustomerVoiceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgCustomerVoicePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RgCustomerVoiceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgCustomerVoicePayload>
+        }
+        findMany: {
+          args: Prisma.RgCustomerVoiceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgCustomerVoicePayload>[]
+        }
+        create: {
+          args: Prisma.RgCustomerVoiceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgCustomerVoicePayload>
+        }
+        createMany: {
+          args: Prisma.RgCustomerVoiceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RgCustomerVoiceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgCustomerVoicePayload>[]
+        }
+        delete: {
+          args: Prisma.RgCustomerVoiceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgCustomerVoicePayload>
+        }
+        update: {
+          args: Prisma.RgCustomerVoiceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgCustomerVoicePayload>
+        }
+        deleteMany: {
+          args: Prisma.RgCustomerVoiceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RgCustomerVoiceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RgCustomerVoiceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgCustomerVoicePayload>[]
+        }
+        upsert: {
+          args: Prisma.RgCustomerVoiceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgCustomerVoicePayload>
+        }
+        aggregate: {
+          args: Prisma.RgCustomerVoiceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRgCustomerVoice>
+        }
+        groupBy: {
+          args: Prisma.RgCustomerVoiceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RgCustomerVoiceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RgCustomerVoiceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RgCustomerVoiceCountAggregateOutputType> | number
         }
       }
     }
@@ -8211,6 +8886,7 @@ export const DentalSavedDocumentScalarFieldEnum = {
   sortOrder: 'sortOrder',
   templateId: 'templateId',
   templateName: 'templateName',
+  templateData: 'templateData',
   pdfUrl: 'pdfUrl',
   version: 'version',
   dentalClinicId: 'dentalClinicId',
@@ -8624,6 +9300,19 @@ export const RcRecipeIngredientScalarFieldEnum = {
 export type RcRecipeIngredientScalarFieldEnum = (typeof RcRecipeIngredientScalarFieldEnum)[keyof typeof RcRecipeIngredientScalarFieldEnum]
 
 
+export const RcCategoryYieldMasterScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  categoryName: 'categoryName',
+  yieldRate: 'yieldRate',
+  isFallback: 'isFallback'
+} as const
+
+export type RcCategoryYieldMasterScalarFieldEnum = (typeof RcCategoryYieldMasterScalarFieldEnum)[keyof typeof RcCategoryYieldMasterScalarFieldEnum]
+
+
 export const RcProfitMarginStandardScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -8636,6 +9325,123 @@ export const RcProfitMarginStandardScalarFieldEnum = {
 } as const
 
 export type RcProfitMarginStandardScalarFieldEnum = (typeof RcProfitMarginStandardScalarFieldEnum)[keyof typeof RcProfitMarginStandardScalarFieldEnum]
+
+
+export const RgStoreScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  fullName: 'fullName',
+  isActive: 'isActive'
+} as const
+
+export type RgStoreScalarFieldEnum = (typeof RgStoreScalarFieldEnum)[keyof typeof RgStoreScalarFieldEnum]
+
+
+export const RgStaffScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  staffName: 'staffName',
+  storeId: 'storeId',
+  role: 'role',
+  isActive: 'isActive'
+} as const
+
+export type RgStaffScalarFieldEnum = (typeof RgStaffScalarFieldEnum)[keyof typeof RgStaffScalarFieldEnum]
+
+
+export const RgMonthlyReportScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  yearMonth: 'yearMonth',
+  importedAt: 'importedAt',
+  importedFileName: 'importedFileName'
+} as const
+
+export type RgMonthlyReportScalarFieldEnum = (typeof RgMonthlyReportScalarFieldEnum)[keyof typeof RgMonthlyReportScalarFieldEnum]
+
+
+export const RgStaffRecordScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  monthlyReportId: 'monthlyReportId',
+  staffId: 'staffId',
+  storeId: 'storeId',
+  rank: 'rank',
+  sales: 'sales',
+  customerCount: 'customerCount',
+  newCustomerCount: 'newCustomerCount',
+  nominationCount: 'nominationCount',
+  unitPrice: 'unitPrice'
+} as const
+
+export type RgStaffRecordScalarFieldEnum = (typeof RgStaffRecordScalarFieldEnum)[keyof typeof RgStaffRecordScalarFieldEnum]
+
+
+export const RgStoreTotalsScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  monthlyReportId: 'monthlyReportId',
+  storeId: 'storeId',
+  sales: 'sales',
+  customerCount: 'customerCount',
+  nominationCount: 'nominationCount',
+  unitPrice: 'unitPrice'
+} as const
+
+export type RgStoreTotalsScalarFieldEnum = (typeof RgStoreTotalsScalarFieldEnum)[keyof typeof RgStoreTotalsScalarFieldEnum]
+
+
+export const RgStoreKpiScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  monthlyReportId: 'monthlyReportId',
+  storeId: 'storeId',
+  utilizationRate: 'utilizationRate',
+  returnRate: 'returnRate',
+  csRegistrationCount: 'csRegistrationCount',
+  comment: 'comment'
+} as const
+
+export type RgStoreKpiScalarFieldEnum = (typeof RgStoreKpiScalarFieldEnum)[keyof typeof RgStoreKpiScalarFieldEnum]
+
+
+export const RgStaffManualDataScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  monthlyReportId: 'monthlyReportId',
+  staffId: 'staffId',
+  utilizationRate: 'utilizationRate',
+  csRegistrationCount: 'csRegistrationCount'
+} as const
+
+export type RgStaffManualDataScalarFieldEnum = (typeof RgStaffManualDataScalarFieldEnum)[keyof typeof RgStaffManualDataScalarFieldEnum]
+
+
+export const RgCustomerVoiceScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  monthlyReportId: 'monthlyReportId',
+  content: 'content'
+} as const
+
+export type RgCustomerVoiceScalarFieldEnum = (typeof RgCustomerVoiceScalarFieldEnum)[keyof typeof RgCustomerVoiceScalarFieldEnum]
 
 
 export const SbmCustomerScalarFieldEnum = {
@@ -9822,7 +10628,16 @@ export type GlobalOmitConfig = {
   rcIngredientMaster?: Prisma.RcIngredientMasterOmit
   rcRecipe?: Prisma.RcRecipeOmit
   rcRecipeIngredient?: Prisma.RcRecipeIngredientOmit
+  rcCategoryYieldMaster?: Prisma.RcCategoryYieldMasterOmit
   rcProfitMarginStandard?: Prisma.RcProfitMarginStandardOmit
+  rgStore?: Prisma.RgStoreOmit
+  rgStaff?: Prisma.RgStaffOmit
+  rgMonthlyReport?: Prisma.RgMonthlyReportOmit
+  rgStaffRecord?: Prisma.RgStaffRecordOmit
+  rgStoreTotals?: Prisma.RgStoreTotalsOmit
+  rgStoreKpi?: Prisma.RgStoreKpiOmit
+  rgStaffManualData?: Prisma.RgStaffManualDataOmit
+  rgCustomerVoice?: Prisma.RgCustomerVoiceOmit
   sbmCustomer?: Prisma.SbmCustomerOmit
   sbmCustomerPhone?: Prisma.SbmCustomerPhoneOmit
   sbmProduct?: Prisma.SbmProductOmit
