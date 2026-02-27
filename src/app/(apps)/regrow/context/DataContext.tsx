@@ -115,7 +115,7 @@ export const DataContextProvider = ({
   currentUserRole = 'viewer',
   initialScopes,
 }: DataContextProviderProps) => {
-  const scopes = initialScopes
+  const scopes = initialScopes || { isAdmin: true, isManager: false }
   // DB版かlocalStorage版かを判定（initialYearMonthがあればDB版）
   const useDb = initialYearMonth !== undefined
 
