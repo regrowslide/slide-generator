@@ -2,115 +2,369 @@
 
 /**
  * Excelインポートビュー
- * 担当者別分析表（3店舗分）をアップロード
+ * 年月と店舗を手動選択 → ファイル選択 → プレビュー確認 → DB保存
  */
 
 import React, {useState, useRef, useCallback} from 'react'
 import {useDataContext} from '../../context/DataContext'
 import {parseStaffAnalysisExcel} from '../../lib/excel-parser'
+import type {ExcelParseResult, StoreName, YearMonth} from '../../types'
+
+/** スタッフのDBマッチング結果 */
+type StaffMatchStatus = {
+  staffName: string
+  isMatched: boolean
+}
 
 export const ImportView = () => {
-  const {addImportedData, monthlyData} = useDataContext()
-  const [isDragging, setIsDragging] = useState(false)
+  const {addImportedData, monthlyData, availableMonths, currentYearMonth, staffMaster, stores} = useDataContext()
+  const [selectedYearMonth, setSelectedYearMonth] = useState<YearMonth>(currentYearMonth)
+  const [selectedStore, setSelectedStore] = useState<StoreName | ''>('')
+  const [previewData, setPreviewData] = useState<ExcelParseResult | null>(null)
+  const [matchStatuses, setMatchStatuses] = useState<StaffMatchStatus[]>([])
   const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isParsing, setIsParsing] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
+  const isFormReady = selectedYearMonth !== '' && selectedStore !== ''
+
+  // スタッフDBマッチングチェック（店舗＋スタッフ名の組み合わせ）
+  const checkStaffMatching = useCallback(
+    (staffList: ExcelParseResult['staffList'], store: StoreName): StaffMatchStatus[] => {
+      return staffList.map((staff) => ({
+        staffName: staff.staffName,
+        isMatched: staffMaster.some((m) => m.staffName === staff.staffName && m.storeName === store),
+      }))
+    },
+    [staffMaster]
+  )
+
+  // ファイル選択時: パースしてプレビュー表示（DB保存しない）
   const handleFile = useCallback(
     async (file: File) => {
       if (!file.name.endsWith('.xlsx') && !file.name.endsWith('.xls')) {
         setError('Excelファイル（.xlsx / .xls）を選択してください')
         return
       }
+      if (!isFormReady) return
 
       setError(null)
-      setIsLoading(true)
+      setSuccessMessage(null)
+      setPreviewData(null)
+      setIsParsing(true)
 
       try {
-        const result = await parseStaffAnalysisExcel(file)
-        addImportedData(result)
-        setError(null)
+        const result = await parseStaffAnalysisExcel(file, selectedStore as StoreName)
+        const statuses = checkStaffMatching(result.staffList, selectedStore as StoreName)
+        setPreviewData(result)
+        setMatchStatuses(statuses)
       } catch (err) {
         setError((err as Error).message)
       } finally {
-        setIsLoading(false)
+        setIsParsing(false)
+        if (inputRef.current) inputRef.current.value = ''
       }
     },
-    [addImportedData]
+    [isFormReady, selectedStore, checkStaffMatching]
   )
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
       e.preventDefault()
-      setIsDragging(false)
+      if (!isFormReady) return
       const file = e.dataTransfer.files[0]
       if (file) handleFile(file)
     },
-    [handleFile]
+    [handleFile, isFormReady]
   )
 
+  // 「確認して取り込む」ボタン: DB保存
+  const handleConfirmImport = useCallback(async () => {
+    if (!previewData) return
+    setIsSaving(true)
+    setError(null)
+    try {
+      await addImportedData(previewData, selectedYearMonth)
+      setSuccessMessage(`${selectedStore}（${selectedYearMonth}）のデータを取り込みました`)
+      setPreviewData(null)
+      setMatchStatuses([])
+    } catch (err) {
+      setError((err as Error).message)
+    } finally {
+      setIsSaving(false)
+    }
+  }, [previewData, addImportedData, selectedYearMonth, selectedStore])
+
+  // プレビューキャンセル
+  const handleCancelPreview = useCallback(() => {
+    setPreviewData(null)
+    setMatchStatuses([])
+    setError(null)
+  }, [])
+
+  const unmatchedCount = matchStatuses.filter((s) => !s.isMatched).length
   const importedStores = monthlyData.importedData?.storeTotals.map((t) => t.storeName) || []
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-6 text-gray-800">Excel取込</h1>
 
-      {/* ドラッグ&ドロップエリア */}
-      <div
-        data-guidance="upload-area"
-        className={`border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-all ${
-          isDragging ? 'border-red-400 bg-red-50' : 'border-gray-300 hover:border-red-300 hover:bg-gray-50'
-        }`}
-        onDragOver={(e) => {
-          e.preventDefault()
-          setIsDragging(true)
-        }}
-        onDragLeave={() => setIsDragging(false)}
-        onDrop={handleDrop}
-        onClick={() => inputRef.current?.click()}
-      >
-        <input
-          ref={inputRef}
-          type="file"
-          accept=".xlsx,.xls"
-          className="hidden"
-          onChange={(e) => {
-            const file = e.target.files?.[0]
-            if (file) handleFile(file)
-          }}
-        />
-
-        {isLoading ? (
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-12 h-12 border-4 border-red-400 border-t-transparent rounded-full animate-spin" />
-            <p className="text-gray-600 font-medium">パース中...</p>
-            <p className="text-gray-500 text-sm">Excel解析中です。しばらくお待ちください。</p>
+      {/* STEP 1: 年月・店舗選択 */}
+      <div className="mb-6 bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+        <p className="text-sm font-semibold text-gray-600 mb-4">STEP 1：取込先を選択</p>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              年月 <span className="text-red-500">*</span>
+            </label>
+            <select
+              value={selectedYearMonth}
+              onChange={(e) => {
+                setSelectedYearMonth(e.target.value as YearMonth)
+                setPreviewData(null)
+              }}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+            >
+              <option value="">-- 年月を選択 --</option>
+              {availableMonths.map((month) => (
+                <option key={month} value={month}>
+                  {month}
+                </option>
+              ))}
+            </select>
           </div>
-        ) : (
-          <>
-            <div className="mb-4">
-              <svg
-                className="mx-auto h-16 w-16 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                />
-              </svg>
-            </div>
-            <p className="text-gray-700 text-lg font-medium mb-2">
-              ここにExcelファイルをドラッグ＆ドロップ
-            </p>
-            <p className="text-gray-500 mb-1">またはクリックしてファイルを選択</p>
-            <p className="text-xs text-gray-400">対応形式: .xlsx / .xls</p>
-          </>
-        )}
+
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              店舗 <span className="text-red-500">*</span>
+            </label>
+            <select
+              value={selectedStore}
+              onChange={(e) => {
+                setSelectedStore(e.target.value as StoreName | '')
+                setPreviewData(null)
+              }}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+            >
+              <option value="">-- 店舗を選択 --</option>
+              {stores.map((store) => (
+                <option key={store.id} value={store.name}>
+                  {store.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
       </div>
+
+      {/* STEP 2: ファイルアップロード（プレビューが無い場合のみ表示） */}
+      {!previewData && (
+        <div className="mb-4">
+          <p className="text-sm font-semibold text-gray-600 mb-3">STEP 2：Excelファイルを選択（プレビュー確認後に取り込み）</p>
+          <div
+            data-guidance="upload-area"
+            className={`border-2 border-dashed rounded-lg p-12 text-center transition-all ${
+              !isFormReady
+                ? 'border-gray-200 bg-gray-50 cursor-not-allowed opacity-50'
+                : 'border-gray-300 hover:border-red-300 hover:bg-gray-50 cursor-pointer'
+            }`}
+            onDragOver={(e) => {
+              e.preventDefault()
+            }}
+            onDragLeave={() => {}}
+            onDrop={handleDrop}
+            onClick={() => isFormReady && inputRef.current?.click()}
+          >
+            <input
+              ref={inputRef}
+              type="file"
+              accept=".xlsx,.xls"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0]
+                if (file) handleFile(file)
+              }}
+            />
+
+            {isParsing ? (
+              <div className="flex flex-col items-center gap-3">
+                <div className="w-12 h-12 border-4 border-red-400 border-t-transparent rounded-full animate-spin" />
+                <p className="text-gray-600 font-medium">解析中...</p>
+                <p className="text-gray-500 text-sm">Excelを読み込んでいます。しばらくお待ちください。</p>
+              </div>
+            ) : (
+              <>
+                <div className="mb-4">
+                  <svg className="mx-auto h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                    />
+                  </svg>
+                </div>
+                {!isFormReady ? (
+                  <p className="text-gray-400 text-base">年月と店舗を選択してからアップロードできます</p>
+                ) : (
+                  <>
+                    <p className="text-gray-700 text-lg font-medium mb-2">
+                      ここにExcelファイルをドラッグ＆ドロップ
+                    </p>
+                    <p className="text-gray-500 mb-1">またはクリックしてファイルを選択</p>
+                    <p className="text-xs text-gray-400">対応形式: .xlsx / .xls</p>
+                    <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 bg-red-50 border border-red-200 rounded-full text-sm text-red-700">
+                      <span>取込先:</span>
+                      <span className="font-semibold">{selectedYearMonth}</span>
+                      <span>/</span>
+                      <span className="font-semibold">{selectedStore}</span>
+                    </div>
+                  </>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* STEP 3: プレビュー確認（ファイル解析後に表示） */}
+      {previewData && (
+        <div className="mb-6">
+          <p className="text-sm font-semibold text-gray-600 mb-3">STEP 2：取込内容を確認してください</p>
+
+          {/* 取込先情報 */}
+          <div className="mb-4 flex items-center gap-2 text-sm text-gray-700 bg-gray-50 px-4 py-2 rounded-lg border border-gray-200">
+            <span>取込先:</span>
+            <span className="font-bold text-red-600">{selectedYearMonth} / {selectedStore}</span>
+            {previewData.periodStart && (
+              <span className="ml-2 text-gray-500">（集計期間: {previewData.periodStart} 〜 {previewData.periodEnd}）</span>
+            )}
+          </div>
+
+          {/* 未登録スタッフ警告バナー */}
+          {unmatchedCount > 0 && (
+            <div className="mb-4 bg-amber-50 border border-amber-300 rounded-lg p-4">
+              <p className="text-amber-800 font-semibold">
+                ⚠️ DBに未登録のスタッフが {unmatchedCount}名 います
+              </p>
+              <p className="text-amber-700 text-sm mt-1">
+                未登録スタッフは取り込み後にスタッフマスタへ追加されます。このまま取り込むことも可能です。
+              </p>
+            </div>
+          )}
+
+          {/* 店舗合計 */}
+          <div className="mb-4 bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+            <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
+              <p className="text-sm font-semibold text-gray-700">店舗合計</p>
+            </div>
+            <div className="grid grid-cols-4 divide-x divide-gray-100 text-center py-4">
+              <div>
+                <p className="text-xs text-gray-500 mb-1">売上合計</p>
+                <p className="text-lg font-bold text-gray-800">¥{previewData.total.sales.toLocaleString()}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 mb-1">対応客数</p>
+                <p className="text-lg font-bold text-gray-800">{previewData.total.customerCount.toLocaleString()}名</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 mb-1">指名数</p>
+                <p className="text-lg font-bold text-gray-800">{previewData.total.nominationCount.toLocaleString()}件</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 mb-1">客単価</p>
+                <p className="text-lg font-bold text-gray-800">¥{previewData.total.unitPrice.toLocaleString()}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* スタッフ一覧 */}
+          <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+            <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex items-center justify-between">
+              <p className="text-sm font-semibold text-gray-700">スタッフ一覧（{previewData.staffList.length}名）</p>
+              <div className="flex items-center gap-3 text-xs text-gray-500">
+                <span className="flex items-center gap-1"><span className="text-green-600">✅</span> DB登録済</span>
+                <span className="flex items-center gap-1"><span className="text-amber-500">⚠️</span> 未登録</span>
+              </div>
+            </div>
+            <div className="divide-y divide-gray-100 max-h-96 overflow-y-auto">
+              {previewData.staffList.map((staff, i) => {
+                const status = matchStatuses[i]
+                return (
+                  <div
+                    key={i}
+                    className={`flex items-center px-4 py-3 gap-3 ${!status?.isMatched ? 'bg-amber-50' : ''}`}
+                  >
+                    <span className="text-lg">{status?.isMatched ? '✅' : '⚠️'}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-400 w-8">#{staff.rank}</span>
+                        <span className="font-medium text-gray-800 truncate">{staff.staffName}</span>
+                        {!status?.isMatched && (
+                          <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full border border-amber-200">
+                            未登録
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4 gap-4 text-right text-sm text-gray-600 shrink-0">
+                      <div>
+                        <p className="text-xs text-gray-400">売上</p>
+                        <p className="font-medium">¥{staff.sales.toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-400">客数</p>
+                        <p className="font-medium">{staff.customerCount}名</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-400">新規</p>
+                        <p className="font-medium">{staff.newCustomerCount}名</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-400">客単価</p>
+                        <p className="font-medium">¥{staff.unitPrice.toLocaleString()}</p>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* アクションボタン */}
+          <div className="mt-5 flex items-center gap-3 justify-end">
+            <button
+              onClick={handleCancelPreview}
+              className="px-5 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            >
+              キャンセル
+            </button>
+            <button
+              onClick={handleConfirmImport}
+              disabled={isSaving}
+              className="px-6 py-2 bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+            >
+              {isSaving ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  保存中...
+                </>
+              ) : (
+                <>確認して取り込む</>
+              )}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 成功メッセージ */}
+      {successMessage && (
+        <div className="mt-4 bg-green-50 border border-green-200 rounded-lg p-4">
+          <p className="text-green-800 font-medium">✅ {successMessage}</p>
+        </div>
+      )}
 
       {/* エラー表示 */}
       {error && (
@@ -120,16 +374,16 @@ export const ImportView = () => {
         </div>
       )}
 
-      {/* 取込済みデータ一覧 */}
-      {importedStores.length > 0 && (
+      {/* 取込済みデータ一覧（現在表示中の月） */}
+      {importedStores.length > 0 && !previewData && (
         <div data-guidance="imported-list" className="mt-6">
-          <h2 className="text-lg font-bold mb-3 text-gray-800">取込済みデータ</h2>
+          <h2 className="text-lg font-bold mb-3 text-gray-800">取込済みデータ（{currentYearMonth}）</h2>
           <div className="space-y-3">
             {monthlyData.importedData?.storeTotals.map((total, i) => {
               const staffCount =
                 monthlyData.importedData?.staffRecords.filter((r) => r.storeName === total.storeName).length || 0
               return (
-                <div key={i} className="bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                <div key={i} className="bg-white border rounded-lg p-4 shadow-sm">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3">
@@ -149,7 +403,6 @@ export const ImportView = () => {
               )
             })}
           </div>
-
           {monthlyData.importedData && (
             <div className="mt-3 text-sm text-gray-500">
               <p>インポート日時: {new Date(monthlyData.importedData.importedAt).toLocaleString('ja-JP')}</p>
@@ -158,15 +411,16 @@ export const ImportView = () => {
         </div>
       )}
 
-      {/* 指示 */}
-      <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <p className="text-blue-800 font-medium mb-2">📝 ファイル要件</p>
-        <ul className="text-blue-700 text-sm space-y-1 list-disc list-inside">
-          <li>ファイル名: 担当者別分析表_Relaxation Salon SAMPLE[店舗名]_YYYYMMDD.xlsx</li>
-          <li>3店舗分（港北店、青葉店、中央店）をアップロードしてください</li>
-          <li>同じ店舗のファイルを再度アップロードすると上書きされます</li>
-        </ul>
-      </div>
+      {/* ファイル要件 */}
+      {!previewData && (
+        <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <p className="text-blue-800 font-medium mb-2">📝 ファイル要件</p>
+          <ul className="text-blue-700 text-sm space-y-1 list-disc list-inside">
+            <li>担当者別分析表（.xlsx / .xls）をアップロードしてください</li>
+            <li>同じ店舗・年月のデータを再度アップロードすると上書きされます</li>
+          </ul>
+        </div>
+      )}
     </div>
   )
 }

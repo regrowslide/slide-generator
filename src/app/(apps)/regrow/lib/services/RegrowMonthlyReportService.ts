@@ -6,7 +6,6 @@ import type {
   RgStoreKpi,
   RgStaffManualData,
   RgCustomerVoice,
-  RgStaff,
   RgStore,
 } from '@prisma/generated/prisma/client'
 import type {
@@ -19,21 +18,21 @@ import type {
   StaffManualData as StaffManualDataType,
   CustomerVoice,
 } from '../../types'
-import {RegrowStaffService} from './RegrowStaffService'
 
 type RgMonthlyReportWithRelations = RgMonthlyReport & {
-  RgStaffRecord: (RgStaffRecord & {RgStaff: RgStaff; RgStore: RgStore})[]
+  RgStaffRecord: (RgStaffRecord & {RgStore: RgStore})[]
   RgStoreTotals: (RgStoreTotalsModel & {RgStore: RgStore})[]
   RgStoreKpi: (RgStoreKpi & {RgStore: RgStore})[]
-  RgStaffManualData: (RgStaffManualData & {RgStaff: RgStaff & {RgStore: RgStore}})[]
+  RgStaffManualData: RgStaffManualData[]
   RgCustomerVoice: RgCustomerVoice[]
 }
 
 export class RegrowMonthlyReportService {
   private static convertToMonthlyData(report: RgMonthlyReportWithRelations): MonthlyData {
+    // staffNameは直接レコードに保存されているため、RgStaff結合不要
     const staffRecords: StaffRecord[] = report.RgStaffRecord.map((r) => ({
       rank: r.rank,
-      staffName: r.RgStaff.staffName,
+      staffName: r.staffName,
       storeName: r.RgStore.name as StoreName,
       sales: r.sales,
       customerCount: r.customerCount,
@@ -58,9 +57,10 @@ export class RegrowMonthlyReportService {
       comment: k.comment,
     }))
 
+    // staffName/storeNameは直接レコードに保存されているため、RgStaff/RgStore結合不要
     const staffManualData: StaffManualDataType[] = report.RgStaffManualData.map((m) => ({
-      staffName: m.RgStaff.staffName,
-      storeName: m.RgStaff.RgStore.name as StoreName,
+      staffName: m.staffName,
+      storeName: m.storeName as StoreName,
       utilizationRate: m.utilizationRate,
       csRegistrationCount: m.csRegistrationCount,
     }))
@@ -95,7 +95,7 @@ export class RegrowMonthlyReportService {
       where: {yearMonth},
       include: {
         RgStaffRecord: {
-          include: {RgStaff: true, RgStore: true},
+          include: {RgStore: true},
           orderBy: {rank: 'asc'},
         },
         RgStoreTotals: {
@@ -107,7 +107,6 @@ export class RegrowMonthlyReportService {
           orderBy: {sortOrder: 'asc'},
         },
         RgStaffManualData: {
-          include: {RgStaff: {include: {RgStore: true}}},
           orderBy: {sortOrder: 'asc'},
         },
         RgCustomerVoice: true,
@@ -141,16 +140,7 @@ export class RegrowMonthlyReportService {
   ): Promise<void> {
     const report = await RegrowMonthlyReportService.upsertMonthlyReport(yearMonth)
 
-    // スタッフとストアを名前で解決
-    const staffMap = new Map<string, {staffId: number; storeId: number}>()
-    for (const record of staffRecords) {
-      const key = `${record.staffName}_${record.storeName}`
-      if (!staffMap.has(key)) {
-        const staff = await RegrowStaffService.upsertStaffByName(record.staffName, record.storeName)
-        staffMap.set(key, {staffId: staff.id, storeId: staff.storeId})
-      }
-    }
-
+    // 店舗名→IDマップを構築
     const storeMap = new Map<string, number>()
     const stores = await prisma.rgStore.findMany()
     for (const store of stores) {
@@ -161,13 +151,15 @@ export class RegrowMonthlyReportService {
     await prisma.rgStaffRecord.deleteMany({where: {monthlyReportId: report.id}})
     await prisma.rgStoreTotals.deleteMany({where: {monthlyReportId: report.id}})
 
+    // staffNameを直接保存（RgStaffテーブルは不要）
     await prisma.rgStaffRecord.createMany({
       data: staffRecords.map((r) => {
-        const resolved = staffMap.get(`${r.staffName}_${r.storeName}`)!
+        const storeId = storeMap.get(r.storeName)
+        if (!storeId) throw new Error(`店舗が見つかりません: ${r.storeName}`)
         return {
           monthlyReportId: report.id,
-          staffId: resolved.staffId,
-          storeId: resolved.storeId,
+          staffName: r.staffName,
+          storeId,
           rank: r.rank,
           sales: r.sales,
           customerCount: r.customerCount,
@@ -239,18 +231,19 @@ export class RegrowMonthlyReportService {
     data: Partial<StaffManualDataType>
   ): Promise<void> {
     const report = await RegrowMonthlyReportService.upsertMonthlyReport(yearMonth)
-    const staff = await RegrowStaffService.upsertStaffByName(staffName, storeName)
 
+    // staffName+storeNameを直接保存（RgStaffテーブルは不要）
     await prisma.rgStaffManualData.upsert({
       where: {
-        monthlyReportId_staffId: {
+        monthlyReportId_staffName: {
           monthlyReportId: report.id,
-          staffId: staff.id,
+          staffName,
         },
       },
       create: {
         monthlyReportId: report.id,
-        staffId: staff.id,
+        staffName,
+        storeName,
         utilizationRate: data.utilizationRate ?? null,
         csRegistrationCount: data.csRegistrationCount ?? null,
       },

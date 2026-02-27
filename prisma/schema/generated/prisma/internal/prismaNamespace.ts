@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.3.0
- * Query Engine version: 9d6ad21cbbceab97458517b147a6a09ff43aa735
+ * Prisma Client JS version: 7.4.1
+ * Query Engine version: 55ae170b1ced7fc6ed07a15f110549408c501bb3
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.3.0",
-  engine: "9d6ad21cbbceab97458517b147a6a09ff43aa735"
+  client: "7.4.1",
+  engine: "55ae170b1ced7fc6ed07a15f110549408c501bb3"
 }
 
 /**
@@ -435,7 +435,6 @@ export const ModelName = {
   RcCategoryYieldMaster: 'RcCategoryYieldMaster',
   RcProfitMarginStandard: 'RcProfitMarginStandard',
   RgStore: 'RgStore',
-  RgStaff: 'RgStaff',
   RgMonthlyReport: 'RgMonthlyReport',
   RgStaffRecord: 'RgStaffRecord',
   RgStoreTotals: 'RgStoreTotals',
@@ -506,7 +505,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "dentalClinic" | "dentalFacility" | "dentalPatient" | "dentalVisitPlan" | "dentalExamination" | "dentalScoringHistory" | "dentalSavedDocument" | "kgFacilityMaster" | "kgDietTypeMaster" | "kgDailyMenu" | "kgMealSlot" | "kgMenuRecipe" | "kgRecipeIngredient" | "kgOrder" | "kgOrderLine" | "kgProductionBatch" | "kgProductionItem" | "kgRequiredIngredient" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "rcIngredientMaster" | "rcRecipe" | "rcRecipeIngredient" | "rcCategoryYieldMaster" | "rcProfitMarginStandard" | "rgStore" | "rgStaff" | "rgMonthlyReport" | "rgStaffRecord" | "rgStoreTotals" | "rgStoreKpi" | "rgStaffManualData" | "rgCustomerVoice" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "store" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "cronExecutionLog" | "stockConfig" | "stock" | "stockHistory" | "exerciseMaster" | "workoutLog" | "yamanokaiDepartment" | "yamanokaiRole" | "yamanokaiCourse" | "yamanokaiEquipment" | "yamanokaiInsuranceGrade" | "yamanokaiStaminaGrade" | "yamanokaiSkillGrade" | "yamanokaiRockCategory" | "yamanokaiMember" | "yamanokaiMemberRole" | "yamanokaiCourseCompletion" | "yamanokaiEvent" | "yamanokaiEventRequiredCourse" | "yamanokaiEventPlan" | "yamanokaiEventPlanParticipant" | "yamanokaiAttendance" | "yamanokaiRecord" | "yamanokaiRecordFile" | "yamanokaiEquipmentLoan"
+    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "dentalClinic" | "dentalFacility" | "dentalPatient" | "dentalVisitPlan" | "dentalExamination" | "dentalScoringHistory" | "dentalSavedDocument" | "kgFacilityMaster" | "kgDietTypeMaster" | "kgDailyMenu" | "kgMealSlot" | "kgMenuRecipe" | "kgRecipeIngredient" | "kgOrder" | "kgOrderLine" | "kgProductionBatch" | "kgProductionItem" | "kgRequiredIngredient" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "rcIngredientMaster" | "rcRecipe" | "rcRecipeIngredient" | "rcCategoryYieldMaster" | "rcProfitMarginStandard" | "rgStore" | "rgMonthlyReport" | "rgStaffRecord" | "rgStoreTotals" | "rgStoreKpi" | "rgStaffManualData" | "rgCustomerVoice" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "store" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "cronExecutionLog" | "stockConfig" | "stock" | "stockHistory" | "exerciseMaster" | "workoutLog" | "yamanokaiDepartment" | "yamanokaiRole" | "yamanokaiCourse" | "yamanokaiEquipment" | "yamanokaiInsuranceGrade" | "yamanokaiStaminaGrade" | "yamanokaiSkillGrade" | "yamanokaiRockCategory" | "yamanokaiMember" | "yamanokaiMemberRole" | "yamanokaiCourseCompletion" | "yamanokaiEvent" | "yamanokaiEventRequiredCourse" | "yamanokaiEventPlan" | "yamanokaiEventPlanParticipant" | "yamanokaiAttendance" | "yamanokaiRecord" | "yamanokaiRecordFile" | "yamanokaiEquipmentLoan"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -4281,80 +4280,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.RgStoreCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.RgStoreCountAggregateOutputType> | number
-        }
-      }
-    }
-    RgStaff: {
-      payload: Prisma.$RgStaffPayload<ExtArgs>
-      fields: Prisma.RgStaffFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.RgStaffFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.RgStaffFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload>
-        }
-        findFirst: {
-          args: Prisma.RgStaffFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.RgStaffFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload>
-        }
-        findMany: {
-          args: Prisma.RgStaffFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload>[]
-        }
-        create: {
-          args: Prisma.RgStaffCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload>
-        }
-        createMany: {
-          args: Prisma.RgStaffCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.RgStaffCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload>[]
-        }
-        delete: {
-          args: Prisma.RgStaffDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload>
-        }
-        update: {
-          args: Prisma.RgStaffUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload>
-        }
-        deleteMany: {
-          args: Prisma.RgStaffDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.RgStaffUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.RgStaffUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload>[]
-        }
-        upsert: {
-          args: Prisma.RgStaffUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffPayload>
-        }
-        aggregate: {
-          args: Prisma.RgStaffAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateRgStaff>
-        }
-        groupBy: {
-          args: Prisma.RgStaffGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.RgStaffGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.RgStaffCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.RgStaffCountAggregateOutputType> | number
         }
       }
     }
@@ -9340,20 +9265,6 @@ export const RgStoreScalarFieldEnum = {
 export type RgStoreScalarFieldEnum = (typeof RgStoreScalarFieldEnum)[keyof typeof RgStoreScalarFieldEnum]
 
 
-export const RgStaffScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  staffName: 'staffName',
-  storeId: 'storeId',
-  role: 'role',
-  isActive: 'isActive'
-} as const
-
-export type RgStaffScalarFieldEnum = (typeof RgStaffScalarFieldEnum)[keyof typeof RgStaffScalarFieldEnum]
-
-
 export const RgMonthlyReportScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -9373,7 +9284,8 @@ export const RgStaffRecordScalarFieldEnum = {
   updatedAt: 'updatedAt',
   sortOrder: 'sortOrder',
   monthlyReportId: 'monthlyReportId',
-  staffId: 'staffId',
+  staffName: 'staffName',
+  userId: 'userId',
   storeId: 'storeId',
   rank: 'rank',
   sales: 'sales',
@@ -9424,7 +9336,9 @@ export const RgStaffManualDataScalarFieldEnum = {
   updatedAt: 'updatedAt',
   sortOrder: 'sortOrder',
   monthlyReportId: 'monthlyReportId',
-  staffId: 'staffId',
+  staffName: 'staffName',
+  storeName: 'storeName',
+  userId: 'userId',
   utilizationRate: 'utilizationRate',
   csRegistrationCount: 'csRegistrationCount'
 } as const
@@ -9736,7 +9650,8 @@ export const UserScalarFieldEnum = {
   aidocumentCompanyId: 'aidocumentCompanyId',
   storeId: 'storeId',
   departmentId: 'departmentId',
-  dentalClinicId: 'dentalClinicId'
+  dentalClinicId: 'dentalClinicId',
+  rgStoreId: 'rgStoreId'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -10631,7 +10546,6 @@ export type GlobalOmitConfig = {
   rcCategoryYieldMaster?: Prisma.RcCategoryYieldMasterOmit
   rcProfitMarginStandard?: Prisma.RcProfitMarginStandardOmit
   rgStore?: Prisma.RgStoreOmit
-  rgStaff?: Prisma.RgStaffOmit
   rgMonthlyReport?: Prisma.RgMonthlyReportOmit
   rgStaffRecord?: Prisma.RgStaffRecordOmit
   rgStoreTotals?: Prisma.RgStoreTotalsOmit

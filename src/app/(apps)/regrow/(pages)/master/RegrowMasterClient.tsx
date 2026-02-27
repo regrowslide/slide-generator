@@ -1,38 +1,32 @@
 'use client'
 
-import {useState, useCallback} from 'react'
-import {Plus, Pencil, Trash2, Building2, Users, Database} from 'lucide-react'
+import { useState, useCallback, useEffect } from 'react'
+import { Pencil, Trash2, Building2, Users, Database, Shield } from 'lucide-react'
 
-import {Card, CardContent} from '@shadcn/ui/card'
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@shadcn/ui/table'
-import {Input} from '@shadcn/ui/input'
-import {Label} from '@shadcn/ui/label'
-import {Switch} from '@shadcn/ui/switch'
-import {Button} from '@cm/components/styles/common-components/Button'
+import { Card, CardContent } from '@shadcn/ui/card'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@shadcn/ui/table'
+import { Input } from '@shadcn/ui/input'
+import { Label } from '@shadcn/ui/label'
+import { Switch } from '@shadcn/ui/switch'
+import { Button } from '@cm/components/styles/common-components/Button'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import useModal from '@cm/components/utils/modal/useModal'
 
-import {createStore, updateStore, deleteStore} from '../../_actions/store-actions'
-import {createStaff, updateStaff, deleteStaff} from '../../_actions/staff-actions'
-import {seedRegrowData} from '../../_actions/seed-regrow-actions'
+import { createStore, updateStore, deleteStore } from '../../_actions/store-actions'
+import { getAllUsers, updateUserRgStore, createRegrowUser } from '../../_actions/staff-actions'
+import { seedRegrowData, resetRegrowData } from '../../_actions/seed-regrow-actions'
+import RoleAllocationTable from '@cm/components/RoleAllocationTable/RoleAllocationTable'
 
-import type {RgStore, RgStaff} from '@prisma/generated/prisma/client'
+import type { RgStore, User } from '@prisma/generated/prisma/client'
+import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
 
 type Props = {
   stores: RgStore[]
-  staffs: (RgStaff & {RgStore: RgStore})[]
 }
 
 type StoreFormData = {
   name: string
   fullName: string
-  isActive: boolean
-}
-
-type StaffFormData = {
-  staffName: string
-  storeId: number | null
-  role: string
   isActive: boolean
 }
 
@@ -42,22 +36,9 @@ const defaultStoreForm: StoreFormData = {
   isActive: true,
 }
 
-const defaultStaffForm: StaffFormData = {
-  staffName: '',
-  storeId: null,
-  role: 'viewer',
-  isActive: true,
-}
-
-const ROLE_OPTIONS = [
-  {value: 'admin', label: '管理者'},
-  {value: 'manager', label: 'マネージャー'},
-  {value: 'viewer', label: '閲覧者'},
-]
-
-const RegrowMasterClient = ({stores: initialStores, staffs: initialStaffs}: Props) => {
-  const {toggleLoad} = useGlobal()
-  const [activeTab, setActiveTab] = useState<'store' | 'staff'>('store')
+const RegrowMasterClient = ({ stores: initialStores }: Props) => {
+  const { query, toggleLoad } = useGlobal()
+  const [activeTab, setActiveTab] = useState<'store' | 'user' | 'role'>('store')
 
   // 店舗state
   const [stores, setStores] = useState(initialStores)
@@ -65,16 +46,28 @@ const RegrowMasterClient = ({stores: initialStores, staffs: initialStaffs}: Prop
   const [storeForm, setStoreForm] = useState<StoreFormData>(defaultStoreForm)
   const [storeFormError, setStoreFormError] = useState<string | null>(null)
 
-  // スタッフstate
-  const [staffs, setStaffs] = useState(initialStaffs)
-  const [staffEditingId, setStaffEditingId] = useState<number | null>(null)
-  const [staffForm, setStaffForm] = useState<StaffFormData>(defaultStaffForm)
-  const [staffFormError, setStaffFormError] = useState<string | null>(null)
-  const [staffFilterStoreId, setStaffFilterStoreId] = useState<number | null>(null)
+  // ユーザー・店舗割当state
+  const [users, setUsers] = useState<(User & { RgStoreRg: RgStore | null })[]>([])
+
+  // ユーザー新規追加state
+  const [userForm, setUserForm] = useState({ name: '', email: '', password: '' })
+  const [userFormError, setUserFormError] = useState<string | null>(null)
 
   // モーダル
   const storeModal = useModal()
-  const staffModal = useModal()
+  const userModal = useModal()
+
+  // ユーザー一覧を取得
+  const fetchUsers = useCallback(async () => {
+    const result = await getAllUsers()
+    setUsers(result)
+  }, [])
+
+  useEffect(() => {
+    if (activeTab === 'user') {
+      fetchUsers()
+    }
+  }, [activeTab, fetchUsers])
 
   // ============================================================
   // 店舗マスタ
@@ -123,7 +116,7 @@ const RegrowMasterClient = ({stores: initialStores, staffs: initialStaffs}: Prop
         setStores((prev) => [...prev, created])
       }
       storeModal.handleClose()
-    })
+    }, { refresh: false })
   }, [storeEditingId, storeForm, toggleLoad, storeModal])
 
   const handleDeleteStore = useCallback(
@@ -133,133 +126,113 @@ const RegrowMasterClient = ({stores: initialStores, staffs: initialStaffs}: Prop
       toggleLoad(async () => {
         await deleteStore(id)
         setStores((prev) => prev.filter((s) => s.id !== id))
-      })
+      }, { refresh: false })
     },
     [toggleLoad]
   )
 
   // ============================================================
-  // スタッフマスタ
+  // ユーザー新規追加
   // ============================================================
 
-  const handleOpenNewStaff = useCallback(() => {
-    setStaffEditingId(null)
-    setStaffForm(defaultStaffForm)
-    setStaffFormError(null)
-    staffModal.handleOpen()
-  }, [staffModal])
+  const handleOpenNewUser = useCallback(() => {
+    setUserForm({ name: '', email: '', password: '' })
+    setUserFormError(null)
+    userModal.handleOpen()
+  }, [userModal])
 
-  const handleOpenEditStaff = useCallback(
-    (staff: RgStaff & {RgStore: RgStore}) => {
-      setStaffEditingId(staff.id)
-      setStaffForm({
-        staffName: staff.staffName,
-        storeId: staff.storeId,
-        role: staff.role ?? 'viewer',
-        isActive: staff.isActive,
-      })
-      setStaffFormError(null)
-      staffModal.handleOpen()
-    },
-    [staffModal]
-  )
-
-  const handleSaveStaff = useCallback(async () => {
-    if (!staffForm.staffName) {
-      setStaffFormError('名前は必須です')
+  const handleSaveUser = useCallback(async () => {
+    if (!userForm.name.trim()) {
+      setUserFormError('名前は必須です')
       return
     }
-    if (!staffForm.storeId) {
-      setStaffFormError('店舗を選択してください')
-      return
-    }
-
     toggleLoad(async () => {
-      if (staffEditingId) {
-        const updated = await updateStaff(staffEditingId, {
-          staffName: staffForm.staffName,
-          storeId: staffForm.storeId!,
-          role: staffForm.role,
-          isActive: staffForm.isActive,
-        })
-        // includeされた店舗情報を付与
-        const store = stores.find((s) => s.id === staffForm.storeId)!
-        const staffWithStore = {...updated, RgStore: store} as RgStaff & {RgStore: RgStore}
-        setStaffs((prev) => prev.map((s) => (s.id === staffEditingId ? staffWithStore : s)))
-      } else {
-        const created = await createStaff({
-          staffName: staffForm.staffName,
-          storeId: staffForm.storeId!,
-          role: staffForm.role,
-        })
-        const store = stores.find((s) => s.id === staffForm.storeId)!
-        const staffWithStore = {...created, RgStore: store} as RgStaff & {RgStore: RgStore}
-        setStaffs((prev) => [...prev, staffWithStore])
-      }
-      staffModal.handleClose()
-    })
-  }, [staffEditingId, staffForm, stores, toggleLoad, staffModal])
-
-  const handleDeleteStaff = useCallback(
-    async (id: number) => {
-      if (!window.confirm('このスタッフを削除しますか？')) return
-
-      toggleLoad(async () => {
-        await deleteStaff(id)
-        setStaffs((prev) => prev.filter((s) => s.id !== id))
+      const created = await createRegrowUser({
+        name: userForm.name.trim(),
+        email: userForm.email.trim() || undefined,
+        password: userForm.password.trim() || undefined,
       })
+      setUsers((prev) => [...prev, { ...created, RgStoreRg: null }])
+      userModal.handleClose()
+    }, { refresh: false })
+  }, [userForm, toggleLoad, userModal])
+
+  // ============================================================
+  // ユーザー担当店舗割当
+  // ============================================================
+
+  const handleUpdateUserStore = useCallback(
+    async (userId: number, rgStoreId: number | null) => {
+      await updateUserRgStore(userId, rgStoreId)
+      await fetchUsers()
     },
-    [toggleLoad]
+    [fetchUsers]
   )
-
-  // フィルタ済みスタッフ
-  const filteredStaffs = staffFilterStoreId ? staffs.filter((s) => s.storeId === staffFilterStoreId) : staffs
-
-  const getRoleLabel = (role: string | null) => {
-    return ROLE_OPTIONS.find((r) => r.value === role)?.label ?? role ?? '-'
-  }
 
   return (
     <div className="space-y-6">
       {/* ヘッダー */}
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-slate-800">Regrow マスタ管理</h2>
-        <Button
-          color="red"
-          size="sm"
-          onClick={() => {
-            if (!window.confirm('既存データをリセットしてシードデータを再投入しますか？')) return
-            toggleLoad(async () => {
-              const result = await seedRegrowData()
-              window.alert(result.message)
-              window.location.reload()
-            })
-          }}
-        >
-          <Database className="w-4 h-4 mr-1" />
-          シードデータ投入
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            color="red"
+            size="sm"
+            onClick={() => {
+              if (!window.confirm('全データを削除します。この操作は取り消せません。よろしいですか？')) return
+              toggleLoad(async () => {
+                const result = await resetRegrowData()
+                window.alert(result.message)
+                window.location.reload()
+              })
+            }}
+          >
+            <Trash2 className="w-4 h-4 mr-1" />
+            データリセット
+          </Button>
+          <Button
+            color="blue"
+            size="sm"
+            onClick={() => {
+              if (!window.confirm('既存データをリセットしてシードデータを再投入しますか？')) return
+              toggleLoad(async () => {
+                const result = await seedRegrowData()
+                window.alert(result.message)
+                window.location.reload()
+              })
+            }}
+          >
+            <Database className="w-4 h-4 mr-1" />
+            シードデータ投入
+          </Button>
+        </div>
       </div>
 
       {/* タブ */}
       <div className="flex gap-2 border-b">
         <button
-          className={`flex items-center gap-2 px-4 py-2 border-b-2 transition-colors ${
-            activeTab === 'store' ? 'border-blue-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700'
-          }`}
+          className={`flex items-center gap-2 px-4 py-2 border-b-2 transition-colors ${activeTab === 'store' ? 'border-blue-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700'
+            }`}
           onClick={() => setActiveTab('store')}
         >
           <Building2 className="w-4 h-4" />
           店舗マスタ
         </button>
         <button
-          className={`flex items-center gap-2 px-4 py-2 border-b-2 transition-colors ${
-            activeTab === 'staff' ? 'border-blue-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700'
-          }`}
-          onClick={() => setActiveTab('staff')}
+          className={`flex items-center gap-2 px-4 py-2 border-b-2 transition-colors ${activeTab === 'user' ? 'border-blue-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700'
+            }`}
+          onClick={() => setActiveTab('user')}
         >
           <Users className="w-4 h-4" />
-          スタッフマスタ
+          ユーザー・権限管理
+        </button>
+        <button
+          className={`flex items-center gap-2 px-4 py-2 border-b-2 transition-colors ${activeTab === 'role' ? 'border-blue-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700'
+            }`}
+          onClick={() => setActiveTab('role')}
+        >
+          <Shield className="w-4 h-4" />
+          権限割当
         </button>
       </div>
 
@@ -268,7 +241,6 @@ const RegrowMasterClient = ({stores: initialStores, staffs: initialStaffs}: Prop
         <>
           <div className="flex justify-end">
             <Button onClick={handleOpenNewStore}>
-              <Plus className="w-4 h-4 mr-2" />
               新規追加
             </Button>
           </div>
@@ -305,9 +277,8 @@ const RegrowMasterClient = ({stores: initialStores, staffs: initialStaffs}: Prop
                         <TableCell>{store.fullName ?? '-'}</TableCell>
                         <TableCell>
                           <span
-                            className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              store.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
-                            }`}
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${store.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
+                              }`}
                           >
                             {store.isActive ? '有効' : '無効'}
                           </span>
@@ -339,7 +310,7 @@ const RegrowMasterClient = ({stores: initialStores, staffs: initialStaffs}: Prop
                 <Input
                   id="storeName"
                   value={storeForm.name}
-                  onChange={(e) => setStoreForm({...storeForm, name: e.target.value})}
+                  onChange={(e) => setStoreForm({ ...storeForm, name: e.target.value })}
                   placeholder="港北店"
                 />
               </div>
@@ -348,7 +319,7 @@ const RegrowMasterClient = ({stores: initialStores, staffs: initialStaffs}: Prop
                 <Input
                   id="storeFullName"
                   value={storeForm.fullName}
-                  onChange={(e) => setStoreForm({...storeForm, fullName: e.target.value})}
+                  onChange={(e) => setStoreForm({ ...storeForm, fullName: e.target.value })}
                   placeholder="Regrow 港北店"
                 />
               </div>
@@ -356,7 +327,7 @@ const RegrowMasterClient = ({stores: initialStores, staffs: initialStaffs}: Prop
                 <Switch
                   id="storeIsActive"
                   checked={storeForm.isActive}
-                  onCheckedChange={(checked) => setStoreForm({...storeForm, isActive: checked})}
+                  onCheckedChange={(checked) => setStoreForm({ ...storeForm, isActive: checked })}
                 />
                 <Label htmlFor="storeIsActive">有効</Label>
               </div>
@@ -371,148 +342,114 @@ const RegrowMasterClient = ({stores: initialStores, staffs: initialStaffs}: Prop
         </>
       )}
 
-      {/* スタッフマスタ */}
-      {activeTab === 'staff' && (
-        <>
-          <div className="flex items-center justify-between">
-            <select
-              className="border rounded px-3 py-2 text-sm"
-              value={staffFilterStoreId ?? ''}
-              onChange={(e) => setStaffFilterStoreId(e.target.value ? Number(e.target.value) : null)}
-            >
-              <option value="">全店舗</option>
-              {stores.map((store) => (
-                <option key={store.id} value={store.id}>
-                  {store.name}
-                </option>
-              ))}
-            </select>
-            <Button onClick={handleOpenNewStaff}>
-              <Plus className="w-4 h-4 mr-2" />
-              新規追加
-            </Button>
-          </div>
-
-          <Card>
-            <CardContent className="pt-6">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>名前</TableHead>
-                    <TableHead>店舗</TableHead>
-                    <TableHead>権限</TableHead>
-                    <TableHead>状態</TableHead>
-                    <TableHead>操作</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredStaffs.length === 0 ? (
+      {/* ユーザー・権限管理 */}
+      {activeTab === 'user' && (
+        <div className="space-y-8">
+          {/* 担当店舗割当 */}
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-slate-700">ユーザー一覧・担当店舗割当</h3>
+              <Button size="sm" onClick={handleOpenNewUser}>
+                <Users className="w-4 h-4 mr-1" />
+                新規追加
+              </Button>
+            </div>
+            <Card>
+              <CardContent className="pt-6">
+                <Table>
+                  <TableHeader>
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center py-8 text-slate-400">
-                        スタッフが登録されていません
-                      </TableCell>
+                      <TableHead>名前</TableHead>
+                      <TableHead>担当店舗</TableHead>
                     </TableRow>
-                  ) : (
-                    filteredStaffs.map((staff) => (
-                      <TableRow key={staff.id} className={!staff.isActive ? 'opacity-50' : ''}>
-                        <TableCell>{staff.id}</TableCell>
-                        <TableCell className="font-medium">
-                          <div className="flex items-center gap-2">
-                            <Users className="w-4 h-4 text-slate-400" />
-                            {staff.staffName}
-                          </div>
-                        </TableCell>
-                        <TableCell>{staff.RgStore?.name ?? '-'}</TableCell>
-                        <TableCell>{getRoleLabel(staff.role)}</TableCell>
-                        <TableCell>
-                          <span
-                            className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              staff.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
-                            }`}
-                          >
-                            {staff.isActive ? '有効' : '無効'}
-                          </span>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <button className="p-1 hover:bg-gray-100 rounded" onClick={() => handleOpenEditStaff(staff)}>
-                              <Pencil className="w-4 h-4" />
-                            </button>
-                            <button className="p-1 hover:bg-gray-100 rounded" onClick={() => handleDeleteStaff(staff.id)}>
-                              <Trash2 className="w-4 h-4 text-red-500" />
-                            </button>
-                          </div>
+                  </TableHeader>
+                  <TableBody>
+                    {users.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={2} className="text-center py-8 text-slate-400">
+                          ユーザーが見つかりません（appsに「regrow」が含まれるユーザーが対象）
                         </TableCell>
                       </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+                    ) : (
+                      users.map((user) => (
+                        <TableRow key={user.id}>
+                          <TableCell className="font-medium">{user.name}</TableCell>
+                          <TableCell>
+                            <select
+                              className="border rounded px-2 py-1 text-sm"
+                              value={user.rgStoreId ?? ''}
+                              onChange={(e) => handleUpdateUserStore(user.id, e.target.value ? Number(e.target.value) : null)}
+                            >
+                              <option value="">未設定</option>
+                              {stores.map((store) => (
+                                <option key={store.id} value={store.id}>
+                                  {store.name}
+                                </option>
+                              ))}
+                            </select>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </div>
 
-          {/* スタッフ編集モーダル */}
-          <staffModal.Modal title={staffEditingId ? 'スタッフを編集' : 'スタッフを追加'}>
+          {/* 新規ユーザー追加モーダル */}
+          <userModal.Modal title="ユーザーを追加">
             <div className="space-y-4">
-              {staffFormError && <div className="text-sm text-red-500 bg-red-50 p-2 rounded">{staffFormError}</div>}
+              {userFormError && <div className="text-sm text-red-500 bg-red-50 p-2 rounded">{userFormError}</div>}
               <div className="space-y-2">
-                <Label htmlFor="staffName">名前 *</Label>
+                <Label htmlFor="userName">名前 *</Label>
                 <Input
-                  id="staffName"
-                  value={staffForm.staffName}
-                  onChange={(e) => setStaffForm({...staffForm, staffName: e.target.value})}
+                  id="userName"
+                  value={userForm.name}
+                  onChange={(e) => setUserForm({ ...userForm, name: e.target.value })}
                   placeholder="山田 太郎"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="staffStoreId">店舗 *</Label>
-                <select
-                  id="staffStoreId"
-                  className="w-full border rounded px-3 py-2 text-sm"
-                  value={staffForm.storeId ?? ''}
-                  onChange={(e) => setStaffForm({...staffForm, storeId: e.target.value ? Number(e.target.value) : null})}
-                >
-                  <option value="">選択してください</option>
-                  {stores.map((store) => (
-                    <option key={store.id} value={store.id}>
-                      {store.name}
-                    </option>
-                  ))}
-                </select>
+                <Label htmlFor="userEmail">メールアドレス</Label>
+                <Input
+                  id="userEmail"
+                  type="email"
+                  value={userForm.email}
+                  onChange={(e) => setUserForm({ ...userForm, email: e.target.value })}
+                  placeholder="taro@example.com"
+                />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="staffRole">権限</Label>
-                <select
-                  id="staffRole"
-                  className="w-full border rounded px-3 py-2 text-sm"
-                  value={staffForm.role}
-                  onChange={(e) => setStaffForm({...staffForm, role: e.target.value})}
-                >
-                  {ROLE_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="flex items-center gap-2">
-                <Switch
-                  id="staffIsActive"
-                  checked={staffForm.isActive}
-                  onCheckedChange={(checked) => setStaffForm({...staffForm, isActive: checked})}
+                <Label htmlFor="userPassword">パスワード</Label>
+                <Input
+                  id="userPassword"
+                  type="password"
+                  value={userForm.password}
+                  onChange={(e) => setUserForm({ ...userForm, password: e.target.value })}
+                  placeholder="未入力の場合はデフォルト値"
                 />
-                <Label htmlFor="staffIsActive">有効</Label>
               </div>
             </div>
             <div className="flex justify-end gap-2 mt-4">
-              <Button color="gray" onClick={() => staffModal.handleClose()}>
-                キャンセル
-              </Button>
-              <Button onClick={handleSaveStaff}>{staffEditingId ? '更新' : '追加'}</Button>
+              <Button color="gray" onClick={() => userModal.handleClose()}>キャンセル</Button>
+              <Button onClick={handleSaveUser}>追加</Button>
             </div>
-          </staffModal.Modal>
-        </>
+          </userModal.Modal>
+
+
+        </div>
+      )}
+
+      {activeTab === 'role' && (
+        <div className={`w-fit `}>
+          <h3 className="text-lg font-semibold text-slate-700 mb-4">権限割当</h3>
+          <Card>
+            <CardContent className="pt-4 ">
+              <RoleAllocationTable />
+            </CardContent>
+          </Card>
+        </div>
       )}
     </div>
   )

@@ -102,7 +102,6 @@ export const ModelName = {
   RcCategoryYieldMaster: 'RcCategoryYieldMaster',
   RcProfitMarginStandard: 'RcProfitMarginStandard',
   RgStore: 'RgStore',
-  RgStaff: 'RgStaff',
   RgMonthlyReport: 'RgMonthlyReport',
   RgStaffRecord: 'RgStaffRecord',
   RgStoreTotals: 'RgStoreTotals',
@@ -1049,20 +1048,6 @@ export const RgStoreScalarFieldEnum = {
 export type RgStoreScalarFieldEnum = (typeof RgStoreScalarFieldEnum)[keyof typeof RgStoreScalarFieldEnum]
 
 
-export const RgStaffScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  staffName: 'staffName',
-  storeId: 'storeId',
-  role: 'role',
-  isActive: 'isActive'
-} as const
-
-export type RgStaffScalarFieldEnum = (typeof RgStaffScalarFieldEnum)[keyof typeof RgStaffScalarFieldEnum]
-
-
 export const RgMonthlyReportScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -1082,7 +1067,8 @@ export const RgStaffRecordScalarFieldEnum = {
   updatedAt: 'updatedAt',
   sortOrder: 'sortOrder',
   monthlyReportId: 'monthlyReportId',
-  staffId: 'staffId',
+  staffName: 'staffName',
+  userId: 'userId',
   storeId: 'storeId',
   rank: 'rank',
   sales: 'sales',
@@ -1133,7 +1119,9 @@ export const RgStaffManualDataScalarFieldEnum = {
   updatedAt: 'updatedAt',
   sortOrder: 'sortOrder',
   monthlyReportId: 'monthlyReportId',
-  staffId: 'staffId',
+  staffName: 'staffName',
+  storeName: 'storeName',
+  userId: 'userId',
   utilizationRate: 'utilizationRate',
   csRegistrationCount: 'csRegistrationCount'
 } as const
@@ -1445,7 +1433,8 @@ export const UserScalarFieldEnum = {
   aidocumentCompanyId: 'aidocumentCompanyId',
   storeId: 'storeId',
   departmentId: 'departmentId',
-  dentalClinicId: 'dentalClinicId'
+  dentalClinicId: 'dentalClinicId',
+  rgStoreId: 'rgStoreId'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]

@@ -273,11 +273,6 @@ export type RcProfitMarginStandard = Prisma.RcProfitMarginStandardModel
  */
 export type RgStore = Prisma.RgStoreModel
 /**
- * Model RgStaff
- * 
- */
-export type RgStaff = Prisma.RgStaffModel
-/**
  * Model RgMonthlyReport
  * 
  */

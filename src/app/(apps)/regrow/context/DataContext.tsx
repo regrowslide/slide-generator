@@ -8,7 +8,8 @@
  */
 
 import React, {createContext, useContext, useState, useCallback, useEffect, useRef} from 'react'
-import type {MonthlyData, YearMonth, ExcelParseResult, StoreName, StoreKpi, StaffManualData, StaffMaster} from '../types'
+import type {MonthlyData, YearMonth, ExcelParseResult, StoreKpi, StaffManualData, StaffMaster, StaffRole, StoreName} from '../types'
+import type {RgStore} from '@prisma/generated/prisma/client'
 import {
   loadMonthlyData,
   saveMonthlyData,
@@ -29,7 +30,7 @@ import {
   saveCustomerVoice,
   upsertMonthlyReport,
 } from '../_actions/monthly-report-actions'
-import {getStaffs, upsertStaffByName} from '../_actions/staff-actions'
+import {getStaffMaster} from '../_actions/staff-actions'
 
 // ============================================================
 // コンテキスト型定義
@@ -51,8 +52,8 @@ type DataContextType = {
   // データ再読み込み
   refreshData: () => Promise<void>
 
-  // インポートデータ更新
-  addImportedData: (parseResult: ExcelParseResult) => void
+  // インポートデータ更新（targetYearMonth: 保存先の年月。省略時はcurrentYearMonth）
+  addImportedData: (parseResult: ExcelParseResult, targetYearMonth?: YearMonth) => void
   clearImportedData: () => void
 
   // 手動入力データ更新
@@ -63,6 +64,12 @@ type DataContextType = {
   // スタッフマスタ
   staffMaster: StaffMaster[]
   refreshStaffMaster: () => void
+
+  // 店舗マスタ
+  stores: RgStore[]
+
+  // 現在のユーザーロール
+  currentUserRole: StaffRole
 
   // ナビゲーション
   goToPreviousMonth: () => void
@@ -88,6 +95,8 @@ type DataContextProviderProps = {
   initialYearMonth?: YearMonth
   initialData?: MonthlyData | null
   initialStaffMaster?: StaffMaster[]
+  initialStores?: RgStore[]
+  currentUserRole?: StaffRole
 }
 
 export const DataContextProvider = ({
@@ -96,6 +105,8 @@ export const DataContextProvider = ({
   initialYearMonth,
   initialData,
   initialStaffMaster,
+  initialStores,
+  currentUserRole = 'viewer',
 }: DataContextProviderProps) => {
   // DB版かlocalStorage版かを判定（initialYearMonthがあればDB版）
   const useDb = initialYearMonth !== undefined
@@ -104,19 +115,14 @@ export const DataContextProvider = ({
   const [availableMonths, setAvailableMonths] = useState<YearMonth[]>(initialMonths ?? [])
   const [monthlyData, setMonthlyData] = useState<MonthlyData | null>(initialData ?? null)
   const [staffMaster, setStaffMaster] = useState<StaffMaster[]>(initialStaffMaster ?? [])
+  const [stores, setStores] = useState<RgStore[]>(initialStores ?? [])
 
   // ============================================================
   // DB版のスタッフマスタ再読み込み
   // ============================================================
   const refreshStaffMasterFromDb = useCallback(async () => {
-    const staffs = await getStaffs()
-    const converted: StaffMaster[] = staffs.map((s) => ({
-      staffName: s.staffName,
-      storeName: s.RgStore.name as StoreName,
-      role: s.role as StaffMaster['role'],
-      isActive: s.isActive,
-    }))
-    setStaffMaster(converted)
+    const staffMaster = await getStaffMaster()
+    setStaffMaster(staffMaster)
   }, [])
 
   // ============================================================
@@ -223,7 +229,8 @@ export const DataContextProvider = ({
 
   // インポートデータ追加
   const addImportedData = useCallback(
-    async (parseResult: ExcelParseResult) => {
+    async (parseResult: ExcelParseResult, targetYearMonth?: YearMonth) => {
+      const saveYearMonth = targetYearMonth ?? currentYearMonth
       if (useDb) {
         // DB版: Server Action経由で保存
         const staffRecords = parseResult.staffList.map((s) => ({
@@ -237,10 +244,11 @@ export const DataContextProvider = ({
           },
         ]
 
-        await saveImportedData(currentYearMonth, staffRecords, storeTotals as any)
+        await saveImportedData(saveYearMonth, staffRecords, storeTotals as any)
 
-        // DB再取得で最新データを反映
-        const updated = await getMonthlyReport(currentYearMonth)
+        // DB再取得で最新データを反映（対象月に移動してから取得）
+        setCurrentYearMonth(saveYearMonth)
+        const updated = await getMonthlyReport(saveYearMonth)
         if (updated) setMonthlyData(updated)
 
         // スタッフマスタも再取得
@@ -446,6 +454,8 @@ export const DataContextProvider = ({
         updateCustomerVoice,
         staffMaster,
         refreshStaffMaster,
+        stores,
+        currentUserRole,
         goToPreviousMonth,
         goToNextMonth,
         createNewMonth,

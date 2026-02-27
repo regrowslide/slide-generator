@@ -10,25 +10,10 @@ model RgStore {
   fullName  String? // 'asian relaxation villa新潟西店'
   isActive  Boolean   @default(true)
 
-  RgStaff       RgStaff[]
+  RgUserList    User[]          @relation("RgUserStore")
   RgStoreKpi    RgStoreKpi[]
   RgStoreTotals RgStoreTotals[]
   RgStaffRecord RgStaffRecord[]
-}
-
-model RgStaff {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
-  sortOrder Float     @default(0)
-  staffName String
-  storeId   Int
-  role      String    @default("viewer") // admin, manager, viewer
-  isActive  Boolean   @default(true)
-
-  RgStore           RgStore             @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  RgStaffRecord     RgStaffRecord[]
-  RgStaffManualData RgStaffManualData[]
 }
 
 model RgMonthlyReport {
@@ -50,22 +35,23 @@ model RgMonthlyReport {
 }
 
 model RgStaffRecord {
-  id              Int       @id @default(autoincrement())
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime? @updatedAt
-  sortOrder       Float     @default(0)
-  monthlyReportId Int
-  staffId         Int
-  storeId         Int
-  rank            Int
-  sales           Float
-  customerCount   Int
+  id               Int       @id @default(autoincrement())
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime? @updatedAt
+  sortOrder        Float     @default(0)
+  monthlyReportId  Int
+  staffName        String // スタッフ名（直接保存）
+  userId           Int? // Userとの紐付け（任意）
+  storeId          Int
+  rank             Int
+  sales            Float
+  customerCount    Int
   newCustomerCount Int
-  nominationCount Int
-  unitPrice       Float
+  nominationCount  Int
+  unitPrice        Float
 
   RgMonthlyReport RgMonthlyReport @relation(fields: [monthlyReportId], references: [id], onDelete: Cascade)
-  RgStaff         RgStaff         @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  User            User?           @relation("RgStaffRecordUser", fields: [userId], references: [id], onDelete: SetNull)
   RgStore         RgStore         @relation(fields: [storeId], references: [id], onDelete: Cascade)
 }
 
@@ -109,14 +95,16 @@ model RgStaffManualData {
   updatedAt           DateTime? @updatedAt
   sortOrder           Float     @default(0)
   monthlyReportId     Int
-  staffId             Int
+  staffName           String // スタッフ名（直接保存）
+  storeName           String // 店舗名（直接保存）
+  userId              Int? // Userとの紐付け（任意）
   utilizationRate     Float?
   csRegistrationCount Int?
 
   RgMonthlyReport RgMonthlyReport @relation(fields: [monthlyReportId], references: [id], onDelete: Cascade)
-  RgStaff         RgStaff         @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  User            User?           @relation("RgStaffManualDataUser", fields: [userId], references: [id], onDelete: SetNull)
 
-  @@unique([monthlyReportId, staffId])
+  @@unique([monthlyReportId, staffName])
 }
 
 model RgCustomerVoice {

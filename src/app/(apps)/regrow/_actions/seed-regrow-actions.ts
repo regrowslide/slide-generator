@@ -22,8 +22,26 @@ export const seedRegrowData = async (): Promise<{message: string}> => {
   await prisma.rgStoreTotals.deleteMany()
   await prisma.rgStaffRecord.deleteMany()
   await prisma.rgMonthlyReport.deleteMany()
-  await prisma.rgStaff.deleteMany()
   await prisma.rgStore.deleteMany()
+
+  // RoleMaster に regrowロールをupsert
+  await Promise.all([
+    prisma.roleMaster.upsert({
+      where: {name: 'regrow-admin'},
+      create: {name: 'regrow-admin', apps: ['regrow'], description: '管理者'},
+      update: {apps: ['regrow'], description: '管理者'},
+    }),
+    prisma.roleMaster.upsert({
+      where: {name: 'regrow-manager'},
+      create: {name: 'regrow-manager', apps: ['regrow'], description: '店舗責任者'},
+      update: {apps: ['regrow'], description: '店舗責任者'},
+    }),
+    prisma.roleMaster.upsert({
+      where: {name: 'regrow-viewer'},
+      create: {name: 'regrow-viewer', apps: ['regrow'], description: '閲覧者'},
+      update: {apps: ['regrow'], description: '閲覧者'},
+    }),
+  ])
 
   // 1. 店舗作成
   const stores = await Promise.all([
@@ -34,22 +52,12 @@ export const seedRegrowData = async (): Promise<{message: string}> => {
 
   const storeMap = new Map(stores.map((s) => [s.name, s]))
 
-  // 2. スタッフ作成（各店舗5名）
-  const allStaff: Array<{id: number; staffName: string; storeId: number; storeName: string}> = []
-  let staffSort = 1
+  // 2. スタッフリスト（RgStaffテーブルは廃止、staffNameを直接使用）
+  const allStaff: Array<{staffName: string; storeId: number; storeName: string}> = []
   for (const [storeName, staffNames] of Object.entries(STAFF_BY_STORE)) {
     const store = storeMap.get(storeName)!
     for (const staffName of staffNames) {
-      const staff = await prisma.rgStaff.create({
-        data: {
-          staffName,
-          storeId: store.id,
-          role: staffSort === 1 ? 'admin' : staffSort <= 3 ? 'manager' : 'viewer',
-          sortOrder: staffSort,
-        },
-      })
-      allStaff.push({id: staff.id, staffName: staff.staffName, storeId: store.id, storeName})
-      staffSort++
+      allStaff.push({staffName, storeId: store.id, storeName})
     }
   }
 
@@ -66,7 +74,7 @@ export const seedRegrowData = async (): Promise<{message: string}> => {
       },
     })
 
-    // スタッフレコード
+    // スタッフレコード（staffNameを直接保存）
     const staffRecordsRaw = allStaff.map((staff) => {
       const customerCount = randomInt(20, 50)
       const newCustomerCount = randomInt(5, Math.floor(customerCount * 0.3))
@@ -74,7 +82,7 @@ export const seedRegrowData = async (): Promise<{message: string}> => {
       const baseSales = customerCount * randomInt(6000, 9000)
       const sales = Math.floor(baseSales * multiplier)
       return {
-        staffId: staff.id,
+        staffName: staff.staffName,
         storeId: staff.storeId,
         storeName: staff.storeName,
         sales,
@@ -90,7 +98,7 @@ export const seedRegrowData = async (): Promise<{message: string}> => {
     await prisma.rgStaffRecord.createMany({
       data: staffRecordsRaw.map((r, i) => ({
         monthlyReportId: report.id,
-        staffId: r.staffId,
+        staffName: r.staffName,
         storeId: r.storeId,
         rank: i + 1,
         sales: r.sales,
@@ -137,12 +145,13 @@ export const seedRegrowData = async (): Promise<{message: string}> => {
       })
     }
 
-    // スタッフ手動データ
+    // スタッフ手動データ（staffName + storeNameを直接保存）
     for (const staff of allStaff) {
       await prisma.rgStaffManualData.create({
         data: {
           monthlyReportId: report.id,
-          staffId: staff.id,
+          staffName: staff.staffName,
+          storeName: staff.storeName,
           utilizationRate: randomFloat(70, 100),
           csRegistrationCount: randomInt(2, 8),
         },
@@ -161,4 +170,20 @@ export const seedRegrowData = async (): Promise<{message: string}> => {
   return {
     message: `シードデータを投入しました: 店舗${stores.length}件、スタッフ${allStaff.length}名、12ヶ月分のデータ`,
   }
+}
+
+// ============================================================
+// リセット（全データ削除のみ）
+// ============================================================
+
+export const resetRegrowData = async (): Promise<{message: string}> => {
+  await prisma.rgCustomerVoice.deleteMany()
+  await prisma.rgStaffManualData.deleteMany()
+  await prisma.rgStoreKpi.deleteMany()
+  await prisma.rgStoreTotals.deleteMany()
+  await prisma.rgStaffRecord.deleteMany()
+  await prisma.rgMonthlyReport.deleteMany()
+  await prisma.rgStore.deleteMany()
+
+  return {message: '全データをリセットしました'}
 }

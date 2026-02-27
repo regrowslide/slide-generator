@@ -6,32 +6,10 @@ import * as XLSX from 'xlsx'
 import type {ExcelParseResult, StoreName, StaffRecord} from '../types'
 
 /**
- * ファイル名から店舗名を抽出
- * 例: "担当者別分析表_Relaxation Salon SAMPLE港北店_20260209.xlsx" → "港北店"
- */
-export const extractStoreName = (filename: string): StoreName => {
-  const match = filename.match(/SAMPLE(.*?)_/)
-  if (!match) {
-    // フォールバック: ファイル名に店舗名が含まれているか確認
-    if (filename.includes('港北店')) return '港北店'
-    if (filename.includes('青葉店')) return '青葉店'
-    if (filename.includes('中央店')) return '中央店'
-    throw new Error('ファイル名から店舗名を抽出できませんでした')
-  }
-
-  const extracted = match[1].trim()
-  // 店舗名マッピング
-  if (extracted.includes('港北') || extracted === '港北店') return '港北店'
-  if (extracted.includes('青葉') || extracted === '青葉店') return '青葉店'
-  if (extracted.includes('中央') || extracted === '中央店') return '中央店'
-
-  throw new Error(`未知の店舗名: ${extracted}`)
-}
-
-/**
  * 担当者別分析表のExcelファイルをパース
+ * storeShortName: 手動選択された店舗名（ファイル名からの推測は行わない）
  */
-export const parseStaffAnalysisExcel = (file: File): Promise<ExcelParseResult> => {
+export const parseStaffAnalysisExcel = (file: File, storeShortName: StoreName): Promise<ExcelParseResult> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
 
@@ -41,16 +19,7 @@ export const parseStaffAnalysisExcel = (file: File): Promise<ExcelParseResult> =
         const wb = XLSX.read(data, {type: 'array'})
         const ws = wb.Sheets[wb.SheetNames[0]]
 
-        // 店舗名抽出
-        let storeShortName: StoreName
-        try {
-          storeShortName = extractStoreName(file.name)
-        } catch (error) {
-          reject(error)
-          return
-        }
-
-        // B1セルから店舗名取得（フルネーム）
+        // B1セルから店舗名取得（フルネーム、表示用）
         const storeCell = ws[XLSX.utils.encode_cell({r: 0, c: 1})]
         const storeName = storeCell?.v ? String(storeCell.v).replace('店舗名：', '') : storeShortName
 

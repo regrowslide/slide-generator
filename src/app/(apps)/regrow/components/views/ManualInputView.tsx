@@ -12,9 +12,10 @@ import type {StoreName} from '../../types'
 type TabKey = 'store-kpi' | 'staff-utilization' | 'customer-voice'
 
 export const ManualInputView = () => {
-  const {monthlyData, updateStoreKpi, updateStaffManualData, updateCustomerVoice} = useDataContext()
+  const {monthlyData, updateStoreKpi, updateStaffManualData, updateCustomerVoice, currentUserRole} = useDataContext()
   const [activeTab, setActiveTab] = useState<TabKey>('store-kpi')
   const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | null>(null)
+  const isEditable = currentUserRole === 'admin' || currentUserRole === 'manager'
 
   const handleSave = (callback: () => void) => {
     setSaveStatus('saving')
@@ -82,6 +83,9 @@ export const ManualInputView = () => {
     <div className="p-6 max-w-6xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-800">手動入力管理</h1>
+        {!isEditable && (
+          <span className="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-full border">閲覧専用</span>
+        )}
         {saveStatus && (
           <span
             className={`text-sm font-medium ${
@@ -178,10 +182,11 @@ export const ManualInputView = () => {
                       <label className="block text-sm font-medium text-gray-700 mb-1">コメント</label>
                       <textarea
                         value={kpi?.comment ?? ''}
-                        onBlur={(e) => handleSave(() => updateStoreKpi(store, {comment: e.target.value}))}
-                        onChange={(e) => updateStoreKpi(store, {comment: e.target.value})}
+                        onBlur={(e) => isEditable && handleSave(() => updateStoreKpi(store, {comment: e.target.value}))}
+                        onChange={(e) => isEditable && updateStoreKpi(store, {comment: e.target.value})}
+                        disabled={!isEditable}
                         rows={2}
-                        className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
+                        className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-red-500 resize-none disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
                       />
                     </div>
                   </div>
@@ -223,6 +228,7 @@ export const ManualInputView = () => {
                             type="number"
                             value={manualData?.utilizationRate ?? ''}
                             onBlur={(e) =>
+                              isEditable &&
                               handleSave(() =>
                                 updateStaffManualData(staff.staffName, staff.storeName, {
                                   utilizationRate: e.target.value ? Number(e.target.value) : null,
@@ -230,11 +236,13 @@ export const ManualInputView = () => {
                               )
                             }
                             onChange={(e) =>
+                              isEditable &&
                               updateStaffManualData(staff.staffName, staff.storeName, {
                                 utilizationRate: e.target.value ? Number(e.target.value) : null,
                               })
                             }
-                            className="w-24 px-2 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+                            disabled={!isEditable}
+                            className="w-24 px-2 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-50 disabled:cursor-not-allowed"
                           />
                         </td>
                         <td className="p-3">
@@ -247,6 +255,7 @@ export const ManualInputView = () => {
                             type="number"
                             value={manualData?.csRegistrationCount ?? ''}
                             onBlur={(e) =>
+                              isEditable &&
                               handleSave(() =>
                                 updateStaffManualData(staff.staffName, staff.storeName, {
                                   csRegistrationCount: e.target.value ? Number(e.target.value) : null,
@@ -254,11 +263,13 @@ export const ManualInputView = () => {
                               )
                             }
                             onChange={(e) =>
+                              isEditable &&
                               updateStaffManualData(staff.staffName, staff.storeName, {
                                 csRegistrationCount: e.target.value ? Number(e.target.value) : null,
                               })
                             }
-                            className="w-24 px-2 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+                            disabled={!isEditable}
+                            className="w-24 px-2 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-50 disabled:cursor-not-allowed"
                           />
                         </td>
                       </tr>
@@ -277,11 +288,12 @@ export const ManualInputView = () => {
           <h2 className="text-lg font-bold mb-4">お客様の声</h2>
           <textarea
             value={monthlyData.manualData.customerVoice.content}
-            onBlur={(e) => handleSave(() => updateCustomerVoice(e.target.value))}
-            onChange={(e) => updateCustomerVoice(e.target.value)}
+            onBlur={(e) => isEditable && handleSave(() => updateCustomerVoice(e.target.value))}
+            onChange={(e) => isEditable && updateCustomerVoice(e.target.value)}
+            disabled={!isEditable}
             rows={12}
             placeholder="お客様からのフィードバックをここに入力してください..."
-            className="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
+            className="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-red-500 resize-none disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
           />
           <p className="text-sm text-gray-500 mt-2">
             ※ この内容はスライド10「お客様の声」に表示されます

@@ -11359,7 +11359,7 @@
           "isUpdatedAt": false
         },
         {
-          "name": "RgStaff",
+          "name": "RgUserList",
           "kind": "object",
           "isList": true,
           "isRequired": true,
@@ -11367,9 +11367,9 @@
           "isId": false,
           "isReadOnly": false,
           "hasDefaultValue": false,
-          "type": "RgStaff",
+          "type": "User",
           "nativeType": null,
-          "relationName": "RgStaffToRgStore",
+          "relationName": "RgUserStore",
           "relationFromFields": [],
           "relationToFields": [],
           "isGenerated": false,
@@ -11421,196 +11421,6 @@
           "type": "RgStaffRecord",
           "nativeType": null,
           "relationName": "RgStaffRecordToRgStore",
-          "relationFromFields": [],
-          "relationToFields": [],
-          "isGenerated": false,
-          "isUpdatedAt": false
-        }
-      ],
-      "primaryKey": null,
-      "uniqueFields": [],
-      "uniqueIndexes": [],
-      "isGenerated": false
-    },
-    {
-      "name": "RgStaff",
-      "dbName": null,
-      "schema": null,
-      "fields": [
-        {
-          "name": "id",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": true,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Int",
-          "nativeType": null,
-          "default": {
-            "name": "autoincrement",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "createdAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "DateTime",
-          "nativeType": null,
-          "default": {
-            "name": "now",
-            "args": []
-          },
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "updatedAt",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "DateTime",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": true
-        },
-        {
-          "name": "sortOrder",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Float",
-          "nativeType": null,
-          "default": 0,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "staffName",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "storeId",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": true,
-          "hasDefaultValue": false,
-          "type": "Int",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "role",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "String",
-          "nativeType": null,
-          "default": "viewer",
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "isActive",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Boolean",
-          "nativeType": null,
-          "default": true,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "RgStore",
-          "kind": "object",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "RgStore",
-          "nativeType": null,
-          "relationName": "RgStaffToRgStore",
-          "relationFromFields": [
-            "storeId"
-          ],
-          "relationToFields": [
-            "id"
-          ],
-          "relationOnDelete": "Cascade",
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "RgStaffRecord",
-          "kind": "object",
-          "isList": true,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "RgStaffRecord",
-          "nativeType": null,
-          "relationName": "RgStaffToRgStaffRecord",
-          "relationFromFields": [],
-          "relationToFields": [],
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
-          "name": "RgStaffManualData",
-          "kind": "object",
-          "isList": true,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "RgStaffManualData",
-          "nativeType": null,
-          "relationName": "RgStaffToRgStaffManualData",
           "relationFromFields": [],
           "relationToFields": [],
           "isGenerated": false,
@@ -11921,10 +11731,24 @@
           "isUpdatedAt": false
         },
         {
-          "name": "staffId",
+          "name": "staffName",
           "kind": "scalar",
           "isList": false,
           "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "userId",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
           "isUnique": false,
           "isId": false,
           "isReadOnly": true,
@@ -12055,24 +11879,24 @@
           "isUpdatedAt": false
         },
         {
-          "name": "RgStaff",
+          "name": "User",
           "kind": "object",
           "isList": false,
-          "isRequired": true,
+          "isRequired": false,
           "isUnique": false,
           "isId": false,
           "isReadOnly": false,
           "hasDefaultValue": false,
-          "type": "RgStaff",
+          "type": "User",
           "nativeType": null,
-          "relationName": "RgStaffToRgStaffRecord",
+          "relationName": "RgStaffRecordUser",
           "relationFromFields": [
-            "staffId"
+            "userId"
           ],
           "relationToFields": [
             "id"
           ],
-          "relationOnDelete": "Cascade",
+          "relationOnDelete": "SetNull",
           "isGenerated": false,
           "isUpdatedAt": false
         },
@@ -12611,10 +12435,38 @@
           "isUpdatedAt": false
         },
         {
-          "name": "staffId",
+          "name": "staffName",
           "kind": "scalar",
           "isList": false,
           "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "storeName",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "userId",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
           "isUnique": false,
           "isId": false,
           "isReadOnly": true,
@@ -12675,24 +12527,24 @@
           "isUpdatedAt": false
         },
         {
-          "name": "RgStaff",
+          "name": "User",
           "kind": "object",
           "isList": false,
-          "isRequired": true,
+          "isRequired": false,
           "isUnique": false,
           "isId": false,
           "isReadOnly": false,
           "hasDefaultValue": false,
-          "type": "RgStaff",
+          "type": "User",
           "nativeType": null,
-          "relationName": "RgStaffToRgStaffManualData",
+          "relationName": "RgStaffManualDataUser",
           "relationFromFields": [
-            "staffId"
+            "userId"
           ],
           "relationToFields": [
             "id"
           ],
-          "relationOnDelete": "Cascade",
+          "relationOnDelete": "SetNull",
           "isGenerated": false,
           "isUpdatedAt": false
         }
@@ -12701,7 +12553,7 @@
       "uniqueFields": [
         [
           "monthlyReportId",
-          "staffId"
+          "staffName"
         ]
       ],
       "uniqueIndexes": [
@@ -12709,7 +12561,7 @@
           "name": null,
           "fields": [
             "monthlyReportId",
-            "staffId"
+            "staffName"
           ]
         }
       ],
@@ -17127,6 +16979,75 @@
           "type": "DentalExamination",
           "nativeType": null,
           "relationName": "ExaminationHygienist",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "rgStoreId",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": true,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "RgStoreRg",
+          "kind": "object",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "RgStore",
+          "nativeType": null,
+          "relationName": "RgUserStore",
+          "relationFromFields": [
+            "rgStoreId"
+          ],
+          "relationToFields": [
+            "id"
+          ],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "RgStaffRecordUser",
+          "kind": "object",
+          "isList": true,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "RgStaffRecord",
+          "nativeType": null,
+          "relationName": "RgStaffRecordUser",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "RgStaffManualDataUser",
+          "kind": "object",
+          "isList": true,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "RgStaffManualData",
+          "nativeType": null,
+          "relationName": "RgStaffManualDataUser",
           "relationFromFields": [],
           "relationToFields": [],
           "isGenerated": false,
@@ -26017,16 +25938,6 @@
       ]
     },
     {
-      "model": "RgStaff",
-      "type": "id",
-      "isDefinedOnField": true,
-      "fields": [
-        {
-          "name": "id"
-        }
-      ]
-    },
-    {
       "model": "RgMonthlyReport",
       "type": "id",
       "isDefinedOnField": true,
@@ -26108,7 +26019,7 @@
           "name": "monthlyReportId"
         },
         {
-          "name": "staffId"
+          "name": "staffName"
         }
       ]
     },

@@ -1,44 +1,36 @@
 'use server'
 
-import {RegrowStaffService} from '../lib/services/RegrowStaffService'
-import type {RgStaff, RgStore} from '@prisma/generated/prisma/client'
-
-// ============================================================
-// Create
-// ============================================================
-
-export const createStaff = async (data: {
-  staffName: string
-  storeId: number
-  role?: string
-}): Promise<RgStaff> => RegrowStaffService.createStaff(data)
+import {RegrowUserService} from '../lib/services/RegrowUserService'
+import type {User, RgStore} from '@prisma/generated/prisma/client'
+import type {StaffMaster, StaffRole} from '../types'
 
 // ============================================================
 // Read
 // ============================================================
 
-export const getStaffs = async (
-  where?: Partial<{storeId: number; isActive: boolean}>
-): Promise<(RgStaff & {RgStore: RgStore})[]> => RegrowStaffService.getStaffs(where)
+export const getAllUsers = async (): Promise<(User & {RgStoreRg: RgStore | null})[]> =>
+  RegrowUserService.getAllUsers()
+
+export const getStaffMaster = async (): Promise<StaffMaster[]> =>
+  RegrowUserService.getStaffMaster()
+
+// ============================================================
+// Create
+// ============================================================
+
+export const createRegrowUser = async (data: {name: string; email?: string; password?: string}): Promise<User> =>
+  RegrowUserService.createUser(data)
 
 // ============================================================
 // Update
 // ============================================================
 
-export const updateStaff = async (
-  id: number,
-  data: Partial<{staffName: string; storeId: number; role: string; isActive: boolean; sortOrder: number}>
-): Promise<RgStaff> => RegrowStaffService.updateStaff(id, data)
+export const updateUserRgStore = async (userId: number, rgStoreId: number | null): Promise<User> =>
+  RegrowUserService.updateRgStore(userId, rgStoreId)
 
 // ============================================================
-// Delete
+// 権限取得（ログインユーザーのRgロール）
 // ============================================================
 
-export const deleteStaff = async (id: number): Promise<void> => RegrowStaffService.deleteStaff(id)
-
-// ============================================================
-// Upsert（名前+店舗名で検索、なければ作成）
-// ============================================================
-
-export const upsertStaffByName = async (staffName: string, storeName: string): Promise<RgStaff> =>
-  RegrowStaffService.upsertStaffByName(staffName, storeName)
+export const getCurrentUserRgRole = async (userId: number): Promise<StaffRole> =>
+  RegrowUserService.getRgRoleByUserId(userId)

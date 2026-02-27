@@ -30,225 +30,220 @@ export type PageGetterFunction = (props: PageGetterType) => PageGetterResult
  * 各アプリケーションのページ設定取得関数を格納するオブジェクト
  */
 export const PAGES: Record<string, PageGetterFunction> = {
-
-
-
   KM_PAGES,
   training_PAGES,
   regrow_PAGES,
   yamanokai_PAGES,
   dental_PAGES,
 
+  // sbm_PAGES: (props: PageGetterType) => {
+  //   const { roles, query, session, rootPath, pathname } = props
 
+  //   const { login, admin } = getScopes(session, { query, roles })
 
-  sbm_PAGES: (props: PageGetterType) => {
-    const { roles, query, session, rootPath, pathname } = props
+  //   const loginPaths = [
+  //     { tabId: 'dashboard', label: 'ダッシュボード', ROOT: [rootPath] },
+  //     {
+  //       tabId: '',
+  //       label: '予約',
+  //       ROOT: [rootPath],
+  //       children: [
+  //         { tabId: 'reservations', label: '予約管理' },
+  //         { tabId: 'delivery-route', label: '配達ルート管理' },
+  //         { tabId: 'ingredients/usage', label: '材料使用量計算' },
+  //       ],
+  //     },
 
-    const { login, admin } = getScopes(session, { query, roles })
+  //     { tabId: 'invoices', label: '伝票印刷', ROOT: [rootPath] },
+  //     { tabId: 'rfm', label: 'RFM分析', ROOT: [rootPath] },
 
-    const loginPaths = [
-      { tabId: 'dashboard', label: 'ダッシュボード', ROOT: [rootPath] },
-      {
-        tabId: '',
-        label: '予約',
-        ROOT: [rootPath],
-        children: [
-          { tabId: 'reservations', label: '予約管理' },
-          { tabId: 'delivery-route', label: '配達ルート管理' },
-          { tabId: 'ingredients/usage', label: '材料使用量計算' },
-        ],
-      },
+  //     {
+  //       tabId: '',
+  //       label: '管理',
+  //       ROOT: [rootPath],
+  //       children: [
+  //         { tabId: 'ingredients', label: '材料マスタ', ROOT: [rootPath] },
+  //         { tabId: 'products', label: '商品マスタ', ROOT: [rootPath] },
+  //         { tabId: 'customers', label: '顧客マスタ', ROOT: [rootPath] },
+  //         { tabId: 'customer-merge', label: '顧客統合', ROOT: [rootPath] },
+  //         { tabId: 'users', label: 'ユーザーマスタ', ROOT: [rootPath] },
+  //         { tabId: 'seed', label: 'データ管理・シード', ROOT: [rootPath] },
+  //       ],
+  //     },
+  //   ].map((item, i) => {
+  //     return { ...item, ROOT: [rootPath], exclusiveTo: !!login }
+  //   })
 
-      { tabId: 'invoices', label: '伝票印刷', ROOT: [rootPath] },
-      { tabId: 'rfm', label: 'RFM分析', ROOT: [rootPath] },
+  //   const pathSource: pathItemType[] = [...loginPaths]
 
-      {
-        tabId: '',
-        label: '管理',
-        ROOT: [rootPath],
-        children: [
-          { tabId: 'ingredients', label: '材料マスタ', ROOT: [rootPath] },
-          { tabId: 'products', label: '商品マスタ', ROOT: [rootPath] },
-          { tabId: 'customers', label: '顧客マスタ', ROOT: [rootPath] },
-          { tabId: 'customer-merge', label: '顧客統合', ROOT: [rootPath] },
-          { tabId: 'users', label: 'ユーザーマスタ', ROOT: [rootPath] },
-          { tabId: 'seed', label: 'データ管理・シード', ROOT: [rootPath] },
-        ],
-      },
-    ].map((item, i) => {
-      return { ...item, ROOT: [rootPath], exclusiveTo: !!login }
-    })
+  //   const { cleansedPathSource, navItems, breads, allPathsPattenrs } = CleansePathSource({
+  //     rootPath,
+  //     pathSource,
+  //     pathname,
+  //     session,
+  //   })
 
-    const pathSource: pathItemType[] = [...loginPaths]
+  //   return {
+  //     allPathsPattenrs,
+  //     cleansedPathSource,
+  //     navItems,
+  //     breads,
+  //   }
+  // },
 
-    const { cleansedPathSource, navItems, breads, allPathsPattenrs } = CleansePathSource({
-      rootPath,
-      pathSource,
-      pathname,
-      session,
-    })
+  // counseling_PAGES: (props: PageGetterType) => {
+  //   const { roles, query, session, rootPath, pathname } = props
 
-    return {
-      allPathsPattenrs,
-      cleansedPathSource,
-      navItems,
-      breads,
-    }
-  },
+  //   const { login, admin } = getScopes(session, { query, roles })
 
-  counseling_PAGES: (props: PageGetterType) => {
-    const { roles, query, session, rootPath, pathname } = props
+  //   const loginPaths = [{ tabId: 'settings', label: 'マスタ設定', ROOT: [rootPath] }]
 
-    const { login, admin } = getScopes(session, { query, roles })
+  //   const pathSource: pathItemType[] = [...loginPaths]
 
-    const loginPaths = [{ tabId: 'settings', label: 'マスタ設定', ROOT: [rootPath] }]
+  //   const { cleansedPathSource, navItems, breads, allPathsPattenrs } = CleansePathSource({
+  //     rootPath,
+  //     pathSource,
+  //     pathname,
+  //     session,
+  //   })
+  //   return {
+  //     allPathsPattenrs,
+  //     cleansedPathSource,
+  //     navItems,
+  //     breads,
+  //   }
+  // },
+  // portal_PAGES: (props: PageGetterType) => {
+  //   const { roles, query, session, rootPath, pathname } = props
 
-    const pathSource: pathItemType[] = [...loginPaths]
+  //   const { login, admin } = getScopes(session, { query, roles })
 
-    const { cleansedPathSource, navItems, breads, allPathsPattenrs } = CleansePathSource({
-      rootPath,
-      pathSource,
-      pathname,
-      session,
-    })
-    return {
-      allPathsPattenrs,
-      cleansedPathSource,
-      navItems,
-      breads,
-    }
-  },
-  portal_PAGES: (props: PageGetterType) => {
-    const { roles, query, session, rootPath, pathname } = props
+  //   const loginPaths = [
+  //     { tabId: '', label: 'ダッシュボード', ROOT: [rootPath] },
 
-    const { login, admin } = getScopes(session, { query, roles })
+  //     {
+  //       tabId: '',
+  //       label: 'データ入力',
+  //       ROOT: [rootPath],
+  //       children: [
+  //         { tabId: 'orders', label: '受注', ROOT: [rootPath] },
+  //         { tabId: 'productions', label: '生産', ROOT: [rootPath] },
+  //         { tabId: 'shipments', label: '出荷', ROOT: [rootPath] },
+  //       ],
+  //     },
+  //     {
+  //       tabId: '',
+  //       label: 'マスタ管理',
+  //       ROOT: [rootPath],
+  //       children: [
+  //         { tabId: 'materials', label: '原材料マスター', ROOT: [rootPath] },
+  //         { tabId: 'products', label: '製品マスター', ROOT: [rootPath] },
+  //         { tabId: 'calendar', label: 'カレンダー管理', ROOT: [rootPath] },
+  //       ],
+  //     },
+  //   ]
 
-    const loginPaths = [
-      { tabId: '', label: 'ダッシュボード', ROOT: [rootPath] },
+  //   const pathSource: pathItemType[] = [...loginPaths]
 
-      {
-        tabId: '',
-        label: 'データ入力',
-        ROOT: [rootPath],
-        children: [
-          { tabId: 'orders', label: '受注', ROOT: [rootPath] },
-          { tabId: 'productions', label: '生産', ROOT: [rootPath] },
-          { tabId: 'shipments', label: '出荷', ROOT: [rootPath] },
-        ],
-      },
-      {
-        tabId: '',
-        label: 'マスタ管理',
-        ROOT: [rootPath],
-        children: [
-          { tabId: 'materials', label: '原材料マスター', ROOT: [rootPath] },
-          { tabId: 'products', label: '製品マスター', ROOT: [rootPath] },
-          { tabId: 'calendar', label: 'カレンダー管理', ROOT: [rootPath] },
-        ],
-      },
-    ]
+  //   const { cleansedPathSource, navItems, breads, allPathsPattenrs } = CleansePathSource({
+  //     rootPath,
+  //     pathSource,
+  //     pathname,
+  //     session,
+  //   })
+  //   return {
+  //     allPathsPattenrs,
+  //     cleansedPathSource,
+  //     navItems,
+  //     breads,
+  //   }
+  // },
 
-    const pathSource: pathItemType[] = [...loginPaths]
+  // aidocument_PAGES: (props: PageGetterType) => {
+  //   const { roles, query, session, rootPath, pathname } = props
 
-    const { cleansedPathSource, navItems, breads, allPathsPattenrs } = CleansePathSource({
-      rootPath,
-      pathSource,
-      pathname,
-      session,
-    })
-    return {
-      allPathsPattenrs,
-      cleansedPathSource,
-      navItems,
-      breads,
-    }
-  },
+  //   const { login, admin } = getScopes(session, { query, roles })
 
-  aidocument_PAGES: (props: PageGetterType) => {
-    const { roles, query, session, rootPath, pathname } = props
+  //   const loginPaths = [
+  //     {
+  //       tabId: 'company',
+  //       label: '自社情報管理',
+  //       ROOT: [rootPath],
+  //       exclusiveTo: !!login,
+  //     },
+  //     {
+  //       tabId: 'clients',
+  //       label: '取引先マスタ管理',
+  //       ROOT: [rootPath],
+  //       exclusiveTo: !!login,
+  //     },
+  //   ]
 
-    const { login, admin } = getScopes(session, { query, roles })
+  //   const adminPaths = [
+  //     {
+  //       tabId: '',
+  //       label: '管理者',
+  //       ROOT: [rootPath],
+  //       children: [
+  //         { tabId: 'aidocumentCompany', label: '企業一覧', ROOT: [rootPath] },
+  //         { tabId: 'user', label: 'ユーザー一覧', ROOT: [rootPath] },
+  //       ],
+  //       exclusiveTo: !!admin,
+  //     },
+  //   ]
 
-    const loginPaths = [
-      {
-        tabId: 'company',
-        label: '自社情報管理',
-        ROOT: [rootPath],
-        exclusiveTo: !!login,
-      },
-      {
-        tabId: 'clients',
-        label: '取引先マスタ管理',
-        ROOT: [rootPath],
-        exclusiveTo: !!login,
-      },
-    ]
+  //   const pathSource: pathItemType[] = [...loginPaths, ...adminPaths]
 
-    const adminPaths = [
-      {
-        tabId: '',
-        label: '管理者',
-        ROOT: [rootPath],
-        children: [
-          { tabId: 'aidocumentCompany', label: '企業一覧', ROOT: [rootPath] },
-          { tabId: 'user', label: 'ユーザー一覧', ROOT: [rootPath] },
-        ],
-        exclusiveTo: !!admin,
-      },
-    ]
+  //   const { cleansedPathSource, navItems, breads, allPathsPattenrs } = CleansePathSource({
+  //     rootPath,
+  //     pathSource,
+  //     pathname,
+  //     session,
+  //   })
 
-    const pathSource: pathItemType[] = [...loginPaths, ...adminPaths]
+  //   return {
+  //     allPathsPattenrs,
+  //     cleansedPathSource,
+  //     navItems,
+  //     breads,
+  //   }
+  // },
 
-    const { cleansedPathSource, navItems, breads, allPathsPattenrs } = CleansePathSource({
-      rootPath,
-      pathSource,
-      pathname,
-      session,
-    })
+  // imageCaptioner_PAGES: (props: PageGetterType) => {
+  //   const { roles, query, session, rootPath, pathname } = props
 
-    return {
-      allPathsPattenrs,
-      cleansedPathSource,
-      navItems,
-      breads,
-    }
-  },
+  //   const { login, admin } = getScopes(session, { query, roles })
 
-  imageCaptioner_PAGES: (props: PageGetterType) => {
-    const { roles, query, session, rootPath, pathname } = props
+  //   const loginPaths = [
+  //     {
+  //       tabId: '',
+  //       label: '',
+  //       ROOT: [rootPath],
+  //       exclusiveTo: !!login,
+  //     },
 
-    const { login, admin } = getScopes(session, { query, roles })
+  //   ]
 
-    const loginPaths = [
-      {
-        tabId: '',
-        label: '',
-        ROOT: [rootPath],
-        exclusiveTo: !!login,
-      },
+  //   const adminPaths = [
 
-    ]
+  //   ]
 
-    const adminPaths = [
+  //   const pathSource: pathItemType[] = [...loginPaths, ...adminPaths]
 
-    ]
+  //   const { cleansedPathSource, navItems, breads, allPathsPattenrs } = CleansePathSource({
+  //     rootPath,
+  //     pathSource,
+  //     pathname,
+  //     session,
+  //   })
 
-    const pathSource: pathItemType[] = [...loginPaths, ...adminPaths]
-
-    const { cleansedPathSource, navItems, breads, allPathsPattenrs } = CleansePathSource({
-      rootPath,
-      pathSource,
-      pathname,
-      session,
-    })
-
-    return {
-      allPathsPattenrs,
-      cleansedPathSource,
-      navItems,
-      breads,
-    }
-  },
+  //   return {
+  //     allPathsPattenrs,
+  //     cleansedPathSource,
+  //     navItems,
+  //     breads,
+  //   }
+  // },
 
 }
 

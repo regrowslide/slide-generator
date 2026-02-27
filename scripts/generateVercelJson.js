@@ -70,10 +70,6 @@ function generateVercelJson() {
     try {
       const dynamicCrons = parseBatchMasterCrons(batchMasterPath)
 
-      if (!Array.isArray(dynamicCrons) || dynamicCrons.length === 0) {
-        throw new Error('No cron jobs found in batch master')
-      }
-
       vercelJson.crons = dynamicCrons
       console.log(`✅ ${dynamicCrons.length}個のcronジョブをbatchMaster.tsから取得しました`)
     } catch (error) {

@@ -110,6 +110,12 @@ model User {
   dentalClinicId             Int?
   DentalExaminationDoctor    DentalExamination[] @relation("ExaminationDoctor")
   DentalExaminationHygienist DentalExamination[] @relation("ExaminationHygienist")
+
+  // regrow
+  rgStoreId             Int?
+  RgStoreRg             RgStore?              @relation("RgUserStore", fields: [rgStoreId], references: [id])
+  RgStaffRecordUser     RgStaffRecord[]       @relation("RgStaffRecordUser")
+  RgStaffManualDataUser RgStaffManualData[]   @relation("RgStaffManualDataUser")
 }
 
 model ReleaseNotes {

@@ -3,36 +3,31 @@
 import React, {useState} from 'react'
 import {DataContextProvider, useDataContext} from '../../context/DataContext'
 import {MonthSelector} from '../../components/MonthSelector'
-import {GuidanceView} from '../../components/views/GuidanceView'
 import {ImportView} from '../../components/views/ImportView'
 import {ImportDataView} from '../../components/views/ImportDataView'
 import {ManualInputView} from '../../components/views/ManualInputView'
 import {SlidesView} from '../../components/views/SlidesView'
 import type {SectionKey, YearMonth, MonthlyData, StaffMaster, StoreName, StaffRole} from '../../types'
-import type {RgStaff, RgStore} from '@prisma/generated/prisma/client'
+import type {RgStore} from '@prisma/generated/prisma/client'
 
 type Props = {
   initialMonths: YearMonth[]
   initialYearMonth: YearMonth
   initialData: MonthlyData | null
-  initialStaffMaster: (RgStaff & {RgStore: RgStore})[]
+  initialStaffMaster: StaffMaster[]
+  initialStores: RgStore[]
+  currentUserRole: StaffRole
 }
 
-const RegrowReportClient = ({initialMonths, initialYearMonth, initialData, initialStaffMaster}: Props) => {
-  // RgStaff → StaffMaster に変換
-  const convertedStaffMaster: StaffMaster[] = initialStaffMaster.map((s) => ({
-    staffName: s.staffName,
-    storeName: s.RgStore.name as StoreName,
-    role: s.role as StaffRole,
-    isActive: s.isActive,
-  }))
-
+const RegrowReportClient = ({initialMonths, initialYearMonth, initialData, initialStaffMaster, initialStores, currentUserRole}: Props) => {
   return (
     <DataContextProvider
       initialMonths={initialMonths}
       initialYearMonth={initialYearMonth}
       initialData={initialData}
-      initialStaffMaster={convertedStaffMaster}
+      initialStaffMaster={initialStaffMaster}
+      initialStores={initialStores}
+      currentUserRole={currentUserRole}
     >
       <RegrowReportContent />
     </DataContextProvider>
@@ -40,11 +35,11 @@ const RegrowReportClient = ({initialMonths, initialYearMonth, initialData, initi
 }
 
 const RegrowReportContent = () => {
-  const [activeSection, setActiveSection] = useState<SectionKey>('guidance')
-  const {monthlyData} = useDataContext()
+  const [activeSection, setActiveSection] = useState<SectionKey>('slides')
+  const {monthlyData, currentUserRole} = useDataContext()
 
+  // タブ一覧（ガイダンスは廃止。全ロールに全タブを表示）
   const sections: {key: SectionKey; label: string}[] = [
-    {key: 'guidance', label: 'ガイダンス'},
     {key: 'import', label: 'Excel取込'},
     {key: 'import-data', label: 'データ確認'},
     {key: 'manual-input', label: '手動入力'},
@@ -76,8 +71,6 @@ const RegrowReportContent = () => {
 
   const renderView = () => {
     switch (activeSection) {
-      case 'guidance':
-        return <GuidanceView onNavigate={setActiveSection} />
       case 'import':
         return <ImportView />
       case 'import-data':
