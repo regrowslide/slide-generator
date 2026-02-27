@@ -41,6 +41,18 @@ export const getScopes = (session: anyObject, options: getScopeOptionsProps) => 
       return { userId, isSystemAdmin }
     },
 
+    getRegrowScopes: () => {
+
+      const isAdmin = roleNames.includes('管理者')
+      const isManager = roleNames.includes('マネージャー')
+
+      return {
+        isAdmin,
+        isManager,
+
+      }
+    },
+
   }
 
   return result

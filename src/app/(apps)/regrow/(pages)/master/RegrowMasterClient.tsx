@@ -13,7 +13,7 @@ import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import useModal from '@cm/components/utils/modal/useModal'
 
 import { createStore, updateStore, deleteStore } from '../../_actions/store-actions'
-import { getAllUsers, updateUserRgStore, createRegrowUser } from '../../_actions/staff-actions'
+import { getAllUsers, updateUserRgStore, updateUserActive, createRegrowUser } from '../../_actions/staff-actions'
 import { seedRegrowData, resetRegrowData } from '../../_actions/seed-regrow-actions'
 import RoleAllocationTable from '@cm/components/RoleAllocationTable/RoleAllocationTable'
 
@@ -167,6 +167,16 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
       await fetchUsers()
     },
     [fetchUsers]
+  )
+
+  const handleToggleUserActive = useCallback(
+    async (userId: number, active: boolean) => {
+      toggleLoad(async () => {
+        await updateUserActive(userId, active)
+        await fetchUsers()
+      }, { refresh: false })
+    },
+    [toggleLoad, fetchUsers]
   )
 
   return (
@@ -361,18 +371,19 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
                     <TableRow>
                       <TableHead>名前</TableHead>
                       <TableHead>担当店舗</TableHead>
+                      <TableHead>状態</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {users.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={2} className="text-center py-8 text-slate-400">
+                        <TableCell colSpan={3} className="text-center py-8 text-slate-400">
                           ユーザーが見つかりません（appsに「regrow」が含まれるユーザーが対象）
                         </TableCell>
                       </TableRow>
                     ) : (
                       users.map((user) => (
-                        <TableRow key={user.id}>
+                        <TableRow key={user.id} className={!user.active ? 'opacity-50' : ''}>
                           <TableCell className="font-medium">{user.name}</TableCell>
                           <TableCell>
                             <select
@@ -381,12 +392,23 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
                               onChange={(e) => handleUpdateUserStore(user.id, e.target.value ? Number(e.target.value) : null)}
                             >
                               <option value="">未設定</option>
-                              {stores.map((store) => (
+                              {stores.filter((s) => s.isActive).map((store) => (
                                 <option key={store.id} value={store.id}>
                                   {store.name}
                                 </option>
                               ))}
                             </select>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <Switch
+                                checked={user.active}
+                                onCheckedChange={(checked) => handleToggleUserActive(user.id, checked)}
+                              />
+                              <span className={`text-xs font-medium ${user.active ? 'text-green-700' : 'text-gray-500'}`}>
+                                {user.active ? '有効' : '無効'}
+                              </span>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))

@@ -1,7 +1,7 @@
 'use server'
 
 import {RegrowMonthlyReportService} from '../lib/services/RegrowMonthlyReportService'
-import type {MonthlyData, YearMonth, StaffRecord, StoreTotals, StoreName, StoreKpi, StaffManualData} from '../types'
+import type {MonthlyData, YearMonth, StaffRecord, StoreTotals, StoreKpi, StaffManualData, StoreName} from '../types'
 
 // ============================================================
 // Read
@@ -40,9 +40,9 @@ export const saveStoreKpi = async (
 export const saveStaffManualData = async (
   yearMonth: string,
   staffName: string,
-  storeName: StoreName,
+  storeId: number,
   data: Partial<StaffManualData>
-): Promise<void> => RegrowMonthlyReportService.saveStaffManualData(yearMonth, staffName, storeName, data)
+): Promise<void> => RegrowMonthlyReportService.saveStaffManualData(yearMonth, staffName, storeId, data)
 
 export const saveCustomerVoice = async (yearMonth: string, content: string): Promise<void> =>
   RegrowMonthlyReportService.saveCustomerVoice(yearMonth, content)

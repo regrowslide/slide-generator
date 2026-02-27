@@ -149,13 +149,13 @@ const main = async () => {
       })
     }
 
-    // スタッフ手動データ作成（staffName + storeNameを直接保存）
+    // スタッフ手動データ作成（staffName + storeId FK）
     for (const staff of allStaff) {
       await prisma.rgStaffManualData.create({
         data: {
           monthlyReportId: report.id,
           staffName: staff.staffName,
-          storeName: staff.storeName,
+          storeId: staff.storeId,
           utilizationRate: randomFloat(70, 100),
           csRegistrationCount: randomInt(2, 8),
         },

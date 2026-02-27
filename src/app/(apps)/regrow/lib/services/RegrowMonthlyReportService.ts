@@ -23,7 +23,7 @@ type RgMonthlyReportWithRelations = RgMonthlyReport & {
   RgStaffRecord: (RgStaffRecord & {RgStore: RgStore})[]
   RgStoreTotals: (RgStoreTotalsModel & {RgStore: RgStore})[]
   RgStoreKpi: (RgStoreKpi & {RgStore: RgStore})[]
-  RgStaffManualData: RgStaffManualData[]
+  RgStaffManualData: (RgStaffManualData & {RgStore: RgStore})[]
   RgCustomerVoice: RgCustomerVoice[]
 }
 
@@ -57,10 +57,9 @@ export class RegrowMonthlyReportService {
       comment: k.comment,
     }))
 
-    // staffName/storeNameは直接レコードに保存されているため、RgStaff/RgStore結合不要
     const staffManualData: StaffManualDataType[] = report.RgStaffManualData.map((m) => ({
       staffName: m.staffName,
-      storeName: m.storeName as StoreName,
+      storeName: m.RgStore.name as StoreName,
       utilizationRate: m.utilizationRate,
       csRegistrationCount: m.csRegistrationCount,
     }))
@@ -107,6 +106,7 @@ export class RegrowMonthlyReportService {
           orderBy: {sortOrder: 'asc'},
         },
         RgStaffManualData: {
+          include: {RgStore: true},
           orderBy: {sortOrder: 'asc'},
         },
         RgCustomerVoice: true,
@@ -147,19 +147,40 @@ export class RegrowMonthlyReportService {
       storeMap.set(store.name, store.id)
     }
 
+    // regrow User（rgStoreId付き）を全件取得し、staffName_storeId → userId マップ構築
+    const rgUsers = await prisma.user.findMany({
+      where: {apps: {has: 'regrow'}, rgStoreId: {not: null}},
+    })
+    const userMap = new Map<string, number>()
+    for (const u of rgUsers) {
+      userMap.set(`${u.name}_${u.rgStoreId}`, u.id)
+    }
+
+    // 未登録スタッフチェック（マッチしないスタッフがいたらエラー）
+    const unmatchedStaff: string[] = []
+    for (const r of staffRecords) {
+      const storeId = storeMap.get(r.storeName)
+      if (!storeId) throw new Error(`店舗が見つかりません: ${r.storeName}`)
+      const userId = userMap.get(`${r.staffName}_${storeId}`)
+      if (!userId) unmatchedStaff.push(r.staffName)
+    }
+    if (unmatchedStaff.length > 0) {
+      throw new Error(`未登録スタッフがいるためインポートできません: ${unmatchedStaff.join(', ')}`)
+    }
+
     // 既存レコードを削除して再作成
     await prisma.rgStaffRecord.deleteMany({where: {monthlyReportId: report.id}})
     await prisma.rgStoreTotals.deleteMany({where: {monthlyReportId: report.id}})
 
-    // staffNameを直接保存（RgStaffテーブルは不要）
     await prisma.rgStaffRecord.createMany({
       data: staffRecords.map((r) => {
-        const storeId = storeMap.get(r.storeName)
-        if (!storeId) throw new Error(`店舗が見つかりません: ${r.storeName}`)
+        const storeId = storeMap.get(r.storeName)!
+        const userId = userMap.get(`${r.staffName}_${storeId}`)!
         return {
           monthlyReportId: report.id,
           staffName: r.staffName,
           storeId,
+          userId,
           rank: r.rank,
           sales: r.sales,
           customerCount: r.customerCount,
@@ -227,23 +248,29 @@ export class RegrowMonthlyReportService {
   static async saveStaffManualData(
     yearMonth: string,
     staffName: string,
-    storeName: StoreName,
+    storeId: number,
     data: Partial<StaffManualDataType>
   ): Promise<void> {
     const report = await RegrowMonthlyReportService.upsertMonthlyReport(yearMonth)
 
-    // staffName+storeNameを直接保存（RgStaffテーブルは不要）
+    // User マッチングして userId セット
+    const user = await prisma.user.findFirst({
+      where: {apps: {has: 'regrow'}, name: staffName, rgStoreId: storeId},
+    })
+
     await prisma.rgStaffManualData.upsert({
       where: {
-        monthlyReportId_staffName: {
+        monthlyReportId_staffName_storeId: {
           monthlyReportId: report.id,
           staffName,
+          storeId,
         },
       },
       create: {
         monthlyReportId: report.id,
         staffName,
-        storeName,
+        storeId,
+        userId: user?.id ?? null,
         utilizationRate: data.utilizationRate ?? null,
         csRegistrationCount: data.csRegistrationCount ?? null,
       },

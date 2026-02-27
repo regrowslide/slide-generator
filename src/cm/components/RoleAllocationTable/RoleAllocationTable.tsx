@@ -57,6 +57,7 @@ const RoleAllocationTable = ({
   appFilter,
   createUserFetchProps,
 }: RoleAllocationTableProps) => {
+  const minWidthClassName = 'min-w-[480px]'
   const useGlobalProps = useGlobal()
   const { query, addQuery, session } = useGlobalProps
 
@@ -179,7 +180,7 @@ const RoleAllocationTable = ({
   }
 
   return (
-    <C_Stack className="gap-4">
+    <C_Stack className="gap-4" >
       {/* RoleMaster管理（管理者のみ） */}
       {isAdmin && (
         <RoleMasterCrudSection
@@ -202,6 +203,7 @@ const RoleAllocationTable = ({
                 roles={roles}
                 selectedRoleFilter={selectedRoleFilter}
                 onFilterChange={handleRoleFilterChange}
+                minWidthClassName={minWidthClassName}
               />
 
               {/* 動的検索フィールドのフォーム */}
@@ -254,6 +256,7 @@ const RoleAllocationTable = ({
               users={paginatedUsers}
               roles={roles}
               onUsersChanged={fetchUsers}
+              minWidthClassName={minWidthClassName}
             />
           </div>
 

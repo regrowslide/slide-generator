@@ -10,7 +10,7 @@
 export type YearMonth = string
 
 /** 店舗名 */
-export type StoreName = '港北店' | '青葉店' | '中央店'
+export type StoreName = string
 
 // ABCD評価は不要のため削除
 
@@ -140,3 +140,13 @@ export type GuidanceStep = {
 
 /** ステータス */
 export type Status = 'completed' | 'incomplete' | 'in-progress'
+
+// ============================================================
+// 権限スコープ
+// ============================================================
+
+/** Regrowアプリの操作権限（getScopes().getRegrowScopes() の戻り値型） */
+export type RegrowScopes = {
+  isAdmin: boolean
+  isManager: boolean
+}

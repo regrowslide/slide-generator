@@ -14,7 +14,11 @@ export const createStore = async (data: {name: string; fullName?: string}): Prom
 // Read
 // ============================================================
 
+/** 有効な店舗のみ取得（レポート画面用） */
 export const getStores = async (): Promise<RgStore[]> => RegrowStoreService.getStores()
+
+/** 全店舗取得（マスタ管理画面用、無効含む） */
+export const getAllStores = async (): Promise<RgStore[]> => RegrowStoreService.getAllStores()
 
 // ============================================================
 // Update

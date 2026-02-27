@@ -1,17 +1,19 @@
-import {Metadata} from 'next'
+import { Metadata } from 'next'
 import Admin from '@cm/components/layout/Admin/Admin'
-import {RegrowDataProvider} from './(pages)/context/RegrowDataContext'
+import { RegrowDataProvider } from './(pages)/context/RegrowDataContext'
+import { PageBuilder } from '@app/(apps)/regrow/(builders)/PageBuilders/PageBuilder'
 
 const AppName = 'Regrow'
-export const metadata: Metadata = {title: AppName}
+export const metadata: Metadata = { title: AppName }
 
-export default async function RegrowLayout({children}) {
+export default async function RegrowLayout({ children }) {
   return (
     <Admin
       {...{
         AppName: AppName,
         Logo: '🌿',
         PagesMethod: 'regrow_PAGES',
+        PageBuilderGetter: { class: PageBuilder, getter: 'getGlobalIdSelector' }
       }}
     >
       <RegrowDataProvider>

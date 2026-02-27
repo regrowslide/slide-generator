@@ -55,8 +55,6 @@ export type StaffMaster = {
 // 定数・マスタ
 // ============================================================
 
-export const STORE_NAMES = ['港北店', '青葉店', '中央店'] as const
-
 export const STAFF_MASTER: StaffMaster[] = [
   {name: '青山', storeName: '港北店'},
   {name: '白石', storeName: '港北店'},

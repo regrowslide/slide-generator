@@ -10,8 +10,9 @@ import {useDataContext} from '../../context/DataContext'
 import type {StoreName} from '../../types'
 
 export const ImportDataView = () => {
-  const {monthlyData} = useDataContext()
-  const [activeStore, setActiveStore] = useState<StoreName>('港北店')
+  const {monthlyData, stores} = useDataContext()
+  const storeNames = stores.map((s) => s.name)
+  const [activeStore, setActiveStore] = useState<StoreName>(storeNames[0] ?? '')
 
   if (!monthlyData.importedData) {
     return (
@@ -22,7 +23,6 @@ export const ImportDataView = () => {
     )
   }
 
-  const stores: StoreName[] = ['港北店', '青葉店', '中央店']
   const currentStoreData = monthlyData.importedData.staffRecords.filter((r) => r.storeName === activeStore)
   const currentStoreTotal = monthlyData.importedData.storeTotals.find((t) => t.storeName === activeStore)
 
@@ -32,7 +32,7 @@ export const ImportDataView = () => {
 
       {/* 店舗タブ */}
       <div data-guidance="store-tabs" className="flex border-b mb-6">
-        {stores.map((store) => {
+        {storeNames.map((store) => {
           const hasData = monthlyData.importedData?.storeTotals.some((t) => t.storeName === store)
           return (
             <button

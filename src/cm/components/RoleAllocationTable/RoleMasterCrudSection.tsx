@@ -15,6 +15,7 @@ type RoleMasterCrudSectionProps = {
   appFilter?: string
   onRolesChanged: () => Promise<void>
   onUsersChanged: () => Promise<void>
+  minWidthClassName?: string
 }
 
 const RoleMasterCrudSection = ({
@@ -22,6 +23,7 @@ const RoleMasterCrudSection = ({
   appFilter,
   onRolesChanged,
   onUsersChanged,
+  minWidthClassName,
 }: RoleMasterCrudSectionProps) => {
   const [editingRoleId, setEditingRoleId] = useState<number | null>(null)
   const [editForm, setEditForm] = useState<RoleFormData>(emptyForm)
@@ -114,12 +116,12 @@ const RoleMasterCrudSection = ({
       <ShadModal
         title="権限マスタ設定"
         description="権限マスタを管理します。"
-        className="p-8"
+        className="p-4"
         Trigger={<Button color="primary">権限マスタ管理</Button>}
       >
-        <div className="space-y-2 border rounded-lg border-gray-200 bg-gray-50">
+        <div className="space-y-2 border rounded-lg border-gray-200 bg-gray-50 p-2">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">権限マスタ管理</span>
+
             {!isAdding && (
               <button
                 onClick={() => setIsAdding(true)}

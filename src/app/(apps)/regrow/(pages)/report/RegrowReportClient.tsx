@@ -1,14 +1,14 @@
 'use client'
 
-import React, {useState} from 'react'
-import {DataContextProvider, useDataContext} from '../../context/DataContext'
-import {MonthSelector} from '../../components/MonthSelector'
-import {ImportView} from '../../components/views/ImportView'
-import {ImportDataView} from '../../components/views/ImportDataView'
-import {ManualInputView} from '../../components/views/ManualInputView'
-import {SlidesView} from '../../components/views/SlidesView'
-import type {SectionKey, YearMonth, MonthlyData, StaffMaster, StoreName, StaffRole} from '../../types'
-import type {RgStore} from '@prisma/generated/prisma/client'
+import React, { useState } from 'react'
+import { DataContextProvider, useDataContext } from '../../context/DataContext'
+import { MonthSelector } from '../../components/MonthSelector'
+import { ImportView } from '../../components/views/ImportView'
+import { ImportDataView } from '../../components/views/ImportDataView'
+import { ManualInputView } from '../../components/views/ManualInputView'
+import { SlidesView } from '../../components/views/SlidesView'
+import type { SectionKey, YearMonth, MonthlyData, StaffMaster, RegrowScopes } from '../../types'
+import type { RgStore } from '@prisma/generated/prisma/client'
 
 type Props = {
   initialMonths: YearMonth[]
@@ -16,10 +16,10 @@ type Props = {
   initialData: MonthlyData | null
   initialStaffMaster: StaffMaster[]
   initialStores: RgStore[]
-  currentUserRole: StaffRole
+  regrowScopes: RegrowScopes
 }
 
-const RegrowReportClient = ({initialMonths, initialYearMonth, initialData, initialStaffMaster, initialStores, currentUserRole}: Props) => {
+const RegrowReportClient = ({ initialMonths, initialYearMonth, initialData, initialStaffMaster, initialStores, regrowScopes }: Props) => {
   return (
     <DataContextProvider
       initialMonths={initialMonths}
@@ -27,7 +27,7 @@ const RegrowReportClient = ({initialMonths, initialYearMonth, initialData, initi
       initialData={initialData}
       initialStaffMaster={initialStaffMaster}
       initialStores={initialStores}
-      currentUserRole={currentUserRole}
+      initialScopes={regrowScopes}
     >
       <RegrowReportContent />
     </DataContextProvider>
@@ -35,25 +35,28 @@ const RegrowReportClient = ({initialMonths, initialYearMonth, initialData, initi
 }
 
 const RegrowReportContent = () => {
+  const { scopes } = useDataContext()
   const [activeSection, setActiveSection] = useState<SectionKey>('slides')
-  const {monthlyData, currentUserRole} = useDataContext()
+  const { monthlyData, stores } = useDataContext()
+  const storeNames = stores.map((s) => s.name)
+
+
 
   // タブ一覧（ガイダンスは廃止。全ロールに全タブを表示）
-  const sections: {key: SectionKey; label: string}[] = [
-    {key: 'import', label: 'Excel取込'},
-    {key: 'import-data', label: 'データ確認'},
-    {key: 'manual-input', label: '手動入力'},
-    {key: 'slides', label: 'スライド'},
-  ]
+  const sections: { key: SectionKey; label: string, isVisible: () => boolean }[] = [
+    { key: 'import', label: 'Excel取込', isVisible: () => scopes.isAdmin },
+    { key: 'import-data', label: 'データ確認', isVisible: () => scopes.isAdmin },
+    { key: 'manual-input', label: '手動入力', isVisible: () => scopes.isAdmin },
+    { key: 'slides', label: 'スライド', isVisible: () => true },
+  ].filter((section) => section.isVisible()) as { key: SectionKey; label: string, isVisible: () => boolean }[]
 
   // 手動入力の完了状況をチェック
-  const checkManualInputStatus = (): {isComplete: boolean; missingCount: number} => {
+  const checkManualInputStatus = (): { isComplete: boolean; missingCount: number } => {
     const hasImportedData = monthlyData.importedData !== null
-    if (!hasImportedData) return {isComplete: true, missingCount: 0}
+    if (!hasImportedData) return { isComplete: true, missingCount: 0 }
 
     let missingCount = 0
-    const stores: StoreName[] = ['港北店', '青葉店', '中央店']
-    stores.forEach((storeName) => {
+    storeNames.forEach((storeName) => {
       const kpi = monthlyData.manualData.storeKpis?.find((k) => k.storeName === storeName)
       if (!kpi || kpi.utilizationRate === null) missingCount++
     })
@@ -64,7 +67,7 @@ const RegrowReportContent = () => {
       missingCount += staffCount - inputStaffCount
     }
 
-    return {isComplete: missingCount === 0, missingCount}
+    return { isComplete: missingCount === 0, missingCount }
   }
 
   const manualInputStatus = checkManualInputStatus()
@@ -98,11 +101,10 @@ const RegrowReportContent = () => {
                 key={section.key}
                 data-guidance={`tab-${section.key}`}
                 onClick={() => setActiveSection(section.key)}
-                className={`px-6 py-3 font-medium transition-colors relative ${
-                  activeSection === section.key
-                    ? 'border-b-2 border-red-500 text-red-600 bg-red-50'
-                    : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
-                }`}
+                className={`px-6 py-3 font-medium transition-colors relative ${activeSection === section.key
+                  ? 'border-b-2 border-red-500 text-red-600 bg-red-50'
+                  : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+                  }`}
               >
                 <span className="flex items-center gap-2">
                   {section.label}

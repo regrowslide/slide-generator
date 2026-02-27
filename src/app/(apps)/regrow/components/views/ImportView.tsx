@@ -243,15 +243,18 @@ export const ImportView = () => {
             )}
           </div>
 
-          {/* 未登録スタッフ警告バナー */}
+          {/* 未登録スタッフエラーバナー */}
           {unmatchedCount > 0 && (
-            <div className="mb-4 bg-amber-50 border border-amber-300 rounded-lg p-4">
-              <p className="text-amber-800 font-semibold">
-                ⚠️ DBに未登録のスタッフが {unmatchedCount}名 います
+            <div className="mb-4 bg-red-50 border border-red-300 rounded-lg p-4">
+              <p className="text-red-800 font-semibold">
+                未登録スタッフが {unmatchedCount}名 います（インポート不可）
               </p>
-              <p className="text-amber-700 text-sm mt-1">
-                未登録スタッフは取り込み後にスタッフマスタへ追加されます。このまま取り込むことも可能です。
+              <p className="text-red-700 text-sm mt-1">
+                マスタ管理画面で該当スタッフをUser登録し、担当店舗を設定してからインポートしてください。
               </p>
+              <div className="mt-2 text-red-700 text-sm">
+                未登録: {matchStatuses.filter((s) => !s.isMatched).map((s) => s.staffName).join(', ')}
+              </div>
             </div>
           )}
 
@@ -343,7 +346,7 @@ export const ImportView = () => {
             </button>
             <button
               onClick={handleConfirmImport}
-              disabled={isSaving}
+              disabled={isSaving || unmatchedCount > 0}
               className="px-6 py-2 bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
             >
               {isSaving ? (

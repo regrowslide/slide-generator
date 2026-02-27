@@ -15,9 +15,17 @@ export class RegrowStoreService {
     })
   }
 
+  /** 有効な店舗のみ取得（レポート画面用） */
   static async getStores(): Promise<RgStore[]> {
     return prisma.rgStore.findMany({
       where: {isActive: true},
+      orderBy: {sortOrder: 'asc'},
+    })
+  }
+
+  /** 全店舗取得（マスタ管理画面用、無効含む） */
+  static async getAllStores(): Promise<RgStore[]> {
+    return prisma.rgStore.findMany({
       orderBy: {sortOrder: 'asc'},
     })
   }

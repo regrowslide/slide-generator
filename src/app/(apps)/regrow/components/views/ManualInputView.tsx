@@ -5,17 +5,21 @@
  * 店舗KPI、スタッフ稼働率、ABCD評価、お客様の声を入力
  */
 
-import React, {useState, useEffect} from 'react'
-import {useDataContext} from '../../context/DataContext'
-import type {StoreName} from '../../types'
+import React, { useState, useEffect } from 'react'
+import { useDataContext } from '../../context/DataContext'
+import type { StoreName } from '../../types'
 
 type TabKey = 'store-kpi' | 'staff-utilization' | 'customer-voice'
 
 export const ManualInputView = () => {
-  const {monthlyData, updateStoreKpi, updateStaffManualData, updateCustomerVoice, currentUserRole} = useDataContext()
+  const { monthlyData, updateStoreKpi, updateStaffManualData, updateCustomerVoice, scopes, stores } = useDataContext()
+
+
+  // storeName → storeId マッピング
+  const storeIdMap = new Map(stores.map((s) => [s.name, s.id]))
   const [activeTab, setActiveTab] = useState<TabKey>('store-kpi')
   const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | null>(null)
-  const isEditable = currentUserRole === 'admin' || currentUserRole === 'manager'
+  const isEditable = scopes.isAdmin
 
   const handleSave = (callback: () => void) => {
     setSaveStatus('saving')
@@ -26,7 +30,7 @@ export const ManualInputView = () => {
     }, 300)
   }
 
-  const stores: StoreName[] = ['港北店', '青葉店', '中央店']
+  const storeNames = stores.map((s) => s.name)
 
   // スタッフリストを取得（インポートデータから）
   const allStaff =
@@ -88,9 +92,8 @@ export const ManualInputView = () => {
         )}
         {saveStatus && (
           <span
-            className={`text-sm font-medium ${
-              saveStatus === 'saving' ? 'text-blue-600' : 'text-green-600'
-            }`}
+            className={`text-sm font-medium ${saveStatus === 'saving' ? 'text-blue-600' : 'text-green-600'
+              }`}
           >
             {saveStatus === 'saving' ? '保存中...' : '保存完了 ✅'}
           </span>
@@ -101,32 +104,29 @@ export const ManualInputView = () => {
       <div data-guidance="manual-tabs" className="flex border-b mb-6">
         <button
           onClick={() => setActiveTab('store-kpi')}
-          className={`px-6 py-3 font-medium transition-colors ${
-            activeTab === 'store-kpi'
-              ? 'border-b-2 border-red-500 text-red-600'
-              : 'text-gray-600 hover:text-gray-800'
-          }`}
+          className={`px-6 py-3 font-medium transition-colors ${activeTab === 'store-kpi'
+            ? 'border-b-2 border-red-500 text-red-600'
+            : 'text-gray-600 hover:text-gray-800'
+            }`}
         >
           店舗KPI
         </button>
         <button
           onClick={() => setActiveTab('staff-utilization')}
-          className={`px-6 py-3 font-medium transition-colors ${
-            activeTab === 'staff-utilization'
-              ? 'border-b-2 border-red-500 text-red-600'
-              : 'text-gray-600 hover:text-gray-800'
-          }`}
+          className={`px-6 py-3 font-medium transition-colors ${activeTab === 'staff-utilization'
+            ? 'border-b-2 border-red-500 text-red-600'
+            : 'text-gray-600 hover:text-gray-800'
+            }`}
         >
           スタッフ稼働率・CS登録数
         </button>
         <button
           data-guidance="customer-voice-tab"
           onClick={() => setActiveTab('customer-voice')}
-          className={`px-6 py-3 font-medium transition-colors ${
-            activeTab === 'customer-voice'
-              ? 'border-b-2 border-red-500 text-red-600'
-              : 'text-gray-600 hover:text-gray-800'
-          }`}
+          className={`px-6 py-3 font-medium transition-colors ${activeTab === 'customer-voice'
+            ? 'border-b-2 border-red-500 text-red-600'
+            : 'text-gray-600 hover:text-gray-800'
+            }`}
         >
           お客様の声
         </button>
@@ -137,7 +137,7 @@ export const ManualInputView = () => {
         <div data-guidance="store-kpi-form" className="bg-white rounded-lg shadow-sm p-6">
           <h2 className="text-lg font-bold mb-4">店舗月次KPI</h2>
           <div className="space-y-6">
-            {stores.map((store) => {
+            {storeNames.map((store) => {
               const kpi = getStoreKpi(store)
               return (
                 <div key={store} className="border rounded-lg p-4">
@@ -182,8 +182,8 @@ export const ManualInputView = () => {
                       <label className="block text-sm font-medium text-gray-700 mb-1">コメント</label>
                       <textarea
                         value={kpi?.comment ?? ''}
-                        onBlur={(e) => isEditable && handleSave(() => updateStoreKpi(store, {comment: e.target.value}))}
-                        onChange={(e) => isEditable && updateStoreKpi(store, {comment: e.target.value})}
+                        onBlur={(e) => isEditable && handleSave(() => updateStoreKpi(store, { comment: e.target.value }))}
+                        onChange={(e) => isEditable && updateStoreKpi(store, { comment: e.target.value })}
                         disabled={!isEditable}
                         rows={2}
                         className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-red-500 resize-none disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
@@ -230,14 +230,14 @@ export const ManualInputView = () => {
                             onBlur={(e) =>
                               isEditable &&
                               handleSave(() =>
-                                updateStaffManualData(staff.staffName, staff.storeName, {
+                                updateStaffManualData(staff.staffName, staff.storeName, storeIdMap.get(staff.storeName) ?? 0, {
                                   utilizationRate: e.target.value ? Number(e.target.value) : null,
                                 })
                               )
                             }
                             onChange={(e) =>
                               isEditable &&
-                              updateStaffManualData(staff.staffName, staff.storeName, {
+                              updateStaffManualData(staff.staffName, staff.storeName, storeIdMap.get(staff.storeName) ?? 0, {
                                 utilizationRate: e.target.value ? Number(e.target.value) : null,
                               })
                             }
@@ -257,14 +257,14 @@ export const ManualInputView = () => {
                             onBlur={(e) =>
                               isEditable &&
                               handleSave(() =>
-                                updateStaffManualData(staff.staffName, staff.storeName, {
+                                updateStaffManualData(staff.staffName, staff.storeName, storeIdMap.get(staff.storeName) ?? 0, {
                                   csRegistrationCount: e.target.value ? Number(e.target.value) : null,
                                 })
                               )
                             }
                             onChange={(e) =>
                               isEditable &&
-                              updateStaffManualData(staff.staffName, staff.storeName, {
+                              updateStaffManualData(staff.staffName, staff.storeName, storeIdMap.get(staff.storeName) ?? 0, {
                                 csRegistrationCount: e.target.value ? Number(e.target.value) : null,
                               })
                             }

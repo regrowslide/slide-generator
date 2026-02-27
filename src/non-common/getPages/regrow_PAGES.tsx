@@ -1,15 +1,16 @@
-import {CleansePathSource, PageGetterType} from '../path-title-constsnts'
-import {getScopes} from '../scope-lib/getScopes'
+import { CleansePathSource, PageGetterType } from '../path-title-constsnts'
+import { getScopes } from '../scope-lib/getScopes'
 
 export const regrow_PAGES = (props: PageGetterType) => {
-  const {roles, query, session, rootPath, pathname} = props
+  const { roles, query, session, rootPath, pathname } = props
 
-  const {login} = getScopes(session, {query, roles})
-
+  const { login, admin, getRegrowScopes } = getScopes(session, { query, roles })
+  const { isAdmin, isManager } = getRegrowScopes()
+  console.log({ login, isAdmin, })  //logs
   const loginPaths = [
-    {tabId: '/report', label: 'MTG資料'},
-    {tabId: '/master', label: 'マスタ管理'},
-    {tabId: '/mock', label: 'MTG資料（モック）'},
+    { tabId: '/report', label: 'MTG資料', exclusiveTo: !!login },
+    { tabId: '/master', label: 'マスタ管理', exclusiveTo: !!(isAdmin || admin) },
+
   ].map((item) => ({
     ...item,
     ROOT: [rootPath],
@@ -17,7 +18,7 @@ export const regrow_PAGES = (props: PageGetterType) => {
 
   const pathSource = [...loginPaths]
 
-  const {cleansedPathSource, navItems, breads, allPathsPattenrs} = CleansePathSource({
+  const { cleansedPathSource, navItems, breads, allPathsPattenrs } = CleansePathSource({
     rootPath,
     pathSource,
     pathname,

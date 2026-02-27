@@ -17,14 +17,15 @@ type GuidanceViewProps = {
 }
 
 export const GuidanceView = ({onNavigate}: GuidanceViewProps) => {
-  const {currentYearMonth, monthlyData, refreshData} = useDataContext()
+  const {currentYearMonth, monthlyData, refreshData, stores} = useDataContext()
+  const storeNames = stores.map((s) => s.name)
   const [isLoadingMock, setIsLoadingMock] = useState(false)
 
-  // Step 1: Excelインポート完了判定
-  const step1Completed = monthlyData.importedData !== null && (monthlyData.importedData.storeTotals?.length || 0) >= 3
+  // Step 1: Excelインポート完了判定（全店舗分取り込み済み）
+  const step1Completed = monthlyData.importedData !== null && (monthlyData.importedData.storeTotals?.length || 0) >= storeNames.length
 
   // Step 2: 手動入力完了判定
-  const step2Completed = (monthlyData.manualData.storeKpis?.length || 0) >= 3 && (monthlyData.manualData.staffManualData?.length || 0) > 0
+  const step2Completed = (monthlyData.manualData.storeKpis?.length || 0) >= storeNames.length && (monthlyData.manualData.staffManualData?.length || 0) > 0
 
   // Step 3: スライド準備完了判定
   const step3Completed = step1Completed && step2Completed
@@ -143,7 +144,7 @@ export const GuidanceView = ({onNavigate}: GuidanceViewProps) => {
           <div>
             <p className="text-sm font-medium text-gray-700 mb-1">インポート済み店舗:</p>
             <div className="flex gap-2 flex-wrap">
-              {['港北店', '青葉店', '中央店'].map((storeName) => {
+              {storeNames.map((storeName) => {
                 const hasData = monthlyData.importedData?.storeTotals.some((t) => t.storeName === storeName)
                 return (
                   <span
@@ -163,7 +164,7 @@ export const GuidanceView = ({onNavigate}: GuidanceViewProps) => {
           <div>
             <p className="text-sm font-medium text-gray-700 mb-1">手動入力進捗:</p>
             <div className="text-sm text-gray-600">
-              <span>店舗KPI: {monthlyData.manualData.storeKpis?.length || 0} / 3</span>
+              <span>店舗KPI: {monthlyData.manualData.storeKpis?.length || 0} / {storeNames.length}</span>
               <span className="mx-2">|</span>
               <span>スタッフデータ: {monthlyData.manualData.staffManualData?.length || 0} 件</span>
             </div>
@@ -192,7 +193,7 @@ export const GuidanceView = ({onNavigate}: GuidanceViewProps) => {
           デモ用のサンプルデータを読み込みます。2026年1月〜12月の通年データが生成されます。
         </p>
         <ul className="text-sm text-blue-700 mb-4 space-y-1 list-disc list-inside">
-          <li>全店舗（港北店、青葉店、中央店）の12ヶ月分データ</li>
+          <li>全店舗の12ヶ月分データ</li>
           <li>各店舗5名のスタッフデータ（売上、客数、指名数など）</li>
           <li>季節変動を反映した売上データ（春秋繁忙期、年末ピーク）</li>
           <li>店舗KPI（稼働率、失客率、月別コメント）</li>

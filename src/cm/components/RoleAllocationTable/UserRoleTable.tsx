@@ -3,6 +3,8 @@
 import type { RoleMaster, User, UserRole } from '@prisma/generated/prisma/client'
 import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
 import { CsvTable } from '@cm/components/styles/common-components/CsvTable/CsvTable'
+import { cn } from '@cm/shadcn/lib/utils'
+
 
 type UserWithRole = User & { UserRole: UserRole[] }
 
@@ -10,9 +12,10 @@ type UserRoleTableProps = {
   users: UserWithRole[]
   roles: RoleMaster[]
   onUsersChanged: () => Promise<void>
+  minWidthClassName?: string
 }
 
-const UserRoleTable = ({ users, roles, onUsersChanged }: UserRoleTableProps) => {
+const UserRoleTable = ({ users, roles, onUsersChanged, minWidthClassName }: UserRoleTableProps) => {
   return CsvTable({
     records: users.map(u => ({
       csvTableRow: [
@@ -76,7 +79,7 @@ const UserRoleTable = ({ users, roles, onUsersChanged }: UserRoleTableProps) => 
       ],
     })),
   }).WithWrapper({
-    className: 'border rounded-lg border-gray-200 max-h-[55vh] min-w-[480px] border-2 shadow',
+    className: cn('border rounded-lg border-gray-200 max-h-[55vh]  border-2 shadow', minWidthClassName),
   })
 }
 

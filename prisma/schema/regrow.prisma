@@ -10,10 +10,11 @@ model RgStore {
   fullName  String? // 'asian relaxation villa新潟西店'
   isActive  Boolean   @default(true)
 
-  RgUserList    User[]          @relation("RgUserStore")
-  RgStoreKpi    RgStoreKpi[]
-  RgStoreTotals RgStoreTotals[]
-  RgStaffRecord RgStaffRecord[]
+  RgUserList        User[]              @relation("RgUserStore")
+  RgStoreKpi        RgStoreKpi[]
+  RgStoreTotals     RgStoreTotals[]
+  RgStaffRecord     RgStaffRecord[]
+  RgStaffManualData RgStaffManualData[]
 }
 
 model RgMonthlyReport {
@@ -96,15 +97,16 @@ model RgStaffManualData {
   sortOrder           Float     @default(0)
   monthlyReportId     Int
   staffName           String // スタッフ名（直接保存）
-  storeName           String // 店舗名（直接保存）
+  storeId             Int // 店舗FK
   userId              Int? // Userとの紐付け（任意）
   utilizationRate     Float?
   csRegistrationCount Int?
 
   RgMonthlyReport RgMonthlyReport @relation(fields: [monthlyReportId], references: [id], onDelete: Cascade)
   User            User?           @relation("RgStaffManualDataUser", fields: [userId], references: [id], onDelete: SetNull)
+  RgStore         RgStore         @relation(fields: [storeId], references: [id], onDelete: Cascade)
 
-  @@unique([monthlyReportId, staffName])
+  @@unique([monthlyReportId, staffName, storeId])
 }
 
 model RgCustomerVoice {

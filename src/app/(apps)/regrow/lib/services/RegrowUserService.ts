@@ -41,6 +41,14 @@ export class RegrowUserService {
     return roleName.replace('regrow-', '') as StaffRole
   }
 
+  /** ユーザーの有効/無効を切替 */
+  static async updateActive(userId: number, active: boolean): Promise<User> {
+    return prisma.user.update({
+      where: {id: userId},
+      data: {active},
+    })
+  }
+
   /** ユーザーの担当店舗（rgStoreId）を更新 */
   static async updateRgStore(userId: number, rgStoreId: number | null): Promise<User> {
     return prisma.user.update({

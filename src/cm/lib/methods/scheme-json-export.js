@@ -11425,6 +11425,23 @@
           "relationToFields": [],
           "isGenerated": false,
           "isUpdatedAt": false
+        },
+        {
+          "name": "RgStaffManualData",
+          "kind": "object",
+          "isList": true,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "RgStaffManualData",
+          "nativeType": null,
+          "relationName": "RgStaffManualDataToRgStore",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isGenerated": false,
+          "isUpdatedAt": false
         }
       ],
       "primaryKey": null,
@@ -12449,15 +12466,15 @@
           "isUpdatedAt": false
         },
         {
-          "name": "storeName",
+          "name": "storeId",
           "kind": "scalar",
           "isList": false,
           "isRequired": true,
           "isUnique": false,
           "isId": false,
-          "isReadOnly": false,
+          "isReadOnly": true,
           "hasDefaultValue": false,
-          "type": "String",
+          "type": "Int",
           "nativeType": null,
           "isGenerated": false,
           "isUpdatedAt": false
@@ -12547,13 +12564,36 @@
           "relationOnDelete": "SetNull",
           "isGenerated": false,
           "isUpdatedAt": false
+        },
+        {
+          "name": "RgStore",
+          "kind": "object",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "RgStore",
+          "nativeType": null,
+          "relationName": "RgStaffManualDataToRgStore",
+          "relationFromFields": [
+            "storeId"
+          ],
+          "relationToFields": [
+            "id"
+          ],
+          "relationOnDelete": "Cascade",
+          "isGenerated": false,
+          "isUpdatedAt": false
         }
       ],
       "primaryKey": null,
       "uniqueFields": [
         [
           "monthlyReportId",
-          "staffName"
+          "staffName",
+          "storeId"
         ]
       ],
       "uniqueIndexes": [
@@ -12561,7 +12601,8 @@
           "name": null,
           "fields": [
             "monthlyReportId",
-            "staffName"
+            "staffName",
+            "storeId"
           ]
         }
       ],
@@ -26020,6 +26061,9 @@
         },
         {
           "name": "staffName"
+        },
+        {
+          "name": "storeId"
         }
       ]
     },

@@ -9337,7 +9337,7 @@ export const RgStaffManualDataScalarFieldEnum = {
   sortOrder: 'sortOrder',
   monthlyReportId: 'monthlyReportId',
   staffName: 'staffName',
-  storeName: 'storeName',
+  storeId: 'storeId',
   userId: 'userId',
   utilizationRate: 'utilizationRate',
   csRegistrationCount: 'csRegistrationCount'

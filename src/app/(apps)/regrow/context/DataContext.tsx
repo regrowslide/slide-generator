@@ -7,9 +7,9 @@
  * initialData無し → localStorage経由（モック用フォールバック）
  */
 
-import React, {createContext, useContext, useState, useCallback, useEffect, useRef} from 'react'
-import type {MonthlyData, YearMonth, ExcelParseResult, StoreKpi, StaffManualData, StaffMaster, StaffRole, StoreName} from '../types'
-import type {RgStore} from '@prisma/generated/prisma/client'
+import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react'
+import type { MonthlyData, YearMonth, ExcelParseResult, StoreKpi, StaffManualData, StaffMaster, StaffRole, StoreName, RegrowScopes } from '../types'
+import type { RgStore } from '@prisma/generated/prisma/client'
 import {
   loadMonthlyData,
   saveMonthlyData,
@@ -30,7 +30,7 @@ import {
   saveCustomerVoice,
   upsertMonthlyReport,
 } from '../_actions/monthly-report-actions'
-import {getStaffMaster} from '../_actions/staff-actions'
+import { getStaffMaster } from '../_actions/staff-actions'
 
 // ============================================================
 // コンテキスト型定義
@@ -58,7 +58,7 @@ type DataContextType = {
 
   // 手動入力データ更新
   updateStoreKpi: (storeName: StoreName, updates: Partial<StoreKpi>) => void
-  updateStaffManualData: (staffName: string, storeName: StoreName, updates: Partial<StaffManualData>) => void
+  updateStaffManualData: (staffName: string, storeName: StoreName, storeId: number, updates: Partial<StaffManualData>) => void
   updateCustomerVoice: (content: string) => void
 
   // スタッフマスタ
@@ -70,6 +70,9 @@ type DataContextType = {
 
   // 現在のユーザーロール
   currentUserRole: StaffRole
+
+  // 権限スコープ
+  scopes: RegrowScopes
 
   // ナビゲーション
   goToPreviousMonth: () => void
@@ -97,7 +100,10 @@ type DataContextProviderProps = {
   initialStaffMaster?: StaffMaster[]
   initialStores?: RgStore[]
   currentUserRole?: StaffRole
+  initialScopes: RegrowScopes
 }
+
+
 
 export const DataContextProvider = ({
   children,
@@ -107,7 +113,9 @@ export const DataContextProvider = ({
   initialStaffMaster,
   initialStores,
   currentUserRole = 'viewer',
+  initialScopes,
 }: DataContextProviderProps) => {
+  const scopes = initialScopes
   // DB版かlocalStorage版かを判定（initialYearMonthがあればDB版）
   const useDb = initialYearMonth !== undefined
 
@@ -311,10 +319,10 @@ export const DataContextProvider = ({
 
         if (index >= 0) {
           const newKpis = [...existingKpis]
-          newKpis[index] = {...newKpis[index], ...updates}
+          newKpis[index] = { ...newKpis[index], ...updates }
           return {
             ...prev,
-            manualData: {...prev.manualData, storeKpis: newKpis},
+            manualData: { ...prev.manualData, storeKpis: newKpis },
           }
         } else {
           return {
@@ -347,7 +355,7 @@ export const DataContextProvider = ({
 
   // スタッフ手動入力データ更新
   const updateStaffManualData = useCallback(
-    async (staffName: string, storeName: StoreName, updates: Partial<StaffManualData>) => {
+    async (staffName: string, storeName: StoreName, storeId: number, updates: Partial<StaffManualData>) => {
       // 楽観的にState更新
       updateMonthlyData((prev) => {
         const existing = prev.manualData.staffManualData || []
@@ -355,10 +363,10 @@ export const DataContextProvider = ({
 
         if (index >= 0) {
           const newList = [...existing]
-          newList[index] = {...newList[index], ...updates}
+          newList[index] = { ...newList[index], ...updates }
           return {
             ...prev,
-            manualData: {...prev.manualData, staffManualData: newList},
+            manualData: { ...prev.manualData, staffManualData: newList },
           }
         } else {
           return {
@@ -380,9 +388,9 @@ export const DataContextProvider = ({
         }
       })
 
-      // DB版: Server Actionで保存
+      // DB版: Server Actionで保存（storeIdベース）
       if (useDb) {
-        await saveStaffManualData(currentYearMonth, staffName, storeName, updates)
+        await saveStaffManualData(currentYearMonth, staffName, storeId, updates)
       }
     },
     [updateMonthlyData, currentYearMonth, useDb]
@@ -394,7 +402,7 @@ export const DataContextProvider = ({
       // 楽観的にState更新
       updateMonthlyData((prev) => ({
         ...prev,
-        manualData: {...prev.manualData, customerVoice: {content}},
+        manualData: { ...prev.manualData, customerVoice: { content } },
       }))
 
       // DB版: Server Actionで保存
@@ -456,6 +464,7 @@ export const DataContextProvider = ({
         refreshStaffMaster,
         stores,
         currentUserRole,
+        scopes,
         goToPreviousMonth,
         goToNextMonth,
         createNewMonth,

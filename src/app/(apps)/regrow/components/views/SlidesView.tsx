@@ -147,12 +147,20 @@ const calculateStaffCumulativeAverage = (
 // メインコンポーネント
 // ============================================================
 
+// 店舗インデックスに基づく動的カラーパレット
+const STORE_COLORS = ['#DC3545', '#4285F4', '#34A853', '#FF9800', '#9C27B0', '#00BCD4', '#795548', '#607D8B']
+
 export const SlidesView = () => {
-  const {monthlyData} = useDataContext()
+  const {monthlyData, stores: storesMaster} = useDataContext()
+  const allStores = storesMaster.map((s) => s.name)
 
   // グローバルな店舗フィルタ
-  const allStores: StoreName[] = ['港北店', '青葉店', '中央店']
   const [selectedStores, setSelectedStores] = useState<StoreName[]>(allStores)
+
+  // storesMasterが変わったらselectedStoresを同期
+  useEffect(() => {
+    setSelectedStores(allStores)
+  }, [storesMaster])
 
   // スタッフフィルタ
   const [selectedStaffNames, setSelectedStaffNames] = useState<string[]>([])
@@ -524,8 +532,7 @@ const Slide2TableOfContents = () => {
 const Slide3OverallSummary = ({selectedStores}: StoreFilterProps) => {
   const {monthlyData} = useDataContext()
   const stores = monthlyData.importedData?.storeTotals || []
-  const storesNames: StoreName[] = ['港北店', '青葉店', '中央店']
-  const filteredStores = storesNames.filter((s) => selectedStores.includes(s))
+  const filteredStores = selectedStores
 
   // 店舗別の再来率を計算
   const calcStoreReturnRate = (storeName: StoreName): number => {
@@ -654,15 +661,9 @@ const MetricComparisonSlide = ({
             <YAxis style={{fontSize: '14px'}} />
             <Tooltip />
             <Legend />
-            {selectedStores.includes('港北店') && (
-              <Line type="monotone" dataKey="港北店" stroke="#DC3545" strokeWidth={2} name="港北店" />
-            )}
-            {selectedStores.includes('青葉店') && (
-              <Line type="monotone" dataKey="青葉店" stroke="#4285F4" strokeWidth={2} name="青葉店" />
-            )}
-            {selectedStores.includes('中央店') && (
-              <Line type="monotone" dataKey="中央店" stroke="#34A853" strokeWidth={2} name="中央店" />
-            )}
+            {selectedStores.map((storeName, i) => (
+              <Line key={storeName} type="monotone" dataKey={storeName} stroke={STORE_COLORS[i % STORE_COLORS.length]} strokeWidth={2} name={storeName} />
+            ))}
           </ComposedChart>
         </ResponsiveContainer>
       )}
@@ -709,12 +710,11 @@ const Slide7AllMetricsComparison = ({selectedStores}: StoreFilterProps) => {
     )
   )
 
-  // 店舗の色定義
-  const storeColors: Record<StoreName, string> = {
-    港北店: '#DC3545',
-    青葉店: '#4285F4',
-    中央店: '#34A853',
-  }
+  // 店舗の色定義（動的）
+  const storeColors: Record<string, string> = {}
+  selectedStores.forEach((name, i) => {
+    storeColors[name] = STORE_COLORS[i % STORE_COLORS.length]
+  })
 
   // 稼働率/再来率のダッシュパターン
   const metricDash: Record<string, string> = {
