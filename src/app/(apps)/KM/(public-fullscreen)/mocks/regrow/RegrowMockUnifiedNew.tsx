@@ -1,28 +1,29 @@
 'use client'
 
 /**
- * Regrow 統合ページ（リファクタリング版）
+ * Regrow モック統合ページ
  * 5セクション統合: guidance / import / import-data / manual-input / slides
  */
 
 import React, {useState} from 'react'
-import {DataContextProvider, useDataContext} from '../../context/DataContext'
-import {MonthSelector} from '../../components/MonthSelector'
-import {GuidanceView} from '../../components/views/GuidanceView'
-import {ImportView} from '../../components/views/ImportView'
-import {ImportDataView} from '../../components/views/ImportDataView'
-import {ManualInputView} from '../../components/views/ManualInputView'
-import {SlidesView} from '../../components/views/SlidesView'
-import type {SectionKey} from '../../types'
+import {useDataContext} from '@app/(apps)/regrow/context/DataContext'
+import {MonthSelector} from '@app/(apps)/regrow/components/MonthSelector'
+import {GuidanceView} from '@app/(apps)/regrow/components/views/GuidanceView'
+import {ImportView} from '@app/(apps)/regrow/components/views/ImportView'
+import {ImportDataView} from '@app/(apps)/regrow/components/views/ImportDataView'
+import {ManualInputView} from '@app/(apps)/regrow/components/views/ManualInputView'
+import {SlidesView} from '@app/(apps)/regrow/components/views/SlidesView'
+import type {SectionKey} from '@app/(apps)/regrow/types'
+import {loadMockData} from './lib/mockData'
 
 interface RegrowMockUnifiedNewProps {
   externalSection?: SectionKey
   onSectionChange?: (section: SectionKey) => void
-  hideNavigation?: boolean // ナビゲーション・MonthSelectorを非表示（外部ヘッダーで制御する場合）
-  skipDataContext?: boolean // 外部でDataContextProviderをラップ済みの場合にtrue
+  hideNavigation?: boolean
+  skipDataContext?: boolean
 }
 
-const RegrowMockUnifiedNew = ({externalSection, onSectionChange, hideNavigation, skipDataContext}: RegrowMockUnifiedNewProps = {}) => {
+const RegrowMockUnifiedNew = ({externalSection, onSectionChange, hideNavigation}: RegrowMockUnifiedNewProps = {}) => {
   const [activeSection, setActiveSection] = useState<SectionKey>('guidance')
 
   const sections: {key: SectionKey; label: string}[] = [
@@ -33,7 +34,6 @@ const RegrowMockUnifiedNew = ({externalSection, onSectionChange, hideNavigation,
     {key: 'slides', label: 'スライド'},
   ]
 
-  // 外部からのセクション制御
   React.useEffect(() => {
     if (externalSection && externalSection !== activeSection) {
       setActiveSection(externalSection)
@@ -45,18 +45,7 @@ const RegrowMockUnifiedNew = ({externalSection, onSectionChange, hideNavigation,
     onSectionChange?.(section)
   }
 
-  const content = <RegrowMockContent activeSection={activeSection} setActiveSection={handleSetActiveSection} sections={sections} hideNavigation={hideNavigation} />
-
-  // 外部でDataContextProviderをラップ済みの場合はスキップ
-  if (skipDataContext) {
-    return content
-  }
-
-  return (
-    <DataContextProvider>
-      {content}
-    </DataContextProvider>
-  )
+  return <RegrowMockContent activeSection={activeSection} setActiveSection={handleSetActiveSection} sections={sections} hideNavigation={hideNavigation} />
 }
 
 const RegrowMockContent = ({
@@ -77,23 +66,19 @@ const RegrowMockContent = ({
     const hasImportedData = monthlyData.importedData !== null
 
     if (!hasImportedData) {
-      // インポートデータがない場合は警告不要
       return {isComplete: true, missingCount: 0}
     }
 
     let missingCount = 0
 
-    // 店舗KPIのチェック（3店舗）
     const stores: ('港北店' | '青葉店' | '中央店')[] = ['港北店', '青葉店', '中央店']
     stores.forEach((storeName) => {
       const kpi = monthlyData.manualData.storeKpis?.find((k) => k.storeName === storeName)
-      // 稼働率が未入力
       if (!kpi || kpi.utilizationRate === null) {
         missingCount++
       }
     })
 
-    // スタッフデータのチェック
     const staffCount = monthlyData.importedData?.staffRecords.length || 0
     const inputStaffCount = monthlyData.manualData.staffManualData?.length || 0
     if (staffCount > 0 && inputStaffCount < staffCount) {
@@ -108,10 +93,15 @@ const RegrowMockContent = ({
 
   const manualInputStatus = checkManualInputStatus()
 
+  // モックデータ読み込みハンドラ
+  const handleLoadMockData = async () => {
+    loadMockData()
+  }
+
   const renderView = () => {
     switch (activeSection) {
       case 'guidance':
-        return <GuidanceView onNavigate={setActiveSection} />
+        return <GuidanceView onNavigate={setActiveSection} onLoadMockData={handleLoadMockData} />
       case 'import':
         return <ImportView />
       case 'import-data':
@@ -129,10 +119,8 @@ const RegrowMockContent = ({
     <div className={hideNavigation ? '' : 'min-h-screen bg-gray-100'}>
       {!hideNavigation && (
         <>
-          {/* 月選択UI */}
           <MonthSelector />
 
-          {/* セクションナビゲーション */}
           <div className="bg-white border-b shadow-sm">
             <div className="max-w-7xl mx-auto px-4">
               <div className="flex gap-1">
@@ -149,7 +137,6 @@ const RegrowMockContent = ({
                   >
                     <span className="flex items-center gap-2">
                       {section.label}
-                      {/* 手動入力タブに警告を表示 */}
                       {section.key === 'manual-input' && !manualInputStatus.isComplete && (
                         <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
                           !
@@ -164,7 +151,6 @@ const RegrowMockContent = ({
         </>
       )}
 
-      {/* ビューコンテンツ */}
       <div>{renderView()}</div>
     </div>
   )

@@ -18,8 +18,9 @@ import {
   Plus,
   LucideIcon,
 } from 'lucide-react'
-import RegrowMockUnifiedNew from '@app/(apps)/regrow/(pages)/mock/RegrowMockUnifiedNew'
-import { DataContextProvider, useDataContext } from '@app/(apps)/regrow/context/DataContext'
+import RegrowMockUnifiedNew from './RegrowMockUnifiedNew'
+import { MockDataContextProvider } from './context/MockDataContext'
+import { useDataContext } from '@app/(apps)/regrow/context/DataContext'
 import { formatYearMonth } from '@app/(apps)/regrow/lib/storage'
 import type { SectionKey } from '@app/(apps)/regrow/types'
 import {
@@ -129,9 +130,9 @@ const RegrowMockPage = () => {
   }
 
   return (
-    <DataContextProvider>
+    <MockDataContextProvider>
       <RegrowMockPageInner />
-    </DataContextProvider>
+    </MockDataContextProvider>
   )
 }
 
@@ -151,9 +152,7 @@ const RegrowMockPageInner = () => {
   // 新規年月作成
   const handleCreateMonth = () => {
     if (!newMonthValue) return
-    // YYYY-MM形式チェック
     if (!/^\d{4}-\d{2}$/.test(newMonthValue)) return
-    // 重複チェック
     if (availableMonths.includes(newMonthValue)) {
       setCurrentYearMonth(newMonthValue)
       setShowNewMonthInput(false)
@@ -302,12 +301,11 @@ const RegrowMockPageInner = () => {
         </div>
       </header>
 
-      {/* RegrowMockUnifiedNew本体（ナビ非表示、DataContextスキップ） */}
+      {/* RegrowMockUnifiedNew本体（ナビ非表示） */}
       <RegrowMockUnifiedNew
         externalSection={activeSection}
         onSectionChange={(section) => setActiveSection(section)}
         hideNavigation
-        skipDataContext
       />
 
       {/* 機能説明サイドバー */}

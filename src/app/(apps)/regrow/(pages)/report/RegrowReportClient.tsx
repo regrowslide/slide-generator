@@ -16,10 +16,11 @@ type Props = {
   initialData: MonthlyData | null
   initialStaffMaster: StaffMaster[]
   initialStores: RgStore[]
+  initialAllMonthlyData: Record<YearMonth, MonthlyData>
   regrowScopes: RegrowScopes
 }
 
-const RegrowReportClient = ({ initialMonths, initialYearMonth, initialData, initialStaffMaster, initialStores, regrowScopes }: Props) => {
+const RegrowReportClient = ({ initialMonths, initialYearMonth, initialData, initialStaffMaster, initialStores, initialAllMonthlyData, regrowScopes }: Props) => {
   return (
     <DataContextProvider
       initialMonths={initialMonths}
@@ -27,6 +28,7 @@ const RegrowReportClient = ({ initialMonths, initialYearMonth, initialData, init
       initialData={initialData}
       initialStaffMaster={initialStaffMaster}
       initialStores={initialStores}
+      initialAllMonthlyData={initialAllMonthlyData}
       initialScopes={regrowScopes}
     >
       <RegrowReportContent />
@@ -40,9 +42,7 @@ const RegrowReportContent = () => {
   const { monthlyData, stores } = useDataContext()
   const storeNames = stores.map((s) => s.name)
 
-
-
-  // タブ一覧（ガイダンスは廃止。全ロールに全タブを表示）
+  // タブ一覧（全ロールに全タブを表示）
   const sections: { key: SectionKey; label: string, isVisible: () => boolean }[] = [
     { key: 'import', label: 'Excel取込', isVisible: () => scopes.isAdmin },
     { key: 'import-data', label: 'データ確認', isVisible: () => scopes.isAdmin },

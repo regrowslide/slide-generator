@@ -10,13 +10,13 @@ import {useDataContext} from '../../context/DataContext'
 import {formatYearMonth} from '../../lib/storage'
 import {StatusBadge} from '../StatusBadge'
 import type {SectionKey, Status, GuidanceStep} from '../../types'
-import {loadMockData} from '../../lib/mockData'
 
 type GuidanceViewProps = {
   onNavigate: (section: SectionKey) => void
+  onLoadMockData?: () => Promise<void>
 }
 
-export const GuidanceView = ({onNavigate}: GuidanceViewProps) => {
+export const GuidanceView = ({onNavigate, onLoadMockData}: GuidanceViewProps) => {
   const {currentYearMonth, monthlyData, refreshData, stores} = useDataContext()
   const storeNames = stores.map((s) => s.name)
   const [isLoadingMock, setIsLoadingMock] = useState(false)
@@ -65,16 +65,17 @@ export const GuidanceView = ({onNavigate}: GuidanceViewProps) => {
    * モックデータを読み込む
    */
   const handleLoadMockData = async () => {
+    if (!onLoadMockData) return
     if (!confirm('モックデータを読み込みますか？\n2026年1月〜12月の通年データを生成します。\n既存のデータは上書きされます。')) {
       return
     }
 
     setIsLoadingMock(true)
     try {
-      loadMockData()
-      await refreshData() // データを再読み込み
+      await onLoadMockData()
+      await refreshData()
       alert(
-        '✅ モックデータの読み込みが完了しました！\n\n' +
+        'モックデータの読み込みが完了しました！\n\n' +
           '2026年1月〜12月の通年データを生成しました。\n' +
           '・季節変動を反映した売上データ\n' +
           '・月別の店舗コメント\n' +
@@ -82,7 +83,7 @@ export const GuidanceView = ({onNavigate}: GuidanceViewProps) => {
       )
     } catch (error) {
       console.error('モックデータ読み込みエラー:', error)
-      alert('❌ モックデータの読み込みに失敗しました')
+      alert('モックデータの読み込みに失敗しました')
     } finally {
       setIsLoadingMock(false)
     }
@@ -181,35 +182,37 @@ export const GuidanceView = ({onNavigate}: GuidanceViewProps) => {
       {/* 完了メッセージ */}
       {step3Completed && (
         <div className="mt-6 bg-green-50 border border-green-200 rounded-lg p-4">
-          <p className="text-green-800 font-medium">🎉 すべてのステップが完了しました！</p>
+          <p className="text-green-800 font-medium">すべてのステップが完了しました！</p>
           <p className="text-green-700 text-sm mt-1">スライド資料を確認して、印刷またはPDF出力してください。</p>
         </div>
       )}
 
-      {/* 開発用モックデータ読み込み */}
-      <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-5">
-        <h3 className="text-lg font-bold mb-3 text-blue-900">🛠️ 開発用モックデータ</h3>
-        <p className="text-sm text-blue-800 mb-4">
-          デモ用のサンプルデータを読み込みます。2026年1月〜12月の通年データが生成されます。
-        </p>
-        <ul className="text-sm text-blue-700 mb-4 space-y-1 list-disc list-inside">
-          <li>全店舗の12ヶ月分データ</li>
-          <li>各店舗5名のスタッフデータ（売上、客数、指名数など）</li>
-          <li>季節変動を反映した売上データ（春秋繁忙期、年末ピーク）</li>
-          <li>店舗KPI（稼働率、失客率、月別コメント）</li>
-          <li>スタッフ稼働率とCS登録数</li>
-          <li>月別のお客様の声</li>
-        </ul>
-        <button
-          data-guidance="load-mock-button"
-          onClick={handleLoadMockData}
-          disabled={isLoadingMock}
-          className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg font-medium transition-colors shadow-md hover:shadow-lg"
-        >
-          {isLoadingMock ? '読み込み中...' : 'モックデータを読み込む（2026年通年）'}
-        </button>
-        <p className="text-xs text-blue-600 mt-3">⚠️ 既存の2026年データは上書きされます</p>
-      </div>
+      {/* モックデータ読み込み（onLoadMockData propがある場合のみ表示） */}
+      {onLoadMockData && (
+        <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-5">
+          <h3 className="text-lg font-bold mb-3 text-blue-900">開発用モックデータ</h3>
+          <p className="text-sm text-blue-800 mb-4">
+            デモ用のサンプルデータを読み込みます。2026年1月〜12月の通年データが生成されます。
+          </p>
+          <ul className="text-sm text-blue-700 mb-4 space-y-1 list-disc list-inside">
+            <li>全店舗の12ヶ月分データ</li>
+            <li>各店舗5名のスタッフデータ（売上、客数、指名数など）</li>
+            <li>季節変動を反映した売上データ（春秋繁忙期、年末ピーク）</li>
+            <li>店舗KPI（稼働率、月別コメント）</li>
+            <li>スタッフ稼働率とCS登録数</li>
+            <li>月別のお客様の声</li>
+          </ul>
+          <button
+            data-guidance="load-mock-button"
+            onClick={handleLoadMockData}
+            disabled={isLoadingMock}
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg font-medium transition-colors shadow-md hover:shadow-lg"
+          >
+            {isLoadingMock ? '読み込み中...' : 'モックデータを読み込む（2026年通年）'}
+          </button>
+          <p className="text-xs text-blue-600 mt-3">既存の2026年データは上書きされます</p>
+        </div>
+      )}
     </div>
   )
 }

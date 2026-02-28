@@ -26,9 +26,8 @@ import {
   ComposedChart,
   Line,
 } from 'recharts'
-import type {StoreName, YearMonth, StaffRecord, SlideViewMode} from '../../types'
-import {loadMonthlyData, formatYearMonth} from '../../lib/storage'
-import {MOCK_DATA} from '../../lib/mockData'
+import type {MonthlyData, StoreName, YearMonth, StaffRecord, SlideViewMode} from '../../types'
+import {formatYearMonth} from '../../lib/storage'
 
 const TOTAL_SLIDES = 14
 
@@ -87,13 +86,6 @@ const calculateStaffReturnRate = (staff: StaffRecord): number => {
 }
 
 /**
- * 月次データを取得（モックデータ優先）
- */
-const getMonthlyData = (yearMonth: YearMonth) => {
-  return MOCK_DATA[yearMonth] || loadMonthlyData(yearMonth)
-}
-
-/**
  * スタッフの累計平均を算出
  * 当月含む過去全月データからスタッフ指標の平均を計算
  */
@@ -101,7 +93,8 @@ const calculateStaffCumulativeAverage = (
   staffName: string,
   storeName: StoreName,
   currentYearMonth: YearMonth,
-  metric: 'sales' | 'nominationCount' | 'unitPrice' | 'returnRate' | 'utilizationRate'
+  metric: 'sales' | 'nominationCount' | 'unitPrice' | 'returnRate' | 'utilizationRate',
+  allMonthlyData: Record<YearMonth, MonthlyData>
 ): number => {
   const currentYear = currentYearMonth.split('-')[0]
   const currentMonth = parseInt(currentYearMonth.split('-')[1])
@@ -110,7 +103,7 @@ const calculateStaffCumulativeAverage = (
 
   for (let m = 1; m <= currentMonth; m++) {
     const ym = `${currentYear}-${String(m).padStart(2, '0')}` as YearMonth
-    const monthData = getMonthlyData(ym)
+    const monthData = allMonthlyData[ym]
     if (!monthData) continue
 
     if (metric === 'utilizationRate') {
@@ -620,13 +613,13 @@ const MetricComparisonSlide = ({
   metric: '客単価' | '稼働率' | '再来率'
   selectedStores: StoreName[]
 }) => {
-  const {currentYearMonth} = useDataContext()
+  const {currentYearMonth, allMonthlyData} = useDataContext()
   const currentYear = currentYearMonth.split('-')[0]
 
   const data = Array.from({length: 12}, (_, i) => {
     const month = String(i + 1).padStart(2, '0')
     const yearMonth = `${currentYear}-${month}` as YearMonth
-    const monthData = getMonthlyData(yearMonth)
+    const monthData = allMonthlyData[yearMonth]
 
     const result: any = {month: `${i + 1}月`}
     selectedStores.forEach((storeName) => {
@@ -651,7 +644,7 @@ const MetricComparisonSlide = ({
         </div>
       ) : !hasData ? (
         <div className="flex items-center justify-center" style={{height: '500px'}}>
-          <p className="text-gray-500 text-lg">データがありません。モックデータを読み込んでください。</p>
+          <p className="text-gray-500 text-lg">データがありません</p>
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={500}>
@@ -683,14 +676,14 @@ const Slide6MetricComparison = ({metric, selectedStores}: StoreFilterProps & {me
 
 // Phase4: 統合グラフ（ComposedChart: 客単価=Bar左軸円、稼働率/再来率=Line右軸%）
 const Slide7AllMetricsComparison = ({selectedStores}: StoreFilterProps) => {
-  const {currentYearMonth} = useDataContext()
+  const {currentYearMonth, allMonthlyData} = useDataContext()
   const currentYear = currentYearMonth.split('-')[0]
   const metrics: Array<'客単価' | '稼働率' | '再来率'> = ['客単価', '稼働率', '再来率']
 
   const data = Array.from({length: 12}, (_, i) => {
     const month = String(i + 1).padStart(2, '0')
     const yearMonth = `${currentYear}-${month}` as YearMonth
-    const monthData = getMonthlyData(yearMonth)
+    const monthData = allMonthlyData[yearMonth]
 
     const result: any = {month: `${i + 1}月`}
     selectedStores.forEach((storeName) => {
@@ -731,7 +724,7 @@ const Slide7AllMetricsComparison = ({selectedStores}: StoreFilterProps) => {
         </div>
       ) : !hasData ? (
         <div className="flex items-center justify-center" style={{height: '500px'}}>
-          <p className="text-gray-500 text-lg">データがありません。モックデータを読み込んでください。</p>
+          <p className="text-gray-500 text-lg">データがありません</p>
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={500}>
@@ -900,12 +893,12 @@ const ChartToggle = ({
 
 // スタッフ稼働率（各グラフ内にローカルトグル）
 const Slide9StaffUtilizationChart = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
-  const {currentYearMonth, availableMonths} = useDataContext()
+  const {currentYearMonth, availableMonths, allMonthlyData} = useDataContext()
   const [selectedMonth, setSelectedMonth] = useState<YearMonth>(currentYearMonth)
   const [showCurrent, setShowCurrent] = useState(true)
   const [showCumulative, setShowCumulative] = useState(false)
 
-  const selectedMonthData = getMonthlyData(selectedMonth)
+  const selectedMonthData = allMonthlyData[selectedMonth]
 
   // スタッフ稼働率データ
   let utilizationData =
@@ -917,7 +910,7 @@ const Slide9StaffUtilizationChart = ({selectedStores, selectedStaffNames}: Store
         ...(showCurrent ? {当月: u.utilizationRate || 0} : {}),
         store: u.storeName,
         ...(showCumulative
-          ? {累計平均: calculateStaffCumulativeAverage(u.staffName, u.storeName, selectedMonth, 'utilizationRate')}
+          ? {累計平均: calculateStaffCumulativeAverage(u.staffName, u.storeName, selectedMonth, 'utilizationRate', allMonthlyData)}
           : {}),
       })) || []
 
@@ -990,16 +983,17 @@ const buildStaffMomData = (
   currentYearMonth: YearMonth,
   monthlyData: any,
   selectedStores: StoreName[],
-  selectedStaffNames: string[]
+  selectedStaffNames: string[],
+  allMonthlyData: Record<YearMonth, MonthlyData>
 ) => {
   const currentStaff = monthlyData.importedData?.staffRecords || []
   const filtered = filterStaffList(currentStaff, selectedStores, selectedStaffNames)
 
   return filtered.map((staff) => {
-    const cumSales = calculateStaffCumulativeAverage(staff.staffName, staff.storeName, currentYearMonth, 'sales')
-    const cumNomination = calculateStaffCumulativeAverage(staff.staffName, staff.storeName, currentYearMonth, 'nominationCount')
-    const cumUnitPrice = calculateStaffCumulativeAverage(staff.staffName, staff.storeName, currentYearMonth, 'unitPrice')
-    const cumReturnRate = calculateStaffCumulativeAverage(staff.staffName, staff.storeName, currentYearMonth, 'returnRate')
+    const cumSales = calculateStaffCumulativeAverage(staff.staffName, staff.storeName, currentYearMonth, 'sales', allMonthlyData)
+    const cumNomination = calculateStaffCumulativeAverage(staff.staffName, staff.storeName, currentYearMonth, 'nominationCount', allMonthlyData)
+    const cumUnitPrice = calculateStaffCumulativeAverage(staff.staffName, staff.storeName, currentYearMonth, 'unitPrice', allMonthlyData)
+    const cumReturnRate = calculateStaffCumulativeAverage(staff.staffName, staff.storeName, currentYearMonth, 'returnRate', allMonthlyData)
 
     return {
       staffName: staff.staffName,
@@ -1030,8 +1024,8 @@ const DiffCell = ({value, prefix = '', suffix = ''}: {value: number; prefix?: st
 // ============================================================
 
 const Slide10StaffMomTable1 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
-  const {monthlyData, currentYearMonth} = useDataContext()
-  const rows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames)
+  const {monthlyData, currentYearMonth, allMonthlyData} = useDataContext()
+  const rows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData)
 
   return (
     <div className="h-full p-8 overflow-y-auto">
@@ -1083,10 +1077,10 @@ const Slide10StaffMomTable1 = ({selectedStores, selectedStaffNames}: StoreFilter
 // ============================================================
 
 const Slide11StaffMomChart1 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
-  const {monthlyData, currentYearMonth} = useDataContext()
+  const {monthlyData, currentYearMonth, allMonthlyData} = useDataContext()
   const [showCurrent, setShowCurrent] = useState(true)
   const [showCumulative, setShowCumulative] = useState(false)
-  const rows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames)
+  const rows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData)
 
   const chartData = rows.map((row) => ({
     name: row.staffName,
@@ -1132,8 +1126,8 @@ const Slide11StaffMomChart1 = ({selectedStores, selectedStaffNames}: StoreFilter
 // ============================================================
 
 const Slide12StaffMomTable2 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
-  const {monthlyData, currentYearMonth} = useDataContext()
-  const rows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames)
+  const {monthlyData, currentYearMonth, allMonthlyData} = useDataContext()
+  const rows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData)
 
   return (
     <div className="h-full p-8 overflow-y-auto">
@@ -1185,10 +1179,10 @@ const Slide12StaffMomTable2 = ({selectedStores, selectedStaffNames}: StoreFilter
 // ============================================================
 
 const Slide13StaffMomChart2 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
-  const {monthlyData, currentYearMonth} = useDataContext()
+  const {monthlyData, currentYearMonth, allMonthlyData} = useDataContext()
   const [showCurrent, setShowCurrent] = useState(true)
   const [showCumulative, setShowCumulative] = useState(false)
-  const rows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames)
+  const rows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData)
 
   const chartData = rows.map((row) => ({
     name: row.staffName,

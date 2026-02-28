@@ -1,9 +1,9 @@
 /**
  * Regrowアプリのモックデータ生成
- * 2026年1月、2月、3月の3ヶ月分のデータを生成
+ * 2026年1月〜12月の12ヶ月分のデータを生成
  */
 
-import type {MonthlyData, StaffRecord, StoreTotals, StoreName, YearMonth} from '../types'
+import type {MonthlyData, StaffRecord, StoreTotals, StoreName, YearMonth} from '@app/(apps)/regrow/types'
 
 // スタッフ名リスト（各店舗5名）
 const STAFF_BY_STORE: Record<StoreName, string[]> = {
@@ -28,11 +28,6 @@ const randomFloat = (min: number, max: number): number => {
 
 /**
  * 月係数を取得（季節変動を反映）
- * 1-2月: 低調（0.9-1.0）
- * 3-5月: 春の繁忙期（1.1-1.3）
- * 6-8月: 夏季（1.0-1.1）
- * 9-11月: 秋の繁忙期（1.2-1.4）
- * 12月: 年末繁忙（1.5）
  */
 const getMonthMultiplier = (yearMonth: YearMonth): number => {
   const month = parseInt(yearMonth.split('-')[1])
@@ -61,14 +56,13 @@ const generateStaffRecords = (yearMonth: YearMonth): StaffRecord[] => {
   const records: StaffRecord[] = []
   let rank = 1
 
-  // 各店舗のスタッフデータを生成
   Object.entries(STAFF_BY_STORE).forEach(([storeName, staffNames]) => {
     staffNames.forEach((staffName) => {
-      const customerCount = randomInt(20, 50) // 対応客数
-      const newCustomerCount = randomInt(5, Math.floor(customerCount * 0.3)) // 新規客数（30%以下）
-      const nominationCount = randomInt(Math.floor(customerCount * 0.3), Math.floor(customerCount * 0.7)) // 指名数（30-70%）
-      const baseSales = customerCount * randomInt(6000, 9000) // 売上（客数×客単価）
-      const sales = Math.floor(baseSales * multiplier) // 月係数を適用
+      const customerCount = randomInt(20, 50)
+      const newCustomerCount = randomInt(5, Math.floor(customerCount * 0.3))
+      const nominationCount = randomInt(Math.floor(customerCount * 0.3), Math.floor(customerCount * 0.7))
+      const baseSales = customerCount * randomInt(6000, 9000)
+      const sales = Math.floor(baseSales * multiplier)
 
       records.push({
         rank,
@@ -85,10 +79,7 @@ const generateStaffRecords = (yearMonth: YearMonth): StaffRecord[] => {
     })
   })
 
-  // 売上順にソート
   records.sort((a, b) => b.sales - a.sales)
-
-  // ランクを再割り当て
   records.forEach((record, index) => {
     record.rank = index + 1
   })
@@ -348,24 +339,21 @@ export const generateMockMonthlyData = (yearMonth: YearMonth): MonthlyData => {
   const storeTotals = generateStoreTotals(staffRecords)
   const storeComments = generateStoreComments(yearMonth)
 
-  // 手動入力データ: 店舗KPI
   const storeKpis = (['港北店', '青葉店', '中央店'] as StoreName[]).map((storeName) => ({
     storeName,
-    utilizationRate: randomFloat(75, 95), // 稼働率 75-95%
-    returnRate: null, // 自動計算のためnull
-    csRegistrationCount: randomInt(10, 30), // CS登録数
+    utilizationRate: randomFloat(75, 95),
+    returnRate: null,
+    csRegistrationCount: randomInt(10, 30),
     comment: storeComments[storeName],
   }))
 
-  // 手動入力データ: スタッフ稼働率とCS登録数
   const staffManualData = staffRecords.map((staff) => ({
     staffName: staff.staffName,
     storeName: staff.storeName,
-    utilizationRate: randomFloat(70, 100), // 稼働率 70-100%
-    csRegistrationCount: randomInt(2, 8), // CS登録数 2-8件
+    utilizationRate: randomFloat(70, 100),
+    csRegistrationCount: randomInt(2, 8),
   }))
 
-  // お客様の声
   const customerVoice = {
     content: generateCustomerVoice(yearMonth),
   }
@@ -419,7 +407,7 @@ export const getMockData = (yearMonth: YearMonth): MonthlyData | null => {
 }
 
 /**
- * モックデータをlocalStorageに保存（オプション）
+ * モックデータをlocalStorageに保存
  */
 export const loadMockData = (): void => {
   Object.entries(MOCK_DATA).forEach(([yearMonth, data]) => {
@@ -427,10 +415,5 @@ export const loadMockData = (): void => {
     localStorage.setItem(key, JSON.stringify(data))
   })
 
-  console.log('✅ モックデータを12ヶ月分（2026-01〜12）生成しました')
-  console.log('   - 各店舗5名のスタッフデータ')
-  console.log('   - 季節変動を反映した売上データ')
-  console.log('   - 店舗KPI（稼働率、月別コメント）')
-  console.log('   - スタッフ稼働率とCS登録数')
-  console.log('   - 月別のお客様の声')
+  console.log('モックデータを12ヶ月分（2026-01〜12）生成しました')
 }
