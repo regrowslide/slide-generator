@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.4.1
- * Query Engine version: 55ae170b1ced7fc6ed07a15f110549408c501bb3
+ * Prisma Client JS version: 7.4.2
+ * Query Engine version: 94a226be1cf2967af2541cca5529f0f7ba866919
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.4.1",
-  engine: "55ae170b1ced7fc6ed07a15f110549408c501bb3"
+  client: "7.4.2",
+  engine: "94a226be1cf2967af2541cca5529f0f7ba866919"
 }
 
 /**
@@ -407,6 +407,7 @@ export const ModelName = {
   DentalPatient: 'DentalPatient',
   DentalVisitPlan: 'DentalVisitPlan',
   DentalExamination: 'DentalExamination',
+  DentalTimerHistory: 'DentalTimerHistory',
   DentalScoringHistory: 'DentalScoringHistory',
   DentalSavedDocument: 'DentalSavedDocument',
   KgFacilityMaster: 'KgFacilityMaster',
@@ -505,7 +506,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "dentalClinic" | "dentalFacility" | "dentalPatient" | "dentalVisitPlan" | "dentalExamination" | "dentalScoringHistory" | "dentalSavedDocument" | "kgFacilityMaster" | "kgDietTypeMaster" | "kgDailyMenu" | "kgMealSlot" | "kgMenuRecipe" | "kgRecipeIngredient" | "kgOrder" | "kgOrderLine" | "kgProductionBatch" | "kgProductionItem" | "kgRequiredIngredient" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "rcIngredientMaster" | "rcRecipe" | "rcRecipeIngredient" | "rcCategoryYieldMaster" | "rcProfitMarginStandard" | "rgStore" | "rgMonthlyReport" | "rgStaffRecord" | "rgStoreTotals" | "rgStoreKpi" | "rgStaffManualData" | "rgCustomerVoice" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "store" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "cronExecutionLog" | "stockConfig" | "stock" | "stockHistory" | "exerciseMaster" | "workoutLog" | "yamanokaiDepartment" | "yamanokaiRole" | "yamanokaiCourse" | "yamanokaiEquipment" | "yamanokaiInsuranceGrade" | "yamanokaiStaminaGrade" | "yamanokaiSkillGrade" | "yamanokaiRockCategory" | "yamanokaiMember" | "yamanokaiMemberRole" | "yamanokaiCourseCompletion" | "yamanokaiEvent" | "yamanokaiEventRequiredCourse" | "yamanokaiEventPlan" | "yamanokaiEventPlanParticipant" | "yamanokaiAttendance" | "yamanokaiRecord" | "yamanokaiRecordFile" | "yamanokaiEquipmentLoan"
+    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "aidocumentCompany" | "aidocumentSite" | "aidocumentStaff" | "aidocumentSubcontractor" | "aidocumentVehicle" | "aidocumentDocument" | "aidocumentDocumentItem" | "aidocumentAnalysisCache" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "dentalClinic" | "dentalFacility" | "dentalPatient" | "dentalVisitPlan" | "dentalExamination" | "dentalTimerHistory" | "dentalScoringHistory" | "dentalSavedDocument" | "kgFacilityMaster" | "kgDietTypeMaster" | "kgDailyMenu" | "kgMealSlot" | "kgMenuRecipe" | "kgRecipeIngredient" | "kgOrder" | "kgOrderLine" | "kgProductionBatch" | "kgProductionItem" | "kgRequiredIngredient" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "rcIngredientMaster" | "rcRecipe" | "rcRecipeIngredient" | "rcCategoryYieldMaster" | "rcProfitMarginStandard" | "rgStore" | "rgMonthlyReport" | "rgStaffRecord" | "rgStoreTotals" | "rgStoreKpi" | "rgStaffManualData" | "rgCustomerVoice" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "store" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "cronExecutionLog" | "stockConfig" | "stock" | "stockHistory" | "exerciseMaster" | "workoutLog" | "yamanokaiDepartment" | "yamanokaiRole" | "yamanokaiCourse" | "yamanokaiEquipment" | "yamanokaiInsuranceGrade" | "yamanokaiStaminaGrade" | "yamanokaiSkillGrade" | "yamanokaiRockCategory" | "yamanokaiMember" | "yamanokaiMemberRole" | "yamanokaiCourseCompletion" | "yamanokaiEvent" | "yamanokaiEventRequiredCourse" | "yamanokaiEventPlan" | "yamanokaiEventPlanParticipant" | "yamanokaiAttendance" | "yamanokaiRecord" | "yamanokaiRecordFile" | "yamanokaiEquipmentLoan"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2208,6 +2209,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.DentalExaminationCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.DentalExaminationCountAggregateOutputType> | number
+        }
+      }
+    }
+    DentalTimerHistory: {
+      payload: Prisma.$DentalTimerHistoryPayload<ExtArgs>
+      fields: Prisma.DentalTimerHistoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DentalTimerHistoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalTimerHistoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DentalTimerHistoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalTimerHistoryPayload>
+        }
+        findFirst: {
+          args: Prisma.DentalTimerHistoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalTimerHistoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DentalTimerHistoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalTimerHistoryPayload>
+        }
+        findMany: {
+          args: Prisma.DentalTimerHistoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalTimerHistoryPayload>[]
+        }
+        create: {
+          args: Prisma.DentalTimerHistoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalTimerHistoryPayload>
+        }
+        createMany: {
+          args: Prisma.DentalTimerHistoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DentalTimerHistoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalTimerHistoryPayload>[]
+        }
+        delete: {
+          args: Prisma.DentalTimerHistoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalTimerHistoryPayload>
+        }
+        update: {
+          args: Prisma.DentalTimerHistoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalTimerHistoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.DentalTimerHistoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DentalTimerHistoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DentalTimerHistoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalTimerHistoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.DentalTimerHistoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DentalTimerHistoryPayload>
+        }
+        aggregate: {
+          args: Prisma.DentalTimerHistoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDentalTimerHistory>
+        }
+        groupBy: {
+          args: Prisma.DentalTimerHistoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalTimerHistoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DentalTimerHistoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DentalTimerHistoryCountAggregateOutputType> | number
         }
       }
     }
@@ -8790,6 +8865,19 @@ export const DentalExaminationScalarFieldEnum = {
 export type DentalExaminationScalarFieldEnum = (typeof DentalExaminationScalarFieldEnum)[keyof typeof DentalExaminationScalarFieldEnum]
 
 
+export const DentalTimerHistoryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  timerType: 'timerType',
+  actionType: 'actionType',
+  previousValue: 'previousValue',
+  newValue: 'newValue',
+  dentalExaminationId: 'dentalExaminationId'
+} as const
+
+export type DentalTimerHistoryScalarFieldEnum = (typeof DentalTimerHistoryScalarFieldEnum)[keyof typeof DentalTimerHistoryScalarFieldEnum]
+
+
 export const DentalScoringHistoryScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -10518,6 +10606,7 @@ export type GlobalOmitConfig = {
   dentalPatient?: Prisma.DentalPatientOmit
   dentalVisitPlan?: Prisma.DentalVisitPlanOmit
   dentalExamination?: Prisma.DentalExaminationOmit
+  dentalTimerHistory?: Prisma.DentalTimerHistoryOmit
   dentalScoringHistory?: Prisma.DentalScoringHistoryOmit
   dentalSavedDocument?: Prisma.DentalSavedDocumentOmit
   kgFacilityMaster?: Prisma.KgFacilityMasterOmit

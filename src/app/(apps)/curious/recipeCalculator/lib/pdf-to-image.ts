@@ -49,6 +49,7 @@ export const convertPdfToImages = async (file: File, scale: number = 4.0): Promi
 
     // PDFページをCanvasに描画
     await page.render({
+      canvas,
       canvasContext: context,
       viewport,
     }).promise
@@ -81,7 +82,7 @@ export const mergeImages = async (images: string[]): Promise<string> => {
   // 各画像を読み込んでサイズを取得
   const loadedImages = await Promise.all(
     images.map(
-      (src) =>
+      src =>
         new Promise<HTMLImageElement>((resolve, reject) => {
           const img = new Image()
           img.onload = () => resolve(img)
@@ -92,7 +93,7 @@ export const mergeImages = async (images: string[]): Promise<string> => {
   )
 
   // キャンバスサイズを計算（最大幅、高さの合計）
-  const maxWidth = Math.max(...loadedImages.map((img) => img.width))
+  const maxWidth = Math.max(...loadedImages.map(img => img.width))
   const totalHeight = loadedImages.reduce((sum, img) => sum + img.height, 0)
 
   // 結合用キャンバスを作成

@@ -128,9 +128,26 @@ model DentalExamination {
   Hygienist         User?    @relation("ExaminationHygienist", fields: [hygienistId], references: [id])
   hygienistId       Int?
 
-  DentalSavedDocument DentalSavedDocument[]
+  DentalSavedDocument  DentalSavedDocument[]
+  DentalTimerHistory   DentalTimerHistory[]
 
   @@map("dental_examinations")
+}
+
+// DentalTimerHistory - タイマー変更履歴
+model DentalTimerHistory {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  timerType     String @db.VarChar(10) // "dr" | "dh"
+  actionType    String @db.VarChar(20) // "start" | "stop" | "manual_edit"
+  previousValue String? @db.VarChar(20)
+  newValue      String  @db.VarChar(20)
+
+  DentalExamination   DentalExamination @relation(fields: [dentalExaminationId], references: [id], onDelete: Cascade)
+  dentalExaminationId Int
+
+  @@map("dental_timer_histories")
 }
 
 // DentalScoringHistory - 算定履歴

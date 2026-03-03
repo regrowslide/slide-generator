@@ -34,7 +34,7 @@ type ContentPlayerProps = {
 const ImageRenderer = memo(({ src, style }: { src: string; style: anyObject }) => <img src={src} alt="" style={style} />)
 
 const VideoRenderer = memo(({ src, style }: { src: string; style: anyObject }) => (
-  <ReactPlayer url={src} controls={true} style={style} />
+  <ReactPlayer src={src} controls={true} style={style} />
 ))
 
 export default function ContentPlayer(props: ContentPlayerProps) {

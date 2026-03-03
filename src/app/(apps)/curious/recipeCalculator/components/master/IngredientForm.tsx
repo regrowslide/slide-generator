@@ -64,7 +64,7 @@ export const IngredientForm = ({ editingItem, onSave, onClose }: IngredientFormP
           <input name="supplier" defaultValue={editingItem?.supplier} placeholder="仕入れ先" className="w-full border p-2 rounded" />
         </div>
         <div className="flex justify-end gap-2 pt-2">
-          <Button type="button" variant="outline" onClick={onClose}>
+          <Button type="button" onClick={onClose}>
             キャンセル
           </Button>
           <Button type="submit">保存</Button>

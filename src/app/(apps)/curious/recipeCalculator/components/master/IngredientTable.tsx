@@ -43,10 +43,10 @@ export const IngredientMasterTable = ({ data, onEdit, onDelete }: IngredientTabl
               <td className="px-6 py-3 text-slate-500">{item.supplier}</td>
               <td className="px-6 py-3 text-center">
                 <div className="flex items-center justify-center gap-2">
-                  <Button variant="ghost" size="icon" onClick={() => onEdit(item)} className="text-blue-500">
+                  <Button onClick={() => onEdit(item)} className="text-blue-500">
                     <Edit className="w-4 h-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" onClick={() => onDelete(item.id)} className="text-slate-400 hover:text-red-500">
+                  <Button onClick={() => onDelete(item.id)} className="text-slate-400 hover:text-red-500">
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>

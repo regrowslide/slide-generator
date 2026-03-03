@@ -3,6 +3,7 @@ import {getDentalVisitPlan} from '@app/(apps)/dental/_actions/visit-plan-actions
 import {getDentalPatients} from '@app/(apps)/dental/_actions/patient-actions'
 import {getDentalStaffList} from '@app/(apps)/dental/_actions/staff-actions'
 import {getUserClinicId} from '@app/(apps)/dental/lib/get-user-clinic'
+import {getSavedTemplateIds} from '@app/(apps)/dental/_actions/saved-document-actions'
 import {toFacility, toPatient, toStaff, toExamination} from '@app/(apps)/dental/lib/types'
 import {initServerComopnent} from 'src/non-common/serverSideFunction'
 import VisitDetailClient from './VisitDetailClient'
@@ -35,6 +36,14 @@ export default async function Page(props: Props) {
   const staffList = rawStaff.map(toStaff)
   const examinations = (visitPlan.DentalExamination || []).map(toExamination)
 
+  // 各診察の保存済みテンプレートIDを取得
+  const savedTemplateIdsMap: Record<number, string[]> = {}
+  await Promise.all(
+    examinations.map(async (exam) => {
+      savedTemplateIdsMap[exam.id] = await getSavedTemplateIds(exam.id)
+    })
+  )
+
   return (
     <VisitDetailClient
       visitPlanId={visitPlan.id}
@@ -43,6 +52,7 @@ export default async function Page(props: Props) {
       patients={patients}
       examinations={examinations}
       staff={staffList}
+      savedTemplateIdsMap={savedTemplateIdsMap}
     />
   )
 }

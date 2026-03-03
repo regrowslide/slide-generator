@@ -575,7 +575,7 @@ export default function DeliveryRoutePage() {
                           <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
                             <Button
                               onClick={() => MapModalReturn.handleOpen({ reservationId: reservation.id })}
-                              variant="ghost"
+
                               size="sm"
                               className="text-blue-600 hover:text-blue-900"
                             >
@@ -616,10 +616,10 @@ export default function DeliveryRoutePage() {
                       {group.name} ({group.groupReservations?.length || 0}件)
                     </h2>
                     <div className="flex gap-2">
-                      <Button onClick={() => handleSortByDeliveryTime(group.id || 0)} variant="outline" size="sm">
+                      <Button onClick={() => handleSortByDeliveryTime(group.id || 0)} size="sm">
                         <Clock className="mr-1" size={14} /> 納品時間順設定
                       </Button>
-                      <Button onClick={() => handleGenerateMapUrl(group.id || 0)} variant="outline" size="sm">
+                      <Button onClick={() => handleGenerateMapUrl(group.id || 0)} size="sm">
                         <MapPin className="mr-1" size={14} /> 地図表示
                       </Button>
                     </div>
@@ -751,7 +751,7 @@ export default function DeliveryRoutePage() {
                                     onClick={() =>
                                       openOrderChangeModal(reservation.id || 0, group.id || 0, gr.deliveryOrder || 0)
                                     }
-                                    variant="ghost"
+
                                     size="sm"
                                     className="text-blue-600 hover:text-blue-900"
                                   >
@@ -803,7 +803,7 @@ export default function DeliveryRoutePage() {
                 </div>
               </div>
               <div className="flex justify-end gap-2 mt-6">
-                <Button variant="outline" onClick={TeamModalReturn.handleClose}>
+                <Button onClick={TeamModalReturn.handleClose}>
                   キャンセル
                 </Button>
                 <Button onClick={handleCreateTeam}>作成</Button>
@@ -837,7 +837,7 @@ export default function DeliveryRoutePage() {
                 </div>
               </div>
               <div className="flex justify-end gap-2 mt-6">
-                <Button variant="outline" onClick={BulkTeamModalReturn.handleClose}>
+                <Button onClick={BulkTeamModalReturn.handleClose}>
                   キャンセル
                 </Button>
                 <Button onClick={handleCreateMultipleTeams} className="bg-green-600 hover:bg-green-700">
@@ -885,7 +885,7 @@ export default function DeliveryRoutePage() {
               )}
 
               <div className="flex justify-end gap-2 mt-6">
-                <Button variant="outline" onClick={MoveModalReturn.handleClose}>
+                <Button onClick={MoveModalReturn.handleClose}>
                   キャンセル
                 </Button>
                 <Button
@@ -930,7 +930,7 @@ export default function DeliveryRoutePage() {
               )}
               <div className="flex justify-end gap-2 mt-6">
                 <Button
-                  variant="outline"
+
                   onClick={() => {
                     OrderModalReturn.handleClose()
                     setEditingDeliveryOrder(null)
@@ -972,7 +972,7 @@ export default function DeliveryRoutePage() {
                 <DeliveryRouteMap reservations={reservations} optimizeRoute={false} />
               )}
               <div className="flex justify-end mt-4">
-                <Button onClick={MapModalReturn.handleClose} variant="outline">
+                <Button onClick={MapModalReturn.handleClose} >
                   閉じる
                 </Button>
               </div>

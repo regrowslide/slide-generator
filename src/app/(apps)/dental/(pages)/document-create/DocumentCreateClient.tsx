@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import {HREF} from '@cm/lib/methods/urls'
+import { HREF } from '@cm/lib/methods/urls'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import { Button } from '@cm/components/styles/common-components/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@shadcn/ui/card'
@@ -11,6 +11,8 @@ import type {
   Patient,
   Clinic,
   Facility,
+  Staff,
+  ScoringHistoryItem,
   TreatmentContentData,
   KanriKeikakuData,
   HygieneGuidanceData,
@@ -19,8 +21,10 @@ import type {
   OralHygieneManagementData,
   OralFunctionRecord,
 } from '@app/(apps)/dental/lib/types'
-import { getPatientName, getPatientNameKana, countApplicableItems } from '@app/(apps)/dental/lib/helpers'
+import ConsultationClient from '../consultation/ConsultationClient'
+import { getPatientName, getPatientNameKana, countApplicableItems, calculateDocumentRequirements } from '@app/(apps)/dental/lib/helpers'
 import { DOCUMENT_TEMPLATES } from '@app/(apps)/dental/lib/constants'
+import DocumentTemplateButtons from '../components/DocumentTemplateButtons'
 import { generatePdfBlobFromHtml } from '@app/(apps)/dental/lib/pdf-generator'
 import { uploadDocumentPdf } from '@app/(apps)/dental/_actions/document-blob-actions'
 import { createDentalSavedDocument, updateDentalSavedDocument } from '@app/(apps)/dental/_actions/saved-document-actions'
@@ -46,6 +50,12 @@ type Props = {
   initialTemplateId: string
   savedDocumentId?: number | null
   savedTemplateData?: Record<string, unknown> | null
+  staff?: Staff[]
+  allExaminations?: Examination[]
+  scoringHistories?: ScoringHistoryItem[]
+  visitPlanId?: number
+  visitDate?: string
+  savedTemplateIds?: string[]
 }
 
 /** 和暦日付を生成 */
@@ -54,13 +64,21 @@ const toWareki = (d: Date) => {
   return `令和${d.getFullYear() - 2018}年${d.getMonth() + 1}月${d.getDate()}日（${weekDay}）`
 }
 
-const DocumentCreateClient = ({ examination, patient, clinic, facilities, initialTemplateId, savedDocumentId, savedTemplateData }: Props) => {
+const DocumentCreateClient = ({
+  examination, patient, clinic, facilities, initialTemplateId, savedDocumentId, savedTemplateData,
+  staff = [], allExaminations = [], scoringHistories = [], visitPlanId = 0, visitDate = '',
+  savedTemplateIds: initialSavedTemplateIds = [],
+}: Props) => {
   const isEditMode = !!savedDocumentId
   const router = useRouter()
-  const {query} = useGlobal()
+  const { query } = useGlobal()
   const [selectedType, setSelectedType] = useState(initialTemplateId || '')
   const previewRef = useRef<HTMLDivElement>(null)
   const [saving, setSaving] = useState(false)
+  const [isDirty, setIsDirty] = useState(false)
+  const [currentSavedDocId, setCurrentSavedDocId] = useState<number | null>(savedDocumentId ?? null)
+  const [autoSaving, setAutoSaving] = useState(false)
+  const [savedTemplateIds, setSavedTemplateIds] = useState<string[]>(initialSavedTemplateIds)
 
   // 各テンプレートのデータ状態（編集モード時は保存済みデータで初期化）
   const sd = savedTemplateData
@@ -184,14 +202,54 @@ const DocumentCreateClient = ({ examination, patient, clinic, facilities, initia
   // 現在のテンプレートデータを取得
   const getCurrentTemplateData = (): Record<string, unknown> => {
     const dataMap: Record<string, unknown> = {
-      doc_houmon_chiryou: {treatmentData},
-      doc_kanrikeikaku: {kanriData},
-      doc_houeishi: {hygieneData},
-      doc_seimitsu_kensa: {seimitsuData},
-      doc_koukuu_kanri: {oralFunctionPlanData},
-      doc_kouei_kanri: {oralHygieneData},
+      doc_houmon_chiryou: { treatmentData },
+      doc_kanrikeikaku: { kanriData },
+      doc_houeishi: { hygieneData },
+      doc_seimitsu_kensa: { seimitsuData },
+      doc_koukuu_kanri: { oralFunctionPlanData },
+      doc_kouei_kanri: { oralHygieneData },
     }
     return (dataMap[selectedType] || {}) as Record<string, unknown>
+  }
+
+  // テンプレートデータのonBlur即時保存
+  const handleTemplateBlur = async () => {
+    if (autoSaving || !selectedType) return
+    setAutoSaving(true)
+    try {
+      const templateData = getCurrentTemplateData()
+      const template = DOCUMENT_TEMPLATES[selectedType]
+      if (currentSavedDocId) {
+        // 既存レコードを更新
+        await updateDentalSavedDocument(currentSavedDocId, { templateData })
+      } else if (examination) {
+        // 初回保存: レコード作成
+        const newDoc = await createDentalSavedDocument({
+          dentalClinicId: clinic?.id,
+          dentalPatientId: patient?.id || 0,
+          dentalExaminationId: examination.id,
+          templateId: selectedType,
+          templateName: template?.name || '',
+          templateData,
+        })
+        if (newDoc) setCurrentSavedDocId(newDoc.id)
+      }
+      setIsDirty(false)
+      // サイドバーの保存済み表示を更新
+      if (selectedType && !savedTemplateIds.includes(selectedType)) {
+        setSavedTemplateIds(prev => [...prev, selectedType])
+      }
+    } catch (e) {
+      console.error('自動保存失敗:', e)
+    } finally {
+      setAutoSaving(false)
+    }
+  }
+
+  // テンプレート変更時のisDirtyフラグ管理用ラッパー
+  const wrapOnChange = <T,>(setter: (v: T) => void) => (v: T) => {
+    setter(v)
+    setIsDirty(true)
   }
 
   // PDF保存処理
@@ -249,14 +307,20 @@ const DocumentCreateClient = ({ examination, patient, clinic, facilities, initia
     }
   }
 
-  const templateEntries = Object.entries(DOCUMENT_TEMPLATES)
+  // 診察の実施項目から必要文書を判定
+  const docRequirements = useMemo(() => {
+    return calculateDocumentRequirements({
+      procedureItems: examination?.procedureItems,
+      dhSeconds: 0,
+    })
+  }, [examination])
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* ヘッダー */}
       <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between print:hidden">
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" onClick={() => router.back()}>
+          <Button size="sm" onClick={() => router.back()}>
             ← 戻る
           </Button>
           <div>
@@ -265,65 +329,74 @@ const DocumentCreateClient = ({ examination, patient, clinic, facilities, initia
           </div>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => window.print()}>印刷</Button>
+          <Button onClick={() => window.print()}>印刷</Button>
           <Button onClick={handleSave} disabled={saving || !selectedType}>
             {saving ? 'PDF保存中...' : '保存して閉じる'}
           </Button>
         </div>
       </div>
 
-      <div className="flex print:block">
-        {/* テンプレート選択サイドバー */}
-        <div className="w-64 shrink-0 border-r border-gray-200 bg-white p-4 print:hidden">
-          <h2 className="text-sm font-bold text-gray-700 mb-3">文書テンプレート</h2>
-          <div className="space-y-2">
-            {templateEntries.map(([id, t]) => (
-              <button
-                key={id}
-                onClick={() => setSelectedType(id)}
-                className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${selectedType === id
-                    ? 'bg-emerald-100 text-emerald-800 font-medium border border-emerald-300'
-                    : 'hover:bg-gray-100 text-gray-700 border border-transparent'
-                  }`}
-              >
-                {t.name}
-              </button>
-            ))}
+      <div className="flex print:block" style={{ height: 'calc(100vh - 57px)' }}>
+        {/* 左パネル: 診察情報（読み取り専用） */}
+        {examination && patient && clinic && (
+          <div className="w-1/2 shrink-0 border-r border-gray-200 overflow-y-auto print:hidden">
+            <ConsultationClient
+              examination={examination}
+              patient={patient}
+              staff={staff}
+              clinic={clinic}
+              visitDate={visitDate}
+              consultationMode="doctor"
+              allExaminations={allExaminations}
+              scoringHistories={scoringHistories}
+              visitPlanId={visitPlanId}
+              readOnly
+            />
+          </div>
+        )}
+
+        {/* テンプレートサイドバー */}
+        <div className="w-48 shrink-0 border-r border-gray-200 bg-white overflow-y-auto print:hidden">
+          <div className="p-2">
+            <p className="text-xs font-bold text-gray-500 mb-2 px-1">文書テンプレート</p>
+            <DocumentTemplateButtons
+              docRequirements={docRequirements}
+              savedTemplateIds={savedTemplateIds}
+              selectedType={selectedType}
+              onSelect={setSelectedType}
+              variant="sidebar"
+            />
           </div>
         </div>
 
-        {/* プレビュー */}
-        <div className="flex-1 p-4 print:p-0 flex justify-center">
+        {/* 右パネル: テンプレート編集 */}
+        <div className="flex-1 p-4 print:p-0 overflow-y-auto flex justify-center">
           {selectedType ? (
-            <div ref={previewRef}>
+            <div ref={previewRef} onBlur={handleTemplateBlur} className={isDirty ? 'ring-2 ring-yellow-300 rounded' : ''}>
               {selectedType === 'doc_houmon_chiryou' && (
-                <TreatmentContentTemplate data={treatmentData} onChange={setTreatmentData} autoQuoteData={treatmentQuote} />
+                <TreatmentContentTemplate data={treatmentData} onChange={wrapOnChange(setTreatmentData)} autoQuoteData={treatmentQuote} />
               )}
               {selectedType === 'doc_kanrikeikaku' && (
-                <KanriKeikakuTemplate data={kanriData} onChange={setKanriData} autoQuoteData={kanriQuote} />
+                <KanriKeikakuTemplate data={kanriData} onChange={wrapOnChange(setKanriData)} autoQuoteData={kanriQuote} />
               )}
               {selectedType === 'doc_houeishi' && (
-                <HygieneGuidanceTemplate data={hygieneData} onChange={setHygieneData} autoQuoteData={hygieneQuote} />
+                <HygieneGuidanceTemplate data={hygieneData} onChange={wrapOnChange(setHygieneData)} autoQuoteData={hygieneQuote} />
               )}
               {selectedType === 'doc_seimitsu_kensa' && (
                 <OralExamRecordTemplate data={seimitsuData} autoQuoteData={seimitsuQuote} onAutoQuoted={setSeimitsuData} />
               )}
               {selectedType === 'doc_koukuu_kanri' && (
-                <OralFunctionPlanTemplate data={oralFunctionPlanData} onChange={setOralFunctionPlanData} autoQuoteData={oralFunctionPlanQuote} />
+                <OralFunctionPlanTemplate data={oralFunctionPlanData} onChange={wrapOnChange(setOralFunctionPlanData)} autoQuoteData={oralFunctionPlanQuote} />
               )}
               {selectedType === 'doc_kouei_kanri' && (
-                <OralHygieneManagementTemplate data={oralHygieneData} onChange={setOralHygieneData} autoQuoteData={oralHygieneQuote} />
+                <OralHygieneManagementTemplate data={oralHygieneData} onChange={wrapOnChange(setOralHygieneData)} autoQuoteData={oralHygieneQuote} />
               )}
+              {autoSaving && <div className="text-center text-xs text-gray-400 mt-2">保存中...</div>}
             </div>
           ) : (
-            <Card className="w-full max-w-md mt-20">
-              <CardHeader>
-                <CardTitle className="text-center">テンプレートを選択</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-500 text-center">左のメニューから作成する文書テンプレートを選択してください。</p>
-              </CardContent>
-            </Card>
+            <div className="flex items-center justify-center h-full">
+              <p className="text-gray-400 text-sm">← サイドバーからテンプレートを選択してください</p>
+            </div>
           )}
         </div>
       </div>

@@ -45,11 +45,7 @@ const urlToBase64 = async (url: string): Promise<string> => {
 /**
  * AIが生成したスライド構成を取得（内部API呼び出し）
  */
-const generateSlideStructure = async (
-  scenario: string,
-  images: ImageData[],
-  baseUrl: string
-): Promise<SlideStructure> => {
+const generateSlideStructure = async (scenario: string, images: ImageData[], baseUrl: string): Promise<SlideStructure> => {
   const response = await fetch(`${baseUrl}/api/image-captioner/generate-slide-structure`, {
     method: 'POST',
     headers: {
@@ -87,10 +83,7 @@ export async function POST(request: NextRequest) {
     const completedImages = images.filter(img => img.generatedImageUrl)
 
     if (completedImages.length === 0) {
-      return NextResponse.json(
-        {success: false, error: '生成済みの画像がありません。先に画像を生成してください。'},
-        {status: 400}
-      )
+      return NextResponse.json({success: false, error: '生成済みの画像がありません。先に画像を生成してください。'}, {status: 400})
     }
 
     // ベースURLを取得
@@ -235,7 +228,7 @@ export async function POST(request: NextRequest) {
 
     const fileName = `${structure.presentationTitle.replace(/[^a-zA-Z0-9\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g, '_')}-${new Date().toISOString().split('T')[0]}.pptx`
 
-    return new NextResponse(pptxBuffer, {
+    return new NextResponse(pptxBuffer as any, {
       status: 200,
       headers: {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
@@ -250,4 +243,3 @@ export async function POST(request: NextRequest) {
     )
   }
 }
-

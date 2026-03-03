@@ -1,9 +1,10 @@
 'use client'
 
-import React, {useState} from 'react'
-import {Search, Filter, X} from 'lucide-react'
-import {Button} from '@cm/shadcn/ui/button'
-import {Card} from '@cm/shadcn/ui/card'
+import React, { useState } from 'react'
+import { Search, Filter, X } from 'lucide-react'
+
+import { Card } from '@cm/shadcn/ui/card'
+import { Button } from '@cm/components/styles/common-components/Button'
 
 type FilterSectionProps = {
   children: React.ReactNode
@@ -52,7 +53,7 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
         <div className={`flex justify-end `}>
           <div className=" space-x-3 ">
             <Button
-              variant="outline"
+
               onClick={onClear}
               className="px-4 py-2 text-gray-700 bg-white border border-gray-300 hover:bg-gray-50"
             >
@@ -84,7 +85,7 @@ export function useFilterForm<T extends Record<string, any>>(initialValues: T) {
 
   // フォームの値を更新
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const {name, value, type} = e.target
+    const { name, value, type } = e.target
 
     // チェックボックスの場合はチェック状態を、それ以外は値を設定
     const newValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value === '' ? undefined : value

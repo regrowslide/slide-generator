@@ -1,10 +1,10 @@
-import {useState, useMemo, useRef} from 'react'
+import { useState, useMemo, useRef } from 'react'
 
-import {DOCUMENT_TEMPLATES} from './constants'
-import {getPatientName, getPatientNameKana, countApplicableItems} from './helpers'
-import {Button, Card, IconChevronLeft} from './ui-components'
-import {generatePdfBlobFromHtml} from './pdf-generator'
-import {uploadDocumentPdf} from './document-actions'
+import { DOCUMENT_TEMPLATES } from './constants'
+import { getPatientName, getPatientNameKana, countApplicableItems } from './helpers'
+import { Button, Card, IconChevronLeft } from './ui-components'
+import { generatePdfBlobFromHtml } from './pdf-generator'
+import { uploadDocumentPdf } from './document-actions'
 import {
   HoumonChiryouPreview,
   getDefaultTreatmentContentData,
@@ -38,7 +38,7 @@ import type {
 
 type DocumentDataInput = {
   patient?: Patient
-  clinic?: {name: string; address: string; phone: string; representative: string}
+  clinic?: { name: string; address: string; phone: string; representative: string }
   facility?: Facility
   dhSeconds?: number
   visitCondition?: string
@@ -192,16 +192,16 @@ const buildOralFunctionPlanQuoteData = (input: DocumentDataInput): Partial<OralF
   }
   if (input.oralFunctionRecord) {
     const r = input.oralFunctionRecord
-    const statusMap: Array<{value: string; applicable: boolean}> = [
-      {value: r.tongueCoatingPercent ? `${r.tongueCoatingPercent}%` : '', applicable: r.tongueCoatingApplicable},
-      {value: r.oralMoistureValue || '', applicable: r.oralDrynessApplicable},
-      {value: r.remainingTeeth ? `${r.remainingTeeth}本` : '', applicable: r.biteForceApplicable},
-      {value: r.oralDiadochoPa ? `${r.oralDiadochoPa}回/秒` : '', applicable: r.oralMotorApplicable},
-      {value: r.oralDiadochoTa ? `${r.oralDiadochoTa}回/秒` : '', applicable: r.oralMotorApplicable},
-      {value: r.oralDiadochoKa ? `${r.oralDiadochoKa}回/秒` : '', applicable: r.oralMotorApplicable},
-      {value: r.tonguePressureKPa ? `${r.tonguePressureKPa}kPa` : '', applicable: r.tonguePressureApplicable},
-      {value: r.masticatoryAbilityMgDl ? `${r.masticatoryAbilityMgDl}mg/dL` : '', applicable: r.masticatoryApplicable},
-      {value: r.swallowingEAT10Score ? `${r.swallowingEAT10Score}点` : '', applicable: r.swallowingApplicable},
+    const statusMap: Array<{ value: string; applicable: boolean }> = [
+      { value: r.tongueCoatingPercent ? `${r.tongueCoatingPercent}%` : '', applicable: r.tongueCoatingApplicable },
+      { value: r.oralMoistureValue || '', applicable: r.oralDrynessApplicable },
+      { value: r.remainingTeeth ? `${r.remainingTeeth}本` : '', applicable: r.biteForceApplicable },
+      { value: r.oralDiadochoPa ? `${r.oralDiadochoPa}回/秒` : '', applicable: r.oralMotorApplicable },
+      { value: r.oralDiadochoTa ? `${r.oralDiadochoTa}回/秒` : '', applicable: r.oralMotorApplicable },
+      { value: r.oralDiadochoKa ? `${r.oralDiadochoKa}回/秒` : '', applicable: r.oralMotorApplicable },
+      { value: r.tonguePressureKPa ? `${r.tonguePressureKPa}kPa` : '', applicable: r.tonguePressureApplicable },
+      { value: r.masticatoryAbilityMgDl ? `${r.masticatoryAbilityMgDl}mg/dL` : '', applicable: r.masticatoryApplicable },
+      { value: r.swallowingEAT10Score ? `${r.swallowingEAT10Score}点` : '', applicable: r.swallowingApplicable },
     ]
     q.oralFunctionStatus = getDefaultOralFunctionPlanData().oralFunctionStatus.map((item, i) => ({
       ...item,
@@ -235,9 +235,9 @@ const buildOralHygieneQuoteData = (input: DocumentDataInput): Partial<OralHygien
 // DocumentCreatePage
 // =============================================================================
 
-export const DocumentCreatePage = ({documentType, documentData, onBack, onSave}: DocumentCreatePageProps) => {
+export const DocumentCreatePage = ({ documentType, documentData, onBack, onSave }: DocumentCreatePageProps) => {
   const template = DOCUMENT_TEMPLATES[documentType] as DocumentTemplate | undefined
-  const {patient, clinic, dhSeconds, visitCondition, oralFindings, treatment, nextPlan, facility, doctorName, treatmentPerformed} =
+  const { patient, clinic, dhSeconds, visitCondition, oralFindings, treatment, nextPlan, facility, doctorName, treatmentPerformed } =
     documentData || {}
 
   // 新しい文書タイプの状態管理
@@ -431,10 +431,10 @@ export const DocumentCreatePage = ({documentType, documentData, onBack, onSave}:
           <Button variant="primary" onClick={handleDownloadPdfFromHtml} disabled={pdfGenerating}>
             {pdfGenerating ? 'PDF生成中...' : 'PDFダウンロード'}
           </Button>
-          <Button variant="outline" onClick={handleUploadPdf}>
+          <Button onClick={handleUploadPdf}>
             {uploadStatus === 'uploading' ? 'アップロード中...' : uploadStatus === 'done' ? '保存済み' : 'Blobに保存'}
           </Button>
-          <Button variant="outline" onClick={handlePrint}>
+          <Button onClick={handlePrint}>
             印刷
           </Button>
           <Button variant="success" onClick={handleSaveDocument} disabled={pdfGenerating}>
@@ -482,7 +482,7 @@ type DocumentListPageProps = {
   onMergePdfs?: (pdfUrls: string[], fileName: string) => Promise<void>
 }
 
-export const DocumentListPage = ({documents, facilities, onMergePdfs}: DocumentListPageProps) => {
+export const DocumentListPage = ({ documents, facilities, onMergePdfs }: DocumentListPageProps) => {
   const [filterFacility, setFilterFacility] = useState<string>('')
   const [filterDocType, setFilterDocType] = useState<string>('')
   const [filterMonth, setFilterMonth] = useState<string>('')

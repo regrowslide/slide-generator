@@ -15,8 +15,9 @@ import {
   reorderDentalExaminations,
 } from '@app/(apps)/dental/_actions/examination-actions'
 import {STAFF_ROLES, EXAMINATION_STATUS} from '@app/(apps)/dental/lib/constants'
-import {getPatientName} from '@app/(apps)/dental/lib/helpers'
+import {getPatientName, calculateExamPoints, calculateDocumentRequirements} from '@app/(apps)/dental/lib/helpers'
 import type {Facility, Patient, Examination, Staff} from '@app/(apps)/dental/lib/types'
+import DocumentTemplateButtons from '../components/DocumentTemplateButtons'
 
 type Props = {
   visitPlanId: number
@@ -25,6 +26,7 @@ type Props = {
   patients: Patient[]
   examinations: Examination[]
   staff: Staff[]
+  savedTemplateIdsMap?: Record<number, string[]>
 }
 
 type SortableExamItemProps = {
@@ -32,12 +34,15 @@ type SortableExamItemProps = {
   patient: Patient
   doctors: Staff[]
   hygienists: Staff[]
+  visitDate: string
+  savedTemplateIds: string[]
   onUpdateExam: (examId: number, data: {doctorId?: number | null; hygienistId?: number | null}) => void
   onRemoveExam: (examId: number) => void
   onStartConsultation: (examId: number) => void
+  onNavigateDocument: (examId: number, templateId: string) => void
 }
 
-const SortableExamItem = ({exam, patient, doctors, hygienists, onUpdateExam, onRemoveExam, onStartConsultation}: SortableExamItemProps) => {
+const SortableExamItem = ({exam, patient, doctors, hygienists, visitDate, savedTemplateIds, onUpdateExam, onRemoveExam, onStartConsultation, onNavigateDocument}: SortableExamItemProps) => {
   const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({id: exam.id})
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -117,6 +122,32 @@ const SortableExamItem = ({exam, patient, doctors, hygienists, onUpdateExam, onR
         </div>
       </div>
 
+      {/* 合計点数 */}
+      {Object.keys(exam.procedureItems || {}).length > 0 && (
+        <div className="mt-2 flex items-center gap-2">
+          <span className="text-xs text-gray-500">合計:</span>
+          <span className="text-sm font-bold text-slate-700">{calculateExamPoints(exam, visitDate).toLocaleString()} 点</span>
+        </div>
+      )}
+
+      {/* 必要文書ボタン */}
+      {Object.keys(exam.procedureItems || {}).length > 0 && (() => {
+        const docReqs = calculateDocumentRequirements({procedureItems: exam.procedureItems, dhSeconds: 0})
+        const hasRequired = Object.values(docReqs).some(d => d.required)
+        if (!hasRequired) return null
+        return (
+          <div className="mt-1">
+            <DocumentTemplateButtons
+              docRequirements={docReqs}
+              savedTemplateIds={savedTemplateIds}
+              onSelect={(templateId) => onNavigateDocument(exam.id, templateId)}
+              variant="inline"
+              requiredOnly
+            />
+          </div>
+        )
+      })()}
+
       {/* 診療開始ボタン */}
       <div className="mt-2 flex gap-2">
         <button
@@ -130,7 +161,7 @@ const SortableExamItem = ({exam, patient, doctors, hygienists, onUpdateExam, onR
   )
 }
 
-const VisitDetailClient = ({visitPlanId, visitDate, facility, patients, examinations, staff}: Props) => {
+const VisitDetailClient = ({visitPlanId, visitDate, facility, patients, examinations, staff, savedTemplateIdsMap = {}}: Props) => {
   const router = useRouter()
   const {query} = useGlobal()
   const [localExams, setLocalExams] = useState(examinations)
@@ -199,6 +230,11 @@ const VisitDetailClient = ({visitPlanId, visitDate, facility, patients, examinat
   // 診療開始
   const handleStartConsultation = (examId: number) => {
     router.push(HREF(`/dental/consultation`, {examinationId: examId}, query))
+  }
+
+  // 文書作成へ遷移
+  const handleNavigateDocument = (examId: number, templateId: string) => {
+    router.push(HREF(`/dental/document-create`, {examinationId: examId, templateId}, query))
   }
 
   return (
@@ -289,9 +325,12 @@ const VisitDetailClient = ({visitPlanId, visitDate, facility, patients, examinat
                           patient={patient}
                           doctors={doctors}
                           hygienists={hygienists}
+                          visitDate={visitDate}
+                          savedTemplateIds={savedTemplateIdsMap[exam.id] || []}
                           onUpdateExam={handleUpdateExam}
                           onRemoveExam={handleRemoveExam}
                           onStartConsultation={handleStartConsultation}
+                          onNavigateDocument={handleNavigateDocument}
                         />
                       )
                     })}

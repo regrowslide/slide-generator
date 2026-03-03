@@ -5,7 +5,7 @@ import { Plus, Pencil, Trash2, Building2, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
 import { Card, CardContent } from '@shadcn/ui/card'
-
+import { Button } from '@cm/components/styles/common-components/Button'
 import {
   Table,
   TableBody,
@@ -26,8 +26,9 @@ import {
 import type { KgFacilityMaster, KgFacilityFormData } from '../../../types'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import useModal from '@cm/components/utils/modal/useModal'
+import { Badge } from '@cm/shadcn/ui/badge'
 
-import { Button } from '@cm/components/styles/common-components/Button'
+
 
 
 type Props = {
@@ -126,7 +127,7 @@ export const FacilityMasterClient = ({ initialFacilities }: Props) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/curious/kaigoshokuManagement/master">
-            <Button variant="ghost" size="icon">
+            <Button >
               <ArrowLeft className="w-5 h-5" />
             </Button>
           </Link>
@@ -173,7 +174,7 @@ export const FacilityMasterClient = ({ initialFacilities }: Props) => {
                     </TableCell>
                     <TableCell>{facility.phone ?? '-'}</TableCell>
                     <TableCell>
-                      <Badge color={facility.isActive ? 'green' : 'gray'}>
+                      <Badge color={facility.isActive ? 'success' : 'gray'}>
                         {facility.isActive ? '有効' : '無効'}
                       </Badge>
                     </TableCell>
@@ -268,7 +269,7 @@ export const FacilityMasterClient = ({ initialFacilities }: Props) => {
           </div>
         </div>
         <div className="flex justify-end gap-2 mt-4">
-          <Button variant="outline" onClick={() => formModal.handleClose()}>
+          <Button onClick={() => formModal.handleClose()}>
             キャンセル
           </Button>
           <Button onClick={handleSave}>{editingId ? '更新' : '追加'}</Button>

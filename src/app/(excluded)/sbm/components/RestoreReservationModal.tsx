@@ -1,10 +1,10 @@
 'use client'
 
-import React, {useState} from 'react'
-import {X} from 'lucide-react'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
-import {Padding} from '@cm/components/styles/common-components/common-components'
-import {Button} from '@cm/shadcn/ui/button'
+import React, { useState } from 'react'
+import { X } from 'lucide-react'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
+import { Padding } from '@cm/components/styles/common-components/common-components'
+import { Button } from '@cm/components/styles/common-components/Button'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 
 type RestoreReservationModalProps = {
@@ -13,8 +13,8 @@ type RestoreReservationModalProps = {
   onConfirm: (userId: number) => Promise<void>
 }
 
-export const RestoreReservationModal: React.FC<RestoreReservationModalProps> = ({reservation, onCancel, onConfirm}) => {
-  const {session} = useGlobal()
+export const RestoreReservationModal: React.FC<RestoreReservationModalProps> = ({ reservation, onCancel, onConfirm }) => {
+  const { session } = useGlobal()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -75,10 +75,10 @@ export const RestoreReservationModal: React.FC<RestoreReservationModalProps> = (
         </div>
 
         <div className="flex justify-end space-x-3 mt-6">
-          <Button variant="outline" onClick={onCancel} disabled={isSubmitting}>
+          <Button onClick={onCancel} disabled={isSubmitting}>
             キャンセル
           </Button>
-          <Button variant="default" className="bg-green-600 hover:bg-green-700" onClick={handleSubmit} disabled={isSubmitting}>
+          <Button className="bg-green-600 hover:bg-green-700" onClick={handleSubmit} disabled={isSubmitting}>
             {isSubmitting ? '処理中...' : '予約を復元する'}
           </Button>
         </div>

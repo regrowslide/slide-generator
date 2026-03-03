@@ -1,9 +1,9 @@
 'use client'
 
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 
-import {Button} from '@cm/shadcn/ui/button'
-import {Input} from '@cm/shadcn/ui/input'
+import { Button } from '@cm/components/styles/common-components/Button'
+import { Input } from '@cm/shadcn/ui/input'
 
 import Textarea from '@cm/shadcn/ui/Organisms/form/Textarea'
 
@@ -13,7 +13,7 @@ type IngredientFormModalProps = {
   onClose: () => void
 }
 
-export const IngredientFormModal: React.FC<IngredientFormModalProps> = ({ingredient, onSave, onClose}) => {
+export const IngredientFormModal: React.FC<IngredientFormModalProps> = ({ ingredient, onSave, onClose }) => {
   const [formData, setFormData] = useState<Partial<IngredientType>>({
     name: '',
     description: '',
@@ -31,8 +31,8 @@ export const IngredientFormModal: React.FC<IngredientFormModalProps> = ({ingredi
   }, [ingredient])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const {name, value} = e.target
-    setFormData(prev => ({...prev, [name]: value}))
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -74,7 +74,7 @@ export const IngredientFormModal: React.FC<IngredientFormModalProps> = ({ingredi
         </div>
 
         <div className="flex justify-end space-x-3 pt-4">
-          <Button type="button" variant="outline" onClick={onClose}>
+          <Button type="button" onClick={onClose}>
             キャンセル
           </Button>
           <Button type="submit">保存</Button>

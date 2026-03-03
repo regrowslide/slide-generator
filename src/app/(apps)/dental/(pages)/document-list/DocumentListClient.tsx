@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import {HREF} from '@cm/lib/methods/urls'
+import { HREF } from '@cm/lib/methods/urls'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import { Button } from '@cm/components/styles/common-components/Button'
 import { Card, CardContent } from '@shadcn/ui/card'
@@ -32,7 +32,7 @@ type Props = {
 
 const DocumentListClient = ({ documents, facilities }: Props) => {
   const router = useRouter()
-  const {query} = useGlobal()
+  const { query } = useGlobal()
   const [filterFacility, setFilterFacility] = useState('')
   const [filterDocType, setFilterDocType] = useState('')
   const [filterMonth, setFilterMonth] = useState('')
@@ -142,7 +142,7 @@ const DocumentListClient = ({ documents, facilities }: Props) => {
               </select>
             </div>
             <div className="ml-auto flex gap-2">
-              <Button variant="outline" size="sm" onClick={handleSelectAll}>
+              <Button size="sm" onClick={handleSelectAll}>
                 {selectedIds.size === filtered.length && filtered.length > 0 ? '全解除' : '全選択'}
               </Button>
               <Button size="sm" onClick={handleBulkDownload} disabled={selectedIds.size === 0}>
@@ -188,7 +188,7 @@ const DocumentListClient = ({ documents, facilities }: Props) => {
                   <tr
                     key={doc.id}
                     className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-                    onClick={() => router.push(HREF('/dental/document-create', {savedDocumentId: doc.id}, query))}
+                    onClick={() => router.push(HREF('/dental/document-create', { savedDocumentId: doc.id }, query))}
                   >
                     <td className="px-3 py-2" onClick={e => e.stopPropagation()}>
                       <input

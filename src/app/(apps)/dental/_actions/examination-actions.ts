@@ -112,3 +112,82 @@ export const completeDentalExamination = async (id: number) => {
     include: examinationInclude,
   })
 }
+
+// タイマーイベント保存（開始/停止/手動変更）
+export const saveTimerEvent = async (params: {
+  examinationId: number
+  timerType: 'dr' | 'dh'
+  actionType: 'start' | 'stop' | 'manual_edit'
+  previousValue: string | null
+  newValue: string
+}) => {
+  const {examinationId, timerType, actionType, previousValue, newValue} = params
+
+  // 履歴レコード作成
+  await prisma.dentalTimerHistory.create({
+    data: {
+      dentalExaminationId: examinationId,
+      timerType,
+      actionType,
+      previousValue,
+      newValue,
+    },
+  })
+
+  // DentalExaminationの時刻フィールドを更新
+  const updateData: Record<string, string | null> = {}
+  if (timerType === 'dr') {
+    if (actionType === 'start') updateData.drStartTime = newValue
+    else if (actionType === 'stop') updateData.drEndTime = newValue
+    else {
+      // 手動変更: previousValueのフィールドを特定して更新
+      updateData.drStartTime = newValue
+    }
+  } else {
+    if (actionType === 'start') updateData.dhStartTime = newValue
+    else if (actionType === 'stop') updateData.dhEndTime = newValue
+    else {
+      updateData.dhStartTime = newValue
+    }
+  }
+
+  return await prisma.dentalExamination.update({
+    where: {id: examinationId},
+    data: updateData,
+    include: examinationInclude,
+  })
+}
+
+// タイマーイベント保存（開始/終了時刻を指定フィールドに保存）
+export const saveTimerTime = async (params: {
+  examinationId: number
+  field: 'drStartTime' | 'drEndTime' | 'dhStartTime' | 'dhEndTime'
+  value: string | null
+}) => {
+  return await prisma.dentalExamination.update({
+    where: {id: params.examinationId},
+    data: {[params.field]: params.value},
+    include: examinationInclude,
+  })
+}
+
+// タイマー変更履歴取得
+export const getTimerHistories = async (examinationId: number) => {
+  return await prisma.dentalTimerHistory.findMany({
+    where: {dentalExaminationId: examinationId},
+    orderBy: {createdAt: 'desc'},
+  })
+}
+
+// 同一患者の過去診察取得
+export const getPatientPastExaminations = async (patientId: number, excludeExaminationId: number) => {
+  return await prisma.dentalExamination.findMany({
+    where: {
+      dentalPatientId: patientId,
+      id: {not: excludeExaminationId},
+    },
+    orderBy: {createdAt: 'desc'},
+    take: 20,
+    include: examinationInclude,
+  })
+}

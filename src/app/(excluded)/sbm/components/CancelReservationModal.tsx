@@ -1,10 +1,10 @@
 'use client'
 
-import React, {useState} from 'react'
-import {X} from 'lucide-react'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
-import {Padding} from '@cm/components/styles/common-components/common-components'
-import {Button} from '@cm/shadcn/ui/button'
+import React, { useState } from 'react'
+import { X } from 'lucide-react'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
+import { Padding } from '@cm/components/styles/common-components/common-components'
+import { Button } from '@cm/components/styles/common-components/Button'
 import Textarea from '@cm/shadcn/ui/Organisms/form/Textarea'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 
@@ -14,8 +14,8 @@ type CancelReservationModalProps = {
   onConfirm: (reason: string, userId: number) => Promise<void>
 }
 
-export const CancelReservationModal: React.FC<CancelReservationModalProps> = ({reservation, onCancel, onConfirm}) => {
-  const {session} = useGlobal()
+export const CancelReservationModal: React.FC<CancelReservationModalProps> = ({ reservation, onCancel, onConfirm }) => {
+  const { session } = useGlobal()
   const [reason, setReason] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -98,11 +98,11 @@ export const CancelReservationModal: React.FC<CancelReservationModalProps> = ({r
         </div>
 
         <div className="flex justify-end space-x-3 mt-6">
-          <Button variant="outline" onClick={onCancel} disabled={isSubmitting}>
+          <Button onClick={onCancel} disabled={isSubmitting}>
             キャンセル
           </Button>
 
-          <Button variant="destructive" onClick={handleSubmit} disabled={isSubmitting || !reason.trim()}>
+          <Button onClick={handleSubmit} disabled={isSubmitting || !reason.trim()}>
             {isSubmitting ? '処理中...' : '予約を取り消す'}
           </Button>
         </div>

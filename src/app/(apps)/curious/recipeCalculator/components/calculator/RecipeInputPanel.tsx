@@ -52,7 +52,7 @@ export const RecipeInputPanel = ({
     <div className="mt-4 border-t pt-4">
       <div className="flex flex-wrap gap-2 mb-3 items-center">
         <Button
-          variant={inputMode === 'text' ? 'default' : 'outline'}
+
           size="sm"
           onClick={() => onInputModeChange('text')}
           className="flex items-center gap-2"
@@ -61,7 +61,7 @@ export const RecipeInputPanel = ({
           テキスト入力
         </Button>
         <Button
-          variant={inputMode === 'image' ? 'default' : 'outline'}
+
           size="sm"
           onClick={() => onInputModeChange('image')}
           className="flex items-center gap-2"
@@ -70,7 +70,7 @@ export const RecipeInputPanel = ({
           画像
         </Button>
         <Button
-          variant={inputMode === 'pdf' ? 'default' : 'outline'}
+
           size="sm"
           onClick={() => onInputModeChange('pdf')}
           className="flex items-center gap-2"
@@ -159,8 +159,8 @@ export const RecipeInputPanel = ({
             (inputMode === 'pdf' && !selectedPdfName)
           }
           className={`flex items-center gap-2 ${analysisPhase === 'step1_running'
-              ? 'bg-slate-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700'
+            ? 'bg-slate-400 cursor-not-allowed'
+            : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700'
             }`}
         >
           {analysisPhase === 'step1_running' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bot className="w-4 h-4" />}
@@ -173,8 +173,8 @@ export const RecipeInputPanel = ({
             onClick={onStep2Matching}
             disabled={analysisPhase === 'step2_running' || analysisPhase === 'step1_running'}
             className={`flex items-center gap-2 ${analysisPhase === 'step2_running' || analysisPhase === 'step1_running'
-                ? 'bg-slate-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700'
+              ? 'bg-slate-400 cursor-not-allowed'
+              : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700'
               }`}
           >
             {analysisPhase === 'step2_running' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bot className="w-4 h-4" />}

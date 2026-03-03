@@ -524,6 +524,16 @@ export type SelectOption = {
   label: string
 }
 
+/** タイマー変更履歴 */
+export type TimerHistory = {
+  id: number
+  timerType: 'dr' | 'dh'
+  actionType: 'start' | 'stop' | 'manual_edit'
+  previousValue: string | null
+  newValue: string
+  createdAt: string
+}
+
 /** 文書要件判定結果 */
 export type DocumentRequirement = DocumentTemplate & {
   required: boolean

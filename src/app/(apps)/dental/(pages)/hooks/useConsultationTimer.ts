@@ -1,40 +1,172 @@
 'use client'
 import {useState, useRef, useCallback, useEffect} from 'react'
+import {saveTimerEvent, saveTimerTime} from '@app/(apps)/dental/_actions/examination-actions'
+import {formatTime} from '@app/(apps)/dental/lib/helpers'
 
-export const useConsultationTimer = () => {
-  const [drSeconds, setDrSeconds] = useState(0)
-  const [dhSeconds, setDhSeconds] = useState(0)
-  const [drRunning, setDrRunning] = useState(false)
-  const [dhRunning, setDhRunning] = useState(false)
+type TimerParams = {
+  examinationId: number
+  initialDrStartTime: string | null
+  initialDrEndTime: string | null
+  initialDhStartTime: string | null
+  initialDhEndTime: string | null
+}
+
+// HH:MM:SS形式の時刻文字列からDateオブジェクトを生成（今日の日付で）
+const parseTimeToDate = (timeStr: string): Date => {
+  const [h, m, s] = timeStr.split(':').map(Number)
+  const d = new Date()
+  d.setHours(h, m, s || 0, 0)
+  return d
+}
+
+// 2つの時刻間の秒数を計算
+const calcSecondsBetween = (start: string, end: string): number => {
+  const s = parseTimeToDate(start)
+  const e = parseTimeToDate(end)
+  return Math.max(0, Math.floor((e.getTime() - s.getTime()) / 1000))
+}
+
+// 開始時刻から現在までの秒数を計算
+const calcSecondsFromStart = (start: string): number => {
+  const s = parseTimeToDate(start)
+  const now = new Date()
+  return Math.max(0, Math.floor((now.getTime() - s.getTime()) / 1000))
+}
+
+export const useConsultationTimer = ({
+  examinationId,
+  initialDrStartTime,
+  initialDrEndTime,
+  initialDhStartTime,
+  initialDhEndTime,
+}: TimerParams) => {
+  // 初期秒数を計算
+  const calcInitialSeconds = (start: string | null, end: string | null) => {
+    if (!start) return 0
+    if (end) return calcSecondsBetween(start, end)
+    return calcSecondsFromStart(start)
+  }
+
+  const [drSeconds, setDrSeconds] = useState(() => calcInitialSeconds(initialDrStartTime, initialDrEndTime))
+  const [dhSeconds, setDhSeconds] = useState(() => calcInitialSeconds(initialDhStartTime, initialDhEndTime))
+  // running = 開始済みかつ未終了
+  const [drRunning, setDrRunning] = useState(() => !!initialDrStartTime && !initialDrEndTime)
+  const [dhRunning, setDhRunning] = useState(() => !!initialDhStartTime && !initialDhEndTime)
+
+  const [drStartTime, setDrStartTime] = useState<string | null>(initialDrStartTime)
+  const [drEndTime, setDrEndTime] = useState<string | null>(initialDrEndTime)
+  const [dhStartTime, setDhStartTime] = useState<string | null>(initialDhStartTime)
+  const [dhEndTime, setDhEndTime] = useState<string | null>(initialDhEndTime)
+
   const drIntervalRef = useRef<NodeJS.Timeout | null>(null)
   const dhIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
-  const toggleDr = useCallback(() => {
-    if (drRunning) {
-      if (drIntervalRef.current) clearInterval(drIntervalRef.current)
-      drIntervalRef.current = null
-    } else {
+  // ページロード時: running状態ならsetIntervalを再開
+  useEffect(() => {
+    if (drRunning && !drIntervalRef.current) {
       drIntervalRef.current = setInterval(() => setDrSeconds(s => s + 1), 1000)
     }
-    setDrRunning(prev => !prev)
-  }, [drRunning])
-
-  const toggleDh = useCallback(() => {
-    if (dhRunning) {
-      if (dhIntervalRef.current) clearInterval(dhIntervalRef.current)
-      dhIntervalRef.current = null
-    } else {
+    if (dhRunning && !dhIntervalRef.current) {
       dhIntervalRef.current = setInterval(() => setDhSeconds(s => s + 1), 1000)
     }
-    setDhRunning(prev => !prev)
-  }, [dhRunning])
-
-  useEffect(() => {
     return () => {
       if (drIntervalRef.current) clearInterval(drIntervalRef.current)
       if (dhIntervalRef.current) clearInterval(dhIntervalRef.current)
     }
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  return {drSeconds, dhSeconds, drRunning, dhRunning, toggleDr, toggleDh, setDrSeconds, setDhSeconds}
+  const toggleDr = useCallback(async () => {
+    const now = formatTime(new Date())
+    if (drRunning) {
+      // STOP
+      if (drIntervalRef.current) clearInterval(drIntervalRef.current)
+      drIntervalRef.current = null
+      setDrEndTime(now)
+      await saveTimerEvent({examinationId, timerType: 'dr', actionType: 'stop', previousValue: drStartTime, newValue: now})
+      await saveTimerTime({examinationId, field: 'drEndTime', value: now})
+    } else {
+      // START
+      setDrStartTime(now)
+      setDrEndTime(null)
+      setDrSeconds(0)
+      drIntervalRef.current = setInterval(() => setDrSeconds(s => s + 1), 1000)
+      await saveTimerEvent({examinationId, timerType: 'dr', actionType: 'start', previousValue: null, newValue: now})
+      await saveTimerTime({examinationId, field: 'drStartTime', value: now})
+      await saveTimerTime({examinationId, field: 'drEndTime', value: null})
+    }
+    setDrRunning(prev => !prev)
+  }, [drRunning, drStartTime, examinationId])
+
+  const toggleDh = useCallback(async () => {
+    const now = formatTime(new Date())
+    if (dhRunning) {
+      if (dhIntervalRef.current) clearInterval(dhIntervalRef.current)
+      dhIntervalRef.current = null
+      setDhEndTime(now)
+      await saveTimerEvent({examinationId, timerType: 'dh', actionType: 'stop', previousValue: dhStartTime, newValue: now})
+      await saveTimerTime({examinationId, field: 'dhEndTime', value: now})
+    } else {
+      setDhStartTime(now)
+      setDhEndTime(null)
+      setDhSeconds(0)
+      dhIntervalRef.current = setInterval(() => setDhSeconds(s => s + 1), 1000)
+      await saveTimerEvent({examinationId, timerType: 'dh', actionType: 'start', previousValue: null, newValue: now})
+      await saveTimerTime({examinationId, field: 'dhStartTime', value: now})
+      await saveTimerTime({examinationId, field: 'dhEndTime', value: null})
+    }
+    setDhRunning(prev => !prev)
+  }, [dhRunning, dhStartTime, examinationId])
+
+  // 手動変更
+  const manualEditDrStart = useCallback(async (newTime: string) => {
+    const prevValue = drStartTime
+    setDrStartTime(newTime)
+    // 秒数を再計算
+    if (drRunning) {
+      setDrSeconds(calcSecondsFromStart(newTime))
+    } else if (drEndTime) {
+      setDrSeconds(calcSecondsBetween(newTime, drEndTime))
+    }
+    await saveTimerEvent({examinationId, timerType: 'dr', actionType: 'manual_edit', previousValue: prevValue, newValue: newTime})
+    await saveTimerTime({examinationId, field: 'drStartTime', value: newTime})
+  }, [drStartTime, drRunning, drEndTime, examinationId])
+
+  const manualEditDrEnd = useCallback(async (newTime: string) => {
+    const prevValue = drEndTime
+    setDrEndTime(newTime)
+    if (drStartTime) {
+      setDrSeconds(calcSecondsBetween(drStartTime, newTime))
+    }
+    await saveTimerEvent({examinationId, timerType: 'dr', actionType: 'manual_edit', previousValue: prevValue, newValue: newTime})
+    await saveTimerTime({examinationId, field: 'drEndTime', value: newTime})
+  }, [drEndTime, drStartTime, examinationId])
+
+  const manualEditDhStart = useCallback(async (newTime: string) => {
+    const prevValue = dhStartTime
+    setDhStartTime(newTime)
+    if (dhRunning) {
+      setDhSeconds(calcSecondsFromStart(newTime))
+    } else if (dhEndTime) {
+      setDhSeconds(calcSecondsBetween(newTime, dhEndTime))
+    }
+    await saveTimerEvent({examinationId, timerType: 'dh', actionType: 'manual_edit', previousValue: prevValue, newValue: newTime})
+    await saveTimerTime({examinationId, field: 'dhStartTime', value: newTime})
+  }, [dhStartTime, dhRunning, dhEndTime, examinationId])
+
+  const manualEditDhEnd = useCallback(async (newTime: string) => {
+    const prevValue = dhEndTime
+    setDhEndTime(newTime)
+    if (dhStartTime) {
+      setDhSeconds(calcSecondsBetween(dhStartTime, newTime))
+    }
+    await saveTimerEvent({examinationId, timerType: 'dh', actionType: 'manual_edit', previousValue: prevValue, newValue: newTime})
+    await saveTimerTime({examinationId, field: 'dhEndTime', value: newTime})
+  }, [dhEndTime, dhStartTime, examinationId])
+
+  return {
+    drSeconds, dhSeconds, drRunning, dhRunning,
+    toggleDr, toggleDh, setDrSeconds, setDhSeconds,
+    drStartTime, drEndTime, dhStartTime, dhEndTime,
+    manualEditDrStart, manualEditDrEnd, manualEditDhStart, manualEditDhEnd,
+  }
 }

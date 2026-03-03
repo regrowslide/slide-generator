@@ -8,7 +8,7 @@ import {getAllIngredients, createIngredient, updateIngredient, deleteIngredient}
 import {formatDate} from '@cm/class/Days/date-utils/formatters'
 import useModal from '@cm/components/utils/modal/useModal'
 import {Padding} from '@cm/components/styles/common-components/common-components'
-import {Button} from '@cm/shadcn/ui/button'
+import {Button} from '@cm/components/styles/common-components/Button'
 import {IngredientFormModal} from './IngredientFormModal'
 
 export default function IngredientsPage() {
@@ -162,10 +162,10 @@ export default function IngredientsPage() {
               この材料を使用している商品がある場合、関連付けも削除されます。
             </p>
             <div className="flex justify-end space-x-3">
-              <Button variant="outline" onClick={DeleteIngredientModalReturn.handleClose}>
+              <Button  onClick={DeleteIngredientModalReturn.handleClose}>
                 キャンセル
               </Button>
-              <Button variant="destructive" onClick={handleDelete}>
+              <Button  onClick={handleDelete}>
                 削除
               </Button>
             </div>

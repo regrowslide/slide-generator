@@ -84,7 +84,7 @@ const BatchPrintClient = ({ documents, facilities, patients }: Props) => {
         }
       }
 
-      const mergedBytes = await mergedPdf.save()
+      const mergedBytes = await mergedPdf.save() as any
       const blob = new Blob([mergedBytes], { type: 'application/pdf' })
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -165,7 +165,7 @@ const BatchPrintClient = ({ documents, facilities, patients }: Props) => {
 
       {/* 操作ボタン */}
       <div className="flex gap-2 mb-4">
-        <Button variant="outline" size="sm" onClick={handleSelectAll}>
+        <Button size="sm" onClick={handleSelectAll}>
           {selectedIds.size === filtered.length && filtered.length > 0 ? '全解除' : '全選択'}
         </Button>
         <Button

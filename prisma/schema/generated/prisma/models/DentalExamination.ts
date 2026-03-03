@@ -361,6 +361,7 @@ export type DentalExaminationWhereInput = {
   Doctor?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   Hygienist?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentListRelationFilter
+  DentalTimerHistory?: Prisma.DentalTimerHistoryListRelationFilter
 }
 
 export type DentalExaminationOrderByWithRelationInput = {
@@ -392,6 +393,7 @@ export type DentalExaminationOrderByWithRelationInput = {
   Doctor?: Prisma.UserOrderByWithRelationInput
   Hygienist?: Prisma.UserOrderByWithRelationInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentOrderByRelationAggregateInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryOrderByRelationAggregateInput
 }
 
 export type DentalExaminationWhereUniqueInput = Prisma.AtLeast<{
@@ -426,6 +428,7 @@ export type DentalExaminationWhereUniqueInput = Prisma.AtLeast<{
   Doctor?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   Hygienist?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentListRelationFilter
+  DentalTimerHistory?: Prisma.DentalTimerHistoryListRelationFilter
 }, "id">
 
 export type DentalExaminationOrderByWithAggregationInput = {
@@ -512,6 +515,7 @@ export type DentalExaminationCreateInput = {
   Doctor?: Prisma.UserCreateNestedOneWithoutDentalExaminationDoctorInput
   Hygienist?: Prisma.UserCreateNestedOneWithoutDentalExaminationHygienistInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentCreateNestedManyWithoutDentalExaminationInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryCreateNestedManyWithoutDentalExaminationInput
 }
 
 export type DentalExaminationUncheckedCreateInput = {
@@ -539,6 +543,7 @@ export type DentalExaminationUncheckedCreateInput = {
   doctorId?: number | null
   hygienistId?: number | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedCreateNestedManyWithoutDentalExaminationInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedCreateNestedManyWithoutDentalExaminationInput
 }
 
 export type DentalExaminationUpdateInput = {
@@ -565,6 +570,7 @@ export type DentalExaminationUpdateInput = {
   Doctor?: Prisma.UserUpdateOneWithoutDentalExaminationDoctorNestedInput
   Hygienist?: Prisma.UserUpdateOneWithoutDentalExaminationHygienistNestedInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentUpdateManyWithoutDentalExaminationNestedInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryUpdateManyWithoutDentalExaminationNestedInput
 }
 
 export type DentalExaminationUncheckedUpdateInput = {
@@ -592,6 +598,7 @@ export type DentalExaminationUncheckedUpdateInput = {
   doctorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hygienistId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedUpdateManyWithoutDentalExaminationNestedInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedUpdateManyWithoutDentalExaminationNestedInput
 }
 
 export type DentalExaminationCreateManyInput = {
@@ -850,6 +857,20 @@ export type DentalExaminationUncheckedUpdateManyWithoutDentalVisitPlanNestedInpu
   deleteMany?: Prisma.DentalExaminationScalarWhereInput | Prisma.DentalExaminationScalarWhereInput[]
 }
 
+export type DentalExaminationCreateNestedOneWithoutDentalTimerHistoryInput = {
+  create?: Prisma.XOR<Prisma.DentalExaminationCreateWithoutDentalTimerHistoryInput, Prisma.DentalExaminationUncheckedCreateWithoutDentalTimerHistoryInput>
+  connectOrCreate?: Prisma.DentalExaminationCreateOrConnectWithoutDentalTimerHistoryInput
+  connect?: Prisma.DentalExaminationWhereUniqueInput
+}
+
+export type DentalExaminationUpdateOneRequiredWithoutDentalTimerHistoryNestedInput = {
+  create?: Prisma.XOR<Prisma.DentalExaminationCreateWithoutDentalTimerHistoryInput, Prisma.DentalExaminationUncheckedCreateWithoutDentalTimerHistoryInput>
+  connectOrCreate?: Prisma.DentalExaminationCreateOrConnectWithoutDentalTimerHistoryInput
+  upsert?: Prisma.DentalExaminationUpsertWithoutDentalTimerHistoryInput
+  connect?: Prisma.DentalExaminationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DentalExaminationUpdateToOneWithWhereWithoutDentalTimerHistoryInput, Prisma.DentalExaminationUpdateWithoutDentalTimerHistoryInput>, Prisma.DentalExaminationUncheckedUpdateWithoutDentalTimerHistoryInput>
+}
+
 export type DentalExaminationCreateNestedOneWithoutDentalSavedDocumentInput = {
   create?: Prisma.XOR<Prisma.DentalExaminationCreateWithoutDentalSavedDocumentInput, Prisma.DentalExaminationUncheckedCreateWithoutDentalSavedDocumentInput>
   connectOrCreate?: Prisma.DentalExaminationCreateOrConnectWithoutDentalSavedDocumentInput
@@ -971,6 +992,7 @@ export type DentalExaminationCreateWithoutDentalPatientInput = {
   Doctor?: Prisma.UserCreateNestedOneWithoutDentalExaminationDoctorInput
   Hygienist?: Prisma.UserCreateNestedOneWithoutDentalExaminationHygienistInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentCreateNestedManyWithoutDentalExaminationInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryCreateNestedManyWithoutDentalExaminationInput
 }
 
 export type DentalExaminationUncheckedCreateWithoutDentalPatientInput = {
@@ -997,6 +1019,7 @@ export type DentalExaminationUncheckedCreateWithoutDentalPatientInput = {
   doctorId?: number | null
   hygienistId?: number | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedCreateNestedManyWithoutDentalExaminationInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedCreateNestedManyWithoutDentalExaminationInput
 }
 
 export type DentalExaminationCreateOrConnectWithoutDentalPatientInput = {
@@ -1077,6 +1100,7 @@ export type DentalExaminationCreateWithoutDentalVisitPlanInput = {
   Doctor?: Prisma.UserCreateNestedOneWithoutDentalExaminationDoctorInput
   Hygienist?: Prisma.UserCreateNestedOneWithoutDentalExaminationHygienistInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentCreateNestedManyWithoutDentalExaminationInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryCreateNestedManyWithoutDentalExaminationInput
 }
 
 export type DentalExaminationUncheckedCreateWithoutDentalVisitPlanInput = {
@@ -1103,6 +1127,7 @@ export type DentalExaminationUncheckedCreateWithoutDentalVisitPlanInput = {
   doctorId?: number | null
   hygienistId?: number | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedCreateNestedManyWithoutDentalExaminationInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedCreateNestedManyWithoutDentalExaminationInput
 }
 
 export type DentalExaminationCreateOrConnectWithoutDentalVisitPlanInput = {
@@ -1131,6 +1156,128 @@ export type DentalExaminationUpdateManyWithWhereWithoutDentalVisitPlanInput = {
   data: Prisma.XOR<Prisma.DentalExaminationUpdateManyMutationInput, Prisma.DentalExaminationUncheckedUpdateManyWithoutDentalVisitPlanInput>
 }
 
+export type DentalExaminationCreateWithoutDentalTimerHistoryInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  status?: string
+  vitalBefore?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  vitalAfter?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  treatmentItems?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  procedureItems?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  visitCondition?: string | null
+  oralFindings?: string | null
+  treatment?: string | null
+  nextPlan?: string | null
+  drStartTime?: string | null
+  drEndTime?: string | null
+  dhStartTime?: string | null
+  dhEndTime?: string | null
+  treatmentPerformed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  DentalVisitPlan: Prisma.DentalVisitPlanCreateNestedOneWithoutDentalExaminationInput
+  DentalPatient: Prisma.DentalPatientCreateNestedOneWithoutDentalExaminationInput
+  Doctor?: Prisma.UserCreateNestedOneWithoutDentalExaminationDoctorInput
+  Hygienist?: Prisma.UserCreateNestedOneWithoutDentalExaminationHygienistInput
+  DentalSavedDocument?: Prisma.DentalSavedDocumentCreateNestedManyWithoutDentalExaminationInput
+}
+
+export type DentalExaminationUncheckedCreateWithoutDentalTimerHistoryInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  status?: string
+  vitalBefore?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  vitalAfter?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  treatmentItems?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  procedureItems?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  visitCondition?: string | null
+  oralFindings?: string | null
+  treatment?: string | null
+  nextPlan?: string | null
+  drStartTime?: string | null
+  drEndTime?: string | null
+  dhStartTime?: string | null
+  dhEndTime?: string | null
+  treatmentPerformed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dentalVisitPlanId: number
+  dentalPatientId: number
+  doctorId?: number | null
+  hygienistId?: number | null
+  DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedCreateNestedManyWithoutDentalExaminationInput
+}
+
+export type DentalExaminationCreateOrConnectWithoutDentalTimerHistoryInput = {
+  where: Prisma.DentalExaminationWhereUniqueInput
+  create: Prisma.XOR<Prisma.DentalExaminationCreateWithoutDentalTimerHistoryInput, Prisma.DentalExaminationUncheckedCreateWithoutDentalTimerHistoryInput>
+}
+
+export type DentalExaminationUpsertWithoutDentalTimerHistoryInput = {
+  update: Prisma.XOR<Prisma.DentalExaminationUpdateWithoutDentalTimerHistoryInput, Prisma.DentalExaminationUncheckedUpdateWithoutDentalTimerHistoryInput>
+  create: Prisma.XOR<Prisma.DentalExaminationCreateWithoutDentalTimerHistoryInput, Prisma.DentalExaminationUncheckedCreateWithoutDentalTimerHistoryInput>
+  where?: Prisma.DentalExaminationWhereInput
+}
+
+export type DentalExaminationUpdateToOneWithWhereWithoutDentalTimerHistoryInput = {
+  where?: Prisma.DentalExaminationWhereInput
+  data: Prisma.XOR<Prisma.DentalExaminationUpdateWithoutDentalTimerHistoryInput, Prisma.DentalExaminationUncheckedUpdateWithoutDentalTimerHistoryInput>
+}
+
+export type DentalExaminationUpdateWithoutDentalTimerHistoryInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  vitalBefore?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  vitalAfter?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  treatmentItems?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  procedureItems?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  visitCondition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  oralFindings?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nextPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drStartTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drEndTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dhStartTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dhEndTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPerformed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  DentalVisitPlan?: Prisma.DentalVisitPlanUpdateOneRequiredWithoutDentalExaminationNestedInput
+  DentalPatient?: Prisma.DentalPatientUpdateOneRequiredWithoutDentalExaminationNestedInput
+  Doctor?: Prisma.UserUpdateOneWithoutDentalExaminationDoctorNestedInput
+  Hygienist?: Prisma.UserUpdateOneWithoutDentalExaminationHygienistNestedInput
+  DentalSavedDocument?: Prisma.DentalSavedDocumentUpdateManyWithoutDentalExaminationNestedInput
+}
+
+export type DentalExaminationUncheckedUpdateWithoutDentalTimerHistoryInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  vitalBefore?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  vitalAfter?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  treatmentItems?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  procedureItems?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  visitCondition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  oralFindings?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nextPlan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drStartTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drEndTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dhStartTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dhEndTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatmentPerformed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dentalVisitPlanId?: Prisma.IntFieldUpdateOperationsInput | number
+  dentalPatientId?: Prisma.IntFieldUpdateOperationsInput | number
+  doctorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  hygienistId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedUpdateManyWithoutDentalExaminationNestedInput
+}
+
 export type DentalExaminationCreateWithoutDentalSavedDocumentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
@@ -1154,6 +1301,7 @@ export type DentalExaminationCreateWithoutDentalSavedDocumentInput = {
   DentalPatient: Prisma.DentalPatientCreateNestedOneWithoutDentalExaminationInput
   Doctor?: Prisma.UserCreateNestedOneWithoutDentalExaminationDoctorInput
   Hygienist?: Prisma.UserCreateNestedOneWithoutDentalExaminationHygienistInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryCreateNestedManyWithoutDentalExaminationInput
 }
 
 export type DentalExaminationUncheckedCreateWithoutDentalSavedDocumentInput = {
@@ -1180,6 +1328,7 @@ export type DentalExaminationUncheckedCreateWithoutDentalSavedDocumentInput = {
   dentalPatientId: number
   doctorId?: number | null
   hygienistId?: number | null
+  DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedCreateNestedManyWithoutDentalExaminationInput
 }
 
 export type DentalExaminationCreateOrConnectWithoutDentalSavedDocumentInput = {
@@ -1221,6 +1370,7 @@ export type DentalExaminationUpdateWithoutDentalSavedDocumentInput = {
   DentalPatient?: Prisma.DentalPatientUpdateOneRequiredWithoutDentalExaminationNestedInput
   Doctor?: Prisma.UserUpdateOneWithoutDentalExaminationDoctorNestedInput
   Hygienist?: Prisma.UserUpdateOneWithoutDentalExaminationHygienistNestedInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryUpdateManyWithoutDentalExaminationNestedInput
 }
 
 export type DentalExaminationUncheckedUpdateWithoutDentalSavedDocumentInput = {
@@ -1247,6 +1397,7 @@ export type DentalExaminationUncheckedUpdateWithoutDentalSavedDocumentInput = {
   dentalPatientId?: Prisma.IntFieldUpdateOperationsInput | number
   doctorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hygienistId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedUpdateManyWithoutDentalExaminationNestedInput
 }
 
 export type DentalExaminationCreateWithoutDoctorInput = {
@@ -1272,6 +1423,7 @@ export type DentalExaminationCreateWithoutDoctorInput = {
   DentalPatient: Prisma.DentalPatientCreateNestedOneWithoutDentalExaminationInput
   Hygienist?: Prisma.UserCreateNestedOneWithoutDentalExaminationHygienistInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentCreateNestedManyWithoutDentalExaminationInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryCreateNestedManyWithoutDentalExaminationInput
 }
 
 export type DentalExaminationUncheckedCreateWithoutDoctorInput = {
@@ -1298,6 +1450,7 @@ export type DentalExaminationUncheckedCreateWithoutDoctorInput = {
   dentalPatientId: number
   hygienistId?: number | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedCreateNestedManyWithoutDentalExaminationInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedCreateNestedManyWithoutDentalExaminationInput
 }
 
 export type DentalExaminationCreateOrConnectWithoutDoctorInput = {
@@ -1333,6 +1486,7 @@ export type DentalExaminationCreateWithoutHygienistInput = {
   DentalPatient: Prisma.DentalPatientCreateNestedOneWithoutDentalExaminationInput
   Doctor?: Prisma.UserCreateNestedOneWithoutDentalExaminationDoctorInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentCreateNestedManyWithoutDentalExaminationInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryCreateNestedManyWithoutDentalExaminationInput
 }
 
 export type DentalExaminationUncheckedCreateWithoutHygienistInput = {
@@ -1359,6 +1513,7 @@ export type DentalExaminationUncheckedCreateWithoutHygienistInput = {
   dentalPatientId: number
   doctorId?: number | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedCreateNestedManyWithoutDentalExaminationInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedCreateNestedManyWithoutDentalExaminationInput
 }
 
 export type DentalExaminationCreateOrConnectWithoutHygienistInput = {
@@ -1451,6 +1606,7 @@ export type DentalExaminationUpdateWithoutDentalPatientInput = {
   Doctor?: Prisma.UserUpdateOneWithoutDentalExaminationDoctorNestedInput
   Hygienist?: Prisma.UserUpdateOneWithoutDentalExaminationHygienistNestedInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentUpdateManyWithoutDentalExaminationNestedInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryUpdateManyWithoutDentalExaminationNestedInput
 }
 
 export type DentalExaminationUncheckedUpdateWithoutDentalPatientInput = {
@@ -1477,6 +1633,7 @@ export type DentalExaminationUncheckedUpdateWithoutDentalPatientInput = {
   doctorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hygienistId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedUpdateManyWithoutDentalExaminationNestedInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedUpdateManyWithoutDentalExaminationNestedInput
 }
 
 export type DentalExaminationUncheckedUpdateManyWithoutDentalPatientInput = {
@@ -1552,6 +1709,7 @@ export type DentalExaminationUpdateWithoutDentalVisitPlanInput = {
   Doctor?: Prisma.UserUpdateOneWithoutDentalExaminationDoctorNestedInput
   Hygienist?: Prisma.UserUpdateOneWithoutDentalExaminationHygienistNestedInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentUpdateManyWithoutDentalExaminationNestedInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryUpdateManyWithoutDentalExaminationNestedInput
 }
 
 export type DentalExaminationUncheckedUpdateWithoutDentalVisitPlanInput = {
@@ -1578,6 +1736,7 @@ export type DentalExaminationUncheckedUpdateWithoutDentalVisitPlanInput = {
   doctorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   hygienistId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedUpdateManyWithoutDentalExaminationNestedInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedUpdateManyWithoutDentalExaminationNestedInput
 }
 
 export type DentalExaminationUncheckedUpdateManyWithoutDentalVisitPlanInput = {
@@ -1678,6 +1837,7 @@ export type DentalExaminationUpdateWithoutDoctorInput = {
   DentalPatient?: Prisma.DentalPatientUpdateOneRequiredWithoutDentalExaminationNestedInput
   Hygienist?: Prisma.UserUpdateOneWithoutDentalExaminationHygienistNestedInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentUpdateManyWithoutDentalExaminationNestedInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryUpdateManyWithoutDentalExaminationNestedInput
 }
 
 export type DentalExaminationUncheckedUpdateWithoutDoctorInput = {
@@ -1704,6 +1864,7 @@ export type DentalExaminationUncheckedUpdateWithoutDoctorInput = {
   dentalPatientId?: Prisma.IntFieldUpdateOperationsInput | number
   hygienistId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedUpdateManyWithoutDentalExaminationNestedInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedUpdateManyWithoutDentalExaminationNestedInput
 }
 
 export type DentalExaminationUncheckedUpdateManyWithoutDoctorInput = {
@@ -1754,6 +1915,7 @@ export type DentalExaminationUpdateWithoutHygienistInput = {
   DentalPatient?: Prisma.DentalPatientUpdateOneRequiredWithoutDentalExaminationNestedInput
   Doctor?: Prisma.UserUpdateOneWithoutDentalExaminationDoctorNestedInput
   DentalSavedDocument?: Prisma.DentalSavedDocumentUpdateManyWithoutDentalExaminationNestedInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryUpdateManyWithoutDentalExaminationNestedInput
 }
 
 export type DentalExaminationUncheckedUpdateWithoutHygienistInput = {
@@ -1780,6 +1942,7 @@ export type DentalExaminationUncheckedUpdateWithoutHygienistInput = {
   dentalPatientId?: Prisma.IntFieldUpdateOperationsInput | number
   doctorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedUpdateManyWithoutDentalExaminationNestedInput
+  DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedUpdateManyWithoutDentalExaminationNestedInput
 }
 
 export type DentalExaminationUncheckedUpdateManyWithoutHygienistInput = {
@@ -1814,10 +1977,12 @@ export type DentalExaminationUncheckedUpdateManyWithoutHygienistInput = {
 
 export type DentalExaminationCountOutputType = {
   DentalSavedDocument: number
+  DentalTimerHistory: number
 }
 
 export type DentalExaminationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   DentalSavedDocument?: boolean | DentalExaminationCountOutputTypeCountDentalSavedDocumentArgs
+  DentalTimerHistory?: boolean | DentalExaminationCountOutputTypeCountDentalTimerHistoryArgs
 }
 
 /**
@@ -1835,6 +2000,13 @@ export type DentalExaminationCountOutputTypeDefaultArgs<ExtArgs extends runtime.
  */
 export type DentalExaminationCountOutputTypeCountDentalSavedDocumentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.DentalSavedDocumentWhereInput
+}
+
+/**
+ * DentalExaminationCountOutputType without action
+ */
+export type DentalExaminationCountOutputTypeCountDentalTimerHistoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DentalTimerHistoryWhereInput
 }
 
 
@@ -1867,6 +2039,7 @@ export type DentalExaminationSelect<ExtArgs extends runtime.Types.Extensions.Int
   Doctor?: boolean | Prisma.DentalExamination$DoctorArgs<ExtArgs>
   Hygienist?: boolean | Prisma.DentalExamination$HygienistArgs<ExtArgs>
   DentalSavedDocument?: boolean | Prisma.DentalExamination$DentalSavedDocumentArgs<ExtArgs>
+  DentalTimerHistory?: boolean | Prisma.DentalExamination$DentalTimerHistoryArgs<ExtArgs>
   _count?: boolean | Prisma.DentalExaminationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["dentalExamination"]>
 
@@ -1963,6 +2136,7 @@ export type DentalExaminationInclude<ExtArgs extends runtime.Types.Extensions.In
   Doctor?: boolean | Prisma.DentalExamination$DoctorArgs<ExtArgs>
   Hygienist?: boolean | Prisma.DentalExamination$HygienistArgs<ExtArgs>
   DentalSavedDocument?: boolean | Prisma.DentalExamination$DentalSavedDocumentArgs<ExtArgs>
+  DentalTimerHistory?: boolean | Prisma.DentalExamination$DentalTimerHistoryArgs<ExtArgs>
   _count?: boolean | Prisma.DentalExaminationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DentalExaminationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1986,6 +2160,7 @@ export type $DentalExaminationPayload<ExtArgs extends runtime.Types.Extensions.I
     Doctor: Prisma.$UserPayload<ExtArgs> | null
     Hygienist: Prisma.$UserPayload<ExtArgs> | null
     DentalSavedDocument: Prisma.$DentalSavedDocumentPayload<ExtArgs>[]
+    DentalTimerHistory: Prisma.$DentalTimerHistoryPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -2410,6 +2585,7 @@ export interface Prisma__DentalExaminationClient<T, Null = never, ExtArgs extend
   Doctor<T extends Prisma.DentalExamination$DoctorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DentalExamination$DoctorArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   Hygienist<T extends Prisma.DentalExamination$HygienistArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DentalExamination$HygienistArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   DentalSavedDocument<T extends Prisma.DentalExamination$DentalSavedDocumentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DentalExamination$DentalSavedDocumentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DentalSavedDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  DentalTimerHistory<T extends Prisma.DentalExamination$DentalTimerHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DentalExamination$DentalTimerHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DentalTimerHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2917,6 +3093,30 @@ export type DentalExamination$DentalSavedDocumentArgs<ExtArgs extends runtime.Ty
   take?: number
   skip?: number
   distinct?: Prisma.DentalSavedDocumentScalarFieldEnum | Prisma.DentalSavedDocumentScalarFieldEnum[]
+}
+
+/**
+ * DentalExamination.DentalTimerHistory
+ */
+export type DentalExamination$DentalTimerHistoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DentalTimerHistory
+   */
+  select?: Prisma.DentalTimerHistorySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DentalTimerHistory
+   */
+  omit?: Prisma.DentalTimerHistoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DentalTimerHistoryInclude<ExtArgs> | null
+  where?: Prisma.DentalTimerHistoryWhereInput
+  orderBy?: Prisma.DentalTimerHistoryOrderByWithRelationInput | Prisma.DentalTimerHistoryOrderByWithRelationInput[]
+  cursor?: Prisma.DentalTimerHistoryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DentalTimerHistoryScalarFieldEnum | Prisma.DentalTimerHistoryScalarFieldEnum[]
 }
 
 /**

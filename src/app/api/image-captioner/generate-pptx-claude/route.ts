@@ -111,10 +111,7 @@ export async function POST(request: NextRequest) {
     const completedImages = images.filter(img => img.generatedImageUrl)
 
     if (completedImages.length === 0) {
-      return NextResponse.json(
-        {success: false, error: '生成済みの画像がありません。先に画像を生成してください。'},
-        {status: 400}
-      )
+      return NextResponse.json({success: false, error: '生成済みの画像がありません。先に画像を生成してください。'}, {status: 400})
     }
 
     // ベースURLを取得
@@ -397,7 +394,7 @@ export async function POST(request: NextRequest) {
 
     const fileName = `${structure.presentationTitle.replace(/[^a-zA-Z0-9\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g, '_')}-claude-${new Date().toISOString().split('T')[0]}.pptx`
 
-    return new NextResponse(pptxBuffer, {
+    return new NextResponse(pptxBuffer as any, {
       status: 200,
       headers: {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
@@ -412,4 +409,3 @@ export async function POST(request: NextRequest) {
     )
   }
 }
-

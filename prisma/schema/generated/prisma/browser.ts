@@ -133,6 +133,11 @@ export type DentalVisitPlan = Prisma.DentalVisitPlanModel
  */
 export type DentalExamination = Prisma.DentalExaminationModel
 /**
+ * Model DentalTimerHistory
+ * 
+ */
+export type DentalTimerHistory = Prisma.DentalTimerHistoryModel
+/**
  * Model DentalScoringHistory
  * 
  */

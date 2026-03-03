@@ -1,14 +1,15 @@
 'use client'
 
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 
-import {Plus, Trash2, Save} from 'lucide-react'
-import {Button} from '@cm/shadcn/ui/button'
-import {Input} from '@cm/shadcn/ui/input'
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@cm/shadcn/ui/select'
-import {getAllIngredients, getProductIngredients, saveProductIngredients} from '../../actions/ingredientActions'
+import { Plus, Trash2, Save } from 'lucide-react'
 
-import {R_Stack} from '@cm/components/styles/common-components/common-components'
+import { Input } from '@cm/shadcn/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@cm/shadcn/ui/select'
+import { getAllIngredients, getProductIngredients, saveProductIngredients } from '../../actions/ingredientActions'
+
+import { R_Stack } from '@cm/components/styles/common-components/common-components'
+import { Button } from '@cm/components/styles/common-components/Button'
 
 type IngredientModalProps = {
   productId: number
@@ -16,7 +17,7 @@ type IngredientModalProps = {
   onUpdate: () => void
 }
 
-export const IngredientModal: React.FC<IngredientModalProps> = ({productId, onClose, onUpdate}) => {
+export const IngredientModal: React.FC<IngredientModalProps> = ({ productId, onClose, onUpdate }) => {
   const [ingredients, setIngredients] = useState<IngredientType[]>([])
   const [productIngredients, setProductIngredients] = useState<ProductIngredientType[]>([])
   const [loading, setLoading] = useState(true)
@@ -135,7 +136,7 @@ export const IngredientModal: React.FC<IngredientModalProps> = ({productId, onCl
                 className="w-24"
               />
 
-              <Button variant="ghost" size="icon" onClick={() => handleRemoveIngredient(index)} className="text-red-500">
+              <Button onClick={() => handleRemoveIngredient(index)} className="text-red-500">
                 <Trash2 size={18} />
               </Button>
             </div>
@@ -144,15 +145,15 @@ export const IngredientModal: React.FC<IngredientModalProps> = ({productId, onCl
       </div>
 
       <R_Stack>
-        <Button variant="outline" onClick={handleAddIngredient}>
+        <Button onClick={handleAddIngredient}>
           <Plus size={16} className="mr-1" /> 材料を追加
         </Button>
 
         <R_Stack>
-          <Button variant="outline" onClick={onClose}>
+          <Button onClick={onClose}>
             キャンセル
           </Button>
-          <Button onClick={handleSave} variant="default">
+          <Button onClick={handleSave} >
             <Save size={16} className="mr-1" /> 保存
           </Button>
         </R_Stack>

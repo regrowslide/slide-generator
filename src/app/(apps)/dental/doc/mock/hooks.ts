@@ -129,32 +129,35 @@ export const useExaminationManager = () => {
     [examinations]
   )
 
-  const addExamination = useCallback((examination: Pick<Examination, 'visitPlanId' | 'patientId' | 'doctorId' | 'hygienistId'>) => {
-    setExaminations(prev => {
-      const maxSortOrder = Math.max(0, ...prev.filter(e => e.visitPlanId === examination.visitPlanId).map(e => e.sortOrder))
-      return [
-        ...prev,
-        {
-          ...examination,
-          id: nextId(prev),
-          sortOrder: maxSortOrder + 1,
-          status: EXAMINATION_STATUS.WAITING,
-          vitalBefore: null,
-          vitalAfter: null,
-          treatmentItems: [],
-          procedureItems: {},
-          visitCondition: '',
-          oralFindings: '',
-          treatment: '',
-          nextPlan: '',
-          drStartTime: null,
-          drEndTime: null,
-          dhStartTime: null,
-          dhEndTime: null,
-        },
-      ]
-    })
-  }, [])
+  const addExamination = useCallback(
+    (examination: Pick<Examination, 'visitPlanId' | 'patientId' | 'doctorId' | 'hygienistId'>) => {
+      setExaminations(prev => {
+        const maxSortOrder = Math.max(0, ...prev.filter(e => e.visitPlanId === examination.visitPlanId).map(e => e.sortOrder))
+        return [
+          ...prev,
+          {
+            ...examination,
+            id: nextId(prev),
+            sortOrder: maxSortOrder + 1,
+            status: EXAMINATION_STATUS.WAITING,
+            vitalBefore: null,
+            vitalAfter: null,
+            treatmentItems: [],
+            procedureItems: {},
+            visitCondition: '',
+            oralFindings: '',
+            treatment: '',
+            nextPlan: '',
+            drStartTime: null,
+            drEndTime: null,
+            dhStartTime: null,
+            dhEndTime: null,
+          },
+        ]
+      })
+    },
+    []
+  )
 
   const updateExamination = useCallback((id: number, data: Partial<Examination>) => {
     setExaminations(prev => prev.map(e => (e.id === id ? {...e, ...data} : e)))
@@ -239,7 +242,10 @@ export const useScoringHistoryManager = () => {
     setScoringHistory(prev => [...prev, {...record, id: nextId(prev)}])
   }, [])
 
-  const getHistoryByPatient = useCallback((patientId: number) => scoringHistory.filter(h => h.patientId === patientId), [scoringHistory])
+  const getHistoryByPatient = useCallback(
+    (patientId: number) => scoringHistory.filter(h => h.patientId === patientId),
+    [scoringHistory]
+  )
 
   return {scoringHistory, addScoringRecord, getHistoryByPatient}
 }
@@ -251,10 +257,7 @@ export const useDocumentManager = () => {
   const [documents, setDocuments] = useState(INITIAL_SAVED_DOCUMENTS)
 
   const addDocument = useCallback((doc: Omit<SavedDocument, 'id' | 'createdAt'>) => {
-    setDocuments(prev => [
-      ...prev,
-      {...doc, id: nextId(prev), createdAt: formatDate(new Date(2026, 0, 18))},
-    ])
+    setDocuments(prev => [...prev, {...doc, id: nextId(prev), createdAt: formatDate(new Date(2026, 0, 18))}])
   }, [])
 
   const getDocumentsByPatient = useCallback((patientId: number) => documents.filter(d => d.patientId === patientId), [documents])
@@ -277,7 +280,7 @@ export const useDocumentManager = () => {
     }
 
     const mergedBytes = await mergedPdf.save()
-    const blob = new Blob([mergedBytes], {type: 'application/pdf'})
+    const blob = new Blob([mergedBytes as any], {type: 'application/pdf'})
     const downloadUrl = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = downloadUrl

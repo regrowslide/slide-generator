@@ -156,6 +156,62 @@ export const formatDuration = (seconds: number): string => {
 /** 配列内の最大IDから次のIDを算出 */
 export const nextId = (items: Array<{id: number}>): number => Math.max(0, ...items.map(i => i.id)) + 1
 
+/**
+ * 口腔機能精密検査の自動該当判定
+ * 検査値から各下位症状の該当/非該当を自動判定する
+ */
+export const evaluateOralFunctionApplicability = (record: OralFunctionRecord): Partial<OralFunctionRecord> => {
+  const result: Partial<OralFunctionRecord> = {}
+
+  // (1) 口腔衛生: 舌苔 >= 50%
+  const tongueCoating = parseFloat(record.tongueCoatingPercent)
+  if (!isNaN(tongueCoating)) {
+    result.tongueCoatingApplicable = tongueCoating >= 50
+  }
+
+  // (2) 口腔乾燥: 湿潤度 < 27 or 唾液量 <= 2
+  const moisture = parseFloat(record.oralMoistureValue)
+  const saliva = parseFloat(record.salivaAmount)
+  if (!isNaN(moisture) || !isNaN(saliva)) {
+    result.oralDrynessApplicable = (!isNaN(moisture) && moisture < 27) || (!isNaN(saliva) && saliva <= 2)
+  }
+
+  // (3) 咬合力低下: 残存歯 < 20本
+  const remainingTeeth = parseInt(record.remainingTeeth)
+  if (!isNaN(remainingTeeth)) {
+    result.biteForceApplicable = remainingTeeth < 20
+  }
+
+  // (4) 舌口唇運動機能低下: パ/タ/カいずれか < 6回/秒
+  const pa = parseFloat(record.oralDiadochoPa)
+  const ta = parseFloat(record.oralDiadochoTa)
+  const ka = parseFloat(record.oralDiadochoKa)
+  if (!isNaN(pa) || !isNaN(ta) || !isNaN(ka)) {
+    result.oralMotorApplicable =
+      (!isNaN(pa) && pa < 6) || (!isNaN(ta) && ta < 6) || (!isNaN(ka) && ka < 6)
+  }
+
+  // (5) 低舌圧: 舌圧 < 30kPa
+  const tonguePressure = parseFloat(record.tonguePressureKPa)
+  if (!isNaN(tonguePressure)) {
+    result.tonguePressureApplicable = tonguePressure < 30
+  }
+
+  // (6) 咀嚼機能低下: 咀嚼能力 < 100mg/dL
+  const masticatory = parseFloat(record.masticatoryAbilityMgDl)
+  if (!isNaN(masticatory)) {
+    result.masticatoryApplicable = masticatory < 100
+  }
+
+  // (7) 嚥下機能低下: EAT-10 >= 3点
+  const eat10 = parseFloat(record.swallowingEAT10Score)
+  if (!isNaN(eat10)) {
+    result.swallowingApplicable = eat10 >= 3
+  }
+
+  return result
+}
+
 /** 口腔機能精密検査の該当項目数を算出 */
 export const countApplicableItems = (record: OralFunctionRecord | null | undefined): number =>
   [

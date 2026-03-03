@@ -68,3 +68,12 @@ export const updateDentalSavedDocument = async (
 export const deleteDentalSavedDocument = async (id: number) => {
   return await prisma.dentalSavedDocument.delete({where: {id}})
 }
+
+// 診察に紐づく保存済みtemplateIdセットを取得
+export const getSavedTemplateIds = async (examinationId: number): Promise<string[]> => {
+  const docs = await prisma.dentalSavedDocument.findMany({
+    where: {dentalExaminationId: examinationId},
+    select: {templateId: true},
+  })
+  return [...new Set(docs.map(d => d.templateId))]
+}

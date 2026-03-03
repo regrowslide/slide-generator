@@ -5,20 +5,15 @@ import {
   UtensilsCrossed,
   ShoppingBasket,
   BookOpen,
-  BarChart3,
-  TrendingUp,
   Plus,
   Trash2,
   Edit3,
   Calculator,
-  DollarSign,
-  Package,
   type LucideIcon,
 } from 'lucide-react'
 import {
   SplashScreen,
   InfoSidebar,
-  Modal,
   GuidanceOverlay,
   GuidanceStartButton,
   MockHeader,
@@ -27,7 +22,6 @@ import {
   MockHeaderInfoButton,
   ResetButton,
   usePersistedState,
-  useEditModal,
   generateId,
   resetPersistedData,
   type Feature,
@@ -36,6 +30,7 @@ import {
   type OperationStep,
   type GuidanceStep,
 } from '../_components'
+import useModal from '@cm/components/utils/modal/useModal'
 
 // ==========================================
 // 機能説明データ
@@ -55,16 +50,10 @@ const FEATURES: Feature[] = [
     benefit: '原価率の可視化',
   },
   {
-    icon: BarChart3,
-    title: '販売計画シミュレーション',
-    description: '販売数を変更すると材料の月間調達量が変わり、ロット単価が自動で切り替わる連動を体感。',
-    benefit: '仕入れ量と原価の連動把握',
-  },
-  {
-    icon: TrendingUp,
-    title: '損益シミュレーション',
-    description: '固定費と売上から営業利益を自動計算。黒字/赤字判定で経営判断をサポート。',
-    benefit: '採算判定の即時化',
+    icon: Calculator,
+    title: 'メニュー別シミュレーション',
+    description: 'メニューごとに週間販売目標を設定。材料の消費量・発注コストから損益をリアルタイムに算出。',
+    benefit: 'メニュー単位の採算把握',
   },
 ]
 
@@ -79,29 +68,26 @@ const CHALLENGES = [
   '根拠のない値付けで利益が出ているか不明',
   '仕入れ量による単価変動を考慮できていない',
   '原価率の把握に時間がかかる',
-  '固定費を含めた採算判定ができていない',
-  'メニュー変更時の影響が見えない',
+  'メニュー単位の採算が見えない',
 ]
 
 const OVERVIEW: OverviewInfo = {
-  description: '居酒屋の値付けを「なんとなく」から「データに基づく判断」に変えるシミュレーターです。刺身・焼き物・ドリンクまで、材料のロット単価・販売数・固定費を連動させ、元がとれるかを即座に判定します。',
+  description: '居酒屋の値付けを「なんとなく」から「データに基づく判断」に変えるシミュレーターです。メニューごとに材料の発注コストと売上を比較し、元がとれるかを即座に判定します。',
   automationPoints: [
-    '販売数→材料調達量→ロット単価の自動連動',
-    'メニューごとの原価・原価率のリアルタイム計算',
-    '月次損益の自動算出と黒字/赤字判定',
+    '販売目標→材料消費量→ロット単価の自動連動',
+    'メニューごとの発注コスト・損益のリアルタイム計算',
   ],
   userBenefits: [
     '根拠のある値付けで利益を確保',
     '仕入れ量とロット単価の関係を直感的に理解',
-    '固定費を含めた正確な採算判定が可能',
+    'メニュー単位で採算を把握できる',
   ],
 }
 
 const OPERATION_STEPS: OperationStep[] = [
   { step: 1, action: '材料を登録', detail: '材料名・単位・ロット価格ティアを設定' },
   { step: 2, action: 'メニューを設計', detail: '材料を選択し提供価格を設定。原価率を確認' },
-  { step: 3, action: '販売計画を立てる', detail: '週間販売数を入力し月間調達量・ロット単価の変動を確認' },
-  { step: 4, action: '損益を確認', detail: '固定費を入力し営業利益・黒字/赤字を判定' },
+  { step: 3, action: 'シミュレーション', detail: '週間販売目標を設定し、材料の発注コストと損益を確認' },
 ]
 
 // ==========================================
@@ -138,17 +124,7 @@ interface SalesPlan {
   weeklyQuantity: number
 }
 
-interface ShopSettings {
-  fixedCosts: {
-    rent: number
-    labor: number
-    utilities: number
-    other: number
-  }
-  targetCostRate: number
-}
-
-type TabId = 'ingredients' | 'menu' | 'sales' | 'pnl'
+type TabId = 'ingredients' | 'menu' | 'simulation'
 
 // ==========================================
 // 定数
@@ -157,15 +133,13 @@ type TabId = 'ingredients' | 'menu' | 'sales' | 'pnl'
 const TABS: { id: TabId; label: string; icon: LucideIcon }[] = [
   { id: 'ingredients', label: '材料マスタ', icon: ShoppingBasket },
   { id: 'menu', label: 'メニュー設計', icon: BookOpen },
-  { id: 'sales', label: '販売計画', icon: BarChart3 },
-  { id: 'pnl', label: '損益', icon: TrendingUp },
+  { id: 'simulation', label: 'シミュレーション', icon: Calculator },
 ]
 
 const STORAGE_KEYS = {
   ingredients: 'mock-inshoku-ingredients',
   menuItems: 'mock-inshoku-menu-items',
   salesPlans: 'mock-inshoku-sales-plans',
-  shopSettings: 'mock-inshoku-shop-settings',
 }
 
 const CATEGORIES = ['刺身・海鮮', '焼き物', '揚げ物', 'サラダ・前菜', '〆・ご飯', '一品・おつまみ', 'ドリンク']
@@ -217,62 +191,96 @@ const INITIAL_INGREDIENTS: Ingredient[] = [
 
 const INITIAL_MENU_ITEMS: MenuItem[] = [
   // 刺身・海鮮
-  { id: 'MNU01', name: '刺身盛り合わせ（3点）', price: 1280, category: '刺身・海鮮', ingredients: [
-    { ingredientId: 'ING05', quantity: 60 }, { ingredientId: 'ING06', quantity: 50 }, { ingredientId: 'ING10', quantity: 40 }, { ingredientId: 'ING12', quantity: 30 },
-  ]},
-  { id: 'MNU02', name: 'サーモンユッケ', price: 680, category: '刺身・海鮮', ingredients: [
-    { ingredientId: 'ING05', quantity: 80 }, { ingredientId: 'ING20', quantity: 1 }, { ingredientId: 'ING13', quantity: 10 }, { ingredientId: 'ING25', quantity: 10 },
-  ]},
-  { id: 'MNU03', name: 'タコわさび', price: 480, category: '刺身・海鮮', ingredients: [
-    { ingredientId: 'ING10', quantity: 60 }, { ingredientId: 'ING25', quantity: 5 },
-  ]},
+  {
+    id: 'MNU01', name: '刺身盛り合わせ（3点）', price: 1280, category: '刺身・海鮮', ingredients: [
+      { ingredientId: 'ING05', quantity: 60 }, { ingredientId: 'ING06', quantity: 50 }, { ingredientId: 'ING10', quantity: 40 }, { ingredientId: 'ING12', quantity: 30 },
+    ]
+  },
+  {
+    id: 'MNU02', name: 'サーモンユッケ', price: 680, category: '刺身・海鮮', ingredients: [
+      { ingredientId: 'ING05', quantity: 80 }, { ingredientId: 'ING20', quantity: 1 }, { ingredientId: 'ING13', quantity: 10 }, { ingredientId: 'ING25', quantity: 10 },
+    ]
+  },
+  {
+    id: 'MNU03', name: 'タコわさび', price: 480, category: '刺身・海鮮', ingredients: [
+      { ingredientId: 'ING10', quantity: 60 }, { ingredientId: 'ING25', quantity: 5 },
+    ]
+  },
   // 焼き物
-  { id: 'MNU04', name: '手羽先唐揚げ（5本）', price: 580, category: '焼き物', ingredients: [
-    { ingredientId: 'ING04', quantity: 5 }, { ingredientId: 'ING22', quantity: 15 }, { ingredientId: 'ING15', quantity: 5 },
-  ]},
-  { id: 'MNU05', name: '豚バラ串焼き（3本）', price: 480, category: '焼き物', ingredients: [
-    { ingredientId: 'ING02', quantity: 120 }, { ingredientId: 'ING13', quantity: 20 }, { ingredientId: 'ING25', quantity: 5 },
-  ]},
-  { id: 'MNU06', name: 'ホタテバター焼き', price: 780, category: '焼き物', ingredients: [
-    { ingredientId: 'ING09', quantity: 3 }, { ingredientId: 'ING25', quantity: 5 }, { ingredientId: 'ING13', quantity: 10 },
-  ]},
+  {
+    id: 'MNU04', name: '手羽先唐揚げ（5本）', price: 580, category: '焼き物', ingredients: [
+      { ingredientId: 'ING04', quantity: 5 }, { ingredientId: 'ING22', quantity: 15 }, { ingredientId: 'ING15', quantity: 5 },
+    ]
+  },
+  {
+    id: 'MNU05', name: '豚バラ串焼き（3本）', price: 480, category: '焼き物', ingredients: [
+      { ingredientId: 'ING02', quantity: 120 }, { ingredientId: 'ING13', quantity: 20 }, { ingredientId: 'ING25', quantity: 5 },
+    ]
+  },
+  {
+    id: 'MNU06', name: 'ホタテバター焼き', price: 780, category: '焼き物', ingredients: [
+      { ingredientId: 'ING09', quantity: 3 }, { ingredientId: 'ING25', quantity: 5 }, { ingredientId: 'ING13', quantity: 10 },
+    ]
+  },
   // 揚げ物
-  { id: 'MNU07', name: '鶏の唐揚げ', price: 580, category: '揚げ物', ingredients: [
-    { ingredientId: 'ING01', quantity: 150 }, { ingredientId: 'ING22', quantity: 20 }, { ingredientId: 'ING16', quantity: 5 }, { ingredientId: 'ING15', quantity: 3 }, { ingredientId: 'ING17', quantity: 20 },
-  ]},
-  { id: 'MNU08', name: 'エビフライ（3尾）', price: 780, category: '揚げ物', ingredients: [
-    { ingredientId: 'ING08', quantity: 90 }, { ingredientId: 'ING22', quantity: 15 }, { ingredientId: 'ING20', quantity: 1 }, { ingredientId: 'ING23', quantity: 20 }, { ingredientId: 'ING11', quantity: 30 },
-  ]},
+  {
+    id: 'MNU07', name: '鶏の唐揚げ', price: 580, category: '揚げ物', ingredients: [
+      { ingredientId: 'ING01', quantity: 150 }, { ingredientId: 'ING22', quantity: 20 }, { ingredientId: 'ING16', quantity: 5 }, { ingredientId: 'ING15', quantity: 3 }, { ingredientId: 'ING17', quantity: 20 },
+    ]
+  },
+  {
+    id: 'MNU08', name: 'エビフライ（3尾）', price: 780, category: '揚げ物', ingredients: [
+      { ingredientId: 'ING08', quantity: 90 }, { ingredientId: 'ING22', quantity: 15 }, { ingredientId: 'ING20', quantity: 1 }, { ingredientId: 'ING23', quantity: 20 }, { ingredientId: 'ING11', quantity: 30 },
+    ]
+  },
   // サラダ・前菜
-  { id: 'MNU09', name: 'シーザーサラダ', price: 580, category: 'サラダ・前菜', ingredients: [
-    { ingredientId: 'ING17', quantity: 80 }, { ingredientId: 'ING18', quantity: 0.5 }, { ingredientId: 'ING20', quantity: 1 }, { ingredientId: 'ING27', quantity: 15 },
-  ]},
-  { id: 'MNU10', name: '冷奴', price: 380, category: 'サラダ・前菜', ingredients: [
-    { ingredientId: 'ING21', quantity: 1 }, { ingredientId: 'ING16', quantity: 3 }, { ingredientId: 'ING13', quantity: 5 }, { ingredientId: 'ING25', quantity: 10 },
-  ]},
-  { id: 'MNU11', name: 'もつ煮込み', price: 480, category: '一品・おつまみ', ingredients: [
-    { ingredientId: 'ING03', quantity: 100 }, { ingredientId: 'ING12', quantity: 40 }, { ingredientId: 'ING14', quantity: 30 }, { ingredientId: 'ING24', quantity: 20 }, { ingredientId: 'ING21', quantity: 0.5 }, { ingredientId: 'ING13', quantity: 10 },
-  ]},
-  { id: 'MNU12', name: 'だし巻き卵', price: 480, category: '一品・おつまみ', ingredients: [
-    { ingredientId: 'ING20', quantity: 3 }, { ingredientId: 'ING25', quantity: 5 }, { ingredientId: 'ING12', quantity: 20 },
-  ]},
+  {
+    id: 'MNU09', name: 'シーザーサラダ', price: 580, category: 'サラダ・前菜', ingredients: [
+      { ingredientId: 'ING17', quantity: 80 }, { ingredientId: 'ING18', quantity: 0.5 }, { ingredientId: 'ING20', quantity: 1 }, { ingredientId: 'ING27', quantity: 15 },
+    ]
+  },
+  {
+    id: 'MNU10', name: '冷奴', price: 380, category: 'サラダ・前菜', ingredients: [
+      { ingredientId: 'ING21', quantity: 1 }, { ingredientId: 'ING16', quantity: 3 }, { ingredientId: 'ING13', quantity: 5 }, { ingredientId: 'ING25', quantity: 10 },
+    ]
+  },
+  {
+    id: 'MNU11', name: 'もつ煮込み', price: 480, category: '一品・おつまみ', ingredients: [
+      { ingredientId: 'ING03', quantity: 100 }, { ingredientId: 'ING12', quantity: 40 }, { ingredientId: 'ING14', quantity: 30 }, { ingredientId: 'ING24', quantity: 20 }, { ingredientId: 'ING21', quantity: 0.5 }, { ingredientId: 'ING13', quantity: 10 },
+    ]
+  },
+  {
+    id: 'MNU12', name: 'だし巻き卵', price: 480, category: '一品・おつまみ', ingredients: [
+      { ingredientId: 'ING20', quantity: 3 }, { ingredientId: 'ING25', quantity: 5 }, { ingredientId: 'ING12', quantity: 20 },
+    ]
+  },
   // 〆・ご飯
-  { id: 'MNU13', name: '焼きおにぎり（2個）', price: 380, category: '〆・ご飯', ingredients: [
-    { ingredientId: 'ING19', quantity: 200 }, { ingredientId: 'ING25', quantity: 10 },
-  ]},
-  { id: 'MNU14', name: '海鮮丼', price: 980, category: '〆・ご飯', ingredients: [
-    { ingredientId: 'ING05', quantity: 50 }, { ingredientId: 'ING06', quantity: 40 }, { ingredientId: 'ING08', quantity: 30 }, { ingredientId: 'ING20', quantity: 1 }, { ingredientId: 'ING19', quantity: 200 }, { ingredientId: 'ING25', quantity: 10 },
-  ]},
+  {
+    id: 'MNU13', name: '焼きおにぎり（2個）', price: 380, category: '〆・ご飯', ingredients: [
+      { ingredientId: 'ING19', quantity: 200 }, { ingredientId: 'ING25', quantity: 10 },
+    ]
+  },
+  {
+    id: 'MNU14', name: '海鮮丼', price: 980, category: '〆・ご飯', ingredients: [
+      { ingredientId: 'ING05', quantity: 50 }, { ingredientId: 'ING06', quantity: 40 }, { ingredientId: 'ING08', quantity: 30 }, { ingredientId: 'ING20', quantity: 1 }, { ingredientId: 'ING19', quantity: 200 }, { ingredientId: 'ING25', quantity: 10 },
+    ]
+  },
   // ドリンク
-  { id: 'MNU15', name: '生ビール（中）', price: 550, category: 'ドリンク', ingredients: [
-    { ingredientId: 'ING28', quantity: 350 },
-  ]},
-  { id: 'MNU16', name: 'ハイボール', price: 450, category: 'ドリンク', ingredients: [
-    { ingredientId: 'ING29', quantity: 45 }, { ingredientId: 'ING31', quantity: 200 }, { ingredientId: 'ING32', quantity: 0.25 },
-  ]},
-  { id: 'MNU17', name: 'レモンサワー', price: 450, category: 'ドリンク', ingredients: [
-    { ingredientId: 'ING30', quantity: 60 }, { ingredientId: 'ING31', quantity: 180 }, { ingredientId: 'ING32', quantity: 0.5 },
-  ]},
+  {
+    id: 'MNU15', name: '生ビール（中）', price: 550, category: 'ドリンク', ingredients: [
+      { ingredientId: 'ING28', quantity: 350 },
+    ]
+  },
+  {
+    id: 'MNU16', name: 'ハイボール', price: 450, category: 'ドリンク', ingredients: [
+      { ingredientId: 'ING29', quantity: 45 }, { ingredientId: 'ING31', quantity: 200 }, { ingredientId: 'ING32', quantity: 0.25 },
+    ]
+  },
+  {
+    id: 'MNU17', name: 'レモンサワー', price: 450, category: 'ドリンク', ingredients: [
+      { ingredientId: 'ING30', quantity: 60 }, { ingredientId: 'ING31', quantity: 180 }, { ingredientId: 'ING32', quantity: 0.5 },
+    ]
+  },
 ]
 
 const INITIAL_SALES_PLANS: SalesPlan[] = [
@@ -302,11 +310,6 @@ const INITIAL_SALES_PLANS: SalesPlan[] = [
   { menuItemId: 'MNU17', weeklyQuantity: 60 },
 ]
 
-const INITIAL_SHOP_SETTINGS: ShopSettings = {
-  fixedCosts: { rent: 350000, labor: 1200000, utilities: 120000, other: 80000 },
-  targetCostRate: 30,
-}
-
 // ==========================================
 // 計算ロジック（純粋関数）
 // ==========================================
@@ -316,14 +319,6 @@ const getApplicableUnitPrice = (lotPrices: LotPrice[], totalQuantity: number): n
   const sorted = [...lotPrices].sort((a, b) => b.minQuantity - a.minQuantity)
   const tier = sorted.find((lp) => totalQuantity >= lp.minQuantity)
   return tier?.unitPrice ?? lotPrices[0]?.unitPrice ?? 0
-}
-
-/** 適用ロットティア名を返す */
-const getApplicableTierLabel = (lotPrices: LotPrice[], totalQuantity: number): string => {
-  const sorted = [...lotPrices].sort((a, b) => b.minQuantity - a.minQuantity)
-  const tierIndex = sorted.findIndex((lp) => totalQuantity >= lp.minQuantity)
-  if (tierIndex === -1) return 'ティア1'
-  return `ティア${lotPrices.length - tierIndex}`
 }
 
 /** 全メニュー×販売計画から材料ごとの月間調達量を集計 */
@@ -361,34 +356,6 @@ const calcMenuCost = (
   return cost
 }
 
-/** 月次損益計算 */
-const calcPnl = (
-  menuItems: MenuItem[],
-  salesPlans: SalesPlan[],
-  ingredients: Ingredient[],
-  shopSettings: ShopSettings,
-) => {
-  const procurement = calcMonthlyProcurement(menuItems, salesPlans)
-  let totalRevenue = 0
-  let totalCost = 0
-
-  for (const plan of salesPlans) {
-    const menu = menuItems.find((m) => m.id === plan.menuItemId)
-    if (!menu) continue
-    const monthlyQty = plan.weeklyQuantity * 4
-    totalRevenue += menu.price * monthlyQty
-    totalCost += calcMenuCost(menu, ingredients, procurement) * monthlyQty
-  }
-
-  const { rent, labor, utilities, other } = shopSettings.fixedCosts
-  const totalFixedCosts = rent + labor + utilities + other
-  const grossProfit = totalRevenue - totalCost
-  const costRate = totalRevenue > 0 ? (totalCost / totalRevenue) * 100 : 0
-  const operatingProfit = grossProfit - totalFixedCosts
-
-  return { totalRevenue, totalCost, costRate, grossProfit, totalFixedCosts, operatingProfit }
-}
-
 // ==========================================
 // ヘルパー
 // ==========================================
@@ -403,7 +370,7 @@ const FormField = ({ label, children }: { label: string; children: React.ReactNo
   </div>
 )
 
-const inputClass = 'w-full px-3 py-2 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400'
+const inputClass = 'w-full px-3 py-2 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400 '
 const selectClass = inputClass
 
 // ==========================================
@@ -415,12 +382,9 @@ const getGuidanceSteps = (setActiveTab: (tab: TabId) => void): GuidanceStep[] =>
   { targetSelector: '[data-guidance="add-ingredient-button"]', title: '材料の追加', description: '「材料追加」ボタンで新しい材料とロット価格を登録します。', position: 'bottom', action: () => setActiveTab('ingredients') },
   { targetSelector: '[data-guidance="tab-menu"]', title: 'メニュー設計', description: 'メニューごとに材料構成と提供価格を設定。原価率がリアルタイムで表示されます。', position: 'bottom', action: () => setActiveTab('ingredients') },
   { targetSelector: '[data-guidance="add-menu-button"]', title: 'メニューの追加', description: '「メニュー追加」ボタンでメニューを作成し、材料を選択します。', position: 'bottom', action: () => setActiveTab('menu') },
-  { targetSelector: '[data-guidance="tab-sales"]', title: '販売計画', description: '週間販売数を変更すると調達量が変わり、ロット単価が自動で切り替わります。', position: 'bottom', action: () => setActiveTab('menu') },
-  { targetSelector: '[data-guidance="sales-table"]', title: '販売数の編集', description: '週間販売数を直接編集できます。下の調達量テーブルでロット単価の変動を確認。', position: 'top', action: () => setActiveTab('sales') },
-  { targetSelector: '[data-guidance="procurement-table"]', title: '材料別調達量', description: '全メニューの販売計画から月間調達量を自動集計。適用ロットティアと単価が表示されます。', position: 'top', action: () => setActiveTab('sales') },
-  { targetSelector: '[data-guidance="tab-pnl"]', title: '損益シミュレーション', description: '固定費を入力して営業利益を確認。黒字か赤字かを一目で判定。', position: 'bottom', action: () => setActiveTab('sales') },
-  { targetSelector: '[data-guidance="pnl-result"]', title: '損益結果', description: '売上・原価・粗利・固定費・営業利益を一覧表示。黒字/赤字が大きく表示されます。', position: 'top', action: () => setActiveTab('pnl') },
-  { targetSelector: '[data-guidance="info-button"]', title: '機能説明', description: 'システムの概要や操作手順、時間削減効果を確認できます。', position: 'top', action: () => setActiveTab('pnl') },
+  { targetSelector: '[data-guidance="tab-simulation"]', title: 'シミュレーション', description: 'メニューごとに週間販売目標を設定し、材料の発注コストと損益を確認できます。', position: 'bottom', action: () => setActiveTab('menu') },
+  { targetSelector: '[data-guidance="sales-table"]', title: '販売目標と損益', description: '週間目標を変更すると材料コストと損益がリアルタイムで算出されます。', position: 'top', action: () => setActiveTab('simulation') },
+  { targetSelector: '[data-guidance="info-button"]', title: '機能説明', description: 'システムの概要や操作手順、時間削減効果を確認できます。', position: 'top', action: () => setActiveTab('simulation') },
 ]
 
 // ==========================================
@@ -448,8 +412,34 @@ const IngredientsView = ({
   ingredients: Ingredient[]
   setIngredients: React.Dispatch<React.SetStateAction<Ingredient[]>>
 }) => {
-  const { modalOpen, editingItem, form, setForm, openNew, openEdit, close, save, remove } =
-    useEditModal<Ingredient, IngredientForm>(emptyIngredientForm, toIngredientForm)
+  const ingredientModal = useModal<{ item: Ingredient | null }>()
+  const [form, setForm] = useState<IngredientForm>(emptyIngredientForm)
+  const editingItem = ingredientModal.open?.item ?? null
+
+  const openNew = () => {
+    setForm(emptyIngredientForm)
+    ingredientModal.handleOpen({ item: null })
+  }
+
+  const openEdit = (item: Ingredient) => {
+    setForm(toIngredientForm(item))
+    ingredientModal.handleOpen({ item })
+  }
+
+  const handleSave = () => {
+    if (editingItem) {
+      setIngredients((prev) => prev.map((d) => (d.id === editingItem.id ? { ...d, ...form } : d)))
+    } else {
+      setIngredients((prev) => [...prev, { id: generateId('ING'), ...form } as Ingredient])
+    }
+    ingredientModal.handleClose()
+  }
+
+  const handleRemove = () => {
+    if (!editingItem) return
+    setIngredients((prev) => prev.filter((d) => d.id !== editingItem.id))
+    ingredientModal.handleClose()
+  }
 
   const addLotPrice = () => {
     setForm((f) => ({ ...f, lotPrices: [...f.lotPrices, { minQuantity: 0, unitPrice: 0 }] }))
@@ -496,11 +486,13 @@ const IngredientsView = ({
                 <td className="px-4 py-3 font-medium text-stone-800">{ing.name}</td>
                 <td className="px-4 py-3 text-stone-600">{ing.unit}</td>
                 <td className="px-4 py-3">
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="inline-grid grid-cols-[auto_auto_auto] gap-x-3 gap-y-1 text-xs">
                     {[...ing.lotPrices].sort((a, b) => a.minQuantity - b.minQuantity).map((lp, i) => (
-                      <span key={i} className="px-2 py-0.5 bg-amber-50 text-amber-700 text-xs rounded-md border border-amber-200">
-                        {lp.minQuantity}{ing.unit}〜 → ¥{lp.unitPrice}/{ing.unit}
-                      </span>
+                      <React.Fragment key={i}>
+                        <span className="text-stone-500 text-right tabular-nums">{lp.minQuantity.toLocaleString()}{ing.unit}〜</span>
+                        <span className="text-stone-400">→</span>
+                        <span className="text-amber-700 font-medium tabular-nums">¥{lp.unitPrice}/{ing.unit}</span>
+                      </React.Fragment>
                     ))}
                   </div>
                 </td>
@@ -515,8 +507,8 @@ const IngredientsView = ({
         </table>
       </div>
 
-      <Modal isOpen={modalOpen} onClose={close} title={editingItem ? '材料を編集' : '材料を追加'}>
-        <div className="space-y-4">
+      <ingredientModal.Modal title={editingItem ? '材料を編集' : '材料を追加'}>
+        <div className="space-y-4 p-4">
           <FormField label="材料名">
             <input className={inputClass} value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="例: 鶏もも肉" />
           </FormField>
@@ -554,16 +546,16 @@ const IngredientsView = ({
           </div>
           <div className="flex gap-2 pt-2">
             {editingItem && (
-              <button onClick={() => remove(setIngredients)} className="px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+              <button onClick={handleRemove} className="px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors">
                 削除
               </button>
             )}
             <div className="flex-1" />
-            <button onClick={close} className="px-4 py-2 text-sm text-stone-600 hover:bg-stone-100 rounded-lg transition-colors">
+            <button onClick={() => ingredientModal.handleClose()} className="px-4 py-2 text-sm text-stone-600 hover:bg-stone-100 rounded-lg transition-colors">
               キャンセル
             </button>
             <button
-              onClick={() => save(setIngredients, 'ING')}
+              onClick={handleSave}
               disabled={!form.name}
               className="px-4 py-2 text-sm text-white bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
             >
@@ -571,7 +563,7 @@ const IngredientsView = ({
             </button>
           </div>
         </div>
-      </Modal>
+      </ingredientModal.Modal>
     </div>
   )
 }
@@ -607,8 +599,34 @@ const MenuDesignView = ({
   ingredients: Ingredient[]
   salesPlans: SalesPlan[]
 }) => {
-  const { modalOpen, editingItem, form, setForm, openNew, openEdit, close, save, remove } =
-    useEditModal<MenuItem, MenuForm>(emptyMenuForm, toMenuForm)
+  const menuModal = useModal<{ item: MenuItem | null }>()
+  const [form, setForm] = useState<MenuForm>(emptyMenuForm)
+  const editingItem = menuModal.open?.item ?? null
+
+  const openNew = () => {
+    setForm(emptyMenuForm)
+    menuModal.handleOpen({ item: null })
+  }
+
+  const openEdit = (item: MenuItem) => {
+    setForm(toMenuForm(item))
+    menuModal.handleOpen({ item })
+  }
+
+  const handleSave = () => {
+    if (editingItem) {
+      setMenuItems((prev) => prev.map((d) => (d.id === editingItem.id ? { ...d, ...form } : d)))
+    } else {
+      setMenuItems((prev) => [...prev, { id: generateId('MNU'), ...form } as MenuItem])
+    }
+    menuModal.handleClose()
+  }
+
+  const handleRemove = () => {
+    if (!editingItem) return
+    setMenuItems((prev) => prev.filter((d) => d.id !== editingItem.id))
+    menuModal.handleClose()
+  }
 
   const procurement = useMemo(() => calcMonthlyProcurement(menuItems, salesPlans), [menuItems, salesPlans])
 
@@ -699,8 +717,8 @@ const MenuDesignView = ({
         </table>
       </div>
 
-      <Modal isOpen={modalOpen} onClose={close} title={editingItem ? 'メニューを編集' : 'メニューを追加'} maxWidth="max-w-2xl">
-        <div className="space-y-4">
+      <menuModal.Modal title={editingItem ? 'メニューを編集' : 'メニューを追加'} style={{ minWidth: '600px' }}>
+        <div className="space-y-4 p-4">
           <div className="grid grid-cols-3 gap-4">
             <FormField label="メニュー名">
               <input className={inputClass} value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="例: 親子丼" />
@@ -725,12 +743,12 @@ const MenuDesignView = ({
             <div className="space-y-2">
               {form.ingredients.map((mi, i) => (
                 <div key={i} className="flex items-center gap-2">
-                  <select className={`${selectClass} flex-1`} value={mi.ingredientId} onChange={(e) => updateMenuIngredient(i, 'ingredientId', e.target.value)}>
-                    {ingredients.map((ing) => <option key={ing.id} value={ing.id}>{ing.name}</option>)}
+                  <select className={`${selectClass} min-w-[240px]`} value={mi.ingredientId} onChange={(e) => updateMenuIngredient(i, 'ingredientId', e.target.value)}>
+                    {ingredients.map((ing) => <option key={ing.id} value={ing.id}>{ing.name}（{ing.unit}）</option>)}
                   </select>
-                  <input type="number" step="0.1" className={`${inputClass} w-24`} value={mi.quantity} onChange={(e) => updateMenuIngredient(i, 'quantity', Number(e.target.value))} placeholder="数量" />
-                  <span className="text-xs text-stone-400 w-8">{ingredients.find((ig) => ig.id === mi.ingredientId)?.unit}</span>
-                  <button onClick={() => removeMenuIngredient(i)} className="p-1 text-stone-400 hover:text-red-500">
+                  <input type="number" step="0.1" className={`${inputClass} max-w-24`} value={mi.quantity} onChange={(e) => updateMenuIngredient(i, 'quantity', Number(e.target.value))} placeholder="数量" />
+                  <span className="text-xs text-stone-400 w-8 flex-shrink-0">{ingredients.find((ig) => ig.id === mi.ingredientId)?.unit}</span>
+                  <button onClick={() => removeMenuIngredient(i)} className="p-1 text-stone-400 hover:text-red-500 flex-shrink-0">
                     <Trash2 size={14} />
                   </button>
                 </div>
@@ -743,16 +761,16 @@ const MenuDesignView = ({
 
           <div className="flex gap-2 pt-2">
             {editingItem && (
-              <button onClick={() => remove(setMenuItems)} className="px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+              <button onClick={handleRemove} className="px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors">
                 削除
               </button>
             )}
             <div className="flex-1" />
-            <button onClick={close} className="px-4 py-2 text-sm text-stone-600 hover:bg-stone-100 rounded-lg transition-colors">
+            <button onClick={() => menuModal.handleClose()} className="px-4 py-2 text-sm text-stone-600 hover:bg-stone-100 rounded-lg transition-colors">
               キャンセル
             </button>
             <button
-              onClick={() => save(setMenuItems, 'MNU')}
+              onClick={handleSave}
               disabled={!form.name || form.price <= 0}
               className="px-4 py-2 text-sm text-white bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
             >
@@ -760,16 +778,48 @@ const MenuDesignView = ({
             </button>
           </div>
         </div>
-      </Modal>
+      </menuModal.Modal>
     </div>
   )
 }
 
 // ==========================================
-// SalesPlanView
+// SimulationView（メニューごとの損益シミュレーション）
 // ==========================================
 
-const SalesPlanView = ({
+/** メニュー1食分の材料コスト（ロット単価ではなく、そのメニューの週間販売数だけで発注した場合のコスト） */
+const calcMenuIngredientCosts = (
+  menu: MenuItem,
+  ingredients: Ingredient[],
+  weeklyQty: number,
+) => {
+  const monthlyQty = weeklyQty * 4
+  return menu.ingredients.map((mi) => {
+    const ing = ingredients.find((i) => i.id === mi.ingredientId)
+    if (!ing) return null
+    // このメニューだけで月間に消費する総量
+    const monthlyConsumption = mi.quantity * monthlyQty
+    // その量でのロット単価
+    const unitPrice = getApplicableUnitPrice(ing.lotPrices, monthlyConsumption)
+    // 発注金額 = 消費量 × 単価
+    const orderCost = monthlyConsumption * unitPrice
+    return {
+      ingredient: ing,
+      quantityPerServing: mi.quantity,
+      monthlyConsumption,
+      unitPrice,
+      orderCost,
+    }
+  }).filter(Boolean) as {
+    ingredient: Ingredient
+    quantityPerServing: number
+    monthlyConsumption: number
+    unitPrice: number
+    orderCost: number
+  }[]
+}
+
+const SimulationView = ({
   menuItems,
   ingredients,
   salesPlans,
@@ -780,263 +830,110 @@ const SalesPlanView = ({
   salesPlans: SalesPlan[]
   setSalesPlans: React.Dispatch<React.SetStateAction<SalesPlan[]>>
 }) => {
-  const procurement = useMemo(() => calcMonthlyProcurement(menuItems, salesPlans), [menuItems, salesPlans])
-
   const updateWeeklyQty = (menuItemId: string, qty: number) => {
     setSalesPlans((prev) =>
       prev.map((p) => (p.menuItemId === menuItemId ? { ...p, weeklyQuantity: qty } : p)),
     )
   }
 
-  // 材料別調達量テーブル用データ
-  const procurementData = useMemo(() => {
-    return ingredients
-      .map((ing) => {
-        const totalQty = procurement.get(ing.id) || 0
-        if (totalQty === 0) return null
-        const unitPrice = getApplicableUnitPrice(ing.lotPrices, totalQty)
-        const tierLabel = getApplicableTierLabel(ing.lotPrices, totalQty)
-        return { ingredient: ing, totalQty, unitPrice, tierLabel }
-      })
-      .filter(Boolean) as { ingredient: Ingredient; totalQty: number; unitPrice: number; tierLabel: string }[]
-  }, [ingredients, procurement])
-
   return (
     <div className="space-y-6">
-      <h2 className="text-lg font-bold text-stone-800">販売計画</h2>
+      <h2 className="text-lg font-bold text-stone-800">メニュー別シミュレーション</h2>
+      <p className="text-sm text-stone-500">メニューごとに販売価格・週間販売目標から、材料の発注コストと損益を算出します。</p>
 
-      {/* 販売計画テーブル */}
-      <div data-guidance="sales-table" className="bg-white rounded-xl border border-stone-200 overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-stone-50 border-b border-stone-200">
-            <tr>
-              <th className="px-4 py-3 text-left font-medium text-stone-600">メニュー名</th>
-              <th className="px-4 py-3 text-right font-medium text-stone-600">週間販売数</th>
-              <th className="px-4 py-3 text-right font-medium text-stone-600">月間数</th>
-              <th className="px-4 py-3 text-right font-medium text-stone-600">月間売上</th>
-              <th className="px-4 py-3 text-right font-medium text-stone-600">1食原価</th>
-              <th className="px-4 py-3 text-right font-medium text-stone-600">月間原価</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-stone-100">
-            {salesPlans.map((plan) => {
-              const menu = menuItems.find((m) => m.id === plan.menuItemId)
-              if (!menu) return null
-              const monthlyQty = plan.weeklyQuantity * 4
-              const menuCost = calcMenuCost(menu, ingredients, procurement)
-              return (
-                <tr key={plan.menuItemId} className="hover:bg-amber-50/30 transition-colors">
-                  <td className="px-4 py-3 font-medium text-stone-800">{menu.name}</td>
-                  <td className="px-4 py-3 text-right">
-                    <input
-                      type="number"
-                      min={0}
-                      className="w-20 px-2 py-1 border border-stone-200 rounded-lg text-sm text-right focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400"
-                      value={plan.weeklyQuantity}
-                      onChange={(e) => updateWeeklyQty(plan.menuItemId, Math.max(0, Number(e.target.value)))}
-                    />
-                  </td>
-                  <td className="px-4 py-3 text-right text-stone-600">{monthlyQty}</td>
-                  <td className="px-4 py-3 text-right font-medium text-stone-800">{formatCurrency(menu.price * monthlyQty)}</td>
-                  <td className="px-4 py-3 text-right text-stone-600">{formatCurrency(menuCost)}</td>
-                  <td className="px-4 py-3 text-right font-medium text-stone-800">{formatCurrency(menuCost * monthlyQty)}</td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-      </div>
+      <div data-guidance="sales-table" className="space-y-4">
+        {menuItems.map((menu) => {
+          const plan = salesPlans.find((p) => p.menuItemId === menu.id)
+          const weeklyQty = plan?.weeklyQuantity ?? 0
+          const monthlyQty = weeklyQty * 4
+          const monthlySales = menu.price * monthlyQty
+          const ingredientCosts = calcMenuIngredientCosts(menu, ingredients, weeklyQty)
+          const totalOrderCost = ingredientCosts.reduce((sum, ic) => sum + ic.orderCost, 0)
+          const profit = monthlySales - totalOrderCost
+          const isProfit = profit >= 0
 
-      {/* 材料別月間調達量サブテーブル */}
-      <div data-guidance="procurement-table">
-        <h3 className="text-sm font-bold text-stone-700 mb-2 flex items-center gap-2">
-          <Package size={16} className="text-amber-600" />
-          材料別 月間調達量
-        </h3>
-        <div className="bg-white rounded-xl border border-stone-200 overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-amber-50/50 border-b border-stone-200">
-              <tr>
-                <th className="px-4 py-3 text-left font-medium text-stone-600">材料名</th>
-                <th className="px-4 py-3 text-right font-medium text-stone-600">月間調達量</th>
-                <th className="px-4 py-3 text-center font-medium text-stone-600">適用ティア</th>
-                <th className="px-4 py-3 text-right font-medium text-stone-600">適用単価</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-stone-100">
-              {procurementData.map(({ ingredient, totalQty, unitPrice, tierLabel }) => (
-                <tr key={ingredient.id} className="hover:bg-amber-50/30 transition-colors">
-                  <td className="px-4 py-3 font-medium text-stone-800">{ingredient.name}</td>
-                  <td className="px-4 py-3 text-right text-stone-600">{totalQty.toLocaleString()} {ingredient.unit}</td>
-                  <td className="px-4 py-3 text-center">
-                    <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded-md font-medium">{tierLabel}</span>
-                  </td>
-                  <td className="px-4 py-3 text-right font-medium text-stone-800">¥{unitPrice}/{ingredient.unit}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// ==========================================
-// PnlView
-// ==========================================
-
-const PnlView = ({
-  menuItems,
-  ingredients,
-  salesPlans,
-  shopSettings,
-  setShopSettings,
-}: {
-  menuItems: MenuItem[]
-  ingredients: Ingredient[]
-  salesPlans: SalesPlan[]
-  shopSettings: ShopSettings
-  setShopSettings: React.Dispatch<React.SetStateAction<ShopSettings>>
-}) => {
-  const pnl = useMemo(
-    () => calcPnl(menuItems, salesPlans, ingredients, shopSettings),
-    [menuItems, salesPlans, ingredients, shopSettings],
-  )
-
-  const isProfit = pnl.operatingProfit >= 0
-
-  const updateFixedCost = (key: keyof ShopSettings['fixedCosts'], value: number) => {
-    setShopSettings((s) => ({ ...s, fixedCosts: { ...s.fixedCosts, [key]: value } }))
-  }
-
-  // 簡易バーチャート用データ
-  const maxVal = Math.max(pnl.totalRevenue, pnl.totalCost + pnl.totalFixedCosts, 1)
-
-  return (
-    <div className="space-y-6">
-      <h2 className="text-lg font-bold text-stone-800">損益シミュレーション</h2>
-
-      {/* 固定費入力 */}
-      <div className="bg-white rounded-xl border border-stone-200 p-6">
-        <h3 className="text-sm font-bold text-stone-700 mb-4 flex items-center gap-2">
-          <Calculator size={16} className="text-amber-600" />
-          固定費・設定
-        </h3>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <FormField label="家賃 (円/月)">
-            <input type="number" className={inputClass} value={shopSettings.fixedCosts.rent} onChange={(e) => updateFixedCost('rent', Number(e.target.value))} />
-          </FormField>
-          <FormField label="人件費 (円/月)">
-            <input type="number" className={inputClass} value={shopSettings.fixedCosts.labor} onChange={(e) => updateFixedCost('labor', Number(e.target.value))} />
-          </FormField>
-          <FormField label="光熱費 (円/月)">
-            <input type="number" className={inputClass} value={shopSettings.fixedCosts.utilities} onChange={(e) => updateFixedCost('utilities', Number(e.target.value))} />
-          </FormField>
-          <FormField label="その他 (円/月)">
-            <input type="number" className={inputClass} value={shopSettings.fixedCosts.other} onChange={(e) => updateFixedCost('other', Number(e.target.value))} />
-          </FormField>
-          <FormField label="目標原価率 (%)">
-            <input type="number" className={inputClass} value={shopSettings.targetCostRate} onChange={(e) => setShopSettings((s) => ({ ...s, targetCostRate: Number(e.target.value) }))} />
-          </FormField>
-        </div>
-      </div>
-
-      {/* 損益結果 */}
-      <div data-guidance="pnl-result" className="bg-white rounded-xl border border-stone-200 p-6">
-        <h3 className="text-sm font-bold text-stone-700 mb-4 flex items-center gap-2">
-          <DollarSign size={16} className="text-amber-600" />
-          月次損益
-        </h3>
-
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-          <div className="p-4 bg-stone-50 rounded-xl">
-            <p className="text-xs text-stone-500 mb-1">月間売上</p>
-            <p className="text-xl font-bold text-stone-800">{formatCurrency(pnl.totalRevenue)}</p>
-          </div>
-          <div className="p-4 bg-stone-50 rounded-xl">
-            <p className="text-xs text-stone-500 mb-1">原価合計</p>
-            <p className="text-xl font-bold text-stone-800">{formatCurrency(pnl.totalCost)}</p>
-          </div>
-          <div className="p-4 bg-stone-50 rounded-xl">
-            <p className="text-xs text-stone-500 mb-1">原価率</p>
-            <p className={`text-xl font-bold ${pnl.costRate > shopSettings.targetCostRate ? 'text-red-600' : 'text-emerald-600'}`}>
-              {formatPercent(pnl.costRate)}
-            </p>
-            <p className="text-xs text-stone-400">目標: {shopSettings.targetCostRate}%</p>
-          </div>
-          <div className="p-4 bg-stone-50 rounded-xl">
-            <p className="text-xs text-stone-500 mb-1">粗利</p>
-            <p className="text-xl font-bold text-stone-800">{formatCurrency(pnl.grossProfit)}</p>
-          </div>
-          <div className="p-4 bg-stone-50 rounded-xl">
-            <p className="text-xs text-stone-500 mb-1">固定費合計</p>
-            <p className="text-xl font-bold text-stone-800">{formatCurrency(pnl.totalFixedCosts)}</p>
-          </div>
-          <div className={`p-4 rounded-xl ${isProfit ? 'bg-emerald-50 border-2 border-emerald-200' : 'bg-red-50 border-2 border-red-200'}`}>
-            <p className="text-xs text-stone-500 mb-1">営業利益</p>
-            <p className={`text-xl font-bold ${isProfit ? 'text-emerald-600' : 'text-red-600'}`}>{formatCurrency(pnl.operatingProfit)}</p>
-          </div>
-        </div>
-
-        {/* 黒字/赤字判定 */}
-        <div className={`text-center py-6 rounded-xl ${isProfit ? 'bg-emerald-50' : 'bg-red-50'}`}>
-          <p className={`text-4xl font-black ${isProfit ? 'text-emerald-600' : 'text-red-600'}`}>
-            {isProfit ? '✅ 黒字' : '❌ 赤字'}
-          </p>
-          <p className={`text-sm mt-1 ${isProfit ? 'text-emerald-500' : 'text-red-500'}`}>
-            {isProfit
-              ? `月間 ${formatCurrency(pnl.operatingProfit)} の利益`
-              : `月間 ${formatCurrency(Math.abs(pnl.operatingProfit))} の赤字`}
-          </p>
-        </div>
-
-        {/* 簡易バーチャート */}
-        <div className="mt-6 space-y-3">
-          <h4 className="text-xs font-medium text-stone-500">収支バランス</h4>
-          <div className="space-y-2">
-            <div>
-              <div className="flex items-center justify-between text-xs text-stone-600 mb-1">
-                <span>売上</span>
-                <span>{formatCurrency(pnl.totalRevenue)}</span>
+          return (
+            <div key={menu.id} className="bg-white rounded-xl border border-stone-200 overflow-hidden">
+              {/* ヘッダー: メニュー名 + 入力 */}
+              <div className="px-4 py-3 bg-stone-50 border-b border-stone-200">
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                  <div className="flex items-center gap-3">
+                    <h3 className="font-bold text-stone-800">{menu.name}</h3>
+                    <span className="px-2 py-0.5 bg-stone-200 text-stone-600 text-xs rounded-md">{menu.category}</span>
+                  </div>
+                  <div className="flex items-center gap-4 text-sm">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-stone-500">販売価格</span>
+                      <span className="font-bold text-stone-800">{formatCurrency(menu.price)}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-stone-500">週間目標</span>
+                      <input
+                        type="number"
+                        min={0}
+                        className="w-20 px-2 py-1 border border-stone-200 rounded-lg text-sm text-right focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400"
+                        value={weeklyQty}
+                        onChange={(e) => updateWeeklyQty(menu.id, Math.max(0, Number(e.target.value)))}
+                      />
+                      <span className="text-stone-400 text-xs">食/週</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-stone-500">月間</span>
+                      <span className="font-medium text-stone-700">{monthlyQty}食</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="h-6 bg-stone-100 rounded-full overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full transition-all duration-500"
-                  style={{ width: `${(pnl.totalRevenue / maxVal) * 100}%` }} />
-              </div>
+
+              {/* 材料別コスト */}
+              {monthlyQty > 0 ? (
+                <>
+                  <table className="w-full text-sm">
+                    <thead className="bg-amber-50/40 border-b border-stone-100">
+                      <tr>
+                        <th className="px-4 py-2 text-left font-medium text-stone-500 text-xs">材料</th>
+                        <th className="px-4 py-2 text-right font-medium text-stone-500 text-xs">1食あたり</th>
+                        <th className="px-4 py-2 text-right font-medium text-stone-500 text-xs">月間消費量</th>
+                        <th className="px-4 py-2 text-right font-medium text-stone-500 text-xs">適用単価</th>
+                        <th className="px-4 py-2 text-right font-medium text-stone-500 text-xs">発注金額</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-stone-50">
+                      {ingredientCosts.map((ic) => (
+                        <tr key={ic.ingredient.id} className="hover:bg-amber-50/20">
+                          <td className="px-4 py-2 text-stone-700">{ic.ingredient.name}</td>
+                          <td className="px-4 py-2 text-right text-stone-500 tabular-nums">{ic.quantityPerServing}{ic.ingredient.unit}</td>
+                          <td className="px-4 py-2 text-right text-stone-500 tabular-nums">{ic.monthlyConsumption.toLocaleString()}{ic.ingredient.unit}</td>
+                          <td className="px-4 py-2 text-right text-stone-500 tabular-nums">¥{ic.unitPrice}/{ic.ingredient.unit}</td>
+                          <td className="px-4 py-2 text-right font-medium text-stone-800 tabular-nums">{formatCurrency(ic.orderCost)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  {/* 損益サマリー */}
+                  <div className="px-4 py-3 border-t border-stone-200 bg-stone-50/50">
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center gap-6">
+                        <span className="text-stone-500">月間売上 <span className="font-bold text-stone-800">{formatCurrency(monthlySales)}</span></span>
+                        <span className="text-stone-400">−</span>
+                        <span className="text-stone-500">仕入れ合計 <span className="font-bold text-stone-800">{formatCurrency(totalOrderCost)}</span></span>
+                        <span className="text-stone-400">=</span>
+                      </div>
+                      <div className={`font-bold text-lg ${isProfit ? 'text-emerald-600' : 'text-red-600'}`}>
+                        {isProfit ? '+' : ''}{formatCurrency(profit)}
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="px-4 py-6 text-center text-sm text-stone-400">
+                  週間目標を設定すると、材料コストと損益が表示されます
+                </div>
+              )}
             </div>
-            <div>
-              <div className="flex items-center justify-between text-xs text-stone-600 mb-1">
-                <span>原価</span>
-                <span>{formatCurrency(pnl.totalCost)}</span>
-              </div>
-              <div className="h-6 bg-stone-100 rounded-full overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-orange-400 to-orange-500 rounded-full transition-all duration-500"
-                  style={{ width: `${(pnl.totalCost / maxVal) * 100}%` }} />
-              </div>
-            </div>
-            <div>
-              <div className="flex items-center justify-between text-xs text-stone-600 mb-1">
-                <span>固定費</span>
-                <span>{formatCurrency(pnl.totalFixedCosts)}</span>
-              </div>
-              <div className="h-6 bg-stone-100 rounded-full overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-stone-400 to-stone-500 rounded-full transition-all duration-500"
-                  style={{ width: `${(pnl.totalFixedCosts / maxVal) * 100}%` }} />
-              </div>
-            </div>
-            <div>
-              <div className="flex items-center justify-between text-xs text-stone-600 mb-1">
-                <span>営業利益</span>
-                <span className={isProfit ? 'text-emerald-600' : 'text-red-600'}>{formatCurrency(pnl.operatingProfit)}</span>
-              </div>
-              <div className="h-6 bg-stone-100 rounded-full overflow-hidden">
-                <div className={`h-full rounded-full transition-all duration-500 ${isProfit ? 'bg-gradient-to-r from-emerald-400 to-emerald-500' : 'bg-gradient-to-r from-red-400 to-red-500'}`}
-                  style={{ width: `${(Math.abs(pnl.operatingProfit) / maxVal) * 100}%` }} />
-              </div>
-            </div>
-          </div>
-        </div>
+          )
+        })}
       </div>
     </div>
   )
@@ -1055,7 +952,6 @@ export default function InshokuPricingPage() {
   const [ingredients, setIngredients] = usePersistedState<Ingredient[]>(STORAGE_KEYS.ingredients, INITIAL_INGREDIENTS)
   const [menuItems, setMenuItems] = usePersistedState<MenuItem[]>(STORAGE_KEYS.menuItems, INITIAL_MENU_ITEMS)
   const [salesPlans, setSalesPlans] = usePersistedState<SalesPlan[]>(STORAGE_KEYS.salesPlans, INITIAL_SALES_PLANS)
-  const [shopSettings, setShopSettings] = usePersistedState<ShopSettings>(STORAGE_KEYS.shopSettings, INITIAL_SHOP_SETTINGS)
 
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 1500)
@@ -1099,11 +995,8 @@ export default function InshokuPricingPage() {
         {activeTab === 'menu' && (
           <MenuDesignView menuItems={menuItems} setMenuItems={setMenuItems} ingredients={ingredients} salesPlans={salesPlans} />
         )}
-        {activeTab === 'sales' && (
-          <SalesPlanView menuItems={menuItems} ingredients={ingredients} salesPlans={salesPlans} setSalesPlans={setSalesPlans} />
-        )}
-        {activeTab === 'pnl' && (
-          <PnlView menuItems={menuItems} ingredients={ingredients} salesPlans={salesPlans} shopSettings={shopSettings} setShopSettings={setShopSettings} />
+        {activeTab === 'simulation' && (
+          <SimulationView menuItems={menuItems} ingredients={ingredients} salesPlans={salesPlans} setSalesPlans={setSalesPlans} />
         )}
       </main>
 

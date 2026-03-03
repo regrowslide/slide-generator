@@ -108,7 +108,7 @@ const SynesthesiaApp = () => {
             <TabsTrigger value="training">トレーニング</TabsTrigger>
             <TabsTrigger value="visualize">テキスト可視化</TabsTrigger>
           </TabsList>
-          <Button variant="ghost" size="sm" onClick={handleReset} className="text-gray-400 text-xs">
+          <Button size="sm" onClick={handleReset} className="text-gray-400 text-xs">
             リセット
           </Button>
         </div>
@@ -146,11 +146,11 @@ const SynesthesiaApp = () => {
 
               {/* 操作ボタン */}
               <div className="flex justify-center gap-3 mt-2">
-                <Button variant="outline" size="sm" onClick={handleSkip}>
+                <Button size="sm" onClick={handleSkip}>
                   スキップ
                 </Button>
                 <Button
-                  variant="outline"
+
                   size="sm"
                   onClick={handleBack}
                   disabled={historyRef.current.length === 0}

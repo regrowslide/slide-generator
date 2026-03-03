@@ -1,8 +1,9 @@
 import {redirect} from 'next/navigation'
-import {getDentalExamination, getDentalExaminations} from '@app/(apps)/dental/_actions/examination-actions'
+import {getDentalExamination, getDentalExaminations, getPatientPastExaminations} from '@app/(apps)/dental/_actions/examination-actions'
 import {getDentalStaffList} from '@app/(apps)/dental/_actions/staff-actions'
 import {getUserDentalClinic} from '@app/(apps)/dental/_actions/clinic-actions'
 import {getDentalScoringHistories} from '@app/(apps)/dental/_actions/scoring-history-actions'
+import {getSavedTemplateIds} from '@app/(apps)/dental/_actions/saved-document-actions'
 import {toExamination, toStaff, toClinic, toPatient, toFacility, toScoringHistory} from '@app/(apps)/dental/lib/types'
 import {initServerComopnent} from 'src/non-common/serverSideFunction'
 import ConsultationClient from './ConsultationClient'
@@ -34,10 +35,12 @@ export default async function Page(props: Props) {
   const clinicRaw = await getUserDentalClinic(session.id)
   const clinicId = clinicRaw?.id ?? 0
 
-  const [rawStaff, rawScoringHistories, rawAllExams] = await Promise.all([
+  const [rawStaff, rawScoringHistories, rawAllExams, rawPastExams, savedTemplateIds] = await Promise.all([
     getDentalStaffList({dentalClinicId: clinicId}),
     getDentalScoringHistories({where: {dentalPatientId: patient.id}}),
     getDentalExaminations({where: {dentalVisitPlanId: rawExam.dentalVisitPlanId}}),
+    getPatientPastExaminations(patient.id, examinationId),
+    getSavedTemplateIds(examinationId),
   ])
 
   const staffList = rawStaff.map(toStaff)
@@ -46,6 +49,7 @@ export default async function Page(props: Props) {
 
   const scoringHistories = rawScoringHistories.map(toScoringHistory)
   const allExaminations = rawAllExams.map(toExamination)
+  const pastExaminations = rawPastExams.map(toExamination)
 
   const consultationMode = (query.mode === 'dh' ? 'dh' : 'doctor') as 'doctor' | 'dh'
 
@@ -60,6 +64,8 @@ export default async function Page(props: Props) {
       allExaminations={allExaminations}
       scoringHistories={scoringHistories}
       visitPlanId={rawExam.dentalVisitPlanId}
+      pastExaminations={pastExaminations}
+      savedTemplateIds={savedTemplateIds}
     />
   )
 }

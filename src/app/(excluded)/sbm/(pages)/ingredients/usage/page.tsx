@@ -1,12 +1,12 @@
 'use client'
 
-import React, {useState} from 'react'
-import {Calculator} from 'lucide-react'
-import {FilterSection} from '@cm/components/utils/FilterSection'
-import {calculateIngredientsUsage} from '../../../actions/ingredientActions'
-import {formatDate} from '@cm/class/Days/date-utils/formatters'
+import React, { useState } from 'react'
+import { Calculator } from 'lucide-react'
+import { FilterSection } from '@cm/components/utils/FilterSection'
+import { calculateIngredientsUsage } from '../../../actions/ingredientActions'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
 
-import {toUtc} from '@cm/class/Days/date-utils/calculations'
+import { toUtc } from '@cm/class/Days/date-utils/calculations'
 
 export default function IngredientsUsagePage() {
   const [startDate, setStartDate] = useState(formatDate(new Date()))
@@ -23,7 +23,7 @@ export default function IngredientsUsagePage() {
         lte: toUtc(endDate),
         isCanceled: false,
       }
-      const data = await calculateIngredientsUsage({where: {deliveryDate}})
+      const data = await calculateIngredientsUsage({ where: { deliveryDate } })
       setIngredientsUsage(data)
       setHasSearched(true)
     } catch (error) {
@@ -41,7 +41,7 @@ export default function IngredientsUsagePage() {
 
     const csvContent = [headers.join(','), ...rows.map(row => row.join(','))].join('\n')
 
-    const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'})
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
     link.download = `材料使用量_${startDate}_${endDate}.csv`
@@ -99,10 +99,10 @@ export default function IngredientsUsagePage() {
 
           {/* {ingredientsUsage.length > 0 && (
             <div className="flex space-x-2">
-              <Button variant="outline" onClick={handleExportCSV}>
+              <Button   onClick={handleExportCSV}>
                 <Download size={16} className="mr-1" /> CSV出力
               </Button>
-              <Button variant="outline" onClick={handlePrint}>
+              <Button   onClick={handlePrint}>
                 <Printer size={16} className="mr-1" /> 印刷
               </Button>
             </div>
