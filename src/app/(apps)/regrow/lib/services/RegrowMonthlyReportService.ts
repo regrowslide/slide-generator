@@ -136,7 +136,8 @@ export class RegrowMonthlyReportService {
   static async saveImportedData(
     yearMonth: string,
     staffRecords: StaffRecord[],
-    storeTotals: StoreTotals[]
+    storeTotals: StoreTotals[],
+    nameToUserIdOverrides?: Record<string, number>
   ): Promise<void> {
     const report = await RegrowMonthlyReportService.upsertMonthlyReport(yearMonth)
 
@@ -147,21 +148,34 @@ export class RegrowMonthlyReportService {
       storeMap.set(store.name, store.id)
     }
 
-    // regrow User（rgStoreId付き）を全件取得し、staffName_storeId → userId マップ構築
+    // regrow Userを全件取得し、staffName → userId マップ構築（名前のみでマッチング）
     const rgUsers = await prisma.user.findMany({
-      where: {apps: {has: 'regrow'}, rgStoreId: {not: null}, active: true},
+      where: {apps: {has: 'regrow'}, active: true},
     })
     const userMap = new Map<string, number>()
+    const duplicateNames = new Set<string>()
     for (const u of rgUsers) {
-      userMap.set(`${u.name}_${u.rgStoreId}`, u.id)
+      if (userMap.has(u.name)) {
+        // 同名ユーザーが複数いる場合はduplicateNamesに追加
+        duplicateNames.add(u.name)
+      } else {
+        userMap.set(u.name, u.id)
+      }
     }
+    // 重複した名前は自動マッチから除外（overridesで解決する）
+    for (const name of duplicateNames) {
+      userMap.delete(name)
+    }
+
+    // overridesマップ
+    const overrides = nameToUserIdOverrides ? new Map(Object.entries(nameToUserIdOverrides)) : null
 
     // 未登録スタッフチェック（マッチしないスタッフがいたらエラー）
     const unmatchedStaff: string[] = []
     for (const r of staffRecords) {
       const storeId = storeMap.get(r.storeName)
       if (!storeId) throw new Error(`店舗が見つかりません: ${r.storeName}`)
-      const userId = userMap.get(`${r.staffName}_${storeId}`)
+      const userId = overrides?.get(r.staffName) ?? userMap.get(r.staffName)
       if (!userId) unmatchedStaff.push(r.staffName)
     }
     if (unmatchedStaff.length > 0) {
@@ -175,7 +189,7 @@ export class RegrowMonthlyReportService {
     await prisma.rgStaffRecord.createMany({
       data: staffRecords.map((r) => {
         const storeId = storeMap.get(r.storeName)!
-        const userId = userMap.get(`${r.staffName}_${storeId}`)!
+        const userId = (overrides?.get(r.staffName) ?? userMap.get(r.staffName))!
         return {
           monthlyReportId: report.id,
           staffName: r.staffName,

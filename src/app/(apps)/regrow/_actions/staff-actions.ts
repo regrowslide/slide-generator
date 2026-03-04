@@ -26,6 +26,11 @@ export const createRegrowUser = async (data: {name: string; email?: string; pass
 // Update
 // ============================================================
 
+export const updateRegrowUser = async (
+  userId: number,
+  data: {name?: string; email?: string; password?: string}
+): Promise<User> => RegrowUserService.updateUser(userId, data)
+
 export const updateUserRgStore = async (userId: number, rgStoreId: number | null): Promise<User> =>
   RegrowUserService.updateRgStore(userId, rgStoreId)
 
@@ -59,23 +64,25 @@ type BatchLinkResult = {
 
 /** 既存RgStaffRecord/RgStaffManualDataにuserId/storeIdを一括紐付け */
 export const batchLinkStaffData = async (): Promise<BatchLinkResult> => {
-  // regrow User（rgStoreId付き）を全件取得
+  // regrow Userを全件取得
   const rgUsers = await prisma.user.findMany({
-    where: {apps: {has: 'regrow'}, rgStoreId: {not: null}, active: true},
-    include: {RgStoreRg: true},
+    where: {apps: {has: 'regrow'}, active: true},
   })
 
-  // staffName_storeId → userId マップ
+  // staffName → userId マップ（同名ユーザーがいる場合はスキップ）
   const userMap = new Map<string, number>()
+  const duplicateNames = new Set<string>()
   for (const u of rgUsers) {
-    if (u.RgStoreRg) {
-      userMap.set(`${u.name}_${u.rgStoreId}`, u.id)
+    if (userMap.has(u.name)) {
+      duplicateNames.add(u.name)
+    } else {
+      userMap.set(u.name, u.id)
     }
   }
-
-  // 店舗名→IDマップ
-  const stores = await prisma.rgStore.findMany()
-  const storeNameToId = new Map(stores.map((s) => [s.name, s.id]))
+  // 重複した名前は自動マッチから除外（バッチ処理なので安全側に倒す）
+  for (const name of duplicateNames) {
+    userMap.delete(name)
+  }
 
   // 1. RgStaffRecord の userId 紐付け（userId=NULL のもの）
   const unlinkedRecords = await prisma.rgStaffRecord.findMany({
@@ -86,7 +93,7 @@ export const batchLinkStaffData = async (): Promise<BatchLinkResult> => {
   let staffRecordUpdated = 0
   let staffRecordSkipped = 0
   for (const record of unlinkedRecords) {
-    const userId = userMap.get(`${record.staffName}_${record.storeId}`)
+    const userId = userMap.get(record.staffName)
     if (userId) {
       await prisma.rgStaffRecord.update({
         where: {id: record.id},
@@ -98,8 +105,7 @@ export const batchLinkStaffData = async (): Promise<BatchLinkResult> => {
     }
   }
 
-  // 2. RgStaffManualData の storeId/userId 紐付け
-  // storeId=0 または未設定のものを対象（storeName列が残っている既存データ向け）
+  // 2. RgStaffManualData の userId 紐付け
   const allManualData = await prisma.rgStaffManualData.findMany({
     where: {userId: null},
   })
@@ -107,7 +113,7 @@ export const batchLinkStaffData = async (): Promise<BatchLinkResult> => {
   let manualDataUpdated = 0
   let manualDataSkipped = 0
   for (const md of allManualData) {
-    const userId = userMap.get(`${md.staffName}_${md.storeId}`)
+    const userId = userMap.get(md.staffName)
     if (userId) {
       await prisma.rgStaffManualData.update({
         where: {id: md.id},

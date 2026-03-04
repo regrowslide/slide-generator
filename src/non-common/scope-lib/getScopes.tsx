@@ -43,8 +43,10 @@ export const getScopes = (session: anyObject, options: getScopeOptionsProps) => 
 
     getRegrowScopes: () => {
 
-      const isAdmin = roleNames.includes('管理者')
+      const isFakeUser = query?.[globalIds.globalUserId]
       const isManager = roleNames.includes('マネージャー')
+      const isAdmin = roleNames.includes('管理者') || (admin && !isFakeUser)
+      console.log({ isFakeUser, isAdmin })  //logs
 
       return {
         isAdmin,

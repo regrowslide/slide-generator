@@ -5,41 +5,61 @@
  * 年月と店舗を手動選択 → ファイル選択 → プレビュー確認 → DB保存
  */
 
-import React, {useState, useRef, useCallback} from 'react'
+import React, {useState, useRef, useCallback, useEffect} from 'react'
 import {useDataContext} from '../../context/DataContext'
 import {parseStaffAnalysisExcel} from '../../lib/excel-parser'
+import {createRegrowUser, updateUserRgStore} from '../../_actions/staff-actions'
 import type {ExcelParseResult, StoreName, YearMonth} from '../../types'
 
 /** スタッフのDBマッチング結果 */
 type StaffMatchStatus = {
   staffName: string
   isMatched: boolean
+  isDuplicate: boolean // 同名ユーザーが複数いる場合
+  duplicateUsers: {userId: number; name: string; storeName: string}[] // 同名ユーザー一覧
 }
 
 export const ImportView = () => {
-  const {addImportedData, monthlyData, availableMonths, currentYearMonth, staffMaster, stores} = useDataContext()
+  const {addImportedData, monthlyData, availableMonths, currentYearMonth, staffMaster, stores, refreshStaffMaster} = useDataContext()
   const [selectedYearMonth, setSelectedYearMonth] = useState<YearMonth>(currentYearMonth)
   const [selectedStore, setSelectedStore] = useState<StoreName | ''>('')
   const [previewData, setPreviewData] = useState<ExcelParseResult | null>(null)
   const [matchStatuses, setMatchStatuses] = useState<StaffMatchStatus[]>([])
+  const [nameToUserIdMap, setNameToUserIdMap] = useState<Record<string, number>>({})
   const [error, setError] = useState<string | null>(null)
   const [isParsing, setIsParsing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+  const [creatingStaff, setCreatingStaff] = useState<string | null>(null) // 作成中のスタッフ名
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const isFormReady = selectedYearMonth !== '' && selectedStore !== ''
 
-  // スタッフDBマッチングチェック（店舗＋スタッフ名の組み合わせ）
+  // スタッフDBマッチングチェック（staffNameのみで比較）
   const checkStaffMatching = useCallback(
-    (staffList: ExcelParseResult['staffList'], store: StoreName): StaffMatchStatus[] => {
-      return staffList.map((staff) => ({
-        staffName: staff.staffName,
-        isMatched: staffMaster.some((m) => m.staffName === staff.staffName && m.storeName === store),
-      }))
+    (staffList: ExcelParseResult['staffList']): StaffMatchStatus[] => {
+      return staffList.map((staff) => {
+        const matchedUsers = staffMaster.filter((m) => m.staffName === staff.staffName)
+        const isDuplicate = matchedUsers.length > 1
+        return {
+          staffName: staff.staffName,
+          isMatched: matchedUsers.length > 0,
+          isDuplicate,
+          duplicateUsers: isDuplicate
+            ? matchedUsers.map((m) => ({userId: m.userId, name: m.staffName, storeName: m.storeName}))
+            : [],
+        }
+      })
     },
     [staffMaster]
   )
+
+  // staffMaster変更時にプレビュー中のマッチング状態を再チェック
+  useEffect(() => {
+    if (previewData) {
+      setMatchStatuses(checkStaffMatching(previewData.staffList))
+    }
+  }, [staffMaster]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ファイル選択時: パースしてプレビュー表示（DB保存しない）
   const handleFile = useCallback(
@@ -57,9 +77,10 @@ export const ImportView = () => {
 
       try {
         const result = await parseStaffAnalysisExcel(file, selectedStore as StoreName)
-        const statuses = checkStaffMatching(result.staffList, selectedStore as StoreName)
+        const statuses = checkStaffMatching(result.staffList)
         setPreviewData(result)
         setMatchStatuses(statuses)
+        setNameToUserIdMap({})
       } catch (err) {
         setError((err as Error).message)
       } finally {
@@ -86,25 +107,63 @@ export const ImportView = () => {
     setIsSaving(true)
     setError(null)
     try {
-      await addImportedData(previewData, selectedYearMonth)
+      const overrides = Object.keys(nameToUserIdMap).length > 0 ? nameToUserIdMap : undefined
+      await addImportedData(previewData, selectedYearMonth, overrides)
       setSuccessMessage(`${selectedStore}（${selectedYearMonth}）のデータを取り込みました`)
       setPreviewData(null)
       setMatchStatuses([])
+      setNameToUserIdMap({})
     } catch (err) {
       setError((err as Error).message)
     } finally {
       setIsSaving(false)
     }
-  }, [previewData, addImportedData, selectedYearMonth, selectedStore])
+  }, [previewData, addImportedData, selectedYearMonth, selectedStore, nameToUserIdMap])
 
   // プレビューキャンセル
   const handleCancelPreview = useCallback(() => {
     setPreviewData(null)
     setMatchStatuses([])
+    setNameToUserIdMap({})
     setError(null)
   }, [])
 
+  // 未登録スタッフをその場で新規作成
+  const handleQuickCreateUser = useCallback(
+    async (staffName: string) => {
+      if (!selectedStore) return
+      setCreatingStaff(staffName)
+      setError(null)
+      try {
+        // ランダムなemail/passwordを生成
+        const randomSuffix = Math.random().toString(36).slice(2, 10)
+        const email = `rg_${randomSuffix}@auto.local`
+        const password = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)
+
+        // ユーザー作成
+        const user = await createRegrowUser({name: staffName, email, password})
+
+        // 選択中の店舗を担当店舗にセット
+        const store = stores.find((s) => s.name === selectedStore)
+        if (store) {
+          await updateUserRgStore(user.id, store.id)
+        }
+
+        // staffMasterを再取得してマッチング状態を更新
+        await refreshStaffMaster()
+      } catch (err) {
+        setError(`ユーザー「${staffName}」の作成に失敗しました: ${(err as Error).message}`)
+      } finally {
+        setCreatingStaff(null)
+      }
+    },
+    [selectedStore, stores, refreshStaffMaster]
+  )
+
   const unmatchedCount = matchStatuses.filter((s) => !s.isMatched).length
+  // 同名ユーザーのうち、まだドロップダウンで選択されていないもの
+  const unresolvedDuplicates = matchStatuses.filter((s) => s.isDuplicate && !nameToUserIdMap[s.staffName])
+  const hasUnresolvedDuplicates = unresolvedDuplicates.length > 0
   const importedStores = monthlyData.importedData?.storeTotals.map((t) => t.storeName) || []
 
   return (
@@ -250,11 +309,23 @@ export const ImportView = () => {
                 未登録スタッフが {unmatchedCount}名 います（インポート不可）
               </p>
               <p className="text-red-700 text-sm mt-1">
-                マスタ管理画面で該当スタッフをUser登録し、担当店舗を設定してからインポートしてください。
+                スタッフ一覧の「新規登録」ボタンでその場で登録するか、マスタ管理画面で登録してください。
               </p>
               <div className="mt-2 text-red-700 text-sm">
                 未登録: {matchStatuses.filter((s) => !s.isMatched).map((s) => s.staffName).join(', ')}
               </div>
+            </div>
+          )}
+
+          {/* 同名ユーザー警告バナー */}
+          {hasUnresolvedDuplicates && (
+            <div className="mb-4 bg-amber-50 border border-amber-300 rounded-lg p-4">
+              <p className="text-amber-800 font-semibold">
+                同名ユーザーが {unresolvedDuplicates.length}名 います（選択が必要です）
+              </p>
+              <p className="text-amber-700 text-sm mt-1">
+                下のスタッフ一覧で、該当するユーザーをドロップダウンから選択してください。
+              </p>
             </div>
           )}
 
@@ -295,22 +366,69 @@ export const ImportView = () => {
             <div className="divide-y divide-gray-100 max-h-96 overflow-y-auto">
               {previewData.staffList.map((staff, i) => {
                 const status = matchStatuses[i]
+                const bgClass = !status?.isMatched ? 'bg-amber-50' : status?.isDuplicate ? 'bg-yellow-50' : ''
                 return (
                   <div
                     key={i}
-                    className={`flex items-center px-4 py-3 gap-3 ${!status?.isMatched ? 'bg-amber-50' : ''}`}
+                    className={`flex items-center px-4 py-3 gap-3 ${bgClass}`}
                   >
-                    <span className="text-lg">{status?.isMatched ? '✅' : '⚠️'}</span>
+                    <span className="text-lg">
+                      {!status?.isMatched ? '⚠️' : status?.isDuplicate ? (nameToUserIdMap[staff.staffName] ? '✅' : '🔄') : '✅'}
+                    </span>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="text-xs text-gray-400 w-8">#{staff.rank}</span>
                         <span className="font-medium text-gray-800 truncate">{staff.staffName}</span>
                         {!status?.isMatched && (
-                          <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full border border-amber-200">
-                            未登録
+                          <>
+                            <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full border border-amber-200">
+                              未登録
+                            </span>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleQuickCreateUser(staff.staffName)
+                              }}
+                              disabled={creatingStaff !== null}
+                              className="text-xs bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white px-2 py-0.5 rounded-full transition-colors"
+                            >
+                              {creatingStaff === staff.staffName ? '作成中...' : '新規登録'}
+                            </button>
+                          </>
+                        )}
+                        {status?.isDuplicate && (
+                          <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full border border-yellow-200">
+                            同名ユーザー
                           </span>
                         )}
                       </div>
+                      {/* 同名ユーザーのドロップダウン */}
+                      {status?.isDuplicate && (
+                        <div className="mt-2">
+                          <select
+                            value={nameToUserIdMap[staff.staffName] ?? ''}
+                            onChange={(e) => {
+                              const val = e.target.value
+                              setNameToUserIdMap((prev) => {
+                                if (!val) {
+                                  const next = {...prev}
+                                  delete next[staff.staffName]
+                                  return next
+                                }
+                                return {...prev, [staff.staffName]: Number(val)}
+                              })
+                            }}
+                            className="w-full px-2 py-1 border border-yellow-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                          >
+                            <option value="">-- ユーザーを選択 --</option>
+                            {status.duplicateUsers.map((u) => (
+                              <option key={u.userId} value={u.userId}>
+                                {u.name}（{u.storeName}）
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
                     </div>
                     <div className="grid grid-cols-4 gap-4 text-right text-sm text-gray-600 shrink-0">
                       <div>
@@ -346,7 +464,7 @@ export const ImportView = () => {
             </button>
             <button
               onClick={handleConfirmImport}
-              disabled={isSaving || unmatchedCount > 0}
+              disabled={isSaving || unmatchedCount > 0 || hasUnresolvedDuplicates}
               className="px-6 py-2 bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
             >
               {isSaving ? (

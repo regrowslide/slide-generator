@@ -24,8 +24,9 @@ export const upsertMonthlyReport = async (yearMonth: string): Promise<void> => {
 export const saveImportedData = async (
   yearMonth: string,
   staffRecords: StaffRecord[],
-  storeTotals: StoreTotals[]
-): Promise<void> => RegrowMonthlyReportService.saveImportedData(yearMonth, staffRecords, storeTotals)
+  storeTotals: StoreTotals[],
+  nameToUserIdOverrides?: Record<string, number>
+): Promise<void> => RegrowMonthlyReportService.saveImportedData(yearMonth, staffRecords, storeTotals, nameToUserIdOverrides)
 
 // ============================================================
 // Update（手動入力データ保存）

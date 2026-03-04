@@ -45,7 +45,7 @@ export type DataContextType = {
   refreshData: () => Promise<void>
 
   // インポートデータ更新（targetYearMonth: 保存先の年月。省略時はcurrentYearMonth）
-  addImportedData: (parseResult: ExcelParseResult, targetYearMonth?: YearMonth) => void
+  addImportedData: (parseResult: ExcelParseResult, targetYearMonth?: YearMonth, nameToUserIdMap?: Record<string, number>) => void
   clearImportedData: () => void
 
   // 手動入力データ更新
@@ -183,7 +183,7 @@ export const DataContextProvider = ({
 
   // インポートデータ追加
   const addImportedData = useCallback(
-    async (parseResult: ExcelParseResult, targetYearMonth?: YearMonth) => {
+    async (parseResult: ExcelParseResult, targetYearMonth?: YearMonth, nameToUserIdMap?: Record<string, number>) => {
       const saveYearMonth = targetYearMonth ?? currentYearMonth
       const staffRecords = parseResult.staffList.map((s) => ({
         ...s,
@@ -196,7 +196,7 @@ export const DataContextProvider = ({
         },
       ]
 
-      await saveImportedData(saveYearMonth, staffRecords, storeTotals as any)
+      await saveImportedData(saveYearMonth, staffRecords, storeTotals as any, nameToUserIdMap)
 
       // DB再取得で最新データを反映
       setCurrentYearMonth(saveYearMonth)

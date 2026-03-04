@@ -55,6 +55,18 @@ export class RegrowUserService {
     await prisma.user.delete({where: {id: userId}})
   }
 
+  /** ユーザー情報を更新（名前・メール・パスワード） */
+  static async updateUser(userId: number, data: {name?: string; email?: string; password?: string}): Promise<User> {
+    const updateData: Record<string, unknown> = {}
+    if (data.name !== undefined) updateData.name = data.name
+    if (data.email !== undefined) updateData.email = data.email || null
+    if (data.password) updateData.password = await bcrypt.hash(data.password, BCRYPT_ROUNDS)
+    return prisma.user.update({
+      where: {id: userId},
+      data: updateData,
+    })
+  }
+
   /** ユーザーの担当店舗（rgStoreId）を更新 */
   static async updateRgStore(userId: number, rgStoreId: number | null): Promise<User> {
     return prisma.user.update({
@@ -63,10 +75,10 @@ export class RegrowUserService {
     })
   }
 
-  /** rgStoreIdが設定されているUserをStaffMaster形式で取得（レポート画面用） */
+  /** regrow UserをStaffMaster形式で取得（レポート画面用・店舗未設定ユーザーも含む） */
   static async getStaffMaster(): Promise<StaffMaster[]> {
     const users = await prisma.user.findMany({
-      where: {apps: {has: 'regrow'}, rgStoreId: {not: null}, active: true},
+      where: {apps: {has: 'regrow'}, active: true},
       include: {
         RgStoreRg: true,
         UserRole: {
@@ -78,8 +90,9 @@ export class RegrowUserService {
     })
 
     return users.map((u) => ({
+      userId: u.id,
       staffName: u.name,
-      storeName: u.RgStoreRg!.name as StoreName,
+      storeName: (u.RgStoreRg?.name ?? '未設定') as StoreName,
       role: (u.UserRole[0]?.RoleMaster.name.replace('regrow-', '') ?? 'viewer') as StaffRole,
       isActive: u.active,
     }))

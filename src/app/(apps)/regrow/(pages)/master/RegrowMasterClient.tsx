@@ -13,8 +13,8 @@ import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import useModal from '@cm/components/utils/modal/useModal'
 
 import { createStore, updateStore, deleteStore } from '../../_actions/store-actions'
-import { getAllUsers, updateUserRgStore, updateUserActive, createRegrowUser, deleteRegrowUser } from '../../_actions/staff-actions'
-import { seedRegrowData, resetRegrowData } from '../../_actions/seed-regrow-actions'
+import { getAllUsers, updateUserRgStore, updateUserActive, createRegrowUser, deleteRegrowUser, updateRegrowUser } from '../../_actions/staff-actions'
+import { seedRegrowData, resetRegrowData, seedFromExcelFiles } from '../../_actions/seed-regrow-actions'
 import RoleAllocationTable from '@cm/components/RoleAllocationTable/RoleAllocationTable'
 
 import type { RgStore, User } from '@prisma/generated/prisma/client'
@@ -53,9 +53,15 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
   const [userForm, setUserForm] = useState({ name: '', email: '', password: '' })
   const [userFormError, setUserFormError] = useState<string | null>(null)
 
+  // ユーザー編集state
+  const [userEditingId, setUserEditingId] = useState<number | null>(null)
+  const [userEditForm, setUserEditForm] = useState({ name: '', email: '', password: '' })
+  const [userEditFormError, setUserEditFormError] = useState<string | null>(null)
+
   // モーダル
   const storeModal = useModal()
   const userModal = useModal()
+  const userEditModal = useModal()
 
   // ユーザー一覧を取得
   const fetchUsers = useCallback(async () => {
@@ -191,6 +197,37 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
     [toggleLoad, fetchUsers]
   )
 
+  // ============================================================
+  // ユーザー編集
+  // ============================================================
+
+  const handleOpenEditUser = useCallback(
+    (user: User & { RgStoreRg: RgStore | null }) => {
+      setUserEditingId(user.id)
+      setUserEditForm({ name: user.name, email: user.email ?? '', password: '' })
+      setUserEditFormError(null)
+      userEditModal.handleOpen()
+    },
+    [userEditModal]
+  )
+
+  const handleSaveEditUser = useCallback(async () => {
+    if (!userEditingId) return
+    if (!userEditForm.name.trim()) {
+      setUserEditFormError('名前は必須です')
+      return
+    }
+    toggleLoad(async () => {
+      await updateRegrowUser(userEditingId, {
+        name: userEditForm.name.trim(),
+        email: userEditForm.email.trim() || undefined,
+        ...(userEditForm.password.trim() ? { password: userEditForm.password.trim() } : {}),
+      })
+      await fetchUsers()
+      userEditModal.handleClose()
+    }, { refresh: false })
+  }, [userEditingId, userEditForm, toggleLoad, fetchUsers, userEditModal])
+
   return (
     <div className="space-y-6">
       {/* ヘッダー */}
@@ -226,6 +263,21 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
           >
             <Database className="w-4 h-4 mr-1" />
             シードデータ投入
+          </Button>
+          <Button
+            color="green"
+            size="sm"
+            onClick={() => {
+              if (!window.confirm('既存データをリセットし、Excelファイルからシードデータを投入しますか？')) return
+              toggleLoad(async () => {
+                const result = await seedFromExcelFiles()
+                window.alert(result.message)
+                window.location.reload()
+              })
+            }}
+          >
+            <Database className="w-4 h-4 mr-1" />
+            Excelからシード投入
           </Button>
         </div>
       </div>
@@ -382,6 +434,7 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
                   <TableHeader>
                     <TableRow>
                       <TableHead>名前</TableHead>
+                      <TableHead>メールアドレス</TableHead>
                       <TableHead>担当店舗</TableHead>
                       <TableHead>状態</TableHead>
                       <TableHead>操作</TableHead>
@@ -390,7 +443,7 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
                   <TableBody>
                     {users.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={4} className="text-center py-8 text-slate-400">
+                        <TableCell colSpan={5} className="text-center py-8 text-slate-400">
                           ユーザーが見つかりません（appsに「regrow」が含まれるユーザーが対象）
                         </TableCell>
                       </TableRow>
@@ -398,6 +451,7 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
                       users.map((user) => (
                         <TableRow key={user.id} className={!user.active ? 'opacity-50' : ''}>
                           <TableCell className="font-medium">{user.name}</TableCell>
+                          <TableCell className="text-sm text-slate-500">{user.email ?? '-'}</TableCell>
                           <TableCell>
                             <select
                               className="border rounded px-2 py-1 text-sm"
@@ -424,12 +478,20 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <button
-                              className="p-1 hover:bg-gray-100 rounded"
-                              onClick={() => handleDeleteUser(user.id, user.name)}
-                            >
-                              <Trash2 className="w-4 h-4 text-red-500" />
-                            </button>
+                            <div className="flex items-center gap-2">
+                              <button
+                                className="p-1 hover:bg-gray-100 rounded"
+                                onClick={() => handleOpenEditUser(user)}
+                              >
+                                <Pencil className="w-4 h-4" />
+                              </button>
+                              <button
+                                className="p-1 hover:bg-gray-100 rounded"
+                                onClick={() => handleDeleteUser(user.id, user.name)}
+                              >
+                                <Trash2 className="w-4 h-4 text-red-500" />
+                              </button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))
@@ -480,6 +542,45 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
             </div>
           </userModal.Modal>
 
+          {/* ユーザー編集モーダル */}
+          <userEditModal.Modal title="ユーザーを編集">
+            <div className="space-y-4">
+              {userEditFormError && <div className="text-sm text-red-500 bg-red-50 p-2 rounded">{userEditFormError}</div>}
+              <div className="space-y-2">
+                <Label htmlFor="editUserName">名前 *</Label>
+                <Input
+                  id="editUserName"
+                  value={userEditForm.name}
+                  onChange={(e) => setUserEditForm({ ...userEditForm, name: e.target.value })}
+                  placeholder="山田 太郎"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="editUserEmail">メールアドレス</Label>
+                <Input
+                  id="editUserEmail"
+                  type="email"
+                  value={userEditForm.email}
+                  onChange={(e) => setUserEditForm({ ...userEditForm, email: e.target.value })}
+                  placeholder="taro@example.com"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="editUserPassword">パスワード（変更する場合のみ入力）</Label>
+                <Input
+                  id="editUserPassword"
+                  type="password"
+                  value={userEditForm.password}
+                  onChange={(e) => setUserEditForm({ ...userEditForm, password: e.target.value })}
+                  placeholder="空欄の場合は変更しません"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 mt-4">
+              <Button color="gray" onClick={() => userEditModal.handleClose()}>キャンセル</Button>
+              <Button onClick={handleSaveEditUser}>更新</Button>
+            </div>
+          </userEditModal.Modal>
 
         </div>
       )}

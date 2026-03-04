@@ -1,14 +1,9 @@
 'use server'
 
+import path from 'path'
 import prisma from 'src/lib/prisma'
-import {
-  STAFF_BY_STORE,
-  STORE_COMMENTS,
-  CUSTOMER_VOICES,
-  randomInt,
-  randomFloat,
-  getMonthMultiplier,
-} from '../lib/seed-constants'
+import {STAFF_BY_STORE, STORE_COMMENTS, CUSTOMER_VOICES, randomInt, randomFloat, getMonthMultiplier} from '../lib/seed-constants'
+import {parseAllExcelFiles} from '../lib/excel-parser-server'
 
 // ============================================================
 // シード実行（既存データをリセットして再投入）
@@ -50,7 +45,7 @@ export const seedRegrowData = async (): Promise<{message: string}> => {
     prisma.rgStore.create({data: {name: '中央店', fullName: 'asian relaxation villa中央店', sortOrder: 3}}),
   ])
 
-  const storeMap = new Map(stores.map((s) => [s.name, s]))
+  const storeMap = new Map(stores.map(s => [s.name, s]))
 
   // 2. スタッフリスト（RgStaffテーブルは廃止、staffNameを直接使用）
   const allStaff: Array<{staffName: string; storeId: number; storeName: string}> = []
@@ -75,7 +70,7 @@ export const seedRegrowData = async (): Promise<{message: string}> => {
     })
 
     // スタッフレコード（staffNameを直接保存）
-    const staffRecordsRaw = allStaff.map((staff) => {
+    const staffRecordsRaw = allStaff.map(staff => {
       const customerCount = randomInt(20, 50)
       const newCustomerCount = randomInt(5, Math.floor(customerCount * 0.3))
       const nominationCount = randomInt(Math.floor(customerCount * 0.3), Math.floor(customerCount * 0.7))
@@ -111,7 +106,7 @@ export const seedRegrowData = async (): Promise<{message: string}> => {
 
     // 店舗合計
     for (const [storeName, store] of storeMap.entries()) {
-      const storeStaff = staffRecordsRaw.filter((r) => r.storeName === storeName)
+      const storeStaff = staffRecordsRaw.filter(r => r.storeName === storeName)
       const sales = storeStaff.reduce((sum, r) => sum + r.sales, 0)
       const customerCount = storeStaff.reduce((sum, r) => sum + r.customerCount, 0)
       const nominationCount = storeStaff.reduce((sum, r) => sum + r.nominationCount, 0)
@@ -173,6 +168,191 @@ export const seedRegrowData = async (): Promise<{message: string}> => {
 }
 
 // ============================================================
+// Excelファイルからシード投入
+// ============================================================
+
+export const seedFromExcelFiles = async (): Promise<{message: string}> => {
+  // 既存データを削除（依存関係順）
+  await prisma.rgCustomerVoice.deleteMany()
+  await prisma.rgStaffManualData.deleteMany()
+  await prisma.rgStoreKpi.deleteMany()
+  await prisma.rgStoreTotals.deleteMany()
+  await prisma.rgStaffRecord.deleteMany()
+  await prisma.rgMonthlyReport.deleteMany()
+  await prisma.rgStore.deleteMany()
+
+  // RoleMaster に regrowロールをupsert
+  await Promise.all([
+    prisma.roleMaster.upsert({
+      where: {name: 'regrow-admin'},
+      create: {name: 'regrow-admin', apps: ['regrow'], description: '管理者'},
+      update: {apps: ['regrow'], description: '管理者'},
+    }),
+    prisma.roleMaster.upsert({
+      where: {name: 'regrow-manager'},
+      create: {name: 'regrow-manager', apps: ['regrow'], description: '店舗責任者'},
+      update: {apps: ['regrow'], description: '店舗責任者'},
+    }),
+    prisma.roleMaster.upsert({
+      where: {name: 'regrow-viewer'},
+      create: {name: 'regrow-viewer', apps: ['regrow'], description: '閲覧者'},
+      update: {apps: ['regrow'], description: '閲覧者'},
+    }),
+  ])
+
+  // ① Excelディレクトリからファイルをパース
+  const excelDir = path.join(process.cwd(), 'src/app/(apps)/regrow/regrow-doc/excel')
+  const parsedFiles = parseAllExcelFiles(excelDir)
+
+  if (parsedFiles.length === 0) {
+    return {message: 'Excelファイルが見つかりませんでした'}
+  }
+
+  // ② 店舗名を重複排除して作成
+  const storeEntries = new Map<string, string>() // shortName → fullName
+  for (const file of parsedFiles) {
+    if (!storeEntries.has(file.storeShortName)) {
+      storeEntries.set(file.storeShortName, file.result.storeName)
+    }
+  }
+
+  let sortOrder = 1
+  const storeMap = new Map<string, {id: number; sortOrder: number}>()
+  for (const [shortName, fullName] of storeEntries) {
+    const store = await prisma.rgStore.create({
+      data: {name: shortName, fullName, sortOrder},
+    })
+    storeMap.set(shortName, {id: store.id, sortOrder: store.sortOrder})
+    sortOrder++
+  }
+
+  // ③ スタッフ名を収集して重複排除 → User作成 + 担当店舗設定
+  // スタッフ名 → 最も出現回数が多い店舗を担当店舗とする
+  const staffStoreCount = new Map<string, Map<string, number>>() // staffName → (storeName → count)
+  for (const file of parsedFiles) {
+    for (const staff of file.result.staffList) {
+      if (!staffStoreCount.has(staff.staffName)) {
+        staffStoreCount.set(staff.staffName, new Map())
+      }
+      const countMap = staffStoreCount.get(staff.staffName)!
+      countMap.set(file.storeShortName, (countMap.get(file.storeShortName) ?? 0) + 1)
+    }
+  }
+
+  const userMap = new Map<string, number>() // staffName → userId
+  for (const [staffName, countMap] of staffStoreCount) {
+    // 最も出現回数が多い店舗を担当店舗とする
+    let primaryStore = ''
+    let maxCount = 0
+    for (const [storeName, count] of countMap) {
+      if (count > maxCount) {
+        primaryStore = storeName
+        maxCount = count
+      }
+    }
+
+    const storeInfo = storeMap.get(primaryStore)
+    const user = await prisma.user.create({
+      data: {
+        name: staffName,
+        apps: ['regrow'],
+        rgStoreId: storeInfo?.id ?? null,
+      },
+    })
+    userMap.set(staffName, user.id)
+  }
+
+  // ④ 月次データを保存
+  // yearMonthごとにグルーピング
+  const byYearMonth = new Map<string, typeof parsedFiles>()
+  for (const file of parsedFiles) {
+    if (!byYearMonth.has(file.yearMonth)) {
+      byYearMonth.set(file.yearMonth, [])
+    }
+    byYearMonth.get(file.yearMonth)!.push(file)
+  }
+
+  let totalMonths = 0
+  for (const [yearMonth, files] of byYearMonth) {
+    const report = await prisma.rgMonthlyReport.create({
+      data: {
+        yearMonth,
+        importedAt: new Date(),
+        importedFileName: files.map(f => `${f.yearMonth}_${f.storeShortName}.xls`).join(', '),
+      },
+    })
+
+    // 全店舗のスタッフレコードを集約してランク付け
+    const allStaffRecords: Array<{
+      staffName: string
+      storeId: number
+      userId: number | null
+      sales: number
+      customerCount: number
+      newCustomerCount: number
+      nominationCount: number
+      unitPrice: number
+    }> = []
+
+    for (const file of files) {
+      const storeInfo = storeMap.get(file.storeShortName)!
+      for (const staff of file.result.staffList) {
+        allStaffRecords.push({
+          staffName: staff.staffName,
+          storeId: storeInfo.id,
+          userId: userMap.get(staff.staffName) ?? null,
+          sales: staff.sales,
+          customerCount: staff.customerCount,
+          newCustomerCount: staff.newCustomerCount,
+          nominationCount: staff.nominationCount,
+          unitPrice: staff.unitPrice,
+        })
+      }
+    }
+
+    // 売上順でランク付け
+    allStaffRecords.sort((a, b) => b.sales - a.sales)
+
+    await prisma.rgStaffRecord.createMany({
+      data: allStaffRecords.map((r, i) => ({
+        monthlyReportId: report.id,
+        staffName: r.staffName,
+        storeId: r.storeId,
+        userId: r.userId,
+        rank: i + 1,
+        sales: r.sales,
+        customerCount: r.customerCount,
+        newCustomerCount: r.newCustomerCount,
+        nominationCount: r.nominationCount,
+        unitPrice: r.unitPrice,
+      })),
+    })
+
+    // 店舗合計（Excelの総合計データを使用）
+    for (const file of files) {
+      const storeInfo = storeMap.get(file.storeShortName)!
+      await prisma.rgStoreTotals.create({
+        data: {
+          monthlyReportId: report.id,
+          storeId: storeInfo.id,
+          sales: file.result.total.sales,
+          customerCount: file.result.total.customerCount,
+          nominationCount: file.result.total.nominationCount,
+          unitPrice: file.result.total.unitPrice,
+          sortOrder: storeInfo.sortOrder,
+        },
+      })
+    }
+
+    totalMonths++
+  }
+
+  return {
+    message: `Excelからシード投入完了: 店舗${storeMap.size}件、スタッフ${userMap.size}名、${totalMonths}ヶ月分のデータ（${parsedFiles.length}ファイル）`,
+  }
+}
+
+// ============================================================
 // リセット（全データ削除のみ）
 // ============================================================
 
@@ -183,6 +363,8 @@ export const resetRegrowData = async (): Promise<{message: string}> => {
   await prisma.rgStoreTotals.deleteMany()
   await prisma.rgStaffRecord.deleteMany()
   await prisma.rgMonthlyReport.deleteMany()
+  await prisma.user.deleteMany()
+  await prisma.roleMaster.deleteMany()
   await prisma.rgStore.deleteMany()
 
   return {message: '全データをリセットしました'}

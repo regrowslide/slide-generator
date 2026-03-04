@@ -35,6 +35,9 @@ const nextConfig: NextConfig = {
       ...(isProd ? {} : {allowedOrigins: ['*.devtunnels.ms:*', 'localhost:3000']}),
     },
   },
+  outputFileTracingIncludes: {
+    '/regrow/*': ['./src/app/(apps)/regrow/regrow-doc/excel/**/*'],
+  },
   images: {
     remotePatterns: [
       {protocol: 'https', hostname: '**kickswrap.com'},
