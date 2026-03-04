@@ -40,6 +40,13 @@ export const getCurrentUserRgRole = async (userId: number): Promise<StaffRole> =
   RegrowUserService.getRgRoleByUserId(userId)
 
 // ============================================================
+// Delete
+// ============================================================
+
+export const deleteRegrowUser = async (userId: number): Promise<void> =>
+  RegrowUserService.deleteUser(userId)
+
+// ============================================================
 // バッチ紐付け（既存データのuserId/storeIdを一括セット）
 // ============================================================
 
@@ -54,7 +61,7 @@ type BatchLinkResult = {
 export const batchLinkStaffData = async (): Promise<BatchLinkResult> => {
   // regrow User（rgStoreId付き）を全件取得
   const rgUsers = await prisma.user.findMany({
-    where: {apps: {has: 'regrow'}, rgStoreId: {not: null}},
+    where: {apps: {has: 'regrow'}, rgStoreId: {not: null}, active: true},
     include: {RgStoreRg: true},
   })
 

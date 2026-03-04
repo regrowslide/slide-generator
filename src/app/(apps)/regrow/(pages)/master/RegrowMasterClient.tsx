@@ -13,7 +13,7 @@ import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import useModal from '@cm/components/utils/modal/useModal'
 
 import { createStore, updateStore, deleteStore } from '../../_actions/store-actions'
-import { getAllUsers, updateUserRgStore, updateUserActive, createRegrowUser } from '../../_actions/staff-actions'
+import { getAllUsers, updateUserRgStore, updateUserActive, createRegrowUser, deleteRegrowUser } from '../../_actions/staff-actions'
 import { seedRegrowData, resetRegrowData } from '../../_actions/seed-regrow-actions'
 import RoleAllocationTable from '@cm/components/RoleAllocationTable/RoleAllocationTable'
 
@@ -167,6 +167,18 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
       await fetchUsers()
     },
     [fetchUsers]
+  )
+
+  const handleDeleteUser = useCallback(
+    async (userId: number, userName: string) => {
+      if (!window.confirm(`「${userName}」を完全に削除しますか？\nこの操作は取り消せません。過去データのスタッフ紐付けは解除されます。`)) return
+
+      toggleLoad(async () => {
+        await deleteRegrowUser(userId)
+        await fetchUsers()
+      }, { refresh: false })
+    },
+    [toggleLoad, fetchUsers]
   )
 
   const handleToggleUserActive = useCallback(
@@ -372,12 +384,13 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
                       <TableHead>名前</TableHead>
                       <TableHead>担当店舗</TableHead>
                       <TableHead>状態</TableHead>
+                      <TableHead>操作</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {users.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={3} className="text-center py-8 text-slate-400">
+                        <TableCell colSpan={4} className="text-center py-8 text-slate-400">
                           ユーザーが見つかりません（appsに「regrow」が含まれるユーザーが対象）
                         </TableCell>
                       </TableRow>
@@ -409,6 +422,14 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
                                 {user.active ? '有効' : '無効'}
                               </span>
                             </div>
+                          </TableCell>
+                          <TableCell>
+                            <button
+                              className="p-1 hover:bg-gray-100 rounded"
+                              onClick={() => handleDeleteUser(user.id, user.name)}
+                            >
+                              <Trash2 className="w-4 h-4 text-red-500" />
+                            </button>
                           </TableCell>
                         </TableRow>
                       ))

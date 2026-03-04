@@ -325,20 +325,22 @@ export const SlidesView = () => {
           // スクロールモード
           <div className="max-w-6xl mx-auto space-y-8">
             {slides.map((slide, i) => (
-              <SlideContainer key={i} slideNumber={i + 1}>
+              <SlideContainer key={i} slideNumber={i + 1} isFullscreen={isFullscreen}>
                 {slide}
               </SlideContainer>
             ))}
           </div>
         ) : (
           // ページ切替モード
-          <div className="max-w-6xl mx-auto">
-            <SlideContainer slideNumber={currentSlide + 1}>
-              {slides[currentSlide]}
-            </SlideContainer>
+          <div className={`max-w-6xl mx-auto ${isFullscreen ? 'flex items-center justify-center min-h-[calc(100vh-48px)]' : ''}`}>
+            <div className={`w-full ${isFullscreen ? 'pb-16' : ''}`}>
+              <SlideContainer slideNumber={currentSlide + 1} isFullscreen={isFullscreen}>
+                {slides[currentSlide]}
+              </SlideContainer>
+            </div>
 
             {/* ナビゲーション */}
-            <div className="flex items-center justify-center gap-4 mt-4">
+            <div className={`flex items-center justify-center gap-4 ${isFullscreen ? 'fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur py-3 shadow-lg' : 'mt-4'}`}>
               <button
                 onClick={() => setCurrentSlide((prev) => Math.max(prev - 1, 0))}
                 disabled={currentSlide === 0}
@@ -437,9 +439,12 @@ export const SlidesView = () => {
 }
 
 // スライドコンテナ
-const SlideContainer = ({slideNumber, children}: {slideNumber: number; children: React.ReactNode}) => {
+const SlideContainer = ({slideNumber, children, isFullscreen = false}: {slideNumber: number; children: React.ReactNode; isFullscreen?: boolean}) => {
   return (
-    <div className="bg-white shadow-xl rounded-lg overflow-hidden relative" style={{minHeight: '600px'}}>
+    <div
+      className="bg-white shadow-xl rounded-lg overflow-hidden relative"
+      style={isFullscreen ? {height: 'calc(100vh - 48px)'} : {minHeight: '600px'}}
+    >
       <div className="absolute top-4 right-4 bg-gray-800 text-white px-3 py-1 rounded text-sm font-medium z-10">
         {slideNumber} / {TOTAL_SLIDES}
       </div>

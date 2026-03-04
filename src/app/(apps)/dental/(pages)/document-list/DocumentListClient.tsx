@@ -1,13 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { HREF } from '@cm/lib/methods/urls'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import { Button } from '@cm/components/styles/common-components/Button'
 import { Card, CardContent } from '@shadcn/ui/card'
 import { DOCUMENT_TEMPLATES } from '@app/(apps)/dental/lib/constants'
-import { deleteDentalSavedDocument } from '@app/(apps)/dental/_actions/saved-document-actions'
+import { deleteDentalSavedDocument, markDocumentsDownloaded } from '@app/(apps)/dental/_actions/saved-document-actions'
 import { deleteDocumentPdf } from '@app/(apps)/dental/_actions/document-blob-actions'
 import type { Facility } from '@app/(apps)/dental/lib/types'
 
@@ -22,6 +22,7 @@ type DocumentItem = {
   pdfUrl: string
   version: number
   createdAt: string
+  downloadedAt: string | null
   visitDate: string
 }
 
@@ -30,22 +31,56 @@ type Props = {
   facilities: Facility[]
 }
 
+/** 状態バッジ */
+const StatusBadge = ({ doc }: { doc: DocumentItem }) => {
+  if (doc.downloadedAt) {
+    return <span className="text-[11px] font-bold text-green-600 bg-green-100 px-1.5 py-0.5 rounded">DL済</span>
+  }
+  if (doc.pdfUrl) {
+    return <span className="text-[11px] font-bold text-blue-600 bg-blue-100 px-1.5 py-0.5 rounded">清書済</span>
+  }
+  return <span className="text-[11px] text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">下書き</span>
+}
+
 const DocumentListClient = ({ documents, facilities }: Props) => {
   const router = useRouter()
   const { query } = useGlobal()
-  const [filterFacility, setFilterFacility] = useState('')
+  const [filterVisit, setFilterVisit] = useState('')
   const [filterDocType, setFilterDocType] = useState('')
-  const [filterMonth, setFilterMonth] = useState('')
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
+  const [merging, setMerging] = useState(false)
 
-  const filtered = documents.filter(doc => {
-    if (filterFacility && doc.facilityId !== Number(filterFacility)) return false
-    if (filterDocType && doc.templateId !== filterDocType) return false
-    if (filterMonth && !doc.visitDate.startsWith(filterMonth)) return false
-    return true
-  })
+  // 「施設×日付」の複合フィルタ選択肢を生成
+  const visitOptions = useMemo(() => {
+    const map = new Map<string, { facilityId: number; facilityName: string; visitDate: string }>()
+    for (const doc of documents) {
+      if (!doc.facilityId || !doc.visitDate) continue
+      const key = `${doc.facilityId}_${doc.visitDate}`
+      if (!map.has(key)) {
+        map.set(key, { facilityId: doc.facilityId, facilityName: doc.facilityName, visitDate: doc.visitDate })
+      }
+    }
+    return [...map.entries()]
+      .sort((a, b) => b[1].visitDate.localeCompare(a[1].visitDate))
+      .map(([key, v]) => ({ value: key, label: `${v.facilityName} - ${v.visitDate}` }))
+  }, [documents])
+
+  const filtered = useMemo(() => {
+    return documents.filter(doc => {
+      if (filterVisit) {
+        const [fId, vDate] = filterVisit.split('_')
+        if (doc.facilityId !== Number(fId) || doc.visitDate !== vDate) return false
+      }
+      if (filterDocType && doc.templateId !== filterDocType) return false
+      return true
+    })
+  }, [documents, filterVisit, filterDocType])
+
+  // チェック対象: 清書済み（pdfUrlあり）のみ
+  const selectableIds = useMemo(() => new Set(filtered.filter(d => d.pdfUrl).map(d => d.id)), [filtered])
 
   const handleToggleSelect = (id: number) => {
+    if (!selectableIds.has(id)) return
     setSelectedIds(prev => {
       const next = new Set(prev)
       if (next.has(id)) next.delete(id)
@@ -55,10 +90,11 @@ const DocumentListClient = ({ documents, facilities }: Props) => {
   }
 
   const handleSelectAll = () => {
-    if (selectedIds.size === filtered.length) {
+    const currentSelectable = [...selectableIds]
+    if (currentSelectable.every(id => selectedIds.has(id))) {
       setSelectedIds(new Set())
     } else {
-      setSelectedIds(new Set(filtered.map(d => d.id)))
+      setSelectedIds(new Set(currentSelectable))
     }
   }
 
@@ -73,10 +109,11 @@ const DocumentListClient = ({ documents, facilities }: Props) => {
     }
   }
 
-  const handleBulkDownload = () => {
+  // バラバラDL
+  const handleBulkDownload = async () => {
     const selected = filtered.filter(d => selectedIds.has(d.id) && d.pdfUrl)
     if (selected.length === 0) {
-      window.alert('ダウンロード可能な文書が選択されていません。')
+      window.alert('清書済みの文書を選択してください。')
       return
     }
     selected.forEach(doc => {
@@ -86,12 +123,65 @@ const DocumentListClient = ({ documents, facilities }: Props) => {
       a.target = '_blank'
       a.click()
     })
+    // DL済みフラグを記録
+    const ids = selected.filter(d => !d.downloadedAt).map(d => d.id)
+    if (ids.length > 0) {
+      await markDocumentsDownloaded(ids)
+      router.refresh()
+    }
+  }
+
+  // 結合DL（pdf-lib）
+  const handleMergeDownload = async () => {
+    const selected = filtered.filter(d => selectedIds.has(d.id) && d.pdfUrl)
+    if (selected.length === 0) {
+      window.alert('清書済みの文書を選択してください。')
+      return
+    }
+    setMerging(true)
+    try {
+      const { PDFDocument } = await import('pdf-lib')
+      const mergedPdf = await PDFDocument.create()
+      for (const doc of selected) {
+        try {
+          const response = await fetch(doc.pdfUrl)
+          const pdfBytes = await response.arrayBuffer()
+          const pdf = await PDFDocument.load(pdfBytes)
+          const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices())
+          pages.forEach(page => mergedPdf.addPage(page))
+        } catch (e) {
+          console.error(`PDF読み込み失敗 (${doc.templateName}):`, e)
+        }
+      }
+      const mergedBytes = await mergedPdf.save() as any
+      const blob = new Blob([mergedBytes], { type: 'application/pdf' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      const today = new Date().toISOString().slice(0, 10)
+      a.download = `文書一括_${today}.pdf`
+      a.click()
+      URL.revokeObjectURL(url)
+      // DL済みフラグを記録
+      const ids = selected.filter(d => !d.downloadedAt).map(d => d.id)
+      if (ids.length > 0) {
+        await markDocumentsDownloaded(ids)
+        router.refresh()
+      }
+    } catch (e) {
+      console.error('PDF結合失敗:', e)
+      window.alert('PDF結合に失敗しました')
+    } finally {
+      setMerging(false)
+    }
   }
 
   const documentTypeOptions = Object.entries(DOCUMENT_TEMPLATES).map(([id, t]) => ({
     value: id,
     label: t.name,
   }))
+
+  const selectedCount = selectedIds.size
 
   return (
     <div className="p-4 max-w-5xl mx-auto">
@@ -107,24 +197,15 @@ const DocumentListClient = ({ documents, facilities }: Props) => {
         <CardContent className="pt-4">
           <div className="flex flex-wrap gap-4 items-end">
             <div>
-              <label className="block text-xs text-gray-600 mb-1">月</label>
-              <input
-                type="month"
-                value={filterMonth}
-                onChange={e => setFilterMonth(e.target.value)}
-                className="border border-gray-300 rounded px-2 py-1.5 text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-xs text-gray-600 mb-1">施設</label>
+              <label className="block text-xs text-gray-600 mb-1">訪問（施設×日付）</label>
               <select
-                value={filterFacility}
-                onChange={e => setFilterFacility(e.target.value)}
-                className="border border-gray-300 rounded px-2 py-1.5 text-sm"
+                value={filterVisit}
+                onChange={e => setFilterVisit(e.target.value)}
+                className="border border-gray-300 rounded px-2 py-1.5 text-sm min-w-[200px]"
               >
                 <option value="">すべて</option>
-                {facilities.map(f => (
-                  <option key={f.id} value={f.id}>{f.name}</option>
+                {visitOptions.map(opt => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}
               </select>
             </div>
@@ -143,10 +224,13 @@ const DocumentListClient = ({ documents, facilities }: Props) => {
             </div>
             <div className="ml-auto flex gap-2">
               <Button size="sm" onClick={handleSelectAll}>
-                {selectedIds.size === filtered.length && filtered.length > 0 ? '全解除' : '全選択'}
+                {selectableIds.size > 0 && [...selectableIds].every(id => selectedIds.has(id)) ? '全解除' : '全選択'}
               </Button>
-              <Button size="sm" onClick={handleBulkDownload} disabled={selectedIds.size === 0}>
-                選択した文書をDL ({selectedIds.size}件)
+              <Button size="sm" onClick={handleBulkDownload} disabled={selectedCount === 0}>
+                バラバラDL ({selectedCount}件)
+              </Button>
+              <Button size="sm" onClick={handleMergeDownload} disabled={selectedCount === 0 || merging}>
+                {merging ? '結合中...' : `結合DL (${selectedCount}件)`}
               </Button>
             </div>
           </div>
@@ -170,11 +254,12 @@ const DocumentListClient = ({ documents, facilities }: Props) => {
                   <th className="px-3 py-2 text-left w-8">
                     <input
                       type="checkbox"
-                      checked={selectedIds.size === filtered.length && filtered.length > 0}
+                      checked={selectableIds.size > 0 && [...selectableIds].every(id => selectedIds.has(id))}
                       onChange={handleSelectAll}
                       className="w-4 h-4 accent-emerald-600"
                     />
                   </th>
+                  <th className="px-3 py-2 text-left">状態</th>
                   <th className="px-3 py-2 text-left">文書名</th>
                   <th className="px-3 py-2 text-left">患者</th>
                   <th className="px-3 py-2 text-left">施設</th>
@@ -196,7 +281,11 @@ const DocumentListClient = ({ documents, facilities }: Props) => {
                         checked={selectedIds.has(doc.id)}
                         onChange={() => handleToggleSelect(doc.id)}
                         className="w-4 h-4 accent-emerald-600"
+                        disabled={!doc.pdfUrl}
                       />
+                    </td>
+                    <td className="px-3 py-2">
+                      <StatusBadge doc={doc} />
                     </td>
                     <td className="px-3 py-2 font-medium">{doc.templateName}</td>
                     <td className="px-3 py-2">{doc.patientName}</td>
@@ -215,7 +304,7 @@ const DocumentListClient = ({ documents, facilities }: Props) => {
                             PDF
                           </a>
                         ) : (
-                          <span className="text-gray-400 text-xs">未保存</span>
+                          <span className="text-gray-400 text-xs">-</span>
                         )}
                         <button
                           onClick={() => handleDelete(doc)}

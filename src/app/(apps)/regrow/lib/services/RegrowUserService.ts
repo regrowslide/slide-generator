@@ -49,6 +49,12 @@ export class RegrowUserService {
     })
   }
 
+  /** ユーザーを完全削除（UserRoleも事前削除） */
+  static async deleteUser(userId: number): Promise<void> {
+    await prisma.userRole.deleteMany({where: {userId}})
+    await prisma.user.delete({where: {id: userId}})
+  }
+
   /** ユーザーの担当店舗（rgStoreId）を更新 */
   static async updateRgStore(userId: number, rgStoreId: number | null): Promise<User> {
     return prisma.user.update({
@@ -60,7 +66,7 @@ export class RegrowUserService {
   /** rgStoreIdが設定されているUserをStaffMaster形式で取得（レポート画面用） */
   static async getStaffMaster(): Promise<StaffMaster[]> {
     const users = await prisma.user.findMany({
-      where: {apps: {has: 'regrow'}, rgStoreId: {not: null}},
+      where: {apps: {has: 'regrow'}, rgStoreId: {not: null}, active: true},
       include: {
         RgStoreRg: true,
         UserRole: {

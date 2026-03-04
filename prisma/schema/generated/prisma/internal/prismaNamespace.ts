@@ -8902,6 +8902,7 @@ export const DentalSavedDocumentScalarFieldEnum = {
   templateData: 'templateData',
   pdfUrl: 'pdfUrl',
   version: 'version',
+  downloadedAt: 'downloadedAt',
   dentalClinicId: 'dentalClinicId',
   dentalPatientId: 'dentalPatientId',
   dentalExaminationId: 'dentalExaminationId'

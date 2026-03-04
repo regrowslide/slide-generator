@@ -2,14 +2,15 @@
 
 import { DOCUMENT_TEMPLATES } from '@app/(apps)/dental/lib/constants'
 import type { DocumentRequirement } from '@app/(apps)/dental/lib/types'
+import type { SavedTemplateStatus } from '@app/(apps)/dental/_actions/saved-document-actions'
 
 type Variant = 'sidebar' | 'grid' | 'inline'
 
 type Props = {
   /** calculateDocumentRequirementsの結果 */
   docRequirements: Record<string, DocumentRequirement>
-  /** 保存済みtemplateIdの配列 */
-  savedTemplateIds?: string[]
+  /** 保存済みテンプレートの状態 */
+  savedTemplateStatuses?: SavedTemplateStatus[]
   /** 現在選択中のtemplateId（sidebarバリアントで使用） */
   selectedType?: string
   /** ボタンクリック時のコールバック */
@@ -22,16 +23,25 @@ type Props = {
   disabled?: boolean
 }
 
+/** 3状態バッジ: DL済 > 清書済 > 下書き */
+const StatusBadge = ({ status, compact = false }: { status: SavedTemplateStatus | undefined; compact?: boolean }) => {
+  if (!status) return null
+  if (status.downloadedAt) {
+    return <span className={`${compact ? 'text-[10px]' : 'text-[11px]'} font-bold text-green-600 bg-green-100 px-1 rounded`}>DL</span>
+  }
+  if (status.pdfUrl) {
+    return <span className={`${compact ? 'text-[10px]' : 'text-[11px]'} font-bold text-blue-600 bg-blue-100 px-1 rounded`}>PDF</span>
+  }
+  return <span className={`${compact ? 'text-[10px]' : 'text-[11px]'} text-gray-500`}>✓</span>
+}
+
 /**
  * 文書テンプレートボタン共通コンポーネント
- * - 必要文書: 緑系ハイライト
- * - 不要文書: グレー
- * - 保存済み: チェックマーク表示
- * - 選択中: 青背景（sidebar）
+ * バッジで3状態を表示: 下書き(✓) / 清書済(PDF) / DL済(DL)
  */
 const DocumentTemplateButtons = ({
   docRequirements,
-  savedTemplateIds = [],
+  savedTemplateStatuses = [],
   selectedType,
   onSelect,
   variant = 'grid',
@@ -45,13 +55,15 @@ const DocumentTemplateButtons = ({
 
   if (filtered.length === 0) return null
 
+  const getStatus = (key: string) => savedTemplateStatuses.find(s => s.templateId === key)
+
   // サイドバー: document-create用の縦並びナビ
   if (variant === 'sidebar') {
     return (
       <div className="flex flex-col gap-1">
         {filtered.map(([key, tpl]) => {
           const isRequired = docRequirements[key]?.required
-          const isSaved = savedTemplateIds.includes(key)
+          const status = getStatus(key)
           const isSelected = selectedType === key
           return (
             <button
@@ -69,7 +81,10 @@ const DocumentTemplateButtons = ({
               ].join(' ')}
             >
               <span className="flex items-center gap-1 leading-tight">
-                {isSaved && <span className={isSelected ? 'text-white' : 'text-blue-500'}>✓</span>}
+                {isSelected
+                  ? status && <span className="text-white text-[10px]">{status.downloadedAt ? 'DL' : status.pdfUrl ? 'PDF' : '✓'}</span>
+                  : <StatusBadge status={status} compact />
+                }
                 {tpl.name}
               </span>
             </button>
@@ -84,15 +99,15 @@ const DocumentTemplateButtons = ({
     return (
       <div className="flex flex-wrap gap-1">
         {filtered.map(([key, tpl]) => {
-          const isSaved = savedTemplateIds.includes(key)
+          const status = getStatus(key)
           return (
             <button
               key={key}
               onClick={() => onSelect(key)}
               disabled={disabled}
-              className="px-2 py-0.5 text-xs rounded border border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+              className="px-2 py-0.5 text-xs rounded border border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 flex items-center gap-1"
             >
-              {isSaved && <span className="text-blue-500 mr-0.5">✓</span>}
+              <StatusBadge status={status} compact />
               {tpl.name}
             </button>
           )
@@ -106,7 +121,7 @@ const DocumentTemplateButtons = ({
     <div className="flex flex-wrap gap-3">
       {filtered.map(([key, tpl]) => {
         const isRequired = docRequirements[key]?.required
-        const isSaved = savedTemplateIds.includes(key)
+        const status = getStatus(key)
         return (
           <div key={key} className={`flex flex-col items-start gap-1 ${!isRequired ? 'opacity-50' : ''}`}>
             <button
@@ -120,8 +135,8 @@ const DocumentTemplateButtons = ({
                 disabled ? 'cursor-default' : 'cursor-pointer',
               ].join(' ')}
             >
-              {isSaved && <span className="text-blue-500">✓</span>}
-              {isRequired && !isSaved && <span className="text-emerald-600">*</span>}
+              <StatusBadge status={status} />
+              {isRequired && !status && <span className="text-emerald-600">*</span>}
               <span className="font-medium text-sm">{tpl.name}</span>
             </button>
           </div>

@@ -2,10 +2,7 @@
 
 import { useState, useMemo, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { HREF } from '@cm/lib/methods/urls'
-import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import { Button } from '@cm/components/styles/common-components/Button'
-import { Card, CardContent, CardHeader, CardTitle } from '@shadcn/ui/card'
 import type {
   Examination,
   Patient,
@@ -28,6 +25,7 @@ import DocumentTemplateButtons from '../components/DocumentTemplateButtons'
 import { generatePdfBlobFromHtml } from '@app/(apps)/dental/lib/pdf-generator'
 import { uploadDocumentPdf } from '@app/(apps)/dental/_actions/document-blob-actions'
 import { createDentalSavedDocument, updateDentalSavedDocument } from '@app/(apps)/dental/_actions/saved-document-actions'
+import type { SavedTemplateStatus } from '@app/(apps)/dental/_actions/saved-document-actions'
 import {
   TreatmentContentTemplate,
   getDefaultTreatmentContentData,
@@ -55,7 +53,7 @@ type Props = {
   scoringHistories?: ScoringHistoryItem[]
   visitPlanId?: number
   visitDate?: string
-  savedTemplateIds?: string[]
+  savedTemplateStatuses?: SavedTemplateStatus[]
 }
 
 /** 和暦日付を生成 */
@@ -67,18 +65,17 @@ const toWareki = (d: Date) => {
 const DocumentCreateClient = ({
   examination, patient, clinic, facilities, initialTemplateId, savedDocumentId, savedTemplateData,
   staff = [], allExaminations = [], scoringHistories = [], visitPlanId = 0, visitDate = '',
-  savedTemplateIds: initialSavedTemplateIds = [],
+  savedTemplateStatuses: initialStatuses = [],
 }: Props) => {
   const isEditMode = !!savedDocumentId
   const router = useRouter()
-  const { query } = useGlobal()
   const [selectedType, setSelectedType] = useState(initialTemplateId || '')
   const previewRef = useRef<HTMLDivElement>(null)
   const [saving, setSaving] = useState(false)
   const [isDirty, setIsDirty] = useState(false)
   const [currentSavedDocId, setCurrentSavedDocId] = useState<number | null>(savedDocumentId ?? null)
   const [autoSaving, setAutoSaving] = useState(false)
-  const [savedTemplateIds, setSavedTemplateIds] = useState<string[]>(initialSavedTemplateIds)
+  const [templateStatuses, setTemplateStatuses] = useState<SavedTemplateStatus[]>(initialStatuses)
 
   // 各テンプレートのデータ状態（編集モード時は保存済みデータで初期化）
   const sd = savedTemplateData
@@ -235,9 +232,9 @@ const DocumentCreateClient = ({
         if (newDoc) setCurrentSavedDocId(newDoc.id)
       }
       setIsDirty(false)
-      // サイドバーの保存済み表示を更新
-      if (selectedType && !savedTemplateIds.includes(selectedType)) {
-        setSavedTemplateIds(prev => [...prev, selectedType])
+      // サイドバーの保存済み表示を更新（下書き状態）
+      if (selectedType && !templateStatuses.find(s => s.templateId === selectedType)) {
+        setTemplateStatuses(prev => [...prev, { templateId: selectedType, pdfUrl: null, downloadedAt: null }])
       }
     } catch (e) {
       console.error('自動保存失敗:', e)
@@ -252,8 +249,8 @@ const DocumentCreateClient = ({
     setIsDirty(true)
   }
 
-  // PDF保存処理
-  const handleSave = async () => {
+  // 清書（PDF生成 + Blob保存）
+  const handleSeisho = async () => {
     if (saving || !previewRef.current || !selectedType) return
     setSaving(true)
     try {
@@ -280,28 +277,35 @@ const DocumentCreateClient = ({
         visitDate: new Date().toISOString().slice(0, 10),
       })
 
-      if (isEditMode && savedDocumentId) {
-        await updateDentalSavedDocument(savedDocumentId, {
+      if (currentSavedDocId) {
+        // 既存レコードを更新（再清書 = Blob上書き）
+        await updateDentalSavedDocument(currentSavedDocId, {
           templateData,
           pdfUrl: result.url,
         })
-      } else {
-        await createDentalSavedDocument({
+      } else if (examination) {
+        // 初回清書: レコード作成
+        const newDoc = await createDentalSavedDocument({
           dentalClinicId: clinic?.id,
           dentalPatientId: patient?.id || 0,
-          dentalExaminationId: examination?.id || 0,
+          dentalExaminationId: examination.id,
           templateId: selectedType,
           templateName: template?.name || '',
           templateData,
           pdfUrl: result.url,
         })
+        if (newDoc) setCurrentSavedDocId(newDoc.id)
       }
 
-      router.refresh()
-      router.push(HREF('/dental/document-list', {}, query))
+      // ステータスを清書済みに更新（画面遷移しない）
+      setTemplateStatuses(prev => {
+        const rest = prev.filter(s => s.templateId !== selectedType)
+        return [...rest, { templateId: selectedType, pdfUrl: result.url, downloadedAt: null }]
+      })
+      setIsDirty(false)
     } catch (e) {
-      console.error('PDF保存失敗:', e)
-      window.alert('PDF保存に失敗しました')
+      console.error('清書失敗:', e)
+      window.alert('清書（PDF生成）に失敗しました')
     } finally {
       setSaving(false)
     }
@@ -330,8 +334,8 @@ const DocumentCreateClient = ({
         </div>
         <div className="flex gap-2">
           <Button onClick={() => window.print()}>印刷</Button>
-          <Button onClick={handleSave} disabled={saving || !selectedType}>
-            {saving ? 'PDF保存中...' : '保存して閉じる'}
+          <Button onClick={handleSeisho} disabled={saving || !selectedType}>
+            {saving ? '清書中...' : '清書（PDF生成）'}
           </Button>
         </div>
       </div>
@@ -361,7 +365,7 @@ const DocumentCreateClient = ({
             <p className="text-xs font-bold text-gray-500 mb-2 px-1">文書テンプレート</p>
             <DocumentTemplateButtons
               docRequirements={docRequirements}
-              savedTemplateIds={savedTemplateIds}
+              savedTemplateStatuses={templateStatuses}
               selectedType={selectedType}
               onSelect={setSelectedType}
               variant="sidebar"

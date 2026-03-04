@@ -18,6 +18,7 @@ import {STAFF_ROLES, EXAMINATION_STATUS} from '@app/(apps)/dental/lib/constants'
 import {getPatientName, calculateExamPoints, calculateDocumentRequirements} from '@app/(apps)/dental/lib/helpers'
 import type {Facility, Patient, Examination, Staff} from '@app/(apps)/dental/lib/types'
 import DocumentTemplateButtons from '../components/DocumentTemplateButtons'
+import type { SavedTemplateStatus } from '@app/(apps)/dental/_actions/saved-document-actions'
 
 type Props = {
   visitPlanId: number
@@ -26,7 +27,7 @@ type Props = {
   patients: Patient[]
   examinations: Examination[]
   staff: Staff[]
-  savedTemplateIdsMap?: Record<number, string[]>
+  savedTemplateStatusesMap?: Record<number, SavedTemplateStatus[]>
 }
 
 type SortableExamItemProps = {
@@ -35,14 +36,14 @@ type SortableExamItemProps = {
   doctors: Staff[]
   hygienists: Staff[]
   visitDate: string
-  savedTemplateIds: string[]
+  savedTemplateStatuses: SavedTemplateStatus[]
   onUpdateExam: (examId: number, data: {doctorId?: number | null; hygienistId?: number | null}) => void
   onRemoveExam: (examId: number) => void
   onStartConsultation: (examId: number) => void
   onNavigateDocument: (examId: number, templateId: string) => void
 }
 
-const SortableExamItem = ({exam, patient, doctors, hygienists, visitDate, savedTemplateIds, onUpdateExam, onRemoveExam, onStartConsultation, onNavigateDocument}: SortableExamItemProps) => {
+const SortableExamItem = ({exam, patient, doctors, hygienists, visitDate, savedTemplateStatuses, onUpdateExam, onRemoveExam, onStartConsultation, onNavigateDocument}: SortableExamItemProps) => {
   const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({id: exam.id})
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -139,7 +140,7 @@ const SortableExamItem = ({exam, patient, doctors, hygienists, visitDate, savedT
           <div className="mt-1">
             <DocumentTemplateButtons
               docRequirements={docReqs}
-              savedTemplateIds={savedTemplateIds}
+              savedTemplateStatuses={savedTemplateStatuses}
               onSelect={(templateId) => onNavigateDocument(exam.id, templateId)}
               variant="inline"
               requiredOnly
@@ -161,7 +162,7 @@ const SortableExamItem = ({exam, patient, doctors, hygienists, visitDate, savedT
   )
 }
 
-const VisitDetailClient = ({visitPlanId, visitDate, facility, patients, examinations, staff, savedTemplateIdsMap = {}}: Props) => {
+const VisitDetailClient = ({visitPlanId, visitDate, facility, patients, examinations, staff, savedTemplateStatusesMap = {}}: Props) => {
   const router = useRouter()
   const {query} = useGlobal()
   const [localExams, setLocalExams] = useState(examinations)
@@ -326,7 +327,7 @@ const VisitDetailClient = ({visitPlanId, visitDate, facility, patients, examinat
                           doctors={doctors}
                           hygienists={hygienists}
                           visitDate={visitDate}
-                          savedTemplateIds={savedTemplateIdsMap[exam.id] || []}
+                          savedTemplateStatuses={savedTemplateStatusesMap[exam.id] || []}
                           onUpdateExam={handleUpdateExam}
                           onRemoveExam={handleRemoveExam}
                           onStartConsultation={handleStartConsultation}

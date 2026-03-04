@@ -149,7 +149,7 @@ export class RegrowMonthlyReportService {
 
     // regrow User（rgStoreId付き）を全件取得し、staffName_storeId → userId マップ構築
     const rgUsers = await prisma.user.findMany({
-      where: {apps: {has: 'regrow'}, rgStoreId: {not: null}},
+      where: {apps: {has: 'regrow'}, rgStoreId: {not: null}, active: true},
     })
     const userMap = new Map<string, number>()
     for (const u of rgUsers) {

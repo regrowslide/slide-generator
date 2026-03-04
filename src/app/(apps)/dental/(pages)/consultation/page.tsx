@@ -3,7 +3,7 @@ import {getDentalExamination, getDentalExaminations, getPatientPastExaminations}
 import {getDentalStaffList} from '@app/(apps)/dental/_actions/staff-actions'
 import {getUserDentalClinic} from '@app/(apps)/dental/_actions/clinic-actions'
 import {getDentalScoringHistories} from '@app/(apps)/dental/_actions/scoring-history-actions'
-import {getSavedTemplateIds} from '@app/(apps)/dental/_actions/saved-document-actions'
+import {getSavedTemplateStatuses} from '@app/(apps)/dental/_actions/saved-document-actions'
 import {toExamination, toStaff, toClinic, toPatient, toFacility, toScoringHistory} from '@app/(apps)/dental/lib/types'
 import {initServerComopnent} from 'src/non-common/serverSideFunction'
 import ConsultationClient from './ConsultationClient'
@@ -35,12 +35,12 @@ export default async function Page(props: Props) {
   const clinicRaw = await getUserDentalClinic(session.id)
   const clinicId = clinicRaw?.id ?? 0
 
-  const [rawStaff, rawScoringHistories, rawAllExams, rawPastExams, savedTemplateIds] = await Promise.all([
+  const [rawStaff, rawScoringHistories, rawAllExams, rawPastExams, savedTemplateStatuses] = await Promise.all([
     getDentalStaffList({dentalClinicId: clinicId}),
     getDentalScoringHistories({where: {dentalPatientId: patient.id}}),
     getDentalExaminations({where: {dentalVisitPlanId: rawExam.dentalVisitPlanId}}),
     getPatientPastExaminations(patient.id, examinationId),
-    getSavedTemplateIds(examinationId),
+    getSavedTemplateStatuses(examinationId),
   ])
 
   const staffList = rawStaff.map(toStaff)
@@ -65,7 +65,7 @@ export default async function Page(props: Props) {
       scoringHistories={scoringHistories}
       visitPlanId={rawExam.dentalVisitPlanId}
       pastExaminations={pastExaminations}
-      savedTemplateIds={savedTemplateIds}
+      savedTemplateStatuses={savedTemplateStatuses}
     />
   )
 }

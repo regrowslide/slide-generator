@@ -5908,6 +5908,20 @@
           "isUpdatedAt": false
         },
         {
+          "name": "downloadedAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "DateTime",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
           "name": "DentalClinic",
           "kind": "object",
           "isList": false,

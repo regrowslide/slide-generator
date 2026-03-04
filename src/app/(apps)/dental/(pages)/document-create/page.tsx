@@ -5,7 +5,7 @@ import { getDentalScoringHistories } from '@app/(apps)/dental/_actions/scoring-h
 import { getDentalPatients } from '@app/(apps)/dental/_actions/patient-actions'
 import { getUserDentalClinic } from '@app/(apps)/dental/_actions/clinic-actions'
 import { getDentalFacilities } from '@app/(apps)/dental/_actions/facility-actions'
-import { getDentalSavedDocument, getSavedTemplateIds } from '@app/(apps)/dental/_actions/saved-document-actions'
+import { getDentalSavedDocument, getSavedTemplateStatuses } from '@app/(apps)/dental/_actions/saved-document-actions'
 import { getUserClinicId } from '@app/(apps)/dental/lib/get-user-clinic'
 import { toPatient, toExamination, toClinic, toFacility, toStaff, toScoringHistory } from '@app/(apps)/dental/lib/types'
 import type { Examination, Patient } from '@app/(apps)/dental/lib/types'
@@ -102,8 +102,8 @@ export default async function Page(props: Props) {
     }
   }
 
-  // 保存済みテンプレートID取得
-  const savedTemplateIds = examination ? await getSavedTemplateIds(examination.id) : []
+  // 保存済みテンプレートの状態取得
+  const savedTemplateStatuses = examination ? await getSavedTemplateStatuses(examination.id) : []
 
   return (
     <DocumentCreateClient
@@ -119,7 +119,7 @@ export default async function Page(props: Props) {
       scoringHistories={scoringHistories}
       visitPlanId={visitPlanId}
       visitDate={visitDate}
-      savedTemplateIds={savedTemplateIds}
+      savedTemplateStatuses={savedTemplateStatuses}
     />
   )
 }

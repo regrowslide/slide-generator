@@ -53,7 +53,7 @@ export const createDentalSavedDocument = async (data: {
 // 保存済み文書更新
 export const updateDentalSavedDocument = async (
   id: number,
-  data: {templateData?: Record<string, unknown>; pdfUrl?: string; version?: number}
+  data: {templateData?: Record<string, unknown>; pdfUrl?: string; version?: number; downloadedAt?: Date | null}
 ) => {
   return await prisma.dentalSavedDocument.update({
     where: {id},
@@ -69,11 +69,34 @@ export const deleteDentalSavedDocument = async (id: number) => {
   return await prisma.dentalSavedDocument.delete({where: {id}})
 }
 
-// 診察に紐づく保存済みtemplateIdセットを取得
-export const getSavedTemplateIds = async (examinationId: number): Promise<string[]> => {
+// 診察に紐づく保存済みテンプレートの状態を取得
+export type SavedTemplateStatus = {
+  templateId: string
+  pdfUrl: string | null
+  downloadedAt: string | null
+}
+
+export const getSavedTemplateStatuses = async (examinationId: number): Promise<SavedTemplateStatus[]> => {
   const docs = await prisma.dentalSavedDocument.findMany({
     where: {dentalExaminationId: examinationId},
-    select: {templateId: true},
+    select: {templateId: true, pdfUrl: true, downloadedAt: true},
   })
-  return [...new Set(docs.map(d => d.templateId))]
+  // templateIdごとに1件のみ返す（重複排除）
+  const map = new Map<string, SavedTemplateStatus>()
+  for (const d of docs) {
+    map.set(d.templateId, {
+      templateId: d.templateId,
+      pdfUrl: d.pdfUrl,
+      downloadedAt: d.downloadedAt?.toISOString() ?? null,
+    })
+  }
+  return [...map.values()]
+}
+
+// 文書のダウンロード済みフラグを一括記録
+export const markDocumentsDownloaded = async (ids: number[]): Promise<void> => {
+  await prisma.dentalSavedDocument.updateMany({
+    where: {id: {in: ids}, downloadedAt: null},
+    data: {downloadedAt: new Date()},
+  })
 }

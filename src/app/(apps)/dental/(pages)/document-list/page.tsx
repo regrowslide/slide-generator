@@ -28,6 +28,7 @@ export default async function Page(props: {searchParams: Promise<Record<string, 
     pdfUrl: d.pdfUrl || '',
     version: d.version,
     createdAt: d.createdAt.toISOString(),
+    downloadedAt: d.downloadedAt?.toISOString() ?? null,
     visitDate: d.DentalExamination?.DentalVisitPlan?.visitDate
       ? d.DentalExamination.DentalVisitPlan.visitDate.toISOString().split('T')[0]
       : '',

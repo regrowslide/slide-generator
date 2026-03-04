@@ -39,6 +39,7 @@ import type {
   TimerHistory,
 } from '@app/(apps)/dental/lib/types'
 import DocumentTemplateButtons from '../components/DocumentTemplateButtons'
+import type { SavedTemplateStatus } from '@app/(apps)/dental/_actions/saved-document-actions'
 
 type Props = {
   examination: Examination
@@ -52,7 +53,7 @@ type Props = {
   visitPlanId: number
   readOnly?: boolean
   pastExaminations?: Examination[]
-  savedTemplateIds?: string[]
+  savedTemplateStatuses?: SavedTemplateStatus[]
 }
 
 // =============================================================================
@@ -329,7 +330,7 @@ const ConsultationClient = ({
   visitPlanId,
   readOnly = false,
   pastExaminations = [],
-  savedTemplateIds = [],
+  savedTemplateStatuses = [],
 }: Props) => {
   const router = useRouter()
   const { query } = useGlobal()
@@ -813,8 +814,8 @@ const ConsultationClient = ({
                           <button
                             onClick={() => zaishikanTreatmentModal.handleOpen()}
                             className={`px-3 py-1.5 text-sm rounded border ${clinic.qualifications.zahoshin && Object.values(patient.diseases || {}).some(v => v)
-                                ? 'bg-slate-700 text-white border-slate-700'
-                                : 'border-gray-300 hover:bg-gray-50'
+                              ? 'bg-slate-700 text-white border-slate-700'
+                              : 'border-gray-300 hover:bg-gray-50'
                               }`}
                           >
                             対象の治療を選択 {treatmentPerformed.length > 0 && `(${treatmentPerformed.length}件選択中)`}
@@ -845,7 +846,7 @@ const ConsultationClient = ({
         <div className="p-4">
           <DocumentTemplateButtons
             docRequirements={docRequirements}
-            savedTemplateIds={savedTemplateIds}
+            savedTemplateStatuses={savedTemplateStatuses}
             onSelect={(templateId) => {
               if (!readOnly) router.push(HREF(`/dental/document-create`, { examinationId: examination.id, templateId }, query))
             }}
@@ -1021,8 +1022,8 @@ const ConsultationClient = ({
           <button
             onClick={handleToggleComplete}
             className={`px-4 py-2 rounded-md text-sm ${status === EXAMINATION_STATUS.DONE
-                ? 'bg-emerald-100 text-emerald-800 border border-emerald-300 hover:bg-emerald-200'
-                : 'bg-emerald-600 text-white hover:bg-emerald-700'
+              ? 'bg-emerald-100 text-emerald-800 border border-emerald-300 hover:bg-emerald-200'
+              : 'bg-emerald-600 text-white hover:bg-emerald-700'
               }`}
           >
             {status === EXAMINATION_STATUS.DONE ? '完了済み' : '診察完了にする'}

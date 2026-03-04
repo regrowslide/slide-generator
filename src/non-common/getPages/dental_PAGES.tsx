@@ -59,7 +59,6 @@ export const dental_PAGES = (props: PageGetterType) => {
         { tabId: 'scoring-reference', label: '算定項目・点数一覧' },
         { tabId: 'scoring-ledger', label: '算定台帳' },
         { tabId: 'summary', label: '月次サマリー' },
-        { tabId: 'batch-print', label: '一括印刷' },
       ],
     },
   ]

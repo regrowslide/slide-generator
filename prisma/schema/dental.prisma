@@ -179,6 +179,7 @@ model DentalSavedDocument {
   templateData Json?
   pdfUrl       String? @db.Text
   version      Int     @default(1)
+  downloadedAt DateTime?
 
   DentalClinic        DentalClinic?     @relation(fields: [dentalClinicId], references: [id])
   dentalClinicId      Int?
