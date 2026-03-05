@@ -17,7 +17,7 @@ import {
 import DentalAppMock from '@app/(apps)/dental/doc/mock/DentalAppMock'
 import {
   SplashScreen,
-  InfoSidebar,
+  useInfoModal,
   GuidanceOverlay,
   type Feature,
   type TimeEfficiencyItem,
@@ -129,7 +129,6 @@ const getGuidanceSteps = (navigateTo: (page: PageId) => void): GuidanceStep[] =>
 
 const DentalMockPage = () => {
   const [showSplash, setShowSplash] = useState(true)
-  const [showInfoSidebar, setShowInfoSidebar] = useState(false)
   const [showGuidance, setShowGuidance] = useState(false)
   const [activePage, setActivePage] = useState<PageId>('dashboard')
   const [openMenu, setOpenMenu] = useState<string | null>(null)
@@ -139,6 +138,18 @@ const DentalMockPage = () => {
     const timer = setTimeout(() => setShowSplash(false), 1500)
     return () => clearTimeout(timer)
   }, [])
+
+  const { InfoModal, openInfo } = useInfoModal({
+    theme: 'slate',
+    systemIcon: Stethoscope,
+    systemName: '訪問歯科管理システム',
+    systemDescription: '訪問歯科診療に特化した業務管理システムです。患者管理・診療記録・スケジュール管理・ドキュメント生成を統合し、訪問診療の効率を大幅に向上させます。',
+    features: FEATURES,
+    timeEfficiency: TIME_EFFICIENCY,
+    challenges: CHALLENGES,
+    overview: OVERVIEW,
+    operationSteps: OPERATION_STEPS,
+  })
 
   // メニュー外クリックで閉じる
   useEffect(() => {
@@ -184,7 +195,7 @@ const DentalMockPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* 左: アイコン + タイトル + 対象月 */}
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-r from-slate-700 to-slate-900 rounded-xl shadow-lg shadow-slate-500/20">
+            <div className="p-2 bg-gradient-to-r from-slate-700 to-slate-900  shadow-lg shadow-slate-500/20">
               <Stethoscope className="text-white w-5 h-5" />
             </div>
             <div>
@@ -227,8 +238,8 @@ const DentalMockPage = () => {
                   <button
                     onClick={() => handleMenuClick(menu)}
                     className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${active
-                        ? 'bg-gradient-to-r from-slate-700 to-slate-900 text-white shadow-lg shadow-slate-500/25'
-                        : 'text-stone-600 hover:bg-stone-50 border border-transparent hover:border-slate-300'
+                      ? 'bg-gradient-to-r from-slate-700 to-slate-900 text-white shadow-lg shadow-slate-500/25'
+                      : 'text-stone-600 hover:bg-stone-50 border border-transparent hover:border-slate-300'
                       }`}
                   >
                     <Icon size={16} />
@@ -246,8 +257,8 @@ const DentalMockPage = () => {
                           key={item.id}
                           onClick={() => handleSubMenuClick(item.id)}
                           className={`w-full text-left px-4 py-2 text-sm transition-colors ${activePage === item.id
-                              ? 'bg-slate-100 text-slate-900 font-medium'
-                              : 'text-stone-700 hover:bg-stone-50'
+                            ? 'bg-slate-100 text-slate-900 font-medium'
+                            : 'text-stone-700 hover:bg-stone-50'
                             }`}
                         >
                           {item.label}
@@ -261,7 +272,7 @@ const DentalMockPage = () => {
 
             <button
               data-guidance="info-button"
-              onClick={() => setShowInfoSidebar(true)}
+              onClick={openInfo}
               className="ml-2 p-2.5 bg-gradient-to-r from-slate-700 to-slate-900 text-white rounded-xl hover:from-slate-800 hover:to-slate-950 transition-all duration-200 shadow-lg shadow-slate-500/20 hover:shadow-slate-500/30 flex items-center gap-2"
               title="このシステムでできること"
             >
@@ -284,20 +295,7 @@ const DentalMockPage = () => {
         hideHeader
       />
 
-      {/* 機能説明サイドバー */}
-      <InfoSidebar
-        isOpen={showInfoSidebar}
-        onClose={() => setShowInfoSidebar(false)}
-        theme="slate"
-        systemIcon={Stethoscope}
-        systemName="訪問歯科管理システム"
-        systemDescription="訪問歯科診療に特化した業務管理システムです。患者管理・診療記録・スケジュール管理・ドキュメント生成を統合し、訪問診療の効率を大幅に向上させます。"
-        features={FEATURES}
-        timeEfficiency={TIME_EFFICIENCY}
-        challenges={CHALLENGES}
-        overview={OVERVIEW}
-        operationSteps={OPERATION_STEPS}
-      />
+      <InfoModal />
 
       {/* ガイダンスオーバーレイ */}
       <GuidanceOverlay

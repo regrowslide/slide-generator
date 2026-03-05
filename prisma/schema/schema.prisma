@@ -108,6 +108,9 @@ model User {
   DentalExaminationDoctor    DentalExamination[] @relation("ExaminationDoctor")
   DentalExaminationHygienist DentalExamination[] @relation("ExaminationHygienist")
 
+  // tennis
+  lineUserId String? @unique
+
   // regrow
   rgStoreId             Int?
   RgStoreRg             RgStore?            @relation("RgUserStore", fields: [rgStoreId], references: [id])

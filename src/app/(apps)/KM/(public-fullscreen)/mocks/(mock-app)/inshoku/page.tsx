@@ -13,7 +13,7 @@ import {
 } from 'lucide-react'
 import {
   SplashScreen,
-  InfoSidebar,
+  useInfoModal,
   GuidanceOverlay,
   GuidanceStartButton,
   MockHeader,
@@ -946,8 +946,19 @@ const SimulationView = ({
 export default function InshokuPricingPage() {
   const [showSplash, setShowSplash] = useState(true)
   const [activeTab, setActiveTab] = useState<TabId>('ingredients')
-  const [showInfo, setShowInfo] = useState(false)
   const [guidanceActive, setGuidanceActive] = useState(false)
+
+  const { InfoModal, openInfo } = useInfoModal({
+    theme: 'amber',
+    systemIcon: UtensilsCrossed,
+    systemName: '居酒屋値付けシミュレーター',
+    systemDescription: '刺身・焼き物・ドリンクの原価から損益までを一気通貫シミュレーション',
+    features: FEATURES,
+    timeEfficiency: TIME_EFFICIENCY,
+    challenges: CHALLENGES,
+    overview: OVERVIEW,
+    operationSteps: OPERATION_STEPS,
+  })
 
   const [ingredients, setIngredients] = usePersistedState<Ingredient[]>(STORAGE_KEYS.ingredients, INITIAL_INGREDIENTS)
   const [menuItems, setMenuItems] = usePersistedState<MenuItem[]>(STORAGE_KEYS.menuItems, INITIAL_MENU_ITEMS)
@@ -983,7 +994,7 @@ export default function InshokuPricingPage() {
               theme="amber"
             />
           ))}
-          <MockHeaderInfoButton onClick={() => setShowInfo(true)} theme="amber" />
+          <MockHeaderInfoButton onClick={openInfo} theme="amber" />
         </div>
       </MockHeader>
 
@@ -1000,20 +1011,7 @@ export default function InshokuPricingPage() {
         )}
       </main>
 
-      {/* InfoSidebar */}
-      <InfoSidebar
-        isOpen={showInfo}
-        onClose={() => setShowInfo(false)}
-        theme="amber"
-        systemIcon={UtensilsCrossed}
-        systemName="居酒屋値付けシミュレーター"
-        systemDescription="刺身・焼き物・ドリンクの原価から損益までを一気通貫シミュレーション"
-        features={FEATURES}
-        timeEfficiency={TIME_EFFICIENCY}
-        challenges={CHALLENGES}
-        overview={OVERVIEW}
-        operationSteps={OPERATION_STEPS}
-      />
+      <InfoModal />
 
       {/* GuidanceOverlay */}
       <GuidanceOverlay

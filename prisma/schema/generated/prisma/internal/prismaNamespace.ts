@@ -8781,6 +8781,7 @@ export const UserScalarFieldEnum = {
   storeId: 'storeId',
   departmentId: 'departmentId',
   dentalClinicId: 'dentalClinicId',
+  lineUserId: 'lineUserId',
   rgStoreId: 'rgStoreId'
 } as const
 

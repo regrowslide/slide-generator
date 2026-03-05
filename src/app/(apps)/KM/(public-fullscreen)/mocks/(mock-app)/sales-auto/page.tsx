@@ -39,7 +39,7 @@ import {
 } from 'lucide-react'
 import {
   SplashScreen,
-  InfoSidebar,
+  useInfoModal,
   Modal,
   GuidanceOverlay,
   GuidanceStartButton,
@@ -2502,8 +2502,19 @@ const AnalyticsView = ({
 export default function SalesAutoMockPage() {
   const [activeTab, setActiveTab] = useState<TabId>('dashboard')
   const [showSplash, setShowSplash] = useState(true)
-  const [showInfoSidebar, setShowInfoSidebar] = useState(false)
   const [showGuidance, setShowGuidance] = useState(false)
+
+  const { InfoModal, openInfo } = useInfoModal({
+    theme: 'blue',
+    systemIcon: Car,
+    systemName: '自動車ディーラー営業管理システム',
+    systemDescription: '自動車ディーラーの営業活動を一元管理するシステムです。商談・見積・納車・売上分析の全工程をデジタル管理し、成約率の向上と業務効率化を実現します。',
+    features: FEATURES,
+    timeEfficiency: TIME_EFFICIENCY,
+    challenges: CHALLENGES,
+    overview: OVERVIEW,
+    operationSteps: OPERATION_STEPS,
+  })
 
   const [customers, setCustomers] = usePersistedState<Customer[]>(STORAGE_KEYS.customers, INITIAL_DATA.customers)
   const [deals, setDeals] = usePersistedState<Deal[]>(STORAGE_KEYS.deals, INITIAL_DATA.deals)
@@ -2560,7 +2571,7 @@ export default function SalesAutoMockPage() {
               data-guidance={`${tab.id}-tab`}
             />
           ))}
-          <MockHeaderInfoButton onClick={() => setShowInfoSidebar(true)} theme="blue" />
+          <MockHeaderInfoButton onClick={openInfo} theme="blue" />
         </div>
       </MockHeader>
 
@@ -2568,19 +2579,7 @@ export default function SalesAutoMockPage() {
         {TAB_VIEWS[activeTab]}
       </main>
 
-      <InfoSidebar
-        isOpen={showInfoSidebar}
-        onClose={() => setShowInfoSidebar(false)}
-        theme="blue"
-        systemIcon={Car}
-        systemName="自動車ディーラー営業管理システム"
-        systemDescription="自動車ディーラーの営業活動を一元管理するシステムです。商談・見積・納車・売上分析の全工程をデジタル管理し、成約率の向上と業務効率化を実現します。"
-        features={FEATURES}
-        timeEfficiency={TIME_EFFICIENCY}
-        challenges={CHALLENGES}
-        overview={OVERVIEW}
-        operationSteps={OPERATION_STEPS}
-      />
+      <InfoModal />
 
       <GuidanceOverlay
         steps={getGuidanceSteps(setActiveTab)}

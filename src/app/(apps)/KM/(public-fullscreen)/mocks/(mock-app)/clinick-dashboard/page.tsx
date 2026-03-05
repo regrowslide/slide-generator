@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import {
   SplashScreen,
-  InfoSidebar,
+  useInfoModal,
   GuidanceOverlay,
   GuidanceStartButton,
   MockHeader,
@@ -1076,8 +1076,18 @@ export default function MarketingDashboard() {
   const [data, setData] = useState<MockData>({ customers: [], reservations: [], treatments: [] });
   const [isGenerated, setIsGenerated] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
-  const [showInfoSidebar, setShowInfoSidebar] = useState(false);
   const [showGuidance, setShowGuidance] = useState(false);
+  const { InfoModal, openInfo } = useInfoModal({
+    theme: "rose",
+    systemIcon: Heart,
+    systemName: "美容クリニック専用設計",
+    systemDescription: "美容医療業界特有のKPI管理・顧客分析に最適化されたダッシュボードです。複数院の一元管理にも対応しています。",
+    features: CLINIC_FEATURES,
+    timeEfficiency: CLINIC_TIME_EFFICIENCY,
+    challenges: CLINIC_CHALLENGES,
+    overview: CLINIC_OVERVIEW,
+    operationSteps: CLINIC_OPERATION_STEPS,
+  });
 
   // Initial Data Seeding
   useEffect(() => {
@@ -1122,24 +1132,11 @@ export default function MarketingDashboard() {
             theme="rose"
             data-guidance="tables-tab"
           />
-          <MockHeaderInfoButton onClick={() => setShowInfoSidebar(true)} theme="rose" />
+          <MockHeaderInfoButton onClick={openInfo} theme="rose" />
         </div>
       </MockHeader>
 
-      {/* Info Sidebar */}
-      <InfoSidebar
-        isOpen={showInfoSidebar}
-        onClose={() => setShowInfoSidebar(false)}
-        theme="rose"
-        systemIcon={Heart}
-        systemName="美容クリニック専用設計"
-        systemDescription="美容医療業界特有のKPI管理・顧客分析に最適化されたダッシュボードです。複数院の一元管理にも対応しています。"
-        features={CLINIC_FEATURES}
-        timeEfficiency={CLINIC_TIME_EFFICIENCY}
-        challenges={CLINIC_CHALLENGES}
-        overview={CLINIC_OVERVIEW}
-        operationSteps={CLINIC_OPERATION_STEPS}
-      />
+      <InfoModal />
       <GuidanceOverlay
         steps={getClinicGuidanceSteps(setActiveTab)}
         isActive={showGuidance}

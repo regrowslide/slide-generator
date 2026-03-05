@@ -254,9 +254,11 @@ type DataContextType = {
   actionItems: ActionItem[]
   setActionItems: React.Dispatch<React.SetStateAction<ActionItem[]>>
   repairRecords: RepairRecord[]
+  setRepairRecords: React.Dispatch<React.SetStateAction<RepairRecord[]>>
   repairVendors: RepairVendor[]
   setRepairVendors: React.Dispatch<React.SetStateAction<RepairVendor[]>>
   repairRequests: RepairRequest[]
+  setRepairRequests: React.Dispatch<React.SetStateAction<RepairRequest[]>>
   currentUser: CurrentUser
   setPortal: (p: PortalType) => void
   portal: PortalType
@@ -867,17 +869,52 @@ const ActionItemSubTab = ({propertyId}: {propertyId: string}) => {
 }
 
 // --- 修繕記録タブ ---
+const EMPTY_REPAIR: RepairRecord = {id: '', propertyId: '', category: '水漏れ', content: '', status: '未着手', dueDate: '', createdAt: '', logs: []}
+
 const RepairRecordSubTab = ({propertyId}: {propertyId: string}) => {
-  const {repairRecords, repairVendors} = useData()
+  const {repairRecords, setRepairRecords, repairVendors, repairRequests, setRepairRequests} = useData()
   const records = useMemo(() => repairRecords.filter(r => r.propertyId === propertyId), [repairRecords, propertyId])
   const [selected, setSelected] = useState<RepairRecord | null>(null)
+  const [editRecord, setEditRecord] = useState<RepairRecord | null>(null)
+  const [showVendorRequest, setShowVendorRequest] = useState(false)
+  const [selectedVendorId, setSelectedVendorId] = useState('')
+
+  const handleSave = () => {
+    if (!editRecord || !editRecord.content.trim()) return
+    if (editRecord.id) {
+      setRepairRecords(prev => prev.map(r => r.id === editRecord.id ? editRecord : r))
+    } else {
+      const newId = `RR${String(repairRecords.length + 1).padStart(3, '0')}`
+      const today = new Date().toISOString().slice(0, 10)
+      setRepairRecords(prev => [...prev, {...editRecord, id: newId, propertyId, createdAt: today}])
+    }
+    setEditRecord(null)
+  }
+
+  const handleVendorRequest = () => {
+    if (!selected || !selectedVendorId) return
+    const newId = `REQ${String(repairRequests.length + 1).padStart(3, '0')}`
+    const today = new Date().toISOString().slice(0, 10)
+    setRepairRequests(prev => [...prev, {
+      id: newId, repairRecordId: selected.id, propertyId: selected.propertyId,
+      vendorId: selectedVendorId, status: '依頼中', logs: [{date: today, comment: '依頼送信'}],
+    }])
+    setRepairRecords(prev => prev.map(r => r.id === selected.id ? {...r, repairVendorId: selectedVendorId, status: r.status === '未着手' ? '対応中' : r.status} : r))
+    setSelected(prev => prev ? {...prev, repairVendorId: selectedVendorId} : null)
+    setShowVendorRequest(false)
+    setSelectedVendorId('')
+  }
 
   return (
     <div>
+      <div className="flex justify-end mb-4">
+        <Button onClick={() => setEditRecord({...EMPTY_REPAIR})}><Plus className="w-4 h-4 mr-1" />新規追加</Button>
+      </div>
       {records.length === 0 ? <p className="text-sm text-slate-400 text-center py-8">修繕記録がありません</p> : (
         <div className="space-y-3">
           {records.map(r => {
             const vendor = r.repairVendorId ? repairVendors.find(v => v.id === r.repairVendorId) : null
+            const req = repairRequests.find(rq => rq.repairRecordId === r.id)
             return (
               <div key={r.id} onClick={() => setSelected(r)} className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm cursor-pointer hover:border-indigo-300">
                 <div className="flex items-center justify-between mb-2">
@@ -889,36 +926,116 @@ const RepairRecordSubTab = ({propertyId}: {propertyId: string}) => {
                   <span className="text-xs text-slate-400">{r.createdAt}</span>
                 </div>
                 <p className="text-sm text-slate-800">{r.content}</p>
-                {vendor && <p className="text-xs text-slate-400 mt-1">業者: {vendor.name}</p>}
+                <div className="flex items-center gap-3 mt-1">
+                  {vendor && <p className="text-xs text-slate-400">業者: {vendor.name}</p>}
+                  {req && <span className="text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded">依頼: {req.status}</span>}
+                </div>
               </div>
             )
           })}
         </div>
       )}
 
-      <Modal isOpen={!!selected} onClose={() => setSelected(null)} title="修繕記録詳細">
+      {/* 修繕記録詳細モーダル */}
+      <Modal isOpen={!!selected && !showVendorRequest} onClose={() => setSelected(null)} title="修繕記録詳細">
+        {selected && (() => {
+          const vendor = selected.repairVendorId ? repairVendors.find(v => v.id === selected.repairVendorId) : null
+          const req = repairRequests.find(rq => rq.repairRecordId === selected.id)
+          return (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div><span className="text-slate-500">カテゴリ:</span> {selected.category}</div>
+                <div><span className="text-slate-500">ステータス:</span> <StatusBadge status={selected.status} /></div>
+                <div><span className="text-slate-500">期日:</span> {selected.dueDate}</div>
+                <div><span className="text-slate-500">登録日:</span> {selected.createdAt}</div>
+              </div>
+              <div><p className="text-sm text-slate-700">{selected.content}</p></div>
+
+              {/* 業者依頼セクション */}
+              {req ? (
+                <div className="p-3 bg-indigo-50 rounded-lg">
+                  <h4 className="text-sm font-bold text-indigo-700 mb-2">業者依頼</h4>
+                  <div className="text-sm space-y-1">
+                    <p><span className="text-indigo-600">業者:</span> {vendor?.name}</p>
+                    <p><span className="text-indigo-600">ステータス:</span> <StatusBadge status={req.status} /></p>
+                    {req.estimateMessage && <p><span className="text-indigo-600">見積もり:</span> {req.estimateMessage}</p>}
+                  </div>
+                  {req.logs.length > 0 && (
+                    <div className="mt-2 space-y-1">
+                      {req.logs.map((log, i) => (
+                        <div key={i} className="flex gap-2 text-xs p-1.5 bg-white/70 rounded">
+                          <span className="text-indigo-400">{log.date}</span>
+                          <span className="text-indigo-700">{log.comment}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Button onClick={() => { setShowVendorRequest(true); setSelectedVendorId('') }} size="md">
+                  <HardHat className="w-4 h-4 mr-1" />業者に依頼する
+                </Button>
+              )}
+
+              {selected.logs.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-bold text-slate-500 mb-2">対応記録</h4>
+                  <div className="space-y-2">
+                    {selected.logs.map((log, i) => (
+                      <div key={i} className="flex gap-3 text-sm p-2 bg-slate-50 rounded">
+                        <span className="text-slate-400 shrink-0">{log.date}</span>
+                        <span className="text-slate-700">{log.comment}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )
+        })()}
+      </Modal>
+
+      {/* 業者依頼作成モーダル */}
+      <Modal isOpen={showVendorRequest} onClose={() => setShowVendorRequest(false)} title="修繕業者に依頼">
         {selected && (
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div><span className="text-slate-500">カテゴリ:</span> {selected.category}</div>
-              <div><span className="text-slate-500">ステータス:</span> <StatusBadge status={selected.status} /></div>
-              <div><span className="text-slate-500">期日:</span> {selected.dueDate}</div>
-              <div><span className="text-slate-500">登録日:</span> {selected.createdAt}</div>
+            <div className="p-3 bg-slate-50 rounded-lg text-sm">
+              <p className="text-slate-500 mb-1">修繕内容:</p>
+              <p className="text-slate-800 font-medium">{selected.content}</p>
+              <p className="text-xs text-slate-400 mt-1">{selected.category} / 期日: {selected.dueDate}</p>
             </div>
-            <div><p className="text-sm text-slate-700">{selected.content}</p></div>
-            {selected.logs.length > 0 && (
-              <div>
-                <h4 className="text-sm font-bold text-slate-500 mb-2">対応記録</h4>
-                <div className="space-y-2">
-                  {selected.logs.map((log, i) => (
-                    <div key={i} className="flex gap-3 text-sm p-2 bg-slate-50 rounded">
-                      <span className="text-slate-400 shrink-0">{log.date}</span>
-                      <span className="text-slate-700">{log.comment}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            <FormField label="依頼先の修繕業者">
+              <FormSelect value={selectedVendorId} onChange={setSelectedVendorId}
+                options={[{value: '', label: '業者を選択...'}, ...repairVendors.map(v => ({value: v.id, label: `${v.name}（${v.specialty}）`}))]} />
+            </FormField>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button variant="secondary" onClick={() => setShowVendorRequest(false)}>キャンセル</Button>
+              <Button onClick={handleVendorRequest}>依頼を送信</Button>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* 修繕記録 新規追加/編集モーダル */}
+      <Modal isOpen={!!editRecord} onClose={() => setEditRecord(null)} title={editRecord?.id ? '修繕記録を編集' : '修繕記録を追加'}>
+        {editRecord && (
+          <div className="space-y-4">
+            <FormField label="カテゴリ">
+              <FormSelect value={editRecord.category} onChange={v => setEditRecord({...editRecord, category: v as RepairRecord['category']})}
+                options={['水漏れ','補修','電気','その他'].map(c => ({value: c, label: c}))} />
+            </FormField>
+            <FormField label="内容"><FormInput value={editRecord.content} onChange={v => setEditRecord({...editRecord, content: v})} placeholder="修繕内容を記入..." /></FormField>
+            <div className="grid grid-cols-2 gap-4">
+              <FormField label="期日"><FormInput type="date" value={editRecord.dueDate} onChange={v => setEditRecord({...editRecord, dueDate: v})} /></FormField>
+              <FormField label="ステータス">
+                <FormSelect value={editRecord.status} onChange={v => setEditRecord({...editRecord, status: v as RepairRecord['status']})}
+                  options={['未着手','対応中','完了'].map(s => ({value: s, label: s}))} />
+              </FormField>
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button variant="secondary" onClick={() => setEditRecord(null)}>キャンセル</Button>
+              <Button onClick={handleSave}>保存</Button>
+            </div>
           </div>
         )}
       </Modal>
@@ -1295,16 +1412,48 @@ const OwnerPortal = () => {
 // =============================================================================
 
 const VendorPortal = () => {
-  const {currentUser, properties} = useData()
-  const myRequests = useMemo(() => REPAIR_REQUESTS.filter(r => r.vendorId === currentUser.vendorId), [currentUser.vendorId])
+  const {currentUser, properties, repairRecords, repairRequests, setRepairRequests} = useData()
+  const myRequests = useMemo(() => repairRequests.filter(r => r.vendorId === currentUser.vendorId), [repairRequests, currentUser.vendorId])
   const [selectedReq, setSelectedReq] = useState<RepairRequest | null>(null)
-  const record = selectedReq ? REPAIR_RECORDS.find(r => r.id === selectedReq.repairRecordId) : null
+  const [statusFilter, setStatusFilter] = useState('')
+  const [estimateInput, setEstimateInput] = useState('')
+  const [showEstimateForm, setShowEstimateForm] = useState(false)
+  const [logComment, setLogComment] = useState('')
+  const [msgInput, setMsgInput] = useState('')
+
+  const filteredRequests = useMemo(() => myRequests.filter(r => !statusFilter || r.status === statusFilter), [myRequests, statusFilter])
+  const record = selectedReq ? repairRecords.find(r => r.id === selectedReq.repairRecordId) : null
+
+  const handleSubmitEstimate = () => {
+    if (!selectedReq || !estimateInput.trim()) return
+    setRepairRequests(prev => prev.map(r => r.id === selectedReq.id ? {...r, estimateMessage: estimateInput} : r))
+    setSelectedReq(prev => prev ? {...prev, estimateMessage: estimateInput} : null)
+    setEstimateInput('')
+    setShowEstimateForm(false)
+  }
+
+  const handleAddLog = () => {
+    if (!selectedReq || !logComment.trim()) return
+    const today = new Date().toISOString().slice(0, 10)
+    const newLog = {date: today, comment: logComment}
+    setRepairRequests(prev => prev.map(r => r.id === selectedReq.id ? {...r, logs: [...r.logs, newLog]} : r))
+    setSelectedReq(prev => prev ? {...prev, logs: [...prev.logs, newLog]} : null)
+    setLogComment('')
+  }
+
+  const handleStatusChange = (newStatus: '依頼中' | '受注' | '完了') => {
+    if (!selectedReq) return
+    const today = new Date().toISOString().slice(0, 10)
+    const statusLog = {date: today, comment: `ステータスを「${newStatus}」に変更`}
+    setRepairRequests(prev => prev.map(r => r.id === selectedReq.id ? {...r, status: newStatus, logs: [...r.logs, statusLog]} : r))
+    setSelectedReq(prev => prev ? {...prev, status: newStatus, logs: [...prev.logs, statusLog]} : null)
+  }
 
   if (selectedReq && record) {
     const prop = properties.find(p => p.id === record.propertyId)
     return (
       <div>
-        <button onClick={() => setSelectedReq(null)} className="flex items-center gap-1 text-sm text-slate-500 hover:text-indigo-600 mb-4"><ArrowLeft className="w-4 h-4" />依頼一覧に戻る</button>
+        <button onClick={() => { setSelectedReq(null); setShowEstimateForm(false) }} className="flex items-center gap-1 text-sm text-slate-500 hover:text-indigo-600 mb-4"><ArrowLeft className="w-4 h-4" />依頼一覧に戻る</button>
         <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm space-y-4">
           <h2 className="text-lg font-bold text-slate-800">修繕依頼詳細</h2>
           <div className="grid grid-cols-2 gap-3 text-sm">
@@ -1314,21 +1463,85 @@ const VendorPortal = () => {
             <div><span className="text-slate-500">期日:</span> {record.dueDate}</div>
           </div>
           <div><p className="text-sm text-slate-700">{record.content}</p></div>
-          {selectedReq.estimateMessage && (
-            <div className="p-3 bg-indigo-50 rounded-lg">
-              <p className="text-xs text-indigo-600 font-medium mb-1">見積もり</p>
-              <p className="text-sm text-indigo-800">{selectedReq.estimateMessage}</p>
-            </div>
-          )}
+
+          {/* ステータス変更ボタン */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-slate-500">ステータス変更:</span>
+            {(['受注', '完了'] as const).map(s => (
+              <button key={s} onClick={() => handleStatusChange(s)} disabled={selectedReq.status === s}
+                className={`px-3 py-1.5 text-xs rounded-lg border transition-colors ${selectedReq.status === s ? 'bg-indigo-100 text-indigo-700 border-indigo-300 cursor-default' : 'bg-white text-slate-600 border-slate-300 hover:border-indigo-400 hover:text-indigo-600'}`}>
+                {s}
+              </button>
+            ))}
+          </div>
+
+          {/* 見積もりセクション */}
+          <div>
+            <h4 className="text-sm font-bold text-slate-500 mb-2">見積もり</h4>
+            {selectedReq.estimateMessage ? (
+              <div className="p-3 bg-indigo-50 rounded-lg">
+                <p className="text-sm text-indigo-800">{selectedReq.estimateMessage}</p>
+              </div>
+            ) : showEstimateForm ? (
+              <div className="space-y-3 p-3 bg-slate-50 rounded-lg">
+                <FormField label="見積もり内容">
+                  <textarea value={estimateInput} onChange={e => setEstimateInput(e.target.value)} placeholder="例: 外壁塗装一式 概算180万円（税別）"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none" rows={3} />
+                </FormField>
+                <div className="flex justify-end gap-2">
+                  <Button variant="secondary" onClick={() => setShowEstimateForm(false)}>キャンセル</Button>
+                  <Button onClick={handleSubmitEstimate}>見積もりを送信</Button>
+                </div>
+              </div>
+            ) : (
+              <Button variant="secondary" onClick={() => setShowEstimateForm(true)}><Plus className="w-4 h-4 mr-1" />見積もりを作成</Button>
+            )}
+          </div>
+
+          {/* 対応記録 */}
           <div>
             <h4 className="text-sm font-bold text-slate-500 mb-2">対応記録</h4>
-            <div className="space-y-2">
+            <div className="space-y-2 mb-3">
               {selectedReq.logs.map((log, i) => (
                 <div key={i} className="flex gap-3 text-sm p-2 bg-slate-50 rounded">
                   <span className="text-slate-400 shrink-0">{log.date}</span>
                   <span className="text-slate-700">{log.comment}</span>
                 </div>
               ))}
+            </div>
+            <div className="flex gap-2">
+              <input type="text" value={logComment} onChange={e => setLogComment(e.target.value)} placeholder="対応記録を追加..."
+                className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                onKeyDown={e => { if (e.key === 'Enter') handleAddLog() }} />
+              <Button onClick={handleAddLog}>追加</Button>
+            </div>
+          </div>
+
+          {/* メッセージ（管理会社とのやりとり） */}
+          <div>
+            <h4 className="text-sm font-bold text-slate-500 mb-2">管理会社とのメッセージ</h4>
+            <div className="space-y-2 max-h-[200px] overflow-y-auto mb-3">
+              <div className="flex justify-start">
+                <div className="max-w-[80%] px-4 py-2.5 rounded-2xl rounded-bl-md bg-slate-100 text-sm">
+                  <p className="text-[10px] text-slate-400 mb-1">管理会社</p>
+                  <p className="text-slate-800">修繕依頼をお送りしました。ご確認をお願いいたします。</p>
+                </div>
+              </div>
+              {selectedReq.estimateMessage && (
+                <div className="flex justify-end">
+                  <div className="max-w-[80%] px-4 py-2.5 rounded-2xl rounded-br-md bg-indigo-500 text-sm text-white">
+                    <p className="text-[10px] text-indigo-200 mb-1">{currentUser.name}</p>
+                    <p>見積もりを送付いたします。{selectedReq.estimateMessage}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="flex gap-2">
+              <input type="text" value={msgInput} onChange={e => setMsgInput(e.target.value)} placeholder="メッセージを入力..."
+                className="flex-1 px-4 py-2 border border-slate-300 rounded-full text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+              <button className="w-10 h-10 flex items-center justify-center bg-gradient-to-r from-indigo-500 to-blue-600 text-white rounded-full hover:from-indigo-600 hover:to-blue-700 shadow-lg shadow-indigo-500/25">
+                <Send className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </div>
@@ -1339,10 +1552,15 @@ const VendorPortal = () => {
   return (
     <div>
       <h2 className="text-lg font-bold text-slate-800 mb-4">修繕依頼一覧</h2>
-      {myRequests.length === 0 ? <p className="text-sm text-slate-400 text-center py-8">依頼がありません</p> : (
+      <div className="flex gap-2 mb-4 flex-wrap">
+        {['', '依頼中', '受注', '完了'].map(s => (
+          <button key={s} onClick={() => setStatusFilter(s)} className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${statusFilter === s ? 'bg-indigo-500 text-white border-indigo-500' : 'bg-white text-slate-600 border-slate-300 hover:border-indigo-300'}`}>{s || 'すべて'}</button>
+        ))}
+      </div>
+      {filteredRequests.length === 0 ? <p className="text-sm text-slate-400 text-center py-8">依頼がありません</p> : (
         <div className="space-y-3">
-          {myRequests.map(req => {
-            const rec = REPAIR_RECORDS.find(r => r.id === req.repairRecordId)
+          {filteredRequests.map(req => {
+            const rec = repairRecords.find(r => r.id === req.repairRecordId)
             const prop = rec ? properties.find(p => p.id === rec.propertyId) : null
             return (
               <div key={req.id} onClick={() => setSelectedReq(req)} className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm cursor-pointer hover:border-indigo-300">
@@ -1378,6 +1596,8 @@ const EarthMockPage = () => {
   const [properties, setProperties] = useState<Property[]>(PROPERTIES)
   const [actionItems, setActionItems] = useState<ActionItem[]>(ACTION_ITEMS)
   const [repairVendors, setRepairVendors] = useState<RepairVendor[]>(REPAIR_VENDORS)
+  const [repairRecords, setRepairRecords] = useState<RepairRecord[]>(REPAIR_RECORDS)
+  const [repairRequests, setRepairRequests] = useState<RepairRequest[]>(REPAIR_REQUESTS)
 
   const setPortal = useCallback((p: PortalType) => {
     setPortalState(p)
@@ -1389,7 +1609,7 @@ const EarthMockPage = () => {
 
   const ctx: DataContextType = {
     owners, setOwners, properties, setProperties, actionItems, setActionItems,
-    repairRecords: REPAIR_RECORDS, repairVendors, setRepairVendors, repairRequests: REPAIR_REQUESTS,
+    repairRecords, setRepairRecords, repairVendors, setRepairVendors, repairRequests, setRepairRequests,
     currentUser, setPortal, portal, activePage, setActivePage, workspacePropertyId, setWorkspacePropertyId,
   }
 

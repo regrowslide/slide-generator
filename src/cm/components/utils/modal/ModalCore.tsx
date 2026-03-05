@@ -60,7 +60,6 @@ export const ModalCore = React.memo((props: ModalCorePropType) => {
     : props.setopen
 
   const modalStyle = {
-    width: 'fit-content',
     height: 'fit-content',
     maxHeight: '80vh', //スマホ時に、アドレスバーで隠れてしまうので、これ以上上げない
     maxWidth: '95vw',

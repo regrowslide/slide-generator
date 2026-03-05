@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback, useRef } from 'react'
+import useModal from '@cm/components/utils/modal/useModal'
 import {
   Info,
   X,
@@ -490,6 +491,158 @@ export const InfoSidebar: React.FC<InfoSidebarProps> = ({
 }
 
 // ==========================================
+// useInfoModal Hook (useModal ベース)
+// ==========================================
+
+export type InfoModalConfig = Omit<InfoSidebarProps, 'isOpen' | 'onClose'>
+
+/** InfoSidebar の内容を useModal で表示するフック */
+export const useInfoModal = (config: InfoModalConfig) => {
+  const { Modal, handleOpen, handleClose } = useModal()
+
+  const InfoModal = useCallback(() => {
+    const colors = themeConfig[config.theme]
+    const SystemIcon = config.systemIcon
+    return (
+      <Modal
+        style={{ width: 900, maxWidth: '80vw' }}
+        childrenProps={{ className: 'p-8' }}
+        title={
+          <div className="flex items-center gap-3">
+            <div className={`p-2 bg-gradient-to-r ${colors.gradient} rounded-lg`}>
+              <SystemIcon className="w-4 h-4 text-white" />
+            </div>
+            <div>
+              <div className="font-bold text-slate-800">{config.systemName}</div>
+              <div className="text-xs text-slate-500 font-normal">{config.systemDescription}</div>
+            </div>
+          </div>
+        }
+      >
+        <InfoModalBody {...config} />
+      </Modal>
+    )
+  }, [Modal, config])
+
+  return { InfoModal, openInfo: handleOpen }
+}
+
+/** useInfoModal 内部で使うコンテンツ部分 */
+const InfoModalBody: React.FC<InfoModalConfig> = ({
+  theme,
+  features,
+  timeEfficiency,
+  overview,
+  operationSteps,
+}) => {
+  const colors = themeConfig[theme]
+
+  return (
+    <div className="p-1 md:p-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        {/* 左カラム */}
+        <div className="space-y-10">
+          {/* 主要機能 */}
+          <div>
+            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-5 flex items-center gap-2">
+              <Zap className="w-3.5 h-3.5" />
+              主要機能
+            </h3>
+            <div className="space-y-3">
+              {features.map((feature, idx) => (
+                <div key={idx} className="flex items-start gap-3">
+                  <div className={`p-2 bg-gradient-to-br ${colors.iconBg} rounded-lg shrink-0`}>
+                    <feature.icon className={`w-4 h-4 ${colors.textLight}`} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-medium text-slate-800 text-sm">{feature.title}</h4>
+                    <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{feature.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 導入メリット */}
+          {overview && (
+            <div>
+              <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-5 flex items-center gap-2">
+                <TrendingUp className="w-3.5 h-3.5" />
+                導入メリット
+              </h3>
+              <ul className="space-y-2">
+                {overview.userBenefits.map((benefit, idx) => (
+                  <li key={idx} className="flex items-start gap-2.5 text-sm text-slate-700">
+                    <Check className={`w-4 h-4 ${colors.textLight} mt-0.5 shrink-0`} />
+                    <span>{benefit}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        {/* 右カラム */}
+        <div className="space-y-10">
+          {/* 操作手順 */}
+          {operationSteps && operationSteps.length > 0 && (
+            <div>
+              <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-5 flex items-center gap-2">
+                <ListOrdered className="w-3.5 h-3.5" />
+                操作手順
+              </h3>
+              <div className="space-y-3">
+                {operationSteps.map((s) => (
+                  <div key={s.step} className="flex items-start gap-3">
+                    <div className={`w-6 h-6 rounded-full bg-gradient-to-br ${colors.gradient} flex items-center justify-center text-white text-xs font-bold shrink-0`}>
+                      {s.step}
+                    </div>
+                    <div className="flex-1 pt-0.5">
+                      <p className="font-medium text-slate-800 text-sm">{s.action}</p>
+                      <p className="text-xs text-slate-500 mt-0.5">{s.detail}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 時間削減効果 */}
+          <div>
+            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-5 flex items-center gap-2">
+              <Clock className="w-3.5 h-3.5" />
+              時間削減効果
+            </h3>
+            <div className="bg-slate-50 rounded-xl overflow-hidden border border-slate-100">
+              <table className="w-full text-sm">
+                <thead className="bg-slate-100/80">
+                  <tr>
+                    <th className="px-4 py-2.5 text-left font-medium text-slate-500 text-xs">業務</th>
+                    <th className="px-4 py-2.5 text-center font-medium text-slate-500 text-xs">導入前</th>
+                    <th className="px-4 py-2.5 text-center font-medium text-slate-500 text-xs">導入後</th>
+                    <th className="px-4 py-2.5 text-right font-medium text-emerald-600 text-xs">削減</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {timeEfficiency.map((item, idx) => (
+                    <tr key={idx}>
+                      <td className="px-4 py-2.5 text-slate-700 text-sm">{item.task}</td>
+                      <td className="px-4 py-2.5 text-center text-slate-400 text-sm">{item.before}</td>
+                      <td className={`px-4 py-2.5 text-center ${colors.textLight} font-medium text-sm`}>{item.after}</td>
+                      <td className="px-4 py-2.5 text-right text-emerald-600 font-semibold text-sm">{item.saved}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ==========================================
 // GuidanceOverlay Component
 // ==========================================
 
@@ -666,7 +819,7 @@ export const GuidanceOverlay: React.FC<GuidanceOverlayProps> = ({
       <div
         style={highlightStyle}
         className="z-[10000] pointer-events-none border-2 border-white/80"
-        // box-shadowで大きな影を使い、対象部分だけ見えるようにする
+      // box-shadowで大きな影を使い、対象部分だけ見えるようにする
       />
 
       {/* ツールチップ */}
@@ -761,7 +914,7 @@ export const GuidanceStartButton: React.FC<GuidanceStartButtonProps> = ({ onClic
 // ==========================================
 
 /** モーダル + 編集対象 + フォームの状態管理を共通化 */
-export const useEditModal = <T extends {id: string}, F>(
+export const useEditModal = <T extends { id: string }, F>(
   emptyForm: F,
   toForm: (item: T) => F,
 ) => {
@@ -786,9 +939,9 @@ export const useEditModal = <T extends {id: string}, F>(
   /** データ配列に対して upsert + モーダル閉じ */
   const save = (setData: React.Dispatch<React.SetStateAction<T[]>>, idPrefix: string) => {
     if (editingItem) {
-      setData((prev) => prev.map((d) => (d.id === editingItem.id ? {...d, ...form} : d)))
+      setData((prev) => prev.map((d) => (d.id === editingItem.id ? { ...d, ...form } : d)))
     } else {
-      setData((prev) => [...prev, {id: generateId(idPrefix), ...form} as unknown as T])
+      setData((prev) => [...prev, { id: generateId(idPrefix), ...form } as unknown as T])
     }
     close()
   }
@@ -800,7 +953,7 @@ export const useEditModal = <T extends {id: string}, F>(
     close()
   }
 
-  return {modalOpen, editingItem, form, setForm, openNew, openEdit, close, save, remove}
+  return { modalOpen, editingItem, form, setForm, openNew, openEdit, close, save, remove }
 }
 
 // ==========================================
@@ -840,7 +993,7 @@ export const useCsvImport = <T,>(
     setDone(false)
   }
 
-  return {confirmOpen, importing, done, open, execute, cancel}
+  return { confirmOpen, importing, done, open, execute, cancel }
 }
 
 // ==========================================
@@ -848,8 +1001,8 @@ export const useCsvImport = <T,>(
 // ==========================================
 
 /** ヘッダー外枠（glass morphism + sticky） */
-export const MockHeader = React.forwardRef<HTMLElement, {children: React.ReactNode}>(
-  ({children}, ref) => (
+export const MockHeader = React.forwardRef<HTMLElement, { children: React.ReactNode }>(
+  ({ children }, ref) => (
     <header ref={ref} className="bg-white/80 backdrop-blur-md border-b border-stone-200 sticky top-0 z-30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {children}
@@ -910,11 +1063,10 @@ export const MockHeaderTab = ({
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-        active
-          ? `bg-gradient-to-r ${colors.gradient} text-white shadow-lg ${colors.shadow}`
-          : `text-stone-600 hover:bg-stone-50 border border-transparent ${colors.hoverBorder}`
-      }`}
+      className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${active
+        ? `bg-gradient-to-r ${colors.gradient} text-white shadow-lg ${colors.shadow}`
+        : `text-stone-600 hover:bg-stone-50 border border-transparent ${colors.hoverBorder}`
+        }`}
       {...rest}
     >
       <Icon size={16} />

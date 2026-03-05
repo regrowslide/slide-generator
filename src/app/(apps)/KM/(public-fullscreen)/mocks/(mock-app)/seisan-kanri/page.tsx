@@ -26,7 +26,7 @@ import {
 } from 'lucide-react'
 import {
   SplashScreen,
-  InfoSidebar,
+  useInfoModal,
   GuidanceOverlay,
   GuidanceStartButton,
   MockHeader,
@@ -1645,8 +1645,19 @@ const Header: React.FC<HeaderProps> = ({ activePage, setActivePage, onOpenInfo, 
 export default function App() {
   const [activePage, setActivePage] = useState('dashboard')
   const [showSplash, setShowSplash] = useState(true)
-  const [showInfoSidebar, setShowInfoSidebar] = useState(false)
   const [showGuidance, setShowGuidance] = useState(false)
+
+  const { InfoModal, openInfo } = useInfoModal({
+    theme: 'teal',
+    systemIcon: Factory,
+    systemName: '製造業向け生産管理',
+    systemDescription: '中小製造業の現場に最適化された生産管理システムです。Excelでの管理から脱却し、リアルタイムな情報共有を実現します。',
+    features: PRODUCTION_FEATURES,
+    timeEfficiency: PRODUCTION_TIME_EFFICIENCY,
+    challenges: PRODUCTION_CHALLENGES,
+    overview: PRODUCTION_OVERVIEW,
+    operationSteps: PRODUCTION_OPERATION_STEPS,
+  })
 
   const {
     items: products,
@@ -1729,20 +1740,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50/30 font-sans text-slate-800">
-      <Header activePage={activePage} setActivePage={setActivePage} onOpenInfo={() => setShowInfoSidebar(true)} onStartGuidance={() => setShowGuidance(true)} />
-      <InfoSidebar
-        isOpen={showInfoSidebar}
-        onClose={() => setShowInfoSidebar(false)}
-        theme="teal"
-        systemIcon={Factory}
-        systemName="製造業向け生産管理"
-        systemDescription="中小製造業の現場に最適化された生産管理システムです。Excelでの管理から脱却し、リアルタイムな情報共有を実現します。"
-        features={PRODUCTION_FEATURES}
-        timeEfficiency={PRODUCTION_TIME_EFFICIENCY}
-        challenges={PRODUCTION_CHALLENGES}
-        overview={PRODUCTION_OVERVIEW}
-        operationSteps={PRODUCTION_OPERATION_STEPS}
-      />
+      <Header activePage={activePage} setActivePage={setActivePage} onOpenInfo={openInfo} onStartGuidance={() => setShowGuidance(true)} />
+      <InfoModal />
       <GuidanceOverlay
         steps={getProductionGuidanceSteps(setActivePage)}
         isActive={showGuidance}

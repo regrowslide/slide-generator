@@ -26,7 +26,7 @@ import {
 } from 'lucide-react'
 import {
   SplashScreen,
-  InfoSidebar,
+  useInfoModal,
   Modal,
   GuidanceOverlay,
   GuidanceStartButton,
@@ -1057,8 +1057,18 @@ const FacilitiesView = ({
 export default function KaigoshokuMockPage() {
   const [activeTab, setActiveTab] = useState<TabId>('orders')
   const [showSplash, setShowSplash] = useState(true)
-  const [showInfoSidebar, setShowInfoSidebar] = useState(false)
   const [showGuidance, setShowGuidance] = useState(false)
+  const { openInfo, InfoModal } = useInfoModal({
+    theme: 'amber',
+    systemIcon: UtensilsCrossed,
+    systemName: '介護食管理システム',
+    systemDescription: '介護施設向けの給食管理を一元化するシステムです。受注・献立・製造・配送の全工程をデジタル管理し、安全で効率的な食事提供を実現します。',
+    features: FEATURES,
+    timeEfficiency: TIME_EFFICIENCY,
+    challenges: CHALLENGES,
+    overview: OVERVIEW,
+    operationSteps: OPERATION_STEPS,
+  })
 
   const [facilities, setFacilities] = usePersistedState<Facility[]>(STORAGE_KEYS.facilities, INITIAL_FACILITIES)
   const [orders, setOrders] = usePersistedState<Order[]>(STORAGE_KEYS.orders, INITIAL_ORDERS)
@@ -1112,7 +1122,7 @@ export default function KaigoshokuMockPage() {
               data-guidance={`${tab.id}-tab`}
             />
           ))}
-          <MockHeaderInfoButton onClick={() => setShowInfoSidebar(true)} theme="amber" />
+          <MockHeaderInfoButton onClick={openInfo} theme="amber" />
         </div>
       </MockHeader>
 
@@ -1120,19 +1130,7 @@ export default function KaigoshokuMockPage() {
         {TAB_VIEWS[activeTab]}
       </main>
 
-      <InfoSidebar
-        isOpen={showInfoSidebar}
-        onClose={() => setShowInfoSidebar(false)}
-        theme="amber"
-        systemIcon={UtensilsCrossed}
-        systemName="介護食管理システム"
-        systemDescription="介護施設向けの給食管理を一元化するシステムです。受注・献立・製造・配送の全工程をデジタル管理し、安全で効率的な食事提供を実現します。"
-        features={FEATURES}
-        timeEfficiency={TIME_EFFICIENCY}
-        challenges={CHALLENGES}
-        overview={OVERVIEW}
-        operationSteps={OPERATION_STEPS}
-      />
+      <InfoModal />
 
       <GuidanceOverlay
         steps={getGuidanceSteps(setActiveTab)}

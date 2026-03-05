@@ -25,7 +25,7 @@ import { formatYearMonth } from '@app/(apps)/regrow/lib/storage'
 import type { SectionKey } from '@app/(apps)/regrow/types'
 import {
   SplashScreen,
-  InfoSidebar,
+  useInfoModal,
   GuidanceOverlay,
   type Feature,
   type TimeEfficiencyItem,
@@ -141,13 +141,24 @@ const RegrowMockPage = () => {
 // ==========================================
 
 const RegrowMockPageInner = () => {
-  const [showInfoSidebar, setShowInfoSidebar] = useState(false)
   const [showGuidance, setShowGuidance] = useState(false)
   const [activeSection, setActiveSection] = useState<SectionKey>('guidance')
   const [showNewMonthInput, setShowNewMonthInput] = useState(false)
   const [newMonthValue, setNewMonthValue] = useState('')
 
   const { currentYearMonth, availableMonths, setCurrentYearMonth, createNewMonth } = useDataContext()
+
+  const { InfoModal, openInfo } = useInfoModal({
+    theme: 'violet',
+    systemIcon: BarChart3,
+    systemName: '月次業績レポートシステム',
+    systemDescription: '美容サロン月次業績レポート自動生成システム。Excelの担当者別分析表から14枚のスライドを自動構成します。',
+    features: FEATURES,
+    timeEfficiency: TIME_EFFICIENCY,
+    challenges: CHALLENGES,
+    overview: OVERVIEW,
+    operationSteps: OPERATION_STEPS,
+  })
 
   // 新規年月作成
   const handleCreateMonth = () => {
@@ -290,7 +301,7 @@ const RegrowMockPageInner = () => {
             })}
             <button
               data-guidance="info-button"
-              onClick={() => setShowInfoSidebar(true)}
+              onClick={openInfo}
               className="ml-2 p-2.5 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-xl hover:from-violet-600 hover:to-purple-700 transition-all duration-200 shadow-lg shadow-violet-500/20 hover:shadow-violet-500/30 flex items-center gap-2"
               title="このシステムでできること"
             >
@@ -308,20 +319,7 @@ const RegrowMockPageInner = () => {
         hideNavigation
       />
 
-      {/* 機能説明サイドバー */}
-      <InfoSidebar
-        isOpen={showInfoSidebar}
-        onClose={() => setShowInfoSidebar(false)}
-        theme="violet"
-        systemIcon={BarChart3}
-        systemName="月次業績レポートシステム"
-        systemDescription="美容サロン月次業績レポート自動生成システム。Excelの担当者別分析表から14枚のスライドを自動構成します。"
-        features={FEATURES}
-        timeEfficiency={TIME_EFFICIENCY}
-        challenges={CHALLENGES}
-        overview={OVERVIEW}
-        operationSteps={OPERATION_STEPS}
-      />
+      <InfoModal />
 
       {/* ガイダンスオーバーレイ */}
       <GuidanceOverlay

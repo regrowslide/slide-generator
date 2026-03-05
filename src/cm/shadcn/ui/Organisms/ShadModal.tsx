@@ -110,7 +110,7 @@ const ShadModal = React.memo((props: ShadModalProps) => {
             overflow: 'auto',
           }}
           className={cn(
-            `ModalContent  w-fit mx-auto shadow-lg shadow-gray-500  border-gray-200 bg-white ${className}`,
+            `ModalContent  w-fit mx-auto shadow-lg rounded-2xl shadow-gray-500  border-gray-200 bg-white ${className}`,
             childrenProps?.className
           )}
         >

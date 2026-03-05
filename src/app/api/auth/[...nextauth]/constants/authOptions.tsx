@@ -1,5 +1,6 @@
 import { normalCredentialsProvider } from '@app/api/auth/[...nextauth]/constants/normalCredentialsProvider'
 import { googleProvider } from '@app/api/auth/[...nextauth]/constants/GoogleProvider'
+import { lineProvider } from '@app/api/auth/[...nextauth]/constants/LineProvider'
 
 const maxAge = process.env.NEXT_PUBLIC_ROOTPATH === 'Grouping' ? 60 * 60 : 30 * 24 * 60 * 60
 
@@ -8,6 +9,7 @@ export const authOptions: any = {
   providers: [
     //
     googleProvider,
+    lineProvider,
     normalCredentialsProvider,
     // parentProvider,
     // childProvider,

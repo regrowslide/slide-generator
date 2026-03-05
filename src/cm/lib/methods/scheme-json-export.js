@@ -15409,6 +15409,20 @@
           "isUpdatedAt": false
         },
         {
+          "name": "lineUserId",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": true,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
           "name": "rgStoreId",
           "kind": "scalar",
           "isList": false,
@@ -22771,6 +22785,16 @@
       "fields": [
         {
           "name": "employeeCode"
+        }
+      ]
+    },
+    {
+      "model": "User",
+      "type": "unique",
+      "isDefinedOnField": true,
+      "fields": [
+        {
+          "name": "lineUserId"
         }
       ]
     },

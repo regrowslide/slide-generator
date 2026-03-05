@@ -23,7 +23,7 @@ import {
 import useModal from '@cm/components/utils/modal/useModal'
 import {
   SplashScreen,
-  InfoSidebar,
+  useInfoModal,
   GuidanceOverlay,
   GuidanceStartButton,
   MockHeader,
@@ -54,11 +54,20 @@ interface Member {
   avatar: string
 }
 
+type CourtStatus = '予定' | '予約済み'
+
 interface Court {
   id: string
   name: string
   address: string
   googleMapsUrl: string
+  courtNumbers: string[] // コート番号ラベル（例: ["1","2","3"] や ["A","B","C"]）
+}
+
+interface EventCourt {
+  courtId: string
+  courtNumber: string // コート番号ラベル
+  status: CourtStatus
 }
 
 interface Attendance {
@@ -73,7 +82,7 @@ interface TennisEvent {
   date: string // YYYY-MM-DD
   startTime: string // HH:00
   endTime: string // HH:00
-  courtIds: string[] // 複数コート対応
+  courts: EventCourt[] // コート選択（場所・番号・ステータス）
   creatorId: string
   attendances: Attendance[]
   memo: string
@@ -131,21 +140,17 @@ const INITIAL_MEMBERS: Member[] = [
 const INITIAL_COURTS: Court[] = [
   {
     id: 'c1',
-    name: '中央公園テニスコート',
-    address: '東京都新宿区歌舞伎町1-1-1',
-    googleMapsUrl: 'https://maps.google.com/?q=東京都新宿区歌舞伎町1-1-1',
+    name: '県営コート',
+    address: '岡山県岡山市北区いずみ町2-1',
+    googleMapsUrl: 'https://maps.app.goo.gl/RJ5phkgyTeokPrXc6',
+    courtNumbers: ['南1', '南2', '南3', '南4', '南5', '南6', '南7', '南8', '南9', '南10', '北11', '北12', '北13', '北14'],
   },
   {
     id: 'c2',
-    name: '駅前スポーツセンター',
-    address: '東京都渋谷区道玄坂2-2-2',
-    googleMapsUrl: 'https://maps.google.com/?q=東京都渋谷区道玄坂2-2-2',
-  },
-  {
-    id: 'c3',
-    name: '市民テニス場',
-    address: '東京都世田谷区太子堂3-3-3',
-    googleMapsUrl: 'https://maps.google.com/?q=東京都世田谷区太子堂3-3-3',
+    name: 'ハチヤ',
+    address: '岡山県岡山市北区富原1297',
+    googleMapsUrl: 'https://maps.app.goo.gl/wNSdjp45PRAF8tiz9',
+    courtNumbers: ['1', '2', '3', '4', '5'],
   },
 ]
 
@@ -160,7 +165,10 @@ const INITIAL_EVENTS: TennisEvent[] = [
     date: `${yyyy}-${mm}-${String(Math.min(today.getDate() + 2, 28)).padStart(2, '0')}`,
     startTime: '09:00',
     endTime: '12:00',
-    courtIds: ['c1'],
+    courts: [
+      { courtId: 'c1', courtNumber: '南3', status: '予約済み' },
+      { courtId: 'c1', courtNumber: '南4', status: '予約済み' },
+    ],
     creatorId: 'm1',
     attendances: [
       { memberId: 'm1', status: '○', comment: '' },
@@ -179,7 +187,11 @@ const INITIAL_EVENTS: TennisEvent[] = [
     date: `${yyyy}-${mm}-${String(Math.min(today.getDate() + 7, 28)).padStart(2, '0')}`,
     startTime: '13:00',
     endTime: '17:00',
-    courtIds: ['c1', 'c2'],
+    courts: [
+      { courtId: 'c1', courtNumber: '北11', status: '予約済み' },
+      { courtId: 'c1', courtNumber: '北12', status: '予定' },
+      { courtId: 'c2', courtNumber: '3', status: '予定' },
+    ],
     creatorId: 'm3',
     attendances: [
       { memberId: 'm3', status: '○', comment: '主催です！' },
@@ -199,13 +211,13 @@ const INITIAL_EVENTS: TennisEvent[] = [
     date: `${yyyy}-${mm}-${String(Math.min(today.getDate() + 14, 28)).padStart(2, '0')}`,
     startTime: '07:00',
     endTime: '09:00',
-    courtIds: ['c3'],
+    courts: [{ courtId: 'c2', courtNumber: '1', status: '予約済み' }],
     creatorId: 'm5',
     attendances: [
       { memberId: 'm5', status: '○', comment: '' },
       { memberId: 'm2', status: '○', comment: '早起き頑張ります' },
     ],
-    memo: '',
+    memo: '屋根付きなので雨でもOK！',
     createdAt: new Date(today.getTime() - 1 * 24 * 60 * 60 * 1000).toISOString(),
   },
 ]
@@ -278,7 +290,7 @@ const OVERVIEW: OverviewInfo = {
 }
 
 const OPERATION_STEPS: OperationStep[] = [
-  { step: 1, action: 'ログイン', detail: 'Googleアカウントでログイン' },
+  { step: 1, action: 'ログイン', detail: 'LINEアカウントでログイン' },
   { step: 2, action: '予定を確認', detail: 'カレンダーで今月の予定を確認' },
   { step: 3, action: '参加可否を入力', detail: '○△×をタップ＋コメント' },
   { step: 4, action: '予定を作成', detail: '日時・コートを選んで作成' },
@@ -381,49 +393,143 @@ const HourSelect = ({ value, onChange, label }: { value: string; onChange: (v: s
   </div>
 )
 
-// コート複数選択チェックボックス
-const CourtMultiSelect = ({
-  courts,
-  selectedIds,
+// コート番号管理UI（マスタ用）
+const CourtNumberEditor = ({
+  courtNumbers,
   onChange,
 }: {
-  courts: Court[]
-  selectedIds: string[]
-  onChange: (ids: string[]) => void
+  courtNumbers: string[]
+  onChange: (numbers: string[]) => void
 }) => {
-  const toggle = (id: string) => {
-    if (selectedIds.includes(id)) {
-      onChange(selectedIds.filter((x) => x !== id))
-    } else {
-      onChange([...selectedIds, id])
-    }
+  const [input, setInput] = useState('')
+
+  const addNumber = () => {
+    const trimmed = input.trim()
+    if (!trimmed || courtNumbers.includes(trimmed)) return
+    onChange([...courtNumbers, trimmed])
+    setInput('')
+  }
+
+  const removeNumber = (num: string) => {
+    onChange(courtNumbers.filter((n) => n !== num))
   }
 
   return (
     <div>
-      <label className="block text-sm font-medium text-slate-700 mb-1">コート（複数選択可）</label>
-      <div className="space-y-1.5">
-        {courts.map((court) => {
-          const checked = selectedIds.includes(court.id)
-          return (
-            <button
-              key={court.id}
-              type="button"
-              onClick={() => toggle(court.id)}
-              className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl border text-sm text-left transition-all
-                ${checked ? 'border-emerald-300 bg-emerald-50 text-emerald-700' : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'}
-              `}
-            >
-              <div className={`w-4.5 h-4.5 rounded border-2 flex items-center justify-center shrink-0 transition-colors
-                ${checked ? 'border-emerald-500 bg-emerald-500' : 'border-slate-300'}
-              `}>
-                {checked && <svg className="w-3 h-3 text-white" viewBox="0 0 12 12"><path d="M10 3L4.5 8.5 2 6" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>}
-              </div>
-              <div className="flex-1 min-w-0">
-                <span className="font-medium">{court.name}</span>
-                {court.address && <span className="text-xs text-slate-400 ml-1.5">{court.address}</span>}
-              </div>
+      <label className="block text-sm font-medium text-slate-700 mb-1">コート番号（{courtNumbers.length}面）</label>
+      <div className="flex flex-wrap gap-1.5 mb-2">
+        {courtNumbers.map((num) => (
+          <span key={num} className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-sm font-medium px-2.5 py-1 rounded-full">
+            {num}番
+            <button type="button" onClick={() => removeNumber(num)} className="text-emerald-400 hover:text-red-500 transition-colors">
+              <svg className="w-3.5 h-3.5" viewBox="0 0 12 12"><path d="M9 3L3 9M3 3l6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
             </button>
+          </span>
+        ))}
+        {courtNumbers.length === 0 && <span className="text-xs text-slate-400">コート番号を追加してください</span>}
+      </div>
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addNumber() } }}
+          placeholder="例：1, A, 南"
+          className="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:border-emerald-300"
+        />
+        <button
+          type="button"
+          onClick={addNumber}
+          disabled={!input.trim() || courtNumbers.includes(input.trim())}
+          className="shrink-0 bg-emerald-500 text-white px-3 py-2 rounded-xl text-sm font-medium hover:bg-emerald-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        >
+          追加
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// コート複数選択チェックボックス
+const CourtMultiSelect = ({
+  courts,
+  selected,
+  onChange,
+}: {
+  courts: Court[]
+  selected: EventCourt[]
+  onChange: (courts: EventCourt[]) => void
+}) => {
+  // コート番号の追加
+  const addCourtNumber = (courtId: string, courtNumber: string) => {
+    onChange([...selected, { courtId, courtNumber, status: '予定' }])
+  }
+
+  // コート番号の削除
+  const removeCourtEntry = (courtId: string, courtNumber: string) => {
+    onChange(selected.filter((s) => !(s.courtId === courtId && s.courtNumber === courtNumber)))
+  }
+
+  // ステータス切り替え
+  const toggleStatus = (courtId: string, courtNumber: string) => {
+    onChange(
+      selected.map((s) =>
+        s.courtId === courtId && s.courtNumber === courtNumber
+          ? { ...s, status: s.status === '予定' ? '予約済み' : '予定' }
+          : s
+      )
+    )
+  }
+
+  const getSelected = (courtId: string) => selected.filter((s) => s.courtId === courtId)
+
+  return (
+    <div>
+      <label className="block text-sm font-medium text-slate-700 mb-1">コート（複数選択可）</label>
+      <div className="space-y-2">
+        {courts.map((court) => {
+          const courtSelections = getSelected(court.id)
+          return (
+            <div key={court.id} className="rounded-xl border border-slate-200 overflow-hidden">
+              <div className="px-3 py-2.5 bg-slate-50">
+                <span className="font-medium text-sm text-slate-700">{court.name}</span>
+                <span className="text-xs text-slate-400 ml-1.5">（{court.courtNumbers.length}面）</span>
+              </div>
+              <div className="px-3 py-2 space-y-1.5">
+                {court.courtNumbers.map((num) => {
+                  const entry = courtSelections.find((s) => s.courtNumber === num)
+                  return (
+                    <div key={num} className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => (entry ? removeCourtEntry(court.id, num) : addCourtNumber(court.id, num))}
+                        className={`flex items-center gap-2 flex-1 px-2.5 py-2 rounded-lg text-sm text-left transition-all
+                          ${entry ? 'bg-emerald-50 text-emerald-700' : 'bg-white text-slate-500 hover:bg-slate-50'}
+                        `}
+                      >
+                        <div className={`w-4 h-4 rounded border-2 flex items-center justify-center shrink-0 transition-colors
+                          ${entry ? 'border-emerald-500 bg-emerald-500' : 'border-slate-300'}
+                        `}>
+                          {entry && <svg className="w-3 h-3 text-white" viewBox="0 0 12 12"><path d="M10 3L4.5 8.5 2 6" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+                        </div>
+                        <span className="font-medium">{num}番コート</span>
+                      </button>
+                      {entry && (
+                        <button
+                          type="button"
+                          onClick={() => toggleStatus(court.id, num)}
+                          className={`shrink-0 text-xs font-bold px-2.5 py-1.5 rounded-full transition-all
+                            ${entry.status === '予約済み' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}
+                          `}
+                        >
+                          {entry.status}
+                        </button>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
           )
         })}
       </div>
@@ -451,13 +557,17 @@ const LoginScreen = ({ members, onLogin }: { members: Member[]; onLogin: (member
 
       <div className="px-6 mb-6">
         <button disabled className="w-full flex items-center justify-center gap-3 bg-white border border-slate-200 rounded-xl px-4 py-3.5 shadow-sm opacity-50 cursor-not-allowed">
-          <svg className="w-5 h-5" viewBox="0 0 24 24">
-            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
-            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
-            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+
+            <rect width="48" height="48" rx="12" fill="#06C755" />
+
+            <path d="M24 9C15.163 9 8 15.089 8 22.6c0 4.698 2.981 8.836 7.5 11.29-.329 1.228-1.19 4.453-1.362 5.146-.214.865.316.853.664.621.274-.183 4.352-2.958 6.113-4.154.99.138 2.01.21 3.085.21 8.837 0 16-6.089 16-13.113C40 15.089 32.837 9 24 9z" fill="white" />
+
+            <circle cx="17" cy="22.5" r="2" fill="#06C755" />
+            <circle cx="24" cy="22.5" r="2" fill="#06C755" />
+            <circle cx="31" cy="22.5" r="2" fill="#06C755" />
           </svg>
-          <span className="text-slate-600 font-medium">Googleアカウントでログイン</span>
+          <span className="text-slate-600 font-medium">LINEアカウントでログイン</span>
         </button>
         <p className="text-xs text-slate-400 text-center mt-2">※デモ版のため下のメンバーを選択してください</p>
       </div>
@@ -488,8 +598,18 @@ const LoginScreen = ({ members, onLogin }: { members: Member[]; onLogin: (member
 
 export default function TennisSchedulePage() {
   const [showSplash, setShowSplash] = useState(true)
-  const [showInfoSidebar, setShowInfoSidebar] = useState(false)
   const [showGuidance, setShowGuidance] = useState(false)
+  const { InfoModal, openInfo } = useInfoModal({
+    theme: THEME,
+    systemIcon: CircleDot,
+    systemName: 'テニスカレンダー',
+    systemDescription: 'テニスサークルの予定管理に特化したカレンダーアプリ。LINEスケジュールの煩雑さを解消し、ワンタップで参加可否を入力できます。',
+    features: FEATURES,
+    timeEfficiency: TIME_EFFICIENCY,
+    challenges: CHALLENGES,
+    overview: OVERVIEW,
+    operationSteps: OPERATION_STEPS,
+  })
 
   // ログイン状態
   const [loggedInUserId, setLoggedInUserId] = usePersistedState<string | null>(STORAGE_KEYS.loggedInUser, null)
@@ -509,6 +629,7 @@ export default function TennisSchedulePage() {
   const dateEventsModal = useModal<string>() // 日付選択モーダル（値は dateStr）
   const eventDetailModal = useModal<string>() // イベント詳細モーダル（値は eventId）
   const createEventModal = useModal()
+  const editEventModal = useModal<string>() // 編集中のeventId
   const createCourtModal = useModal()
   const editCourtModal = useModal<string>() // 編集中のcourtId
 
@@ -522,12 +643,22 @@ export default function TennisSchedulePage() {
     date: '',
     startTime: '09:00',
     endTime: '12:00',
-    courtIds: [] as string[],
+    courts: [] as EventCourt[],
+    memo: '',
+  })
+
+  // 編集イベントフォーム
+  const [editEvent, setEditEvent] = useState({
+    title: '',
+    date: '',
+    startTime: '09:00',
+    endTime: '12:00',
+    courts: [] as EventCourt[],
     memo: '',
   })
 
   // 新規コートフォーム
-  const [newCourt, setNewCourt] = useState({ name: '', address: '', googleMapsUrl: '' })
+  const [newCourt, setNewCourt] = useState({ name: '', address: '', googleMapsUrl: '', courtNumbers: ['1', '2'] })
 
   const members = INITIAL_MEMBERS
   const loggedInUser = members.find((m) => m.id === loggedInUserId) ?? null
@@ -611,14 +742,14 @@ export default function TennisSchedulePage() {
 
   // イベント作成
   const handleCreateEvent = () => {
-    if (!loggedInUserId || !newEvent.title || !newEvent.date || newEvent.courtIds.length === 0) return
+    if (!loggedInUserId || !newEvent.title || !newEvent.date || newEvent.courts.length === 0) return
     const event: TennisEvent = {
       id: generateId('ev'),
       title: newEvent.title,
       date: newEvent.date,
       startTime: newEvent.startTime,
       endTime: newEvent.endTime,
-      courtIds: newEvent.courtIds,
+      courts: newEvent.courts,
       creatorId: loggedInUserId,
       attendances: [{ memberId: loggedInUserId, status: '○', comment: '' }],
       memo: newEvent.memo,
@@ -626,7 +757,7 @@ export default function TennisSchedulePage() {
     }
     setEvents((prev) => [...prev, event])
     createEventModal.handleClose()
-    setNewEvent({ title: '', date: '', startTime: '09:00', endTime: '12:00', courtIds: [], memo: '' })
+    setNewEvent({ title: '', date: '', startTime: '09:00', endTime: '12:00', courts: [], memo: '' })
   }
 
   // イベント削除
@@ -635,22 +766,51 @@ export default function TennisSchedulePage() {
     eventDetailModal.handleClose()
   }
 
+  // イベント編集開始
+  const handleStartEditEvent = (eventId: string) => {
+    const ev = events.find((e) => e.id === eventId)
+    if (!ev) return
+    setEditEvent({
+      title: ev.title,
+      date: ev.date,
+      startTime: ev.startTime,
+      endTime: ev.endTime,
+      courts: ev.courts,
+      memo: ev.memo,
+    })
+    eventDetailModal.handleClose()
+    setTimeout(() => editEventModal.handleOpen(eventId), 150)
+  }
+
+  // イベント更新
+  const handleUpdateEvent = () => {
+    if (!editEventModal.open || !editEvent.title || !editEvent.date || editEvent.courts.length === 0) return
+    setEvents((prev) =>
+      prev.map((ev) =>
+        ev.id === editEventModal.open
+          ? { ...ev, title: editEvent.title, date: editEvent.date, startTime: editEvent.startTime, endTime: editEvent.endTime, courts: editEvent.courts, memo: editEvent.memo }
+          : ev
+      )
+    )
+    editEventModal.handleClose()
+  }
+
   // コート作成
   const handleCreateCourt = () => {
     if (!newCourt.name) return
     const url = newCourt.googleMapsUrl || `https://maps.google.com/?q=${encodeURIComponent(newCourt.address)}`
-    setCourts((prev) => [...prev, { id: generateId('ct'), name: newCourt.name, address: newCourt.address, googleMapsUrl: url }])
+    setCourts((prev) => [...prev, { id: generateId('ct'), name: newCourt.name, address: newCourt.address, googleMapsUrl: url, courtNumbers: newCourt.courtNumbers }])
     createCourtModal.handleClose()
-    setNewCourt({ name: '', address: '', googleMapsUrl: '' })
+    setNewCourt({ name: '', address: '', googleMapsUrl: '', courtNumbers: ['1', '2'] })
   }
 
   // コート更新
   const handleUpdateCourt = () => {
     if (!editCourtModal.open || !newCourt.name) return
     const url = newCourt.googleMapsUrl || `https://maps.google.com/?q=${encodeURIComponent(newCourt.address)}`
-    setCourts((prev) => prev.map((c) => (c.id === editCourtModal.open ? { ...c, name: newCourt.name, address: newCourt.address, googleMapsUrl: url } : c)))
+    setCourts((prev) => prev.map((c) => (c.id === editCourtModal.open ? { ...c, name: newCourt.name, address: newCourt.address, googleMapsUrl: url, courtNumbers: newCourt.courtNumbers } : c)))
     editCourtModal.handleClose()
-    setNewCourt({ name: '', address: '', googleMapsUrl: '' })
+    setNewCourt({ name: '', address: '', googleMapsUrl: '', courtNumbers: ['1', '2'] })
   }
 
   // コート削除
@@ -721,24 +881,53 @@ export default function TennisSchedulePage() {
   }
 
   // コート名表示（複数対応）
-  const renderCourtNames = (courtIds: string[], compact = false) => {
-    const courtList = courtIds.map((id) => getCourt(id)).filter(Boolean) as Court[]
-    if (courtList.length === 0) return null
+  const renderCourtNames = (eventCourts: EventCourt[], compact = false) => {
+    if (eventCourts.length === 0) return null
     if (compact) {
-      return <span className="truncate">{courtList.map((c) => c.name).join('、')}</span>
+      const labels = eventCourts.map((ec) => {
+        const court = getCourt(ec.courtId)
+        return court ? `${court.name} ${ec.courtNumber}番` : ''
+      }).filter(Boolean)
+      return <span className="truncate">{labels.join('、')}</span>
     }
+
+    // コート場所ごとにグループ化
+    const grouped = new Map<string, EventCourt[]>()
+    eventCourts.forEach((ec) => {
+      const list = grouped.get(ec.courtId) || []
+      list.push(ec)
+      grouped.set(ec.courtId, list)
+    })
+
     return (
       <div className="space-y-1">
-        {courtList.map((court) => (
-          <div key={court.id} className="flex items-center gap-2">
-            <span className="text-slate-700">{court.name}</span>
-            <a href={court.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-0.5 text-xs text-emerald-600 hover:underline">
-              <Navigation className="w-3 h-3" />
-              地図
-              <ExternalLink className="w-2.5 h-2.5" />
-            </a>
-          </div>
-        ))}
+        {Array.from(grouped.entries()).map(([courtId, entries]) => {
+          const court = getCourt(courtId)
+          if (!court) return null
+          return (
+            <div key={courtId}>
+              <div className="flex items-center gap-2">
+                <span className="text-slate-700">{court.name}</span>
+                <a href={court.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-0.5 text-xs text-emerald-600 hover:underline">
+                  <Navigation className="w-3 h-3" />
+                  地図
+                  <ExternalLink className="w-2.5 h-2.5" />
+                </a>
+              </div>
+              <div className="flex flex-wrap gap-1 mt-0.5 ml-1">
+                {entries.map((ec) => (
+                  <span
+                    key={ec.courtNumber}
+                    className={`text-xs font-medium px-2 py-0.5 rounded-full ${ec.status === '予約済み' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
+                      }`}
+                  >
+                    {ec.courtNumber}番 {ec.status}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )
+        })}
       </div>
     )
   }
@@ -871,7 +1060,7 @@ export default function TennisSchedulePage() {
               </div>
               <div className="flex items-center gap-1.5 mt-1 text-xs text-slate-500">
                 <MapPin className="w-3.5 h-3.5 shrink-0" />
-                {renderCourtNames(ev.courtIds, true)}
+                {renderCourtNames(ev.courts, true)}
               </div>
             </div>
             <div className="flex items-center gap-2 shrink-0 text-xs">
@@ -898,7 +1087,7 @@ export default function TennisSchedulePage() {
         <h4 className="text-sm font-bold text-slate-600 px-1">登録コート一覧</h4>
         <button
           onClick={() => {
-            setNewCourt({ name: '', address: '', googleMapsUrl: '' })
+            setNewCourt({ name: '', address: '', googleMapsUrl: '', courtNumbers: ['1', '2'] })
             createCourtModal.handleOpen()
           }}
           className="flex items-center gap-1 text-xs font-medium text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full hover:bg-emerald-100 transition-colors"
@@ -909,17 +1098,17 @@ export default function TennisSchedulePage() {
       </div>
 
       <div className="space-y-2">
-        {courts.map((court) => (
-          <div key={court.id} className="bg-white rounded-xl border border-slate-100 shadow-sm p-4">
+        {courts.map((court, index) => (
+          <div key={index} className="bg-white rounded-xl border border-slate-100 shadow-sm p-4">
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1 min-w-0">
-                <h5 className="font-bold text-slate-800 text-sm">{court.name}</h5>
+                <h5 className="font-bold text-slate-800 text-sm">{court.name}<span className="text-xs font-normal text-slate-400 ml-1.5">（{court.courtNumbers.length}面）</span></h5>
                 <p className="text-xs text-slate-500 mt-1">{court.address}</p>
               </div>
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => {
-                    setNewCourt({ name: court.name, address: court.address, googleMapsUrl: court.googleMapsUrl })
+                    setNewCourt({ name: court.name, address: court.address, googleMapsUrl: court.googleMapsUrl, courtNumbers: court.courtNumbers })
                     editCourtModal.handleOpen(court.id)
                   }}
                   className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
@@ -961,7 +1150,7 @@ export default function TennisSchedulePage() {
         </div>
         <div className="flex items-center gap-1">
           <GuidanceStartButton onClick={() => setShowGuidance(true)} theme={THEME} />
-          <MockHeaderInfoButton onClick={() => setShowInfoSidebar(true)} theme={THEME} />
+          <MockHeaderInfoButton onClick={openInfo} theme={THEME} />
         </div>
       </MockHeader>
 
@@ -985,7 +1174,7 @@ export default function TennisSchedulePage() {
       {activeTab === 'home' && (
         <button
           onClick={() => {
-            setNewEvent({ title: '', date: '', startTime: '09:00', endTime: '12:00', courtIds: [], memo: '' })
+            setNewEvent({ title: '', date: '', startTime: '09:00', endTime: '12:00', courts: [], memo: '' })
             createEventModal.handleOpen()
           }}
           data-guidance="add-event"
@@ -1012,7 +1201,7 @@ export default function TennisSchedulePage() {
                     onClick={() => {
                       const d = dateEventsModal.open
                       dateEventsModal.handleClose()
-                      setNewEvent({ title: '', date: d, startTime: '09:00', endTime: '12:00', courtIds: [], memo: '' })
+                      setNewEvent({ title: '', date: d, startTime: '09:00', endTime: '12:00', courts: [], memo: '' })
                       createEventModal.handleOpen()
                     }}
                     className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-600 bg-emerald-50 px-4 py-2 rounded-full hover:bg-emerald-100 transition-colors"
@@ -1043,7 +1232,7 @@ export default function TennisSchedulePage() {
                               </div>
                               <div className="flex items-center gap-1.5 mt-0.5 text-xs text-slate-500">
                                 <MapPin className="w-3.5 h-3.5 shrink-0" />
-                                {renderCourtNames(ev.courtIds, true)}
+                                {renderCourtNames(ev.courts, true)}
                               </div>
                             </div>
                             <div className="flex items-center gap-2 shrink-0 text-xs">
@@ -1077,7 +1266,7 @@ export default function TennisSchedulePage() {
           selectedEvent.attendances.forEach((a) => attendanceByStatus[a.status].push(a))
 
           return (
-            <div className="-mt-2">
+            <div className="-mt-2 w-72 max-w-[70vw]">
               <div className="mb-4">
                 <h3 className="text-lg font-bold text-slate-800">{selectedEvent.title}</h3>
                 {creator && (
@@ -1099,7 +1288,7 @@ export default function TennisSchedulePage() {
                 </div>
                 <div className="flex items-start gap-3 text-sm">
                   <MapPin className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                  {renderCourtNames(selectedEvent.courtIds)}
+                  {renderCourtNames(selectedEvent.courts)}
                 </div>
               </div>
 
@@ -1225,10 +1414,14 @@ export default function TennisSchedulePage() {
               </div>
 
               {isCreator && (
-                <div className="mt-6 pt-4 border-t border-slate-100">
+                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                  <button onClick={() => handleStartEditEvent(selectedEvent.id)} className="flex items-center gap-1.5 text-xs text-emerald-600 hover:text-emerald-700 font-medium">
+                    <Edit3 className="w-3.5 h-3.5" />
+                    この予定を編集
+                  </button>
                   <button onClick={() => handleDeleteEvent(selectedEvent.id)} className="flex items-center gap-1.5 text-xs text-red-400 hover:text-red-500">
                     <Trash2 className="w-3.5 h-3.5" />
-                    この予定を削除
+                    削除
                   </button>
                 </div>
               )}
@@ -1263,7 +1456,7 @@ export default function TennisSchedulePage() {
             <HourSelect label="開始時間" value={newEvent.startTime} onChange={(v) => setNewEvent((p) => ({ ...p, startTime: v }))} />
             <HourSelect label="終了時間" value={newEvent.endTime} onChange={(v) => setNewEvent((p) => ({ ...p, endTime: v }))} />
           </div>
-          <CourtMultiSelect courts={courts} selectedIds={newEvent.courtIds} onChange={(ids) => setNewEvent((p) => ({ ...p, courtIds: ids }))} />
+          <CourtMultiSelect courts={courts} selected={newEvent.courts} onChange={(c) => setNewEvent((p) => ({ ...p, courts: c }))} />
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">メモ（任意）</label>
             <textarea
@@ -1276,13 +1469,60 @@ export default function TennisSchedulePage() {
           </div>
           <button
             onClick={handleCreateEvent}
-            disabled={!newEvent.title || !newEvent.date || newEvent.courtIds.length === 0}
+            disabled={!newEvent.title || !newEvent.date || newEvent.courts.length === 0}
             className="w-full bg-gradient-to-r from-emerald-400 to-teal-500 text-white font-bold py-3 rounded-xl hover:shadow-lg disabled:opacity-40 disabled:cursor-not-allowed transition-all"
           >
             作成する
           </button>
         </div>
       </createEventModal.Modal>
+
+      {/* イベント編集モーダル */}
+      <editEventModal.Modal title="予定を編集">
+        <div className="space-y-4 w-[360px] max-w-[80vw]">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">タイトル</label>
+            <input
+              type="text"
+              value={editEvent.title}
+              onChange={(e) => setEditEvent((p) => ({ ...p, title: e.target.value }))}
+              placeholder="例：定期練習会"
+              className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:border-emerald-300"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">日付</label>
+            <input
+              type="date"
+              value={editEvent.date}
+              onChange={(e) => setEditEvent((p) => ({ ...p, date: e.target.value }))}
+              className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:border-emerald-300"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <HourSelect label="開始時間" value={editEvent.startTime} onChange={(v) => setEditEvent((p) => ({ ...p, startTime: v }))} />
+            <HourSelect label="終了時間" value={editEvent.endTime} onChange={(v) => setEditEvent((p) => ({ ...p, endTime: v }))} />
+          </div>
+          <CourtMultiSelect courts={courts} selected={editEvent.courts} onChange={(c) => setEditEvent((p) => ({ ...p, courts: c }))} />
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">メモ（任意）</label>
+            <textarea
+              value={editEvent.memo}
+              onChange={(e) => setEditEvent((p) => ({ ...p, memo: e.target.value }))}
+              placeholder="初心者歓迎、ラケット貸出あり　など"
+              rows={2}
+              className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:border-emerald-300 resize-none"
+            />
+          </div>
+          <button
+            onClick={handleUpdateEvent}
+            disabled={!editEvent.title || !editEvent.date || editEvent.courts.length === 0}
+            className="w-full bg-gradient-to-r from-emerald-400 to-teal-500 text-white font-bold py-3 rounded-xl hover:shadow-lg disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+          >
+            更新する
+          </button>
+        </div>
+      </editEventModal.Modal>
 
       {/* コート作成モーダル */}
       <createCourtModal.Modal title="コートを追加">
@@ -1291,6 +1531,10 @@ export default function TennisSchedulePage() {
             <label className="block text-sm font-medium text-slate-700 mb-1">コート名</label>
             <input type="text" value={newCourt.name} onChange={(e) => setNewCourt((p) => ({ ...p, name: e.target.value }))} placeholder="例：中央公園テニスコート" className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:border-emerald-300" />
           </div>
+          <CourtNumberEditor
+            courtNumbers={newCourt.courtNumbers}
+            onChange={(nums) => setNewCourt((p) => ({ ...p, courtNumbers: nums }))}
+          />
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">住所</label>
             <input type="text" value={newCourt.address} onChange={(e) => setNewCourt((p) => ({ ...p, address: e.target.value }))} placeholder="例：東京都新宿区○○1-2-3" className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:border-emerald-300" />
@@ -1312,6 +1556,10 @@ export default function TennisSchedulePage() {
             <label className="block text-sm font-medium text-slate-700 mb-1">コート名</label>
             <input type="text" value={newCourt.name} onChange={(e) => setNewCourt((p) => ({ ...p, name: e.target.value }))} className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:border-emerald-300" />
           </div>
+          <CourtNumberEditor
+            courtNumbers={newCourt.courtNumbers}
+            onChange={(nums) => setNewCourt((p) => ({ ...p, courtNumbers: nums }))}
+          />
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">住所</label>
             <input type="text" value={newCourt.address} onChange={(e) => setNewCourt((p) => ({ ...p, address: e.target.value }))} className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:border-emerald-300" />
@@ -1337,20 +1585,7 @@ export default function TennisSchedulePage() {
         </button>
       </div>
 
-      {/* InfoSidebar */}
-      <InfoSidebar
-        isOpen={showInfoSidebar}
-        onClose={() => setShowInfoSidebar(false)}
-        systemIcon={CircleDot}
-        systemName="テニスカレンダー"
-        systemDescription="テニスサークルの予定管理に特化したカレンダーアプリ。LINEスケジュールの煩雑さを解消し、ワンタップで参加可否を入力できます。"
-        features={FEATURES}
-        timeEfficiency={TIME_EFFICIENCY}
-        challenges={CHALLENGES}
-        overview={OVERVIEW}
-        operationSteps={OPERATION_STEPS}
-        theme={THEME}
-      />
+      <InfoModal />
 
       {/* ガイダンスオーバーレイ */}
       <GuidanceOverlay steps={getGuidanceSteps()} isActive={showGuidance} onClose={() => setShowGuidance(false)} theme={THEME} />

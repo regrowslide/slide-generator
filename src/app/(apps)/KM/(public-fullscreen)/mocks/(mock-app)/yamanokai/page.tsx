@@ -18,7 +18,7 @@ import {
 } from 'lucide-react'
 import {
   SplashScreen,
-  InfoSidebar,
+  useInfoModal,
   Modal,
   GuidanceOverlay,
   GuidanceStartButton,
@@ -397,8 +397,18 @@ const getGuidanceSteps = (setActiveTab: (tab: TabId) => void): GuidanceStep[] =>
 const YamanokaiMock = () => {
   const [activeTab, setActiveTab] = useState<TabId>('dashboard')
   const [showSplash, setShowSplash] = useState(true)
-  const [showInfoSidebar, setShowInfoSidebar] = useState(false)
   const [showGuidance, setShowGuidance] = useState(false)
+  const { openInfo, InfoModal } = useInfoModal({
+    systemIcon: Mountain,
+    systemName: '山岳会管理システム',
+    systemDescription: '山岳会の活動全体をデジタル管理するシステムです。例会の企画から案内、計画書、記録、会員・装備管理まで一気通貫で運用できます。',
+    theme: 'emerald',
+    features: FEATURES,
+    timeEfficiency: TIME_EFFICIENCY,
+    challenges: CHALLENGES,
+    overview: OVERVIEW,
+    operationSteps: OPERATION_STEPS,
+  })
 
   // データ（usePersistedState）
   const [members, setMembers] = usePersistedState<Member[]>(STORAGE_KEYS.members, INITIAL_MEMBERS)
@@ -1169,7 +1179,7 @@ const YamanokaiMock = () => {
             />
           ))}
 
-          <MockHeaderInfoButton onClick={() => setShowInfoSidebar(true)} theme="emerald" />
+          <MockHeaderInfoButton onClick={openInfo} theme="emerald" />
         </div>
       </MockHeader>
 
@@ -1178,19 +1188,7 @@ const YamanokaiMock = () => {
         {renderContent()}
       </main>
 
-      <InfoSidebar
-        isOpen={showInfoSidebar}
-        onClose={() => setShowInfoSidebar(false)}
-        theme="emerald"
-        systemIcon={Mountain}
-        systemName="山岳会管理システム"
-        systemDescription="山岳会の活動全体をデジタル管理するシステムです。例会の企画から案内、計画書、記録、会員・装備管理まで一気通貫で運用できます。"
-        features={FEATURES}
-        timeEfficiency={TIME_EFFICIENCY}
-        challenges={CHALLENGES}
-        overview={OVERVIEW}
-        operationSteps={OPERATION_STEPS}
-      />
+      <InfoModal />
 
       <GuidanceOverlay
         steps={getGuidanceSteps(setActiveTab)}

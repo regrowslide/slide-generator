@@ -23,7 +23,7 @@ import {
 } from 'lucide-react'
 import {
   SplashScreen,
-  InfoSidebar,
+  useInfoModal,
   Modal,
   GuidanceOverlay,
   GuidanceStartButton,
@@ -953,8 +953,19 @@ const ProfitStandardsView = ({
 export default function RecipeCalculatorMockPage() {
   const [activeTab, setActiveTab] = useState<TabId>('calculator')
   const [showSplash, setShowSplash] = useState(true)
-  const [showInfoSidebar, setShowInfoSidebar] = useState(false)
   const [showGuidance, setShowGuidance] = useState(false)
+
+  const { InfoModal, openInfo } = useInfoModal({
+    theme: 'amber',
+    systemIcon: Calculator,
+    systemName: 'AI食品原価計算システム',
+    systemDescription: 'AIでレシピ画像や手書きメモから食材を自動認識し、原価を瞬時に算出するシステムです。食材マスタと粗利基準の管理で収益性の向上を支援します。',
+    features: FEATURES,
+    timeEfficiency: TIME_EFFICIENCY,
+    challenges: CHALLENGES,
+    overview: OVERVIEW,
+    operationSteps: OPERATION_STEPS,
+  })
 
   const [ingredients, setIngredients] = usePersistedState<Ingredient[]>(STORAGE_KEYS.ingredients, INITIAL_INGREDIENTS)
   const [profitStandards, setProfitStandards] = usePersistedState<ProfitStandard[]>(STORAGE_KEYS.profitStandards, INITIAL_PROFIT_STANDARDS)
@@ -1004,7 +1015,7 @@ export default function RecipeCalculatorMockPage() {
               data-guidance={`${tab.id}-tab`}
             />
           ))}
-          <MockHeaderInfoButton onClick={() => setShowInfoSidebar(true)} theme="amber" />
+          <MockHeaderInfoButton onClick={openInfo} theme="amber" />
         </div>
       </MockHeader>
 
@@ -1012,19 +1023,7 @@ export default function RecipeCalculatorMockPage() {
         {TAB_VIEWS[activeTab]}
       </main>
 
-      <InfoSidebar
-        isOpen={showInfoSidebar}
-        onClose={() => setShowInfoSidebar(false)}
-        theme="amber"
-        systemIcon={Calculator}
-        systemName="AI食品原価計算システム"
-        systemDescription="AIでレシピ画像や手書きメモから食材を自動認識し、原価を瞬時に算出するシステムです。食材マスタと粗利基準の管理で収益性の向上を支援します。"
-        features={FEATURES}
-        timeEfficiency={TIME_EFFICIENCY}
-        challenges={CHALLENGES}
-        overview={OVERVIEW}
-        operationSteps={OPERATION_STEPS}
-      />
+      <InfoModal />
 
       <GuidanceOverlay
         steps={getGuidanceSteps(setActiveTab)}
