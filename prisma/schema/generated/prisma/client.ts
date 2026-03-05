@@ -67,46 +67,6 @@ export type KaizenWorkImage = Prisma.KaizenWorkImageModel
  */
 export type KaizenCMS = Prisma.KaizenCMSModel
 /**
- * Model AidocumentCompany
- * 
- */
-export type AidocumentCompany = Prisma.AidocumentCompanyModel
-/**
- * Model AidocumentSite
- * 
- */
-export type AidocumentSite = Prisma.AidocumentSiteModel
-/**
- * Model AidocumentStaff
- * 
- */
-export type AidocumentStaff = Prisma.AidocumentStaffModel
-/**
- * Model AidocumentSubcontractor
- * 
- */
-export type AidocumentSubcontractor = Prisma.AidocumentSubcontractorModel
-/**
- * Model AidocumentVehicle
- * 
- */
-export type AidocumentVehicle = Prisma.AidocumentVehicleModel
-/**
- * Model AidocumentDocument
- * 
- */
-export type AidocumentDocument = Prisma.AidocumentDocumentModel
-/**
- * Model AidocumentDocumentItem
- * 
- */
-export type AidocumentDocumentItem = Prisma.AidocumentDocumentItemModel
-/**
- * Model AidocumentAnalysisCache
- * 
- */
-export type AidocumentAnalysisCache = Prisma.AidocumentAnalysisCacheModel
-/**
  * Model CounselingStore
  * 
  */
@@ -456,21 +416,6 @@ export type Calendar = Prisma.CalendarModel
  * 
  */
 export type CronExecutionLog = Prisma.CronExecutionLogModel
-/**
- * Model StockConfig
- * 
- */
-export type StockConfig = Prisma.StockConfigModel
-/**
- * Model Stock
- * 
- */
-export type Stock = Prisma.StockModel
-/**
- * Model StockHistory
- * 
- */
-export type StockHistory = Prisma.StockHistoryModel
 /**
  * Model ExerciseMaster
  * 

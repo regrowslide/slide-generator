@@ -784,6 +784,10 @@ export type DentalPatientUncheckedUpdateManyWithoutDentalFacilityNestedInput = {
   deleteMany?: Prisma.DentalPatientScalarWhereInput | Prisma.DentalPatientScalarWhereInput[]
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type DentalPatientCreateNestedOneWithoutDentalExaminationInput = {
   create?: Prisma.XOR<Prisma.DentalPatientCreateWithoutDentalExaminationInput, Prisma.DentalPatientUncheckedCreateWithoutDentalExaminationInput>
   connectOrCreate?: Prisma.DentalPatientCreateOrConnectWithoutDentalExaminationInput

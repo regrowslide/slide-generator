@@ -56,14 +56,6 @@ export const ModelName = {
   KaizenWork: 'KaizenWork',
   KaizenWorkImage: 'KaizenWorkImage',
   KaizenCMS: 'KaizenCMS',
-  AidocumentCompany: 'AidocumentCompany',
-  AidocumentSite: 'AidocumentSite',
-  AidocumentStaff: 'AidocumentStaff',
-  AidocumentSubcontractor: 'AidocumentSubcontractor',
-  AidocumentVehicle: 'AidocumentVehicle',
-  AidocumentDocument: 'AidocumentDocument',
-  AidocumentDocumentItem: 'AidocumentDocumentItem',
-  AidocumentAnalysisCache: 'AidocumentAnalysisCache',
   CounselingStore: 'CounselingStore',
   CounselingRoom: 'CounselingRoom',
   CounselingClient: 'CounselingClient',
@@ -134,9 +126,6 @@ export const ModelName = {
   ChainMethodLock: 'ChainMethodLock',
   Calendar: 'Calendar',
   CronExecutionLog: 'CronExecutionLog',
-  StockConfig: 'StockConfig',
-  Stock: 'Stock',
-  StockHistory: 'StockHistory',
   ExerciseMaster: 'ExerciseMaster',
   WorkoutLog: 'WorkoutLog',
   YamanokaiDepartment: 'YamanokaiDepartment',
@@ -265,139 +254,6 @@ export const KaizenCMSScalarFieldEnum = {
 } as const
 
 export type KaizenCMSScalarFieldEnum = (typeof KaizenCMSScalarFieldEnum)[keyof typeof KaizenCMSScalarFieldEnum]
-
-
-export const AidocumentCompanyScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  name: 'name',
-  type: 'type',
-  representativeName: 'representativeName',
-  address: 'address',
-  phone: 'phone',
-  constructionLicense: 'constructionLicense',
-  socialInsurance: 'socialInsurance'
-} as const
-
-export type AidocumentCompanyScalarFieldEnum = (typeof AidocumentCompanyScalarFieldEnum)[keyof typeof AidocumentCompanyScalarFieldEnum]
-
-
-export const AidocumentSiteScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  clientId: 'clientId',
-  companyId: 'companyId',
-  name: 'name',
-  address: 'address',
-  contractDate: 'contractDate',
-  startDate: 'startDate',
-  endDate: 'endDate',
-  amount: 'amount',
-  costBreakdown: 'costBreakdown',
-  siteAgent: 'siteAgent',
-  chiefEngineer: 'chiefEngineer',
-  safetyManager: 'safetyManager',
-  safetyPromoter: 'safetyPromoter'
-} as const
-
-export type AidocumentSiteScalarFieldEnum = (typeof AidocumentSiteScalarFieldEnum)[keyof typeof AidocumentSiteScalarFieldEnum]
-
-
-export const AidocumentStaffScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  siteId: 'siteId',
-  name: 'name',
-  role: 'role',
-  qualification: 'qualification',
-  workContent: 'workContent',
-  age: 'age',
-  gender: 'gender',
-  term: 'term',
-  isForeigner: 'isForeigner',
-  isTrainee: 'isTrainee'
-} as const
-
-export type AidocumentStaffScalarFieldEnum = (typeof AidocumentStaffScalarFieldEnum)[keyof typeof AidocumentStaffScalarFieldEnum]
-
-
-export const AidocumentSubcontractorScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  siteId: 'siteId',
-  companyId: 'companyId',
-  workType: 'workType',
-  chiefEngineerName: 'chiefEngineerName',
-  safetyManagerName: 'safetyManagerName',
-  staff: 'staff'
-} as const
-
-export type AidocumentSubcontractorScalarFieldEnum = (typeof AidocumentSubcontractorScalarFieldEnum)[keyof typeof AidocumentSubcontractorScalarFieldEnum]
-
-
-export const AidocumentVehicleScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  siteId: 'siteId',
-  plate: 'plate',
-  term: 'term'
-} as const
-
-export type AidocumentVehicleScalarFieldEnum = (typeof AidocumentVehicleScalarFieldEnum)[keyof typeof AidocumentVehicleScalarFieldEnum]
-
-
-export const AidocumentDocumentScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  siteId: 'siteId',
-  name: 'name',
-  pdfTemplateUrl: 'pdfTemplateUrl',
-  items: 'items'
-} as const
-
-export type AidocumentDocumentScalarFieldEnum = (typeof AidocumentDocumentScalarFieldEnum)[keyof typeof AidocumentDocumentScalarFieldEnum]
-
-
-export const AidocumentDocumentItemScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  documentId: 'documentId',
-  componentId: 'componentId',
-  x: 'x',
-  y: 'y',
-  value: 'value'
-} as const
-
-export type AidocumentDocumentItemScalarFieldEnum = (typeof AidocumentDocumentItemScalarFieldEnum)[keyof typeof AidocumentDocumentItemScalarFieldEnum]
-
-
-export const AidocumentAnalysisCacheScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  documentId: 'documentId',
-  pdfUrl: 'pdfUrl',
-  pdfHash: 'pdfHash',
-  siteId: 'siteId',
-  analysisResult: 'analysisResult',
-  confidence: 'confidence'
-} as const
-
-export type AidocumentAnalysisCacheScalarFieldEnum = (typeof AidocumentAnalysisCacheScalarFieldEnum)[keyof typeof AidocumentAnalysisCacheScalarFieldEnum]
 
 
 export const CounselingStoreScalarFieldEnum = {
@@ -1445,7 +1301,6 @@ export const UserScalarFieldEnum = {
   avatar: 'avatar',
   bcc: 'bcc',
   counselingStoreId: 'counselingStoreId',
-  aidocumentCompanyId: 'aidocumentCompanyId',
   storeId: 'storeId',
   departmentId: 'departmentId',
   dentalClinicId: 'dentalClinicId',
@@ -1563,147 +1418,6 @@ export const CronExecutionLogScalarFieldEnum = {
 } as const
 
 export type CronExecutionLogScalarFieldEnum = (typeof CronExecutionLogScalarFieldEnum)[keyof typeof CronExecutionLogScalarFieldEnum]
-
-
-export const StockConfigScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  type: 'type',
-  name: 'name',
-  value: 'value'
-} as const
-
-export type StockConfigScalarFieldEnum = (typeof StockConfigScalarFieldEnum)[keyof typeof StockConfigScalarFieldEnum]
-
-
-export const StockScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  favorite: 'favorite',
-  heldCount: 'heldCount',
-  averageBuyPrice: 'averageBuyPrice',
-  profit: 'profit',
-  Code: 'Code',
-  Date: 'Date',
-  CompanyName: 'CompanyName',
-  CompanyNameEnglish: 'CompanyNameEnglish',
-  Sector17Code: 'Sector17Code',
-  Sector17CodeName: 'Sector17CodeName',
-  Sector33Code: 'Sector33Code',
-  Sector33CodeName: 'Sector33CodeName',
-  ScaleCategory: 'ScaleCategory',
-  MarketCode: 'MarketCode',
-  MarketCodeName: 'MarketCodeName',
-  last_Date: 'last_Date',
-  last_Open: 'last_Open',
-  last_High: 'last_High',
-  last_Low: 'last_Low',
-  last_Close: 'last_Close',
-  last_UpperLimit: 'last_UpperLimit',
-  last_LowerLimit: 'last_LowerLimit',
-  last_Volume: 'last_Volume',
-  last_TurnoverValue: 'last_TurnoverValue',
-  last_AdjustmentFactor: 'last_AdjustmentFactor',
-  last_AdjustmentOpen: 'last_AdjustmentOpen',
-  last_AdjustmentHigh: 'last_AdjustmentHigh',
-  last_AdjustmentLow: 'last_AdjustmentLow',
-  last_AdjustmentClose: 'last_AdjustmentClose',
-  last_AdjustmentVolume: 'last_AdjustmentVolume',
-  last_updatedAt: 'last_updatedAt',
-  last_riseRate: 'last_riseRate',
-  last_josho: 'last_josho',
-  last_dekidakaJosho: 'last_dekidakaJosho',
-  last_renzokuJosho: 'last_renzokuJosho',
-  last_takaneBreakout: 'last_takaneBreakout',
-  last_idoHeikinKairiJosho: 'last_idoHeikinKairiJosho',
-  last_spike: 'last_spike',
-  last_spikeFall: 'last_spikeFall',
-  last_spikeRise: 'last_spikeRise',
-  last_recentCrash: 'last_recentCrash',
-  last_goldenCross: 'last_goldenCross',
-  last_rsiOversold: 'last_rsiOversold',
-  last_crashAndRebound: 'last_crashAndRebound',
-  last_consecutivePositiveCloses: 'last_consecutivePositiveCloses',
-  last_macdBullish: 'last_macdBullish',
-  last_volumeBreakout: 'last_volumeBreakout',
-  last_priceVolumeBreakout: 'last_priceVolumeBreakout',
-  last_deathCross: 'last_deathCross',
-  last_rsiOverbought: 'last_rsiOverbought',
-  last_macdBearish: 'last_macdBearish',
-  last_lowVolatility: 'last_lowVolatility',
-  last_supportBounce: 'last_supportBounce',
-  last_resistanceBreak: 'last_resistanceBreak',
-  last_macdLine: 'last_macdLine',
-  last_macdSignal: 'last_macdSignal',
-  last_macdHistogram: 'last_macdHistogram',
-  last_ma5: 'last_ma5',
-  last_ma20: 'last_ma20',
-  last_ma60: 'last_ma60',
-  last_rsi: 'last_rsi'
-} as const
-
-export type StockScalarFieldEnum = (typeof StockScalarFieldEnum)[keyof typeof StockScalarFieldEnum]
-
-
-export const StockHistoryScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  Date: 'Date',
-  Code: 'Code',
-  Open: 'Open',
-  High: 'High',
-  Low: 'Low',
-  Close: 'Close',
-  UpperLimit: 'UpperLimit',
-  LowerLimit: 'LowerLimit',
-  Volume: 'Volume',
-  TurnoverValue: 'TurnoverValue',
-  AdjustmentFactor: 'AdjustmentFactor',
-  AdjustmentOpen: 'AdjustmentOpen',
-  AdjustmentHigh: 'AdjustmentHigh',
-  AdjustmentLow: 'AdjustmentLow',
-  AdjustmentClose: 'AdjustmentClose',
-  AdjustmentVolume: 'AdjustmentVolume',
-  riseRate: 'riseRate',
-  josho: 'josho',
-  dekidakaJosho: 'dekidakaJosho',
-  renzokuJosho: 'renzokuJosho',
-  takaneBreakout: 'takaneBreakout',
-  idoHeikinKairiJosho: 'idoHeikinKairiJosho',
-  spike: 'spike',
-  spikeFall: 'spikeFall',
-  spikeRise: 'spikeRise',
-  recentCrash: 'recentCrash',
-  goldenCross: 'goldenCross',
-  rsiOversold: 'rsiOversold',
-  crashAndRebound: 'crashAndRebound',
-  consecutivePositiveCloses: 'consecutivePositiveCloses',
-  macdBullish: 'macdBullish',
-  volumeBreakout: 'volumeBreakout',
-  priceVolumeBreakout: 'priceVolumeBreakout',
-  deathCross: 'deathCross',
-  rsiOverbought: 'rsiOverbought',
-  macdBearish: 'macdBearish',
-  lowVolatility: 'lowVolatility',
-  supportBounce: 'supportBounce',
-  resistanceBreak: 'resistanceBreak',
-  macdLine: 'macdLine',
-  macdSignal: 'macdSignal',
-  macdHistogram: 'macdHistogram',
-  ma5: 'ma5',
-  ma20: 'ma20',
-  ma60: 'ma60',
-  rsi: 'rsi',
-  stockId: 'stockId'
-} as const
-
-export type StockHistoryScalarFieldEnum = (typeof StockHistoryScalarFieldEnum)[keyof typeof StockHistoryScalarFieldEnum]
 
 
 export const ExerciseMasterScalarFieldEnum = {
@@ -2082,13 +1796,6 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
-
-
-export const JsonNullValueInput = {
-  JsonNull: JsonNull
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {

@@ -91,11 +91,8 @@ model User {
   counselingStoreId           Int?
   CounselingSlot              CounselingSlot[]
 
-  // aidocument
-  aidocumentCompanyId Int?
-  AidocumentCompany   AidocumentCompany? @relation(fields: [aidocumentCompanyId], references: [id], onDelete: SetNull)
-  Store               Store?             @relation(fields: [storeId], references: [id])
-  storeId             Int?
+  Store   Store? @relation(fields: [storeId], references: [id])
+  storeId Int?
 
   // yamanokai
   YamanokaiEventAsCL            YamanokaiEvent[]      @relation("YamanokaiEventCL")
@@ -113,9 +110,9 @@ model User {
 
   // regrow
   rgStoreId             Int?
-  RgStoreRg             RgStore?              @relation("RgUserStore", fields: [rgStoreId], references: [id])
-  RgStaffRecordUser     RgStaffRecord[]       @relation("RgStaffRecordUser")
-  RgStaffManualDataUser RgStaffManualData[]   @relation("RgStaffManualDataUser")
+  RgStoreRg             RgStore?            @relation("RgUserStore", fields: [rgStoreId], references: [id])
+  RgStaffRecordUser     RgStaffRecord[]     @relation("RgStaffRecordUser")
+  RgStaffManualDataUser RgStaffManualData[] @relation("RgStaffManualDataUser")
 }
 
 model ReleaseNotes {

@@ -34,7 +34,6 @@ export type UserAvgAggregateOutputType = {
   shopId: number | null
   damageNameMasterId: number | null
   counselingStoreId: number | null
-  aidocumentCompanyId: number | null
   storeId: number | null
   departmentId: number | null
   dentalClinicId: number | null
@@ -49,7 +48,6 @@ export type UserSumAggregateOutputType = {
   shopId: number | null
   damageNameMasterId: number | null
   counselingStoreId: number | null
-  aidocumentCompanyId: number | null
   storeId: number | null
   departmentId: number | null
   dentalClinicId: number | null
@@ -88,7 +86,6 @@ export type UserMinAggregateOutputType = {
   avatar: string | null
   bcc: string | null
   counselingStoreId: number | null
-  aidocumentCompanyId: number | null
   storeId: number | null
   departmentId: number | null
   dentalClinicId: number | null
@@ -127,7 +124,6 @@ export type UserMaxAggregateOutputType = {
   avatar: string | null
   bcc: string | null
   counselingStoreId: number | null
-  aidocumentCompanyId: number | null
   storeId: number | null
   departmentId: number | null
   dentalClinicId: number | null
@@ -167,7 +163,6 @@ export type UserCountAggregateOutputType = {
   avatar: number
   bcc: number
   counselingStoreId: number
-  aidocumentCompanyId: number
   storeId: number
   departmentId: number
   dentalClinicId: number
@@ -184,7 +179,6 @@ export type UserAvgAggregateInputType = {
   shopId?: true
   damageNameMasterId?: true
   counselingStoreId?: true
-  aidocumentCompanyId?: true
   storeId?: true
   departmentId?: true
   dentalClinicId?: true
@@ -199,7 +193,6 @@ export type UserSumAggregateInputType = {
   shopId?: true
   damageNameMasterId?: true
   counselingStoreId?: true
-  aidocumentCompanyId?: true
   storeId?: true
   departmentId?: true
   dentalClinicId?: true
@@ -238,7 +231,6 @@ export type UserMinAggregateInputType = {
   avatar?: true
   bcc?: true
   counselingStoreId?: true
-  aidocumentCompanyId?: true
   storeId?: true
   departmentId?: true
   dentalClinicId?: true
@@ -277,7 +269,6 @@ export type UserMaxAggregateInputType = {
   avatar?: true
   bcc?: true
   counselingStoreId?: true
-  aidocumentCompanyId?: true
   storeId?: true
   departmentId?: true
   dentalClinicId?: true
@@ -317,7 +308,6 @@ export type UserCountAggregateInputType = {
   avatar?: true
   bcc?: true
   counselingStoreId?: true
-  aidocumentCompanyId?: true
   storeId?: true
   departmentId?: true
   dentalClinicId?: true
@@ -444,7 +434,6 @@ export type UserGroupByOutputType = {
   avatar: string | null
   bcc: string | null
   counselingStoreId: number | null
-  aidocumentCompanyId: number | null
   storeId: number | null
   departmentId: number | null
   dentalClinicId: number | null
@@ -507,7 +496,6 @@ export type UserWhereInput = {
   avatar?: Prisma.StringNullableFilter<"User"> | string | null
   bcc?: Prisma.StringNullableFilter<"User"> | string | null
   counselingStoreId?: Prisma.IntNullableFilter<"User"> | number | null
-  aidocumentCompanyId?: Prisma.IntNullableFilter<"User"> | number | null
   storeId?: Prisma.IntNullableFilter<"User"> | number | null
   departmentId?: Prisma.IntNullableFilter<"User"> | number | null
   dentalClinicId?: Prisma.IntNullableFilter<"User"> | number | null
@@ -520,7 +508,6 @@ export type UserWhereInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryListRelationFilter
   CounselingStore?: Prisma.XOR<Prisma.CounselingStoreNullableScalarRelationFilter, Prisma.CounselingStoreWhereInput> | null
   CounselingSlot?: Prisma.CounselingSlotListRelationFilter
-  AidocumentCompany?: Prisma.XOR<Prisma.AidocumentCompanyNullableScalarRelationFilter, Prisma.AidocumentCompanyWhereInput> | null
   Store?: Prisma.XOR<Prisma.StoreNullableScalarRelationFilter, Prisma.StoreWhereInput> | null
   YamanokaiEventAsCL?: Prisma.YamanokaiEventListRelationFilter
   YamanokaiEventAsSL?: Prisma.YamanokaiEventListRelationFilter
@@ -568,7 +555,6 @@ export type UserOrderByWithRelationInput = {
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
   bcc?: Prisma.SortOrderInput | Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrderInput | Prisma.SortOrder
-  aidocumentCompanyId?: Prisma.SortOrderInput | Prisma.SortOrder
   storeId?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   dentalClinicId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -581,7 +567,6 @@ export type UserOrderByWithRelationInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryOrderByRelationAggregateInput
   CounselingStore?: Prisma.CounselingStoreOrderByWithRelationInput
   CounselingSlot?: Prisma.CounselingSlotOrderByRelationAggregateInput
-  AidocumentCompany?: Prisma.AidocumentCompanyOrderByWithRelationInput
   Store?: Prisma.StoreOrderByWithRelationInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventOrderByRelationAggregateInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventOrderByRelationAggregateInput
@@ -632,7 +617,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   avatar?: Prisma.StringNullableFilter<"User"> | string | null
   bcc?: Prisma.StringNullableFilter<"User"> | string | null
   counselingStoreId?: Prisma.IntNullableFilter<"User"> | number | null
-  aidocumentCompanyId?: Prisma.IntNullableFilter<"User"> | number | null
   storeId?: Prisma.IntNullableFilter<"User"> | number | null
   departmentId?: Prisma.IntNullableFilter<"User"> | number | null
   dentalClinicId?: Prisma.IntNullableFilter<"User"> | number | null
@@ -645,7 +629,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryListRelationFilter
   CounselingStore?: Prisma.XOR<Prisma.CounselingStoreNullableScalarRelationFilter, Prisma.CounselingStoreWhereInput> | null
   CounselingSlot?: Prisma.CounselingSlotListRelationFilter
-  AidocumentCompany?: Prisma.XOR<Prisma.AidocumentCompanyNullableScalarRelationFilter, Prisma.AidocumentCompanyWhereInput> | null
   Store?: Prisma.XOR<Prisma.StoreNullableScalarRelationFilter, Prisma.StoreWhereInput> | null
   YamanokaiEventAsCL?: Prisma.YamanokaiEventListRelationFilter
   YamanokaiEventAsSL?: Prisma.YamanokaiEventListRelationFilter
@@ -693,7 +676,6 @@ export type UserOrderByWithAggregationInput = {
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
   bcc?: Prisma.SortOrderInput | Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrderInput | Prisma.SortOrder
-  aidocumentCompanyId?: Prisma.SortOrderInput | Prisma.SortOrder
   storeId?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   dentalClinicId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -741,7 +723,6 @@ export type UserScalarWhereWithAggregatesInput = {
   avatar?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   bcc?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   counselingStoreId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
-  aidocumentCompanyId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
   storeId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
   departmentId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
   dentalClinicId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
@@ -787,7 +768,6 @@ export type UserCreateInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
@@ -835,7 +815,6 @@ export type UserUncheckedCreateInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -896,7 +875,6 @@ export type UserUpdateInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
@@ -944,7 +922,6 @@ export type UserUncheckedUpdateInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -999,7 +976,6 @@ export type UserCreateManyInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -1072,7 +1048,6 @@ export type UserUncheckedUpdateManyInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1135,7 +1110,6 @@ export type UserCountOrderByAggregateInput = {
   avatar?: Prisma.SortOrder
   bcc?: Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrder
-  aidocumentCompanyId?: Prisma.SortOrder
   storeId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   dentalClinicId?: Prisma.SortOrder
@@ -1150,7 +1124,6 @@ export type UserAvgOrderByAggregateInput = {
   shopId?: Prisma.SortOrder
   damageNameMasterId?: Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrder
-  aidocumentCompanyId?: Prisma.SortOrder
   storeId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   dentalClinicId?: Prisma.SortOrder
@@ -1189,7 +1162,6 @@ export type UserMaxOrderByAggregateInput = {
   avatar?: Prisma.SortOrder
   bcc?: Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrder
-  aidocumentCompanyId?: Prisma.SortOrder
   storeId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   dentalClinicId?: Prisma.SortOrder
@@ -1228,7 +1200,6 @@ export type UserMinOrderByAggregateInput = {
   avatar?: Prisma.SortOrder
   bcc?: Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrder
-  aidocumentCompanyId?: Prisma.SortOrder
   storeId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   dentalClinicId?: Prisma.SortOrder
@@ -1243,7 +1214,6 @@ export type UserSumOrderByAggregateInput = {
   shopId?: Prisma.SortOrder
   damageNameMasterId?: Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrder
-  aidocumentCompanyId?: Prisma.SortOrder
   storeId?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   dentalClinicId?: Prisma.SortOrder
@@ -1253,48 +1223,6 @@ export type UserSumOrderByAggregateInput = {
 export type UserScalarRelationFilter = {
   is?: Prisma.UserWhereInput
   isNot?: Prisma.UserWhereInput
-}
-
-export type UserCreateNestedManyWithoutAidocumentCompanyInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutAidocumentCompanyInput, Prisma.UserUncheckedCreateWithoutAidocumentCompanyInput> | Prisma.UserCreateWithoutAidocumentCompanyInput[] | Prisma.UserUncheckedCreateWithoutAidocumentCompanyInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAidocumentCompanyInput | Prisma.UserCreateOrConnectWithoutAidocumentCompanyInput[]
-  createMany?: Prisma.UserCreateManyAidocumentCompanyInputEnvelope
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-}
-
-export type UserUncheckedCreateNestedManyWithoutAidocumentCompanyInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutAidocumentCompanyInput, Prisma.UserUncheckedCreateWithoutAidocumentCompanyInput> | Prisma.UserCreateWithoutAidocumentCompanyInput[] | Prisma.UserUncheckedCreateWithoutAidocumentCompanyInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAidocumentCompanyInput | Prisma.UserCreateOrConnectWithoutAidocumentCompanyInput[]
-  createMany?: Prisma.UserCreateManyAidocumentCompanyInputEnvelope
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-}
-
-export type UserUpdateManyWithoutAidocumentCompanyNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutAidocumentCompanyInput, Prisma.UserUncheckedCreateWithoutAidocumentCompanyInput> | Prisma.UserCreateWithoutAidocumentCompanyInput[] | Prisma.UserUncheckedCreateWithoutAidocumentCompanyInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAidocumentCompanyInput | Prisma.UserCreateOrConnectWithoutAidocumentCompanyInput[]
-  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutAidocumentCompanyInput | Prisma.UserUpsertWithWhereUniqueWithoutAidocumentCompanyInput[]
-  createMany?: Prisma.UserCreateManyAidocumentCompanyInputEnvelope
-  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  update?: Prisma.UserUpdateWithWhereUniqueWithoutAidocumentCompanyInput | Prisma.UserUpdateWithWhereUniqueWithoutAidocumentCompanyInput[]
-  updateMany?: Prisma.UserUpdateManyWithWhereWithoutAidocumentCompanyInput | Prisma.UserUpdateManyWithWhereWithoutAidocumentCompanyInput[]
-  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
-}
-
-export type UserUncheckedUpdateManyWithoutAidocumentCompanyNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutAidocumentCompanyInput, Prisma.UserUncheckedCreateWithoutAidocumentCompanyInput> | Prisma.UserCreateWithoutAidocumentCompanyInput[] | Prisma.UserUncheckedCreateWithoutAidocumentCompanyInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAidocumentCompanyInput | Prisma.UserCreateOrConnectWithoutAidocumentCompanyInput[]
-  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutAidocumentCompanyInput | Prisma.UserUpsertWithWhereUniqueWithoutAidocumentCompanyInput[]
-  createMany?: Prisma.UserCreateManyAidocumentCompanyInputEnvelope
-  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  update?: Prisma.UserUpdateWithWhereUniqueWithoutAidocumentCompanyInput | Prisma.UserUpdateWithWhereUniqueWithoutAidocumentCompanyInput[]
-  updateMany?: Prisma.UserUpdateManyWithWhereWithoutAidocumentCompanyInput | Prisma.UserUpdateManyWithWhereWithoutAidocumentCompanyInput[]
-  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
 }
 
 export type UserCreateNestedManyWithoutCounselingStoreInput = {
@@ -1746,182 +1674,6 @@ export type UserUpdateOneWithoutYamanokaiAttendanceAsApproverNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutYamanokaiAttendanceAsApproverInput, Prisma.UserUpdateWithoutYamanokaiAttendanceAsApproverInput>, Prisma.UserUncheckedUpdateWithoutYamanokaiAttendanceAsApproverInput>
 }
 
-export type UserCreateWithoutAidocumentCompanyInput = {
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
-  SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
-  ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
-  WorkoutLog?: Prisma.WorkoutLogCreateNestedManyWithoutUserInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
-  CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
-  CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
-  department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
-  DentalClinic?: Prisma.DentalClinicCreateNestedOneWithoutUserInput
-  DentalExaminationDoctor?: Prisma.DentalExaminationCreateNestedManyWithoutDoctorInput
-  DentalExaminationHygienist?: Prisma.DentalExaminationCreateNestedManyWithoutHygienistInput
-  RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
-  RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
-  RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
-}
-
-export type UserUncheckedCreateWithoutAidocumentCompanyInput = {
-  id?: number
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  counselingStoreId?: number | null
-  storeId?: number | null
-  departmentId?: number | null
-  dentalClinicId?: number | null
-  rgStoreId?: number | null
-  UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
-  SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
-  ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
-  WorkoutLog?: Prisma.WorkoutLogUncheckedCreateNestedManyWithoutUserInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedCreateNestedManyWithoutUserInput
-  CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
-  DentalExaminationDoctor?: Prisma.DentalExaminationUncheckedCreateNestedManyWithoutDoctorInput
-  DentalExaminationHygienist?: Prisma.DentalExaminationUncheckedCreateNestedManyWithoutHygienistInput
-  RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
-  RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
-}
-
-export type UserCreateOrConnectWithoutAidocumentCompanyInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutAidocumentCompanyInput, Prisma.UserUncheckedCreateWithoutAidocumentCompanyInput>
-}
-
-export type UserCreateManyAidocumentCompanyInputEnvelope = {
-  data: Prisma.UserCreateManyAidocumentCompanyInput | Prisma.UserCreateManyAidocumentCompanyInput[]
-  skipDuplicates?: boolean
-}
-
-export type UserUpsertWithWhereUniqueWithoutAidocumentCompanyInput = {
-  where: Prisma.UserWhereUniqueInput
-  update: Prisma.XOR<Prisma.UserUpdateWithoutAidocumentCompanyInput, Prisma.UserUncheckedUpdateWithoutAidocumentCompanyInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutAidocumentCompanyInput, Prisma.UserUncheckedCreateWithoutAidocumentCompanyInput>
-}
-
-export type UserUpdateWithWhereUniqueWithoutAidocumentCompanyInput = {
-  where: Prisma.UserWhereUniqueInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutAidocumentCompanyInput, Prisma.UserUncheckedUpdateWithoutAidocumentCompanyInput>
-}
-
-export type UserUpdateManyWithWhereWithoutAidocumentCompanyInput = {
-  where: Prisma.UserScalarWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutAidocumentCompanyInput>
-}
-
-export type UserScalarWhereInput = {
-  AND?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
-  OR?: Prisma.UserScalarWhereInput[]
-  NOT?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
-  id?: Prisma.IntFilter<"User"> | number
-  code?: Prisma.StringNullableFilter<"User"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  updatedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  sortOrder?: Prisma.FloatFilter<"User"> | number
-  active?: Prisma.BoolFilter<"User"> | boolean
-  hiredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  retiredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  transferredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  yukyuCategory?: Prisma.StringNullableFilter<"User"> | string | null
-  name?: Prisma.StringFilter<"User"> | string
-  kana?: Prisma.StringNullableFilter<"User"> | string | null
-  email?: Prisma.StringNullableFilter<"User"> | string | null
-  password?: Prisma.StringNullableFilter<"User"> | string | null
-  type?: Prisma.StringNullableFilter<"User"> | string | null
-  role?: Prisma.StringFilter<"User"> | string
-  tempResetCode?: Prisma.StringNullableFilter<"User"> | string | null
-  tempResetCodeExpired?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  schoolId?: Prisma.IntNullableFilter<"User"> | number | null
-  rentaStoreId?: Prisma.IntNullableFilter<"User"> | number | null
-  type2?: Prisma.StringNullableFilter<"User"> | string | null
-  shopId?: Prisma.IntNullableFilter<"User"> | number | null
-  membershipName?: Prisma.StringNullableFilter<"User"> | string | null
-  damageNameMasterId?: Prisma.IntNullableFilter<"User"> | number | null
-  color?: Prisma.StringNullableFilter<"User"> | string | null
-  app?: Prisma.StringNullableFilter<"User"> | string | null
-  apps?: Prisma.StringNullableListFilter<"User">
-  employeeCode?: Prisma.StringNullableFilter<"User"> | string | null
-  phone?: Prisma.StringNullableFilter<"User"> | string | null
-  avatar?: Prisma.StringNullableFilter<"User"> | string | null
-  bcc?: Prisma.StringNullableFilter<"User"> | string | null
-  counselingStoreId?: Prisma.IntNullableFilter<"User"> | number | null
-  aidocumentCompanyId?: Prisma.IntNullableFilter<"User"> | number | null
-  storeId?: Prisma.IntNullableFilter<"User"> | number | null
-  departmentId?: Prisma.IntNullableFilter<"User"> | number | null
-  dentalClinicId?: Prisma.IntNullableFilter<"User"> | number | null
-  rgStoreId?: Prisma.IntNullableFilter<"User"> | number | null
-}
-
 export type UserCreateWithoutCounselingStoreInput = {
   code?: string | null
   createdAt?: Date | string
@@ -1960,7 +1712,6 @@ export type UserCreateWithoutCounselingStoreInput = {
   WorkoutLog?: Prisma.WorkoutLogCreateNestedManyWithoutUserInput
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
@@ -2007,7 +1758,6 @@ export type UserUncheckedCreateWithoutCounselingStoreInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -2055,6 +1805,48 @@ export type UserUpdateManyWithWhereWithoutCounselingStoreInput = {
   data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutCounselingStoreInput>
 }
 
+export type UserScalarWhereInput = {
+  AND?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+  OR?: Prisma.UserScalarWhereInput[]
+  NOT?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+  id?: Prisma.IntFilter<"User"> | number
+  code?: Prisma.StringNullableFilter<"User"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  updatedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  sortOrder?: Prisma.FloatFilter<"User"> | number
+  active?: Prisma.BoolFilter<"User"> | boolean
+  hiredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  retiredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  transferredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  yukyuCategory?: Prisma.StringNullableFilter<"User"> | string | null
+  name?: Prisma.StringFilter<"User"> | string
+  kana?: Prisma.StringNullableFilter<"User"> | string | null
+  email?: Prisma.StringNullableFilter<"User"> | string | null
+  password?: Prisma.StringNullableFilter<"User"> | string | null
+  type?: Prisma.StringNullableFilter<"User"> | string | null
+  role?: Prisma.StringFilter<"User"> | string
+  tempResetCode?: Prisma.StringNullableFilter<"User"> | string | null
+  tempResetCodeExpired?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  schoolId?: Prisma.IntNullableFilter<"User"> | number | null
+  rentaStoreId?: Prisma.IntNullableFilter<"User"> | number | null
+  type2?: Prisma.StringNullableFilter<"User"> | string | null
+  shopId?: Prisma.IntNullableFilter<"User"> | number | null
+  membershipName?: Prisma.StringNullableFilter<"User"> | string | null
+  damageNameMasterId?: Prisma.IntNullableFilter<"User"> | number | null
+  color?: Prisma.StringNullableFilter<"User"> | string | null
+  app?: Prisma.StringNullableFilter<"User"> | string | null
+  apps?: Prisma.StringNullableListFilter<"User">
+  employeeCode?: Prisma.StringNullableFilter<"User"> | string | null
+  phone?: Prisma.StringNullableFilter<"User"> | string | null
+  avatar?: Prisma.StringNullableFilter<"User"> | string | null
+  bcc?: Prisma.StringNullableFilter<"User"> | string | null
+  counselingStoreId?: Prisma.IntNullableFilter<"User"> | number | null
+  storeId?: Prisma.IntNullableFilter<"User"> | number | null
+  departmentId?: Prisma.IntNullableFilter<"User"> | number | null
+  dentalClinicId?: Prisma.IntNullableFilter<"User"> | number | null
+  rgStoreId?: Prisma.IntNullableFilter<"User"> | number | null
+}
+
 export type UserCreateWithoutCounselingSlotInput = {
   code?: string | null
   createdAt?: Date | string
@@ -2093,7 +1885,6 @@ export type UserCreateWithoutCounselingSlotInput = {
   WorkoutLog?: Prisma.WorkoutLogCreateNestedManyWithoutUserInput
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
@@ -2141,7 +1932,6 @@ export type UserUncheckedCreateWithoutCounselingSlotInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -2216,7 +2006,6 @@ export type UserUpdateWithoutCounselingSlotInput = {
   WorkoutLog?: Prisma.WorkoutLogUpdateManyWithoutUserNestedInput
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
@@ -2264,7 +2053,6 @@ export type UserUncheckedUpdateWithoutCounselingSlotInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -2324,7 +2112,6 @@ export type UserCreateWithoutDentalClinicInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
@@ -2371,7 +2158,6 @@ export type UserUncheckedCreateWithoutDentalClinicInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   rgStoreId?: number | null
@@ -2457,7 +2243,6 @@ export type UserCreateWithoutDentalExaminationDoctorInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
@@ -2504,7 +2289,6 @@ export type UserUncheckedCreateWithoutDentalExaminationDoctorInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -2569,7 +2353,6 @@ export type UserCreateWithoutDentalExaminationHygienistInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
@@ -2616,7 +2399,6 @@ export type UserUncheckedCreateWithoutDentalExaminationHygienistInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -2692,7 +2474,6 @@ export type UserUpdateWithoutDentalExaminationDoctorInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
@@ -2739,7 +2520,6 @@ export type UserUncheckedUpdateWithoutDentalExaminationDoctorInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -2810,7 +2590,6 @@ export type UserUpdateWithoutDentalExaminationHygienistInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
@@ -2857,7 +2636,6 @@ export type UserUncheckedUpdateWithoutDentalExaminationHygienistInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -2917,7 +2695,6 @@ export type UserCreateWithoutRgStoreRgInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
@@ -2964,7 +2741,6 @@ export type UserUncheckedCreateWithoutRgStoreRgInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -3050,7 +2826,6 @@ export type UserCreateWithoutRgStaffRecordUserInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
@@ -3097,7 +2872,6 @@ export type UserUncheckedCreateWithoutRgStaffRecordUserInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -3173,7 +2947,6 @@ export type UserUpdateWithoutRgStaffRecordUserInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
@@ -3220,7 +2993,6 @@ export type UserUncheckedUpdateWithoutRgStaffRecordUserInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -3280,7 +3052,6 @@ export type UserCreateWithoutRgStaffManualDataUserInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
@@ -3327,7 +3098,6 @@ export type UserUncheckedCreateWithoutRgStaffManualDataUserInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -3403,7 +3173,6 @@ export type UserUpdateWithoutRgStaffManualDataUserInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
@@ -3450,7 +3219,6 @@ export type UserUncheckedUpdateWithoutRgStaffManualDataUserInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -3509,7 +3277,6 @@ export type UserCreateWithoutSbmReservationInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
@@ -3557,7 +3324,6 @@ export type UserUncheckedCreateWithoutSbmReservationInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -3632,7 +3398,6 @@ export type UserUpdateWithoutSbmReservationInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
@@ -3680,7 +3445,6 @@ export type UserUncheckedUpdateWithoutSbmReservationInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -3739,7 +3503,6 @@ export type UserCreateWithoutSbmReservationChangeHistoryInput = {
   WorkoutLog?: Prisma.WorkoutLogCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
@@ -3787,7 +3550,6 @@ export type UserUncheckedCreateWithoutSbmReservationChangeHistoryInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -3862,7 +3624,6 @@ export type UserUpdateWithoutSbmReservationChangeHistoryInput = {
   WorkoutLog?: Prisma.WorkoutLogUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
@@ -3910,7 +3671,6 @@ export type UserUncheckedUpdateWithoutSbmReservationChangeHistoryInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -3969,7 +3729,6 @@ export type UserCreateWithoutSbmDeliveryAssignmentInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
@@ -4017,7 +3776,6 @@ export type UserUncheckedCreateWithoutSbmDeliveryAssignmentInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -4092,7 +3850,6 @@ export type UserUpdateWithoutSbmDeliveryAssignmentInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
@@ -4140,7 +3897,6 @@ export type UserUncheckedUpdateWithoutSbmDeliveryAssignmentInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -4200,7 +3956,6 @@ export type UserCreateWithoutDepartmentInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
@@ -4247,7 +4002,6 @@ export type UserUncheckedCreateWithoutDepartmentInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   dentalClinicId?: number | null
   rgStoreId?: number | null
@@ -4333,7 +4087,6 @@ export type UserCreateWithoutStoreInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
@@ -4380,7 +4133,6 @@ export type UserUncheckedCreateWithoutStoreInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
   rgStoreId?: number | null
@@ -4465,7 +4217,6 @@ export type UserCreateWithoutUserRoleInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
@@ -4513,7 +4264,6 @@ export type UserUncheckedCreateWithoutUserRoleInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -4588,7 +4338,6 @@ export type UserUpdateWithoutUserRoleInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
@@ -4636,7 +4385,6 @@ export type UserUncheckedUpdateWithoutUserRoleInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -4695,7 +4443,6 @@ export type UserCreateWithoutExerciseMasterInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
@@ -4743,7 +4490,6 @@ export type UserUncheckedCreateWithoutExerciseMasterInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -4818,7 +4564,6 @@ export type UserUpdateWithoutExerciseMasterInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
@@ -4866,7 +4611,6 @@ export type UserUncheckedUpdateWithoutExerciseMasterInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -4925,7 +4669,6 @@ export type UserCreateWithoutWorkoutLogInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
@@ -4973,7 +4716,6 @@ export type UserUncheckedCreateWithoutWorkoutLogInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -5048,7 +4790,6 @@ export type UserUpdateWithoutWorkoutLogInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
@@ -5096,7 +4837,6 @@ export type UserUncheckedUpdateWithoutWorkoutLogInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -5156,7 +4896,6 @@ export type UserCreateWithoutYamanokaiEventAsCLInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
@@ -5203,7 +4942,6 @@ export type UserUncheckedCreateWithoutYamanokaiEventAsCLInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -5268,7 +5006,6 @@ export type UserCreateWithoutYamanokaiEventAsSLInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
@@ -5315,7 +5052,6 @@ export type UserUncheckedCreateWithoutYamanokaiEventAsSLInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -5391,7 +5127,6 @@ export type UserUpdateWithoutYamanokaiEventAsCLInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
@@ -5438,7 +5173,6 @@ export type UserUncheckedUpdateWithoutYamanokaiEventAsCLInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -5509,7 +5243,6 @@ export type UserUpdateWithoutYamanokaiEventAsSLInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
@@ -5556,7 +5289,6 @@ export type UserUncheckedUpdateWithoutYamanokaiEventAsSLInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -5616,7 +5348,6 @@ export type UserCreateWithoutYamanokaiAttendanceInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
@@ -5663,7 +5394,6 @@ export type UserUncheckedCreateWithoutYamanokaiAttendanceInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -5728,7 +5458,6 @@ export type UserCreateWithoutYamanokaiAttendanceAsApproverInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
   CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
   CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
-  AidocumentCompany?: Prisma.AidocumentCompanyCreateNestedOneWithoutUsersInput
   Store?: Prisma.StoreCreateNestedOneWithoutUserInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
@@ -5775,7 +5504,6 @@ export type UserUncheckedCreateWithoutYamanokaiAttendanceAsApproverInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -5851,7 +5579,6 @@ export type UserUpdateWithoutYamanokaiAttendanceInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
@@ -5898,7 +5625,6 @@ export type UserUncheckedUpdateWithoutYamanokaiAttendanceInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -5969,7 +5695,6 @@ export type UserUpdateWithoutYamanokaiAttendanceAsApproverInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
@@ -6016,7 +5741,6 @@ export type UserUncheckedUpdateWithoutYamanokaiAttendanceAsApproverInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -6035,191 +5759,6 @@ export type UserUncheckedUpdateWithoutYamanokaiAttendanceAsApproverInput = {
   DentalExaminationHygienist?: Prisma.DentalExaminationUncheckedUpdateManyWithoutHygienistNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
-}
-
-export type UserCreateManyAidocumentCompanyInput = {
-  id?: number
-  code?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string | null
-  sortOrder?: number
-  active?: boolean
-  hiredAt?: Date | string | null
-  retiredAt?: Date | string | null
-  transferredAt?: Date | string | null
-  yukyuCategory?: string | null
-  name: string
-  kana?: string | null
-  email?: string | null
-  password?: string | null
-  type?: string | null
-  role?: string
-  tempResetCode?: string | null
-  tempResetCodeExpired?: Date | string | null
-  schoolId?: number | null
-  rentaStoreId?: number | null
-  type2?: string | null
-  shopId?: number | null
-  membershipName?: string | null
-  damageNameMasterId?: number | null
-  color?: string | null
-  app?: string | null
-  apps?: Prisma.UserCreateappsInput | string[]
-  employeeCode?: string | null
-  phone?: string | null
-  avatar?: string | null
-  bcc?: string | null
-  counselingStoreId?: number | null
-  storeId?: number | null
-  departmentId?: number | null
-  dentalClinicId?: number | null
-  rgStoreId?: number | null
-}
-
-export type UserUpdateWithoutAidocumentCompanyInput = {
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
-  SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
-  ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
-  WorkoutLog?: Prisma.WorkoutLogUpdateManyWithoutUserNestedInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
-  CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
-  CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
-  department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
-  DentalClinic?: Prisma.DentalClinicUpdateOneWithoutUserNestedInput
-  DentalExaminationDoctor?: Prisma.DentalExaminationUpdateManyWithoutDoctorNestedInput
-  DentalExaminationHygienist?: Prisma.DentalExaminationUpdateManyWithoutHygienistNestedInput
-  RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
-  RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
-  RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutAidocumentCompanyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rgStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
-  SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
-  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
-  ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
-  WorkoutLog?: Prisma.WorkoutLogUncheckedUpdateManyWithoutUserNestedInput
-  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedUpdateManyWithoutUserNestedInput
-  CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
-  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
-  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
-  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
-  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
-  DentalExaminationDoctor?: Prisma.DentalExaminationUncheckedUpdateManyWithoutDoctorNestedInput
-  DentalExaminationHygienist?: Prisma.DentalExaminationUncheckedUpdateManyWithoutHygienistNestedInput
-  RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
-  RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateManyWithoutAidocumentCompanyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apps?: Prisma.UserUpdateappsInput | string[]
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  rgStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type UserCreateManyCounselingStoreInput = {
@@ -6254,7 +5793,6 @@ export type UserCreateManyCounselingStoreInput = {
   phone?: string | null
   avatar?: string | null
   bcc?: string | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -6299,7 +5837,6 @@ export type UserUpdateWithoutCounselingStoreInput = {
   WorkoutLog?: Prisma.WorkoutLogUpdateManyWithoutUserNestedInput
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
@@ -6346,7 +5883,6 @@ export type UserUncheckedUpdateWithoutCounselingStoreInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -6400,7 +5936,6 @@ export type UserUncheckedUpdateManyWithoutCounselingStoreInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -6440,7 +5975,6 @@ export type UserCreateManyDentalClinicInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   rgStoreId?: number | null
@@ -6485,7 +6019,6 @@ export type UserUpdateWithoutDentalClinicInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
@@ -6532,7 +6065,6 @@ export type UserUncheckedUpdateWithoutDentalClinicInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rgStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -6586,7 +6118,6 @@ export type UserUncheckedUpdateManyWithoutDentalClinicInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rgStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -6625,7 +6156,6 @@ export type UserCreateManyRgStoreRgInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
@@ -6670,7 +6200,6 @@ export type UserUpdateWithoutRgStoreRgInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
@@ -6717,7 +6246,6 @@ export type UserUncheckedUpdateWithoutRgStoreRgInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -6771,7 +6299,6 @@ export type UserUncheckedUpdateManyWithoutRgStoreRgInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -6810,7 +6337,6 @@ export type UserCreateManyDepartmentInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   storeId?: number | null
   dentalClinicId?: number | null
   rgStoreId?: number | null
@@ -6855,7 +6381,6 @@ export type UserUpdateWithoutDepartmentInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
@@ -6902,7 +6427,6 @@ export type UserUncheckedUpdateWithoutDepartmentInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rgStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -6956,7 +6480,6 @@ export type UserUncheckedUpdateManyWithoutDepartmentInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rgStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -6995,7 +6518,6 @@ export type UserCreateManyStoreInput = {
   avatar?: string | null
   bcc?: string | null
   counselingStoreId?: number | null
-  aidocumentCompanyId?: number | null
   departmentId?: number | null
   dentalClinicId?: number | null
   rgStoreId?: number | null
@@ -7040,7 +6562,6 @@ export type UserUpdateWithoutStoreInput = {
   SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
   CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
   CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
-  AidocumentCompany?: Prisma.AidocumentCompanyUpdateOneWithoutUsersNestedInput
   YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
   YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
@@ -7087,7 +6608,6 @@ export type UserUncheckedUpdateWithoutStoreInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rgStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -7141,7 +6661,6 @@ export type UserUncheckedUpdateManyWithoutStoreInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  aidocumentCompanyId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rgStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -7337,7 +6856,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   avatar?: boolean
   bcc?: boolean
   counselingStoreId?: boolean
-  aidocumentCompanyId?: boolean
   storeId?: boolean
   departmentId?: boolean
   dentalClinicId?: boolean
@@ -7350,7 +6868,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   SbmReservationChangeHistory?: boolean | Prisma.User$SbmReservationChangeHistoryArgs<ExtArgs>
   CounselingStore?: boolean | Prisma.User$CounselingStoreArgs<ExtArgs>
   CounselingSlot?: boolean | Prisma.User$CounselingSlotArgs<ExtArgs>
-  AidocumentCompany?: boolean | Prisma.User$AidocumentCompanyArgs<ExtArgs>
   Store?: boolean | Prisma.User$StoreArgs<ExtArgs>
   YamanokaiEventAsCL?: boolean | Prisma.User$YamanokaiEventAsCLArgs<ExtArgs>
   YamanokaiEventAsSL?: boolean | Prisma.User$YamanokaiEventAsSLArgs<ExtArgs>
@@ -7399,13 +6916,11 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   avatar?: boolean
   bcc?: boolean
   counselingStoreId?: boolean
-  aidocumentCompanyId?: boolean
   storeId?: boolean
   departmentId?: boolean
   dentalClinicId?: boolean
   rgStoreId?: boolean
   CounselingStore?: boolean | Prisma.User$CounselingStoreArgs<ExtArgs>
-  AidocumentCompany?: boolean | Prisma.User$AidocumentCompanyArgs<ExtArgs>
   Store?: boolean | Prisma.User$StoreArgs<ExtArgs>
   department?: boolean | Prisma.User$departmentArgs<ExtArgs>
   DentalClinic?: boolean | Prisma.User$DentalClinicArgs<ExtArgs>
@@ -7445,13 +6960,11 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   avatar?: boolean
   bcc?: boolean
   counselingStoreId?: boolean
-  aidocumentCompanyId?: boolean
   storeId?: boolean
   departmentId?: boolean
   dentalClinicId?: boolean
   rgStoreId?: boolean
   CounselingStore?: boolean | Prisma.User$CounselingStoreArgs<ExtArgs>
-  AidocumentCompany?: boolean | Prisma.User$AidocumentCompanyArgs<ExtArgs>
   Store?: boolean | Prisma.User$StoreArgs<ExtArgs>
   department?: boolean | Prisma.User$departmentArgs<ExtArgs>
   DentalClinic?: boolean | Prisma.User$DentalClinicArgs<ExtArgs>
@@ -7491,14 +7004,13 @@ export type UserSelectScalar = {
   avatar?: boolean
   bcc?: boolean
   counselingStoreId?: boolean
-  aidocumentCompanyId?: boolean
   storeId?: boolean
   departmentId?: boolean
   dentalClinicId?: boolean
   rgStoreId?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "createdAt" | "updatedAt" | "sortOrder" | "active" | "hiredAt" | "retiredAt" | "transferredAt" | "yukyuCategory" | "name" | "kana" | "email" | "password" | "type" | "role" | "tempResetCode" | "tempResetCodeExpired" | "schoolId" | "rentaStoreId" | "type2" | "shopId" | "membershipName" | "damageNameMasterId" | "color" | "app" | "apps" | "employeeCode" | "phone" | "avatar" | "bcc" | "counselingStoreId" | "aidocumentCompanyId" | "storeId" | "departmentId" | "dentalClinicId" | "rgStoreId", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "createdAt" | "updatedAt" | "sortOrder" | "active" | "hiredAt" | "retiredAt" | "transferredAt" | "yukyuCategory" | "name" | "kana" | "email" | "password" | "type" | "role" | "tempResetCode" | "tempResetCodeExpired" | "schoolId" | "rentaStoreId" | "type2" | "shopId" | "membershipName" | "damageNameMasterId" | "color" | "app" | "apps" | "employeeCode" | "phone" | "avatar" | "bcc" | "counselingStoreId" | "storeId" | "departmentId" | "dentalClinicId" | "rgStoreId", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   UserRole?: boolean | Prisma.User$UserRoleArgs<ExtArgs>
   SbmReservation?: boolean | Prisma.User$SbmReservationArgs<ExtArgs>
@@ -7508,7 +7020,6 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   SbmReservationChangeHistory?: boolean | Prisma.User$SbmReservationChangeHistoryArgs<ExtArgs>
   CounselingStore?: boolean | Prisma.User$CounselingStoreArgs<ExtArgs>
   CounselingSlot?: boolean | Prisma.User$CounselingSlotArgs<ExtArgs>
-  AidocumentCompany?: boolean | Prisma.User$AidocumentCompanyArgs<ExtArgs>
   Store?: boolean | Prisma.User$StoreArgs<ExtArgs>
   YamanokaiEventAsCL?: boolean | Prisma.User$YamanokaiEventAsCLArgs<ExtArgs>
   YamanokaiEventAsSL?: boolean | Prisma.User$YamanokaiEventAsSLArgs<ExtArgs>
@@ -7525,7 +7036,6 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   CounselingStore?: boolean | Prisma.User$CounselingStoreArgs<ExtArgs>
-  AidocumentCompany?: boolean | Prisma.User$AidocumentCompanyArgs<ExtArgs>
   Store?: boolean | Prisma.User$StoreArgs<ExtArgs>
   department?: boolean | Prisma.User$departmentArgs<ExtArgs>
   DentalClinic?: boolean | Prisma.User$DentalClinicArgs<ExtArgs>
@@ -7533,7 +7043,6 @@ export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 }
 export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   CounselingStore?: boolean | Prisma.User$CounselingStoreArgs<ExtArgs>
-  AidocumentCompany?: boolean | Prisma.User$AidocumentCompanyArgs<ExtArgs>
   Store?: boolean | Prisma.User$StoreArgs<ExtArgs>
   department?: boolean | Prisma.User$departmentArgs<ExtArgs>
   DentalClinic?: boolean | Prisma.User$DentalClinicArgs<ExtArgs>
@@ -7551,7 +7060,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     SbmReservationChangeHistory: Prisma.$SbmReservationChangeHistoryPayload<ExtArgs>[]
     CounselingStore: Prisma.$CounselingStorePayload<ExtArgs> | null
     CounselingSlot: Prisma.$CounselingSlotPayload<ExtArgs>[]
-    AidocumentCompany: Prisma.$AidocumentCompanyPayload<ExtArgs> | null
     Store: Prisma.$StorePayload<ExtArgs> | null
     YamanokaiEventAsCL: Prisma.$YamanokaiEventPayload<ExtArgs>[]
     YamanokaiEventAsSL: Prisma.$YamanokaiEventPayload<ExtArgs>[]
@@ -7598,7 +7106,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     avatar: string | null
     bcc: string | null
     counselingStoreId: number | null
-    aidocumentCompanyId: number | null
     storeId: number | null
     departmentId: number | null
     dentalClinicId: number | null
@@ -8005,7 +7512,6 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   SbmReservationChangeHistory<T extends Prisma.User$SbmReservationChangeHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$SbmReservationChangeHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SbmReservationChangeHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   CounselingStore<T extends Prisma.User$CounselingStoreArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$CounselingStoreArgs<ExtArgs>>): Prisma.Prisma__CounselingStoreClient<runtime.Types.Result.GetResult<Prisma.$CounselingStorePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   CounselingSlot<T extends Prisma.User$CounselingSlotArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$CounselingSlotArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CounselingSlotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  AidocumentCompany<T extends Prisma.User$AidocumentCompanyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$AidocumentCompanyArgs<ExtArgs>>): Prisma.Prisma__AidocumentCompanyClient<runtime.Types.Result.GetResult<Prisma.$AidocumentCompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   Store<T extends Prisma.User$StoreArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$StoreArgs<ExtArgs>>): Prisma.Prisma__StoreClient<runtime.Types.Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   YamanokaiEventAsCL<T extends Prisma.User$YamanokaiEventAsCLArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$YamanokaiEventAsCLArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$YamanokaiEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   YamanokaiEventAsSL<T extends Prisma.User$YamanokaiEventAsSLArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$YamanokaiEventAsSLArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$YamanokaiEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -8079,7 +7585,6 @@ export interface UserFieldRefs {
   readonly avatar: Prisma.FieldRef<"User", 'String'>
   readonly bcc: Prisma.FieldRef<"User", 'String'>
   readonly counselingStoreId: Prisma.FieldRef<"User", 'Int'>
-  readonly aidocumentCompanyId: Prisma.FieldRef<"User", 'Int'>
   readonly storeId: Prisma.FieldRef<"User", 'Int'>
   readonly departmentId: Prisma.FieldRef<"User", 'Int'>
   readonly dentalClinicId: Prisma.FieldRef<"User", 'Int'>
@@ -8664,25 +8169,6 @@ export type User$CounselingSlotArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.CounselingSlotScalarFieldEnum | Prisma.CounselingSlotScalarFieldEnum[]
-}
-
-/**
- * User.AidocumentCompany
- */
-export type User$AidocumentCompanyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the AidocumentCompany
-   */
-  select?: Prisma.AidocumentCompanySelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the AidocumentCompany
-   */
-  omit?: Prisma.AidocumentCompanyOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AidocumentCompanyInclude<ExtArgs> | null
-  where?: Prisma.AidocumentCompanyWhereInput
 }
 
 /**

@@ -1,0 +1,84 @@
+// モックアプリのメタデータ定義（SEO・サイトマップ用）
+export type MockAppMeta = {
+  id: string
+  title: string
+  description: string
+  features: string[]
+}
+
+export const MOCK_APPS: MockAppMeta[] = [
+  {
+    id: 'clinick-dashboard',
+    title: '美容医療クリニック管理ダッシュボード',
+    description:
+      '美容クリニックのマーケティング分析・顧客管理・予約管理を統合したダッシュボード。流入経路分析やKPI可視化機能を搭載。',
+    features: ['流入経路分析', 'KPI可視化', '顧客管理', '予約管理'],
+  },
+  {
+    id: 'seisan-kanri',
+    title: '製造業向け生産管理システム',
+    description:
+      '製造業の生産計画・在庫管理・受注管理を効率化するシステム。カレンダーベースの生産スケジュール管理と原材料在庫の可視化を実現。',
+    features: ['生産計画', '在庫管理', '受注管理', 'スケジュール管理'],
+  },
+  {
+    id: 'dental',
+    title: '訪問歯科管理システム',
+    description:
+      '訪問歯科診療の患者管理・診療記録・スケジュール管理を統合。訪問先施設ごとの患者一覧やドキュメント管理を効率化。',
+    features: ['患者管理', '診療記録', '訪問スケジュール', 'ドキュメント管理'],
+  },
+  {
+    id: 'regrow',
+    title: '月次業績レポートシステム',
+    description:
+      '月次の業績データをスライド形式で自動生成。売上推移・KPI分析・部門別比較などを視覚的にプレゼンテーション。',
+    features: ['自動スライド生成', '売上推移分析', 'KPI可視化', '部門別比較'],
+  },
+  {
+    id: 'recipe-calculator',
+    title: 'AI食品原価計算システム',
+    description:
+      'AIでレシピ画像や手書きメモから食材を自動認識し、原価を瞬時に算出。食材マスタと粗利基準の管理で収益性を可視化。',
+    features: ['AI原価解析', '食材マスタ', '粗利基準管理', '自動原価算出'],
+  },
+  {
+    id: 'sales-auto',
+    title: '自動車ディーラー営業管理システム',
+    description:
+      '商談管理・見積書作成・納車スケジュール・売上分析を統合した営業管理ツール。ABC判定やパイプライン可視化で成約率を向上。',
+    features: ['商談管理', '見積書作成', '納車管理', '売上分析'],
+  },
+  {
+    id: 'tennis-schedule',
+    title: 'テニスサークル予定管理アプリ',
+    description:
+      'サークルの練習・試合予定をカレンダーで共有。ワンタップで参加可否を入力でき、LINEスケジュールの煩雑さを解消。コート場所もすぐに確認可能。',
+    features: ['カレンダー管理', 'ワンタップ出欠', 'コート場所リンク', '誰でも予定作成'],
+  },
+  {
+    id: 'inshoku',
+    title: '飲食店管理システム',
+    description:
+      '飲食店の売上管理・在庫管理・メニュー管理を一元化。日次売上レポートやシフト管理で店舗運営を効率化。',
+    features: ['売上管理', '在庫管理', 'メニュー管理', 'シフト管理'],
+  },
+  {
+    id: 'kaigoshoku',
+    title: '介護食管理システム',
+    description:
+      '介護施設向けの給食管理・献立作成・製造指示・配送管理を一元化。施設ごとの食事形態や個別対応にも柔軟に対応。',
+    features: ['受注管理', '献立管理', '製造指示', '梱包・配送'],
+  },
+  {
+    id: 'yamanokai',
+    title: '山の会管理システム',
+    description:
+      '登山サークルの会員管理・イベント計画・活動記録を一元管理。参加申込や会費管理もオンラインで完結。',
+    features: ['会員管理', 'イベント管理', '活動記録', '会費管理'],
+  },
+]
+
+export function getMockAppById(id: string): MockAppMeta | undefined {
+  return MOCK_APPS.find((app) => app.id === id)
+}
