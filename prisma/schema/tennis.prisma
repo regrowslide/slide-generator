@@ -1,0 +1,71 @@
+model TennisCourt {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  name          String  @db.VarChar(200)
+  address       String? @db.Text
+  googleMapsUrl String? @db.Text
+  courtNumbers    String[]
+  schedulePageKey String? @db.VarChar(50)
+  isDeleted       Boolean @default(false)
+
+  TennisEventCourt TennisEventCourt[]
+
+  @@map("tennis_courts")
+}
+
+model TennisEvent {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  sortOrder Float     @default(0)
+
+  title     String @db.VarChar(200)
+  date      DateTime // UTC保存
+  startTime String @db.VarChar(5) // "09:00"
+  endTime   String @db.VarChar(5) // "12:00"
+  memo      String? @db.Text
+  isDeleted Boolean @default(false)
+
+  Creator   User @relation("TennisEventCreator", fields: [creatorId], references: [id])
+  creatorId Int
+
+  TennisEventCourt TennisEventCourt[]
+  TennisAttendance TennisAttendance[]
+
+  @@map("tennis_events")
+}
+
+model TennisEventCourt {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
+  courtNumber String    @db.VarChar(50)
+  status      String    @default("planned") @db.VarChar(20) // "planned" | "reserved"
+
+  TennisEvent   TennisEvent @relation(fields: [tennisEventId], references: [id], onDelete: Cascade)
+  tennisEventId Int
+  TennisCourt   TennisCourt @relation(fields: [tennisCourtId], references: [id], onDelete: Cascade)
+  tennisCourtId Int
+
+  @@unique([tennisEventId, tennisCourtId, courtNumber])
+  @@map("tennis_event_courts")
+}
+
+model TennisAttendance {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  status    String    @db.VarChar(10) // "yes" | "maybe" | "no"
+  comment   String?   @db.Text
+
+  TennisEvent   TennisEvent @relation(fields: [tennisEventId], references: [id], onDelete: Cascade)
+  tennisEventId Int
+  User          User @relation("TennisAttendanceUser", fields: [userId], references: [id], onDelete: Cascade)
+  userId        Int
+
+  @@unique([tennisEventId, userId])
+  @@map("tennis_attendances")
+}

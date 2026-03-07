@@ -1,3 +1,4 @@
+import { globalIds } from 'src/non-common/searchParamStr'
 import { SessionFaker } from 'src/non-common/SessionFaker'
 
 type roleArray = string[] | string
@@ -37,8 +38,12 @@ export const judgeIsAdmin = (session: session, query) => {
     return result
   }
 
+  const adminSelf = admin && query?.[globalIds.globalUserId] === undefined
+
   return {
     admin,
+    adminSelf,
+
     getGlobalUserId,
     globalUserId: getGlobalUserId(),
   }

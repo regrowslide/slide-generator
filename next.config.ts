@@ -26,6 +26,15 @@ const withPWA = require('next-pwa')({
 })
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: [
+    'googleapis',
+    '@prisma/generated',
+    'bcrypt',
+    'sharp',
+    'nodemailer',
+    '@google-cloud/bigquery',
+    'fluent-ffmpeg',
+  ],
   reactStrictMode: false,
   turbopack: {},
   experimental: {

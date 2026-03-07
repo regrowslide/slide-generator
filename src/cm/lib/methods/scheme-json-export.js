@@ -15423,6 +15423,40 @@
           "isUpdatedAt": false
         },
         {
+          "name": "TennisEventCreator",
+          "kind": "object",
+          "isList": true,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "TennisEvent",
+          "nativeType": null,
+          "relationName": "TennisEventCreator",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "TennisAttendance",
+          "kind": "object",
+          "isList": true,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "TennisAttendance",
+          "nativeType": null,
+          "relationName": "TennisAttendanceUser",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
           "name": "rgStoreId",
           "kind": "scalar",
           "isList": false,
@@ -16613,6 +16647,817 @@
       "primaryKey": null,
       "uniqueFields": [],
       "uniqueIndexes": [],
+      "isGenerated": false
+    },
+    {
+      "name": "TennisCourt",
+      "dbName": "tennis_courts",
+      "schema": null,
+      "fields": [
+        {
+          "name": "id",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": true,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Int",
+          "nativeType": null,
+          "default": {
+            "name": "autoincrement",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "createdAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "DateTime",
+          "nativeType": null,
+          "default": {
+            "name": "now",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "updatedAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "DateTime",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": true
+        },
+        {
+          "name": "sortOrder",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Float",
+          "nativeType": null,
+          "default": 0,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "name",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": [
+            "VarChar",
+            [
+              "200"
+            ]
+          ],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "address",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": [
+            "Text",
+            []
+          ],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "googleMapsUrl",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": [
+            "Text",
+            []
+          ],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "courtNumbers",
+          "kind": "scalar",
+          "isList": true,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "schedulePageKey",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": [
+            "VarChar",
+            [
+              "50"
+            ]
+          ],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "isDeleted",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Boolean",
+          "nativeType": null,
+          "default": false,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "TennisEventCourt",
+          "kind": "object",
+          "isList": true,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "TennisEventCourt",
+          "nativeType": null,
+          "relationName": "TennisCourtToTennisEventCourt",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        }
+      ],
+      "primaryKey": null,
+      "uniqueFields": [],
+      "uniqueIndexes": [],
+      "isGenerated": false
+    },
+    {
+      "name": "TennisEvent",
+      "dbName": "tennis_events",
+      "schema": null,
+      "fields": [
+        {
+          "name": "id",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": true,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Int",
+          "nativeType": null,
+          "default": {
+            "name": "autoincrement",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "createdAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "DateTime",
+          "nativeType": null,
+          "default": {
+            "name": "now",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "updatedAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "DateTime",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": true
+        },
+        {
+          "name": "sortOrder",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Float",
+          "nativeType": null,
+          "default": 0,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "title",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": [
+            "VarChar",
+            [
+              "200"
+            ]
+          ],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "date",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "DateTime",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "startTime",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": [
+            "VarChar",
+            [
+              "5"
+            ]
+          ],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "endTime",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": [
+            "VarChar",
+            [
+              "5"
+            ]
+          ],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "memo",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": [
+            "Text",
+            []
+          ],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "isDeleted",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Boolean",
+          "nativeType": null,
+          "default": false,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "Creator",
+          "kind": "object",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "User",
+          "nativeType": null,
+          "relationName": "TennisEventCreator",
+          "relationFromFields": [
+            "creatorId"
+          ],
+          "relationToFields": [
+            "id"
+          ],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "creatorId",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": true,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "TennisEventCourt",
+          "kind": "object",
+          "isList": true,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "TennisEventCourt",
+          "nativeType": null,
+          "relationName": "TennisEventToTennisEventCourt",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "TennisAttendance",
+          "kind": "object",
+          "isList": true,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "TennisAttendance",
+          "nativeType": null,
+          "relationName": "TennisAttendanceToTennisEvent",
+          "relationFromFields": [],
+          "relationToFields": [],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        }
+      ],
+      "primaryKey": null,
+      "uniqueFields": [],
+      "uniqueIndexes": [],
+      "isGenerated": false
+    },
+    {
+      "name": "TennisEventCourt",
+      "dbName": "tennis_event_courts",
+      "schema": null,
+      "fields": [
+        {
+          "name": "id",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": true,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Int",
+          "nativeType": null,
+          "default": {
+            "name": "autoincrement",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "createdAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "DateTime",
+          "nativeType": null,
+          "default": {
+            "name": "now",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "updatedAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "DateTime",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": true
+        },
+        {
+          "name": "courtNumber",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": [
+            "VarChar",
+            [
+              "50"
+            ]
+          ],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "status",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "String",
+          "nativeType": [
+            "VarChar",
+            [
+              "20"
+            ]
+          ],
+          "default": "planned",
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "TennisEvent",
+          "kind": "object",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "TennisEvent",
+          "nativeType": null,
+          "relationName": "TennisEventToTennisEventCourt",
+          "relationFromFields": [
+            "tennisEventId"
+          ],
+          "relationToFields": [
+            "id"
+          ],
+          "relationOnDelete": "Cascade",
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "tennisEventId",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": true,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "TennisCourt",
+          "kind": "object",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "TennisCourt",
+          "nativeType": null,
+          "relationName": "TennisCourtToTennisEventCourt",
+          "relationFromFields": [
+            "tennisCourtId"
+          ],
+          "relationToFields": [
+            "id"
+          ],
+          "relationOnDelete": "Cascade",
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "tennisCourtId",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": true,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        }
+      ],
+      "primaryKey": null,
+      "uniqueFields": [
+        [
+          "tennisEventId",
+          "tennisCourtId",
+          "courtNumber"
+        ]
+      ],
+      "uniqueIndexes": [
+        {
+          "name": null,
+          "fields": [
+            "tennisEventId",
+            "tennisCourtId",
+            "courtNumber"
+          ]
+        }
+      ],
+      "isGenerated": false
+    },
+    {
+      "name": "TennisAttendance",
+      "dbName": "tennis_attendances",
+      "schema": null,
+      "fields": [
+        {
+          "name": "id",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": true,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Int",
+          "nativeType": null,
+          "default": {
+            "name": "autoincrement",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "createdAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "DateTime",
+          "nativeType": null,
+          "default": {
+            "name": "now",
+            "args": []
+          },
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "updatedAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "DateTime",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": true
+        },
+        {
+          "name": "status",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": [
+            "VarChar",
+            [
+              "10"
+            ]
+          ],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "comment",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": [
+            "Text",
+            []
+          ],
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "TennisEvent",
+          "kind": "object",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "TennisEvent",
+          "nativeType": null,
+          "relationName": "TennisAttendanceToTennisEvent",
+          "relationFromFields": [
+            "tennisEventId"
+          ],
+          "relationToFields": [
+            "id"
+          ],
+          "relationOnDelete": "Cascade",
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "tennisEventId",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": true,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "User",
+          "kind": "object",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "User",
+          "nativeType": null,
+          "relationName": "TennisAttendanceUser",
+          "relationFromFields": [
+            "userId"
+          ],
+          "relationToFields": [
+            "id"
+          ],
+          "relationOnDelete": "Cascade",
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "userId",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": true,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        }
+      ],
+      "primaryKey": null,
+      "uniqueFields": [
+        [
+          "tennisEventId",
+          "userId"
+        ]
+      ],
+      "uniqueIndexes": [
+        {
+          "name": null,
+          "fields": [
+            "tennisEventId",
+            "userId"
+          ]
+        }
+      ],
       "isGenerated": false
     },
     {
@@ -22959,6 +23804,75 @@
       "fields": [
         {
           "name": "status"
+        }
+      ]
+    },
+    {
+      "model": "TennisCourt",
+      "type": "id",
+      "isDefinedOnField": true,
+      "fields": [
+        {
+          "name": "id"
+        }
+      ]
+    },
+    {
+      "model": "TennisEvent",
+      "type": "id",
+      "isDefinedOnField": true,
+      "fields": [
+        {
+          "name": "id"
+        }
+      ]
+    },
+    {
+      "model": "TennisEventCourt",
+      "type": "id",
+      "isDefinedOnField": true,
+      "fields": [
+        {
+          "name": "id"
+        }
+      ]
+    },
+    {
+      "model": "TennisEventCourt",
+      "type": "unique",
+      "isDefinedOnField": false,
+      "fields": [
+        {
+          "name": "tennisEventId"
+        },
+        {
+          "name": "tennisCourtId"
+        },
+        {
+          "name": "courtNumber"
+        }
+      ]
+    },
+    {
+      "model": "TennisAttendance",
+      "type": "id",
+      "isDefinedOnField": true,
+      "fields": [
+        {
+          "name": "id"
+        }
+      ]
+    },
+    {
+      "model": "TennisAttendance",
+      "type": "unique",
+      "isDefinedOnField": false,
+      "fields": [
+        {
+          "name": "tennisEventId"
+        },
+        {
+          "name": "userId"
         }
       ]
     },

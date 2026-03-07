@@ -1,13 +1,22 @@
 'use client'
 
-import {signIn} from 'next-auth/react'
-import {CircleDot} from 'lucide-react'
+import { signIn } from 'next-auth/react'
+import { CircleDot } from 'lucide-react'
+import { HREF } from '@cm/lib/methods/urls'
+import useGlobal from '@cm/hooks/globalHooks/useGlobal'
+import Redirector from '@cm/components/utils/Redirector'
 
 export default function TennisLoginPage() {
+  const { session, query } = useGlobal()
   const allowLineLogin = process.env.NEXT_PUBLIC_ALLOW_LINE_LOGIN === 'true'
+  if (session?.lineUserId) {
+    return <Redirector {...{ redirectPath: '/tennis' }} />
+  }
+
+
 
   const handleLineLogin = async () => {
-    await signIn('line', {callbackUrl: '/tennis'})
+    await signIn('line', { redirect: HREF('/tennis/login', {}, query) as any })
   }
 
   return (

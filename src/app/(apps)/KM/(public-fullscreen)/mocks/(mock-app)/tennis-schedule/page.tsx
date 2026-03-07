@@ -602,7 +602,7 @@ export default function TennisSchedulePage() {
   const { InfoModal, openInfo } = useInfoModal({
     theme: THEME,
     systemIcon: CircleDot,
-    systemName: 'テニスカレンダー',
+    systemName: 'Tennis',
     systemDescription: 'テニスサークルの予定管理に特化したカレンダーアプリ。LINEスケジュールの煩雑さを解消し、ワンタップで参加可否を入力できます。',
     features: FEATURES,
     timeEfficiency: TIME_EFFICIENCY,
@@ -1143,7 +1143,7 @@ export default function TennisSchedulePage() {
     <div className="min-h-screen bg-slate-50 max-w-lg mx-auto relative">
       {/* ヘッダー */}
       <MockHeader>
-        <MockHeaderTitle icon={CircleDot} title="テニスカレンダー" subtitle="" theme={THEME} />
+        <MockHeaderTitle icon={CircleDot} title="tennis" subtitle="" theme={THEME} />
         <div className="flex items-center gap-1">
           <MockHeaderTab label="ホーム" icon={Calendar} active={activeTab === 'home'} onClick={() => setActiveTab('home')} theme={THEME} />
           <MockHeaderTab label="コート" icon={MapPin} active={activeTab === 'courts'} onClick={() => setActiveTab('courts')} theme={THEME} data-guidance="tab-courts" />

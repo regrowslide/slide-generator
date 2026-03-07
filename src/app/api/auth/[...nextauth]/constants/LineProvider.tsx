@@ -9,21 +9,23 @@ export const lineProvider = {
   authorization: {
     url: 'https://access.line.me/oauth2/v2.1/authorize',
     params: {
-      scope: 'profile openid',
+      scope: 'profile',
     },
   },
   token: 'https://api.line.me/oauth2/v2.1/token',
+  idToken: false,
   userinfo: 'https://api.line.me/v2/profile',
   clientId: process.env.LINE_CLIENT_ID ?? '',
   clientSecret: process.env.LINE_CLIENT_SECRET ?? '',
   profile: async (profile: { userId: string; displayName: string; pictureUrl?: string }) => {
+
     // lineUserIdで既存ユーザーを検索
     const existingUser = await prisma.user.findUnique({
       where: { lineUserId: profile.userId },
     })
 
     if (existingUser) {
-      return { ...existingUser, id: profile.userId }
+      return { ...existingUser }
     }
 
     // 初回ログイン：User自動生成
@@ -35,6 +37,6 @@ export const lineProvider = {
       },
     })
 
-    return { ...newUser, id: profile.userId }
+    return { ...newUser }
   },
 }

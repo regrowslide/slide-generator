@@ -3,14 +3,15 @@
 // このファイルはモックであり、単一ファイルに収まるよう構築されています。
 // 本番プロジェクトでは、プロジェクトの設計やルールに従ってページやコンポーネントを分割してください。
 
-import React, {useState, useEffect, useMemo, useContext, createContext, useCallback} from 'react'
+import React, {useState, useEffect, useMemo, useContext, createContext, useCallback, useRef} from 'react'
 import {
   Building2, Users, Menu, X, Search, Phone, Mail, MapPin,
   MessageCircle, Send, Wrench, ChevronDown, Home, Plus, Pencil, Trash2,
   LayoutDashboard, UserCheck, HardHat, FileUp, Clock, Bell, Calendar,
   CheckCircle2, AlertCircle, TrendingUp, Eye, Download, Upload,
-  ChevronRight, LogOut, ArrowLeft,
+  ChevronRight, LogOut, ArrowLeft, Loader2,
 } from 'lucide-react'
+import {uploadEarthFile, listEarthFiles, deleteEarthFile} from './_actions'
 
 // =============================================================================
 // 型定義
@@ -96,6 +97,17 @@ type ChatMessage = {
   message: string
   timestamp: string
   scheduledAt?: string
+  tenantId?: string
+}
+
+type BlobFile = {
+  id: string
+  propertyId: string
+  name: string
+  url: string
+  size: number
+  uploadedAt: string
+  uploadedBy: string
 }
 
 type RepairVendor = {
@@ -213,8 +225,8 @@ const CHAT_MESSAGES: ChatMessage[] = [
   {id: 'CM008', propertyId: 'P002', chatType: 'owner', senderRole: 'owner', senderName: '山田太郎', message: '承知しました。よろしくお願いします。', timestamp: '2026-02-15 15:30'},
   {id: 'CM009', propertyId: 'P003', chatType: 'owner', senderRole: 'staff', senderName: '佐藤', message: 'サンライズ不動産様、2月度の月次収支報告書を25日までにお送りいたします。', timestamp: '2026-02-20 09:00', scheduledAt: '2026-02-20 09:00'},
   // 入居者チャット
-  {id: 'CM010', propertyId: 'P001', chatType: 'tenant', senderRole: 'tenant', senderName: '松本大輔(301)', message: 'エアコンが動かなくなりました。確認をお願いできますか？', timestamp: '2026-02-18 20:00'},
-  {id: 'CM011', propertyId: 'P001', chatType: 'tenant', senderRole: 'staff', senderName: '佐藤', message: '松本様、ご連絡ありがとうございます。修理業者を手配いたします。', timestamp: '2026-02-19 09:00'},
+  {id: 'CM010', propertyId: 'P001', chatType: 'tenant', senderRole: 'tenant', senderName: '松本大輔(301)', message: 'エアコンが動かなくなりました。確認をお願いできますか？', timestamp: '2026-02-18 20:00', tenantId: 'T005'},
+  {id: 'CM011', propertyId: 'P001', chatType: 'tenant', senderRole: 'staff', senderName: '佐藤', message: '松本様、ご連絡ありがとうございます。修理業者を手配いたします。', timestamp: '2026-02-19 09:00', tenantId: 'T005'},
 ]
 
 const REPAIR_VENDORS: RepairVendor[] = [
@@ -251,6 +263,8 @@ type DataContextType = {
   setOwners: React.Dispatch<React.SetStateAction<Owner[]>>
   properties: Property[]
   setProperties: React.Dispatch<React.SetStateAction<Property[]>>
+  tenants: Tenant[]
+  setTenants: React.Dispatch<React.SetStateAction<Tenant[]>>
   actionItems: ActionItem[]
   setActionItems: React.Dispatch<React.SetStateAction<ActionItem[]>>
   repairRecords: RepairRecord[]
@@ -259,6 +273,10 @@ type DataContextType = {
   setRepairVendors: React.Dispatch<React.SetStateAction<RepairVendor[]>>
   repairRequests: RepairRequest[]
   setRepairRequests: React.Dispatch<React.SetStateAction<RepairRequest[]>>
+  chatMessages: ChatMessage[]
+  setChatMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>
+  blobFiles: BlobFile[]
+  setBlobFiles: React.Dispatch<React.SetStateAction<BlobFile[]>>
   currentUser: CurrentUser
   setPortal: (p: PortalType) => void
   portal: PortalType

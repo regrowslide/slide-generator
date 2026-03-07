@@ -393,6 +393,26 @@ export type Calendar = Prisma.CalendarModel
  */
 export type CronExecutionLog = Prisma.CronExecutionLogModel
 /**
+ * Model TennisCourt
+ * 
+ */
+export type TennisCourt = Prisma.TennisCourtModel
+/**
+ * Model TennisEvent
+ * 
+ */
+export type TennisEvent = Prisma.TennisEventModel
+/**
+ * Model TennisEventCourt
+ * 
+ */
+export type TennisEventCourt = Prisma.TennisEventCourtModel
+/**
+ * Model TennisAttendance
+ * 
+ */
+export type TennisAttendance = Prisma.TennisAttendanceModel
+/**
  * Model ExerciseMaster
  * 
  */

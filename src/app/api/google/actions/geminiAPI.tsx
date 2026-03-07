@@ -36,9 +36,15 @@ export interface GeminiResponseSchema {
   description?: string
 }
 
+export interface GeminiInlineData {
+  mimeType: string
+  data: string
+}
+
 export interface GeminiRequestOptions {
   model?: GeminiModel
   prompt: string
+  inlineData?: GeminiInlineData[]
   generationConfig?: GeminiGenerationConfig
   maxRetries?: number
   retryDelayMs?: number
@@ -216,16 +222,15 @@ export async function callGeminiAPI<T = unknown>(options: GeminiRequestOptions):
     ...generationConfig,
   }
 
+  const { inlineData } = options
+
+  const parts: Array<{ text: string } | { inlineData: GeminiInlineData }> = [
+    ...(inlineData || []).map(d => ({ inlineData: d })),
+    { text: prompt },
+  ]
+
   const requestBody = {
-    contents: [
-      {
-        parts: [
-          {
-            text: prompt,
-          },
-        ],
-      },
-    ],
+    contents: [{ parts }],
     generationConfig: mergedConfig,
   }
 

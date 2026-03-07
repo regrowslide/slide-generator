@@ -1,4 +1,6 @@
 import { arr__findCommonValues } from '@cm/class/ArrHandler/array-utils/data-operations'
+import { MyFormType } from '@cm/types/form-types'
+import { MyTableType } from '@cm/types/types'
 import { anyObject } from '@cm/types/utility-types'
 
 import { judgeIsAdmin, roleIs, typeIs } from 'src/non-common/scope-lib/judgeIsAdmin'
@@ -60,17 +62,37 @@ export const getScopes = (session: anyObject, options: getScopeOptionsProps) => 
   return result
 }
 
-const addAdminToRoles: (targetObject: any, session: anyObject) => anyObject = (targetObject, session) => {
-  // const result: anyObject = {...targetObject}
-  Object.keys(targetObject).forEach(key => {
-    const value = targetObject[key]
-    targetObject[key] = value
+const addAdminToRoles: (targetObject: any, session: anyObject, adminSelf: boolean) => anyObject = (targetObject, session, adminSelf) => {
 
-    if (typeof targetObject[key] !== 'object' && roleIs(['管理者'], session) && targetObject[key] === false) {
-      targetObject[key] = true
-    }
-  })
+  // const result: anyObject = {...targetObject}
+  if (adminSelf) {
+    Object.keys(targetObject).forEach(key => {
+      const value = targetObject[key]
+      targetObject[key] = value
+
+      if (typeof targetObject[key] !== 'object' && roleIs(['管理者'], session) && targetObject[key] === false) {
+        targetObject[key] = true
+      }
+    })
+
+  }
 
   return targetObject
 }
-// 管理者・編集者・閲覧者
+
+export const limitEditting = (props: { exclusiveTo?: boolean; myTable?: MyTableType; myForm?: MyFormType }) => {
+  const {
+    exclusiveTo,
+    myTable = { update: false, delete: false },
+    myForm = {
+      update: false,
+      delete: false,
+    },
+  } = props
+  if (!exclusiveTo) {
+    return {
+      myTable,
+      myForm,
+    }
+  }
+}

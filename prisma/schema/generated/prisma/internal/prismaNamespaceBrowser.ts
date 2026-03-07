@@ -126,6 +126,10 @@ export const ModelName = {
   ChainMethodLock: 'ChainMethodLock',
   Calendar: 'Calendar',
   CronExecutionLog: 'CronExecutionLog',
+  TennisCourt: 'TennisCourt',
+  TennisEvent: 'TennisEvent',
+  TennisEventCourt: 'TennisEventCourt',
+  TennisAttendance: 'TennisAttendance',
   ExerciseMaster: 'ExerciseMaster',
   WorkoutLog: 'WorkoutLog',
   YamanokaiDepartment: 'YamanokaiDepartment',
@@ -1419,6 +1423,65 @@ export const CronExecutionLogScalarFieldEnum = {
 } as const
 
 export type CronExecutionLogScalarFieldEnum = (typeof CronExecutionLogScalarFieldEnum)[keyof typeof CronExecutionLogScalarFieldEnum]
+
+
+export const TennisCourtScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  address: 'address',
+  googleMapsUrl: 'googleMapsUrl',
+  courtNumbers: 'courtNumbers',
+  schedulePageKey: 'schedulePageKey',
+  isDeleted: 'isDeleted'
+} as const
+
+export type TennisCourtScalarFieldEnum = (typeof TennisCourtScalarFieldEnum)[keyof typeof TennisCourtScalarFieldEnum]
+
+
+export const TennisEventScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  title: 'title',
+  date: 'date',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  memo: 'memo',
+  isDeleted: 'isDeleted',
+  creatorId: 'creatorId'
+} as const
+
+export type TennisEventScalarFieldEnum = (typeof TennisEventScalarFieldEnum)[keyof typeof TennisEventScalarFieldEnum]
+
+
+export const TennisEventCourtScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  courtNumber: 'courtNumber',
+  status: 'status',
+  tennisEventId: 'tennisEventId',
+  tennisCourtId: 'tennisCourtId'
+} as const
+
+export type TennisEventCourtScalarFieldEnum = (typeof TennisEventCourtScalarFieldEnum)[keyof typeof TennisEventCourtScalarFieldEnum]
+
+
+export const TennisAttendanceScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  status: 'status',
+  comment: 'comment',
+  tennisEventId: 'tennisEventId',
+  userId: 'userId'
+} as const
+
+export type TennisAttendanceScalarFieldEnum = (typeof TennisAttendanceScalarFieldEnum)[keyof typeof TennisAttendanceScalarFieldEnum]
 
 
 export const ExerciseMasterScalarFieldEnum = {
