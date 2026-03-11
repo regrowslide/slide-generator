@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 
 type NavItem = {
   id: string
@@ -20,7 +20,7 @@ type HeaderMenuProps = {
 /**
  * ヘッダーナビゲーション（メインメニュー＞サブメニュー構成）
  */
-export const HeaderMenu = ({currentPage, onNavigate}: HeaderMenuProps) => {
+export const HeaderMenu = ({ currentPage, onNavigate }: HeaderMenuProps) => {
   const [openMenu, setOpenMenu] = useState<string | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -29,10 +29,10 @@ export const HeaderMenu = ({currentPage, onNavigate}: HeaderMenuProps) => {
       id: 'master',
       label: 'マスタ',
       items: [
-        {id: 'admin-clinic', label: 'クリニック'},
-        {id: 'admin-facilities', label: '施設'},
-        {id: 'admin-patients', label: '利用者'},
-        {id: 'admin-staff', label: 'スタッフ'},
+        { id: 'admin-clinic', label: 'クリニック' },
+        { id: 'admin-facilities', label: '施設' },
+        { id: 'admin-patients', label: '利用者' },
+        { id: 'admin-staff', label: 'スタッフ' },
       ],
     },
     {
@@ -40,11 +40,7 @@ export const HeaderMenu = ({currentPage, onNavigate}: HeaderMenuProps) => {
       label: '訪問計画スケジュール',
       directPage: 'schedule',
     },
-    {
-      id: 'individual',
-      label: '個別入力',
-      directPage: 'individual-input',
-    },
+
     {
       id: 'document-list',
       label: '文書管理',
@@ -103,11 +99,10 @@ export const HeaderMenu = ({currentPage, onNavigate}: HeaderMenuProps) => {
             <div key={menu.id} className="relative">
               <button
                 onClick={() => handleMenuClick(menu)}
-                className={`flex items-center gap-1 px-3 py-2 text-sm rounded transition-colors ${
-                  isActive(menu)
+                className={`flex items-center gap-1 px-3 py-2 text-sm rounded transition-colors ${isActive(menu)
                     ? 'bg-slate-100 text-slate-900 font-medium'
                     : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                }`}
+                  }`}
               >
                 <span>{menu.label}</span>
                 {menu.items && (
@@ -129,11 +124,10 @@ export const HeaderMenu = ({currentPage, onNavigate}: HeaderMenuProps) => {
                     <button
                       key={item.id}
                       onClick={() => handleItemClick(item.id)}
-                      className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                        currentPage === item.id
+                      className={`w-full text-left px-4 py-2 text-sm transition-colors ${currentPage === item.id
                           ? 'bg-slate-100 text-slate-900 font-medium'
                           : 'text-gray-700 hover:bg-gray-50'
-                      }`}
+                        }`}
                     >
                       {item.label}
                     </button>

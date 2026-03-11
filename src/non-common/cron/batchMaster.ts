@@ -27,47 +27,8 @@ export type BatchConfig = {
  * 全バッチ設定のマスター
  * vercel.jsonのcrons設定と同期
  */
-export const BATCH_MASTER: Record<string, BatchConfig> = {
-  tennisReminder3Days: {
-    id: 'tennisReminder3Days',
-    name: 'テニス 3日前リマインド',
-    description: '3日後の予定に未定・未回答の人へLINEで回答促進通知を送信',
-    purpose: '出欠未回答者への催促。毎日20:00 JSTに実行。',
-    app: 'tennis',
-    effectOn: 'batch',
-    schedule: '0 11 * * *', // UTC 11:00 = JST 20:00
-    handler: async () => {
-      const {sendReminder3Days} = await import('@app/(apps)/tennis/_actions/line-notify-actions')
-      return sendReminder3Days()
-    },
-  },
-  tennisReminderNextDay: {
-    id: 'tennisReminderNextDay',
-    name: 'テニス 前日通知',
-    description: '翌日の予定詳細（参加者一覧・コート情報）をLINEで参加者に通知',
-    purpose: '前日のリマインドと参加者確認。毎日20:00 JSTに実行。',
-    app: 'tennis',
-    effectOn: 'batch',
-    schedule: '0 11 * * *', // UTC 11:00 = JST 20:00
-    handler: async () => {
-      const {sendReminderNextDay} = await import('@app/(apps)/tennis/_actions/line-notify-actions')
-      return sendReminderNextDay()
-    },
-  },
-  tennisCourtUndecided: {
-    id: 'tennisCourtUndecided',
-    name: 'テニス コート未定警告',
-    description: '2日前〜前日の予定でコートが未設定の場合にLINEグループに通知',
-    purpose: 'コート予約漏れの防止。毎日18:00 JSTに実行。',
-    app: 'tennis',
-    effectOn: 'batch',
-    schedule: '0 9 * * *', // UTC 9:00 = JST 18:00
-    handler: async () => {
-      const {sendCourtUndecidedWarning} = await import('@app/(apps)/tennis/_actions/line-notify-actions')
-      return sendCourtUndecidedWarning()
-    },
-  },
-}
+
+export const BATCH_MASTER: Record<string, BatchConfig> = {}
 
 /**
  * vercel.json生成用のヘルパー関数

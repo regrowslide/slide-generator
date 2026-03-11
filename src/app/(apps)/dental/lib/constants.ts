@@ -103,9 +103,8 @@ export const CLINIC_QUALIFICATIONS: ClinicQualificationMaster[] = [
   {id: 'shizaikanOther', name: '①歯援診（その他）', description: '在宅療養支援歯科診療所その他'},
   {id: 'zahoshin', name: '②在歯管', description: '在宅歯科疾患診療管理料'},
   {id: 'koukukan', name: '③口管強', description: '（歯科口腔リハビリテーション料2の注6に規定する施設基準）'},
-  {id: 'baseup', name: '④ベースアップ加算', description: ''},
-  {id: 'dx', name: '⑤DX加算', description: ''},
-  {id: 'johorenkei', name: '⑥在宅歯科医療情報連携加算', description: 'ICTで他職種と情報共有した月に算定'},
+  {id: 'dx', name: '④DX加算', description: ''},
+  {id: 'johorenkei', name: '⑤在宅歯科医療情報連携加算', description: 'ICTで他職種と情報共有した月に算定'},
   // {id: 'other', name: 'その他', description: '', hasTextInput: true},
 ]
 
@@ -271,38 +270,6 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
       },
     ],
   },
-  // === ベースアップ加算 ===
-  {
-    id: 'baseup',
-    name: 'ベースアップ加算',
-    fullName: 'ベースアップ評価料',
-    selectionMode: 'single',
-    infoText: '医院マスターで「ベースアップ評価料」にチェックが入っている場合に算定可能。',
-    subItems: [
-      {
-        id: 'baseup-1',
-        name: '1人',
-        points: 41,
-        isManualOnly: false,
-        requiredRole: 'doctor',
-        requiredQualification: 'baseup',
-        conditionLabel: 'ベースアップ届出あり＋同一日同一施設1人',
-        infoText: '',
-        evaluate: (ctx: EvalContext) => ctx.clinic.qualifications.baseup && ctx.sameDayCount === 1,
-      },
-      {
-        id: 'baseup-2plus',
-        name: '2人以上',
-        points: 10,
-        isManualOnly: false,
-        requiredRole: 'doctor',
-        requiredQualification: 'baseup',
-        conditionLabel: 'ベースアップ届出あり＋同一日同一施設2人以上',
-        infoText: '',
-        evaluate: (ctx: EvalContext) => ctx.clinic.qualifications.baseup && ctx.sameDayCount >= 2,
-      },
-    ],
-  },
   // === 歯科訪問診療補助加算（訪補助） ===
   {
     id: 'houhojo',
@@ -348,13 +315,13 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
       },
     ],
   },
-  // === 歯科疾患在宅療養管理料（歯在管） ===
+  // === 歯科疾患在宅療養管理料（歯在管）＋文書提供加算 ===
   {
     id: 'shizaikan',
     name: '歯在管',
-    fullName: '歯科疾患在宅療養管理料',
-    selectionMode: 'single',
-    infoText: '月1回算定。Drの診療時に算定を提案。歯援診の届出区分により点数が異なります。管理計画はカルテに記入する。',
+    fullName: '歯科疾患在宅療養管理料 + 文書提供加算',
+    selectionMode: 'mixed',
+    infoText: '月1回算定。Drの診療時に算定を提案。歯援診の届出区分により点数が異なります。管理計画はカルテに記入する。\n文書提供加算は歯在管とセットで算定可能。',
     subItems: [
       {
         id: 'shizaikan-shiensin1',
@@ -365,6 +332,7 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
         requiredQualification: 'shiensin1',
         conditionLabel: '歯援診1の届出あり＋月初回',
         infoText: '管理計画はカルテに記入する',
+        exclusiveGroup: 'shiensin',
         evaluate: (ctx: EvalContext) => ctx.hasDoctor && ctx.clinic.qualifications.shiensin1,
       },
       {
@@ -376,6 +344,7 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
         requiredQualification: 'shiensin2',
         conditionLabel: '歯援診2の届出あり＋月初回',
         infoText: '',
+        exclusiveGroup: 'shiensin',
         evaluate: (ctx: EvalContext) =>
           ctx.hasDoctor && ctx.clinic.qualifications.shiensin2 && !ctx.clinic.qualifications.shiensin1,
       },
@@ -388,23 +357,13 @@ export const PROCEDURE_ITEMS_MASTER: ProcedureItemMaster[] = [
         requiredQualification: null,
         conditionLabel: '歯援診の届出なし＋月初回',
         infoText: '',
+        exclusiveGroup: 'shiensin',
         evaluate: (ctx: EvalContext) =>
           ctx.hasDoctor && !ctx.clinic.qualifications.shiensin1 && !ctx.clinic.qualifications.shiensin2,
       },
-    ],
-  },
-  // === 歯在管文書提供加算 ===
-  {
-    id: 'shizaikan_bunsho',
-    name: '歯在管文書提供加算',
-    fullName: '文書提供加算（在宅・訪問関連）',
-    selectionMode: 'single',
-    infoText:
-      '歯在管を算定して、患者さんや家族へ、管理計画の内容を文章にして提供した場合に算定できる点数。文章提供するかしないかは医院によって違うので、歯在管を算定するから必ず算定するものではない。算定した場合は管理計画書を作成して施設からご家族さんに渡してもらう。',
-    subItems: [
       {
         id: 'shizaikan-bunsho-main',
-        name: '文',
+        name: '文書提供加算',
         points: 10,
         isManualOnly: false,
         requiredRole: 'doctor',
@@ -720,8 +679,8 @@ export const DOCUMENT_TEMPLATES: Record<string, DocumentTemplate> = {
 
 /** 算定項目カテゴリ分類（算定項目・点数一覧ページ用） */
 export const SCORING_SECTIONS: ScoringSection[] = [
-  {id: 'shihou', label: '歯訪系', items: ['shihou', 'baseup', 'houhojo']},
-  {id: 'kanri', label: '管理系', items: ['shizaikan', 'shizaikan_bunsho', 'zaishikan']},
+  {id: 'shihou', label: '歯訪系', items: ['shihou', 'houhojo']},
+  {id: 'kanri', label: '管理系', items: ['shizaikan', 'zaishikan']},
   {id: 'houeishi', label: '訪衛指系', items: ['houeishi', 'zaikouei', 'nst2']},
   {id: 'kensa', label: '口腔機能検査系', items: ['koukuu_kensa', 'shiriha3']},
 ]
@@ -758,6 +717,42 @@ export const getScoringSections = (dateStr: string): ScoringSection[] => getRevi
 /** マスターからIDで項目を検索 */
 export const findMasterById = (master: ProcedureItemMaster[], masterId: string): ProcedureItemMaster | undefined =>
   master.find(i => i.id === masterId)
+
+/** 実施記録・所見セクションのプルダウン挿入用文言 */
+export const TEXT_INSERT_OPTIONS: Record<string, {label: string; options: string[]}> = {
+  visitCondition: {
+    label: '訪問時の様子',
+    options: [
+      'ベッド上臥位、覚醒良好。バイタル安定。',
+      '車椅子座位、意思疎通良好。体調変わりなし。',
+      'ベッド上臥位、傾眠傾向あり。声掛けにて開口可能。',
+    ],
+  },
+  oralFindings: {
+    label: '口腔内所見',
+    options: [
+      '口腔内全体的に乾燥傾向。舌苔の付着あり。',
+      '残存歯に歯石沈着あり。歯肉発赤・腫脹を認める。',
+      '義歯の適合概ね良好。粘膜に発赤・潰瘍なし。',
+    ],
+  },
+  treatment: {
+    label: '処置',
+    options: [
+      '口腔ケア（ブラッシング・粘膜清掃・保湿）実施。',
+      '義歯調整（内面・咬合面の削合）実施。',
+      'スケーリング・歯面清掃実施。TBI実施。',
+    ],
+  },
+  nextPlan: {
+    label: '次回予定',
+    options: [
+      '1週間後、経過観察予定。',
+      '2週間後、口腔ケア継続予定。',
+      '1ヶ月後、定期管理予定。',
+    ],
+  },
+}
 
 /** バイタルデータの初期値 */
 export const INITIAL_VITAL: Vital = {

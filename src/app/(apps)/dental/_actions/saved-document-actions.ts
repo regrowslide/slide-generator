@@ -100,3 +100,17 @@ export const markDocumentsDownloaded = async (ids: number[]): Promise<void> => {
     data: {downloadedAt: new Date()},
   })
 }
+
+// 同一患者×同一文書タイプの直前のデータを取得（前回取込用）
+export const getPreviousDocument = async (patientId: number, templateId: string, currentExaminationId?: number) => {
+  const doc = await prisma.dentalSavedDocument.findFirst({
+    where: {
+      dentalPatientId: patientId,
+      templateId,
+      ...(currentExaminationId ? {dentalExaminationId: {not: currentExaminationId}} : {}),
+    },
+    orderBy: {createdAt: 'desc'},
+    select: {templateData: true, templateId: true},
+  })
+  return doc ? {templateData: doc.templateData as Record<string, unknown>, templateId: doc.templateId} : null
+}

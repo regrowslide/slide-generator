@@ -1,12 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import {Card, CardContent} from '@shadcn/ui/card'
-import {HREF} from '@cm/lib/methods/urls'
+import { Card, CardContent } from '@shadcn/ui/card'
+import { HREF } from '@cm/lib/methods/urls'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
-import {EXAMINATION_STATUS} from '@app/(apps)/dental/lib/constants'
-import {formatDate} from '@app/(apps)/dental/lib/helpers'
-import type {Clinic, VisitPlan, Examination} from '@app/(apps)/dental/lib/types'
+import { EXAMINATION_STATUS } from '@app/(apps)/dental/lib/constants'
+import { formatDate } from '@app/(apps)/dental/lib/helpers'
+import type { Clinic, VisitPlan, Examination } from '@app/(apps)/dental/lib/types'
 
 type DashboardClientProps = {
   clinic: Clinic | null
@@ -14,8 +14,8 @@ type DashboardClientProps = {
   examinations: Examination[]
 }
 
-const DashboardClient = ({clinic, visitPlans, examinations}: DashboardClientProps) => {
-  const {query} = useGlobal()
+const DashboardClient = ({ clinic, visitPlans, examinations }: DashboardClientProps) => {
+  const { query } = useGlobal()
   const todayStr = formatDate(new Date())
   const todayPlans = visitPlans.filter(p => p.visitDate === todayStr)
   const completedExams = examinations.filter(e => e.status === EXAMINATION_STATUS.DONE)
@@ -38,14 +38,7 @@ const DashboardClient = ({clinic, visitPlans, examinations}: DashboardClientProp
       desc: '利用者の検索・登録・編集・削除を行います',
       href: HREF('/dental/admin/patients', {}, query),
     },
-    {
-      id: 'individual-input',
-      icon: '\u{270F}\u{FE0F}',
-      title: 'Individual Input',
-      sub: '個別入力',
-      desc: '個人を選択して直接入力する場合',
-      href: HREF('/dental/individual-input', {}, query),
-    },
+
     {
       id: 'admin-clinic',
       icon: '\u{2699}\u{FE0F}',
@@ -118,11 +111,10 @@ const DashboardClient = ({clinic, visitPlans, examinations}: DashboardClientProp
                       <span className="text-gray-500 ml-2">施設ID: {plan.facilityId}</span>
                     </div>
                     <span
-                      className={`text-xs px-2 py-0.5 rounded ${
-                        plan.status === 'completed'
+                      className={`text-xs px-2 py-0.5 rounded ${plan.status === 'completed'
                           ? 'bg-emerald-100 text-emerald-700'
                           : 'bg-blue-100 text-blue-700'
-                      }`}
+                        }`}
                     >
                       {plan.status === 'completed' ? '完了' : '予定'}
                     </span>

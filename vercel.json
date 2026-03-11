@@ -8,20 +8,7 @@
   "sin1"
  ],
  "trailingSlash": false,
- "crons": [
-  {
-   "path": "/api/cron/execute/tennisCourtUndecided",
-   "schedule": "0 9 * * *"
-  },
-  {
-   "path": "/api/cron/execute/tennisReminder3Days",
-   "schedule": "0 11 * * *"
-  },
-  {
-   "path": "/api/cron/execute/tennisReminderNextDay",
-   "schedule": "0 11 * * *"
-  }
- ],
+ "crons": [],
  "build": {
   "env": {
    "NEXT_TELEMETRY_DISABLED": "1"

@@ -7,15 +7,20 @@ import { Input } from '@shadcn/ui/input'
 import { Card, CardContent } from '@shadcn/ui/card'
 import { Checkbox } from '@shadcn/ui/checkbox'
 import { upsertDentalClinic } from '@app/(apps)/dental/_actions/clinic-actions'
+import { updateDentalStaffCredentials } from '@app/(apps)/dental/_actions/staff-actions'
 import { CLINIC_QUALIFICATIONS } from '@app/(apps)/dental/lib/constants'
 import type { Clinic, ClinicQualifications } from '@app/(apps)/dental/lib/types'
 import { Button } from '@cm/components/styles/common-components/Button'
+import useModal from '@cm/components/utils/modal/useModal'
+
+type StaffInfo = {id: number; name: string; email: string | null; type: string | null}
 
 type ClinicSettingsClientProps = {
   clinic: Clinic | null
+  staff?: StaffInfo[]
 }
 
-const ClinicSettingsClient = ({ clinic }: ClinicSettingsClientProps) => {
+const ClinicSettingsClient = ({ clinic, staff = [] }: ClinicSettingsClientProps) => {
   const router = useRouter()
   const [formData, setFormData] = useState({
     name: clinic?.name || '',
@@ -31,12 +36,34 @@ const ClinicSettingsClient = ({ clinic }: ClinicSettingsClientProps) => {
       koukukan: false,
       johorenkei: false,
       dx: false,
-      baseup: false,
       electronicPrescription: false,
       other: false,
       otherText: '',
     }
   )
+
+  // スタッフ認証情報編集モーダル
+  const staffEditModal = useModal()
+  const [editingStaff, setEditingStaff] = useState<StaffInfo | null>(null)
+  const [credData, setCredData] = useState({ email: '', password: '' })
+
+  const handleOpenStaffEdit = (s: StaffInfo) => {
+    setEditingStaff(s)
+    setCredData({ email: s.email || '', password: '' })
+    staffEditModal.handleOpen()
+  }
+
+  const handleSaveCredentials = async () => {
+    if (!editingStaff) return
+    const data: {email?: string; password?: string} = {}
+    if (credData.email !== (editingStaff.email || '')) data.email = credData.email
+    if (credData.password) data.password = credData.password
+    if (Object.keys(data).length > 0) {
+      await updateDentalStaffCredentials(editingStaff.id, data)
+    }
+    staffEditModal.handleClose()
+    router.refresh()
+  }
 
   const handleSaveBasicInfo = async () => {
     await upsertDentalClinic({
@@ -129,10 +156,67 @@ const ClinicSettingsClient = ({ clinic }: ClinicSettingsClientProps) => {
             )
           })}
           <div className="flex justify-end pt-2">
-            <Button onClick={handleSaveBasicInfo} >資格情報を保存</Button>
+            <Button onClick={handleSaveBasicInfo}>資格情報を保存</Button>
           </div>
         </CardContent>
       </Card>
+
+      {/* スタッフ認証情報 */}
+      {staff.length > 0 && (
+        <Card className="mt-4">
+          <div className="p-3 border-b border-gray-200 bg-gray-50 rounded-t-lg">
+            <span className="text-sm font-medium text-gray-700">スタッフ認証情報</span>
+          </div>
+          <CardContent className="p-0">
+            <ul className="divide-y divide-gray-200">
+              {staff.map(s => (
+                <li
+                  key={s.id}
+                  className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
+                  onClick={() => handleOpenStaffEdit(s)}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-medium text-gray-900 hover:text-blue-600">{s.name}</span>
+                    <span className="text-xs text-gray-500">{s.type === 'doctor' ? '医師' : '衛生士'}</span>
+                    {s.email && <span className="text-xs text-gray-400">{s.email}</span>}
+                  </div>
+                  <span className="text-xs text-gray-400">クリックして編集</span>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* スタッフ認証情報編集モーダル */}
+      <staffEditModal.Modal title={editingStaff ? `${editingStaff.name} の認証情報` : '認証情報の編集'}>
+        <div className="p-4 space-y-4">
+          <div>
+            <label className="block text-xs text-gray-600 mb-1">メールアドレス</label>
+            <input
+              type="email"
+              value={credData.email}
+              onChange={e => setCredData(prev => ({...prev, email: e.target.value}))}
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+              placeholder="example@example.com"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-gray-600 mb-1">パスワード（変更する場合のみ入力）</label>
+            <input
+              type="text"
+              value={credData.password}
+              onChange={e => setCredData(prev => ({...prev, password: e.target.value}))}
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+              placeholder="新しいパスワード"
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button onClick={staffEditModal.handleClose}>キャンセル</Button>
+            <Button color="primary" onClick={handleSaveCredentials}>保存</Button>
+          </div>
+        </div>
+      </staffEditModal.Modal>
     </div>
   )
 }

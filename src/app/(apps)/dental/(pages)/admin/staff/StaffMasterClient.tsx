@@ -4,10 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@cm/components/styles/common-components/Button'
 import { Card, CardContent } from '@shadcn/ui/card'
-import { Fields } from '@cm/class/Fields/Fields'
-import useBasicFormProps from '@cm/hooks/useBasicForm/useBasicFormProps'
 import useModal from '@cm/components/utils/modal/useModal'
-import { createDentalStaff, updateDentalStaffType, removeDentalStaff, reorderDentalStaff } from '@app/(apps)/dental/_actions/staff-actions'
+import { createDentalStaff, updateDentalStaffType, removeDentalStaff, reorderDentalStaff, updateDentalStaffCredentials } from '@app/(apps)/dental/_actions/staff-actions'
 import { STAFF_ROLES } from '@app/(apps)/dental/lib/constants'
 import type { Staff } from '@app/(apps)/dental/lib/types'
 
@@ -21,24 +19,12 @@ const ROLE_OPTIONS = [
   { id: STAFF_ROLES.HYGIENIST, name: '歯科衛生士' },
 ]
 
-const staffColumns = Fields.transposeColumns([
-  { id: 'name', label: '名前', type: 'text', form: { register: { required: '名前は必須です' } } },
-  {
-    id: 'role',
-    label: '役割',
-    forSelect: {
-      optionsOrOptionFetcher: ROLE_OPTIONS,
-    },
-    form: { register: { required: '役割は必須です' } },
-  },
-])
-
 const StaffMasterClient = ({ staff, clinicId }: StaffMasterClientProps) => {
   const router = useRouter()
-  const [editingStaff, setEditingStaff] = useState<Staff | null>(null)
   const staffModal = useModal()
 
-  const { BasicForm, latestFormData, ReactHookForm } = useBasicFormProps({ columns: staffColumns })
+  const [editingStaff, setEditingStaff] = useState<Staff | null>(null)
+  const [formData, setFormData] = useState({ name: '', role: '', email: '', password: '' })
 
   const doctors = staff
     .filter(s => s.role === STAFF_ROLES.DOCTOR)
@@ -49,23 +35,33 @@ const StaffMasterClient = ({ staff, clinicId }: StaffMasterClientProps) => {
 
   const handleOpenAdd = () => {
     setEditingStaff(null)
-    ReactHookForm.reset({ name: '', role: '' })
+    setFormData({ name: '', role: '', email: '', password: '' })
     staffModal.handleOpen()
   }
 
-  const handleOpenEdit = (s: Staff) => {
+  const handleOpenEdit = (s: Staff & {email?: string | null}) => {
     setEditingStaff(s)
-    ReactHookForm.reset({ name: s.name, role: s.role })
+    setFormData({ name: s.name, role: s.role, email: s.email || '', password: '' })
     staffModal.handleOpen()
   }
 
-  const handleSubmit = async (data: Record<string, string>) => {
-    if (!data.role) return
+  const handleSubmit = async () => {
+    if (!formData.role) return
     if (editingStaff) {
-      await updateDentalStaffType(editingStaff.id, data.role)
+      // 役割更新
+      if (formData.role !== editingStaff.role) {
+        await updateDentalStaffType(editingStaff.id, formData.role)
+      }
+      // 認証情報更新
+      const credData: {email?: string; password?: string} = {}
+      if (formData.email !== (editingStaff.email || '')) credData.email = formData.email
+      if (formData.password) credData.password = formData.password
+      if (Object.keys(credData).length > 0) {
+        await updateDentalStaffCredentials(editingStaff.id, credData)
+      }
     } else {
-      if (!data.name?.trim()) return
-      await createDentalStaff({ name: data.name.trim(), dentalClinicId: clinicId, type: data.role })
+      if (!formData.name?.trim()) return
+      await createDentalStaff({ name: formData.name.trim(), dentalClinicId: clinicId, type: formData.role })
     }
     staffModal.handleClose()
     router.refresh()
@@ -102,7 +98,13 @@ const StaffMasterClient = ({ staff, clinicId }: StaffMasterClientProps) => {
         <ul className='divide-y divide-gray-200'>
           {members.map((s, idx) => (
             <li key={s.id} className='flex items-center justify-between px-4 py-3'>
-              <span className='text-sm font-medium text-gray-900'>{s.name}</span>
+              <div
+                className='cursor-pointer hover:text-blue-600 transition-colors'
+                onClick={() => handleOpenEdit(s)}
+              >
+                <span className='text-sm font-medium text-gray-900'>{s.name}</span>
+                {s.email && <span className='text-xs text-gray-400 ml-2'>{s.email}</span>}
+              </div>
               <div className='flex gap-1 items-center'>
                 <button
                   onClick={() => handleReorder(s.id, 'up')}
@@ -134,7 +136,7 @@ const StaffMasterClient = ({ staff, clinicId }: StaffMasterClientProps) => {
   )
 
   return (
-    <div className={`p-4`}>
+    <div className='p-4'>
       <div className='flex items-center justify-between mb-4'>
         <h2 className='text-xl font-bold text-gray-900'>スタッフマスタ</h2>
         <Button onClick={handleOpenAdd} color='primary'>+ スタッフ追加</Button>
@@ -146,15 +148,70 @@ const StaffMasterClient = ({ staff, clinicId }: StaffMasterClientProps) => {
       </div>
 
       <staffModal.Modal title={editingStaff ? 'スタッフを編集' : 'スタッフを追加'}>
-        <div className='p-4'>
-          <BasicForm latestFormData={latestFormData} onSubmit={handleSubmit}>
-            <div className='flex justify-end gap-2 pt-2'>
-              <Button onClick={staffModal.handleClose}>
-                キャンセル
-              </Button>
-              <Button type='submit' color='primary'>{editingStaff ? '更新' : '追加'}</Button>
-            </div>
-          </BasicForm>
+        <div className='p-4 space-y-4'>
+          {/* 名前（新規追加時のみ編集可能） */}
+          <div>
+            <label className='block text-xs text-gray-600 mb-1'>名前</label>
+            {editingStaff ? (
+              <div className='text-sm font-medium text-gray-900 py-2'>{editingStaff.name}</div>
+            ) : (
+              <input
+                type='text'
+                value={formData.name}
+                onChange={e => setFormData(prev => ({...prev, name: e.target.value}))}
+                className='w-full border border-gray-300 rounded px-3 py-2 text-sm'
+                placeholder='名前を入力'
+              />
+            )}
+          </div>
+
+          {/* 役割 */}
+          <div>
+            <label className='block text-xs text-gray-600 mb-1'>役割</label>
+            <select
+              value={formData.role}
+              onChange={e => setFormData(prev => ({...prev, role: e.target.value}))}
+              className='w-full border border-gray-300 rounded px-3 py-2 text-sm'
+            >
+              <option value=''>選択してください</option>
+              {ROLE_OPTIONS.map(opt => (
+                <option key={opt.id} value={opt.id}>{opt.name}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* 認証情報（編集時のみ表示） */}
+          {editingStaff && (
+            <>
+              <hr className='border-gray-200' />
+              <div className='text-xs font-medium text-gray-500'>認証情報</div>
+              <div>
+                <label className='block text-xs text-gray-600 mb-1'>メールアドレス</label>
+                <input
+                  type='email'
+                  value={formData.email}
+                  onChange={e => setFormData(prev => ({...prev, email: e.target.value}))}
+                  className='w-full border border-gray-300 rounded px-3 py-2 text-sm'
+                  placeholder='example@example.com'
+                />
+              </div>
+              <div>
+                <label className='block text-xs text-gray-600 mb-1'>パスワード（変更する場合のみ入力）</label>
+                <input
+                  type='text'
+                  value={formData.password}
+                  onChange={e => setFormData(prev => ({...prev, password: e.target.value}))}
+                  className='w-full border border-gray-300 rounded px-3 py-2 text-sm'
+                  placeholder='新しいパスワード'
+                />
+              </div>
+            </>
+          )}
+
+          <div className='flex justify-end gap-2 pt-2'>
+            <Button onClick={staffModal.handleClose}>キャンセル</Button>
+            <Button color='primary' onClick={handleSubmit}>{editingStaff ? '更新' : '追加'}</Button>
+          </div>
         </div>
       </staffModal.Modal>
     </div>

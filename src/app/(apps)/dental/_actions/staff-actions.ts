@@ -59,3 +59,15 @@ export const removeDentalStaff = async (userId: number) => {
 export const reorderDentalStaff = async (items: Array<{id: number; sortOrder: number}>) => {
   await Promise.all(items.map(item => prisma.user.update({where: {id: item.id}, data: {sortOrder: item.sortOrder}})))
 }
+
+// スタッフの認証情報（メールアドレス・パスワード）を更新
+export const updateDentalStaffCredentials = async (userId: number, data: {email?: string; password?: string}) => {
+  const updateData: Record<string, string> = {}
+  if (data.email !== undefined) updateData.email = data.email
+  if (data.password !== undefined) updateData.password = data.password
+  if (Object.keys(updateData).length === 0) return null
+  return await prisma.user.update({
+    where: {id: userId},
+    data: updateData,
+  })
+}

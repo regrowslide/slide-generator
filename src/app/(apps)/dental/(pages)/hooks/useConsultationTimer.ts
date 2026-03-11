@@ -77,91 +77,139 @@ export const useConsultationTimer = ({
 
   const toggleDr = useCallback(async () => {
     const now = formatTime(new Date())
-    if (drRunning) {
-      // STOP
-      if (drIntervalRef.current) clearInterval(drIntervalRef.current)
-      drIntervalRef.current = null
-      setDrEndTime(now)
-      await saveTimerEvent({examinationId, timerType: 'dr', actionType: 'stop', previousValue: drStartTime, newValue: now})
-      await saveTimerTime({examinationId, field: 'drEndTime', value: now})
-    } else {
-      // START
-      setDrStartTime(now)
-      setDrEndTime(null)
-      setDrSeconds(0)
-      drIntervalRef.current = setInterval(() => setDrSeconds(s => s + 1), 1000)
-      await saveTimerEvent({examinationId, timerType: 'dr', actionType: 'start', previousValue: null, newValue: now})
-      await saveTimerTime({examinationId, field: 'drStartTime', value: now})
-      await saveTimerTime({examinationId, field: 'drEndTime', value: null})
+    try {
+      if (drRunning) {
+        // STOP
+        if (drIntervalRef.current) clearInterval(drIntervalRef.current)
+        drIntervalRef.current = null
+        setDrEndTime(now)
+        setDrRunning(false)
+        await saveTimerEvent({examinationId, timerType: 'dr', actionType: 'stop', previousValue: drStartTime, newValue: now})
+        await saveTimerTime({examinationId, field: 'drEndTime', value: now})
+      } else {
+        // START
+        setDrStartTime(now)
+        setDrEndTime(null)
+        setDrSeconds(0)
+        setDrRunning(true)
+        drIntervalRef.current = setInterval(() => setDrSeconds(s => s + 1), 1000)
+        await saveTimerEvent({examinationId, timerType: 'dr', actionType: 'start', previousValue: null, newValue: now})
+        await saveTimerTime({examinationId, field: 'drStartTime', value: now})
+        await saveTimerTime({examinationId, field: 'drEndTime', value: null})
+      }
+    } catch (e) {
+      console.error('タイマー保存失敗(DR):', e)
     }
-    setDrRunning(prev => !prev)
   }, [drRunning, drStartTime, examinationId])
 
   const toggleDh = useCallback(async () => {
     const now = formatTime(new Date())
-    if (dhRunning) {
-      if (dhIntervalRef.current) clearInterval(dhIntervalRef.current)
-      dhIntervalRef.current = null
-      setDhEndTime(now)
-      await saveTimerEvent({examinationId, timerType: 'dh', actionType: 'stop', previousValue: dhStartTime, newValue: now})
-      await saveTimerTime({examinationId, field: 'dhEndTime', value: now})
-    } else {
-      setDhStartTime(now)
-      setDhEndTime(null)
-      setDhSeconds(0)
-      dhIntervalRef.current = setInterval(() => setDhSeconds(s => s + 1), 1000)
-      await saveTimerEvent({examinationId, timerType: 'dh', actionType: 'start', previousValue: null, newValue: now})
-      await saveTimerTime({examinationId, field: 'dhStartTime', value: now})
-      await saveTimerTime({examinationId, field: 'dhEndTime', value: null})
+    try {
+      if (dhRunning) {
+        if (dhIntervalRef.current) clearInterval(dhIntervalRef.current)
+        dhIntervalRef.current = null
+        setDhEndTime(now)
+        setDhRunning(false)
+        await saveTimerEvent({examinationId, timerType: 'dh', actionType: 'stop', previousValue: dhStartTime, newValue: now})
+        await saveTimerTime({examinationId, field: 'dhEndTime', value: now})
+      } else {
+        setDhStartTime(now)
+        setDhEndTime(null)
+        setDhSeconds(0)
+        setDhRunning(true)
+        dhIntervalRef.current = setInterval(() => setDhSeconds(s => s + 1), 1000)
+        await saveTimerEvent({examinationId, timerType: 'dh', actionType: 'start', previousValue: null, newValue: now})
+        await saveTimerTime({examinationId, field: 'dhStartTime', value: now})
+        await saveTimerTime({examinationId, field: 'dhEndTime', value: null})
+      }
+    } catch (e) {
+      console.error('タイマー保存失敗(DH):', e)
     }
-    setDhRunning(prev => !prev)
   }, [dhRunning, dhStartTime, examinationId])
 
   // 手動変更
   const manualEditDrStart = useCallback(async (newTime: string) => {
-    const prevValue = drStartTime
-    setDrStartTime(newTime)
-    // 秒数を再計算
-    if (drRunning) {
-      setDrSeconds(calcSecondsFromStart(newTime))
-    } else if (drEndTime) {
-      setDrSeconds(calcSecondsBetween(newTime, drEndTime))
+    try {
+      const prevValue = drStartTime
+      setDrStartTime(newTime)
+      if (drRunning) {
+        setDrSeconds(calcSecondsFromStart(newTime))
+      } else if (drEndTime) {
+        setDrSeconds(calcSecondsBetween(newTime, drEndTime))
+      }
+      await saveTimerEvent({examinationId, timerType: 'dr', actionType: 'manual_edit', previousValue: prevValue, newValue: newTime})
+      await saveTimerTime({examinationId, field: 'drStartTime', value: newTime})
+    } catch (e) {
+      console.error('タイマー手動変更保存失敗:', e)
     }
-    await saveTimerEvent({examinationId, timerType: 'dr', actionType: 'manual_edit', previousValue: prevValue, newValue: newTime})
-    await saveTimerTime({examinationId, field: 'drStartTime', value: newTime})
   }, [drStartTime, drRunning, drEndTime, examinationId])
 
   const manualEditDrEnd = useCallback(async (newTime: string) => {
-    const prevValue = drEndTime
-    setDrEndTime(newTime)
-    if (drStartTime) {
-      setDrSeconds(calcSecondsBetween(drStartTime, newTime))
+    try {
+      const prevValue = drEndTime
+      setDrEndTime(newTime)
+      if (drStartTime) {
+        setDrSeconds(calcSecondsBetween(drStartTime, newTime))
+      }
+      await saveTimerEvent({examinationId, timerType: 'dr', actionType: 'manual_edit', previousValue: prevValue, newValue: newTime})
+      await saveTimerTime({examinationId, field: 'drEndTime', value: newTime})
+    } catch (e) {
+      console.error('タイマー手動変更保存失敗:', e)
     }
-    await saveTimerEvent({examinationId, timerType: 'dr', actionType: 'manual_edit', previousValue: prevValue, newValue: newTime})
-    await saveTimerTime({examinationId, field: 'drEndTime', value: newTime})
   }, [drEndTime, drStartTime, examinationId])
 
   const manualEditDhStart = useCallback(async (newTime: string) => {
-    const prevValue = dhStartTime
-    setDhStartTime(newTime)
-    if (dhRunning) {
-      setDhSeconds(calcSecondsFromStart(newTime))
-    } else if (dhEndTime) {
-      setDhSeconds(calcSecondsBetween(newTime, dhEndTime))
+    try {
+      const prevValue = dhStartTime
+      setDhStartTime(newTime)
+      if (dhRunning) {
+        setDhSeconds(calcSecondsFromStart(newTime))
+      } else if (dhEndTime) {
+        setDhSeconds(calcSecondsBetween(newTime, dhEndTime))
+      }
+      await saveTimerEvent({examinationId, timerType: 'dh', actionType: 'manual_edit', previousValue: prevValue, newValue: newTime})
+      await saveTimerTime({examinationId, field: 'dhStartTime', value: newTime})
+    } catch (e) {
+      console.error('タイマー手動変更保存失敗:', e)
     }
-    await saveTimerEvent({examinationId, timerType: 'dh', actionType: 'manual_edit', previousValue: prevValue, newValue: newTime})
-    await saveTimerTime({examinationId, field: 'dhStartTime', value: newTime})
   }, [dhStartTime, dhRunning, dhEndTime, examinationId])
 
   const manualEditDhEnd = useCallback(async (newTime: string) => {
-    const prevValue = dhEndTime
-    setDhEndTime(newTime)
-    if (dhStartTime) {
-      setDhSeconds(calcSecondsBetween(dhStartTime, newTime))
+    try {
+      const prevValue = dhEndTime
+      setDhEndTime(newTime)
+      if (dhStartTime) {
+        setDhSeconds(calcSecondsBetween(dhStartTime, newTime))
+      }
+      await saveTimerEvent({examinationId, timerType: 'dh', actionType: 'manual_edit', previousValue: prevValue, newValue: newTime})
+      await saveTimerTime({examinationId, field: 'dhEndTime', value: newTime})
+    } catch (e) {
+      console.error('タイマー手動変更保存失敗:', e)
     }
-    await saveTimerEvent({examinationId, timerType: 'dh', actionType: 'manual_edit', previousValue: prevValue, newValue: newTime})
-    await saveTimerTime({examinationId, field: 'dhEndTime', value: newTime})
   }, [dhEndTime, dhStartTime, examinationId])
+
+  // ページ離脱時にrunning中のタイマーを保存
+  // beforeunloadではasync処理が完了しない可能性があるため、visibilitychangeも併用
+  useEffect(() => {
+    const savePendingTimers = () => {
+      const now = formatTime(new Date())
+      if (drRunning) {
+        saveTimerTime({examinationId, field: 'drEndTime', value: now})
+      }
+      if (dhRunning) {
+        saveTimerTime({examinationId, field: 'dhEndTime', value: now})
+      }
+    }
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') savePendingTimers()
+    }
+    window.addEventListener('beforeunload', savePendingTimers)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      window.removeEventListener('beforeunload', savePendingTimers)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [drRunning, dhRunning, examinationId])
 
   return {
     drSeconds, dhSeconds, drRunning, dhRunning,

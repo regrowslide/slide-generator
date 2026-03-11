@@ -134,28 +134,22 @@ export const saveTimerEvent = async (params: {
     },
   })
 
-  // DentalExaminationの時刻フィールドを更新
-  const updateData: Record<string, string | null> = {}
-  if (timerType === 'dr') {
-    if (actionType === 'start') updateData.drStartTime = newValue
-    else if (actionType === 'stop') updateData.drEndTime = newValue
-    else {
-      // 手動変更: previousValueのフィールドを特定して更新
-      updateData.drStartTime = newValue
+  // DentalExaminationの時刻フィールドを更新（manual_editはsaveTimerTimeで個別保存するため、ここではstart/stopのみ）
+  if (actionType === 'start' || actionType === 'stop') {
+    const updateData: Record<string, string | null> = {}
+    if (timerType === 'dr') {
+      if (actionType === 'start') updateData.drStartTime = newValue
+      else updateData.drEndTime = newValue
+    } else {
+      if (actionType === 'start') updateData.dhStartTime = newValue
+      else updateData.dhEndTime = newValue
     }
-  } else {
-    if (actionType === 'start') updateData.dhStartTime = newValue
-    else if (actionType === 'stop') updateData.dhEndTime = newValue
-    else {
-      updateData.dhStartTime = newValue
-    }
+    return await prisma.dentalExamination.update({
+      where: {id: examinationId},
+      data: updateData,
+      include: examinationInclude,
+    })
   }
-
-  return await prisma.dentalExamination.update({
-    where: {id: examinationId},
-    data: updateData,
-    include: examinationInclude,
-  })
 }
 
 // タイマーイベント保存（開始/終了時刻を指定フィールドに保存）

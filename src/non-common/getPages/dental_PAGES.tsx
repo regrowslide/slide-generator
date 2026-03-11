@@ -35,12 +35,7 @@ export const dental_PAGES = (props: PageGetterType) => {
       ROOT: [rootPath],
       exclusiveTo: login,
     },
-    {
-      tabId: 'individual-input',
-      label: '個別入力',
-      ROOT: [rootPath],
-      exclusiveTo: login,
-    },
+
     {
       tabId: '',
       label: '文書管理',

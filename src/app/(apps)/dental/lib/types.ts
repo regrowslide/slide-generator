@@ -116,6 +116,7 @@ export const toStaff = (u: User): Staff => ({
   name: u.name,
   role: u.type || '',
   sortOrder: u.sortOrder,
+  email: u.email,
 })
 
 /** Prisma DentalExamination → アプリ Examination */
@@ -165,7 +166,7 @@ export const toClinic = (c: DentalClinic): Clinic => ({
     koukukan: false,
     johorenkei: false,
     dx: false,
-    baseup: false,
+
     electronicPrescription: false,
     other: false,
     otherText: '',
@@ -283,6 +284,7 @@ export type Staff = {
   name: string
   role: string
   sortOrder: number
+  email?: string | null
 }
 
 /** 訪問計画 */
@@ -389,6 +391,7 @@ export type SubItem = {
   requiredQualification: string | null
   conditionLabel: string
   infoText: string
+  exclusiveGroup?: string
   evaluate: (ctx: EvalContext) => boolean
 }
 
@@ -397,7 +400,7 @@ export type ProcedureItemMaster = {
   id: string
   name: string
   fullName: string
-  selectionMode: 'single' | 'multiple'
+  selectionMode: 'single' | 'multiple' | 'mixed'
   infoText: string
   subItems: SubItem[]
   note?: string
@@ -468,11 +471,11 @@ export type ClinicQualifications = {
   koukukan: boolean
   johorenkei: boolean
   dx: boolean
-  baseup: boolean
+
   electronicPrescription: boolean
   other: boolean
   otherText: string
-  [key: string]: boolean | string
+  [key: string]: boolean | string | undefined
 }
 
 /** クリニック */

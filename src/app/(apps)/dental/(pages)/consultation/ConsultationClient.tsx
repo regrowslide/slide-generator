@@ -15,6 +15,7 @@ import {
   EXAMINATION_STATUS,
   getProcedureMaster,
   findMasterById,
+  TEXT_INSERT_OPTIONS,
 } from '@app/(apps)/dental/lib/constants'
 import {
   getPatientName,
@@ -496,7 +497,7 @@ const ConsultationClient = ({
     saveField({ procedureItems: next as Record<string, unknown> })
   }
 
-  const handleSelectSubItem = (masterId: string, subItemId: string, selectionMode: 'single' | 'multiple') => {
+  const handleSelectSubItem = (masterId: string, subItemId: string, selectionMode: 'single' | 'multiple' | 'mixed') => {
     const current = procedureItems[masterId]
     if (!current) return
     let newSelected: string[]
@@ -704,26 +705,32 @@ const ConsultationClient = ({
         </div>
         <div className={`${readOnly ? 'p-2' : 'p-4'} space-y-4`}>
           {([
-            { label: '1. 訪問時の様子', field: visitConditionField, placeholder: '例: ベッド上臥位、覚醒良好...' },
-            { label: '2. 口腔内所見', field: oralFindingsField, placeholder: '例: 右下残根部発赤あり、PCR 40%...' },
-            { label: '3. 処置', field: treatmentField, placeholder: '例: 義歯調整、口腔ケア、TBI...' },
-            { label: '4. 次回予定', field: nextPlanField, placeholder: '例: 1週間後、義歯経過観察...' },
-          ]).map(({ label, field, placeholder }) => (
+            { label: '1. 訪問時の様子', fieldKey: 'visitCondition' as const, field: visitConditionField, placeholder: '例: ベッド上臥位、覚醒良好...' },
+            { label: '2. 口腔内所見', fieldKey: 'oralFindings' as const, field: oralFindingsField, placeholder: '例: 右下残根部発赤あり、PCR 40%...' },
+            { label: '3. 処置', fieldKey: 'treatment' as const, field: treatmentField, placeholder: '例: 義歯調整、口腔ケア、TBI...' },
+            { label: '4. 次回予定', fieldKey: 'nextPlan' as const, field: nextPlanField, placeholder: '例: 1週間後、義歯経過観察...' },
+          ]).map(({ label, fieldKey, field, placeholder }) => (
             <div key={label}>
               <div className="text-xs text-gray-600 mb-1">{label}</div>
-              <select className={`border px-2 `}>
-                <option>選択すると、挿入されます。</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-              </select>
+              {!readOnly && TEXT_INSERT_OPTIONS[fieldKey] && (
+                <select
+                  className="border border-gray-300 rounded px-2 py-1 text-xs mb-1"
+                  value=""
+                  onChange={e => {
+                    if (e.target.value) {
+                      const current = field.localValue
+                      const newValue = current ? current + '\n' + e.target.value : e.target.value
+                      field.onChange(newValue)
+                      e.target.value = ''
+                    }
+                  }}
+                >
+                  <option value="">定型文を挿入...</option>
+                  {TEXT_INSERT_OPTIONS[fieldKey].options.map((opt, i) => (
+                    <option key={i} value={opt}>{opt}</option>
+                  ))}
+                </select>
+              )}
               {readOnly ? (
                 <div className={`${readOnly ? 'text-sm' : ''} p-2 bg-gray-50 rounded min-h-[2rem]`}>{field.localValue || <span className="text-gray-400">未入力</span>}</div>
               ) : (
@@ -732,7 +739,7 @@ const ConsultationClient = ({
                   onChange={e => field.onChange(e.target.value)}
                   onBlur={field.onBlur}
                   placeholder={placeholder}
-                  rows={2}
+                  rows={6}
                   className={`w-full px-3 py-2 border rounded-md text-sm resize-none ${field.isDirty ? 'bg-yellow-50 border-yellow-300' : 'border-gray-300'}`}
                 />
               )}
@@ -807,20 +814,108 @@ const ConsultationClient = ({
                   {isSelected && master.subItems?.length > 0 && (
                     <div className="p-3 bg-slate-50 border-t border-slate-200 space-y-3">
                       <div className="text-xs text-gray-600 mb-2">該当区分</div>
-                      <div className="flex flex-wrap gap-2">
-                        {master.subItems.map(sub => {
-                          const isSubSelected = (itemData?.selectedSubItems || []).includes(sub.id)
-                          const inputType = master.selectionMode === 'single' ? 'radio' : 'checkbox'
-                          return (
-                            <label key={sub.id} className={`flex items-center gap-2 px-3 py-2 border rounded cursor-pointer transition-colors ${isSubSelected ? 'border-emerald-500 bg-emerald-50' : 'border-gray-300 bg-white hover:border-gray-400'}`}>
-                              <input type={inputType} name={`sub-${master.id}`} checked={isSubSelected} onChange={() => handleSelectSubItem(master.id, sub.id, master.selectionMode)} className="w-4 h-4 text-emerald-600 accent-emerald-600" />
-                              <span className="text-sm">{sub.name}</span>
-                              <span className="text-xs text-gray-500">({sub.points}点)</span>
-                              {sub.isManualOnly && <span className="px-1.5 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-medium rounded">手動</span>}
-                            </label>
-                          )
-                        })}
-                      </div>
+                      {/* 歯訪の場合: 20分以上/未満で左右2列表示 */}
+                      {master.id === 'shihou' ? (
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <div className="text-xs font-medium text-gray-700 mb-2">20分以上</div>
+                            <div className="space-y-1">
+                              {master.subItems.filter(sub => sub.id.includes('20over')).map(sub => {
+                                const isSubSelected = (itemData?.selectedSubItems || []).includes(sub.id)
+                                return (
+                                  <label key={sub.id} className={`flex items-center gap-2 px-3 py-2 border rounded cursor-pointer transition-colors ${isSubSelected ? 'border-emerald-500 bg-emerald-50' : 'border-gray-300 bg-white hover:border-gray-400'}`}>
+                                    <input type="radio" name={`sub-${master.id}`} checked={isSubSelected} onChange={() => handleSelectSubItem(master.id, sub.id, master.selectionMode)} className="w-4 h-4 text-emerald-600 accent-emerald-600" />
+                                    <span className="text-sm">{sub.name}</span>
+                                    <span className="text-xs text-gray-500">({sub.points}点)</span>
+                                  </label>
+                                )
+                              })}
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-xs font-medium text-gray-700 mb-2">20分未満</div>
+                            <div className="space-y-1">
+                              {master.subItems.filter(sub => sub.id.includes('20under')).map(sub => {
+                                const isSubSelected = (itemData?.selectedSubItems || []).includes(sub.id)
+                                return (
+                                  <label key={sub.id} className={`flex items-center gap-2 px-3 py-2 border rounded cursor-pointer transition-colors ${isSubSelected ? 'border-emerald-500 bg-emerald-50' : 'border-gray-300 bg-white hover:border-gray-400'}`}>
+                                    <input type="radio" name={`sub-${master.id}`} checked={isSubSelected} onChange={() => handleSelectSubItem(master.id, sub.id, master.selectionMode)} className="w-4 h-4 text-emerald-600 accent-emerald-600" />
+                                    <span className="text-sm">{sub.name}</span>
+                                    <span className="text-xs text-gray-500">({sub.points}点)</span>
+                                  </label>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        </div>
+                      ) : master.selectionMode === 'mixed' ? (
+                        /* 歯在管(mixed): 排他グループ + 複数チェック */
+                        <div className="space-y-3">
+                          <div>
+                            <div className="text-xs font-medium text-gray-700 mb-2">歯援診区分（いずれか1つ）</div>
+                            <div className="flex flex-wrap gap-2">
+                              {master.subItems.filter((sub: any) => sub.exclusiveGroup === 'shiensin').map(sub => {
+                                const isSubSelected = (itemData?.selectedSubItems || []).includes(sub.id)
+                                return (
+                                  <label key={sub.id} className={`flex items-center gap-2 px-3 py-2 border rounded cursor-pointer transition-colors ${isSubSelected ? 'border-emerald-500 bg-emerald-50' : 'border-gray-300 bg-white hover:border-gray-400'}`}>
+                                    <input type="radio" name={`sub-exclusive-${master.id}`} checked={isSubSelected} onChange={() => {
+                                      const current = procedureItems[master.id]
+                                      if (!current) return
+                                      const exclusiveIds = master.subItems.filter((s: any) => s.exclusiveGroup === 'shiensin').map(s => s.id)
+                                      const nonExclusive = current.selectedSubItems.filter(id => !exclusiveIds.includes(id))
+                                      const next = { ...procedureItems, [master.id]: { ...current, selectedSubItems: [...nonExclusive, sub.id], isAutoSet: false } }
+                                      setProcedureItems(next)
+                                      saveField({ procedureItems: next as Record<string, unknown> })
+                                    }} className="w-4 h-4 text-emerald-600 accent-emerald-600" />
+                                    <span className="text-sm">{sub.name}</span>
+                                    <span className="text-xs text-gray-500">({sub.points}点)</span>
+                                  </label>
+                                )
+                              })}
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-xs font-medium text-gray-700 mb-2">追加加算（複数選択可）</div>
+                            <div className="flex flex-wrap gap-2">
+                              {master.subItems.filter((sub: any) => !sub.exclusiveGroup).map(sub => {
+                                const isSubSelected = (itemData?.selectedSubItems || []).includes(sub.id)
+                                return (
+                                  <label key={sub.id} className={`flex items-center gap-2 px-3 py-2 border rounded cursor-pointer transition-colors ${isSubSelected ? 'border-emerald-500 bg-emerald-50' : 'border-gray-300 bg-white hover:border-gray-400'}`}>
+                                    <input type="checkbox" checked={isSubSelected} onChange={() => {
+                                      const current = procedureItems[master.id]
+                                      if (!current) return
+                                      const newSelected = isSubSelected
+                                        ? current.selectedSubItems.filter(id => id !== sub.id)
+                                        : [...current.selectedSubItems, sub.id]
+                                      const next = { ...procedureItems, [master.id]: { ...current, selectedSubItems: newSelected, isAutoSet: false } }
+                                      setProcedureItems(next)
+                                      saveField({ procedureItems: next as Record<string, unknown> })
+                                    }} className="w-4 h-4 text-emerald-600 accent-emerald-600" />
+                                    <span className="text-sm">{sub.name}</span>
+                                    <span className="text-xs text-gray-500">({sub.points}点)</span>
+                                  </label>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        /* 通常: 従来のflex-wrap表示 */
+                        <div className="flex flex-wrap gap-2">
+                          {master.subItems.map(sub => {
+                            const isSubSelected = (itemData?.selectedSubItems || []).includes(sub.id)
+                            const inputType = master.selectionMode === 'single' ? 'radio' : 'checkbox'
+                            return (
+                              <label key={sub.id} className={`flex items-center gap-2 px-3 py-2 border rounded cursor-pointer transition-colors ${isSubSelected ? 'border-emerald-500 bg-emerald-50' : 'border-gray-300 bg-white hover:border-gray-400'}`}>
+                                <input type={inputType} name={`sub-${master.id}`} checked={isSubSelected} onChange={() => handleSelectSubItem(master.id, sub.id, master.selectionMode)} className="w-4 h-4 text-emerald-600 accent-emerald-600" />
+                                <span className="text-sm">{sub.name}</span>
+                                <span className="text-xs text-gray-500">({sub.points}点)</span>
+                                {sub.isManualOnly && <span className="px-1.5 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-medium rounded">手動</span>}
+                              </label>
+                            )
+                          })}
+                        </div>
+                      )}
                       {/* 在歯管の場合: 対象の治療ボタン */}
                       {master.id === 'zaishikan' && (
                         <div className="mt-2">

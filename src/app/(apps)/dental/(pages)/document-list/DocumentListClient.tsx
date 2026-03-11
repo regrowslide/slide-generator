@@ -42,39 +42,51 @@ const StatusBadge = ({ doc }: { doc: DocumentItem }) => {
   return <span className="text-[11px] text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">下書き</span>
 }
 
+/** 当月の月初・月末をYYYY-MM-DD形式で返す */
+const getMonthRange = () => {
+  const now = new Date()
+  const y = now.getFullYear()
+  const m = now.getMonth()
+  const from = `${y}-${String(m + 1).padStart(2, '0')}-01`
+  const lastDay = new Date(y, m + 1, 0).getDate()
+  const to = `${y}-${String(m + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`
+  return { from, to }
+}
+
 const DocumentListClient = ({ documents, facilities }: Props) => {
   const router = useRouter()
   const { query } = useGlobal()
-  const [filterVisit, setFilterVisit] = useState('')
+  const defaultRange = useMemo(() => getMonthRange(), [])
+  const [filterFacility, setFilterFacility] = useState('')
+  const [filterDateFrom, setFilterDateFrom] = useState(defaultRange.from)
+  const [filterDateTo, setFilterDateTo] = useState(defaultRange.to)
+  const [filterPatientName, setFilterPatientName] = useState('')
   const [filterDocType, setFilterDocType] = useState('')
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
   const [merging, setMerging] = useState(false)
 
-  // 「施設×日付」の複合フィルタ選択肢を生成
-  const visitOptions = useMemo(() => {
-    const map = new Map<string, { facilityId: number; facilityName: string; visitDate: string }>()
+  // 施設の選択肢
+  const facilityOptions = useMemo(() => {
+    const map = new Map<number, string>()
     for (const doc of documents) {
-      if (!doc.facilityId || !doc.visitDate) continue
-      const key = `${doc.facilityId}_${doc.visitDate}`
-      if (!map.has(key)) {
-        map.set(key, { facilityId: doc.facilityId, facilityName: doc.facilityName, visitDate: doc.visitDate })
-      }
+      if (doc.facilityId && doc.facilityName) map.set(doc.facilityId, doc.facilityName)
     }
-    return [...map.entries()]
-      .sort((a, b) => b[1].visitDate.localeCompare(a[1].visitDate))
-      .map(([key, v]) => ({ value: key, label: `${v.facilityName} - ${v.visitDate}` }))
+    return [...map.entries()].map(([id, name]) => ({value: String(id), label: name}))
   }, [documents])
 
+  // 期間が指定されているか
+  const hasDateRange = !!filterDateFrom && !!filterDateTo
+
   const filtered = useMemo(() => {
+    if (!hasDateRange) return []
     return documents.filter(doc => {
-      if (filterVisit) {
-        const [fId, vDate] = filterVisit.split('_')
-        if (doc.facilityId !== Number(fId) || doc.visitDate !== vDate) return false
-      }
+      if (filterFacility && doc.facilityId !== Number(filterFacility)) return false
+      if (doc.visitDate < filterDateFrom || doc.visitDate > filterDateTo) return false
+      if (filterPatientName && !doc.patientName.includes(filterPatientName)) return false
       if (filterDocType && doc.templateId !== filterDocType) return false
       return true
     })
-  }, [documents, filterVisit, filterDocType])
+  }, [documents, filterFacility, filterDateFrom, filterDateTo, filterPatientName, filterDocType, hasDateRange])
 
   // チェック対象: 清書済み（pdfUrlあり）のみ
   const selectableIds = useMemo(() => new Set(filtered.filter(d => d.pdfUrl).map(d => d.id)), [filtered])
@@ -176,6 +188,64 @@ const DocumentListClient = ({ documents, facilities }: Props) => {
     }
   }
 
+  // 利用者別グルーピングDL
+  const handleGroupedDownload = async () => {
+    const selected = filtered.filter(d => selectedIds.has(d.id) && d.pdfUrl)
+    if (selected.length === 0) {
+      window.alert('清書済みの文書を選択してください。')
+      return
+    }
+    setMerging(true)
+    try {
+      const { PDFDocument } = await import('pdf-lib')
+      // 利用者（患者）でグルーピング
+      const grouped = new Map<number, DocumentItem[]>()
+      for (const doc of selected) {
+        const list = grouped.get(doc.patientId) || []
+        list.push(doc)
+        grouped.set(doc.patientId, list)
+      }
+
+      for (const [patientId, docs] of grouped) {
+        const mergedPdf = await PDFDocument.create()
+        for (const doc of docs) {
+          try {
+            const response = await fetch(doc.pdfUrl)
+            const pdfBytes = await response.arrayBuffer()
+            const pdf = await PDFDocument.load(pdfBytes)
+            const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices())
+            pages.forEach(page => mergedPdf.addPage(page))
+          } catch (e) {
+            console.error(`PDF読み込み失敗 (${doc.templateName}):`, e)
+          }
+        }
+        const mergedBytes = await mergedPdf.save() as any
+        const blob = new Blob([mergedBytes], { type: 'application/pdf' })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        const firstDoc = docs[0]
+        const dateStr = (firstDoc.visitDate || new Date().toISOString().slice(0, 10)).replace(/-/g, '')
+        const fileName = `${dateStr}_${firstDoc.facilityName}_${firstDoc.patientName}_${patientId}.pdf`
+        a.download = fileName
+        a.click()
+        URL.revokeObjectURL(url)
+      }
+
+      // DL済みフラグを記録
+      const ids = selected.filter(d => !d.downloadedAt).map(d => d.id)
+      if (ids.length > 0) {
+        await markDocumentsDownloaded(ids)
+        router.refresh()
+      }
+    } catch (e) {
+      console.error('グルーピングDL失敗:', e)
+      window.alert('グルーピングDLに失敗しました')
+    } finally {
+      setMerging(false)
+    }
+  }
+
   const documentTypeOptions = Object.entries(DOCUMENT_TEMPLATES).map(([id, t]) => ({
     value: id,
     label: t.name,
@@ -197,17 +267,45 @@ const DocumentListClient = ({ documents, facilities }: Props) => {
         <CardContent className="pt-4">
           <div className="flex flex-wrap gap-4 items-end">
             <div>
-              <label className="block text-xs text-gray-600 mb-1">訪問（施設×日付）</label>
+              <label className="block text-xs text-gray-600 mb-1">施設</label>
               <select
-                value={filterVisit}
-                onChange={e => setFilterVisit(e.target.value)}
-                className="border border-gray-300 rounded px-2 py-1.5 text-sm min-w-[200px]"
+                value={filterFacility}
+                onChange={e => setFilterFacility(e.target.value)}
+                className="border border-gray-300 rounded px-2 py-1.5 text-sm min-w-[160px]"
               >
                 <option value="">すべて</option>
-                {visitOptions.map(opt => (
+                {facilityOptions.map(opt => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}
               </select>
+            </div>
+            <div>
+              <label className="block text-xs text-gray-600 mb-1">期間（必須）</label>
+              <div className="flex items-center gap-1">
+                <input
+                  type="date"
+                  value={filterDateFrom}
+                  onChange={e => setFilterDateFrom(e.target.value)}
+                  className="border border-gray-300 rounded px-2 py-1.5 text-sm"
+                />
+                <span className="text-gray-400 text-xs">〜</span>
+                <input
+                  type="date"
+                  value={filterDateTo}
+                  onChange={e => setFilterDateTo(e.target.value)}
+                  className="border border-gray-300 rounded px-2 py-1.5 text-sm"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs text-gray-600 mb-1">患者氏名</label>
+              <input
+                type="text"
+                value={filterPatientName}
+                onChange={e => setFilterPatientName(e.target.value)}
+                placeholder="氏名で検索"
+                className="border border-gray-300 rounded px-2 py-1.5 text-sm min-w-[140px]"
+              />
             </div>
             <div>
               <label className="block text-xs text-gray-600 mb-1">文書タイプ</label>
@@ -232,17 +330,27 @@ const DocumentListClient = ({ documents, facilities }: Props) => {
               <Button size="sm" onClick={handleMergeDownload} disabled={selectedCount === 0 || merging}>
                 {merging ? '結合中...' : `結合DL (${selectedCount}件)`}
               </Button>
+              <Button size="sm" onClick={handleGroupedDownload} disabled={selectedCount === 0 || merging}>
+                利用者別DL ({selectedCount}件)
+              </Button>
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* 文書一覧 */}
-      {filtered.length === 0 ? (
+      {!hasDateRange ? (
         <Card>
           <CardContent className="p-8 text-center text-gray-500">
-            <p className="text-lg mb-2">保存済み文書がありません</p>
-            <p className="text-sm">文書作成画面から文書を作成・保存すると、ここに表示されます。</p>
+            <p className="text-lg mb-2">期間を指定してください</p>
+            <p className="text-sm">開始日と終了日を入力すると文書が表示されます。</p>
+          </CardContent>
+        </Card>
+      ) : filtered.length === 0 ? (
+        <Card>
+          <CardContent className="p-8 text-center text-gray-500">
+            <p className="text-lg mb-2">該当する文書がありません</p>
+            <p className="text-sm">指定期間内に保存済み文書がないか、フィルタ条件を確認してください。</p>
           </CardContent>
         </Card>
       ) : (

@@ -794,35 +794,140 @@ export default function KidsMasterClient({
               ) : (
                 <>
                   <div style={{ fontSize: 12, color: '#999', marginBottom: 12 }}>
-                    ついかしたいルーチンをえらんでね
+                    ついかしたいルーチンをえらんでね（タップでへんしゅう）
                   </div>
                   {aiSuggestions.map((s, i) => (
-                    <div
-                      key={i}
-                      onClick={() => toggleAiSelect(i)}
-                      className="flex items-center gap-2 cursor-pointer mb-2"
-                      style={{
-                        padding: '10px 14px',
-                        borderRadius: 12,
-                        background: aiSelected.has(i) ? '#E8F5E9' : '#F5F5F5',
-                        border: aiSelected.has(i)
-                          ? '2px solid #6BCB77'
-                          : '2px solid transparent',
-                      }}
-                    >
-                      <span style={{ fontSize: 20 }}>{s.emoji}</span>
-                      <div className="flex-1">
-                        <div style={{ fontSize: 13, fontWeight: 800, color: '#333' }}>
-                          {s.name}
+                    <div key={i} className="mb-2">
+                      {aiEditingIdx === i ? (
+                        /* 編集モード */
+                        <div
+                          style={{
+                            padding: '12px 14px',
+                            borderRadius: 12,
+                            background: '#FFF8E1',
+                            border: '2px solid #FFB020',
+                          }}
+                        >
+                          <div className="flex gap-2 mb-2">
+                            <input
+                              value={s.emoji}
+                              onChange={(e) => updateAiSuggestion(i, 'emoji', e.target.value)}
+                              className="w-12 text-center"
+                              style={{
+                                border: '1px solid #DDD',
+                                borderRadius: 8,
+                                padding: 4,
+                                fontSize: 18,
+                              }}
+                            />
+                            <input
+                              value={s.name}
+                              onChange={(e) => updateAiSuggestion(i, 'name', e.target.value)}
+                              className="flex-1"
+                              style={{
+                                border: '1px solid #DDD',
+                                borderRadius: 8,
+                                padding: '4px 8px',
+                                fontSize: 13,
+                                fontWeight: 700,
+                                fontFamily: 'inherit',
+                              }}
+                            />
+                            <input
+                              value={s.sticker}
+                              onChange={(e) => updateAiSuggestion(i, 'sticker', e.target.value)}
+                              className="w-12 text-center"
+                              style={{
+                                border: '1px solid #DDD',
+                                borderRadius: 8,
+                                padding: 4,
+                                fontSize: 18,
+                              }}
+                            />
+                          </div>
+                          <div className="flex gap-2">
+                            <input
+                              value={s.categoryEmoji}
+                              onChange={(e) => updateAiSuggestion(i, 'categoryEmoji', e.target.value)}
+                              className="w-12 text-center"
+                              style={{
+                                border: '1px solid #DDD',
+                                borderRadius: 8,
+                                padding: 4,
+                                fontSize: 14,
+                              }}
+                            />
+                            <input
+                              value={s.categoryName}
+                              onChange={(e) => updateAiSuggestion(i, 'categoryName', e.target.value)}
+                              className="flex-1"
+                              placeholder="カテゴリ"
+                              style={{
+                                border: '1px solid #DDD',
+                                borderRadius: 8,
+                                padding: '4px 8px',
+                                fontSize: 12,
+                                fontFamily: 'inherit',
+                              }}
+                            />
+                            <button
+                              onClick={() => setAiEditingIdx(null)}
+                              className="cursor-pointer border-none"
+                              style={{
+                                background: '#FFB020',
+                                borderRadius: 8,
+                                padding: '4px 12px',
+                                fontSize: 12,
+                                fontWeight: 900,
+                                color: '#fff',
+                                fontFamily: 'inherit',
+                              }}
+                            >
+                              OK
+                            </button>
+                          </div>
                         </div>
-                        <div style={{ fontSize: 10, color: '#999' }}>
-                          {s.categoryEmoji} {s.categoryName}
+                      ) : (
+                        /* 表示モード */
+                        <div
+                          className="flex items-center gap-2 cursor-pointer"
+                          style={{
+                            padding: '10px 14px',
+                            borderRadius: 12,
+                            background: aiSelected.has(i) ? '#E8F5E9' : '#F5F5F5',
+                            border: aiSelected.has(i)
+                              ? '2px solid #6BCB77'
+                              : '2px solid transparent',
+                          }}
+                        >
+                          <span
+                            onClick={() => toggleAiSelect(i)}
+                            style={{ fontSize: 16, cursor: 'pointer' }}
+                          >
+                            {aiSelected.has(i) ? '✅' : '⬜'}
+                          </span>
+                          <span style={{ fontSize: 20 }}>{s.emoji}</span>
+                          <div className="flex-1" onClick={() => toggleAiSelect(i)}>
+                            <div style={{ fontSize: 13, fontWeight: 800, color: '#333' }}>
+                              {s.name}
+                            </div>
+                            <div style={{ fontSize: 10, color: '#999' }}>
+                              {s.categoryEmoji} {s.categoryName}
+                            </div>
+                          </div>
+                          <span style={{ fontSize: 18 }}>{s.sticker}</span>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setAiEditingIdx(i)
+                            }}
+                            className="cursor-pointer border-none bg-transparent"
+                            style={{ fontSize: 12, padding: 4 }}
+                          >
+                            ✏️
+                          </button>
                         </div>
-                      </div>
-                      <span style={{ fontSize: 18 }}>{s.sticker}</span>
-                      <span style={{ fontSize: 16 }}>
-                        {aiSelected.has(i) ? '✅' : '⬜'}
-                      </span>
+                      )}
                     </div>
                   ))}
 

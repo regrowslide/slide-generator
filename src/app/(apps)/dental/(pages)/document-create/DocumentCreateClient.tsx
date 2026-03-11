@@ -24,7 +24,7 @@ import { DOCUMENT_TEMPLATES } from '@app/(apps)/dental/lib/constants'
 import DocumentTemplateButtons from '../components/DocumentTemplateButtons'
 import { generatePdfBlobFromHtml } from '@app/(apps)/dental/lib/pdf-generator'
 import { uploadDocumentPdf } from '@app/(apps)/dental/_actions/document-blob-actions'
-import { createDentalSavedDocument, updateDentalSavedDocument } from '@app/(apps)/dental/_actions/saved-document-actions'
+import { createDentalSavedDocument, updateDentalSavedDocument, getPreviousDocument } from '@app/(apps)/dental/_actions/saved-document-actions'
 import type { SavedTemplateStatus } from '@app/(apps)/dental/_actions/saved-document-actions'
 import {
   TreatmentContentTemplate,
@@ -311,6 +311,28 @@ const DocumentCreateClient = ({
     }
   }
 
+  // 前回取込
+  const handleLoadPrevious = async () => {
+    if (!patient || !selectedType) return
+    // 口腔機能精密検査票は対象外
+    if (selectedType === 'doc_seimitsu_kensa') {
+      window.alert('口腔機能精密検査票は前回取込の対象外です。')
+      return
+    }
+    const prev = await getPreviousDocument(patient.id, selectedType, examination?.id)
+    if (!prev || !prev.templateData) {
+      window.alert('前回の文書データが見つかりません。')
+      return
+    }
+    const td = prev.templateData
+    if (selectedType === 'doc_houmon_chiryou' && td.treatmentData) setTreatmentData(td.treatmentData as TreatmentContentData)
+    if (selectedType === 'doc_kanrikeikaku' && td.kanriData) setKanriData(td.kanriData as KanriKeikakuData)
+    if (selectedType === 'doc_houeishi' && td.hygieneData) setHygieneData(td.hygieneData as HygieneGuidanceData)
+    if (selectedType === 'doc_koukuu_kanri' && td.oralFunctionPlanData) setOralFunctionPlanData(td.oralFunctionPlanData as OralFunctionPlanData)
+    if (selectedType === 'doc_kouei_kanri' && td.oralHygieneData) setOralHygieneData(td.oralHygieneData as OralHygieneManagementData)
+    setIsDirty(true)
+  }
+
   // 診察の実施項目から必要文書を判定
   const docRequirements = useMemo(() => {
     return calculateDocumentRequirements({
@@ -333,7 +355,10 @@ const DocumentCreateClient = ({
           </div>
         </div>
         <div className="flex gap-2">
-          <Button onClick={() => window.print()}>印刷</Button>
+          {selectedType && selectedType !== 'doc_seimitsu_kensa' && (
+            <Button onClick={handleLoadPrevious}>前回取込</Button>
+          )}
+
           <Button onClick={handleSeisho} disabled={saving || !selectedType}>
             {saving ? '清書中...' : '清書（PDF生成）'}
           </Button>
@@ -343,7 +368,7 @@ const DocumentCreateClient = ({
       <div className="flex print:block" style={{ height: 'calc(100vh - 57px)' }}>
         {/* 左パネル: 診察情報（読み取り専用） */}
         {examination && patient && clinic && (
-          <div className="w-1/2 shrink-0 border-r border-gray-200 overflow-y-auto print:hidden">
+          <div className="w-1/2 shrink-0 border-r border-gray-200 overflow-y-auto print:hidden pointer-events-none opacity-60">
             <ConsultationClient
               examination={examination}
               patient={patient}
