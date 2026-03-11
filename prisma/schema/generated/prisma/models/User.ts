@@ -530,6 +530,7 @@ export type UserWhereInput = {
   RgStoreRg?: Prisma.XOR<Prisma.RgStoreNullableScalarRelationFilter, Prisma.RgStoreWhereInput> | null
   RgStaffRecordUser?: Prisma.RgStaffRecordListRelationFilter
   RgStaffManualDataUser?: Prisma.RgStaffManualDataListRelationFilter
+  KidsChildUser?: Prisma.KidsChildListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -592,6 +593,7 @@ export type UserOrderByWithRelationInput = {
   RgStoreRg?: Prisma.RgStoreOrderByWithRelationInput
   RgStaffRecordUser?: Prisma.RgStaffRecordOrderByRelationAggregateInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataOrderByRelationAggregateInput
+  KidsChildUser?: Prisma.KidsChildOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -657,6 +659,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   RgStoreRg?: Prisma.XOR<Prisma.RgStoreNullableScalarRelationFilter, Prisma.RgStoreWhereInput> | null
   RgStaffRecordUser?: Prisma.RgStaffRecordListRelationFilter
   RgStaffManualDataUser?: Prisma.RgStaffManualDataListRelationFilter
+  KidsChildUser?: Prisma.KidsChildListRelationFilter
 }, "id" | "code" | "email" | "employeeCode" | "lineUserId">
 
 export type UserOrderByWithAggregationInput = {
@@ -801,6 +804,7 @@ export type UserCreateInput = {
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -858,6 +862,7 @@ export type UserUncheckedCreateInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -914,6 +919,7 @@ export type UserUpdateInput = {
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -971,6 +977,7 @@ export type UserUncheckedUpdateInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -1100,6 +1107,11 @@ export type UserOrderByRelationAggregateInput = {
 export type UserNullableScalarRelationFilter = {
   is?: Prisma.UserWhereInput | null
   isNot?: Prisma.UserWhereInput | null
+}
+
+export type UserScalarRelationFilter = {
+  is?: Prisma.UserWhereInput
+  isNot?: Prisma.UserWhereInput
 }
 
 export type StringNullableListFilter<$PrismaModel = never> = {
@@ -1256,11 +1268,6 @@ export type UserSumOrderByAggregateInput = {
   rgStoreId?: Prisma.SortOrder
 }
 
-export type UserScalarRelationFilter = {
-  is?: Prisma.UserWhereInput
-  isNot?: Prisma.UserWhereInput
-}
-
 export type UserCreateNestedManyWithoutCounselingStoreInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutCounselingStoreInput, Prisma.UserUncheckedCreateWithoutCounselingStoreInput> | Prisma.UserCreateWithoutCounselingStoreInput[] | Prisma.UserUncheckedCreateWithoutCounselingStoreInput[]
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutCounselingStoreInput | Prisma.UserCreateOrConnectWithoutCounselingStoreInput[]
@@ -1391,6 +1398,20 @@ export type UserUpdateOneWithoutDentalExaminationHygienistNestedInput = {
   delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDentalExaminationHygienistInput, Prisma.UserUpdateWithoutDentalExaminationHygienistInput>, Prisma.UserUncheckedUpdateWithoutDentalExaminationHygienistInput>
+}
+
+export type UserCreateNestedOneWithoutKidsChildUserInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutKidsChildUserInput, Prisma.UserUncheckedCreateWithoutKidsChildUserInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutKidsChildUserInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutKidsChildUserNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutKidsChildUserInput, Prisma.UserUncheckedCreateWithoutKidsChildUserInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutKidsChildUserInput
+  upsert?: Prisma.UserUpsertWithoutKidsChildUserInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutKidsChildUserInput, Prisma.UserUpdateWithoutKidsChildUserInput>, Prisma.UserUncheckedUpdateWithoutKidsChildUserInput>
 }
 
 export type UserCreateNestedManyWithoutRgStoreRgInput = {
@@ -1791,6 +1812,7 @@ export type UserCreateWithoutCounselingStoreInput = {
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCounselingStoreInput = {
@@ -1847,6 +1869,7 @@ export type UserUncheckedCreateWithoutCounselingStoreInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCounselingStoreInput = {
@@ -1971,6 +1994,7 @@ export type UserCreateWithoutCounselingSlotInput = {
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCounselingSlotInput = {
@@ -2027,6 +2051,7 @@ export type UserUncheckedCreateWithoutCounselingSlotInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCounselingSlotInput = {
@@ -2098,6 +2123,7 @@ export type UserUpdateWithoutCounselingSlotInput = {
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCounselingSlotInput = {
@@ -2154,6 +2180,7 @@ export type UserUncheckedUpdateWithoutCounselingSlotInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDentalClinicInput = {
@@ -2209,6 +2236,7 @@ export type UserCreateWithoutDentalClinicInput = {
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDentalClinicInput = {
@@ -2265,6 +2293,7 @@ export type UserUncheckedCreateWithoutDentalClinicInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDentalClinicInput = {
@@ -2346,6 +2375,7 @@ export type UserCreateWithoutDentalExaminationDoctorInput = {
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDentalExaminationDoctorInput = {
@@ -2402,6 +2432,7 @@ export type UserUncheckedCreateWithoutDentalExaminationDoctorInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDentalExaminationDoctorInput = {
@@ -2462,6 +2493,7 @@ export type UserCreateWithoutDentalExaminationHygienistInput = {
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDentalExaminationHygienistInput = {
@@ -2518,6 +2550,7 @@ export type UserUncheckedCreateWithoutDentalExaminationHygienistInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDentalExaminationHygienistInput = {
@@ -2589,6 +2622,7 @@ export type UserUpdateWithoutDentalExaminationDoctorInput = {
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDentalExaminationDoctorInput = {
@@ -2645,6 +2679,7 @@ export type UserUncheckedUpdateWithoutDentalExaminationDoctorInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutDentalExaminationHygienistInput = {
@@ -2711,6 +2746,7 @@ export type UserUpdateWithoutDentalExaminationHygienistInput = {
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDentalExaminationHygienistInput = {
@@ -2763,6 +2799,249 @@ export type UserUncheckedUpdateWithoutDentalExaminationHygienistInput = {
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
   YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
   DentalExaminationDoctor?: Prisma.DentalExaminationUncheckedUpdateManyWithoutDoctorNestedInput
+  TennisEventCreator?: Prisma.TennisEventUncheckedUpdateManyWithoutCreatorNestedInput
+  TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
+  RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutKidsChildUserInput = {
+  code?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  active?: boolean
+  hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
+  yukyuCategory?: string | null
+  name: string
+  kana?: string | null
+  email?: string | null
+  password?: string | null
+  type?: string | null
+  role?: string
+  tempResetCode?: string | null
+  tempResetCodeExpired?: Date | string | null
+  schoolId?: number | null
+  rentaStoreId?: number | null
+  type2?: string | null
+  shopId?: number | null
+  membershipName?: string | null
+  damageNameMasterId?: number | null
+  color?: string | null
+  app?: string | null
+  apps?: Prisma.UserCreateappsInput | string[]
+  employeeCode?: string | null
+  phone?: string | null
+  avatar?: string | null
+  bcc?: string | null
+  lineUserId?: string | null
+  UserRole?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  SbmReservation?: Prisma.SbmReservationCreateNestedManyWithoutUserInput
+  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentCreateNestedManyWithoutUserInput
+  ExerciseMaster?: Prisma.ExerciseMasterCreateNestedManyWithoutUserInput
+  WorkoutLog?: Prisma.WorkoutLogCreateNestedManyWithoutUserInput
+  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryCreateNestedManyWithoutUserInput
+  CounselingStore?: Prisma.CounselingStoreCreateNestedOneWithoutUserInput
+  CounselingSlot?: Prisma.CounselingSlotCreateNestedManyWithoutUserInput
+  Store?: Prisma.StoreCreateNestedOneWithoutUserInput
+  YamanokaiEventAsCL?: Prisma.YamanokaiEventCreateNestedManyWithoutCLInput
+  YamanokaiEventAsSL?: Prisma.YamanokaiEventCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceCreateNestedManyWithoutApprovedByUserInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutUserInput
+  DentalClinic?: Prisma.DentalClinicCreateNestedOneWithoutUserInput
+  DentalExaminationDoctor?: Prisma.DentalExaminationCreateNestedManyWithoutDoctorInput
+  DentalExaminationHygienist?: Prisma.DentalExaminationCreateNestedManyWithoutHygienistInput
+  TennisEventCreator?: Prisma.TennisEventCreateNestedManyWithoutCreatorInput
+  TennisAttendance?: Prisma.TennisAttendanceCreateNestedManyWithoutUserInput
+  RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
+  RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
+  RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutKidsChildUserInput = {
+  id?: number
+  code?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  active?: boolean
+  hiredAt?: Date | string | null
+  retiredAt?: Date | string | null
+  transferredAt?: Date | string | null
+  yukyuCategory?: string | null
+  name: string
+  kana?: string | null
+  email?: string | null
+  password?: string | null
+  type?: string | null
+  role?: string
+  tempResetCode?: string | null
+  tempResetCodeExpired?: Date | string | null
+  schoolId?: number | null
+  rentaStoreId?: number | null
+  type2?: string | null
+  shopId?: number | null
+  membershipName?: string | null
+  damageNameMasterId?: number | null
+  color?: string | null
+  app?: string | null
+  apps?: Prisma.UserCreateappsInput | string[]
+  employeeCode?: string | null
+  phone?: string | null
+  avatar?: string | null
+  bcc?: string | null
+  counselingStoreId?: number | null
+  storeId?: number | null
+  departmentId?: number | null
+  dentalClinicId?: number | null
+  lineUserId?: string | null
+  rgStoreId?: number | null
+  UserRole?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  SbmReservation?: Prisma.SbmReservationUncheckedCreateNestedManyWithoutUserInput
+  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedCreateNestedManyWithoutUserInput
+  ExerciseMaster?: Prisma.ExerciseMasterUncheckedCreateNestedManyWithoutUserInput
+  WorkoutLog?: Prisma.WorkoutLogUncheckedCreateNestedManyWithoutUserInput
+  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedCreateNestedManyWithoutUserInput
+  CounselingSlot?: Prisma.CounselingSlotUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutCLInput
+  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedCreateNestedManyWithoutSLInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutUserInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutApprovedByUserInput
+  DentalExaminationDoctor?: Prisma.DentalExaminationUncheckedCreateNestedManyWithoutDoctorInput
+  DentalExaminationHygienist?: Prisma.DentalExaminationUncheckedCreateNestedManyWithoutHygienistInput
+  TennisEventCreator?: Prisma.TennisEventUncheckedCreateNestedManyWithoutCreatorInput
+  TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
+  RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
+  RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutKidsChildUserInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutKidsChildUserInput, Prisma.UserUncheckedCreateWithoutKidsChildUserInput>
+}
+
+export type UserUpsertWithoutKidsChildUserInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutKidsChildUserInput, Prisma.UserUncheckedUpdateWithoutKidsChildUserInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutKidsChildUserInput, Prisma.UserUncheckedCreateWithoutKidsChildUserInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutKidsChildUserInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutKidsChildUserInput, Prisma.UserUncheckedUpdateWithoutKidsChildUserInput>
+}
+
+export type UserUpdateWithoutKidsChildUserInput = {
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apps?: Prisma.UserUpdateappsInput | string[]
+  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  UserRole?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  SbmReservation?: Prisma.SbmReservationUpdateManyWithoutUserNestedInput
+  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUpdateManyWithoutUserNestedInput
+  ExerciseMaster?: Prisma.ExerciseMasterUpdateManyWithoutUserNestedInput
+  WorkoutLog?: Prisma.WorkoutLogUpdateManyWithoutUserNestedInput
+  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUpdateManyWithoutUserNestedInput
+  CounselingStore?: Prisma.CounselingStoreUpdateOneWithoutUserNestedInput
+  CounselingSlot?: Prisma.CounselingSlotUpdateManyWithoutUserNestedInput
+  Store?: Prisma.StoreUpdateOneWithoutUserNestedInput
+  YamanokaiEventAsCL?: Prisma.YamanokaiEventUpdateManyWithoutCLNestedInput
+  YamanokaiEventAsSL?: Prisma.YamanokaiEventUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUpdateManyWithoutApprovedByUserNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutUserNestedInput
+  DentalClinic?: Prisma.DentalClinicUpdateOneWithoutUserNestedInput
+  DentalExaminationDoctor?: Prisma.DentalExaminationUpdateManyWithoutDoctorNestedInput
+  DentalExaminationHygienist?: Prisma.DentalExaminationUpdateManyWithoutHygienistNestedInput
+  TennisEventCreator?: Prisma.TennisEventUpdateManyWithoutCreatorNestedInput
+  TennisAttendance?: Prisma.TennisAttendanceUpdateManyWithoutUserNestedInput
+  RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
+  RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
+  RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutKidsChildUserInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  yukyuCategory?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  kana?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  tempResetCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tempResetCodeExpired?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  schoolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rentaStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  type2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  damageNameMasterId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  app?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  apps?: Prisma.UserUpdateappsInput | string[]
+  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bcc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  counselingStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  storeId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  dentalClinicId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rgStoreId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  UserRole?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  SbmReservation?: Prisma.SbmReservationUncheckedUpdateManyWithoutUserNestedInput
+  SbmDeliveryAssignment?: Prisma.SbmDeliveryAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  ExerciseMaster?: Prisma.ExerciseMasterUncheckedUpdateManyWithoutUserNestedInput
+  WorkoutLog?: Prisma.WorkoutLogUncheckedUpdateManyWithoutUserNestedInput
+  SbmReservationChangeHistory?: Prisma.SbmReservationChangeHistoryUncheckedUpdateManyWithoutUserNestedInput
+  CounselingSlot?: Prisma.CounselingSlotUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiEventAsCL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutCLNestedInput
+  YamanokaiEventAsSL?: Prisma.YamanokaiEventUncheckedUpdateManyWithoutSLNestedInput
+  YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutUserNestedInput
+  YamanokaiAttendanceAsApprover?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserNestedInput
+  DentalExaminationDoctor?: Prisma.DentalExaminationUncheckedUpdateManyWithoutDoctorNestedInput
+  DentalExaminationHygienist?: Prisma.DentalExaminationUncheckedUpdateManyWithoutHygienistNestedInput
   TennisEventCreator?: Prisma.TennisEventUncheckedUpdateManyWithoutCreatorNestedInput
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
@@ -2822,6 +3101,7 @@ export type UserCreateWithoutRgStoreRgInput = {
   TennisAttendance?: Prisma.TennisAttendanceCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRgStoreRgInput = {
@@ -2878,6 +3158,7 @@ export type UserUncheckedCreateWithoutRgStoreRgInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRgStoreRgInput = {
@@ -2959,6 +3240,7 @@ export type UserCreateWithoutRgStaffRecordUserInput = {
   TennisAttendance?: Prisma.TennisAttendanceCreateNestedManyWithoutUserInput
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRgStaffRecordUserInput = {
@@ -3015,6 +3297,7 @@ export type UserUncheckedCreateWithoutRgStaffRecordUserInput = {
   TennisEventCreator?: Prisma.TennisEventUncheckedCreateNestedManyWithoutCreatorInput
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRgStaffRecordUserInput = {
@@ -3086,6 +3369,7 @@ export type UserUpdateWithoutRgStaffRecordUserInput = {
   TennisAttendance?: Prisma.TennisAttendanceUpdateManyWithoutUserNestedInput
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRgStaffRecordUserInput = {
@@ -3142,6 +3426,7 @@ export type UserUncheckedUpdateWithoutRgStaffRecordUserInput = {
   TennisEventCreator?: Prisma.TennisEventUncheckedUpdateManyWithoutCreatorNestedInput
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutRgStaffManualDataUserInput = {
@@ -3197,6 +3482,7 @@ export type UserCreateWithoutRgStaffManualDataUserInput = {
   TennisAttendance?: Prisma.TennisAttendanceCreateNestedManyWithoutUserInput
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRgStaffManualDataUserInput = {
@@ -3253,6 +3539,7 @@ export type UserUncheckedCreateWithoutRgStaffManualDataUserInput = {
   TennisEventCreator?: Prisma.TennisEventUncheckedCreateNestedManyWithoutCreatorInput
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRgStaffManualDataUserInput = {
@@ -3324,6 +3611,7 @@ export type UserUpdateWithoutRgStaffManualDataUserInput = {
   TennisAttendance?: Prisma.TennisAttendanceUpdateManyWithoutUserNestedInput
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRgStaffManualDataUserInput = {
@@ -3380,6 +3668,7 @@ export type UserUncheckedUpdateWithoutRgStaffManualDataUserInput = {
   TennisEventCreator?: Prisma.TennisEventUncheckedUpdateManyWithoutCreatorNestedInput
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSbmReservationInput = {
@@ -3435,6 +3724,7 @@ export type UserCreateWithoutSbmReservationInput = {
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSbmReservationInput = {
@@ -3491,6 +3781,7 @@ export type UserUncheckedCreateWithoutSbmReservationInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSbmReservationInput = {
@@ -3562,6 +3853,7 @@ export type UserUpdateWithoutSbmReservationInput = {
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSbmReservationInput = {
@@ -3618,6 +3910,7 @@ export type UserUncheckedUpdateWithoutSbmReservationInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSbmReservationChangeHistoryInput = {
@@ -3673,6 +3966,7 @@ export type UserCreateWithoutSbmReservationChangeHistoryInput = {
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSbmReservationChangeHistoryInput = {
@@ -3729,6 +4023,7 @@ export type UserUncheckedCreateWithoutSbmReservationChangeHistoryInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSbmReservationChangeHistoryInput = {
@@ -3800,6 +4095,7 @@ export type UserUpdateWithoutSbmReservationChangeHistoryInput = {
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSbmReservationChangeHistoryInput = {
@@ -3856,6 +4152,7 @@ export type UserUncheckedUpdateWithoutSbmReservationChangeHistoryInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSbmDeliveryAssignmentInput = {
@@ -3911,6 +4208,7 @@ export type UserCreateWithoutSbmDeliveryAssignmentInput = {
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSbmDeliveryAssignmentInput = {
@@ -3967,6 +4265,7 @@ export type UserUncheckedCreateWithoutSbmDeliveryAssignmentInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSbmDeliveryAssignmentInput = {
@@ -4038,6 +4337,7 @@ export type UserUpdateWithoutSbmDeliveryAssignmentInput = {
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSbmDeliveryAssignmentInput = {
@@ -4094,6 +4394,7 @@ export type UserUncheckedUpdateWithoutSbmDeliveryAssignmentInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDepartmentInput = {
@@ -4149,6 +4450,7 @@ export type UserCreateWithoutDepartmentInput = {
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDepartmentInput = {
@@ -4205,6 +4507,7 @@ export type UserUncheckedCreateWithoutDepartmentInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDepartmentInput = {
@@ -4286,6 +4589,7 @@ export type UserCreateWithoutStoreInput = {
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutStoreInput = {
@@ -4342,6 +4646,7 @@ export type UserUncheckedCreateWithoutStoreInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutStoreInput = {
@@ -4423,6 +4728,7 @@ export type UserCreateWithoutUserRoleInput = {
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUserRoleInput = {
@@ -4479,6 +4785,7 @@ export type UserUncheckedCreateWithoutUserRoleInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUserRoleInput = {
@@ -4550,6 +4857,7 @@ export type UserUpdateWithoutUserRoleInput = {
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUserRoleInput = {
@@ -4606,6 +4914,7 @@ export type UserUncheckedUpdateWithoutUserRoleInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTennisEventCreatorInput = {
@@ -4661,6 +4970,7 @@ export type UserCreateWithoutTennisEventCreatorInput = {
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTennisEventCreatorInput = {
@@ -4717,6 +5027,7 @@ export type UserUncheckedCreateWithoutTennisEventCreatorInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTennisEventCreatorInput = {
@@ -4788,6 +5099,7 @@ export type UserUpdateWithoutTennisEventCreatorInput = {
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTennisEventCreatorInput = {
@@ -4844,6 +5156,7 @@ export type UserUncheckedUpdateWithoutTennisEventCreatorInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTennisAttendanceInput = {
@@ -4899,6 +5212,7 @@ export type UserCreateWithoutTennisAttendanceInput = {
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTennisAttendanceInput = {
@@ -4955,6 +5269,7 @@ export type UserUncheckedCreateWithoutTennisAttendanceInput = {
   TennisEventCreator?: Prisma.TennisEventUncheckedCreateNestedManyWithoutCreatorInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTennisAttendanceInput = {
@@ -5026,6 +5341,7 @@ export type UserUpdateWithoutTennisAttendanceInput = {
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTennisAttendanceInput = {
@@ -5082,6 +5398,7 @@ export type UserUncheckedUpdateWithoutTennisAttendanceInput = {
   TennisEventCreator?: Prisma.TennisEventUncheckedUpdateManyWithoutCreatorNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutExerciseMasterInput = {
@@ -5137,6 +5454,7 @@ export type UserCreateWithoutExerciseMasterInput = {
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutExerciseMasterInput = {
@@ -5193,6 +5511,7 @@ export type UserUncheckedCreateWithoutExerciseMasterInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutExerciseMasterInput = {
@@ -5264,6 +5583,7 @@ export type UserUpdateWithoutExerciseMasterInput = {
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExerciseMasterInput = {
@@ -5320,6 +5640,7 @@ export type UserUncheckedUpdateWithoutExerciseMasterInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWorkoutLogInput = {
@@ -5375,6 +5696,7 @@ export type UserCreateWithoutWorkoutLogInput = {
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWorkoutLogInput = {
@@ -5431,6 +5753,7 @@ export type UserUncheckedCreateWithoutWorkoutLogInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWorkoutLogInput = {
@@ -5502,6 +5825,7 @@ export type UserUpdateWithoutWorkoutLogInput = {
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWorkoutLogInput = {
@@ -5558,6 +5882,7 @@ export type UserUncheckedUpdateWithoutWorkoutLogInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutYamanokaiEventAsCLInput = {
@@ -5613,6 +5938,7 @@ export type UserCreateWithoutYamanokaiEventAsCLInput = {
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutYamanokaiEventAsCLInput = {
@@ -5669,6 +5995,7 @@ export type UserUncheckedCreateWithoutYamanokaiEventAsCLInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutYamanokaiEventAsCLInput = {
@@ -5729,6 +6056,7 @@ export type UserCreateWithoutYamanokaiEventAsSLInput = {
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutYamanokaiEventAsSLInput = {
@@ -5785,6 +6113,7 @@ export type UserUncheckedCreateWithoutYamanokaiEventAsSLInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutYamanokaiEventAsSLInput = {
@@ -5856,6 +6185,7 @@ export type UserUpdateWithoutYamanokaiEventAsCLInput = {
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutYamanokaiEventAsCLInput = {
@@ -5912,6 +6242,7 @@ export type UserUncheckedUpdateWithoutYamanokaiEventAsCLInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutYamanokaiEventAsSLInput = {
@@ -5978,6 +6309,7 @@ export type UserUpdateWithoutYamanokaiEventAsSLInput = {
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutYamanokaiEventAsSLInput = {
@@ -6034,6 +6366,7 @@ export type UserUncheckedUpdateWithoutYamanokaiEventAsSLInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutYamanokaiAttendanceInput = {
@@ -6089,6 +6422,7 @@ export type UserCreateWithoutYamanokaiAttendanceInput = {
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutYamanokaiAttendanceInput = {
@@ -6145,6 +6479,7 @@ export type UserUncheckedCreateWithoutYamanokaiAttendanceInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutYamanokaiAttendanceInput = {
@@ -6205,6 +6540,7 @@ export type UserCreateWithoutYamanokaiAttendanceAsApproverInput = {
   RgStoreRg?: Prisma.RgStoreCreateNestedOneWithoutRgUserListInput
   RgStaffRecordUser?: Prisma.RgStaffRecordCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutYamanokaiAttendanceAsApproverInput = {
@@ -6261,6 +6597,7 @@ export type UserUncheckedCreateWithoutYamanokaiAttendanceAsApproverInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedCreateNestedManyWithoutUserInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutUserInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutUserInput
+  KidsChildUser?: Prisma.KidsChildUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutYamanokaiAttendanceAsApproverInput = {
@@ -6332,6 +6669,7 @@ export type UserUpdateWithoutYamanokaiAttendanceInput = {
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutYamanokaiAttendanceInput = {
@@ -6388,6 +6726,7 @@ export type UserUncheckedUpdateWithoutYamanokaiAttendanceInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutYamanokaiAttendanceAsApproverInput = {
@@ -6454,6 +6793,7 @@ export type UserUpdateWithoutYamanokaiAttendanceAsApproverInput = {
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutYamanokaiAttendanceAsApproverInput = {
@@ -6510,6 +6850,7 @@ export type UserUncheckedUpdateWithoutYamanokaiAttendanceAsApproverInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyCounselingStoreInput = {
@@ -6604,6 +6945,7 @@ export type UserUpdateWithoutCounselingStoreInput = {
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCounselingStoreInput = {
@@ -6660,6 +7002,7 @@ export type UserUncheckedUpdateWithoutCounselingStoreInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutCounselingStoreInput = {
@@ -6793,6 +7136,7 @@ export type UserUpdateWithoutDentalClinicInput = {
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDentalClinicInput = {
@@ -6849,6 +7193,7 @@ export type UserUncheckedUpdateWithoutDentalClinicInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutDentalClinicInput = {
@@ -6982,6 +7327,7 @@ export type UserUpdateWithoutRgStoreRgInput = {
   TennisAttendance?: Prisma.TennisAttendanceUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRgStoreRgInput = {
@@ -7038,6 +7384,7 @@ export type UserUncheckedUpdateWithoutRgStoreRgInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutRgStoreRgInput = {
@@ -7171,6 +7518,7 @@ export type UserUpdateWithoutDepartmentInput = {
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDepartmentInput = {
@@ -7227,6 +7575,7 @@ export type UserUncheckedUpdateWithoutDepartmentInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutDepartmentInput = {
@@ -7360,6 +7709,7 @@ export type UserUpdateWithoutStoreInput = {
   RgStoreRg?: Prisma.RgStoreUpdateOneWithoutRgUserListNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStoreInput = {
@@ -7416,6 +7766,7 @@ export type UserUncheckedUpdateWithoutStoreInput = {
   TennisAttendance?: Prisma.TennisAttendanceUncheckedUpdateManyWithoutUserNestedInput
   RgStaffRecordUser?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutUserNestedInput
   RgStaffManualDataUser?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutUserNestedInput
+  KidsChildUser?: Prisma.KidsChildUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutStoreInput = {
@@ -7480,6 +7831,7 @@ export type UserCountOutputType = {
   TennisAttendance: number
   RgStaffRecordUser: number
   RgStaffManualDataUser: number
+  KidsChildUser: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -7500,6 +7852,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   TennisAttendance?: boolean | UserCountOutputTypeCountTennisAttendanceArgs
   RgStaffRecordUser?: boolean | UserCountOutputTypeCountRgStaffRecordUserArgs
   RgStaffManualDataUser?: boolean | UserCountOutputTypeCountRgStaffManualDataUserArgs
+  KidsChildUser?: boolean | UserCountOutputTypeCountKidsChildUserArgs
 }
 
 /**
@@ -7631,6 +7984,13 @@ export type UserCountOutputTypeCountRgStaffManualDataUserArgs<ExtArgs extends ru
   where?: Prisma.RgStaffManualDataWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountKidsChildUserArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.KidsChildWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -7692,6 +8052,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   RgStoreRg?: boolean | Prisma.User$RgStoreRgArgs<ExtArgs>
   RgStaffRecordUser?: boolean | Prisma.User$RgStaffRecordUserArgs<ExtArgs>
   RgStaffManualDataUser?: boolean | Prisma.User$RgStaffManualDataUserArgs<ExtArgs>
+  KidsChildUser?: boolean | Prisma.User$KidsChildUserArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -7849,6 +8210,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   RgStoreRg?: boolean | Prisma.User$RgStoreRgArgs<ExtArgs>
   RgStaffRecordUser?: boolean | Prisma.User$RgStaffRecordUserArgs<ExtArgs>
   RgStaffManualDataUser?: boolean | Prisma.User$RgStaffManualDataUserArgs<ExtArgs>
+  KidsChildUser?: boolean | Prisma.User$KidsChildUserArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -7891,6 +8253,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     RgStoreRg: Prisma.$RgStorePayload<ExtArgs> | null
     RgStaffRecordUser: Prisma.$RgStaffRecordPayload<ExtArgs>[]
     RgStaffManualDataUser: Prisma.$RgStaffManualDataPayload<ExtArgs>[]
+    KidsChildUser: Prisma.$KidsChildPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -8346,6 +8709,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   RgStoreRg<T extends Prisma.User$RgStoreRgArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$RgStoreRgArgs<ExtArgs>>): Prisma.Prisma__RgStoreClient<runtime.Types.Result.GetResult<Prisma.$RgStorePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   RgStaffRecordUser<T extends Prisma.User$RgStaffRecordUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$RgStaffRecordUserArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RgStaffRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   RgStaffManualDataUser<T extends Prisma.User$RgStaffManualDataUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$RgStaffManualDataUserArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RgStaffManualDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  KidsChildUser<T extends Prisma.User$KidsChildUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$KidsChildUserArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KidsChildPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9308,6 +9672,30 @@ export type User$RgStaffManualDataUserArgs<ExtArgs extends runtime.Types.Extensi
   take?: number
   skip?: number
   distinct?: Prisma.RgStaffManualDataScalarFieldEnum | Prisma.RgStaffManualDataScalarFieldEnum[]
+}
+
+/**
+ * User.KidsChildUser
+ */
+export type User$KidsChildUserArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the KidsChild
+   */
+  select?: Prisma.KidsChildSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the KidsChild
+   */
+  omit?: Prisma.KidsChildOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.KidsChildInclude<ExtArgs> | null
+  where?: Prisma.KidsChildWhereInput
+  orderBy?: Prisma.KidsChildOrderByWithRelationInput | Prisma.KidsChildOrderByWithRelationInput[]
+  cursor?: Prisma.KidsChildWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.KidsChildScalarFieldEnum | Prisma.KidsChildScalarFieldEnum[]
 }
 
 /**

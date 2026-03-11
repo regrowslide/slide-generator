@@ -352,6 +352,7 @@ export const generateMockMonthlyData = (yearMonth: YearMonth): MonthlyData => {
     storeName: staff.storeName,
     utilizationRate: randomFloat(70, 100),
     csRegistrationCount: randomInt(2, 8),
+    targetSales: Math.floor(staff.sales * randomFloat(0.85, 1.15)),
   }))
 
   const customerVoice = {

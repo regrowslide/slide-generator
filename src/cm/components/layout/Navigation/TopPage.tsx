@@ -9,7 +9,6 @@ import { T_LINK } from '@cm/components/styles/common-components/links'
 
 const TopPage = React.memo(() => {
   const { session, rootPath, pathname, query, roles } = useGlobal()
-  console.log({ session })  //logs
 
   const [navItems, setNavItems] = useState<any[]>([])
 

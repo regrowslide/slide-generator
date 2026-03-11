@@ -25,11 +25,7 @@ export default async function Page(props: Props) {
   const examinationId = query.examinationId ? Number(query.examinationId) : null
   const templateId = query.templateId || ''
 
-  console.log({
-    savedDocumentId,
-    examinationId,
-    templateId,
-  })  //logs
+
 
   // 新規作成モードの場合、examinationIdとtemplateIdが必須
   if (!savedDocumentId) {

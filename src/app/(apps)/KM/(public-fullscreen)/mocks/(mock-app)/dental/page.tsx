@@ -14,7 +14,7 @@ import {
   ChevronDown,
   LucideIcon,
 } from 'lucide-react'
-import DentalAppMock from '@app/(apps)/dental/doc/mock/DentalAppMock'
+import DentalAppMock from '@app/(apps)/dental/detnal-doc/mock/DentalAppMock'
 import {
   SplashScreen,
   useInfoModal,

@@ -63,6 +63,7 @@ export const loadMonthlyData = (yearMonth: YearMonth): MonthlyData | null => {
             storeName,
             utilizationRate: utilization?.utilizationRate || null,
             csRegistrationCount: null,
+            targetSales: null,
           }
         })
 

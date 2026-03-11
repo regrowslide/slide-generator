@@ -6,6 +6,7 @@ import { MonthSelector } from '../../components/MonthSelector'
 import { ImportView } from '../../components/views/ImportView'
 import { ImportDataView } from '../../components/views/ImportDataView'
 import { ManualInputView } from '../../components/views/ManualInputView'
+import { TargetSalesView } from '../../components/views/TargetSalesView'
 import { SlidesView } from '../../components/views/SlidesView'
 import type { SectionKey, YearMonth, MonthlyData, StaffMaster, RegrowScopes } from '../../types'
 import type { RgStore } from '@prisma/generated/prisma/client'
@@ -47,6 +48,7 @@ const RegrowReportContent = () => {
     { key: 'import', label: 'Excel取込', isVisible: () => scopes.isAdmin },
     { key: 'import-data', label: 'データ確認', isVisible: () => scopes.isAdmin },
     { key: 'manual-input', label: '手動入力', isVisible: () => scopes.isAdmin },
+    { key: 'target-sales', label: '目標売上', isVisible: () => scopes.isAdmin },
     { key: 'slides', label: 'スライド', isVisible: () => true },
   ].filter((section) => section.isVisible()) as { key: SectionKey; label: string, isVisible: () => boolean }[]
 
@@ -80,6 +82,8 @@ const RegrowReportContent = () => {
         return <ImportDataView />
       case 'manual-input':
         return <ManualInputView />
+      case 'target-sales':
+        return <TargetSalesView />
       case 'slides':
         return <SlidesView />
       default:

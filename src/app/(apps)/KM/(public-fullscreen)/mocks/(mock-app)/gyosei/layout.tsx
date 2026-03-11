@@ -1,20 +1,21 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: '補助金やることリスト生成AI',
+  title: 'AI行政書士君 II | 補助金採択後やることリスト作成ツール',
   description:
-    '補助金採択後に必要なタスクをAIが自動生成。計画書PDFと公募要領URLを読み込み、やることリスト（タスク・期限・担当者）を出力します。改善マニアが開発した補助金タスク管理AIのデモ画面をご覧いただけます。',
-  keywords: ['補助金', 'やることリスト', 'AI', 'タスク管理', '行政書士', 'システム開発', '業務改善', '改善マニア', 'デモ'],
+    '補助金採択後に必要なタスクをAIが自動生成。計画書PDF・公募要領URL・採択状況を入力するだけで、やることリスト（タスク・期限・担当者）と実績報告ガイドを出力します。',
+  keywords: ['補助金', 'やることリスト', 'AI', 'タスク管理', '行政書士', '実績報告', '交付申請', '保利国際法務事務所'],
   openGraph: {
-    title: '補助金やることリスト生成AI | 改善マニア 業務システムデモ',
-    description: '補助金採択後に必要なタスクをAIが自動生成。計画書PDFと公募要領URLを読み込み、やることリスト（タスク・期限・担当者）を出力します。',
+    title: 'AI行政書士君 II | 補助金採択後やることリスト作成ツール',
+    description:
+      '補助金採択後に必要なタスクをAIが自動生成。計画書PDF・公募要領URL・採択状況を入力するだけで、やることリスト（タスク・期限・担当者）と実績報告ガイドを出力します。',
     type: 'website',
     locale: 'ja_JP',
     siteName: '改善マニア',
-    url: 'https://kaizen-mania.com/KM/mocks/gyosei',
+    url: 'https://kaizen-mania.com/KM/mocks/gyosei-ii',
   },
   alternates: {
-    canonical: 'https://kaizen-mania.com/KM/mocks/gyosei',
+    canonical: 'https://kaizen-mania.com/KM/mocks/gyosei-ii',
   },
 }
 

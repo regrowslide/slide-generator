@@ -1,0 +1,24 @@
+model GyoseiSession {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @default(now()) @updatedAt()
+  uuid      String    @unique @default(uuid())
+  status    String    @default("draft") // draft / analyzing / completed / error
+  grantStatus       String?  // not-applied / applied / decided
+  adoptionDate      String?
+  grantDecisionDate String?
+  analysisResult    Json?    // { tasks: TaskItem[], reportGuide: string }
+  email             String?
+  GyoseiFile        GyoseiFile[]
+}
+
+model GyoseiFile {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  fileName  String
+  blobUrl   String
+  fileType  String   // plan / guidelines / guide
+  sortOrder Float    @default(0)
+  GyoseiSession   GyoseiSession @relation(fields: [gyoseiSessionId], references: [id], onDelete: Cascade)
+  gyoseiSessionId Int
+}

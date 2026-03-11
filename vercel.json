@@ -1,1 +1,30 @@
-{"framework":"nextjs","installCommand":"npm install","devCommand":"next dev","buildCommand":"npx prisma generate && next build ","cleanUrls":true,"regions":["sin1"],"trailingSlash":false,"crons":[],"build":{"env":{"NEXT_TELEMETRY_DISABLED":"1"}}}
+{
+ "framework": "nextjs",
+ "installCommand": "npm install",
+ "devCommand": "next dev",
+ "buildCommand": "npx prisma generate && next build ",
+ "cleanUrls": true,
+ "regions": [
+  "sin1"
+ ],
+ "trailingSlash": false,
+ "crons": [
+  {
+   "path": "/api/cron/execute/tennisCourtUndecided",
+   "schedule": "0 9 * * *"
+  },
+  {
+   "path": "/api/cron/execute/tennisReminder3Days",
+   "schedule": "0 11 * * *"
+  },
+  {
+   "path": "/api/cron/execute/tennisReminderNextDay",
+   "schedule": "0 11 * * *"
+  }
+ ],
+ "build": {
+  "env": {
+   "NEXT_TELEMETRY_DISABLED": "1"
+  }
+ }
+}

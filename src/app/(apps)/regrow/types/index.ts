@@ -81,6 +81,7 @@ export type StaffManualData = {
   storeName: StoreName
   utilizationRate: number | null // 稼働率 (%)
   csRegistrationCount: number | null // CS登録数
+  targetSales: number | null // 目標売上（円単位）
 }
 
 /** お客様の声（手動入力） */
@@ -127,7 +128,7 @@ export type ExcelParseResult = {
 // ============================================================
 
 /** セクションキー */
-export type SectionKey = 'guidance' | 'import' | 'import-data' | 'manual-input' | 'slides'
+export type SectionKey = 'guidance' | 'import' | 'import-data' | 'manual-input' | 'target-sales' | 'slides'
 
 /** ガイダンスステップ */
 export type GuidanceStep = {

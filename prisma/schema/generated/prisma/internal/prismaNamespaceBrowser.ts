@@ -69,6 +69,8 @@ export const ModelName = {
   DentalTimerHistory: 'DentalTimerHistory',
   DentalScoringHistory: 'DentalScoringHistory',
   DentalSavedDocument: 'DentalSavedDocument',
+  GyoseiSession: 'GyoseiSession',
+  GyoseiFile: 'GyoseiFile',
   KgFacilityMaster: 'KgFacilityMaster',
   KgDietTypeMaster: 'KgDietTypeMaster',
   KgDailyMenu: 'KgDailyMenu',
@@ -80,6 +82,12 @@ export const ModelName = {
   KgProductionBatch: 'KgProductionBatch',
   KgProductionItem: 'KgProductionItem',
   KgRequiredIngredient: 'KgRequiredIngredient',
+  KidsChild: 'KidsChild',
+  KidsCategory: 'KidsCategory',
+  KidsRoutine: 'KidsRoutine',
+  KidsRoutineLog: 'KidsRoutineLog',
+  KidsAchievement: 'KidsAchievement',
+  KidsStreak: 'KidsStreak',
   Product: 'Product',
   RawMaterial: 'RawMaterial',
   ProductRecipe: 'ProductRecipe',
@@ -480,6 +488,35 @@ export const DentalSavedDocumentScalarFieldEnum = {
 export type DentalSavedDocumentScalarFieldEnum = (typeof DentalSavedDocumentScalarFieldEnum)[keyof typeof DentalSavedDocumentScalarFieldEnum]
 
 
+export const GyoseiSessionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  uuid: 'uuid',
+  status: 'status',
+  grantStatus: 'grantStatus',
+  adoptionDate: 'adoptionDate',
+  grantDecisionDate: 'grantDecisionDate',
+  analysisResult: 'analysisResult',
+  email: 'email'
+} as const
+
+export type GyoseiSessionScalarFieldEnum = (typeof GyoseiSessionScalarFieldEnum)[keyof typeof GyoseiSessionScalarFieldEnum]
+
+
+export const GyoseiFileScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  fileName: 'fileName',
+  blobUrl: 'blobUrl',
+  fileType: 'fileType',
+  sortOrder: 'sortOrder',
+  gyoseiSessionId: 'gyoseiSessionId'
+} as const
+
+export type GyoseiFileScalarFieldEnum = (typeof GyoseiFileScalarFieldEnum)[keyof typeof GyoseiFileScalarFieldEnum]
+
+
 export const KgFacilityMasterScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -672,6 +709,85 @@ export const KgRequiredIngredientScalarFieldEnum = {
 } as const
 
 export type KgRequiredIngredientScalarFieldEnum = (typeof KgRequiredIngredientScalarFieldEnum)[keyof typeof KgRequiredIngredientScalarFieldEnum]
+
+
+export const KidsChildScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  emoji: 'emoji',
+  userId: 'userId'
+} as const
+
+export type KidsChildScalarFieldEnum = (typeof KidsChildScalarFieldEnum)[keyof typeof KidsChildScalarFieldEnum]
+
+
+export const KidsCategoryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  emoji: 'emoji',
+  isArchived: 'isArchived',
+  childId: 'childId'
+} as const
+
+export type KidsCategoryScalarFieldEnum = (typeof KidsCategoryScalarFieldEnum)[keyof typeof KidsCategoryScalarFieldEnum]
+
+
+export const KidsRoutineScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  emoji: 'emoji',
+  sticker: 'sticker',
+  isArchived: 'isArchived',
+  categoryId: 'categoryId'
+} as const
+
+export type KidsRoutineScalarFieldEnum = (typeof KidsRoutineScalarFieldEnum)[keyof typeof KidsRoutineScalarFieldEnum]
+
+
+export const KidsRoutineLogScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  routineId: 'routineId',
+  childId: 'childId',
+  date: 'date',
+  completedAt: 'completedAt'
+} as const
+
+export type KidsRoutineLogScalarFieldEnum = (typeof KidsRoutineLogScalarFieldEnum)[keyof typeof KidsRoutineLogScalarFieldEnum]
+
+
+export const KidsAchievementScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  childId: 'childId',
+  sticker: 'sticker',
+  name: 'name',
+  date: 'date'
+} as const
+
+export type KidsAchievementScalarFieldEnum = (typeof KidsAchievementScalarFieldEnum)[keyof typeof KidsAchievementScalarFieldEnum]
+
+
+export const KidsStreakScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  childId: 'childId',
+  currentStreak: 'currentStreak',
+  longestStreak: 'longestStreak',
+  lastCompletedDate: 'lastCompletedDate'
+} as const
+
+export type KidsStreakScalarFieldEnum = (typeof KidsStreakScalarFieldEnum)[keyof typeof KidsStreakScalarFieldEnum]
 
 
 export const ProductScalarFieldEnum = {
@@ -998,7 +1114,8 @@ export const RgStaffManualDataScalarFieldEnum = {
   storeId: 'storeId',
   userId: 'userId',
   utilizationRate: 'utilizationRate',
-  csRegistrationCount: 'csRegistrationCount'
+  csRegistrationCount: 'csRegistrationCount',
+  targetSales: 'targetSales'
 } as const
 
 export type RgStaffManualDataScalarFieldEnum = (typeof RgStaffManualDataScalarFieldEnum)[keyof typeof RgStaffManualDataScalarFieldEnum]

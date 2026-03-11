@@ -42,7 +42,7 @@ export const GuidanceView = ({onNavigate, onLoadMockData}: GuidanceViewProps) =>
     {
       step: 2,
       title: '手動入力データの登録',
-      description: '店舗KPI、スタッフ稼働率、ABCD評価などを入力してください',
+      description: '店舗KPI、スタッフ稼働率・CS登録数、お客様の声を入力してください',
       completed: step2Completed,
       actionLabel: '手動入力ページへ',
       targetSection: 'manual-input',

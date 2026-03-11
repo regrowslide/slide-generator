@@ -2,7 +2,7 @@
 
 /**
  * 手動入力管理ビュー
- * 店舗KPI、スタッフ稼働率、ABCD評価、お客様の声を入力
+ * 店舗KPI、スタッフ稼働率・CS登録数、お客様の声を入力
  */
 
 import React, { useState, useEffect } from 'react'
@@ -296,7 +296,7 @@ export const ManualInputView = () => {
             className="w-full px-4 py-3 border rounded focus:outline-none focus:ring-2 focus:ring-red-500 resize-none disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
           />
           <p className="text-sm text-gray-500 mt-2">
-            ※ この内容はスライド10「お客様の声」に表示されます
+            ※ この内容はスライド18「お客様の声」に表示されます
           </p>
         </div>
       )}

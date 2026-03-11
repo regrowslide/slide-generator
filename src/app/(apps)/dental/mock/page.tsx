@@ -1,3 +1,3 @@
-import DentalAppMock from "../doc/mock/DentalAppMock";
+import DentalAppMock from "../detnal-doc/mock/DentalAppMock";
 
 export default DentalAppMock;

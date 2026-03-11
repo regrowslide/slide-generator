@@ -6,7 +6,7 @@ export const regrow_PAGES = (props: PageGetterType) => {
 
   const { login, admin, getRegrowScopes } = getScopes(session, { query, roles })
   const { isAdmin, isManager } = getRegrowScopes()
-  console.log({ login, isAdmin, })  //logs
+
   const loginPaths = [
     { tabId: '/report', label: 'MTG資料', exclusiveTo: !!login },
     { tabId: '/master', label: 'マスタ管理', exclusiveTo: !!(isAdmin || admin) },

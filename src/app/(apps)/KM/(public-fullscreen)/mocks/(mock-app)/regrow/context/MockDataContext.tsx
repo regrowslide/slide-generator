@@ -222,6 +222,7 @@ export const MockDataContextProvider = ({
                   storeName,
                   utilizationRate: null,
                   csRegistrationCount: null,
+                  targetSales: null,
                   ...updates,
                 },
               ],

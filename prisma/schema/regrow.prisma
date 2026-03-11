@@ -101,6 +101,7 @@ model RgStaffManualData {
   userId              Int? // Userとの紐付け（任意）
   utilizationRate     Float?
   csRegistrationCount Int?
+  targetSales         Int? // 目標売上（円単位）
 
   RgMonthlyReport RgMonthlyReport @relation(fields: [monthlyReportId], references: [id], onDelete: Cascade)
   User            User?           @relation("RgStaffManualDataUser", fields: [userId], references: [id], onDelete: SetNull)

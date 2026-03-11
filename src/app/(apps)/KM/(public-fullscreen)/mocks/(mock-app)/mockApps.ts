@@ -77,6 +77,13 @@ export const MOCK_APPS: MockAppMeta[] = [
       '登山サークルの会員管理・イベント計画・活動記録を一元管理。参加申込や会費管理もオンラインで完結。',
     features: ['会員管理', 'イベント管理', '活動記録', '会費管理'],
   },
+  {
+    id: 'gyosei-ii',
+    title: 'AI行政書士君 II — 補助金採択後やることリスト作成ツール',
+    description:
+      '補助金採択後に必要なタスクをAIが自動生成。計画書PDF・公募要領URL・採択状況を入力するだけで、やることリスト（タスク・期限・担当者）と実績報告ガイドを出力します。',
+    features: ['AI分析', 'やることリスト生成', '実績報告ガイド', 'ステップウィザード'],
+  },
 ]
 
 export function getMockAppById(id: string): MockAppMeta | undefined {

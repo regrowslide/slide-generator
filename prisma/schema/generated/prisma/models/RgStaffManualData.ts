@@ -34,6 +34,7 @@ export type RgStaffManualDataAvgAggregateOutputType = {
   userId: number | null
   utilizationRate: number | null
   csRegistrationCount: number | null
+  targetSales: number | null
 }
 
 export type RgStaffManualDataSumAggregateOutputType = {
@@ -44,6 +45,7 @@ export type RgStaffManualDataSumAggregateOutputType = {
   userId: number | null
   utilizationRate: number | null
   csRegistrationCount: number | null
+  targetSales: number | null
 }
 
 export type RgStaffManualDataMinAggregateOutputType = {
@@ -57,6 +59,7 @@ export type RgStaffManualDataMinAggregateOutputType = {
   userId: number | null
   utilizationRate: number | null
   csRegistrationCount: number | null
+  targetSales: number | null
 }
 
 export type RgStaffManualDataMaxAggregateOutputType = {
@@ -70,6 +73,7 @@ export type RgStaffManualDataMaxAggregateOutputType = {
   userId: number | null
   utilizationRate: number | null
   csRegistrationCount: number | null
+  targetSales: number | null
 }
 
 export type RgStaffManualDataCountAggregateOutputType = {
@@ -83,6 +87,7 @@ export type RgStaffManualDataCountAggregateOutputType = {
   userId: number
   utilizationRate: number
   csRegistrationCount: number
+  targetSales: number
   _all: number
 }
 
@@ -95,6 +100,7 @@ export type RgStaffManualDataAvgAggregateInputType = {
   userId?: true
   utilizationRate?: true
   csRegistrationCount?: true
+  targetSales?: true
 }
 
 export type RgStaffManualDataSumAggregateInputType = {
@@ -105,6 +111,7 @@ export type RgStaffManualDataSumAggregateInputType = {
   userId?: true
   utilizationRate?: true
   csRegistrationCount?: true
+  targetSales?: true
 }
 
 export type RgStaffManualDataMinAggregateInputType = {
@@ -118,6 +125,7 @@ export type RgStaffManualDataMinAggregateInputType = {
   userId?: true
   utilizationRate?: true
   csRegistrationCount?: true
+  targetSales?: true
 }
 
 export type RgStaffManualDataMaxAggregateInputType = {
@@ -131,6 +139,7 @@ export type RgStaffManualDataMaxAggregateInputType = {
   userId?: true
   utilizationRate?: true
   csRegistrationCount?: true
+  targetSales?: true
 }
 
 export type RgStaffManualDataCountAggregateInputType = {
@@ -144,6 +153,7 @@ export type RgStaffManualDataCountAggregateInputType = {
   userId?: true
   utilizationRate?: true
   csRegistrationCount?: true
+  targetSales?: true
   _all?: true
 }
 
@@ -244,6 +254,7 @@ export type RgStaffManualDataGroupByOutputType = {
   userId: number | null
   utilizationRate: number | null
   csRegistrationCount: number | null
+  targetSales: number | null
   _count: RgStaffManualDataCountAggregateOutputType | null
   _avg: RgStaffManualDataAvgAggregateOutputType | null
   _sum: RgStaffManualDataSumAggregateOutputType | null
@@ -280,6 +291,7 @@ export type RgStaffManualDataWhereInput = {
   userId?: Prisma.IntNullableFilter<"RgStaffManualData"> | number | null
   utilizationRate?: Prisma.FloatNullableFilter<"RgStaffManualData"> | number | null
   csRegistrationCount?: Prisma.IntNullableFilter<"RgStaffManualData"> | number | null
+  targetSales?: Prisma.IntNullableFilter<"RgStaffManualData"> | number | null
   RgMonthlyReport?: Prisma.XOR<Prisma.RgMonthlyReportScalarRelationFilter, Prisma.RgMonthlyReportWhereInput>
   User?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   RgStore?: Prisma.XOR<Prisma.RgStoreScalarRelationFilter, Prisma.RgStoreWhereInput>
@@ -296,6 +308,7 @@ export type RgStaffManualDataOrderByWithRelationInput = {
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
   utilizationRate?: Prisma.SortOrderInput | Prisma.SortOrder
   csRegistrationCount?: Prisma.SortOrderInput | Prisma.SortOrder
+  targetSales?: Prisma.SortOrderInput | Prisma.SortOrder
   RgMonthlyReport?: Prisma.RgMonthlyReportOrderByWithRelationInput
   User?: Prisma.UserOrderByWithRelationInput
   RgStore?: Prisma.RgStoreOrderByWithRelationInput
@@ -316,6 +329,7 @@ export type RgStaffManualDataWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.IntNullableFilter<"RgStaffManualData"> | number | null
   utilizationRate?: Prisma.FloatNullableFilter<"RgStaffManualData"> | number | null
   csRegistrationCount?: Prisma.IntNullableFilter<"RgStaffManualData"> | number | null
+  targetSales?: Prisma.IntNullableFilter<"RgStaffManualData"> | number | null
   RgMonthlyReport?: Prisma.XOR<Prisma.RgMonthlyReportScalarRelationFilter, Prisma.RgMonthlyReportWhereInput>
   User?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   RgStore?: Prisma.XOR<Prisma.RgStoreScalarRelationFilter, Prisma.RgStoreWhereInput>
@@ -332,6 +346,7 @@ export type RgStaffManualDataOrderByWithAggregationInput = {
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
   utilizationRate?: Prisma.SortOrderInput | Prisma.SortOrder
   csRegistrationCount?: Prisma.SortOrderInput | Prisma.SortOrder
+  targetSales?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.RgStaffManualDataCountOrderByAggregateInput
   _avg?: Prisma.RgStaffManualDataAvgOrderByAggregateInput
   _max?: Prisma.RgStaffManualDataMaxOrderByAggregateInput
@@ -353,6 +368,7 @@ export type RgStaffManualDataScalarWhereWithAggregatesInput = {
   userId?: Prisma.IntNullableWithAggregatesFilter<"RgStaffManualData"> | number | null
   utilizationRate?: Prisma.FloatNullableWithAggregatesFilter<"RgStaffManualData"> | number | null
   csRegistrationCount?: Prisma.IntNullableWithAggregatesFilter<"RgStaffManualData"> | number | null
+  targetSales?: Prisma.IntNullableWithAggregatesFilter<"RgStaffManualData"> | number | null
 }
 
 export type RgStaffManualDataCreateInput = {
@@ -362,6 +378,7 @@ export type RgStaffManualDataCreateInput = {
   staffName: string
   utilizationRate?: number | null
   csRegistrationCount?: number | null
+  targetSales?: number | null
   RgMonthlyReport: Prisma.RgMonthlyReportCreateNestedOneWithoutRgStaffManualDataInput
   User?: Prisma.UserCreateNestedOneWithoutRgStaffManualDataUserInput
   RgStore: Prisma.RgStoreCreateNestedOneWithoutRgStaffManualDataInput
@@ -378,6 +395,7 @@ export type RgStaffManualDataUncheckedCreateInput = {
   userId?: number | null
   utilizationRate?: number | null
   csRegistrationCount?: number | null
+  targetSales?: number | null
 }
 
 export type RgStaffManualDataUpdateInput = {
@@ -387,6 +405,7 @@ export type RgStaffManualDataUpdateInput = {
   staffName?: Prisma.StringFieldUpdateOperationsInput | string
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetSales?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   RgMonthlyReport?: Prisma.RgMonthlyReportUpdateOneRequiredWithoutRgStaffManualDataNestedInput
   User?: Prisma.UserUpdateOneWithoutRgStaffManualDataUserNestedInput
   RgStore?: Prisma.RgStoreUpdateOneRequiredWithoutRgStaffManualDataNestedInput
@@ -403,6 +422,7 @@ export type RgStaffManualDataUncheckedUpdateInput = {
   userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetSales?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type RgStaffManualDataCreateManyInput = {
@@ -416,6 +436,7 @@ export type RgStaffManualDataCreateManyInput = {
   userId?: number | null
   utilizationRate?: number | null
   csRegistrationCount?: number | null
+  targetSales?: number | null
 }
 
 export type RgStaffManualDataUpdateManyMutationInput = {
@@ -425,6 +446,7 @@ export type RgStaffManualDataUpdateManyMutationInput = {
   staffName?: Prisma.StringFieldUpdateOperationsInput | string
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetSales?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type RgStaffManualDataUncheckedUpdateManyInput = {
@@ -438,6 +460,7 @@ export type RgStaffManualDataUncheckedUpdateManyInput = {
   userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetSales?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type RgStaffManualDataListRelationFilter = {
@@ -467,6 +490,7 @@ export type RgStaffManualDataCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   utilizationRate?: Prisma.SortOrder
   csRegistrationCount?: Prisma.SortOrder
+  targetSales?: Prisma.SortOrder
 }
 
 export type RgStaffManualDataAvgOrderByAggregateInput = {
@@ -477,6 +501,7 @@ export type RgStaffManualDataAvgOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   utilizationRate?: Prisma.SortOrder
   csRegistrationCount?: Prisma.SortOrder
+  targetSales?: Prisma.SortOrder
 }
 
 export type RgStaffManualDataMaxOrderByAggregateInput = {
@@ -490,6 +515,7 @@ export type RgStaffManualDataMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   utilizationRate?: Prisma.SortOrder
   csRegistrationCount?: Prisma.SortOrder
+  targetSales?: Prisma.SortOrder
 }
 
 export type RgStaffManualDataMinOrderByAggregateInput = {
@@ -503,6 +529,7 @@ export type RgStaffManualDataMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   utilizationRate?: Prisma.SortOrder
   csRegistrationCount?: Prisma.SortOrder
+  targetSales?: Prisma.SortOrder
 }
 
 export type RgStaffManualDataSumOrderByAggregateInput = {
@@ -513,6 +540,7 @@ export type RgStaffManualDataSumOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   utilizationRate?: Prisma.SortOrder
   csRegistrationCount?: Prisma.SortOrder
+  targetSales?: Prisma.SortOrder
 }
 
 export type RgStaffManualDataCreateNestedManyWithoutRgStoreInput = {
@@ -648,6 +676,7 @@ export type RgStaffManualDataCreateWithoutRgStoreInput = {
   staffName: string
   utilizationRate?: number | null
   csRegistrationCount?: number | null
+  targetSales?: number | null
   RgMonthlyReport: Prisma.RgMonthlyReportCreateNestedOneWithoutRgStaffManualDataInput
   User?: Prisma.UserCreateNestedOneWithoutRgStaffManualDataUserInput
 }
@@ -662,6 +691,7 @@ export type RgStaffManualDataUncheckedCreateWithoutRgStoreInput = {
   userId?: number | null
   utilizationRate?: number | null
   csRegistrationCount?: number | null
+  targetSales?: number | null
 }
 
 export type RgStaffManualDataCreateOrConnectWithoutRgStoreInput = {
@@ -704,6 +734,7 @@ export type RgStaffManualDataScalarWhereInput = {
   userId?: Prisma.IntNullableFilter<"RgStaffManualData"> | number | null
   utilizationRate?: Prisma.FloatNullableFilter<"RgStaffManualData"> | number | null
   csRegistrationCount?: Prisma.IntNullableFilter<"RgStaffManualData"> | number | null
+  targetSales?: Prisma.IntNullableFilter<"RgStaffManualData"> | number | null
 }
 
 export type RgStaffManualDataCreateWithoutRgMonthlyReportInput = {
@@ -713,6 +744,7 @@ export type RgStaffManualDataCreateWithoutRgMonthlyReportInput = {
   staffName: string
   utilizationRate?: number | null
   csRegistrationCount?: number | null
+  targetSales?: number | null
   User?: Prisma.UserCreateNestedOneWithoutRgStaffManualDataUserInput
   RgStore: Prisma.RgStoreCreateNestedOneWithoutRgStaffManualDataInput
 }
@@ -727,6 +759,7 @@ export type RgStaffManualDataUncheckedCreateWithoutRgMonthlyReportInput = {
   userId?: number | null
   utilizationRate?: number | null
   csRegistrationCount?: number | null
+  targetSales?: number | null
 }
 
 export type RgStaffManualDataCreateOrConnectWithoutRgMonthlyReportInput = {
@@ -762,6 +795,7 @@ export type RgStaffManualDataCreateWithoutUserInput = {
   staffName: string
   utilizationRate?: number | null
   csRegistrationCount?: number | null
+  targetSales?: number | null
   RgMonthlyReport: Prisma.RgMonthlyReportCreateNestedOneWithoutRgStaffManualDataInput
   RgStore: Prisma.RgStoreCreateNestedOneWithoutRgStaffManualDataInput
 }
@@ -776,6 +810,7 @@ export type RgStaffManualDataUncheckedCreateWithoutUserInput = {
   storeId: number
   utilizationRate?: number | null
   csRegistrationCount?: number | null
+  targetSales?: number | null
 }
 
 export type RgStaffManualDataCreateOrConnectWithoutUserInput = {
@@ -814,6 +849,7 @@ export type RgStaffManualDataCreateManyRgStoreInput = {
   userId?: number | null
   utilizationRate?: number | null
   csRegistrationCount?: number | null
+  targetSales?: number | null
 }
 
 export type RgStaffManualDataUpdateWithoutRgStoreInput = {
@@ -823,6 +859,7 @@ export type RgStaffManualDataUpdateWithoutRgStoreInput = {
   staffName?: Prisma.StringFieldUpdateOperationsInput | string
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetSales?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   RgMonthlyReport?: Prisma.RgMonthlyReportUpdateOneRequiredWithoutRgStaffManualDataNestedInput
   User?: Prisma.UserUpdateOneWithoutRgStaffManualDataUserNestedInput
 }
@@ -837,6 +874,7 @@ export type RgStaffManualDataUncheckedUpdateWithoutRgStoreInput = {
   userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetSales?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type RgStaffManualDataUncheckedUpdateManyWithoutRgStoreInput = {
@@ -849,6 +887,7 @@ export type RgStaffManualDataUncheckedUpdateManyWithoutRgStoreInput = {
   userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetSales?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type RgStaffManualDataCreateManyRgMonthlyReportInput = {
@@ -861,6 +900,7 @@ export type RgStaffManualDataCreateManyRgMonthlyReportInput = {
   userId?: number | null
   utilizationRate?: number | null
   csRegistrationCount?: number | null
+  targetSales?: number | null
 }
 
 export type RgStaffManualDataUpdateWithoutRgMonthlyReportInput = {
@@ -870,6 +910,7 @@ export type RgStaffManualDataUpdateWithoutRgMonthlyReportInput = {
   staffName?: Prisma.StringFieldUpdateOperationsInput | string
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetSales?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   User?: Prisma.UserUpdateOneWithoutRgStaffManualDataUserNestedInput
   RgStore?: Prisma.RgStoreUpdateOneRequiredWithoutRgStaffManualDataNestedInput
 }
@@ -884,6 +925,7 @@ export type RgStaffManualDataUncheckedUpdateWithoutRgMonthlyReportInput = {
   userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetSales?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type RgStaffManualDataUncheckedUpdateManyWithoutRgMonthlyReportInput = {
@@ -896,6 +938,7 @@ export type RgStaffManualDataUncheckedUpdateManyWithoutRgMonthlyReportInput = {
   userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetSales?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type RgStaffManualDataCreateManyUserInput = {
@@ -908,6 +951,7 @@ export type RgStaffManualDataCreateManyUserInput = {
   storeId: number
   utilizationRate?: number | null
   csRegistrationCount?: number | null
+  targetSales?: number | null
 }
 
 export type RgStaffManualDataUpdateWithoutUserInput = {
@@ -917,6 +961,7 @@ export type RgStaffManualDataUpdateWithoutUserInput = {
   staffName?: Prisma.StringFieldUpdateOperationsInput | string
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetSales?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   RgMonthlyReport?: Prisma.RgMonthlyReportUpdateOneRequiredWithoutRgStaffManualDataNestedInput
   RgStore?: Prisma.RgStoreUpdateOneRequiredWithoutRgStaffManualDataNestedInput
 }
@@ -931,6 +976,7 @@ export type RgStaffManualDataUncheckedUpdateWithoutUserInput = {
   storeId?: Prisma.IntFieldUpdateOperationsInput | number
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetSales?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type RgStaffManualDataUncheckedUpdateManyWithoutUserInput = {
@@ -943,6 +989,7 @@ export type RgStaffManualDataUncheckedUpdateManyWithoutUserInput = {
   storeId?: Prisma.IntFieldUpdateOperationsInput | number
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  targetSales?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 
@@ -958,6 +1005,7 @@ export type RgStaffManualDataSelect<ExtArgs extends runtime.Types.Extensions.Int
   userId?: boolean
   utilizationRate?: boolean
   csRegistrationCount?: boolean
+  targetSales?: boolean
   RgMonthlyReport?: boolean | Prisma.RgMonthlyReportDefaultArgs<ExtArgs>
   User?: boolean | Prisma.RgStaffManualData$UserArgs<ExtArgs>
   RgStore?: boolean | Prisma.RgStoreDefaultArgs<ExtArgs>
@@ -974,6 +1022,7 @@ export type RgStaffManualDataSelectCreateManyAndReturn<ExtArgs extends runtime.T
   userId?: boolean
   utilizationRate?: boolean
   csRegistrationCount?: boolean
+  targetSales?: boolean
   RgMonthlyReport?: boolean | Prisma.RgMonthlyReportDefaultArgs<ExtArgs>
   User?: boolean | Prisma.RgStaffManualData$UserArgs<ExtArgs>
   RgStore?: boolean | Prisma.RgStoreDefaultArgs<ExtArgs>
@@ -990,6 +1039,7 @@ export type RgStaffManualDataSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   userId?: boolean
   utilizationRate?: boolean
   csRegistrationCount?: boolean
+  targetSales?: boolean
   RgMonthlyReport?: boolean | Prisma.RgMonthlyReportDefaultArgs<ExtArgs>
   User?: boolean | Prisma.RgStaffManualData$UserArgs<ExtArgs>
   RgStore?: boolean | Prisma.RgStoreDefaultArgs<ExtArgs>
@@ -1006,9 +1056,10 @@ export type RgStaffManualDataSelectScalar = {
   userId?: boolean
   utilizationRate?: boolean
   csRegistrationCount?: boolean
+  targetSales?: boolean
 }
 
-export type RgStaffManualDataOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "monthlyReportId" | "staffName" | "storeId" | "userId" | "utilizationRate" | "csRegistrationCount", ExtArgs["result"]["rgStaffManualData"]>
+export type RgStaffManualDataOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "monthlyReportId" | "staffName" | "storeId" | "userId" | "utilizationRate" | "csRegistrationCount" | "targetSales", ExtArgs["result"]["rgStaffManualData"]>
 export type RgStaffManualDataInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   RgMonthlyReport?: boolean | Prisma.RgMonthlyReportDefaultArgs<ExtArgs>
   User?: boolean | Prisma.RgStaffManualData$UserArgs<ExtArgs>
@@ -1043,6 +1094,7 @@ export type $RgStaffManualDataPayload<ExtArgs extends runtime.Types.Extensions.I
     userId: number | null
     utilizationRate: number | null
     csRegistrationCount: number | null
+    targetSales: number | null
   }, ExtArgs["result"]["rgStaffManualData"]>
   composites: {}
 }
@@ -1479,6 +1531,7 @@ export interface RgStaffManualDataFieldRefs {
   readonly userId: Prisma.FieldRef<"RgStaffManualData", 'Int'>
   readonly utilizationRate: Prisma.FieldRef<"RgStaffManualData", 'Float'>
   readonly csRegistrationCount: Prisma.FieldRef<"RgStaffManualData", 'Int'>
+  readonly targetSales: Prisma.FieldRef<"RgStaffManualData", 'Int'>
 }
     
 

@@ -16,6 +16,7 @@ import {useDataContext} from '../../context/DataContext'
 import {
   BarChart,
   Bar,
+  Cell,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -29,7 +30,7 @@ import {
 import type {MonthlyData, StoreName, YearMonth, StaffRecord, SlideViewMode} from '../../types'
 import {formatYearMonth} from '../../lib/storage'
 
-const TOTAL_SLIDES = 14
+const TOTAL_SLIDES = 18
 
 // ============================================================
 // ヘルパー関数
@@ -242,11 +243,15 @@ export const SlidesView = () => {
     <Slide7AllMetricsComparison key="s7" {...commonProps} />,
     <Slide8StaffPerformanceTable key="s8" {...commonProps} />,
     <Slide9StaffUtilizationChart key="s9" {...commonProps} />,
-    <Slide10StaffMomTable1 key="s10" {...commonProps} />,
-    <Slide11StaffMomChart1 key="s11" {...commonProps} />,
-    <Slide12StaffMomTable2 key="s12" {...commonProps} />,
-    <Slide13StaffMomChart2 key="s13" {...commonProps} />,
-    <Slide14CustomerVoice key="s14" />,
+    <Slide10StaffAchievementTable key="s10" {...commonProps} />,
+    <Slide11StaffAchievementChart key="s11" {...commonProps} />,
+    <Slide12StoreAchievementTable key="s12" {...commonProps} />,
+    <Slide13StoreAchievementChart key="s13" {...commonProps} />,
+    <Slide14StaffMomTable1 key="s14" {...commonProps} />,
+    <Slide15StaffMomChart1 key="s15" {...commonProps} />,
+    <Slide16StaffMomTable2 key="s16" {...commonProps} />,
+    <Slide17StaffMomChart2 key="s17" {...commonProps} />,
+    <Slide18CustomerVoice key="s18" />,
   ]
 
   return (
@@ -516,10 +521,14 @@ const Slide2TableOfContents = () => {
         </div>
         <div className="flex items-center gap-3">
           <span className="font-bold text-red-500">5.</span>
-          <span>スタッフ別先月比（売上金額/指名件数・再来率/客単価）</span>
+          <span>売上目標達成率（スタッフ別・店舗別）</span>
         </div>
         <div className="flex items-center gap-3">
           <span className="font-bold text-red-500">6.</span>
+          <span>スタッフ別先月比（売上金額/指名件数・再来率/客単価）</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="font-bold text-red-500">7.</span>
           <span>お客様の声</span>
         </div>
       </div>
@@ -977,6 +986,316 @@ const Slide9StaffUtilizationChart = ({selectedStores, selectedStaffNames}: Store
 }
 
 // ============================================================
+// 達成率データ構築ヘルパー
+// ============================================================
+
+type StaffAchievementRow = {
+  staffName: string
+  storeName: string
+  targetSales: number
+  actualSales: number
+  diff: number
+  achievementRate: number
+}
+
+type StoreAchievementRow = {
+  storeName: string
+  targetTotal: number
+  actualTotal: number
+  diff: number
+  achievementRate: number
+}
+
+const achievementColorClass = (rate: number) =>
+  rate >= 100 ? 'bg-green-100 text-green-700' : rate >= 80 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
+
+const achievementBarColor = (rate: number) =>
+  rate >= 100 ? '#34A853' : rate >= 80 ? '#FFA500' : '#DC3545'
+
+const buildStaffAchievementData = (
+  monthlyData: MonthlyData,
+  selectedStores: StoreName[],
+  selectedStaffNames: string[]
+): StaffAchievementRow[] => {
+  const allStaffList = monthlyData.importedData?.staffRecords || []
+  const filteredStaff = filterStaffList(allStaffList, selectedStores, selectedStaffNames)
+  return filteredStaff
+    .map((staff) => {
+      const manualData = monthlyData.manualData.staffManualData?.find(
+        (m) => m.staffName === staff.staffName && m.storeName === staff.storeName
+      )
+      const target = manualData?.targetSales
+      if (!target || target <= 0) return null
+      return {
+        staffName: staff.staffName,
+        storeName: staff.storeName,
+        targetSales: target,
+        actualSales: staff.sales,
+        diff: staff.sales - target,
+        achievementRate: Math.round((staff.sales / target) * 100),
+      }
+    })
+    .filter(Boolean) as StaffAchievementRow[]
+}
+
+const buildStoreAchievementData = (
+  monthlyData: MonthlyData,
+  selectedStores: StoreName[]
+): StoreAchievementRow[] => {
+  return selectedStores
+    .map((storeName) => {
+      const storeRecords = monthlyData.importedData?.staffRecords.filter((r) => r.storeName === storeName) || []
+      const totalActual = storeRecords.reduce((sum, r) => sum + r.sales, 0)
+      const storeManualData = monthlyData.manualData.staffManualData?.filter((m) => m.storeName === storeName) || []
+      const totalTarget = storeManualData.reduce((sum, m) => sum + (m.targetSales ?? 0), 0)
+      if (totalTarget <= 0) return null
+      return {
+        storeName,
+        targetTotal: totalTarget,
+        actualTotal: totalActual,
+        diff: totalActual - totalTarget,
+        achievementRate: Math.round((totalActual / totalTarget) * 100),
+      }
+    })
+    .filter(Boolean) as StoreAchievementRow[]
+}
+
+const AchievementLegend = () => (
+  <div className="mt-4 flex gap-4 text-xs text-gray-500">
+    <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-green-600 inline-block" /> 100%以上</span>
+    <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-orange-500 inline-block" /> 80-99%</span>
+    <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-red-600 inline-block" /> 80%未満</span>
+    <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-indigo-500 inline-block" /> 達成率ライン</span>
+  </div>
+)
+
+// ============================================================
+// スライド10: スタッフ別売上達成率（テーブル）
+// ============================================================
+
+const Slide10StaffAchievementTable = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
+  const {monthlyData} = useDataContext()
+  const rows = buildStaffAchievementData(monthlyData, selectedStores, selectedStaffNames)
+  const hasStaff = (monthlyData.importedData?.staffRecords || []).length > 0
+
+  return (
+    <div className="h-full p-8 overflow-y-auto">
+      <h2 className="text-2xl font-bold mb-4 text-gray-800">スタッフ別 売上目標達成率</h2>
+      {rows.length === 0 ? (
+        <div className="flex items-center justify-center" style={{height: '400px'}}>
+          <p className="text-gray-500 text-lg">
+            {!hasStaff ? 'スタッフデータがありません' : '目標売上が未入力です（目標売上タブで入力してください）'}
+          </p>
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-sm">
+            <thead className="bg-purple-600 text-white">
+              <tr>
+                <th className="p-2.5 border">スタッフ</th>
+                <th className="p-2.5 border">店舗</th>
+                <th className="p-2.5 border">目標売上</th>
+                <th className="p-2.5 border">実績売上</th>
+                <th className="p-2.5 border">差額</th>
+                <th className="p-2.5 border">達成率</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, i) => (
+                <tr key={i} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                  <td className="p-2.5 border font-medium">{row.staffName}</td>
+                  <td className="p-2.5 border text-xs">{row.storeName}</td>
+                  <td className="p-2.5 border text-right">¥{row.targetSales.toLocaleString()}</td>
+                  <td className="p-2.5 border text-right">¥{row.actualSales.toLocaleString()}</td>
+                  <td className="p-2.5 border text-right">
+                    <span className={row.diff >= 0 ? 'text-green-600 font-medium' : 'text-red-600 font-medium'}>
+                      {row.diff >= 0 ? '+' : ''}¥{row.diff.toLocaleString()}
+                    </span>
+                  </td>
+                  <td className="p-2.5 border text-right">
+                    <span className={`px-2 py-0.5 rounded text-xs font-bold ${achievementColorClass(row.achievementRate)}`}>
+                      {row.achievementRate}%
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============================================================
+// スライド11: スタッフ別売上達成率（グラフ）
+// 横棒: 目標vs実績（2本並び）+ 達成率ライン
+// ============================================================
+
+const Slide11StaffAchievementChart = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
+  const {monthlyData} = useDataContext()
+  const rows = buildStaffAchievementData(monthlyData, selectedStores, selectedStaffNames)
+  const hasStaff = (monthlyData.importedData?.staffRecords || []).length > 0
+
+  const chartData = rows.map((row) => ({
+    name: row.staffName,
+    目標売上: row.targetSales,
+    実績売上: row.actualSales,
+    達成率: row.achievementRate,
+  }))
+
+  return (
+    <div className="p-8">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">スタッフ別 売上目標達成率</h2>
+      {chartData.length === 0 ? (
+        <div className="flex items-center justify-center" style={{height: '450px'}}>
+          <p className="text-gray-500 text-lg">
+            {!hasStaff ? 'スタッフデータがありません' : '目標売上が未入力です（目標売上タブで入力してください）'}
+          </p>
+        </div>
+      ) : (
+        <ResponsiveContainer width="100%" height={Math.max(chartData.length * 50 + 80, 300)}>
+          <ComposedChart data={chartData} layout="vertical" margin={{left: 20, right: 60}}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis xAxisId="sales" type="number" orientation="bottom" style={{fontSize: '11px'}}
+              tickFormatter={(v: number) => `¥${(v / 10000).toFixed(0)}万`}
+            />
+            <XAxis xAxisId="rate" type="number" orientation="top" domain={[0, (max: number) => Math.max(max, 130)]} unit="%" style={{fontSize: '11px'}} hide />
+            <YAxis dataKey="name" type="category" width={80} style={{fontSize: '12px'}} />
+            <Tooltip
+              formatter={(value: number, name: string) => {
+                if (name === '達成率') return [`${value}%`, name]
+                return [`¥${value.toLocaleString()}`, name]
+              }}
+            />
+            <Legend wrapperStyle={{fontSize: '12px'}} />
+            <Bar xAxisId="sales" dataKey="目標売上" fill="#94A3B8" name="目標売上" barSize={16} />
+            <Bar xAxisId="sales" dataKey="実績売上" name="実績売上" barSize={16}>
+              {chartData.map((entry, index) => (
+                <Cell key={index} fill={achievementBarColor(entry.達成率)} />
+              ))}
+            </Bar>
+            <Line xAxisId="rate" dataKey="達成率" stroke="#6366F1" strokeWidth={2} name="達成率" dot={{r: 5, fill: '#6366F1'}} />
+          </ComposedChart>
+        </ResponsiveContainer>
+      )}
+      <AchievementLegend />
+    </div>
+  )
+}
+
+// ============================================================
+// スライド12: 店舗別売上達成率（テーブル）
+// ============================================================
+
+const Slide12StoreAchievementTable = ({selectedStores}: StoreFilterProps) => {
+  const {monthlyData} = useDataContext()
+  const rows = buildStoreAchievementData(monthlyData, selectedStores)
+
+  return (
+    <div className="h-full p-8 overflow-y-auto">
+      <h2 className="text-2xl font-bold mb-4 text-gray-800">店舗別 売上目標達成率</h2>
+      {rows.length === 0 ? (
+        <div className="flex items-center justify-center" style={{height: '400px'}}>
+          <p className="text-gray-500 text-lg">
+            {selectedStores.length === 0 ? '店舗を選択してください' : '目標売上が未入力です（目標売上タブで入力してください）'}
+          </p>
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-sm">
+            <thead className="bg-purple-600 text-white">
+              <tr>
+                <th className="p-2.5 border">店舗</th>
+                <th className="p-2.5 border">目標合計</th>
+                <th className="p-2.5 border">実績合計</th>
+                <th className="p-2.5 border">差額</th>
+                <th className="p-2.5 border">達成率</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, i) => (
+                <tr key={i} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                  <td className="p-2.5 border font-medium">{row.storeName}</td>
+                  <td className="p-2.5 border text-right">¥{row.targetTotal.toLocaleString()}</td>
+                  <td className="p-2.5 border text-right">¥{row.actualTotal.toLocaleString()}</td>
+                  <td className="p-2.5 border text-right">
+                    <span className={row.diff >= 0 ? 'text-green-600 font-medium' : 'text-red-600 font-medium'}>
+                      {row.diff >= 0 ? '+' : ''}¥{row.diff.toLocaleString()}
+                    </span>
+                  </td>
+                  <td className="p-2.5 border text-right">
+                    <span className={`px-2 py-0.5 rounded text-xs font-bold ${achievementColorClass(row.achievementRate)}`}>
+                      {row.achievementRate}%
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============================================================
+// スライド13: 店舗別売上達成率（グラフ）
+// 横棒: 目標vs実績（2本並び）+ 達成率ライン
+// ============================================================
+
+const Slide13StoreAchievementChart = ({selectedStores}: StoreFilterProps) => {
+  const {monthlyData} = useDataContext()
+  const rows = buildStoreAchievementData(monthlyData, selectedStores)
+
+  const chartData = rows.map((row) => ({
+    name: row.storeName,
+    目標売上: row.targetTotal,
+    実績売上: row.actualTotal,
+    達成率: row.achievementRate,
+  }))
+
+  return (
+    <div className="p-8">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">店舗別 売上目標達成率</h2>
+      {chartData.length === 0 ? (
+        <div className="flex items-center justify-center" style={{height: '450px'}}>
+          <p className="text-gray-500 text-lg">
+            {selectedStores.length === 0 ? '店舗を選択してください' : '目標売上が未入力です（目標売上タブで入力してください）'}
+          </p>
+        </div>
+      ) : (
+        <ResponsiveContainer width="100%" height={Math.max(chartData.length * 70 + 80, 250)}>
+          <ComposedChart data={chartData} layout="vertical" margin={{left: 20, right: 60}}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis xAxisId="sales" type="number" orientation="bottom" style={{fontSize: '11px'}}
+              tickFormatter={(v: number) => `¥${(v / 10000).toFixed(0)}万`}
+            />
+            <XAxis xAxisId="rate" type="number" orientation="top" domain={[0, (max: number) => Math.max(max, 130)]} unit="%" style={{fontSize: '11px'}} hide />
+            <YAxis dataKey="name" type="category" width={100} style={{fontSize: '14px', fontWeight: 'bold'}} />
+            <Tooltip
+              formatter={(value: number, name: string) => {
+                if (name === '達成率') return [`${value}%`, name]
+                return [`¥${value.toLocaleString()}`, name]
+              }}
+            />
+            <Legend wrapperStyle={{fontSize: '12px'}} />
+            <Bar xAxisId="sales" dataKey="目標売上" fill="#94A3B8" name="目標売上" barSize={22} />
+            <Bar xAxisId="sales" dataKey="実績売上" name="実績売上" barSize={22}>
+              {chartData.map((entry, index) => (
+                <Cell key={index} fill={achievementBarColor(entry.達成率)} />
+              ))}
+            </Bar>
+            <Line xAxisId="rate" dataKey="達成率" stroke="#6366F1" strokeWidth={2} name="達成率" dot={{r: 6, fill: '#6366F1'}} />
+          </ComposedChart>
+        </ResponsiveContainer>
+      )}
+      <AchievementLegend />
+    </div>
+  )
+}
+
+// ============================================================
 // スタッフ別先月比 共通ヘルパー
 // ============================================================
 
@@ -1025,10 +1344,10 @@ const DiffCell = ({value, prefix = '', suffix = ''}: {value: number; prefix?: st
 }
 
 // ============================================================
-// スライド10: スタッフ別先月比① テーブル（売上金額/指名件数）
+// スライド14: スタッフ別先月比① テーブル（売上金額/指名件数）
 // ============================================================
 
-const Slide10StaffMomTable1 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
+const Slide14StaffMomTable1 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
   const {monthlyData, currentYearMonth, allMonthlyData} = useDataContext()
   const rows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData)
 
@@ -1078,10 +1397,10 @@ const Slide10StaffMomTable1 = ({selectedStores, selectedStaffNames}: StoreFilter
 }
 
 // ============================================================
-// スライド11: スタッフ別先月比① グラフ（売上金額/指名件数）
+// スライド15: スタッフ別先月比① グラフ（売上金額/指名件数）
 // ============================================================
 
-const Slide11StaffMomChart1 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
+const Slide15StaffMomChart1 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
   const {monthlyData, currentYearMonth, allMonthlyData} = useDataContext()
   const [showCurrent, setShowCurrent] = useState(true)
   const [showCumulative, setShowCumulative] = useState(false)
@@ -1127,10 +1446,10 @@ const Slide11StaffMomChart1 = ({selectedStores, selectedStaffNames}: StoreFilter
 }
 
 // ============================================================
-// スライド12: スタッフ別先月比② テーブル（再来率/客単価）
+// スライド16: スタッフ別先月比② テーブル（再来率/客単価）
 // ============================================================
 
-const Slide12StaffMomTable2 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
+const Slide16StaffMomTable2 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
   const {monthlyData, currentYearMonth, allMonthlyData} = useDataContext()
   const rows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData)
 
@@ -1180,10 +1499,10 @@ const Slide12StaffMomTable2 = ({selectedStores, selectedStaffNames}: StoreFilter
 }
 
 // ============================================================
-// スライド13: スタッフ別先月比② グラフ（再来率/客単価）
+// スライド17: スタッフ別先月比② グラフ（再来率/客単価）
 // ============================================================
 
-const Slide13StaffMomChart2 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
+const Slide17StaffMomChart2 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
   const {monthlyData, currentYearMonth, allMonthlyData} = useDataContext()
   const [showCurrent, setShowCurrent] = useState(true)
   const [showCumulative, setShowCumulative] = useState(false)
@@ -1229,10 +1548,10 @@ const Slide13StaffMomChart2 = ({selectedStores, selectedStaffNames}: StoreFilter
 }
 
 // ============================================================
-// スライド14: お客様の声
+// スライド18: お客様の声
 // ============================================================
 
-const Slide14CustomerVoice = () => {
+const Slide18CustomerVoice = () => {
   const {monthlyData} = useDataContext()
   const customerVoice = monthlyData.manualData.customerVoice.content
 

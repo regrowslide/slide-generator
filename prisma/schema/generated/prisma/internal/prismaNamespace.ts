@@ -402,6 +402,8 @@ export const ModelName = {
   DentalTimerHistory: 'DentalTimerHistory',
   DentalScoringHistory: 'DentalScoringHistory',
   DentalSavedDocument: 'DentalSavedDocument',
+  GyoseiSession: 'GyoseiSession',
+  GyoseiFile: 'GyoseiFile',
   KgFacilityMaster: 'KgFacilityMaster',
   KgDietTypeMaster: 'KgDietTypeMaster',
   KgDailyMenu: 'KgDailyMenu',
@@ -413,6 +415,12 @@ export const ModelName = {
   KgProductionBatch: 'KgProductionBatch',
   KgProductionItem: 'KgProductionItem',
   KgRequiredIngredient: 'KgRequiredIngredient',
+  KidsChild: 'KidsChild',
+  KidsCategory: 'KidsCategory',
+  KidsRoutine: 'KidsRoutine',
+  KidsRoutineLog: 'KidsRoutineLog',
+  KidsAchievement: 'KidsAchievement',
+  KidsStreak: 'KidsStreak',
   Product: 'Product',
   RawMaterial: 'RawMaterial',
   ProductRecipe: 'ProductRecipe',
@@ -499,7 +507,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "dentalClinic" | "dentalFacility" | "dentalPatient" | "dentalVisitPlan" | "dentalExamination" | "dentalTimerHistory" | "dentalScoringHistory" | "dentalSavedDocument" | "kgFacilityMaster" | "kgDietTypeMaster" | "kgDailyMenu" | "kgMealSlot" | "kgMenuRecipe" | "kgRecipeIngredient" | "kgOrder" | "kgOrderLine" | "kgProductionBatch" | "kgProductionItem" | "kgRequiredIngredient" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "rcIngredientMaster" | "rcRecipe" | "rcRecipeIngredient" | "rcCategoryYieldMaster" | "rcProfitMarginStandard" | "rgStore" | "rgMonthlyReport" | "rgStaffRecord" | "rgStoreTotals" | "rgStoreKpi" | "rgStaffManualData" | "rgCustomerVoice" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "store" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "cronExecutionLog" | "tennisCourt" | "tennisEvent" | "tennisEventCourt" | "tennisAttendance" | "exerciseMaster" | "workoutLog" | "yamanokaiDepartment" | "yamanokaiRole" | "yamanokaiCourse" | "yamanokaiEquipment" | "yamanokaiInsuranceGrade" | "yamanokaiStaminaGrade" | "yamanokaiSkillGrade" | "yamanokaiRockCategory" | "yamanokaiMember" | "yamanokaiMemberRole" | "yamanokaiCourseCompletion" | "yamanokaiEvent" | "yamanokaiEventRequiredCourse" | "yamanokaiEventPlan" | "yamanokaiEventPlanParticipant" | "yamanokaiAttendance" | "yamanokaiRecord" | "yamanokaiRecordFile" | "yamanokaiEquipmentLoan"
+    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "dentalClinic" | "dentalFacility" | "dentalPatient" | "dentalVisitPlan" | "dentalExamination" | "dentalTimerHistory" | "dentalScoringHistory" | "dentalSavedDocument" | "gyoseiSession" | "gyoseiFile" | "kgFacilityMaster" | "kgDietTypeMaster" | "kgDailyMenu" | "kgMealSlot" | "kgMenuRecipe" | "kgRecipeIngredient" | "kgOrder" | "kgOrderLine" | "kgProductionBatch" | "kgProductionItem" | "kgRequiredIngredient" | "kidsChild" | "kidsCategory" | "kidsRoutine" | "kidsRoutineLog" | "kidsAchievement" | "kidsStreak" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "rcIngredientMaster" | "rcRecipe" | "rcRecipeIngredient" | "rcCategoryYieldMaster" | "rcProfitMarginStandard" | "rgStore" | "rgMonthlyReport" | "rgStaffRecord" | "rgStoreTotals" | "rgStoreKpi" | "rgStaffManualData" | "rgCustomerVoice" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "store" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "cronExecutionLog" | "tennisCourt" | "tennisEvent" | "tennisEventCourt" | "tennisAttendance" | "exerciseMaster" | "workoutLog" | "yamanokaiDepartment" | "yamanokaiRole" | "yamanokaiCourse" | "yamanokaiEquipment" | "yamanokaiInsuranceGrade" | "yamanokaiStaminaGrade" | "yamanokaiSkillGrade" | "yamanokaiRockCategory" | "yamanokaiMember" | "yamanokaiMemberRole" | "yamanokaiCourseCompletion" | "yamanokaiEvent" | "yamanokaiEventRequiredCourse" | "yamanokaiEventPlan" | "yamanokaiEventPlanParticipant" | "yamanokaiAttendance" | "yamanokaiRecord" | "yamanokaiRecordFile" | "yamanokaiEquipmentLoan"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1835,6 +1843,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    GyoseiSession: {
+      payload: Prisma.$GyoseiSessionPayload<ExtArgs>
+      fields: Prisma.GyoseiSessionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GyoseiSessionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiSessionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GyoseiSessionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiSessionPayload>
+        }
+        findFirst: {
+          args: Prisma.GyoseiSessionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiSessionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GyoseiSessionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiSessionPayload>
+        }
+        findMany: {
+          args: Prisma.GyoseiSessionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiSessionPayload>[]
+        }
+        create: {
+          args: Prisma.GyoseiSessionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiSessionPayload>
+        }
+        createMany: {
+          args: Prisma.GyoseiSessionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GyoseiSessionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiSessionPayload>[]
+        }
+        delete: {
+          args: Prisma.GyoseiSessionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiSessionPayload>
+        }
+        update: {
+          args: Prisma.GyoseiSessionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiSessionPayload>
+        }
+        deleteMany: {
+          args: Prisma.GyoseiSessionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GyoseiSessionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GyoseiSessionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiSessionPayload>[]
+        }
+        upsert: {
+          args: Prisma.GyoseiSessionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiSessionPayload>
+        }
+        aggregate: {
+          args: Prisma.GyoseiSessionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGyoseiSession>
+        }
+        groupBy: {
+          args: Prisma.GyoseiSessionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GyoseiSessionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GyoseiSessionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GyoseiSessionCountAggregateOutputType> | number
+        }
+      }
+    }
+    GyoseiFile: {
+      payload: Prisma.$GyoseiFilePayload<ExtArgs>
+      fields: Prisma.GyoseiFileFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GyoseiFileFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiFilePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GyoseiFileFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiFilePayload>
+        }
+        findFirst: {
+          args: Prisma.GyoseiFileFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiFilePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GyoseiFileFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiFilePayload>
+        }
+        findMany: {
+          args: Prisma.GyoseiFileFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiFilePayload>[]
+        }
+        create: {
+          args: Prisma.GyoseiFileCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiFilePayload>
+        }
+        createMany: {
+          args: Prisma.GyoseiFileCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GyoseiFileCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiFilePayload>[]
+        }
+        delete: {
+          args: Prisma.GyoseiFileDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiFilePayload>
+        }
+        update: {
+          args: Prisma.GyoseiFileUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiFilePayload>
+        }
+        deleteMany: {
+          args: Prisma.GyoseiFileDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GyoseiFileUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GyoseiFileUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiFilePayload>[]
+        }
+        upsert: {
+          args: Prisma.GyoseiFileUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GyoseiFilePayload>
+        }
+        aggregate: {
+          args: Prisma.GyoseiFileAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGyoseiFile>
+        }
+        groupBy: {
+          args: Prisma.GyoseiFileGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GyoseiFileGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GyoseiFileCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GyoseiFileCountAggregateOutputType> | number
+        }
+      }
+    }
     KgFacilityMaster: {
       payload: Prisma.$KgFacilityMasterPayload<ExtArgs>
       fields: Prisma.KgFacilityMasterFieldRefs
@@ -2646,6 +2802,450 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.KgRequiredIngredientCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.KgRequiredIngredientCountAggregateOutputType> | number
+        }
+      }
+    }
+    KidsChild: {
+      payload: Prisma.$KidsChildPayload<ExtArgs>
+      fields: Prisma.KidsChildFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KidsChildFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsChildPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KidsChildFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsChildPayload>
+        }
+        findFirst: {
+          args: Prisma.KidsChildFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsChildPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KidsChildFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsChildPayload>
+        }
+        findMany: {
+          args: Prisma.KidsChildFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsChildPayload>[]
+        }
+        create: {
+          args: Prisma.KidsChildCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsChildPayload>
+        }
+        createMany: {
+          args: Prisma.KidsChildCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KidsChildCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsChildPayload>[]
+        }
+        delete: {
+          args: Prisma.KidsChildDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsChildPayload>
+        }
+        update: {
+          args: Prisma.KidsChildUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsChildPayload>
+        }
+        deleteMany: {
+          args: Prisma.KidsChildDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KidsChildUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KidsChildUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsChildPayload>[]
+        }
+        upsert: {
+          args: Prisma.KidsChildUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsChildPayload>
+        }
+        aggregate: {
+          args: Prisma.KidsChildAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKidsChild>
+        }
+        groupBy: {
+          args: Prisma.KidsChildGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KidsChildGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KidsChildCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KidsChildCountAggregateOutputType> | number
+        }
+      }
+    }
+    KidsCategory: {
+      payload: Prisma.$KidsCategoryPayload<ExtArgs>
+      fields: Prisma.KidsCategoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KidsCategoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsCategoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KidsCategoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsCategoryPayload>
+        }
+        findFirst: {
+          args: Prisma.KidsCategoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsCategoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KidsCategoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsCategoryPayload>
+        }
+        findMany: {
+          args: Prisma.KidsCategoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsCategoryPayload>[]
+        }
+        create: {
+          args: Prisma.KidsCategoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsCategoryPayload>
+        }
+        createMany: {
+          args: Prisma.KidsCategoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KidsCategoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsCategoryPayload>[]
+        }
+        delete: {
+          args: Prisma.KidsCategoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsCategoryPayload>
+        }
+        update: {
+          args: Prisma.KidsCategoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsCategoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.KidsCategoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KidsCategoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KidsCategoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsCategoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.KidsCategoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsCategoryPayload>
+        }
+        aggregate: {
+          args: Prisma.KidsCategoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKidsCategory>
+        }
+        groupBy: {
+          args: Prisma.KidsCategoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KidsCategoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KidsCategoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KidsCategoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    KidsRoutine: {
+      payload: Prisma.$KidsRoutinePayload<ExtArgs>
+      fields: Prisma.KidsRoutineFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KidsRoutineFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutinePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KidsRoutineFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutinePayload>
+        }
+        findFirst: {
+          args: Prisma.KidsRoutineFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutinePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KidsRoutineFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutinePayload>
+        }
+        findMany: {
+          args: Prisma.KidsRoutineFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutinePayload>[]
+        }
+        create: {
+          args: Prisma.KidsRoutineCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutinePayload>
+        }
+        createMany: {
+          args: Prisma.KidsRoutineCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KidsRoutineCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutinePayload>[]
+        }
+        delete: {
+          args: Prisma.KidsRoutineDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutinePayload>
+        }
+        update: {
+          args: Prisma.KidsRoutineUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutinePayload>
+        }
+        deleteMany: {
+          args: Prisma.KidsRoutineDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KidsRoutineUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KidsRoutineUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutinePayload>[]
+        }
+        upsert: {
+          args: Prisma.KidsRoutineUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutinePayload>
+        }
+        aggregate: {
+          args: Prisma.KidsRoutineAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKidsRoutine>
+        }
+        groupBy: {
+          args: Prisma.KidsRoutineGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KidsRoutineGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KidsRoutineCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KidsRoutineCountAggregateOutputType> | number
+        }
+      }
+    }
+    KidsRoutineLog: {
+      payload: Prisma.$KidsRoutineLogPayload<ExtArgs>
+      fields: Prisma.KidsRoutineLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KidsRoutineLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutineLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KidsRoutineLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutineLogPayload>
+        }
+        findFirst: {
+          args: Prisma.KidsRoutineLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutineLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KidsRoutineLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutineLogPayload>
+        }
+        findMany: {
+          args: Prisma.KidsRoutineLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutineLogPayload>[]
+        }
+        create: {
+          args: Prisma.KidsRoutineLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutineLogPayload>
+        }
+        createMany: {
+          args: Prisma.KidsRoutineLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KidsRoutineLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutineLogPayload>[]
+        }
+        delete: {
+          args: Prisma.KidsRoutineLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutineLogPayload>
+        }
+        update: {
+          args: Prisma.KidsRoutineLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutineLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.KidsRoutineLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KidsRoutineLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KidsRoutineLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutineLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.KidsRoutineLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsRoutineLogPayload>
+        }
+        aggregate: {
+          args: Prisma.KidsRoutineLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKidsRoutineLog>
+        }
+        groupBy: {
+          args: Prisma.KidsRoutineLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KidsRoutineLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KidsRoutineLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KidsRoutineLogCountAggregateOutputType> | number
+        }
+      }
+    }
+    KidsAchievement: {
+      payload: Prisma.$KidsAchievementPayload<ExtArgs>
+      fields: Prisma.KidsAchievementFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KidsAchievementFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsAchievementPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KidsAchievementFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsAchievementPayload>
+        }
+        findFirst: {
+          args: Prisma.KidsAchievementFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsAchievementPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KidsAchievementFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsAchievementPayload>
+        }
+        findMany: {
+          args: Prisma.KidsAchievementFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsAchievementPayload>[]
+        }
+        create: {
+          args: Prisma.KidsAchievementCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsAchievementPayload>
+        }
+        createMany: {
+          args: Prisma.KidsAchievementCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KidsAchievementCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsAchievementPayload>[]
+        }
+        delete: {
+          args: Prisma.KidsAchievementDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsAchievementPayload>
+        }
+        update: {
+          args: Prisma.KidsAchievementUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsAchievementPayload>
+        }
+        deleteMany: {
+          args: Prisma.KidsAchievementDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KidsAchievementUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KidsAchievementUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsAchievementPayload>[]
+        }
+        upsert: {
+          args: Prisma.KidsAchievementUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsAchievementPayload>
+        }
+        aggregate: {
+          args: Prisma.KidsAchievementAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKidsAchievement>
+        }
+        groupBy: {
+          args: Prisma.KidsAchievementGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KidsAchievementGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KidsAchievementCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KidsAchievementCountAggregateOutputType> | number
+        }
+      }
+    }
+    KidsStreak: {
+      payload: Prisma.$KidsStreakPayload<ExtArgs>
+      fields: Prisma.KidsStreakFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.KidsStreakFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsStreakPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.KidsStreakFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsStreakPayload>
+        }
+        findFirst: {
+          args: Prisma.KidsStreakFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsStreakPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.KidsStreakFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsStreakPayload>
+        }
+        findMany: {
+          args: Prisma.KidsStreakFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsStreakPayload>[]
+        }
+        create: {
+          args: Prisma.KidsStreakCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsStreakPayload>
+        }
+        createMany: {
+          args: Prisma.KidsStreakCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.KidsStreakCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsStreakPayload>[]
+        }
+        delete: {
+          args: Prisma.KidsStreakDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsStreakPayload>
+        }
+        update: {
+          args: Prisma.KidsStreakUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsStreakPayload>
+        }
+        deleteMany: {
+          args: Prisma.KidsStreakDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.KidsStreakUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.KidsStreakUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsStreakPayload>[]
+        }
+        upsert: {
+          args: Prisma.KidsStreakUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$KidsStreakPayload>
+        }
+        aggregate: {
+          args: Prisma.KidsStreakAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateKidsStreak>
+        }
+        groupBy: {
+          args: Prisma.KidsStreakGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KidsStreakGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.KidsStreakCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.KidsStreakCountAggregateOutputType> | number
         }
       }
     }
@@ -8253,6 +8853,35 @@ export const DentalSavedDocumentScalarFieldEnum = {
 export type DentalSavedDocumentScalarFieldEnum = (typeof DentalSavedDocumentScalarFieldEnum)[keyof typeof DentalSavedDocumentScalarFieldEnum]
 
 
+export const GyoseiSessionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  uuid: 'uuid',
+  status: 'status',
+  grantStatus: 'grantStatus',
+  adoptionDate: 'adoptionDate',
+  grantDecisionDate: 'grantDecisionDate',
+  analysisResult: 'analysisResult',
+  email: 'email'
+} as const
+
+export type GyoseiSessionScalarFieldEnum = (typeof GyoseiSessionScalarFieldEnum)[keyof typeof GyoseiSessionScalarFieldEnum]
+
+
+export const GyoseiFileScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  fileName: 'fileName',
+  blobUrl: 'blobUrl',
+  fileType: 'fileType',
+  sortOrder: 'sortOrder',
+  gyoseiSessionId: 'gyoseiSessionId'
+} as const
+
+export type GyoseiFileScalarFieldEnum = (typeof GyoseiFileScalarFieldEnum)[keyof typeof GyoseiFileScalarFieldEnum]
+
+
 export const KgFacilityMasterScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -8445,6 +9074,85 @@ export const KgRequiredIngredientScalarFieldEnum = {
 } as const
 
 export type KgRequiredIngredientScalarFieldEnum = (typeof KgRequiredIngredientScalarFieldEnum)[keyof typeof KgRequiredIngredientScalarFieldEnum]
+
+
+export const KidsChildScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  emoji: 'emoji',
+  userId: 'userId'
+} as const
+
+export type KidsChildScalarFieldEnum = (typeof KidsChildScalarFieldEnum)[keyof typeof KidsChildScalarFieldEnum]
+
+
+export const KidsCategoryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  emoji: 'emoji',
+  isArchived: 'isArchived',
+  childId: 'childId'
+} as const
+
+export type KidsCategoryScalarFieldEnum = (typeof KidsCategoryScalarFieldEnum)[keyof typeof KidsCategoryScalarFieldEnum]
+
+
+export const KidsRoutineScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sortOrder: 'sortOrder',
+  name: 'name',
+  emoji: 'emoji',
+  sticker: 'sticker',
+  isArchived: 'isArchived',
+  categoryId: 'categoryId'
+} as const
+
+export type KidsRoutineScalarFieldEnum = (typeof KidsRoutineScalarFieldEnum)[keyof typeof KidsRoutineScalarFieldEnum]
+
+
+export const KidsRoutineLogScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  routineId: 'routineId',
+  childId: 'childId',
+  date: 'date',
+  completedAt: 'completedAt'
+} as const
+
+export type KidsRoutineLogScalarFieldEnum = (typeof KidsRoutineLogScalarFieldEnum)[keyof typeof KidsRoutineLogScalarFieldEnum]
+
+
+export const KidsAchievementScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  childId: 'childId',
+  sticker: 'sticker',
+  name: 'name',
+  date: 'date'
+} as const
+
+export type KidsAchievementScalarFieldEnum = (typeof KidsAchievementScalarFieldEnum)[keyof typeof KidsAchievementScalarFieldEnum]
+
+
+export const KidsStreakScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  childId: 'childId',
+  currentStreak: 'currentStreak',
+  longestStreak: 'longestStreak',
+  lastCompletedDate: 'lastCompletedDate'
+} as const
+
+export type KidsStreakScalarFieldEnum = (typeof KidsStreakScalarFieldEnum)[keyof typeof KidsStreakScalarFieldEnum]
 
 
 export const ProductScalarFieldEnum = {
@@ -8771,7 +9479,8 @@ export const RgStaffManualDataScalarFieldEnum = {
   storeId: 'storeId',
   userId: 'userId',
   utilizationRate: 'utilizationRate',
-  csRegistrationCount: 'csRegistrationCount'
+  csRegistrationCount: 'csRegistrationCount',
+  targetSales: 'targetSales'
 } as const
 
 export type RgStaffManualDataScalarFieldEnum = (typeof RgStaffManualDataScalarFieldEnum)[keyof typeof RgStaffManualDataScalarFieldEnum]
@@ -9855,6 +10564,8 @@ export type GlobalOmitConfig = {
   dentalTimerHistory?: Prisma.DentalTimerHistoryOmit
   dentalScoringHistory?: Prisma.DentalScoringHistoryOmit
   dentalSavedDocument?: Prisma.DentalSavedDocumentOmit
+  gyoseiSession?: Prisma.GyoseiSessionOmit
+  gyoseiFile?: Prisma.GyoseiFileOmit
   kgFacilityMaster?: Prisma.KgFacilityMasterOmit
   kgDietTypeMaster?: Prisma.KgDietTypeMasterOmit
   kgDailyMenu?: Prisma.KgDailyMenuOmit
@@ -9866,6 +10577,12 @@ export type GlobalOmitConfig = {
   kgProductionBatch?: Prisma.KgProductionBatchOmit
   kgProductionItem?: Prisma.KgProductionItemOmit
   kgRequiredIngredient?: Prisma.KgRequiredIngredientOmit
+  kidsChild?: Prisma.KidsChildOmit
+  kidsCategory?: Prisma.KidsCategoryOmit
+  kidsRoutine?: Prisma.KidsRoutineOmit
+  kidsRoutineLog?: Prisma.KidsRoutineLogOmit
+  kidsAchievement?: Prisma.KidsAchievementOmit
+  kidsStreak?: Prisma.KidsStreakOmit
   product?: Prisma.ProductOmit
   rawMaterial?: Prisma.RawMaterialOmit
   productRecipe?: Prisma.ProductRecipeOmit

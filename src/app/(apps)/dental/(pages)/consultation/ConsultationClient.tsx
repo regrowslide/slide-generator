@@ -670,7 +670,7 @@ const ConsultationClient = ({
           </div>
         </div>
         {is20MinOver && (
-          <div className="mt-2 px-3 py-2 bg-red-50 border border-red-200 rounded text-red-700 text-sm">20分を超過しています</div>
+          <div className="mt-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded text-blue-700 text-sm">20分を超えました。</div>
         )}
         {!readOnly && (
           <div className="mt-2 text-right">
@@ -711,6 +711,19 @@ const ConsultationClient = ({
           ]).map(({ label, field, placeholder }) => (
             <div key={label}>
               <div className="text-xs text-gray-600 mb-1">{label}</div>
+              <select className={`border px-2 `}>
+                <option>選択すると、挿入されます。</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+              </select>
               {readOnly ? (
                 <div className={`${readOnly ? 'text-sm' : ''} p-2 bg-gray-50 rounded min-h-[2rem]`}>{field.localValue || <span className="text-gray-400">未入力</span>}</div>
               ) : (

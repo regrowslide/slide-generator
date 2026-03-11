@@ -108,6 +108,16 @@ export type DentalScoringHistory = Prisma.DentalScoringHistoryModel
  */
 export type DentalSavedDocument = Prisma.DentalSavedDocumentModel
 /**
+ * Model GyoseiSession
+ * 
+ */
+export type GyoseiSession = Prisma.GyoseiSessionModel
+/**
+ * Model GyoseiFile
+ * 
+ */
+export type GyoseiFile = Prisma.GyoseiFileModel
+/**
  * Model KgFacilityMaster
  * 
  */
@@ -162,6 +172,36 @@ export type KgProductionItem = Prisma.KgProductionItemModel
  * 
  */
 export type KgRequiredIngredient = Prisma.KgRequiredIngredientModel
+/**
+ * Model KidsChild
+ * 
+ */
+export type KidsChild = Prisma.KidsChildModel
+/**
+ * Model KidsCategory
+ * 
+ */
+export type KidsCategory = Prisma.KidsCategoryModel
+/**
+ * Model KidsRoutine
+ * 
+ */
+export type KidsRoutine = Prisma.KidsRoutineModel
+/**
+ * Model KidsRoutineLog
+ * 
+ */
+export type KidsRoutineLog = Prisma.KidsRoutineLogModel
+/**
+ * Model KidsAchievement
+ * 
+ */
+export type KidsAchievement = Prisma.KidsAchievementModel
+/**
+ * Model KidsStreak
+ * 
+ */
+export type KidsStreak = Prisma.KidsStreakModel
 /**
  * Model Product
  * 

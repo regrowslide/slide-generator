@@ -62,6 +62,7 @@ export class RegrowMonthlyReportService {
       storeName: m.RgStore.name as StoreName,
       utilizationRate: m.utilizationRate,
       csRegistrationCount: m.csRegistrationCount,
+      targetSales: m.targetSales,
     }))
 
     const customerVoice: CustomerVoice = {
@@ -287,10 +288,12 @@ export class RegrowMonthlyReportService {
         userId: user?.id ?? null,
         utilizationRate: data.utilizationRate ?? null,
         csRegistrationCount: data.csRegistrationCount ?? null,
+        targetSales: data.targetSales ?? null,
       },
       update: {
         ...(data.utilizationRate !== undefined && {utilizationRate: data.utilizationRate}),
         ...(data.csRegistrationCount !== undefined && {csRegistrationCount: data.csRegistrationCount}),
+        ...(data.targetSales !== undefined && {targetSales: data.targetSales}),
       },
     })
   }

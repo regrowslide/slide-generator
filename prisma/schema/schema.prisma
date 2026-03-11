@@ -118,6 +118,9 @@ model User {
   RgStoreRg             RgStore?            @relation("RgUserStore", fields: [rgStoreId], references: [id])
   RgStaffRecordUser     RgStaffRecord[]     @relation("RgStaffRecordUser")
   RgStaffManualDataUser RgStaffManualData[] @relation("RgStaffManualDataUser")
+
+  // kids
+  KidsChildUser KidsChild[] @relation("KidsChildUser")
 }
 
 model ReleaseNotes {

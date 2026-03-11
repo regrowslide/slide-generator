@@ -2,19 +2,18 @@
 
 /**
  * Regrow モック統合ページ
- * 5セクション統合: guidance / import / import-data / manual-input / slides
+ * 5セクション統合: import / import-data / manual-input / target-sales / slides
  */
 
 import React, {useState} from 'react'
 import {useDataContext} from '@app/(apps)/regrow/context/DataContext'
 import {MonthSelector} from '@app/(apps)/regrow/components/MonthSelector'
-import {GuidanceView} from '@app/(apps)/regrow/components/views/GuidanceView'
 import {ImportView} from '@app/(apps)/regrow/components/views/ImportView'
 import {ImportDataView} from '@app/(apps)/regrow/components/views/ImportDataView'
 import {ManualInputView} from '@app/(apps)/regrow/components/views/ManualInputView'
+import {TargetSalesView} from '@app/(apps)/regrow/components/views/TargetSalesView'
 import {SlidesView} from '@app/(apps)/regrow/components/views/SlidesView'
 import type {SectionKey} from '@app/(apps)/regrow/types'
-import {loadMockData} from './lib/mockData'
 
 interface RegrowMockUnifiedNewProps {
   externalSection?: SectionKey
@@ -24,13 +23,13 @@ interface RegrowMockUnifiedNewProps {
 }
 
 const RegrowMockUnifiedNew = ({externalSection, onSectionChange, hideNavigation}: RegrowMockUnifiedNewProps = {}) => {
-  const [activeSection, setActiveSection] = useState<SectionKey>('guidance')
+  const [activeSection, setActiveSection] = useState<SectionKey>('slides')
 
   const sections: {key: SectionKey; label: string}[] = [
-    {key: 'guidance', label: 'ガイダンス'},
     {key: 'import', label: 'Excel取込'},
     {key: 'import-data', label: 'データ確認'},
     {key: 'manual-input', label: '手動入力'},
+    {key: 'target-sales', label: '目標売上'},
     {key: 'slides', label: 'スライド'},
   ]
 
@@ -93,21 +92,16 @@ const RegrowMockContent = ({
 
   const manualInputStatus = checkManualInputStatus()
 
-  // モックデータ読み込みハンドラ
-  const handleLoadMockData = async () => {
-    loadMockData()
-  }
-
   const renderView = () => {
     switch (activeSection) {
-      case 'guidance':
-        return <GuidanceView onNavigate={setActiveSection} onLoadMockData={handleLoadMockData} />
       case 'import':
         return <ImportView />
       case 'import-data':
         return <ImportDataView />
       case 'manual-input':
         return <ManualInputView />
+      case 'target-sales':
+        return <TargetSalesView />
       case 'slides':
         return <SlidesView />
       default:
