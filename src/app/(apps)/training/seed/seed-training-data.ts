@@ -5,7 +5,7 @@ async function main() {
   console.log('トレーニングデータのシーディングを開始します...')
 
   // テスト用ユーザーID（既存のユーザーを使用するか、新規作成）
-  const userId = 1
+  const userId = '1'
 
   try {
     // 種目マスタの作成

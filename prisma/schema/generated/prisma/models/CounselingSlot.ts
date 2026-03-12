@@ -31,7 +31,6 @@ export type CounselingSlotAvgAggregateOutputType = {
   sortOrder: number | null
   counselingRoomId: number | null
   counselingStoreId: number | null
-  userId: number | null
 }
 
 export type CounselingSlotSumAggregateOutputType = {
@@ -39,7 +38,6 @@ export type CounselingSlotSumAggregateOutputType = {
   sortOrder: number | null
   counselingRoomId: number | null
   counselingStoreId: number | null
-  userId: number | null
 }
 
 export type CounselingSlotMinAggregateOutputType = {
@@ -51,7 +49,7 @@ export type CounselingSlotMinAggregateOutputType = {
   endAt: Date | null
   counselingRoomId: number | null
   counselingStoreId: number | null
-  userId: number | null
+  userId: string | null
 }
 
 export type CounselingSlotMaxAggregateOutputType = {
@@ -63,7 +61,7 @@ export type CounselingSlotMaxAggregateOutputType = {
   endAt: Date | null
   counselingRoomId: number | null
   counselingStoreId: number | null
-  userId: number | null
+  userId: string | null
 }
 
 export type CounselingSlotCountAggregateOutputType = {
@@ -85,7 +83,6 @@ export type CounselingSlotAvgAggregateInputType = {
   sortOrder?: true
   counselingRoomId?: true
   counselingStoreId?: true
-  userId?: true
 }
 
 export type CounselingSlotSumAggregateInputType = {
@@ -93,7 +90,6 @@ export type CounselingSlotSumAggregateInputType = {
   sortOrder?: true
   counselingRoomId?: true
   counselingStoreId?: true
-  userId?: true
 }
 
 export type CounselingSlotMinAggregateInputType = {
@@ -228,7 +224,7 @@ export type CounselingSlotGroupByOutputType = {
   endAt: Date
   counselingRoomId: number
   counselingStoreId: number
-  userId: number | null
+  userId: string | null
   _count: CounselingSlotCountAggregateOutputType | null
   _avg: CounselingSlotAvgAggregateOutputType | null
   _sum: CounselingSlotSumAggregateOutputType | null
@@ -263,7 +259,7 @@ export type CounselingSlotWhereInput = {
   endAt?: Prisma.DateTimeFilter<"CounselingSlot"> | Date | string
   counselingRoomId?: Prisma.IntFilter<"CounselingSlot"> | number
   counselingStoreId?: Prisma.IntFilter<"CounselingSlot"> | number
-  userId?: Prisma.IntNullableFilter<"CounselingSlot"> | number | null
+  userId?: Prisma.StringNullableFilter<"CounselingSlot"> | string | null
   CounselingRoom?: Prisma.XOR<Prisma.CounselingRoomScalarRelationFilter, Prisma.CounselingRoomWhereInput>
   CounselingStore?: Prisma.XOR<Prisma.CounselingStoreScalarRelationFilter, Prisma.CounselingStoreWhereInput>
   User?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -298,7 +294,7 @@ export type CounselingSlotWhereUniqueInput = Prisma.AtLeast<{
   endAt?: Prisma.DateTimeFilter<"CounselingSlot"> | Date | string
   counselingRoomId?: Prisma.IntFilter<"CounselingSlot"> | number
   counselingStoreId?: Prisma.IntFilter<"CounselingSlot"> | number
-  userId?: Prisma.IntNullableFilter<"CounselingSlot"> | number | null
+  userId?: Prisma.StringNullableFilter<"CounselingSlot"> | string | null
   CounselingRoom?: Prisma.XOR<Prisma.CounselingRoomScalarRelationFilter, Prisma.CounselingRoomWhereInput>
   CounselingStore?: Prisma.XOR<Prisma.CounselingStoreScalarRelationFilter, Prisma.CounselingStoreWhereInput>
   User?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -334,7 +330,7 @@ export type CounselingSlotScalarWhereWithAggregatesInput = {
   endAt?: Prisma.DateTimeWithAggregatesFilter<"CounselingSlot"> | Date | string
   counselingRoomId?: Prisma.IntWithAggregatesFilter<"CounselingSlot"> | number
   counselingStoreId?: Prisma.IntWithAggregatesFilter<"CounselingSlot"> | number
-  userId?: Prisma.IntNullableWithAggregatesFilter<"CounselingSlot"> | number | null
+  userId?: Prisma.StringNullableWithAggregatesFilter<"CounselingSlot"> | string | null
 }
 
 export type CounselingSlotCreateInput = {
@@ -358,7 +354,7 @@ export type CounselingSlotUncheckedCreateInput = {
   endAt: Date | string
   counselingRoomId: number
   counselingStoreId: number
-  userId?: number | null
+  userId?: string | null
   CounselingReservation?: Prisma.CounselingReservationUncheckedCreateNestedManyWithoutCounselingSlotInput
 }
 
@@ -383,7 +379,7 @@ export type CounselingSlotUncheckedUpdateInput = {
   endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counselingRoomId?: Prisma.IntFieldUpdateOperationsInput | number
   counselingStoreId?: Prisma.IntFieldUpdateOperationsInput | number
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   CounselingReservation?: Prisma.CounselingReservationUncheckedUpdateManyWithoutCounselingSlotNestedInput
 }
 
@@ -396,7 +392,7 @@ export type CounselingSlotCreateManyInput = {
   endAt: Date | string
   counselingRoomId: number
   counselingStoreId: number
-  userId?: number | null
+  userId?: string | null
 }
 
 export type CounselingSlotUpdateManyMutationInput = {
@@ -416,7 +412,7 @@ export type CounselingSlotUncheckedUpdateManyInput = {
   endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counselingRoomId?: Prisma.IntFieldUpdateOperationsInput | number
   counselingStoreId?: Prisma.IntFieldUpdateOperationsInput | number
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CounselingSlotListRelationFilter = {
@@ -451,7 +447,6 @@ export type CounselingSlotAvgOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
   counselingRoomId?: Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
 }
 
 export type CounselingSlotMaxOrderByAggregateInput = {
@@ -483,7 +478,6 @@ export type CounselingSlotSumOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
   counselingRoomId?: Prisma.SortOrder
   counselingStoreId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
 }
 
 export type CounselingSlotCreateNestedManyWithoutCounselingStoreInput = {
@@ -647,7 +641,7 @@ export type CounselingSlotUncheckedCreateWithoutCounselingStoreInput = {
   startAt: Date | string
   endAt: Date | string
   counselingRoomId: number
-  userId?: number | null
+  userId?: string | null
   CounselingReservation?: Prisma.CounselingReservationUncheckedCreateNestedManyWithoutCounselingSlotInput
 }
 
@@ -689,7 +683,7 @@ export type CounselingSlotScalarWhereInput = {
   endAt?: Prisma.DateTimeFilter<"CounselingSlot"> | Date | string
   counselingRoomId?: Prisma.IntFilter<"CounselingSlot"> | number
   counselingStoreId?: Prisma.IntFilter<"CounselingSlot"> | number
-  userId?: Prisma.IntNullableFilter<"CounselingSlot"> | number | null
+  userId?: Prisma.StringNullableFilter<"CounselingSlot"> | string | null
 }
 
 export type CounselingSlotCreateWithoutCounselingRoomInput = {
@@ -711,7 +705,7 @@ export type CounselingSlotUncheckedCreateWithoutCounselingRoomInput = {
   startAt: Date | string
   endAt: Date | string
   counselingStoreId: number
-  userId?: number | null
+  userId?: string | null
   CounselingReservation?: Prisma.CounselingReservationUncheckedCreateNestedManyWithoutCounselingSlotInput
 }
 
@@ -761,7 +755,7 @@ export type CounselingSlotUncheckedCreateWithoutCounselingReservationInput = {
   endAt: Date | string
   counselingRoomId: number
   counselingStoreId: number
-  userId?: number | null
+  userId?: string | null
 }
 
 export type CounselingSlotCreateOrConnectWithoutCounselingReservationInput = {
@@ -800,7 +794,7 @@ export type CounselingSlotUncheckedUpdateWithoutCounselingReservationInput = {
   endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counselingRoomId?: Prisma.IntFieldUpdateOperationsInput | number
   counselingStoreId?: Prisma.IntFieldUpdateOperationsInput | number
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CounselingSlotCreateWithoutUserInput = {
@@ -860,7 +854,7 @@ export type CounselingSlotCreateManyCounselingStoreInput = {
   startAt: Date | string
   endAt: Date | string
   counselingRoomId: number
-  userId?: number | null
+  userId?: string | null
 }
 
 export type CounselingSlotUpdateWithoutCounselingStoreInput = {
@@ -882,7 +876,7 @@ export type CounselingSlotUncheckedUpdateWithoutCounselingStoreInput = {
   startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counselingRoomId?: Prisma.IntFieldUpdateOperationsInput | number
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   CounselingReservation?: Prisma.CounselingReservationUncheckedUpdateManyWithoutCounselingSlotNestedInput
 }
 
@@ -894,7 +888,7 @@ export type CounselingSlotUncheckedUpdateManyWithoutCounselingStoreInput = {
   startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counselingRoomId?: Prisma.IntFieldUpdateOperationsInput | number
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CounselingSlotCreateManyCounselingRoomInput = {
@@ -905,7 +899,7 @@ export type CounselingSlotCreateManyCounselingRoomInput = {
   startAt: Date | string
   endAt: Date | string
   counselingStoreId: number
-  userId?: number | null
+  userId?: string | null
 }
 
 export type CounselingSlotUpdateWithoutCounselingRoomInput = {
@@ -927,7 +921,7 @@ export type CounselingSlotUncheckedUpdateWithoutCounselingRoomInput = {
   startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counselingStoreId?: Prisma.IntFieldUpdateOperationsInput | number
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   CounselingReservation?: Prisma.CounselingReservationUncheckedUpdateManyWithoutCounselingSlotNestedInput
 }
 
@@ -939,7 +933,7 @@ export type CounselingSlotUncheckedUpdateManyWithoutCounselingRoomInput = {
   startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counselingStoreId?: Prisma.IntFieldUpdateOperationsInput | number
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CounselingSlotCreateManyUserInput = {
@@ -1113,7 +1107,7 @@ export type $CounselingSlotPayload<ExtArgs extends runtime.Types.Extensions.Inte
     endAt: Date
     counselingRoomId: number
     counselingStoreId: number
-    userId: number | null
+    userId: string | null
   }, ExtArgs["result"]["counselingSlot"]>
   composites: {}
 }
@@ -1549,7 +1543,7 @@ export interface CounselingSlotFieldRefs {
   readonly endAt: Prisma.FieldRef<"CounselingSlot", 'DateTime'>
   readonly counselingRoomId: Prisma.FieldRef<"CounselingSlot", 'Int'>
   readonly counselingStoreId: Prisma.FieldRef<"CounselingSlot", 'Int'>
-  readonly userId: Prisma.FieldRef<"CounselingSlot", 'Int'>
+  readonly userId: Prisma.FieldRef<"CounselingSlot", 'String'>
 }
     
 

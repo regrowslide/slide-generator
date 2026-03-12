@@ -1,12 +1,10 @@
 export const globalSelectorPrefix = '__global__'
 export const globalIds = {
-  globalUserId: globalSelectorPrefix + 'userId',
   globalStoreId: globalSelectorPrefix + 'storeId',
   globalSelectedUserId: globalSelectorPrefix + 'selectedUserId',
 
   globalTeacherId: globalSelectorPrefix + 'teacherId',
   globalSchoolId: globalSelectorPrefix + 'schoolId',
-
 }
 
 export const paginationPrefix = '__pg__'

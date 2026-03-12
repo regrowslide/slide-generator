@@ -4,7 +4,7 @@ import { KidsChildService } from '../lib/services/KidsChildService'
 
 // ── Read ──
 
-export async function getChildren(userId: number) {
+export async function getChildren(userId: string) {
   return KidsChildService.getChildrenByUserId(userId)
 }
 
@@ -12,13 +12,13 @@ export async function getChildWithCategories(childId: number) {
   return KidsChildService.getChildWithCategories(childId)
 }
 
-export async function isOwnChild(childId: number, userId: number) {
+export async function isOwnChild(childId: number, userId: string) {
   return KidsChildService.isOwnChild(childId, userId)
 }
 
 // ── Create ──
 
-export async function createChild(userId: number, name: string, emoji: string) {
+export async function createChild(userId: string, name: string, emoji: string) {
   return KidsChildService.createChild(userId, name, emoji)
 }
 

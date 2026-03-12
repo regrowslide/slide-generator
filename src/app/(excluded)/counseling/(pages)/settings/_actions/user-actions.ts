@@ -2,6 +2,7 @@
 
 import {revalidatePath} from 'next/cache'
 import prisma from 'src/lib/prisma'
+import {AuthService} from 'src/lib/services/AuthService'
 
 // ===================================================================
 // CREATE
@@ -9,13 +10,13 @@ import prisma from 'src/lib/prisma'
 
 export const createCounselingUser = async (data: {name: string; email: string; role: string; counselingStoreId: number}) => {
   try {
-    const user = await prisma.user.create({
-      data: {
+    const user = await AuthService.createUserDirect({
+      password: '999999',
+      prismaData: {
         name: data.name,
         email: data.email,
         role: data.role,
         counselingStoreId: data.counselingStoreId,
-        password: '999999', // デフォルトパスワード
       },
     })
     revalidatePath('/counseling/settings')
@@ -48,7 +49,7 @@ export const getCounselingUsers = async () => {
   }
 }
 
-export const getCounselingUser = async (id: number) => {
+export const getCounselingUser = async (id: string) => {
   try {
     const user = await prisma.user.findUnique({
       where: {id},
@@ -68,19 +69,14 @@ export const getCounselingUser = async (id: number) => {
 // ===================================================================
 
 export const updateCounselingUser = async (
-  id: number,
+  id: string,
   data: {name: string; email: string; role: string; counselingStoreId: number}
 ) => {
   try {
-    const user = await prisma.user.update({
-      where: {id},
-      data: {
-        name: data.name,
-        email: data.email,
-        role: data.role,
-        counselingStoreId: data.counselingStoreId,
-      },
-    })
+    const user = await AuthService.updateUser(
+      {id},
+      {name: data.name, email: data.email, role: data.role, counselingStoreId: data.counselingStoreId},
+    )
     revalidatePath('/counseling/settings')
     return {success: true, data: user}
   } catch (error) {
@@ -93,14 +89,9 @@ export const updateCounselingUser = async (
 // DELETE
 // ===================================================================
 
-export const deleteCounselingUser = async (id: number) => {
+export const deleteCounselingUser = async (id: string) => {
   try {
-    await prisma.user.update({
-      where: {id},
-      data: {
-        counselingStoreId: null,
-      },
-    })
+    await AuthService.updateUser({id}, {counselingStoreId: null})
     revalidatePath('/counseling/settings')
     return {success: true}
   } catch (error) {

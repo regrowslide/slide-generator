@@ -13,7 +13,7 @@ import { createDentalStaff, removeDentalStaff } from '@app/(apps)/dental/_action
 import { STAFF_ROLES } from '@app/(apps)/dental/lib/constants'
 import { Button } from '@cm/components/styles/common-components/Button'
 
-type ClinicStaff = { id: number; name: string; type: string | null; sortOrder: number }
+type ClinicStaff = { id: string; name: string; type: string | null; sortOrder: number }
 type ClinicWithStaff = {
   id: number
   name: string
@@ -112,7 +112,7 @@ const ClinicListClient = ({ clinics }: Props) => {
     router.refresh()
   }
 
-  const handleRemoveStaff = async (userId: number, name: string) => {
+  const handleRemoveStaff = async (userId: string, name: string) => {
     if (!window.confirm(`「${name}」をスタッフから外しますか？`)) return
     await removeDentalStaff(userId)
     router.refresh()

@@ -1,6 +1,6 @@
 
 import { R_Stack } from '@cm/components/styles/common-components/common-components'
-import { signIn } from 'next-auth/react'
+import { authClient } from 'src/lib/auth-client'
 
 export const GoogleLoginButton = ({ callbackUrl }) => {
  return (
@@ -9,7 +9,10 @@ export const GoogleLoginButton = ({ callbackUrl }) => {
 
 
    onClick={async e => {
-    await signIn('google', { callbackUrl })
+    await authClient.signIn.social({
+     provider: 'google',
+     callbackURL: callbackUrl,
+    })
    }}
   >
    <R_Stack>

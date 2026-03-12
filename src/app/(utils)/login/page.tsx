@@ -25,15 +25,15 @@ const AdminLogin = async props => {
   const REDIRECT_CON2_NO_LOGIN = process.env.NEXT_PUBLIC_NO_LOGIN === 'true' && redirectRoot
   const doRedirect = REDIRECT_CON2_NO_LOGIN || REDIRECT_CON1_redirectBySession
 
-  if (!session) {
-    return <PlaceHolder />
-  }
+
+
 
   if (doRedirect && session?.id) {
     const path = `${process.env.NEXT_PUBLIC_BASEPATH}/${redirectRoot}`
-
     return <Redirector redirectPath={path} />
   }
+
+
 
   return (
     <Absolute className={`w-full p-4`}>

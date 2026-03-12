@@ -14,7 +14,7 @@ import type { Clinic, ClinicQualifications } from '@app/(apps)/dental/lib/types'
 import { Button } from '@cm/components/styles/common-components/Button'
 import useModal from '@cm/components/utils/modal/useModal'
 
-type StaffInfo = {id: number; name: string; email: string | null; type: string | null}
+type StaffInfo = {id: string; name: string; email: string | null; type: string | null}
 
 type ClinicSettingsClientProps = {
   clinic: Clinic | null

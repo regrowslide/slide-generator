@@ -29,13 +29,11 @@ export type AggregateKidsChild = {
 export type KidsChildAvgAggregateOutputType = {
   id: number | null
   sortOrder: number | null
-  userId: number | null
 }
 
 export type KidsChildSumAggregateOutputType = {
   id: number | null
   sortOrder: number | null
-  userId: number | null
 }
 
 export type KidsChildMinAggregateOutputType = {
@@ -45,7 +43,7 @@ export type KidsChildMinAggregateOutputType = {
   sortOrder: number | null
   name: string | null
   emoji: string | null
-  userId: number | null
+  userId: string | null
 }
 
 export type KidsChildMaxAggregateOutputType = {
@@ -55,7 +53,7 @@ export type KidsChildMaxAggregateOutputType = {
   sortOrder: number | null
   name: string | null
   emoji: string | null
-  userId: number | null
+  userId: string | null
 }
 
 export type KidsChildCountAggregateOutputType = {
@@ -73,13 +71,11 @@ export type KidsChildCountAggregateOutputType = {
 export type KidsChildAvgAggregateInputType = {
   id?: true
   sortOrder?: true
-  userId?: true
 }
 
 export type KidsChildSumAggregateInputType = {
   id?: true
   sortOrder?: true
-  userId?: true
 }
 
 export type KidsChildMinAggregateInputType = {
@@ -206,7 +202,7 @@ export type KidsChildGroupByOutputType = {
   sortOrder: number
   name: string
   emoji: string
-  userId: number
+  userId: string
   _count: KidsChildCountAggregateOutputType | null
   _avg: KidsChildAvgAggregateOutputType | null
   _sum: KidsChildSumAggregateOutputType | null
@@ -239,7 +235,7 @@ export type KidsChildWhereInput = {
   sortOrder?: Prisma.FloatFilter<"KidsChild"> | number
   name?: Prisma.StringFilter<"KidsChild"> | string
   emoji?: Prisma.StringFilter<"KidsChild"> | string
-  userId?: Prisma.IntFilter<"KidsChild"> | number
+  userId?: Prisma.StringFilter<"KidsChild"> | string
   User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   KidsCategory?: Prisma.KidsCategoryListRelationFilter
   KidsRoutineLog?: Prisma.KidsRoutineLogListRelationFilter
@@ -272,7 +268,7 @@ export type KidsChildWhereUniqueInput = Prisma.AtLeast<{
   sortOrder?: Prisma.FloatFilter<"KidsChild"> | number
   name?: Prisma.StringFilter<"KidsChild"> | string
   emoji?: Prisma.StringFilter<"KidsChild"> | string
-  userId?: Prisma.IntFilter<"KidsChild"> | number
+  userId?: Prisma.StringFilter<"KidsChild"> | string
   User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   KidsCategory?: Prisma.KidsCategoryListRelationFilter
   KidsRoutineLog?: Prisma.KidsRoutineLogListRelationFilter
@@ -305,7 +301,7 @@ export type KidsChildScalarWhereWithAggregatesInput = {
   sortOrder?: Prisma.FloatWithAggregatesFilter<"KidsChild"> | number
   name?: Prisma.StringWithAggregatesFilter<"KidsChild"> | string
   emoji?: Prisma.StringWithAggregatesFilter<"KidsChild"> | string
-  userId?: Prisma.IntWithAggregatesFilter<"KidsChild"> | number
+  userId?: Prisma.StringWithAggregatesFilter<"KidsChild"> | string
 }
 
 export type KidsChildCreateInput = {
@@ -328,7 +324,7 @@ export type KidsChildUncheckedCreateInput = {
   sortOrder?: number
   name: string
   emoji?: string
-  userId: number
+  userId: string
   KidsCategory?: Prisma.KidsCategoryUncheckedCreateNestedManyWithoutKidsChildInput
   KidsRoutineLog?: Prisma.KidsRoutineLogUncheckedCreateNestedManyWithoutKidsChildInput
   KidsAchievement?: Prisma.KidsAchievementUncheckedCreateNestedManyWithoutKidsChildInput
@@ -355,7 +351,7 @@ export type KidsChildUncheckedUpdateInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   emoji?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   KidsCategory?: Prisma.KidsCategoryUncheckedUpdateManyWithoutKidsChildNestedInput
   KidsRoutineLog?: Prisma.KidsRoutineLogUncheckedUpdateManyWithoutKidsChildNestedInput
   KidsAchievement?: Prisma.KidsAchievementUncheckedUpdateManyWithoutKidsChildNestedInput
@@ -369,7 +365,7 @@ export type KidsChildCreateManyInput = {
   sortOrder?: number
   name: string
   emoji?: string
-  userId: number
+  userId: string
 }
 
 export type KidsChildUpdateManyMutationInput = {
@@ -387,7 +383,7 @@ export type KidsChildUncheckedUpdateManyInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   emoji?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type KidsChildCountOrderByAggregateInput = {
@@ -403,7 +399,6 @@ export type KidsChildCountOrderByAggregateInput = {
 export type KidsChildAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
 }
 
 export type KidsChildMaxOrderByAggregateInput = {
@@ -429,7 +424,6 @@ export type KidsChildMinOrderByAggregateInput = {
 export type KidsChildSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
 }
 
 export type KidsChildScalarRelationFilter = {
@@ -564,7 +558,7 @@ export type KidsChildUncheckedCreateWithoutKidsCategoryInput = {
   sortOrder?: number
   name: string
   emoji?: string
-  userId: number
+  userId: string
   KidsRoutineLog?: Prisma.KidsRoutineLogUncheckedCreateNestedManyWithoutKidsChildInput
   KidsAchievement?: Prisma.KidsAchievementUncheckedCreateNestedManyWithoutKidsChildInput
   KidsStreak?: Prisma.KidsStreakUncheckedCreateNestedOneWithoutKidsChildInput
@@ -605,7 +599,7 @@ export type KidsChildUncheckedUpdateWithoutKidsCategoryInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   emoji?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   KidsRoutineLog?: Prisma.KidsRoutineLogUncheckedUpdateManyWithoutKidsChildNestedInput
   KidsAchievement?: Prisma.KidsAchievementUncheckedUpdateManyWithoutKidsChildNestedInput
   KidsStreak?: Prisma.KidsStreakUncheckedUpdateOneWithoutKidsChildNestedInput
@@ -630,7 +624,7 @@ export type KidsChildUncheckedCreateWithoutKidsRoutineLogInput = {
   sortOrder?: number
   name: string
   emoji?: string
-  userId: number
+  userId: string
   KidsCategory?: Prisma.KidsCategoryUncheckedCreateNestedManyWithoutKidsChildInput
   KidsAchievement?: Prisma.KidsAchievementUncheckedCreateNestedManyWithoutKidsChildInput
   KidsStreak?: Prisma.KidsStreakUncheckedCreateNestedOneWithoutKidsChildInput
@@ -671,7 +665,7 @@ export type KidsChildUncheckedUpdateWithoutKidsRoutineLogInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   emoji?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   KidsCategory?: Prisma.KidsCategoryUncheckedUpdateManyWithoutKidsChildNestedInput
   KidsAchievement?: Prisma.KidsAchievementUncheckedUpdateManyWithoutKidsChildNestedInput
   KidsStreak?: Prisma.KidsStreakUncheckedUpdateOneWithoutKidsChildNestedInput
@@ -696,7 +690,7 @@ export type KidsChildUncheckedCreateWithoutKidsAchievementInput = {
   sortOrder?: number
   name: string
   emoji?: string
-  userId: number
+  userId: string
   KidsCategory?: Prisma.KidsCategoryUncheckedCreateNestedManyWithoutKidsChildInput
   KidsRoutineLog?: Prisma.KidsRoutineLogUncheckedCreateNestedManyWithoutKidsChildInput
   KidsStreak?: Prisma.KidsStreakUncheckedCreateNestedOneWithoutKidsChildInput
@@ -737,7 +731,7 @@ export type KidsChildUncheckedUpdateWithoutKidsAchievementInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   emoji?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   KidsCategory?: Prisma.KidsCategoryUncheckedUpdateManyWithoutKidsChildNestedInput
   KidsRoutineLog?: Prisma.KidsRoutineLogUncheckedUpdateManyWithoutKidsChildNestedInput
   KidsStreak?: Prisma.KidsStreakUncheckedUpdateOneWithoutKidsChildNestedInput
@@ -762,7 +756,7 @@ export type KidsChildUncheckedCreateWithoutKidsStreakInput = {
   sortOrder?: number
   name: string
   emoji?: string
-  userId: number
+  userId: string
   KidsCategory?: Prisma.KidsCategoryUncheckedCreateNestedManyWithoutKidsChildInput
   KidsRoutineLog?: Prisma.KidsRoutineLogUncheckedCreateNestedManyWithoutKidsChildInput
   KidsAchievement?: Prisma.KidsAchievementUncheckedCreateNestedManyWithoutKidsChildInput
@@ -803,7 +797,7 @@ export type KidsChildUncheckedUpdateWithoutKidsStreakInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   emoji?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   KidsCategory?: Prisma.KidsCategoryUncheckedUpdateManyWithoutKidsChildNestedInput
   KidsRoutineLog?: Prisma.KidsRoutineLogUncheckedUpdateManyWithoutKidsChildNestedInput
   KidsAchievement?: Prisma.KidsAchievementUncheckedUpdateManyWithoutKidsChildNestedInput
@@ -870,7 +864,7 @@ export type KidsChildScalarWhereInput = {
   sortOrder?: Prisma.FloatFilter<"KidsChild"> | number
   name?: Prisma.StringFilter<"KidsChild"> | string
   emoji?: Prisma.StringFilter<"KidsChild"> | string
-  userId?: Prisma.IntFilter<"KidsChild"> | number
+  userId?: Prisma.StringFilter<"KidsChild"> | string
 }
 
 export type KidsChildCreateManyUserInput = {
@@ -1045,7 +1039,7 @@ export type $KidsChildPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     sortOrder: number
     name: string
     emoji: string
-    userId: number
+    userId: string
   }, ExtArgs["result"]["kidsChild"]>
   composites: {}
 }
@@ -1480,7 +1474,7 @@ export interface KidsChildFieldRefs {
   readonly sortOrder: Prisma.FieldRef<"KidsChild", 'Float'>
   readonly name: Prisma.FieldRef<"KidsChild", 'String'>
   readonly emoji: Prisma.FieldRef<"KidsChild", 'String'>
-  readonly userId: Prisma.FieldRef<"KidsChild", 'Int'>
+  readonly userId: Prisma.FieldRef<"KidsChild", 'String'>
 }
     
 

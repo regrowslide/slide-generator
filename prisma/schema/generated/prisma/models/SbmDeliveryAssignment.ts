@@ -30,7 +30,6 @@ export type SbmDeliveryAssignmentAvgAggregateOutputType = {
   id: number | null
   sbmDeliveryTeamId: number | null
   sbmReservationId: number | null
-  userId: number | null
   estimatedDuration: number | null
   actualDuration: number | null
 }
@@ -39,7 +38,6 @@ export type SbmDeliveryAssignmentSumAggregateOutputType = {
   id: number | null
   sbmDeliveryTeamId: number | null
   sbmReservationId: number | null
-  userId: number | null
   estimatedDuration: number | null
   actualDuration: number | null
 }
@@ -49,7 +47,7 @@ export type SbmDeliveryAssignmentMinAggregateOutputType = {
   sbmDeliveryTeamId: number | null
   sbmReservationId: number | null
   assignedBy: string | null
-  userId: number | null
+  userId: string | null
   deliveryDate: Date | null
   estimatedDuration: number | null
   actualDuration: number | null
@@ -63,7 +61,7 @@ export type SbmDeliveryAssignmentMaxAggregateOutputType = {
   sbmDeliveryTeamId: number | null
   sbmReservationId: number | null
   assignedBy: string | null
-  userId: number | null
+  userId: string | null
   deliveryDate: Date | null
   estimatedDuration: number | null
   actualDuration: number | null
@@ -93,7 +91,6 @@ export type SbmDeliveryAssignmentAvgAggregateInputType = {
   id?: true
   sbmDeliveryTeamId?: true
   sbmReservationId?: true
-  userId?: true
   estimatedDuration?: true
   actualDuration?: true
 }
@@ -102,7 +99,6 @@ export type SbmDeliveryAssignmentSumAggregateInputType = {
   id?: true
   sbmDeliveryTeamId?: true
   sbmReservationId?: true
-  userId?: true
   estimatedDuration?: true
   actualDuration?: true
 }
@@ -242,7 +238,7 @@ export type SbmDeliveryAssignmentGroupByOutputType = {
   sbmDeliveryTeamId: number
   sbmReservationId: number
   assignedBy: string
-  userId: number | null
+  userId: string | null
   deliveryDate: Date
   estimatedDuration: number | null
   actualDuration: number | null
@@ -280,7 +276,7 @@ export type SbmDeliveryAssignmentWhereInput = {
   sbmDeliveryTeamId?: Prisma.IntFilter<"SbmDeliveryAssignment"> | number
   sbmReservationId?: Prisma.IntFilter<"SbmDeliveryAssignment"> | number
   assignedBy?: Prisma.StringFilter<"SbmDeliveryAssignment"> | string
-  userId?: Prisma.IntNullableFilter<"SbmDeliveryAssignment"> | number | null
+  userId?: Prisma.StringNullableFilter<"SbmDeliveryAssignment"> | string | null
   deliveryDate?: Prisma.DateTimeFilter<"SbmDeliveryAssignment"> | Date | string
   estimatedDuration?: Prisma.IntNullableFilter<"SbmDeliveryAssignment"> | number | null
   actualDuration?: Prisma.IntNullableFilter<"SbmDeliveryAssignment"> | number | null
@@ -319,7 +315,7 @@ export type SbmDeliveryAssignmentWhereUniqueInput = Prisma.AtLeast<{
   sbmDeliveryTeamId?: Prisma.IntFilter<"SbmDeliveryAssignment"> | number
   sbmReservationId?: Prisma.IntFilter<"SbmDeliveryAssignment"> | number
   assignedBy?: Prisma.StringFilter<"SbmDeliveryAssignment"> | string
-  userId?: Prisma.IntNullableFilter<"SbmDeliveryAssignment"> | number | null
+  userId?: Prisma.StringNullableFilter<"SbmDeliveryAssignment"> | string | null
   deliveryDate?: Prisma.DateTimeFilter<"SbmDeliveryAssignment"> | Date | string
   estimatedDuration?: Prisma.IntNullableFilter<"SbmDeliveryAssignment"> | number | null
   actualDuration?: Prisma.IntNullableFilter<"SbmDeliveryAssignment"> | number | null
@@ -360,7 +356,7 @@ export type SbmDeliveryAssignmentScalarWhereWithAggregatesInput = {
   sbmDeliveryTeamId?: Prisma.IntWithAggregatesFilter<"SbmDeliveryAssignment"> | number
   sbmReservationId?: Prisma.IntWithAggregatesFilter<"SbmDeliveryAssignment"> | number
   assignedBy?: Prisma.StringWithAggregatesFilter<"SbmDeliveryAssignment"> | string
-  userId?: Prisma.IntNullableWithAggregatesFilter<"SbmDeliveryAssignment"> | number | null
+  userId?: Prisma.StringNullableWithAggregatesFilter<"SbmDeliveryAssignment"> | string | null
   deliveryDate?: Prisma.DateTimeWithAggregatesFilter<"SbmDeliveryAssignment"> | Date | string
   estimatedDuration?: Prisma.IntNullableWithAggregatesFilter<"SbmDeliveryAssignment"> | number | null
   actualDuration?: Prisma.IntNullableWithAggregatesFilter<"SbmDeliveryAssignment"> | number | null
@@ -389,7 +385,7 @@ export type SbmDeliveryAssignmentUncheckedCreateInput = {
   sbmDeliveryTeamId: number
   sbmReservationId: number
   assignedBy: string
-  userId?: number | null
+  userId?: string | null
   deliveryDate: Date | string
   estimatedDuration?: number | null
   actualDuration?: number | null
@@ -418,7 +414,7 @@ export type SbmDeliveryAssignmentUncheckedUpdateInput = {
   sbmDeliveryTeamId?: Prisma.IntFieldUpdateOperationsInput | number
   sbmReservationId?: Prisma.IntFieldUpdateOperationsInput | number
   assignedBy?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   estimatedDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -433,7 +429,7 @@ export type SbmDeliveryAssignmentCreateManyInput = {
   sbmDeliveryTeamId: number
   sbmReservationId: number
   assignedBy: string
-  userId?: number | null
+  userId?: string | null
   deliveryDate: Date | string
   estimatedDuration?: number | null
   actualDuration?: number | null
@@ -459,7 +455,7 @@ export type SbmDeliveryAssignmentUncheckedUpdateManyInput = {
   sbmDeliveryTeamId?: Prisma.IntFieldUpdateOperationsInput | number
   sbmReservationId?: Prisma.IntFieldUpdateOperationsInput | number
   assignedBy?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   estimatedDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -498,7 +494,6 @@ export type SbmDeliveryAssignmentAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sbmDeliveryTeamId?: Prisma.SortOrder
   sbmReservationId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
   estimatedDuration?: Prisma.SortOrder
   actualDuration?: Prisma.SortOrder
 }
@@ -535,7 +530,6 @@ export type SbmDeliveryAssignmentSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sbmDeliveryTeamId?: Prisma.SortOrder
   sbmReservationId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
   estimatedDuration?: Prisma.SortOrder
   actualDuration?: Prisma.SortOrder
 }
@@ -683,7 +677,7 @@ export type SbmDeliveryAssignmentUncheckedCreateWithoutSbmReservationInput = {
   id?: number
   sbmDeliveryTeamId: number
   assignedBy: string
-  userId?: number | null
+  userId?: string | null
   deliveryDate: Date | string
   estimatedDuration?: number | null
   actualDuration?: number | null
@@ -727,7 +721,7 @@ export type SbmDeliveryAssignmentScalarWhereInput = {
   sbmDeliveryTeamId?: Prisma.IntFilter<"SbmDeliveryAssignment"> | number
   sbmReservationId?: Prisma.IntFilter<"SbmDeliveryAssignment"> | number
   assignedBy?: Prisma.StringFilter<"SbmDeliveryAssignment"> | string
-  userId?: Prisma.IntNullableFilter<"SbmDeliveryAssignment"> | number | null
+  userId?: Prisma.StringNullableFilter<"SbmDeliveryAssignment"> | string | null
   deliveryDate?: Prisma.DateTimeFilter<"SbmDeliveryAssignment"> | Date | string
   estimatedDuration?: Prisma.IntNullableFilter<"SbmDeliveryAssignment"> | number | null
   actualDuration?: Prisma.IntNullableFilter<"SbmDeliveryAssignment"> | number | null
@@ -754,7 +748,7 @@ export type SbmDeliveryAssignmentUncheckedCreateWithoutSbmDeliveryTeamInput = {
   id?: number
   sbmReservationId: number
   assignedBy: string
-  userId?: number | null
+  userId?: string | null
   deliveryDate: Date | string
   estimatedDuration?: number | null
   actualDuration?: number | null
@@ -847,7 +841,7 @@ export type SbmDeliveryAssignmentCreateManySbmReservationInput = {
   id?: number
   sbmDeliveryTeamId: number
   assignedBy: string
-  userId?: number | null
+  userId?: string | null
   deliveryDate: Date | string
   estimatedDuration?: number | null
   actualDuration?: number | null
@@ -874,7 +868,7 @@ export type SbmDeliveryAssignmentUncheckedUpdateWithoutSbmReservationInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   sbmDeliveryTeamId?: Prisma.IntFieldUpdateOperationsInput | number
   assignedBy?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   estimatedDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -888,7 +882,7 @@ export type SbmDeliveryAssignmentUncheckedUpdateManyWithoutSbmReservationInput =
   id?: Prisma.IntFieldUpdateOperationsInput | number
   sbmDeliveryTeamId?: Prisma.IntFieldUpdateOperationsInput | number
   assignedBy?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   estimatedDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -902,7 +896,7 @@ export type SbmDeliveryAssignmentCreateManySbmDeliveryTeamInput = {
   id?: number
   sbmReservationId: number
   assignedBy: string
-  userId?: number | null
+  userId?: string | null
   deliveryDate: Date | string
   estimatedDuration?: number | null
   actualDuration?: number | null
@@ -929,7 +923,7 @@ export type SbmDeliveryAssignmentUncheckedUpdateWithoutSbmDeliveryTeamInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   sbmReservationId?: Prisma.IntFieldUpdateOperationsInput | number
   assignedBy?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   estimatedDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -943,7 +937,7 @@ export type SbmDeliveryAssignmentUncheckedUpdateManyWithoutSbmDeliveryTeamInput 
   id?: Prisma.IntFieldUpdateOperationsInput | number
   sbmReservationId?: Prisma.IntFieldUpdateOperationsInput | number
   assignedBy?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   estimatedDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   actualDuration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -1108,7 +1102,7 @@ export type $SbmDeliveryAssignmentPayload<ExtArgs extends runtime.Types.Extensio
     sbmDeliveryTeamId: number
     sbmReservationId: number
     assignedBy: string
-    userId: number | null
+    userId: string | null
     deliveryDate: Date
     estimatedDuration: number | null
     actualDuration: number | null
@@ -1546,7 +1540,7 @@ export interface SbmDeliveryAssignmentFieldRefs {
   readonly sbmDeliveryTeamId: Prisma.FieldRef<"SbmDeliveryAssignment", 'Int'>
   readonly sbmReservationId: Prisma.FieldRef<"SbmDeliveryAssignment", 'Int'>
   readonly assignedBy: Prisma.FieldRef<"SbmDeliveryAssignment", 'String'>
-  readonly userId: Prisma.FieldRef<"SbmDeliveryAssignment", 'Int'>
+  readonly userId: Prisma.FieldRef<"SbmDeliveryAssignment", 'String'>
   readonly deliveryDate: Prisma.FieldRef<"SbmDeliveryAssignment", 'DateTime'>
   readonly estimatedDuration: Prisma.FieldRef<"SbmDeliveryAssignment", 'Int'>
   readonly actualDuration: Prisma.FieldRef<"SbmDeliveryAssignment", 'Int'>

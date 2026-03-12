@@ -8,7 +8,7 @@ import { headers } from 'next/headers'
  * 共通の認証チェックロジック
  */
 const checkAccess = (host: string | null, authorization: string | null): boolean => {
-  const secretKey = process.env.NEXTAUTH_SECRET
+  const secretKey = process.env.BETTER_AUTH_SECRET
   const accessFromApp = basePath?.includes(host ?? '')
   const accessWithAuth = authorization === secretKey
   return accessFromApp || accessWithAuth

@@ -4,7 +4,7 @@ import type {Prisma} from '@prisma/generated/prisma/client'
 import prisma from 'src/lib/prisma'
 
 // ユーザーの所属クリニックを取得（User.dentalClinicId経由）
-export const getUserDentalClinic = async (userId: number) => {
+export const getUserDentalClinic = async (userId: string) => {
   const user = await prisma.user.findUnique({
     where: {id: userId},
     include: {DentalClinic: true},

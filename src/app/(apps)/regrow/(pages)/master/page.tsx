@@ -8,7 +8,7 @@ export default async function RegrowMasterPage(props: { searchParams: Promise<an
   const query = await props.searchParams
   const { session } = await initServerComopnent({ query })
 
-  const userId = typeof session?.id === 'number' ? session.id : null
+  const userId = session?.id ?? null
 
 
   const stores = await getAllStores()

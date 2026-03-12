@@ -4,7 +4,7 @@ import {doStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doS
 import {toUtc} from '@cm/class/Days/date-utils/calculations'
 
 // 月間統計データを効率的に取得
-export async function getMonthlyAnalysisData(userId: number, year: number, month: number) {
+export async function getMonthlyAnalysisData(userId: string, year: number, month: number) {
   const startOfMonth = toUtc(Date.UTC(year, month, 1, 0, 0, 0, 0))
   const endOfMonth = toUtc(Date.UTC(year, month + 1, 0, 23, 59, 59, 999))
 
@@ -25,7 +25,7 @@ export async function getMonthlyAnalysisData(userId: number, year: number, month
 }
 
 // 複数月の統計データを効率的に取得（月間推移用）
-export async function getMonthlyTrendsData(userId: number, fromYear: number, fromMonth: number, monthsCount: number) {
+export async function getMonthlyTrendsData(userId: string, fromYear: number, fromMonth: number, monthsCount: number) {
   const startDate = toUtc(Date.UTC(fromYear, fromMonth, 1, 0, 0, 0, 0))
   const endYear = fromYear + Math.floor((fromMonth + monthsCount) / 12)
   const endMonth = (fromMonth + monthsCount) % 12
@@ -50,7 +50,7 @@ export async function getMonthlyTrendsData(userId: number, fromYear: number, fro
 }
 
 // 種目別の進捗データを効率的に取得
-export async function getExerciseProgressData(userId: number, exerciseId: number, months: number = 6) {
+export async function getExerciseProgressData(userId: string, exerciseId: number, months: number = 6) {
   const startDate = new Date()
   startDate.setMonth(startDate.getMonth() - months)
   startDate.setUTCHours(0, 0, 0, 0)
@@ -71,7 +71,7 @@ export async function getExerciseProgressData(userId: number, exerciseId: number
 }
 
 // 全種目の進捗データを一括取得（種目別分析用）
-export async function getAllExercisesProgressData(userId: number, months: number = 6) {
+export async function getAllExercisesProgressData(userId: string, months: number = 6) {
   const startDate = new Date()
   startDate.setMonth(startDate.getMonth() - months)
   startDate.setUTCHours(0, 0, 0, 0)

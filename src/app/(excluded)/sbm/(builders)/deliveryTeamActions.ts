@@ -229,7 +229,7 @@ export async function sortTeamReservationsByDeliveryTime(teamId: number): Promis
 export const createDeliveryGroup = async (
   name: string,
   date: Date,
-  userId: number,
+  userId: string,
   userName: string
 ): Promise<{success: boolean; group?: DeliveryGroupType; error?: string}> => {
   try {
@@ -262,7 +262,7 @@ export const createDeliveryGroup = async (
 export const createMultipleDeliveryGroups = async (
   count: number,
   date: Date,
-  userId: number,
+  userId: string,
   userName: string
 ): Promise<{success: boolean; groups?: DeliveryGroupType[]; error?: string}> => {
   try {

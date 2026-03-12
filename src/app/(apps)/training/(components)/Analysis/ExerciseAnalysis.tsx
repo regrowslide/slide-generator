@@ -9,7 +9,7 @@ import { formatDate } from '@cm/class/Days/date-utils/formatters'
 import { getExerciseProgressData } from '@app/(apps)/training/server-actions/analysis-data'
 
 interface ExerciseAnalysisProps {
-  userId: number
+  userId: string
   exerciseId: number
   masters: ExerciseMaster[]
   onBack: () => void

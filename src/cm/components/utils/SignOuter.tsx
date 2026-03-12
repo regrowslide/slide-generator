@@ -2,11 +2,11 @@
 
 import PlaceHolder from 'src/cm/components/utils/loader/PlaceHolder'
 import {useEffect} from 'react'
-import {signOut} from 'next-auth/react'
+import {authClient} from 'src/lib/auth-client'
 
 const SignOuter = ({redirectPath}) => {
   useEffect(() => {
-    signOut()
+    authClient.signOut()
   }, [])
 
   return <PlaceHolder>Redirecting...</PlaceHolder>

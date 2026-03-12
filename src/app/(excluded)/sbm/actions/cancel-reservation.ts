@@ -15,7 +15,7 @@ type changeHistoryObject = {
 export const cancelReservation = async (
   id: number,
   reason: string,
-  userId: number
+  userId: string
 ): Promise<{success: boolean; error?: string}> => {
   try {
     // 予約の存在確認

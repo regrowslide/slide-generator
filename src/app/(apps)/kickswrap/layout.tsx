@@ -1,5 +1,3 @@
-import {PageBuilder} from '@app/(apps)/kickswrap/class/PageBuilder'
-
 import Admin from '@cm/components/layout/Admin/Admin'
 import {MyContainer} from '@cm/components/styles/common-components/common-components'
 
@@ -23,7 +21,6 @@ export default async function AppLayout(props) {
       {...{
         AppName: 'テストアプリ',
         PagesMethod: 'Advantage_PAGES',
-        PageBuilderGetter: {class: PageBuilder, getter: 'getGlobalIdSelector'},
       }}
     >
       <div>

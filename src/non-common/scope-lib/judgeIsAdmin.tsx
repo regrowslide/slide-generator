@@ -1,6 +1,3 @@
-import { globalIds } from 'src/non-common/searchParamStr'
-import { SessionFaker } from 'src/non-common/SessionFaker'
-
 type roleArray = string[] | string
 type session = any
 export function roleIs(roleArray: roleArray, session: session) {
@@ -18,33 +15,10 @@ export function userIs(key, roleArray: roleArray, session: session) {
   return roleArray.includes(session?.[key])
 }
 
-export const judgeIsAdmin = (session: session, query) => {
-  const admin = roleIs('管理者', session)
-
-  const getGlobalUserId = () => {
-    const targetModels = SessionFaker.getTargetModels()
-
-    const key = targetModels.find(item => item.globalId)?.globalId ?? ''
-
-    let result: number
-    if (!admin) {
-      result = 0
-    } else {
-      result = Number(query?.[key] ?? 0)
-    }
-
-    result = Number(result)
-
-    return result
-  }
-
-  const adminSelf = admin && query?.[globalIds.globalUserId] === undefined
+export const judgeIsAdmin = (session: session) => {
+  const admin = roleIs('admin', session)
 
   return {
     admin,
-    adminSelf,
-
-    getGlobalUserId,
-    globalUserId: getGlobalUserId(),
   }
 }

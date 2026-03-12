@@ -3,7 +3,7 @@ import {WorkoutLogWithMaster, WorkoutLogInput} from '../types/training'
 import {getWorkoutlogListByDate} from '@app/(apps)/training/server-actions/workout-log'
 
 interface UseWorkoutLogProps {
-  userId: number
+  userId: string
   selectedDate: string
 }
 
@@ -103,7 +103,7 @@ export function useWorkoutLog({userId, selectedDate}: UseWorkoutLogProps) {
 
   // クイック追加（同じ内容でセット追加）
   const quickAddSet = async (logToCopy: WorkoutLogWithMaster) => {
-    const newLogData: WorkoutLogInput & {date: Date; userId: number} = {
+    const newLogData: WorkoutLogInput & {date: Date; userId: string} = {
       exerciseId: logToCopy.exerciseId,
       strength: logToCopy.strength,
       reps: logToCopy.reps,

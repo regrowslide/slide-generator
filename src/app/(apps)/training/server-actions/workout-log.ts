@@ -7,7 +7,7 @@ import {getMidnight, toUtc} from '@cm/class/Days/date-utils/calculations'
 import {formatDate} from '@cm/class/Days/date-utils/formatters'
 
 // カレンダー用の月ごとのトレーニング日を取得
-export async function getWorkoutDatesForMonth(userId: number, year: number, month: number) {
+export async function getWorkoutDatesForMonth(userId: string, year: number, month: number) {
   const startDate = toUtc(new Date(year, month - 1, 1))
   const endDate = toUtc(new Date(year, month, 0))
 
@@ -29,7 +29,7 @@ export async function getWorkoutDatesForMonth(userId: number, year: number, mont
 }
 
 // 月ごとの日付別トレーニングデータを取得（部位ごとの集計を含む）
-export async function getWorkoutDataByDate(userId: number, year: number, month: number) {
+export async function getWorkoutDataByDate(userId: string, year: number, month: number) {
   const startDate = toUtc(new Date(year, month - 1, 1))
   const endDate = toUtc(new Date(year, month, 0))
 
@@ -113,7 +113,7 @@ export async function getWorkoutDataByDate(userId: number, year: number, month: 
 }
 
 // 特定の日付のトレーニングログを取得
-export async function getWorkoutlogListByDate(userId: number, dateStr: string) {
+export async function getWorkoutlogListByDate(userId: string, dateStr: string) {
   const date = toUtc(new Date(dateStr))
 
   const logList = await prisma.workoutLog.findMany({
@@ -181,7 +181,7 @@ export async function getExerciseHistory(exerciseId: number, limit = 20) {
 }
 
 // 自己記録（PR）のログIDを取得
-export async function getPRLogIds(userId: number, logIds: number[]) {
+export async function getPRLogIds(userId: string, logIds: number[]) {
   if (logIds.length === 0) return []
 
   // PRを判定するためのクエリ
@@ -228,7 +228,7 @@ export async function getPRLogIds(userId: number, logIds: number[]) {
 }
 
 // 種目マスタを取得
-export async function getExerciseMasters(userId: number) {
+export async function getExerciseMasters(userId: string) {
   const masters = await prisma.exerciseMaster.findMany({
     where: {
       OR: [
@@ -246,14 +246,14 @@ export async function getExerciseMasters(userId: number) {
 }
 
 // トレーニングログを追加
-export async function addLog(data: WorkoutLogInput & {date: Date; userId?: number}) {
+export async function addLog(data: WorkoutLogInput & {date: Date; userId?: string}) {
   const result = await prisma.workoutLog.create({
     data: {
       exerciseId: data.exerciseId,
       strength: data.strength,
       reps: data.reps,
       date: toUtc(data.date),
-      userId: data.userId || 1, // ユーザーIDが指定されていない場合はデフォルト値を使用
+      userId: data.userId || '', // ユーザーIDが指定されていない場合はデフォルト値を使用
     },
   })
 
@@ -307,7 +307,7 @@ export async function removeLog(id: number) {
 }
 
 // クイック追加（同じ種目・重量・回数のセットを追加）
-export async function quickAddSet(data: {userId: number; exerciseId: number; strength: number; reps: number; date: string}) {
+export async function quickAddSet(data: {userId: string; exerciseId: number; strength: number; reps: number; date: string}) {
   const result = await prisma.workoutLog.create({
     data: {
       exerciseId: data.exerciseId,

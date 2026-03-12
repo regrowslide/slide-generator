@@ -7,17 +7,12 @@ import GlobalToast from '@cm/components/utils/GlobalToast'
 
 import React from 'react'
 
-import { getServerSession, Session } from 'next-auth'
-import { authOptions } from '@app/api/auth/[...nextauth]/constants/authOptions'
-
 import AppRootProvider from '@cm/providers/AppRootProvider'
 
 const title = process.env.NEXT_PUBLIC_TITLE
 export const metadata: Metadata = { title: title }
 
 export default async function AppRootLayout(props) {
-  const session = (await getServerSession(authOptions)) as Session
-
   return (
     <html lang="ja" suppressHydrationWarning>
       <head>
@@ -28,7 +23,7 @@ export default async function AppRootLayout(props) {
       </head>
       <body suppressHydrationWarning>
         <Suspense>
-          <AppRootProvider {...{ session }}>
+          <AppRootProvider>
             <GlobalToast></GlobalToast>
             <div className={`max-w-screen overflow-hidden`}>{props.children}</div>
           </AppRootProvider>

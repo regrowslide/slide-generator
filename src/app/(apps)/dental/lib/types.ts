@@ -280,7 +280,7 @@ export type Patient = {
 
 /** スタッフ（User.typeで医師/衛生士を区別） */
 export type Staff = {
-  id: number
+  id: string
   name: string
   role: string
   sortOrder: number
@@ -338,8 +338,8 @@ export type Examination = {
   id: number
   visitPlanId: number
   patientId: number
-  doctorId: number | null
-  hygienistId: number | null
+  doctorId: string | null
+  hygienistId: string | null
   status: string
   sortOrder: number
   vitalBefore: Vital | null

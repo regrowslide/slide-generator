@@ -109,8 +109,8 @@ const RoleAllocationTable = ({
       where = {
         AND: [
           { apps: { has: useGlobalProps.rootPath } },
-          { id: query.userId && Number(query.userId ?? 0) },
-          { storeId: query.storeId && Number(query.storeId ?? 0) },
+          ...(query.userId ? [{ id: query.userId }] : []),
+          ...(query.storeId ? [{ storeId: Number(query.storeId) }] : []),
         ]
       },
       include = {

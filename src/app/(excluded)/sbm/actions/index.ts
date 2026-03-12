@@ -1099,7 +1099,7 @@ export async function upsertReservation(reservationData: Partial<ReservationType
       pointsUsed: reservationData.pointsUsed || 0,
       finalAmount: reservationData.finalAmount || 0,
       orderStaff: reservationData.orderStaff || '',
-      userId: reservationData.userId || 0,
+      userId: reservationData.userId || null,
       notes: reservationData.notes || null,
       deliveryCompleted: reservationData.deliveryCompleted || false,
       recoveryCompleted: reservationData.recoveryCompleted || false,

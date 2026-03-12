@@ -8,7 +8,7 @@ import {doStandardPrisma} from '@cm/lib/server-actions/common-server-actions/doS
  * @param userId ユーザーID
  * @returns 生成結果
  */
-export async function seedTrainingData(userId: number) {
+export async function seedTrainingData(userId: string) {
   if (!userId) {
     throw new Error('ユーザーIDが指定されていません')
   }
@@ -77,7 +77,7 @@ export async function seedTrainingData(userId: number) {
 
     // ワークアウトログの作成（過去3ヶ月分のサンプルデータ）
     const workoutlogList: Array<{
-      userId: number
+      userId: string
       exerciseId: number
       date: Date
       strength: number

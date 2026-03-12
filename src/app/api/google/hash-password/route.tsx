@@ -1,21 +1,49 @@
-import {hashPassword} from 'src/cm/lib/crypt'
+import {hashPassword} from 'better-auth/crypto'
 import prisma from 'src/lib/prisma'
 import {NextResponse} from 'next/server'
 
+/**
+ * 全ユーザーのプレーンテキストパスワードをscryptハッシュ化して
+ * Accountテーブルに保存するAPI（開発・移行用）
+ */
 export const POST = async () => {
-  let result = {}
+  const allUsers = await prisma.user.findMany({
+    where: {password: {not: null}},
+  })
 
-  const allUsers = await prisma.user.findMany()
+  let updatedCount = 0
 
-  result = await Promise.all(
-    allUsers.map(async user => {
-      const hashedPw = await hashPassword(user.password)
+  for (const user of allUsers) {
+    if (!user.password || !user.email) continue
 
-      return await prisma.user.update({
-        where: {id: user.id},
-        data: {password: hashedPw},
-      })
+    // 既にscryptハッシュ済み（salt:hash形式）ならスキップ
+    if (user.password.includes(':') && user.password.length > 100) continue
+
+    const hashed = await hashPassword(user.password)
+
+    // credential Accountを検索
+    const account = await prisma.account.findFirst({
+      where: {userId: user.id, providerId: 'credential'},
     })
-  )
-  return NextResponse.json({result})
+
+    if (account) {
+      await prisma.account.update({
+        where: {id: account.id},
+        data: {password: hashed},
+      })
+    } else {
+      await prisma.account.create({
+        data: {
+          id: crypto.randomUUID(),
+          userId: user.id,
+          accountId: user.email,
+          providerId: 'credential',
+          password: hashed,
+        },
+      })
+    }
+    updatedCount++
+  }
+
+  return NextResponse.json({updatedCount})
 }

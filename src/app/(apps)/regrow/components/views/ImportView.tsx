@@ -16,7 +16,7 @@ type StaffMatchStatus = {
   staffName: string
   isMatched: boolean
   isDuplicate: boolean // 同名ユーザーが複数いる場合
-  duplicateUsers: {userId: number; name: string; storeName: string}[] // 同名ユーザー一覧
+  duplicateUsers: {userId: string; name: string; storeName: string}[] // 同名ユーザー一覧
 }
 
 export const ImportView = () => {
@@ -25,7 +25,7 @@ export const ImportView = () => {
   const [selectedStore, setSelectedStore] = useState<StoreName | ''>('')
   const [previewData, setPreviewData] = useState<ExcelParseResult | null>(null)
   const [matchStatuses, setMatchStatuses] = useState<StaffMatchStatus[]>([])
-  const [nameToUserIdMap, setNameToUserIdMap] = useState<Record<string, number>>({})
+  const [nameToUserIdMap, setNameToUserIdMap] = useState<Record<string, string>>({})
   const [error, setError] = useState<string | null>(null)
   const [isParsing, setIsParsing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
@@ -415,7 +415,7 @@ export const ImportView = () => {
                                   delete next[staff.staffName]
                                   return next
                                 }
-                                return {...prev, [staff.staffName]: Number(val)}
+                                return {...prev, [staff.staffName]: val}
                               })
                             }}
                             className="w-full px-2 py-1 border border-yellow-300 rounded text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400"

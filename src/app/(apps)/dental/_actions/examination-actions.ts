@@ -42,8 +42,8 @@ export const getDentalExamination = async (id: number) => {
 export const createDentalExamination = async (data: {
   dentalVisitPlanId: number
   dentalPatientId: number
-  doctorId?: number | null
-  hygienistId?: number | null
+  doctorId?: string | null
+  hygienistId?: string | null
   status?: string
   sortOrder?: number
 }) => {
@@ -70,8 +70,8 @@ export const updateDentalExamination = async (
     drEndTime?: string | null
     dhStartTime?: string | null
     dhEndTime?: string | null
-    doctorId?: number | null
-    hygienistId?: number | null
+    doctorId?: string | null
+    hygienistId?: string | null
     treatmentPerformed?: unknown[]
     oralFunctionRecord?: Record<string, unknown> | null
     sortOrder?: number

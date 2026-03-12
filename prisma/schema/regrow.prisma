@@ -42,7 +42,7 @@ model RgStaffRecord {
   sortOrder        Float     @default(0)
   monthlyReportId  Int
   staffName        String // スタッフ名（直接保存）
-  userId           Int? // Userとの紐付け（任意）
+  userId           String? // Userとの紐付け（任意）
   storeId          Int
   rank             Int
   sales            Float
@@ -98,7 +98,7 @@ model RgStaffManualData {
   monthlyReportId     Int
   staffName           String // スタッフ名（直接保存）
   storeId             Int // 店舗FK
-  userId              Int? // Userとの紐付け（任意）
+  userId              String? // Userとの紐付け（任意）
   utilizationRate     Float?
   csRegistrationCount Int?
   targetSales         Int? // 目標売上（円単位）

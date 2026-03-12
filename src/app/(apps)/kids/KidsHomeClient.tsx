@@ -8,7 +8,7 @@ import { KidsKeyframes } from './components/KidsStyles'
 
 type Props = {
   initialChildren: KidsChild[]
-  userId: number
+  userId: string
 }
 
 const CHILD_EMOJIS = ['👶', '👧', '👦', '🧒', '👸', '🤴', '🧑', '🐣']

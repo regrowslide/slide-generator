@@ -138,7 +138,7 @@ export class RegrowMonthlyReportService {
     yearMonth: string,
     staffRecords: StaffRecord[],
     storeTotals: StoreTotals[],
-    nameToUserIdOverrides?: Record<string, number>
+    nameToUserIdOverrides?: Record<string, string>
   ): Promise<void> {
     const report = await RegrowMonthlyReportService.upsertMonthlyReport(yearMonth)
 
@@ -153,7 +153,7 @@ export class RegrowMonthlyReportService {
     const rgUsers = await prisma.user.findMany({
       where: {apps: {has: 'regrow'}, active: true},
     })
-    const userMap = new Map<string, number>()
+    const userMap = new Map<string, string>()
     const duplicateNames = new Set<string>()
     for (const u of rgUsers) {
       if (userMap.has(u.name)) {

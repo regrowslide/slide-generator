@@ -19,7 +19,7 @@ export default function useRoleGMF() {
       const {data, mutate} = useSWR(String(GMF_OPEN?.user?.id), async () => {
         const {result: roleMaster} = await doStandardPrisma(`roleMaster`, `findMany`, {})
         const {result: user} = await doStandardPrisma(`user`, `findUnique`, {
-          where: {id: GMF_OPEN?.user?.id ?? 0},
+          where: {id: GMF_OPEN?.user?.id ?? ''},
           include: {UserRole: {include: {RoleMaster: true}}},
         })
         return {roleMaster, user}
@@ -45,20 +45,20 @@ export default function useRoleGMF() {
                               if (!applied) {
                                 await doStandardPrisma(`userRole`, `create`, {
                                   data: {
-                                    userId: user?.id ?? 0,
+                                    userId: user?.id ?? '',
                                     roleMasterId: data.id,
                                   },
                                 })
                               } else {
                                 await doStandardPrisma(`userRole`, `delete`, {
-                                  where: {id: applied?.id ?? 0, userId: user?.id ?? 0},
+                                  where: {id: applied?.id ?? 0, userId: user?.id ?? ''},
                                 })
                               }
 
                               mutate()
 
                               GMF_OPEN?.UseRecordsReturn?.refreshSingleRecord({
-                                findUniqueWhereArgs: {id: GMF_OPEN?.user?.id ?? 0},
+                                findUniqueWhereArgs: {id: GMF_OPEN?.user?.id ?? ''},
                               })
                             },
                           }}

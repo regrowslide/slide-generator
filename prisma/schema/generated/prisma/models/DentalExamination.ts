@@ -31,8 +31,6 @@ export type DentalExaminationAvgAggregateOutputType = {
   sortOrder: number | null
   dentalVisitPlanId: number | null
   dentalPatientId: number | null
-  doctorId: number | null
-  hygienistId: number | null
 }
 
 export type DentalExaminationSumAggregateOutputType = {
@@ -40,8 +38,6 @@ export type DentalExaminationSumAggregateOutputType = {
   sortOrder: number | null
   dentalVisitPlanId: number | null
   dentalPatientId: number | null
-  doctorId: number | null
-  hygienistId: number | null
 }
 
 export type DentalExaminationMinAggregateOutputType = {
@@ -60,8 +56,8 @@ export type DentalExaminationMinAggregateOutputType = {
   dhEndTime: string | null
   dentalVisitPlanId: number | null
   dentalPatientId: number | null
-  doctorId: number | null
-  hygienistId: number | null
+  doctorId: string | null
+  hygienistId: string | null
 }
 
 export type DentalExaminationMaxAggregateOutputType = {
@@ -80,8 +76,8 @@ export type DentalExaminationMaxAggregateOutputType = {
   dhEndTime: string | null
   dentalVisitPlanId: number | null
   dentalPatientId: number | null
-  doctorId: number | null
-  hygienistId: number | null
+  doctorId: string | null
+  hygienistId: string | null
 }
 
 export type DentalExaminationCountAggregateOutputType = {
@@ -117,8 +113,6 @@ export type DentalExaminationAvgAggregateInputType = {
   sortOrder?: true
   dentalVisitPlanId?: true
   dentalPatientId?: true
-  doctorId?: true
-  hygienistId?: true
 }
 
 export type DentalExaminationSumAggregateInputType = {
@@ -126,8 +120,6 @@ export type DentalExaminationSumAggregateInputType = {
   sortOrder?: true
   dentalVisitPlanId?: true
   dentalPatientId?: true
-  doctorId?: true
-  hygienistId?: true
 }
 
 export type DentalExaminationMinAggregateInputType = {
@@ -305,8 +297,8 @@ export type DentalExaminationGroupByOutputType = {
   oralFunctionRecord: runtime.JsonValue | null
   dentalVisitPlanId: number
   dentalPatientId: number
-  doctorId: number | null
-  hygienistId: number | null
+  doctorId: string | null
+  hygienistId: string | null
   _count: DentalExaminationCountAggregateOutputType | null
   _avg: DentalExaminationAvgAggregateOutputType | null
   _sum: DentalExaminationSumAggregateOutputType | null
@@ -354,8 +346,8 @@ export type DentalExaminationWhereInput = {
   oralFunctionRecord?: Prisma.JsonNullableFilter<"DentalExamination">
   dentalVisitPlanId?: Prisma.IntFilter<"DentalExamination"> | number
   dentalPatientId?: Prisma.IntFilter<"DentalExamination"> | number
-  doctorId?: Prisma.IntNullableFilter<"DentalExamination"> | number | null
-  hygienistId?: Prisma.IntNullableFilter<"DentalExamination"> | number | null
+  doctorId?: Prisma.StringNullableFilter<"DentalExamination"> | string | null
+  hygienistId?: Prisma.StringNullableFilter<"DentalExamination"> | string | null
   DentalVisitPlan?: Prisma.XOR<Prisma.DentalVisitPlanScalarRelationFilter, Prisma.DentalVisitPlanWhereInput>
   DentalPatient?: Prisma.XOR<Prisma.DentalPatientScalarRelationFilter, Prisma.DentalPatientWhereInput>
   Doctor?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -421,8 +413,8 @@ export type DentalExaminationWhereUniqueInput = Prisma.AtLeast<{
   oralFunctionRecord?: Prisma.JsonNullableFilter<"DentalExamination">
   dentalVisitPlanId?: Prisma.IntFilter<"DentalExamination"> | number
   dentalPatientId?: Prisma.IntFilter<"DentalExamination"> | number
-  doctorId?: Prisma.IntNullableFilter<"DentalExamination"> | number | null
-  hygienistId?: Prisma.IntNullableFilter<"DentalExamination"> | number | null
+  doctorId?: Prisma.StringNullableFilter<"DentalExamination"> | string | null
+  hygienistId?: Prisma.StringNullableFilter<"DentalExamination"> | string | null
   DentalVisitPlan?: Prisma.XOR<Prisma.DentalVisitPlanScalarRelationFilter, Prisma.DentalVisitPlanWhereInput>
   DentalPatient?: Prisma.XOR<Prisma.DentalPatientScalarRelationFilter, Prisma.DentalPatientWhereInput>
   Doctor?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -487,8 +479,8 @@ export type DentalExaminationScalarWhereWithAggregatesInput = {
   oralFunctionRecord?: Prisma.JsonNullableWithAggregatesFilter<"DentalExamination">
   dentalVisitPlanId?: Prisma.IntWithAggregatesFilter<"DentalExamination"> | number
   dentalPatientId?: Prisma.IntWithAggregatesFilter<"DentalExamination"> | number
-  doctorId?: Prisma.IntNullableWithAggregatesFilter<"DentalExamination"> | number | null
-  hygienistId?: Prisma.IntNullableWithAggregatesFilter<"DentalExamination"> | number | null
+  doctorId?: Prisma.StringNullableWithAggregatesFilter<"DentalExamination"> | string | null
+  hygienistId?: Prisma.StringNullableWithAggregatesFilter<"DentalExamination"> | string | null
 }
 
 export type DentalExaminationCreateInput = {
@@ -540,8 +532,8 @@ export type DentalExaminationUncheckedCreateInput = {
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalVisitPlanId: number
   dentalPatientId: number
-  doctorId?: number | null
-  hygienistId?: number | null
+  doctorId?: string | null
+  hygienistId?: string | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedCreateNestedManyWithoutDentalExaminationInput
   DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedCreateNestedManyWithoutDentalExaminationInput
 }
@@ -595,8 +587,8 @@ export type DentalExaminationUncheckedUpdateInput = {
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalVisitPlanId?: Prisma.IntFieldUpdateOperationsInput | number
   dentalPatientId?: Prisma.IntFieldUpdateOperationsInput | number
-  doctorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  hygienistId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  doctorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hygienistId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedUpdateManyWithoutDentalExaminationNestedInput
   DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedUpdateManyWithoutDentalExaminationNestedInput
 }
@@ -623,8 +615,8 @@ export type DentalExaminationCreateManyInput = {
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalVisitPlanId: number
   dentalPatientId: number
-  doctorId?: number | null
-  hygienistId?: number | null
+  doctorId?: string | null
+  hygienistId?: string | null
 }
 
 export type DentalExaminationUpdateManyMutationInput = {
@@ -670,8 +662,8 @@ export type DentalExaminationUncheckedUpdateManyInput = {
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalVisitPlanId?: Prisma.IntFieldUpdateOperationsInput | number
   dentalPatientId?: Prisma.IntFieldUpdateOperationsInput | number
-  doctorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  hygienistId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  doctorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hygienistId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DentalExaminationListRelationFilter = {
@@ -715,8 +707,6 @@ export type DentalExaminationAvgOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
   dentalVisitPlanId?: Prisma.SortOrder
   dentalPatientId?: Prisma.SortOrder
-  doctorId?: Prisma.SortOrder
-  hygienistId?: Prisma.SortOrder
 }
 
 export type DentalExaminationMaxOrderByAggregateInput = {
@@ -764,8 +754,6 @@ export type DentalExaminationSumOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
   dentalVisitPlanId?: Prisma.SortOrder
   dentalPatientId?: Prisma.SortOrder
-  doctorId?: Prisma.SortOrder
-  hygienistId?: Prisma.SortOrder
 }
 
 export type DentalExaminationScalarRelationFilter = {
@@ -1016,8 +1004,8 @@ export type DentalExaminationUncheckedCreateWithoutDentalPatientInput = {
   treatmentPerformed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalVisitPlanId: number
-  doctorId?: number | null
-  hygienistId?: number | null
+  doctorId?: string | null
+  hygienistId?: string | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedCreateNestedManyWithoutDentalExaminationInput
   DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedCreateNestedManyWithoutDentalExaminationInput
 }
@@ -1073,8 +1061,8 @@ export type DentalExaminationScalarWhereInput = {
   oralFunctionRecord?: Prisma.JsonNullableFilter<"DentalExamination">
   dentalVisitPlanId?: Prisma.IntFilter<"DentalExamination"> | number
   dentalPatientId?: Prisma.IntFilter<"DentalExamination"> | number
-  doctorId?: Prisma.IntNullableFilter<"DentalExamination"> | number | null
-  hygienistId?: Prisma.IntNullableFilter<"DentalExamination"> | number | null
+  doctorId?: Prisma.StringNullableFilter<"DentalExamination"> | string | null
+  hygienistId?: Prisma.StringNullableFilter<"DentalExamination"> | string | null
 }
 
 export type DentalExaminationCreateWithoutDentalVisitPlanInput = {
@@ -1124,8 +1112,8 @@ export type DentalExaminationUncheckedCreateWithoutDentalVisitPlanInput = {
   treatmentPerformed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalPatientId: number
-  doctorId?: number | null
-  hygienistId?: number | null
+  doctorId?: string | null
+  hygienistId?: string | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedCreateNestedManyWithoutDentalExaminationInput
   DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedCreateNestedManyWithoutDentalExaminationInput
 }
@@ -1204,8 +1192,8 @@ export type DentalExaminationUncheckedCreateWithoutDentalTimerHistoryInput = {
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalVisitPlanId: number
   dentalPatientId: number
-  doctorId?: number | null
-  hygienistId?: number | null
+  doctorId?: string | null
+  hygienistId?: string | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedCreateNestedManyWithoutDentalExaminationInput
 }
 
@@ -1273,8 +1261,8 @@ export type DentalExaminationUncheckedUpdateWithoutDentalTimerHistoryInput = {
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalVisitPlanId?: Prisma.IntFieldUpdateOperationsInput | number
   dentalPatientId?: Prisma.IntFieldUpdateOperationsInput | number
-  doctorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  hygienistId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  doctorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hygienistId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedUpdateManyWithoutDentalExaminationNestedInput
 }
 
@@ -1326,8 +1314,8 @@ export type DentalExaminationUncheckedCreateWithoutDentalSavedDocumentInput = {
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalVisitPlanId: number
   dentalPatientId: number
-  doctorId?: number | null
-  hygienistId?: number | null
+  doctorId?: string | null
+  hygienistId?: string | null
   DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedCreateNestedManyWithoutDentalExaminationInput
 }
 
@@ -1395,8 +1383,8 @@ export type DentalExaminationUncheckedUpdateWithoutDentalSavedDocumentInput = {
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalVisitPlanId?: Prisma.IntFieldUpdateOperationsInput | number
   dentalPatientId?: Prisma.IntFieldUpdateOperationsInput | number
-  doctorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  hygienistId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  doctorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hygienistId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedUpdateManyWithoutDentalExaminationNestedInput
 }
 
@@ -1448,7 +1436,7 @@ export type DentalExaminationUncheckedCreateWithoutDoctorInput = {
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalVisitPlanId: number
   dentalPatientId: number
-  hygienistId?: number | null
+  hygienistId?: string | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedCreateNestedManyWithoutDentalExaminationInput
   DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedCreateNestedManyWithoutDentalExaminationInput
 }
@@ -1511,7 +1499,7 @@ export type DentalExaminationUncheckedCreateWithoutHygienistInput = {
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalVisitPlanId: number
   dentalPatientId: number
-  doctorId?: number | null
+  doctorId?: string | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedCreateNestedManyWithoutDentalExaminationInput
   DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedCreateNestedManyWithoutDentalExaminationInput
 }
@@ -1579,8 +1567,8 @@ export type DentalExaminationCreateManyDentalPatientInput = {
   treatmentPerformed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalVisitPlanId: number
-  doctorId?: number | null
-  hygienistId?: number | null
+  doctorId?: string | null
+  hygienistId?: string | null
 }
 
 export type DentalExaminationUpdateWithoutDentalPatientInput = {
@@ -1630,8 +1618,8 @@ export type DentalExaminationUncheckedUpdateWithoutDentalPatientInput = {
   treatmentPerformed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalVisitPlanId?: Prisma.IntFieldUpdateOperationsInput | number
-  doctorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  hygienistId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  doctorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hygienistId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedUpdateManyWithoutDentalExaminationNestedInput
   DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedUpdateManyWithoutDentalExaminationNestedInput
 }
@@ -1657,8 +1645,8 @@ export type DentalExaminationUncheckedUpdateManyWithoutDentalPatientInput = {
   treatmentPerformed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalVisitPlanId?: Prisma.IntFieldUpdateOperationsInput | number
-  doctorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  hygienistId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  doctorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hygienistId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DentalExaminationCreateManyDentalVisitPlanInput = {
@@ -1682,8 +1670,8 @@ export type DentalExaminationCreateManyDentalVisitPlanInput = {
   treatmentPerformed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalPatientId: number
-  doctorId?: number | null
-  hygienistId?: number | null
+  doctorId?: string | null
+  hygienistId?: string | null
 }
 
 export type DentalExaminationUpdateWithoutDentalVisitPlanInput = {
@@ -1733,8 +1721,8 @@ export type DentalExaminationUncheckedUpdateWithoutDentalVisitPlanInput = {
   treatmentPerformed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalPatientId?: Prisma.IntFieldUpdateOperationsInput | number
-  doctorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  hygienistId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  doctorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hygienistId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedUpdateManyWithoutDentalExaminationNestedInput
   DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedUpdateManyWithoutDentalExaminationNestedInput
 }
@@ -1760,8 +1748,8 @@ export type DentalExaminationUncheckedUpdateManyWithoutDentalVisitPlanInput = {
   treatmentPerformed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalPatientId?: Prisma.IntFieldUpdateOperationsInput | number
-  doctorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  hygienistId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  doctorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hygienistId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DentalExaminationCreateManyDoctorInput = {
@@ -1786,7 +1774,7 @@ export type DentalExaminationCreateManyDoctorInput = {
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalVisitPlanId: number
   dentalPatientId: number
-  hygienistId?: number | null
+  hygienistId?: string | null
 }
 
 export type DentalExaminationCreateManyHygienistInput = {
@@ -1811,7 +1799,7 @@ export type DentalExaminationCreateManyHygienistInput = {
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalVisitPlanId: number
   dentalPatientId: number
-  doctorId?: number | null
+  doctorId?: string | null
 }
 
 export type DentalExaminationUpdateWithoutDoctorInput = {
@@ -1862,7 +1850,7 @@ export type DentalExaminationUncheckedUpdateWithoutDoctorInput = {
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalVisitPlanId?: Prisma.IntFieldUpdateOperationsInput | number
   dentalPatientId?: Prisma.IntFieldUpdateOperationsInput | number
-  hygienistId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  hygienistId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedUpdateManyWithoutDentalExaminationNestedInput
   DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedUpdateManyWithoutDentalExaminationNestedInput
 }
@@ -1889,7 +1877,7 @@ export type DentalExaminationUncheckedUpdateManyWithoutDoctorInput = {
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalVisitPlanId?: Prisma.IntFieldUpdateOperationsInput | number
   dentalPatientId?: Prisma.IntFieldUpdateOperationsInput | number
-  hygienistId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  hygienistId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DentalExaminationUpdateWithoutHygienistInput = {
@@ -1940,7 +1928,7 @@ export type DentalExaminationUncheckedUpdateWithoutHygienistInput = {
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalVisitPlanId?: Prisma.IntFieldUpdateOperationsInput | number
   dentalPatientId?: Prisma.IntFieldUpdateOperationsInput | number
-  doctorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  doctorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   DentalSavedDocument?: Prisma.DentalSavedDocumentUncheckedUpdateManyWithoutDentalExaminationNestedInput
   DentalTimerHistory?: Prisma.DentalTimerHistoryUncheckedUpdateManyWithoutDentalExaminationNestedInput
 }
@@ -1967,7 +1955,7 @@ export type DentalExaminationUncheckedUpdateManyWithoutHygienistInput = {
   oralFunctionRecord?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   dentalVisitPlanId?: Prisma.IntFieldUpdateOperationsInput | number
   dentalPatientId?: Prisma.IntFieldUpdateOperationsInput | number
-  doctorId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  doctorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -2184,8 +2172,8 @@ export type $DentalExaminationPayload<ExtArgs extends runtime.Types.Extensions.I
     oralFunctionRecord: runtime.JsonValue | null
     dentalVisitPlanId: number
     dentalPatientId: number
-    doctorId: number | null
-    hygienistId: number | null
+    doctorId: string | null
+    hygienistId: string | null
   }, ExtArgs["result"]["dentalExamination"]>
   composites: {}
 }
@@ -2636,8 +2624,8 @@ export interface DentalExaminationFieldRefs {
   readonly oralFunctionRecord: Prisma.FieldRef<"DentalExamination", 'Json'>
   readonly dentalVisitPlanId: Prisma.FieldRef<"DentalExamination", 'Int'>
   readonly dentalPatientId: Prisma.FieldRef<"DentalExamination", 'Int'>
-  readonly doctorId: Prisma.FieldRef<"DentalExamination", 'Int'>
-  readonly hygienistId: Prisma.FieldRef<"DentalExamination", 'Int'>
+  readonly doctorId: Prisma.FieldRef<"DentalExamination", 'String'>
+  readonly hygienistId: Prisma.FieldRef<"DentalExamination", 'String'>
 }
     
 

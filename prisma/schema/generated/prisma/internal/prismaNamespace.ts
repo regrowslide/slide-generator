@@ -459,6 +459,9 @@ export const ModelName = {
   Department: 'Department',
   Store: 'Store',
   User: 'User',
+  Session: 'Session',
+  Account: 'Account',
+  Verification: 'Verification',
   ReleaseNotes: 'ReleaseNotes',
   Tokens: 'Tokens',
   GoogleAccessToken: 'GoogleAccessToken',
@@ -467,10 +470,6 @@ export const ModelName = {
   ChainMethodLock: 'ChainMethodLock',
   Calendar: 'Calendar',
   CronExecutionLog: 'CronExecutionLog',
-  TennisCourt: 'TennisCourt',
-  TennisEvent: 'TennisEvent',
-  TennisEventCourt: 'TennisEventCourt',
-  TennisAttendance: 'TennisAttendance',
   ExerciseMaster: 'ExerciseMaster',
   WorkoutLog: 'WorkoutLog',
   YamanokaiDepartment: 'YamanokaiDepartment',
@@ -507,7 +506,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "dentalClinic" | "dentalFacility" | "dentalPatient" | "dentalVisitPlan" | "dentalExamination" | "dentalTimerHistory" | "dentalScoringHistory" | "dentalSavedDocument" | "gyoseiSession" | "gyoseiFile" | "kgFacilityMaster" | "kgDietTypeMaster" | "kgDailyMenu" | "kgMealSlot" | "kgMenuRecipe" | "kgRecipeIngredient" | "kgOrder" | "kgOrderLine" | "kgProductionBatch" | "kgProductionItem" | "kgRequiredIngredient" | "kidsChild" | "kidsCategory" | "kidsRoutine" | "kidsRoutineLog" | "kidsAchievement" | "kidsStreak" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "rcIngredientMaster" | "rcRecipe" | "rcRecipeIngredient" | "rcCategoryYieldMaster" | "rcProfitMarginStandard" | "rgStore" | "rgMonthlyReport" | "rgStaffRecord" | "rgStoreTotals" | "rgStoreKpi" | "rgStaffManualData" | "rgCustomerVoice" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "store" | "user" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "cronExecutionLog" | "tennisCourt" | "tennisEvent" | "tennisEventCourt" | "tennisAttendance" | "exerciseMaster" | "workoutLog" | "yamanokaiDepartment" | "yamanokaiRole" | "yamanokaiCourse" | "yamanokaiEquipment" | "yamanokaiInsuranceGrade" | "yamanokaiStaminaGrade" | "yamanokaiSkillGrade" | "yamanokaiRockCategory" | "yamanokaiMember" | "yamanokaiMemberRole" | "yamanokaiCourseCompletion" | "yamanokaiEvent" | "yamanokaiEventRequiredCourse" | "yamanokaiEventPlan" | "yamanokaiEventPlanParticipant" | "yamanokaiAttendance" | "yamanokaiRecord" | "yamanokaiRecordFile" | "yamanokaiEquipmentLoan"
+    modelProps: "kaizenClient" | "kaizenReview" | "kaizenWork" | "kaizenWorkImage" | "kaizenCMS" | "counselingStore" | "counselingRoom" | "counselingClient" | "counselingReservation" | "counselingSlot" | "dentalClinic" | "dentalFacility" | "dentalPatient" | "dentalVisitPlan" | "dentalExamination" | "dentalTimerHistory" | "dentalScoringHistory" | "dentalSavedDocument" | "gyoseiSession" | "gyoseiFile" | "kgFacilityMaster" | "kgDietTypeMaster" | "kgDailyMenu" | "kgMealSlot" | "kgMenuRecipe" | "kgRecipeIngredient" | "kgOrder" | "kgOrderLine" | "kgProductionBatch" | "kgProductionItem" | "kgRequiredIngredient" | "kidsChild" | "kidsCategory" | "kidsRoutine" | "kidsRoutineLog" | "kidsAchievement" | "kidsStreak" | "product" | "rawMaterial" | "productRecipe" | "order" | "production" | "shipment" | "stockAdjustment" | "companyHoliday" | "dailyStaffAssignment" | "rcIngredientMaster" | "rcRecipe" | "rcRecipeIngredient" | "rcCategoryYieldMaster" | "rcProfitMarginStandard" | "rgStore" | "rgMonthlyReport" | "rgStaffRecord" | "rgStoreTotals" | "rgStoreKpi" | "rgStaffManualData" | "rgCustomerVoice" | "sbmCustomer" | "sbmCustomerPhone" | "sbmProduct" | "sbmProductPriceHistory" | "sbmDeliveryGroup" | "sbmDeliveryRouteStop" | "sbmDeliveryGroupReservation" | "sbmReservation" | "sbmReservationItem" | "sbmReservationChangeHistory" | "sbmDeliveryTeam" | "sbmDeliveryAssignment" | "sbmIngredient" | "sbmProductIngredient" | "department" | "store" | "user" | "session" | "account" | "verification" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "cronExecutionLog" | "exerciseMaster" | "workoutLog" | "yamanokaiDepartment" | "yamanokaiRole" | "yamanokaiCourse" | "yamanokaiEquipment" | "yamanokaiInsuranceGrade" | "yamanokaiStaminaGrade" | "yamanokaiSkillGrade" | "yamanokaiRockCategory" | "yamanokaiMember" | "yamanokaiMemberRole" | "yamanokaiCourseCompletion" | "yamanokaiEvent" | "yamanokaiEventRequiredCourse" | "yamanokaiEventPlan" | "yamanokaiEventPlanParticipant" | "yamanokaiAttendance" | "yamanokaiRecord" | "yamanokaiRecordFile" | "yamanokaiEquipmentLoan"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -6061,6 +6060,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Session: {
+      payload: Prisma.$SessionPayload<ExtArgs>
+      fields: Prisma.SessionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SessionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SessionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload>
+        }
+        findFirst: {
+          args: Prisma.SessionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SessionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload>
+        }
+        findMany: {
+          args: Prisma.SessionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload>[]
+        }
+        create: {
+          args: Prisma.SessionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload>
+        }
+        createMany: {
+          args: Prisma.SessionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SessionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload>[]
+        }
+        delete: {
+          args: Prisma.SessionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload>
+        }
+        update: {
+          args: Prisma.SessionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload>
+        }
+        deleteMany: {
+          args: Prisma.SessionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SessionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SessionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload>[]
+        }
+        upsert: {
+          args: Prisma.SessionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SessionPayload>
+        }
+        aggregate: {
+          args: Prisma.SessionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSession>
+        }
+        groupBy: {
+          args: Prisma.SessionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SessionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SessionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SessionCountAggregateOutputType> | number
+        }
+      }
+    }
+    Account: {
+      payload: Prisma.$AccountPayload<ExtArgs>
+      fields: Prisma.AccountFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AccountFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AccountFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountPayload>
+        }
+        findFirst: {
+          args: Prisma.AccountFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AccountFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountPayload>
+        }
+        findMany: {
+          args: Prisma.AccountFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountPayload>[]
+        }
+        create: {
+          args: Prisma.AccountCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountPayload>
+        }
+        createMany: {
+          args: Prisma.AccountCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AccountCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountPayload>[]
+        }
+        delete: {
+          args: Prisma.AccountDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountPayload>
+        }
+        update: {
+          args: Prisma.AccountUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountPayload>
+        }
+        deleteMany: {
+          args: Prisma.AccountDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AccountUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AccountUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountPayload>[]
+        }
+        upsert: {
+          args: Prisma.AccountUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountPayload>
+        }
+        aggregate: {
+          args: Prisma.AccountAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAccount>
+        }
+        groupBy: {
+          args: Prisma.AccountGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AccountGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AccountCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AccountCountAggregateOutputType> | number
+        }
+      }
+    }
+    Verification: {
+      payload: Prisma.$VerificationPayload<ExtArgs>
+      fields: Prisma.VerificationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.VerificationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerificationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.VerificationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerificationPayload>
+        }
+        findFirst: {
+          args: Prisma.VerificationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerificationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.VerificationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerificationPayload>
+        }
+        findMany: {
+          args: Prisma.VerificationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerificationPayload>[]
+        }
+        create: {
+          args: Prisma.VerificationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerificationPayload>
+        }
+        createMany: {
+          args: Prisma.VerificationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.VerificationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerificationPayload>[]
+        }
+        delete: {
+          args: Prisma.VerificationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerificationPayload>
+        }
+        update: {
+          args: Prisma.VerificationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerificationPayload>
+        }
+        deleteMany: {
+          args: Prisma.VerificationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.VerificationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.VerificationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerificationPayload>[]
+        }
+        upsert: {
+          args: Prisma.VerificationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VerificationPayload>
+        }
+        aggregate: {
+          args: Prisma.VerificationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateVerification>
+        }
+        groupBy: {
+          args: Prisma.VerificationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VerificationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.VerificationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VerificationCountAggregateOutputType> | number
+        }
+      }
+    }
     ReleaseNotes: {
       payload: Prisma.$ReleaseNotesPayload<ExtArgs>
       fields: Prisma.ReleaseNotesFieldRefs
@@ -6650,302 +6871,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CronExecutionLogCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CronExecutionLogCountAggregateOutputType> | number
-        }
-      }
-    }
-    TennisCourt: {
-      payload: Prisma.$TennisCourtPayload<ExtArgs>
-      fields: Prisma.TennisCourtFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.TennisCourtFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisCourtPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.TennisCourtFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisCourtPayload>
-        }
-        findFirst: {
-          args: Prisma.TennisCourtFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisCourtPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.TennisCourtFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisCourtPayload>
-        }
-        findMany: {
-          args: Prisma.TennisCourtFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisCourtPayload>[]
-        }
-        create: {
-          args: Prisma.TennisCourtCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisCourtPayload>
-        }
-        createMany: {
-          args: Prisma.TennisCourtCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.TennisCourtCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisCourtPayload>[]
-        }
-        delete: {
-          args: Prisma.TennisCourtDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisCourtPayload>
-        }
-        update: {
-          args: Prisma.TennisCourtUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisCourtPayload>
-        }
-        deleteMany: {
-          args: Prisma.TennisCourtDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.TennisCourtUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.TennisCourtUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisCourtPayload>[]
-        }
-        upsert: {
-          args: Prisma.TennisCourtUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisCourtPayload>
-        }
-        aggregate: {
-          args: Prisma.TennisCourtAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateTennisCourt>
-        }
-        groupBy: {
-          args: Prisma.TennisCourtGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.TennisCourtGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.TennisCourtCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.TennisCourtCountAggregateOutputType> | number
-        }
-      }
-    }
-    TennisEvent: {
-      payload: Prisma.$TennisEventPayload<ExtArgs>
-      fields: Prisma.TennisEventFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.TennisEventFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.TennisEventFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventPayload>
-        }
-        findFirst: {
-          args: Prisma.TennisEventFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.TennisEventFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventPayload>
-        }
-        findMany: {
-          args: Prisma.TennisEventFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventPayload>[]
-        }
-        create: {
-          args: Prisma.TennisEventCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventPayload>
-        }
-        createMany: {
-          args: Prisma.TennisEventCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.TennisEventCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventPayload>[]
-        }
-        delete: {
-          args: Prisma.TennisEventDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventPayload>
-        }
-        update: {
-          args: Prisma.TennisEventUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventPayload>
-        }
-        deleteMany: {
-          args: Prisma.TennisEventDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.TennisEventUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.TennisEventUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventPayload>[]
-        }
-        upsert: {
-          args: Prisma.TennisEventUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventPayload>
-        }
-        aggregate: {
-          args: Prisma.TennisEventAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateTennisEvent>
-        }
-        groupBy: {
-          args: Prisma.TennisEventGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.TennisEventGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.TennisEventCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.TennisEventCountAggregateOutputType> | number
-        }
-      }
-    }
-    TennisEventCourt: {
-      payload: Prisma.$TennisEventCourtPayload<ExtArgs>
-      fields: Prisma.TennisEventCourtFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.TennisEventCourtFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventCourtPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.TennisEventCourtFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventCourtPayload>
-        }
-        findFirst: {
-          args: Prisma.TennisEventCourtFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventCourtPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.TennisEventCourtFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventCourtPayload>
-        }
-        findMany: {
-          args: Prisma.TennisEventCourtFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventCourtPayload>[]
-        }
-        create: {
-          args: Prisma.TennisEventCourtCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventCourtPayload>
-        }
-        createMany: {
-          args: Prisma.TennisEventCourtCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.TennisEventCourtCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventCourtPayload>[]
-        }
-        delete: {
-          args: Prisma.TennisEventCourtDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventCourtPayload>
-        }
-        update: {
-          args: Prisma.TennisEventCourtUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventCourtPayload>
-        }
-        deleteMany: {
-          args: Prisma.TennisEventCourtDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.TennisEventCourtUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.TennisEventCourtUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventCourtPayload>[]
-        }
-        upsert: {
-          args: Prisma.TennisEventCourtUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisEventCourtPayload>
-        }
-        aggregate: {
-          args: Prisma.TennisEventCourtAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateTennisEventCourt>
-        }
-        groupBy: {
-          args: Prisma.TennisEventCourtGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.TennisEventCourtGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.TennisEventCourtCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.TennisEventCourtCountAggregateOutputType> | number
-        }
-      }
-    }
-    TennisAttendance: {
-      payload: Prisma.$TennisAttendancePayload<ExtArgs>
-      fields: Prisma.TennisAttendanceFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.TennisAttendanceFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisAttendancePayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.TennisAttendanceFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisAttendancePayload>
-        }
-        findFirst: {
-          args: Prisma.TennisAttendanceFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisAttendancePayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.TennisAttendanceFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisAttendancePayload>
-        }
-        findMany: {
-          args: Prisma.TennisAttendanceFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisAttendancePayload>[]
-        }
-        create: {
-          args: Prisma.TennisAttendanceCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisAttendancePayload>
-        }
-        createMany: {
-          args: Prisma.TennisAttendanceCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.TennisAttendanceCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisAttendancePayload>[]
-        }
-        delete: {
-          args: Prisma.TennisAttendanceDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisAttendancePayload>
-        }
-        update: {
-          args: Prisma.TennisAttendanceUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisAttendancePayload>
-        }
-        deleteMany: {
-          args: Prisma.TennisAttendanceDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.TennisAttendanceUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.TennisAttendanceUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisAttendancePayload>[]
-        }
-        upsert: {
-          args: Prisma.TennisAttendanceUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$TennisAttendancePayload>
-        }
-        aggregate: {
-          args: Prisma.TennisAttendanceAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateTennisAttendance>
-        }
-        groupBy: {
-          args: Prisma.TennisAttendanceGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.TennisAttendanceGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.TennisAttendanceCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.TennisAttendanceCountAggregateOutputType> | number
         }
       }
     }
@@ -9782,6 +9707,9 @@ export const UserScalarFieldEnum = {
   color: 'color',
   app: 'app',
   apps: 'apps',
+  lineUserId: 'lineUserId',
+  emailVerified: 'emailVerified',
+  image: 'image',
   employeeCode: 'employeeCode',
   phone: 'phone',
   avatar: 'avatar',
@@ -9790,11 +9718,56 @@ export const UserScalarFieldEnum = {
   storeId: 'storeId',
   departmentId: 'departmentId',
   dentalClinicId: 'dentalClinicId',
-  lineUserId: 'lineUserId',
   rgStoreId: 'rgStoreId'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const SessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  impersonatedBy: 'impersonatedBy'
+} as const
+
+export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
+
+
+export const AccountScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  accountId: 'accountId',
+  providerId: 'providerId',
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  accessTokenExpiresAt: 'accessTokenExpiresAt',
+  refreshTokenExpiresAt: 'refreshTokenExpiresAt',
+  scope: 'scope',
+  idToken: 'idToken',
+  password: 'password',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
+
+
+export const VerificationScalarFieldEnum = {
+  id: 'id',
+  identifier: 'identifier',
+  value: 'value',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
 
 
 export const ReleaseNotesScalarFieldEnum = {
@@ -9905,65 +9878,6 @@ export const CronExecutionLogScalarFieldEnum = {
 } as const
 
 export type CronExecutionLogScalarFieldEnum = (typeof CronExecutionLogScalarFieldEnum)[keyof typeof CronExecutionLogScalarFieldEnum]
-
-
-export const TennisCourtScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  name: 'name',
-  address: 'address',
-  googleMapsUrl: 'googleMapsUrl',
-  courtNumbers: 'courtNumbers',
-  schedulePageKey: 'schedulePageKey',
-  isDeleted: 'isDeleted'
-} as const
-
-export type TennisCourtScalarFieldEnum = (typeof TennisCourtScalarFieldEnum)[keyof typeof TennisCourtScalarFieldEnum]
-
-
-export const TennisEventScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  title: 'title',
-  date: 'date',
-  startTime: 'startTime',
-  endTime: 'endTime',
-  memo: 'memo',
-  isDeleted: 'isDeleted',
-  creatorId: 'creatorId'
-} as const
-
-export type TennisEventScalarFieldEnum = (typeof TennisEventScalarFieldEnum)[keyof typeof TennisEventScalarFieldEnum]
-
-
-export const TennisEventCourtScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  courtNumber: 'courtNumber',
-  status: 'status',
-  tennisEventId: 'tennisEventId',
-  tennisCourtId: 'tennisCourtId'
-} as const
-
-export type TennisEventCourtScalarFieldEnum = (typeof TennisEventCourtScalarFieldEnum)[keyof typeof TennisEventCourtScalarFieldEnum]
-
-
-export const TennisAttendanceScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  status: 'status',
-  comment: 'comment',
-  tennisEventId: 'tennisEventId',
-  userId: 'userId'
-} as const
-
-export type TennisAttendanceScalarFieldEnum = (typeof TennisAttendanceScalarFieldEnum)[keyof typeof TennisAttendanceScalarFieldEnum]
 
 
 export const ExerciseMasterScalarFieldEnum = {
@@ -10621,6 +10535,9 @@ export type GlobalOmitConfig = {
   department?: Prisma.DepartmentOmit
   store?: Prisma.StoreOmit
   user?: Prisma.UserOmit
+  session?: Prisma.SessionOmit
+  account?: Prisma.AccountOmit
+  verification?: Prisma.VerificationOmit
   releaseNotes?: Prisma.ReleaseNotesOmit
   tokens?: Prisma.TokensOmit
   googleAccessToken?: Prisma.GoogleAccessTokenOmit
@@ -10629,10 +10546,6 @@ export type GlobalOmitConfig = {
   chainMethodLock?: Prisma.ChainMethodLockOmit
   calendar?: Prisma.CalendarOmit
   cronExecutionLog?: Prisma.CronExecutionLogOmit
-  tennisCourt?: Prisma.TennisCourtOmit
-  tennisEvent?: Prisma.TennisEventOmit
-  tennisEventCourt?: Prisma.TennisEventCourtOmit
-  tennisAttendance?: Prisma.TennisAttendanceOmit
   exerciseMaster?: Prisma.ExerciseMasterOmit
   workoutLog?: Prisma.WorkoutLogOmit
   yamanokaiDepartment?: Prisma.YamanokaiDepartmentOmit

@@ -89,8 +89,8 @@ model CounselingSlot {
  CounselingStore   CounselingStore @relation(fields: [counselingStoreId], references: [id], onDelete: Cascade)
  counselingStoreId Int // 店舗ID（検索の高速化のため非正規化）
 
- User   User? @relation(fields: [userId], references: [id], onDelete: SetNull)
- userId Int? // 担当カウンセラーID（未定の場合null）
+ User   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+ userId String? // 担当カウンセラーID（未定の場合null）
 
  CounselingReservation CounselingReservation[]
 }

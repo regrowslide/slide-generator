@@ -32,8 +32,6 @@ export type YamanokaiEventAvgAggregateOutputType = {
   requiredInsurance: number | null
   capacity: number | null
   yamanokaiDepartmentId: number | null
-  clId: number | null
-  slId: number | null
 }
 
 export type YamanokaiEventSumAggregateOutputType = {
@@ -42,8 +40,6 @@ export type YamanokaiEventSumAggregateOutputType = {
   requiredInsurance: number | null
   capacity: number | null
   yamanokaiDepartmentId: number | null
-  clId: number | null
-  slId: number | null
 }
 
 export type YamanokaiEventMinAggregateOutputType = {
@@ -69,8 +65,8 @@ export type YamanokaiEventMinAggregateOutputType = {
   status: string | null
   isDeleted: boolean | null
   yamanokaiDepartmentId: number | null
-  clId: number | null
-  slId: number | null
+  clId: string | null
+  slId: string | null
 }
 
 export type YamanokaiEventMaxAggregateOutputType = {
@@ -96,8 +92,8 @@ export type YamanokaiEventMaxAggregateOutputType = {
   status: string | null
   isDeleted: boolean | null
   yamanokaiDepartmentId: number | null
-  clId: number | null
-  slId: number | null
+  clId: string | null
+  slId: string | null
 }
 
 export type YamanokaiEventCountAggregateOutputType = {
@@ -135,8 +131,6 @@ export type YamanokaiEventAvgAggregateInputType = {
   requiredInsurance?: true
   capacity?: true
   yamanokaiDepartmentId?: true
-  clId?: true
-  slId?: true
 }
 
 export type YamanokaiEventSumAggregateInputType = {
@@ -145,8 +139,6 @@ export type YamanokaiEventSumAggregateInputType = {
   requiredInsurance?: true
   capacity?: true
   yamanokaiDepartmentId?: true
-  clId?: true
-  slId?: true
 }
 
 export type YamanokaiEventMinAggregateInputType = {
@@ -340,8 +332,8 @@ export type YamanokaiEventGroupByOutputType = {
   status: string
   isDeleted: boolean
   yamanokaiDepartmentId: number
-  clId: number
-  slId: number | null
+  clId: string
+  slId: string | null
   _count: YamanokaiEventCountAggregateOutputType | null
   _avg: YamanokaiEventAvgAggregateOutputType | null
   _sum: YamanokaiEventSumAggregateOutputType | null
@@ -390,8 +382,8 @@ export type YamanokaiEventWhereInput = {
   status?: Prisma.StringFilter<"YamanokaiEvent"> | string
   isDeleted?: Prisma.BoolFilter<"YamanokaiEvent"> | boolean
   yamanokaiDepartmentId?: Prisma.IntFilter<"YamanokaiEvent"> | number
-  clId?: Prisma.IntFilter<"YamanokaiEvent"> | number
-  slId?: Prisma.IntNullableFilter<"YamanokaiEvent"> | number | null
+  clId?: Prisma.StringFilter<"YamanokaiEvent"> | string
+  slId?: Prisma.StringNullableFilter<"YamanokaiEvent"> | string | null
   YamanokaiDepartment?: Prisma.XOR<Prisma.YamanokaiDepartmentScalarRelationFilter, Prisma.YamanokaiDepartmentWhereInput>
   CL?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   SL?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -465,8 +457,8 @@ export type YamanokaiEventWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.StringFilter<"YamanokaiEvent"> | string
   isDeleted?: Prisma.BoolFilter<"YamanokaiEvent"> | boolean
   yamanokaiDepartmentId?: Prisma.IntFilter<"YamanokaiEvent"> | number
-  clId?: Prisma.IntFilter<"YamanokaiEvent"> | number
-  slId?: Prisma.IntNullableFilter<"YamanokaiEvent"> | number | null
+  clId?: Prisma.StringFilter<"YamanokaiEvent"> | string
+  slId?: Prisma.StringNullableFilter<"YamanokaiEvent"> | string | null
   YamanokaiDepartment?: Prisma.XOR<Prisma.YamanokaiDepartmentScalarRelationFilter, Prisma.YamanokaiDepartmentWhereInput>
   CL?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   SL?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -536,8 +528,8 @@ export type YamanokaiEventScalarWhereWithAggregatesInput = {
   status?: Prisma.StringWithAggregatesFilter<"YamanokaiEvent"> | string
   isDeleted?: Prisma.BoolWithAggregatesFilter<"YamanokaiEvent"> | boolean
   yamanokaiDepartmentId?: Prisma.IntWithAggregatesFilter<"YamanokaiEvent"> | number
-  clId?: Prisma.IntWithAggregatesFilter<"YamanokaiEvent"> | number
-  slId?: Prisma.IntNullableWithAggregatesFilter<"YamanokaiEvent"> | number | null
+  clId?: Prisma.StringWithAggregatesFilter<"YamanokaiEvent"> | string
+  slId?: Prisma.StringNullableWithAggregatesFilter<"YamanokaiEvent"> | string | null
 }
 
 export type YamanokaiEventCreateInput = {
@@ -595,8 +587,8 @@ export type YamanokaiEventUncheckedCreateInput = {
   status?: string
   isDeleted?: boolean
   yamanokaiDepartmentId: number
-  clId: number
-  slId?: number | null
+  clId: string
+  slId?: string | null
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiEventInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedCreateNestedOneWithoutYamanokaiEventInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedOneWithoutYamanokaiEventInput
@@ -660,8 +652,8 @@ export type YamanokaiEventUncheckedUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiDepartmentId?: Prisma.IntFieldUpdateOperationsInput | number
-  clId?: Prisma.IntFieldUpdateOperationsInput | number
-  slId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  clId?: Prisma.StringFieldUpdateOperationsInput | string
+  slId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiEventNestedInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateOneWithoutYamanokaiEventNestedInput
@@ -693,8 +685,8 @@ export type YamanokaiEventCreateManyInput = {
   status?: string
   isDeleted?: boolean
   yamanokaiDepartmentId: number
-  clId: number
-  slId?: number | null
+  clId: string
+  slId?: string | null
 }
 
 export type YamanokaiEventUpdateManyMutationInput = {
@@ -743,8 +735,8 @@ export type YamanokaiEventUncheckedUpdateManyInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiDepartmentId?: Prisma.IntFieldUpdateOperationsInput | number
-  clId?: Prisma.IntFieldUpdateOperationsInput | number
-  slId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  clId?: Prisma.StringFieldUpdateOperationsInput | string
+  slId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type YamanokaiEventListRelationFilter = {
@@ -795,8 +787,6 @@ export type YamanokaiEventAvgOrderByAggregateInput = {
   requiredInsurance?: Prisma.SortOrder
   capacity?: Prisma.SortOrder
   yamanokaiDepartmentId?: Prisma.SortOrder
-  clId?: Prisma.SortOrder
-  slId?: Prisma.SortOrder
 }
 
 export type YamanokaiEventMaxOrderByAggregateInput = {
@@ -859,8 +849,6 @@ export type YamanokaiEventSumOrderByAggregateInput = {
   requiredInsurance?: Prisma.SortOrder
   capacity?: Prisma.SortOrder
   yamanokaiDepartmentId?: Prisma.SortOrder
-  clId?: Prisma.SortOrder
-  slId?: Prisma.SortOrder
 }
 
 export type YamanokaiEventScalarRelationFilter = {
@@ -1136,7 +1124,7 @@ export type YamanokaiEventUncheckedCreateWithoutCLInput = {
   status?: string
   isDeleted?: boolean
   yamanokaiDepartmentId: number
-  slId?: number | null
+  slId?: string | null
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiEventInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedCreateNestedOneWithoutYamanokaiEventInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedOneWithoutYamanokaiEventInput
@@ -1209,7 +1197,7 @@ export type YamanokaiEventUncheckedCreateWithoutSLInput = {
   status?: string
   isDeleted?: boolean
   yamanokaiDepartmentId: number
-  clId: number
+  clId: string
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiEventInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedCreateNestedOneWithoutYamanokaiEventInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedOneWithoutYamanokaiEventInput
@@ -1270,8 +1258,8 @@ export type YamanokaiEventScalarWhereInput = {
   status?: Prisma.StringFilter<"YamanokaiEvent"> | string
   isDeleted?: Prisma.BoolFilter<"YamanokaiEvent"> | boolean
   yamanokaiDepartmentId?: Prisma.IntFilter<"YamanokaiEvent"> | number
-  clId?: Prisma.IntFilter<"YamanokaiEvent"> | number
-  slId?: Prisma.IntNullableFilter<"YamanokaiEvent"> | number | null
+  clId?: Prisma.StringFilter<"YamanokaiEvent"> | string
+  slId?: Prisma.StringNullableFilter<"YamanokaiEvent"> | string | null
 }
 
 export type YamanokaiEventUpsertWithWhereUniqueWithoutSLInput = {
@@ -1343,8 +1331,8 @@ export type YamanokaiEventUncheckedCreateWithoutYamanokaiDepartmentInput = {
   notes?: string | null
   status?: string
   isDeleted?: boolean
-  clId: number
-  slId?: number | null
+  clId: string
+  slId?: string | null
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiEventInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedCreateNestedOneWithoutYamanokaiEventInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedOneWithoutYamanokaiEventInput
@@ -1433,8 +1421,8 @@ export type YamanokaiEventUncheckedCreateWithoutYamanokaiCourseCompletionInput =
   status?: string
   isDeleted?: boolean
   yamanokaiDepartmentId: number
-  clId: number
-  slId?: number | null
+  clId: string
+  slId?: string | null
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiEventInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedCreateNestedOneWithoutYamanokaiEventInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedOneWithoutYamanokaiEventInput
@@ -1512,8 +1500,8 @@ export type YamanokaiEventUncheckedUpdateWithoutYamanokaiCourseCompletionInput =
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiDepartmentId?: Prisma.IntFieldUpdateOperationsInput | number
-  clId?: Prisma.IntFieldUpdateOperationsInput | number
-  slId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  clId?: Prisma.StringFieldUpdateOperationsInput | string
+  slId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiEventNestedInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateOneWithoutYamanokaiEventNestedInput
@@ -1575,8 +1563,8 @@ export type YamanokaiEventUncheckedCreateWithoutYamanokaiEventRequiredCourseInpu
   status?: string
   isDeleted?: boolean
   yamanokaiDepartmentId: number
-  clId: number
-  slId?: number | null
+  clId: string
+  slId?: string | null
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiEventInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedCreateNestedOneWithoutYamanokaiEventInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedOneWithoutYamanokaiEventInput
@@ -1654,8 +1642,8 @@ export type YamanokaiEventUncheckedUpdateWithoutYamanokaiEventRequiredCourseInpu
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiDepartmentId?: Prisma.IntFieldUpdateOperationsInput | number
-  clId?: Prisma.IntFieldUpdateOperationsInput | number
-  slId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  clId?: Prisma.StringFieldUpdateOperationsInput | string
+  slId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiEventNestedInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateOneWithoutYamanokaiEventNestedInput
@@ -1717,8 +1705,8 @@ export type YamanokaiEventUncheckedCreateWithoutYamanokaiEventPlanInput = {
   status?: string
   isDeleted?: boolean
   yamanokaiDepartmentId: number
-  clId: number
-  slId?: number | null
+  clId: string
+  slId?: string | null
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiEventInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedOneWithoutYamanokaiEventInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedCreateNestedManyWithoutYamanokaiEventInput
@@ -1796,8 +1784,8 @@ export type YamanokaiEventUncheckedUpdateWithoutYamanokaiEventPlanInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiDepartmentId?: Prisma.IntFieldUpdateOperationsInput | number
-  clId?: Prisma.IntFieldUpdateOperationsInput | number
-  slId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  clId?: Prisma.StringFieldUpdateOperationsInput | string
+  slId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiEventNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedUpdateManyWithoutYamanokaiEventNestedInput
@@ -1859,8 +1847,8 @@ export type YamanokaiEventUncheckedCreateWithoutYamanokaiAttendanceInput = {
   status?: string
   isDeleted?: boolean
   yamanokaiDepartmentId: number
-  clId: number
-  slId?: number | null
+  clId: string
+  slId?: string | null
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedCreateNestedOneWithoutYamanokaiEventInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedOneWithoutYamanokaiEventInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedCreateNestedManyWithoutYamanokaiEventInput
@@ -1938,8 +1926,8 @@ export type YamanokaiEventUncheckedUpdateWithoutYamanokaiAttendanceInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiDepartmentId?: Prisma.IntFieldUpdateOperationsInput | number
-  clId?: Prisma.IntFieldUpdateOperationsInput | number
-  slId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  clId?: Prisma.StringFieldUpdateOperationsInput | string
+  slId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedUpdateManyWithoutYamanokaiEventNestedInput
@@ -2001,8 +1989,8 @@ export type YamanokaiEventUncheckedCreateWithoutYamanokaiRecordInput = {
   status?: string
   isDeleted?: boolean
   yamanokaiDepartmentId: number
-  clId: number
-  slId?: number | null
+  clId: string
+  slId?: string | null
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiEventInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedCreateNestedOneWithoutYamanokaiEventInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedCreateNestedManyWithoutYamanokaiEventInput
@@ -2080,8 +2068,8 @@ export type YamanokaiEventUncheckedUpdateWithoutYamanokaiRecordInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiDepartmentId?: Prisma.IntFieldUpdateOperationsInput | number
-  clId?: Prisma.IntFieldUpdateOperationsInput | number
-  slId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  clId?: Prisma.StringFieldUpdateOperationsInput | string
+  slId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiEventNestedInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiCourseCompletion?: Prisma.YamanokaiCourseCompletionUncheckedUpdateManyWithoutYamanokaiEventNestedInput
@@ -2143,8 +2131,8 @@ export type YamanokaiEventUncheckedCreateWithoutYamanokaiEquipmentLoanInput = {
   status?: string
   isDeleted?: boolean
   yamanokaiDepartmentId: number
-  clId: number
-  slId?: number | null
+  clId: string
+  slId?: string | null
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedCreateNestedManyWithoutYamanokaiEventInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedCreateNestedOneWithoutYamanokaiEventInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedCreateNestedOneWithoutYamanokaiEventInput
@@ -2222,8 +2210,8 @@ export type YamanokaiEventUncheckedUpdateWithoutYamanokaiEquipmentLoanInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiDepartmentId?: Prisma.IntFieldUpdateOperationsInput | number
-  clId?: Prisma.IntFieldUpdateOperationsInput | number
-  slId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  clId?: Prisma.StringFieldUpdateOperationsInput | string
+  slId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiEventNestedInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateOneWithoutYamanokaiEventNestedInput
@@ -2254,7 +2242,7 @@ export type YamanokaiEventCreateManyCLInput = {
   status?: string
   isDeleted?: boolean
   yamanokaiDepartmentId: number
-  slId?: number | null
+  slId?: string | null
 }
 
 export type YamanokaiEventCreateManySLInput = {
@@ -2280,7 +2268,7 @@ export type YamanokaiEventCreateManySLInput = {
   status?: string
   isDeleted?: boolean
   yamanokaiDepartmentId: number
-  clId: number
+  clId: string
 }
 
 export type YamanokaiEventUpdateWithoutCLInput = {
@@ -2337,7 +2325,7 @@ export type YamanokaiEventUncheckedUpdateWithoutCLInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiDepartmentId?: Prisma.IntFieldUpdateOperationsInput | number
-  slId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiEventNestedInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateOneWithoutYamanokaiEventNestedInput
@@ -2369,7 +2357,7 @@ export type YamanokaiEventUncheckedUpdateManyWithoutCLInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiDepartmentId?: Prisma.IntFieldUpdateOperationsInput | number
-  slId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type YamanokaiEventUpdateWithoutSLInput = {
@@ -2426,7 +2414,7 @@ export type YamanokaiEventUncheckedUpdateWithoutSLInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiDepartmentId?: Prisma.IntFieldUpdateOperationsInput | number
-  clId?: Prisma.IntFieldUpdateOperationsInput | number
+  clId?: Prisma.StringFieldUpdateOperationsInput | string
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiEventNestedInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateOneWithoutYamanokaiEventNestedInput
@@ -2458,7 +2446,7 @@ export type YamanokaiEventUncheckedUpdateManyWithoutSLInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiDepartmentId?: Prisma.IntFieldUpdateOperationsInput | number
-  clId?: Prisma.IntFieldUpdateOperationsInput | number
+  clId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type YamanokaiEventCreateManyYamanokaiDepartmentInput = {
@@ -2483,8 +2471,8 @@ export type YamanokaiEventCreateManyYamanokaiDepartmentInput = {
   notes?: string | null
   status?: string
   isDeleted?: boolean
-  clId: number
-  slId?: number | null
+  clId: string
+  slId?: string | null
 }
 
 export type YamanokaiEventUpdateWithoutYamanokaiDepartmentInput = {
@@ -2540,8 +2528,8 @@ export type YamanokaiEventUncheckedUpdateWithoutYamanokaiDepartmentInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  clId?: Prisma.IntFieldUpdateOperationsInput | number
-  slId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  clId?: Prisma.StringFieldUpdateOperationsInput | string
+  slId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   YamanokaiAttendance?: Prisma.YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiEventNestedInput
   YamanokaiEventPlan?: Prisma.YamanokaiEventPlanUncheckedUpdateOneWithoutYamanokaiEventNestedInput
   YamanokaiRecord?: Prisma.YamanokaiRecordUncheckedUpdateOneWithoutYamanokaiEventNestedInput
@@ -2572,8 +2560,8 @@ export type YamanokaiEventUncheckedUpdateManyWithoutYamanokaiDepartmentInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  clId?: Prisma.IntFieldUpdateOperationsInput | number
-  slId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  clId?: Prisma.StringFieldUpdateOperationsInput | string
+  slId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -2818,8 +2806,8 @@ export type $YamanokaiEventPayload<ExtArgs extends runtime.Types.Extensions.Inte
     status: string
     isDeleted: boolean
     yamanokaiDepartmentId: number
-    clId: number
-    slId: number | null
+    clId: string
+    slId: string | null
   }, ExtArgs["result"]["yamanokaiEvent"]>
   composites: {}
 }
@@ -3274,8 +3262,8 @@ export interface YamanokaiEventFieldRefs {
   readonly status: Prisma.FieldRef<"YamanokaiEvent", 'String'>
   readonly isDeleted: Prisma.FieldRef<"YamanokaiEvent", 'Boolean'>
   readonly yamanokaiDepartmentId: Prisma.FieldRef<"YamanokaiEvent", 'Int'>
-  readonly clId: Prisma.FieldRef<"YamanokaiEvent", 'Int'>
-  readonly slId: Prisma.FieldRef<"YamanokaiEvent", 'Int'>
+  readonly clId: Prisma.FieldRef<"YamanokaiEvent", 'String'>
+  readonly slId: Prisma.FieldRef<"YamanokaiEvent", 'String'>
 }
     
 

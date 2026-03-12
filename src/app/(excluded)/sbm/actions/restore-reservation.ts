@@ -11,7 +11,7 @@ type changeHistoryObject = {
  * @param id 予約ID
  * @param userId 復活処理を行うユーザーID
  */
-export const restoreReservation = async (id: number, userId: number): Promise<{success: boolean; error?: string}> => {
+export const restoreReservation = async (id: number, userId: string): Promise<{success: boolean; error?: string}> => {
   try {
     // 予約の存在確認
     const reservation = await prisma.sbmReservation.findUnique({

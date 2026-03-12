@@ -21,7 +21,7 @@ const APPLICATION_STATUS_MAP = {
 type Props = {
   events: EventWithRelations[]
   applications: YamanokaiAttendance[]
-  userId: number
+  userId: string
 }
 
 // 日付フォーマット

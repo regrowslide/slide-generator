@@ -124,9 +124,9 @@ model DentalExamination {
   DentalPatient     DentalPatient   @relation(fields: [dentalPatientId], references: [id], onDelete: Cascade)
   dentalPatientId   Int
   Doctor            User?    @relation("ExaminationDoctor", fields: [doctorId], references: [id])
-  doctorId          Int?
+  doctorId          String?
   Hygienist         User?    @relation("ExaminationHygienist", fields: [hygienistId], references: [id])
-  hygienistId       Int?
+  hygienistId       String?
 
   DentalSavedDocument  DentalSavedDocument[]
   DentalTimerHistory   DentalTimerHistory[]

@@ -5,7 +5,7 @@ export class KidsChildService {
   // ── Read ──
 
   /** 保護者のユーザーIDから子ども一覧を取得 */
-  static async getChildrenByUserId(userId: number) {
+  static async getChildrenByUserId(userId: string) {
     return prisma.kidsChild.findMany({
       where: {userId},
       orderBy: {sortOrder: 'asc'},
@@ -32,7 +32,7 @@ export class KidsChildService {
   }
 
   /** 子どもが指定ユーザーの子かどうか確認 */
-  static async isOwnChild(childId: number, userId: number) {
+  static async isOwnChild(childId: number, userId: string) {
     const child = await prisma.kidsChild.findFirst({
       where: {id: childId, userId},
       select: {id: true},
@@ -43,7 +43,7 @@ export class KidsChildService {
   // ── Create ──
 
   /** 子どもを作成し、デフォルトカテゴリ＋ルーチンも自動生成 */
-  static async createChild(userId: number, name: string, emoji: string) {
+  static async createChild(userId: string, name: string, emoji: string) {
     const childCount = await prisma.kidsChild.count({where: {userId}})
 
     const child = await prisma.kidsChild.create({

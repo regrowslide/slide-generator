@@ -1,14 +1,12 @@
 'use client'
 import React from 'react'
-import { signIn } from 'next-auth/react'
 import useGlobal from 'src/cm/hooks/globalHooks/useGlobal'
-import { sleep } from 'src/cm/lib/methods/common'
 
 import { toast } from 'react-toastify'
 import useBasicFormProps from 'src/cm/hooks/useBasicForm/useBasicFormProps'
 import { Fields } from 'src/cm/class/Fields/Fields'
 import { Button } from '@cm/components/styles/common-components/Button'
-import { CheckLogin } from '@app/api/prisma/login/checkLogin'
+import { authClient } from 'src/lib/auth-client'
 
 export default function CredintialLoginForm(props) {
   const { error, callbackUrl } = props
@@ -44,28 +42,20 @@ export default function CredintialLoginForm(props) {
               onSubmit: async data => {
                 toggleLoad(
                   async () => {
-                    const user = await CheckLogin({
-                      authId: data.loginKeyField, authPw: data.password
-                    })
 
-                    if (!user) {
-                      toast.error(`正しい認証情報を入力してください。`)
-                      return
-                    }
-                    // const result = await toggleLoad(async () => {
-                    const result = await signIn('credentials', {
-                      loginKeyField: data.loginKeyField,
+
+                    const result = await authClient.signIn.email({
+                      email: data.loginKeyField,
                       password: data.password,
-                      redirect: false,
                     })
 
-                    if (result?.ok) {
-                      // const session = await getSession()
-                      toast.success(`ログインしました。`)
 
+
+                    if (result.data) {
+                      toast.success(`ログインしました。`)
                       router.refresh()
-                    } else if (result?.error) {
-                      toast.error(`ログインに失敗しました。:${result.error}`)
+                    } else if (result.error) {
+                      toast.error(`正しい認証情報を入力してください。: ${result.error.message}`)
                     }
                   },
                   { refresh: false, mutate: false }

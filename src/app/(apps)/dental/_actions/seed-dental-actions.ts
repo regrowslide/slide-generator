@@ -2,6 +2,7 @@
 
 import type {Prisma, DentalPatient} from '@prisma/generated/prisma/client'
 import prisma from 'src/lib/prisma'
+import {AuthService} from 'src/lib/services/AuthService'
 
 // ============================================================
 // シードデータ投入（既存データをリセットして再投入）
@@ -37,9 +38,10 @@ export const seedDentalData = async (): Promise<{message: string}> => {
     },
   })
 
-  // 2. スタッフ（User）作成
-  const doctor1 = await prisma.user.create({
-    data: {
+  // 2. スタッフ（User + Account）作成
+  const doctor1 = await AuthService.createUserDirect({
+    password: '999999',
+    prismaData: {
       name: '山田太郎',
       email: 'yamada@example.com',
       type: 'doctor',
@@ -49,8 +51,9 @@ export const seedDentalData = async (): Promise<{message: string}> => {
     },
   })
 
-  const doctor2 = await prisma.user.create({
-    data: {
+  const doctor2 = await AuthService.createUserDirect({
+    password: '999999',
+    prismaData: {
       name: '佐藤健一',
       email: 'sato@example.com',
       type: 'doctor',
@@ -60,8 +63,9 @@ export const seedDentalData = async (): Promise<{message: string}> => {
     },
   })
 
-  const hygienist1 = await prisma.user.create({
-    data: {
+  const hygienist1 = await AuthService.createUserDirect({
+    password: '999999',
+    prismaData: {
       name: '鈴木花子',
       email: 'suzuki@example.com',
       type: 'hygienist',
@@ -71,8 +75,9 @@ export const seedDentalData = async (): Promise<{message: string}> => {
     },
   })
 
-  const hygienist2 = await prisma.user.create({
-    data: {
+  const hygienist2 = await AuthService.createUserDirect({
+    password: '999999',
+    prismaData: {
       name: '田中美咲',
       email: 'tanaka@example.com',
       type: 'hygienist',

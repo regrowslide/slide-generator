@@ -9,7 +9,7 @@ const attendanceInclude = {
 } as const
 
 // 参加申請の作成
-export const createYamanokaiApplication = async (params: { yamanokaiEventId: number; userId: number; comment?: string | null }) => {
+export const createYamanokaiApplication = async (params: { yamanokaiEventId: number; userId: string; comment?: string | null }) => {
   const { yamanokaiEventId, userId, comment } = params
   return await prisma.yamanokaiAttendance.create({
     data: {
@@ -32,7 +32,7 @@ export const getApplicationsByEventId = async (yamanokaiEventId: number) => {
 }
 
 // ユーザーの申請状態一括取得（一覧画面用）
-export const getApplicationsByUserId = async (userId: number) => {
+export const getApplicationsByUserId = async (userId: string) => {
   return await prisma.yamanokaiAttendance.findMany({
     where: { userId, isDeleted: false },
   })
@@ -44,7 +44,7 @@ export const updateYamanokaiApplication = async (
   data: {
     status?: string
     rejectionReason?: string | null
-    approvedBy?: number | null
+    approvedBy?: string | null
   }
 ) => {
   return await prisma.yamanokaiAttendance.update({

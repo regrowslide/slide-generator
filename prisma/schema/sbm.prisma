@@ -78,7 +78,7 @@ model SbmDeliveryGroup {
   id                    Int                           @id @default(autoincrement())
   name                  String
   deliveryDate          DateTime
-  userId                Int
+  userId                String
   userName              String
   status                String                        @default("planning") // planning, route_generated, in_progress, completed
   totalReservations     Int                           @default(0)
@@ -173,7 +173,7 @@ model SbmReservation {
 
   // 管理情報
   orderStaff String  @db.VarChar(100)
-  userId     Int?
+  userId     String?
   notes      String? @db.Text
 
   // タスク管理
@@ -225,8 +225,8 @@ model SbmReservationChangeHistory {
   // リレーション
   SbmReservation SbmReservation? @relation(fields: [sbmReservationId], references: [id])
 
-  userId Int?
-  User   User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId String?
+  User   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
 
 model SbmDeliveryTeam {
@@ -247,7 +247,7 @@ model SbmDeliveryAssignment {
   sbmDeliveryTeamId Int
   sbmReservationId  Int
   assignedBy        String   @db.VarChar(100)
-  userId            Int?
+  userId            String?
   deliveryDate      DateTime
   estimatedDuration Int? // 予想配達時間（分）
   actualDuration    Int? // 実際の配達時間（分）

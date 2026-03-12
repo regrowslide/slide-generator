@@ -28,7 +28,6 @@ export type AggregateSbmDeliveryGroup = {
 
 export type SbmDeliveryGroupAvgAggregateOutputType = {
   id: number | null
-  userId: number | null
   totalReservations: number | null
   completedReservations: number | null
   estimatedDuration: number | null
@@ -37,7 +36,6 @@ export type SbmDeliveryGroupAvgAggregateOutputType = {
 
 export type SbmDeliveryGroupSumAggregateOutputType = {
   id: number | null
-  userId: number | null
   totalReservations: number | null
   completedReservations: number | null
   estimatedDuration: number | null
@@ -48,7 +46,7 @@ export type SbmDeliveryGroupMinAggregateOutputType = {
   id: number | null
   name: string | null
   deliveryDate: Date | null
-  userId: number | null
+  userId: string | null
   userName: string | null
   status: string | null
   totalReservations: number | null
@@ -65,7 +63,7 @@ export type SbmDeliveryGroupMaxAggregateOutputType = {
   id: number | null
   name: string | null
   deliveryDate: Date | null
-  userId: number | null
+  userId: string | null
   userName: string | null
   status: string | null
   totalReservations: number | null
@@ -99,7 +97,6 @@ export type SbmDeliveryGroupCountAggregateOutputType = {
 
 export type SbmDeliveryGroupAvgAggregateInputType = {
   id?: true
-  userId?: true
   totalReservations?: true
   completedReservations?: true
   estimatedDuration?: true
@@ -108,7 +105,6 @@ export type SbmDeliveryGroupAvgAggregateInputType = {
 
 export type SbmDeliveryGroupSumAggregateInputType = {
   id?: true
-  userId?: true
   totalReservations?: true
   completedReservations?: true
   estimatedDuration?: true
@@ -257,7 +253,7 @@ export type SbmDeliveryGroupGroupByOutputType = {
   id: number
   name: string
   deliveryDate: Date
-  userId: number
+  userId: string
   userName: string
   status: string
   totalReservations: number
@@ -297,7 +293,7 @@ export type SbmDeliveryGroupWhereInput = {
   id?: Prisma.IntFilter<"SbmDeliveryGroup"> | number
   name?: Prisma.StringFilter<"SbmDeliveryGroup"> | string
   deliveryDate?: Prisma.DateTimeFilter<"SbmDeliveryGroup"> | Date | string
-  userId?: Prisma.IntFilter<"SbmDeliveryGroup"> | number
+  userId?: Prisma.StringFilter<"SbmDeliveryGroup"> | string
   userName?: Prisma.StringFilter<"SbmDeliveryGroup"> | string
   status?: Prisma.StringFilter<"SbmDeliveryGroup"> | string
   totalReservations?: Prisma.IntFilter<"SbmDeliveryGroup"> | number
@@ -338,7 +334,7 @@ export type SbmDeliveryGroupWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.SbmDeliveryGroupWhereInput | Prisma.SbmDeliveryGroupWhereInput[]
   name?: Prisma.StringFilter<"SbmDeliveryGroup"> | string
   deliveryDate?: Prisma.DateTimeFilter<"SbmDeliveryGroup"> | Date | string
-  userId?: Prisma.IntFilter<"SbmDeliveryGroup"> | number
+  userId?: Prisma.StringFilter<"SbmDeliveryGroup"> | string
   userName?: Prisma.StringFilter<"SbmDeliveryGroup"> | string
   status?: Prisma.StringFilter<"SbmDeliveryGroup"> | string
   totalReservations?: Prisma.IntFilter<"SbmDeliveryGroup"> | number
@@ -382,7 +378,7 @@ export type SbmDeliveryGroupScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"SbmDeliveryGroup"> | number
   name?: Prisma.StringWithAggregatesFilter<"SbmDeliveryGroup"> | string
   deliveryDate?: Prisma.DateTimeWithAggregatesFilter<"SbmDeliveryGroup"> | Date | string
-  userId?: Prisma.IntWithAggregatesFilter<"SbmDeliveryGroup"> | number
+  userId?: Prisma.StringWithAggregatesFilter<"SbmDeliveryGroup"> | string
   userName?: Prisma.StringWithAggregatesFilter<"SbmDeliveryGroup"> | string
   status?: Prisma.StringWithAggregatesFilter<"SbmDeliveryGroup"> | string
   totalReservations?: Prisma.IntWithAggregatesFilter<"SbmDeliveryGroup"> | number
@@ -398,7 +394,7 @@ export type SbmDeliveryGroupScalarWhereWithAggregatesInput = {
 export type SbmDeliveryGroupCreateInput = {
   name: string
   deliveryDate: Date | string
-  userId: number
+  userId: string
   userName: string
   status?: string
   totalReservations?: number
@@ -417,7 +413,7 @@ export type SbmDeliveryGroupUncheckedCreateInput = {
   id?: number
   name: string
   deliveryDate: Date | string
-  userId: number
+  userId: string
   userName: string
   status?: string
   totalReservations?: number
@@ -435,7 +431,7 @@ export type SbmDeliveryGroupUncheckedCreateInput = {
 export type SbmDeliveryGroupUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   userName?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   totalReservations?: Prisma.IntFieldUpdateOperationsInput | number
@@ -454,7 +450,7 @@ export type SbmDeliveryGroupUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   userName?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   totalReservations?: Prisma.IntFieldUpdateOperationsInput | number
@@ -473,7 +469,7 @@ export type SbmDeliveryGroupCreateManyInput = {
   id?: number
   name: string
   deliveryDate: Date | string
-  userId: number
+  userId: string
   userName: string
   status?: string
   totalReservations?: number
@@ -489,7 +485,7 @@ export type SbmDeliveryGroupCreateManyInput = {
 export type SbmDeliveryGroupUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   userName?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   totalReservations?: Prisma.IntFieldUpdateOperationsInput | number
@@ -506,7 +502,7 @@ export type SbmDeliveryGroupUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   userName?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   totalReservations?: Prisma.IntFieldUpdateOperationsInput | number
@@ -538,7 +534,6 @@ export type SbmDeliveryGroupCountOrderByAggregateInput = {
 
 export type SbmDeliveryGroupAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
   totalReservations?: Prisma.SortOrder
   completedReservations?: Prisma.SortOrder
   estimatedDuration?: Prisma.SortOrder
@@ -581,7 +576,6 @@ export type SbmDeliveryGroupMinOrderByAggregateInput = {
 
 export type SbmDeliveryGroupSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
   totalReservations?: Prisma.SortOrder
   completedReservations?: Prisma.SortOrder
   estimatedDuration?: Prisma.SortOrder
@@ -624,7 +618,7 @@ export type SbmDeliveryGroupUpdateOneRequiredWithoutGroupReservationsNestedInput
 export type SbmDeliveryGroupCreateWithoutOptimizedRouteInput = {
   name: string
   deliveryDate: Date | string
-  userId: number
+  userId: string
   userName: string
   status?: string
   totalReservations?: number
@@ -642,7 +636,7 @@ export type SbmDeliveryGroupUncheckedCreateWithoutOptimizedRouteInput = {
   id?: number
   name: string
   deliveryDate: Date | string
-  userId: number
+  userId: string
   userName: string
   status?: string
   totalReservations?: number
@@ -675,7 +669,7 @@ export type SbmDeliveryGroupUpdateToOneWithWhereWithoutOptimizedRouteInput = {
 export type SbmDeliveryGroupUpdateWithoutOptimizedRouteInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   userName?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   totalReservations?: Prisma.IntFieldUpdateOperationsInput | number
@@ -693,7 +687,7 @@ export type SbmDeliveryGroupUncheckedUpdateWithoutOptimizedRouteInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   userName?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   totalReservations?: Prisma.IntFieldUpdateOperationsInput | number
@@ -710,7 +704,7 @@ export type SbmDeliveryGroupUncheckedUpdateWithoutOptimizedRouteInput = {
 export type SbmDeliveryGroupCreateWithoutGroupReservationsInput = {
   name: string
   deliveryDate: Date | string
-  userId: number
+  userId: string
   userName: string
   status?: string
   totalReservations?: number
@@ -728,7 +722,7 @@ export type SbmDeliveryGroupUncheckedCreateWithoutGroupReservationsInput = {
   id?: number
   name: string
   deliveryDate: Date | string
-  userId: number
+  userId: string
   userName: string
   status?: string
   totalReservations?: number
@@ -761,7 +755,7 @@ export type SbmDeliveryGroupUpdateToOneWithWhereWithoutGroupReservationsInput = 
 export type SbmDeliveryGroupUpdateWithoutGroupReservationsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   userName?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   totalReservations?: Prisma.IntFieldUpdateOperationsInput | number
@@ -779,7 +773,7 @@ export type SbmDeliveryGroupUncheckedUpdateWithoutGroupReservationsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   deliveryDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   userName?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   totalReservations?: Prisma.IntFieldUpdateOperationsInput | number
@@ -923,7 +917,7 @@ export type $SbmDeliveryGroupPayload<ExtArgs extends runtime.Types.Extensions.In
     id: number
     name: string
     deliveryDate: Date
-    userId: number
+    userId: string
     userName: string
     status: string
     totalReservations: number
@@ -1362,7 +1356,7 @@ export interface SbmDeliveryGroupFieldRefs {
   readonly id: Prisma.FieldRef<"SbmDeliveryGroup", 'Int'>
   readonly name: Prisma.FieldRef<"SbmDeliveryGroup", 'String'>
   readonly deliveryDate: Prisma.FieldRef<"SbmDeliveryGroup", 'DateTime'>
-  readonly userId: Prisma.FieldRef<"SbmDeliveryGroup", 'Int'>
+  readonly userId: Prisma.FieldRef<"SbmDeliveryGroup", 'String'>
   readonly userName: Prisma.FieldRef<"SbmDeliveryGroup", 'String'>
   readonly status: Prisma.FieldRef<"SbmDeliveryGroup", 'String'>
   readonly totalReservations: Prisma.FieldRef<"SbmDeliveryGroup", 'Int'>

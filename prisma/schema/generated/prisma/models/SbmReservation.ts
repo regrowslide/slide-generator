@@ -32,7 +32,6 @@ export type SbmReservationAvgAggregateOutputType = {
   totalAmount: number | null
   pointsUsed: number | null
   finalAmount: number | null
-  userId: number | null
 }
 
 export type SbmReservationSumAggregateOutputType = {
@@ -41,7 +40,6 @@ export type SbmReservationSumAggregateOutputType = {
   totalAmount: number | null
   pointsUsed: number | null
   finalAmount: number | null
-  userId: number | null
 }
 
 export type SbmReservationMinAggregateOutputType = {
@@ -67,7 +65,7 @@ export type SbmReservationMinAggregateOutputType = {
   pointsUsed: number | null
   finalAmount: number | null
   orderStaff: string | null
-  userId: number | null
+  userId: string | null
   notes: string | null
   deliveryCompleted: boolean | null
   recoveryCompleted: boolean | null
@@ -98,7 +96,7 @@ export type SbmReservationMaxAggregateOutputType = {
   pointsUsed: number | null
   finalAmount: number | null
   orderStaff: string | null
-  userId: number | null
+  userId: string | null
   notes: string | null
   deliveryCompleted: boolean | null
   recoveryCompleted: boolean | null
@@ -145,7 +143,6 @@ export type SbmReservationAvgAggregateInputType = {
   totalAmount?: true
   pointsUsed?: true
   finalAmount?: true
-  userId?: true
 }
 
 export type SbmReservationSumAggregateInputType = {
@@ -154,7 +151,6 @@ export type SbmReservationSumAggregateInputType = {
   totalAmount?: true
   pointsUsed?: true
   finalAmount?: true
-  userId?: true
 }
 
 export type SbmReservationMinAggregateInputType = {
@@ -360,7 +356,7 @@ export type SbmReservationGroupByOutputType = {
   pointsUsed: number
   finalAmount: number
   orderStaff: string
-  userId: number | null
+  userId: string | null
   notes: string | null
   deliveryCompleted: boolean
   recoveryCompleted: boolean
@@ -414,7 +410,7 @@ export type SbmReservationWhereInput = {
   pointsUsed?: Prisma.IntFilter<"SbmReservation"> | number
   finalAmount?: Prisma.IntFilter<"SbmReservation"> | number
   orderStaff?: Prisma.StringFilter<"SbmReservation"> | string
-  userId?: Prisma.IntNullableFilter<"SbmReservation"> | number | null
+  userId?: Prisma.StringNullableFilter<"SbmReservation"> | string | null
   notes?: Prisma.StringNullableFilter<"SbmReservation"> | string | null
   deliveryCompleted?: Prisma.BoolFilter<"SbmReservation"> | boolean
   recoveryCompleted?: Prisma.BoolFilter<"SbmReservation"> | boolean
@@ -493,7 +489,7 @@ export type SbmReservationWhereUniqueInput = Prisma.AtLeast<{
   pointsUsed?: Prisma.IntFilter<"SbmReservation"> | number
   finalAmount?: Prisma.IntFilter<"SbmReservation"> | number
   orderStaff?: Prisma.StringFilter<"SbmReservation"> | string
-  userId?: Prisma.IntNullableFilter<"SbmReservation"> | number | null
+  userId?: Prisma.StringNullableFilter<"SbmReservation"> | string | null
   notes?: Prisma.StringNullableFilter<"SbmReservation"> | string | null
   deliveryCompleted?: Prisma.BoolFilter<"SbmReservation"> | boolean
   recoveryCompleted?: Prisma.BoolFilter<"SbmReservation"> | boolean
@@ -570,7 +566,7 @@ export type SbmReservationScalarWhereWithAggregatesInput = {
   pointsUsed?: Prisma.IntWithAggregatesFilter<"SbmReservation"> | number
   finalAmount?: Prisma.IntWithAggregatesFilter<"SbmReservation"> | number
   orderStaff?: Prisma.StringWithAggregatesFilter<"SbmReservation"> | string
-  userId?: Prisma.IntNullableWithAggregatesFilter<"SbmReservation"> | number | null
+  userId?: Prisma.StringNullableWithAggregatesFilter<"SbmReservation"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"SbmReservation"> | string | null
   deliveryCompleted?: Prisma.BoolWithAggregatesFilter<"SbmReservation"> | boolean
   recoveryCompleted?: Prisma.BoolWithAggregatesFilter<"SbmReservation"> | boolean
@@ -636,7 +632,7 @@ export type SbmReservationUncheckedCreateInput = {
   pointsUsed?: number
   finalAmount: number
   orderStaff: string
-  userId?: number | null
+  userId?: string | null
   notes?: string | null
   deliveryCompleted?: boolean
   recoveryCompleted?: boolean
@@ -707,7 +703,7 @@ export type SbmReservationUncheckedUpdateInput = {
   pointsUsed?: Prisma.IntFieldUpdateOperationsInput | number
   finalAmount?: Prisma.IntFieldUpdateOperationsInput | number
   orderStaff?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recoveryCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -743,7 +739,7 @@ export type SbmReservationCreateManyInput = {
   pointsUsed?: number
   finalAmount: number
   orderStaff: string
-  userId?: number | null
+  userId?: string | null
   notes?: string | null
   deliveryCompleted?: boolean
   recoveryCompleted?: boolean
@@ -802,7 +798,7 @@ export type SbmReservationUncheckedUpdateManyInput = {
   pointsUsed?: Prisma.IntFieldUpdateOperationsInput | number
   finalAmount?: Prisma.IntFieldUpdateOperationsInput | number
   orderStaff?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recoveryCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -862,7 +858,6 @@ export type SbmReservationAvgOrderByAggregateInput = {
   totalAmount?: Prisma.SortOrder
   pointsUsed?: Prisma.SortOrder
   finalAmount?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
 }
 
 export type SbmReservationMaxOrderByAggregateInput = {
@@ -933,7 +928,6 @@ export type SbmReservationSumOrderByAggregateInput = {
   totalAmount?: Prisma.SortOrder
   pointsUsed?: Prisma.SortOrder
   finalAmount?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
 }
 
 export type SbmReservationNullableScalarRelationFilter = {
@@ -1153,7 +1147,7 @@ export type SbmReservationUncheckedCreateWithoutSbmCustomerInput = {
   pointsUsed?: number
   finalAmount: number
   orderStaff: string
-  userId?: number | null
+  userId?: string | null
   notes?: string | null
   deliveryCompleted?: boolean
   recoveryCompleted?: boolean
@@ -1218,7 +1212,7 @@ export type SbmReservationScalarWhereInput = {
   pointsUsed?: Prisma.IntFilter<"SbmReservation"> | number
   finalAmount?: Prisma.IntFilter<"SbmReservation"> | number
   orderStaff?: Prisma.StringFilter<"SbmReservation"> | string
-  userId?: Prisma.IntNullableFilter<"SbmReservation"> | number | null
+  userId?: Prisma.StringNullableFilter<"SbmReservation"> | string | null
   notes?: Prisma.StringNullableFilter<"SbmReservation"> | string | null
   deliveryCompleted?: Prisma.BoolFilter<"SbmReservation"> | boolean
   recoveryCompleted?: Prisma.BoolFilter<"SbmReservation"> | boolean
@@ -1283,7 +1277,7 @@ export type SbmReservationUncheckedCreateWithoutDeliveryRouteStopsInput = {
   pointsUsed?: number
   finalAmount: number
   orderStaff: string
-  userId?: number | null
+  userId?: string | null
   notes?: string | null
   deliveryCompleted?: boolean
   recoveryCompleted?: boolean
@@ -1368,7 +1362,7 @@ export type SbmReservationUncheckedUpdateWithoutDeliveryRouteStopsInput = {
   pointsUsed?: Prisma.IntFieldUpdateOperationsInput | number
   finalAmount?: Prisma.IntFieldUpdateOperationsInput | number
   orderStaff?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recoveryCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1437,7 +1431,7 @@ export type SbmReservationUncheckedCreateWithoutSbmDeliveryGroupReservationInput
   pointsUsed?: number
   finalAmount: number
   orderStaff: string
-  userId?: number | null
+  userId?: string | null
   notes?: string | null
   deliveryCompleted?: boolean
   recoveryCompleted?: boolean
@@ -1522,7 +1516,7 @@ export type SbmReservationUncheckedUpdateWithoutSbmDeliveryGroupReservationInput
   pointsUsed?: Prisma.IntFieldUpdateOperationsInput | number
   finalAmount?: Prisma.IntFieldUpdateOperationsInput | number
   orderStaff?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recoveryCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1591,7 +1585,7 @@ export type SbmReservationUncheckedCreateWithoutSbmReservationItemInput = {
   pointsUsed?: number
   finalAmount: number
   orderStaff: string
-  userId?: number | null
+  userId?: string | null
   notes?: string | null
   deliveryCompleted?: boolean
   recoveryCompleted?: boolean
@@ -1676,7 +1670,7 @@ export type SbmReservationUncheckedUpdateWithoutSbmReservationItemInput = {
   pointsUsed?: Prisma.IntFieldUpdateOperationsInput | number
   finalAmount?: Prisma.IntFieldUpdateOperationsInput | number
   orderStaff?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recoveryCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1745,7 +1739,7 @@ export type SbmReservationUncheckedCreateWithoutSbmReservationChangeHistoryInput
   pointsUsed?: number
   finalAmount: number
   orderStaff: string
-  userId?: number | null
+  userId?: string | null
   notes?: string | null
   deliveryCompleted?: boolean
   recoveryCompleted?: boolean
@@ -1830,7 +1824,7 @@ export type SbmReservationUncheckedUpdateWithoutSbmReservationChangeHistoryInput
   pointsUsed?: Prisma.IntFieldUpdateOperationsInput | number
   finalAmount?: Prisma.IntFieldUpdateOperationsInput | number
   orderStaff?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recoveryCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1899,7 +1893,7 @@ export type SbmReservationUncheckedCreateWithoutSbmDeliveryAssignmentInput = {
   pointsUsed?: number
   finalAmount: number
   orderStaff: string
-  userId?: number | null
+  userId?: string | null
   notes?: string | null
   deliveryCompleted?: boolean
   recoveryCompleted?: boolean
@@ -1984,7 +1978,7 @@ export type SbmReservationUncheckedUpdateWithoutSbmDeliveryAssignmentInput = {
   pointsUsed?: Prisma.IntFieldUpdateOperationsInput | number
   finalAmount?: Prisma.IntFieldUpdateOperationsInput | number
   orderStaff?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recoveryCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2113,7 +2107,7 @@ export type SbmReservationCreateManySbmCustomerInput = {
   pointsUsed?: number
   finalAmount: number
   orderStaff: string
-  userId?: number | null
+  userId?: string | null
   notes?: string | null
   deliveryCompleted?: boolean
   recoveryCompleted?: boolean
@@ -2177,7 +2171,7 @@ export type SbmReservationUncheckedUpdateWithoutSbmCustomerInput = {
   pointsUsed?: Prisma.IntFieldUpdateOperationsInput | number
   finalAmount?: Prisma.IntFieldUpdateOperationsInput | number
   orderStaff?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recoveryCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2212,7 +2206,7 @@ export type SbmReservationUncheckedUpdateManyWithoutSbmCustomerInput = {
   pointsUsed?: Prisma.IntFieldUpdateOperationsInput | number
   finalAmount?: Prisma.IntFieldUpdateOperationsInput | number
   orderStaff?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recoveryCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2606,7 +2600,7 @@ export type $SbmReservationPayload<ExtArgs extends runtime.Types.Extensions.Inte
     pointsUsed: number
     finalAmount: number
     orderStaff: string
-    userId: number | null
+    userId: string | null
     notes: string | null
     deliveryCompleted: boolean
     recoveryCompleted: boolean
@@ -3064,7 +3058,7 @@ export interface SbmReservationFieldRefs {
   readonly pointsUsed: Prisma.FieldRef<"SbmReservation", 'Int'>
   readonly finalAmount: Prisma.FieldRef<"SbmReservation", 'Int'>
   readonly orderStaff: Prisma.FieldRef<"SbmReservation", 'String'>
-  readonly userId: Prisma.FieldRef<"SbmReservation", 'Int'>
+  readonly userId: Prisma.FieldRef<"SbmReservation", 'String'>
   readonly notes: Prisma.FieldRef<"SbmReservation", 'String'>
   readonly deliveryCompleted: Prisma.FieldRef<"SbmReservation", 'Boolean'>
   readonly recoveryCompleted: Prisma.FieldRef<"SbmReservation", 'Boolean'>

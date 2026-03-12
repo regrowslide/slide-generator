@@ -393,6 +393,21 @@ export type Store = Prisma.StoreModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model Session
+ * 
+ */
+export type Session = Prisma.SessionModel
+/**
+ * Model Account
+ * 
+ */
+export type Account = Prisma.AccountModel
+/**
+ * Model Verification
+ * 
+ */
+export type Verification = Prisma.VerificationModel
+/**
  * Model ReleaseNotes
  * 
  */
@@ -432,26 +447,6 @@ export type Calendar = Prisma.CalendarModel
  * 
  */
 export type CronExecutionLog = Prisma.CronExecutionLogModel
-/**
- * Model TennisCourt
- * 
- */
-export type TennisCourt = Prisma.TennisCourtModel
-/**
- * Model TennisEvent
- * 
- */
-export type TennisEvent = Prisma.TennisEventModel
-/**
- * Model TennisEventCourt
- * 
- */
-export type TennisEventCourt = Prisma.TennisEventCourtModel
-/**
- * Model TennisAttendance
- * 
- */
-export type TennisAttendance = Prisma.TennisAttendanceModel
 /**
  * Model ExerciseMaster
  * 

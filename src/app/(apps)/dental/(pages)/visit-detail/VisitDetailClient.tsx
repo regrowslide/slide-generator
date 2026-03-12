@@ -37,7 +37,7 @@ type SortableExamItemProps = {
   hygienists: Staff[]
   visitDate: string
   savedTemplateStatuses: SavedTemplateStatus[]
-  onUpdateExam: (examId: number, data: {doctorId?: number | null; hygienistId?: number | null}) => void
+  onUpdateExam: (examId: number, data: {doctorId?: string | null; hygienistId?: string | null}) => void
   onRemoveExam: (examId: number) => void
   onStartConsultation: (examId: number) => void
   onNavigateDocument: (examId: number, templateId: string) => void
@@ -95,7 +95,7 @@ const SortableExamItem = ({exam, patient, doctors, hygienists, visitDate, savedT
           <div className="text-xs text-gray-500 mb-1">担当医:</div>
           <select
             value={exam.doctorId || ''}
-            onChange={e => onUpdateExam(exam.id, {doctorId: e.target.value ? Number(e.target.value) : null})}
+            onChange={e => onUpdateExam(exam.id, {doctorId: e.target.value || null})}
             className="w-full px-2 py-1 text-xs border border-gray-300 rounded"
           >
             <option value="">未選択</option>
@@ -110,7 +110,7 @@ const SortableExamItem = ({exam, patient, doctors, hygienists, visitDate, savedT
           <div className="text-xs text-gray-500 mb-1">担当DH:</div>
           <select
             value={exam.hygienistId || ''}
-            onChange={e => onUpdateExam(exam.id, {hygienistId: e.target.value ? Number(e.target.value) : null})}
+            onChange={e => onUpdateExam(exam.id, {hygienistId: e.target.value || null})}
             className="w-full px-2 py-1 text-xs border border-gray-300 rounded"
           >
             <option value="">未選択</option>
@@ -198,7 +198,7 @@ const VisitDetailClient = ({visitPlanId, visitDate, facility, patients, examinat
   }
 
   // 担当変更
-  const handleUpdateExam = async (examId: number, data: {doctorId?: number | null; hygienistId?: number | null}) => {
+  const handleUpdateExam = async (examId: number, data: {doctorId?: string | null; hygienistId?: string | null}) => {
     await updateDentalExamination(examId, data)
     setLocalExams(prev => prev.map(e => (e.id === examId ? {...e, ...data} : e)))
   }

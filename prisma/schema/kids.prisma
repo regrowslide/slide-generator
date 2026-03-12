@@ -10,7 +10,7 @@ model KidsChild {
   name  String // 子どもの名前
   emoji String @default("👶") // アイコン絵文字
 
-  userId Int // 保護者のUser FK
+  userId String // 保護者のUser FK
 
   User             User              @relation("KidsChildUser", fields: [userId], references: [id], onDelete: Cascade)
   KidsCategory     KidsCategory[]

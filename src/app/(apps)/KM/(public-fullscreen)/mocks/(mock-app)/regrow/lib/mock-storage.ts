@@ -173,7 +173,7 @@ export const upsertStaff = (staffName: string, storeName: StoreName): boolean =>
   }
 
   master.push({
-    userId: 0,
+    userId: '',
     staffName,
     storeName,
     role: 'viewer',

@@ -14,8 +14,8 @@ const eventInclude = {
 export type YamanokaiEventFormData = {
   title: string
   yamanokaiDepartmentId: number
-  clId: number
-  slId?: number | null
+  clId: string
+  slId?: string | null
   startAt: Date | string
   endAt: Date | string
   deadline: Date | string

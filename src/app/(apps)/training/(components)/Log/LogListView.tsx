@@ -9,7 +9,7 @@ import { IconBtn } from '@cm/components/styles/common-components/IconBtn'
 import { PART_OPTIONS } from '@app/(apps)/training/(constants)/PART_OPTIONS'
 
 type LogListViewProps = {
-  userId: number
+  userId: string
   selectedDate: string
   logList?: WorkoutLogWithMaster[]
   prLogIds?: number[]

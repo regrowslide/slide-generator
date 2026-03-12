@@ -2,6 +2,7 @@
 
 import path from 'path'
 import prisma from 'src/lib/prisma'
+import {AuthService} from 'src/lib/services/AuthService'
 import {STAFF_BY_STORE, STORE_COMMENTS, CUSTOMER_VOICES, randomInt, randomFloat, getMonthMultiplier} from '../lib/seed-constants'
 import {parseAllExcelFiles} from '../lib/excel-parser-server'
 
@@ -22,19 +23,9 @@ export const seedRegrowData = async (): Promise<{message: string}> => {
   // RoleMaster に regrowロールをupsert
   await Promise.all([
     prisma.roleMaster.upsert({
-      where: {name: 'regrow-admin'},
-      create: {name: 'regrow-admin', apps: ['regrow'], description: '管理者'},
+      where: {name: '管理者'},
+      create: {name: '管理者', apps: ['regrow'], description: '管理者'},
       update: {apps: ['regrow'], description: '管理者'},
-    }),
-    prisma.roleMaster.upsert({
-      where: {name: 'regrow-manager'},
-      create: {name: 'regrow-manager', apps: ['regrow'], description: '店舗責任者'},
-      update: {apps: ['regrow'], description: '店舗責任者'},
-    }),
-    prisma.roleMaster.upsert({
-      where: {name: 'regrow-viewer'},
-      create: {name: 'regrow-viewer', apps: ['regrow'], description: '閲覧者'},
-      update: {apps: ['regrow'], description: '閲覧者'},
     }),
   ])
 
@@ -184,19 +175,9 @@ export const seedFromExcelFiles = async (): Promise<{message: string}> => {
   // RoleMaster に regrowロールをupsert
   await Promise.all([
     prisma.roleMaster.upsert({
-      where: {name: 'regrow-admin'},
-      create: {name: 'regrow-admin', apps: ['regrow'], description: '管理者'},
+      where: {name: '管理者'},
+      create: {name: '管理者', apps: ['regrow'], description: '管理者'},
       update: {apps: ['regrow'], description: '管理者'},
-    }),
-    prisma.roleMaster.upsert({
-      where: {name: 'regrow-manager'},
-      create: {name: 'regrow-manager', apps: ['regrow'], description: '店舗責任者'},
-      update: {apps: ['regrow'], description: '店舗責任者'},
-    }),
-    prisma.roleMaster.upsert({
-      where: {name: 'regrow-viewer'},
-      create: {name: 'regrow-viewer', apps: ['regrow'], description: '閲覧者'},
-      update: {apps: ['regrow'], description: '閲覧者'},
     }),
   ])
 
@@ -239,7 +220,7 @@ export const seedFromExcelFiles = async (): Promise<{message: string}> => {
     }
   }
 
-  const userMap = new Map<string, number>() // staffName → userId
+  const userMap = new Map<string, string>() // staffName → userId
   for (const [staffName, countMap] of staffStoreCount) {
     // 最も出現回数が多い店舗を担当店舗とする
     let primaryStore = ''
@@ -252,8 +233,8 @@ export const seedFromExcelFiles = async (): Promise<{message: string}> => {
     }
 
     const storeInfo = storeMap.get(primaryStore)
-    const user = await prisma.user.create({
-      data: {
+    const user = await AuthService.createUserDirect({
+      prismaData: {
         name: staffName,
         apps: ['regrow'],
         rgStoreId: storeInfo?.id ?? null,
@@ -286,7 +267,7 @@ export const seedFromExcelFiles = async (): Promise<{message: string}> => {
     const allStaffRecords: Array<{
       staffName: string
       storeId: number
-      userId: number | null
+      userId: string | null
       sales: number
       customerCount: number
       newCustomerCount: number

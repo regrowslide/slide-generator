@@ -142,7 +142,7 @@ export default function DeliveryRoutePage() {
 
     try {
       // チーム作成処理
-      const result = await createDeliveryGroup(teamName, new Date(appliedFilters.date), session?.id || 0, session?.name || '不明')
+      const result = await createDeliveryGroup(teamName, new Date(appliedFilters.date), session?.id || '', session?.name || '不明')
 
       if (result.success && result.group) {
         toast.success('チームを作成しました')
@@ -182,7 +182,7 @@ export default function DeliveryRoutePage() {
       const result = await createMultipleDeliveryGroups(
         teamCount,
         new Date(appliedFilters.date),
-        session?.id || 0,
+        session?.id || '',
         session?.name || '不明'
       )
 

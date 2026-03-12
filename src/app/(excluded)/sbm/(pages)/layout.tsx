@@ -1,4 +1,3 @@
-import {PageBuilder} from '../(builders)/PageBuilder'
 import Admin from '@cm/components/layout/Admin/Admin'
 
 export default async function AppLayout(props) {
@@ -9,7 +8,6 @@ export default async function AppLayout(props) {
       {...{
         AppName: 'テストアプリ',
         PagesMethod: 'sbm_PAGES',
-        PageBuilderGetter: {class: PageBuilder, getter: 'getGlobalIdSelector'},
       }}
     >
       <div>

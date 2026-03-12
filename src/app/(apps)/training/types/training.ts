@@ -3,7 +3,7 @@ export interface ExerciseMaster {
   id: number
   name: string
   part: string
-  userId: number
+  userId: string
   isPublic?: boolean
   createdAt: Date
   updatedAt: Date
@@ -23,7 +23,7 @@ export interface WorkoutLogInput {
 export interface WorkoutLogWithMaster {
   id: number
   exerciseId: number
-  userId: number
+  userId: string
   strength: number
   reps: number
   date: Date

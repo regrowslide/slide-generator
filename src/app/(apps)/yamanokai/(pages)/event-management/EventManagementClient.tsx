@@ -52,7 +52,7 @@ type Props = {
   canEdit: boolean
   isSystemAdmin: boolean
   applicationSummary: ApplicationSummary
-  currentUserId: number
+  currentUserId: string
 }
 
 // 日付フォーマット
@@ -468,8 +468,8 @@ const EventForm = ({ initialData, departments, users, onSave, onCancel, isLoadin
     onSave({
       title: form.title,
       yamanokaiDepartmentId: Number(form.yamanokaiDepartmentId),
-      clId: Number(form.clId),
-      slId: form.slId ? Number(form.slId) : null,
+      clId: form.clId,
+      slId: form.slId || null,
       startAt: form.startAt,
       endAt: form.endAt || form.startAt,
       deadline: form.deadline,
@@ -643,7 +643,7 @@ const ApplicationManagement = ({
   onSummaryChange,
 }: {
   initialApplications: ApplicationWithUser[]
-  currentUserId: number
+  currentUserId: string
   onSummaryChange: (summary: Record<string, number>) => void
 }) => {
   const [applications, setApplications] = useState(initialApplications)
@@ -657,7 +657,7 @@ const ApplicationManagement = ({
     return summary
   }
 
-  const handleUpdate = async (appId: number, data: { status?: string; rejectionReason?: string | null; approvedBy?: number | null }) => {
+  const handleUpdate = async (appId: number, data: { status?: string; rejectionReason?: string | null; approvedBy?: string | null }) => {
     setSavingIds(prev => new Set(prev).add(appId))
     const updated = await updateYamanokaiApplication(appId, data)
     const newApps = applications.map(a => (a.id === appId ? updated : a))

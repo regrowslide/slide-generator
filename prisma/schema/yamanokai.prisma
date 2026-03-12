@@ -280,9 +280,9 @@ model YamanokaiEvent {
   YamanokaiDepartment    YamanokaiDepartment @relation(fields: [yamanokaiDepartmentId], references: [id])
   yamanokaiDepartmentId  Int
   CL                     User                @relation("YamanokaiEventCL", fields: [clId], references: [id])
-  clId                   Int
+  clId                   String
   SL                     User?               @relation("YamanokaiEventSL", fields: [slId], references: [id])
-  slId                   Int?
+  slId                   String?
   YamanokaiAttendance    YamanokaiAttendance[]
   YamanokaiEventPlan     YamanokaiEventPlan?
   YamanokaiRecord        YamanokaiRecord?
@@ -395,9 +395,9 @@ model YamanokaiAttendance {
   YamanokaiEvent   YamanokaiEvent @relation(fields: [yamanokaiEventId], references: [id], onDelete: Cascade)
   yamanokaiEventId Int
   User             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId           Int
+  userId           String
   ApprovedByUser   User?          @relation("AttendanceApprover", fields: [approvedBy], references: [id])
-  approvedBy       Int? // 承認/却下した管理者のUser ID
+  approvedBy       String? // 承認/却下した管理者のUser ID
 
   @@unique([yamanokaiEventId, userId])
   @@map("yamanokai_attendances")

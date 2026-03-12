@@ -29,7 +29,6 @@ export type AggregateWorkoutLog = {
 export type WorkoutLogAvgAggregateOutputType = {
   id: number | null
   sortOrder: number | null
-  userId: number | null
   exerciseId: number | null
   strength: number | null
   reps: number | null
@@ -38,7 +37,6 @@ export type WorkoutLogAvgAggregateOutputType = {
 export type WorkoutLogSumAggregateOutputType = {
   id: number | null
   sortOrder: number | null
-  userId: number | null
   exerciseId: number | null
   strength: number | null
   reps: number | null
@@ -49,7 +47,7 @@ export type WorkoutLogMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   sortOrder: number | null
-  userId: number | null
+  userId: string | null
   exerciseId: number | null
   date: Date | null
   strength: number | null
@@ -61,7 +59,7 @@ export type WorkoutLogMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   sortOrder: number | null
-  userId: number | null
+  userId: string | null
   exerciseId: number | null
   date: Date | null
   strength: number | null
@@ -85,7 +83,6 @@ export type WorkoutLogCountAggregateOutputType = {
 export type WorkoutLogAvgAggregateInputType = {
   id?: true
   sortOrder?: true
-  userId?: true
   exerciseId?: true
   strength?: true
   reps?: true
@@ -94,7 +91,6 @@ export type WorkoutLogAvgAggregateInputType = {
 export type WorkoutLogSumAggregateInputType = {
   id?: true
   sortOrder?: true
-  userId?: true
   exerciseId?: true
   strength?: true
   reps?: true
@@ -228,7 +224,7 @@ export type WorkoutLogGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   sortOrder: number
-  userId: number
+  userId: string
   exerciseId: number
   date: Date
   strength: number
@@ -263,7 +259,7 @@ export type WorkoutLogWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"WorkoutLog"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WorkoutLog"> | Date | string
   sortOrder?: Prisma.IntFilter<"WorkoutLog"> | number
-  userId?: Prisma.IntFilter<"WorkoutLog"> | number
+  userId?: Prisma.StringFilter<"WorkoutLog"> | string
   exerciseId?: Prisma.IntFilter<"WorkoutLog"> | number
   date?: Prisma.DateTimeFilter<"WorkoutLog"> | Date | string
   strength?: Prisma.IntFilter<"WorkoutLog"> | number
@@ -294,7 +290,7 @@ export type WorkoutLogWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"WorkoutLog"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WorkoutLog"> | Date | string
   sortOrder?: Prisma.IntFilter<"WorkoutLog"> | number
-  userId?: Prisma.IntFilter<"WorkoutLog"> | number
+  userId?: Prisma.StringFilter<"WorkoutLog"> | string
   exerciseId?: Prisma.IntFilter<"WorkoutLog"> | number
   date?: Prisma.DateTimeFilter<"WorkoutLog"> | Date | string
   strength?: Prisma.IntFilter<"WorkoutLog"> | number
@@ -328,7 +324,7 @@ export type WorkoutLogScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"WorkoutLog"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"WorkoutLog"> | Date | string
   sortOrder?: Prisma.IntWithAggregatesFilter<"WorkoutLog"> | number
-  userId?: Prisma.IntWithAggregatesFilter<"WorkoutLog"> | number
+  userId?: Prisma.StringWithAggregatesFilter<"WorkoutLog"> | string
   exerciseId?: Prisma.IntWithAggregatesFilter<"WorkoutLog"> | number
   date?: Prisma.DateTimeWithAggregatesFilter<"WorkoutLog"> | Date | string
   strength?: Prisma.IntWithAggregatesFilter<"WorkoutLog"> | number
@@ -351,7 +347,7 @@ export type WorkoutLogUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sortOrder?: number
-  userId: number
+  userId: string
   exerciseId: number
   date: Date | string
   strength: number
@@ -374,7 +370,7 @@ export type WorkoutLogUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   exerciseId?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   strength?: Prisma.IntFieldUpdateOperationsInput | number
@@ -386,7 +382,7 @@ export type WorkoutLogCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sortOrder?: number
-  userId: number
+  userId: string
   exerciseId: number
   date: Date | string
   strength: number
@@ -407,7 +403,7 @@ export type WorkoutLogUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   exerciseId?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   strength?: Prisma.IntFieldUpdateOperationsInput | number
@@ -439,7 +435,6 @@ export type WorkoutLogCountOrderByAggregateInput = {
 export type WorkoutLogAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
   exerciseId?: Prisma.SortOrder
   strength?: Prisma.SortOrder
   reps?: Prisma.SortOrder
@@ -472,7 +467,6 @@ export type WorkoutLogMinOrderByAggregateInput = {
 export type WorkoutLogSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
   exerciseId?: Prisma.SortOrder
   strength?: Prisma.SortOrder
   reps?: Prisma.SortOrder
@@ -617,7 +611,7 @@ export type WorkoutLogScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"WorkoutLog"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WorkoutLog"> | Date | string
   sortOrder?: Prisma.IntFilter<"WorkoutLog"> | number
-  userId?: Prisma.IntFilter<"WorkoutLog"> | number
+  userId?: Prisma.StringFilter<"WorkoutLog"> | string
   exerciseId?: Prisma.IntFilter<"WorkoutLog"> | number
   date?: Prisma.DateTimeFilter<"WorkoutLog"> | Date | string
   strength?: Prisma.IntFilter<"WorkoutLog"> | number
@@ -639,7 +633,7 @@ export type WorkoutLogUncheckedCreateWithoutExerciseMasterInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sortOrder?: number
-  userId: number
+  userId: string
   date: Date | string
   strength: number
   reps: number
@@ -719,7 +713,7 @@ export type WorkoutLogCreateManyExerciseMasterInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sortOrder?: number
-  userId: number
+  userId: string
   date: Date | string
   strength: number
   reps: number
@@ -740,7 +734,7 @@ export type WorkoutLogUncheckedUpdateWithoutExerciseMasterInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   strength?: Prisma.IntFieldUpdateOperationsInput | number
   reps?: Prisma.IntFieldUpdateOperationsInput | number
@@ -751,7 +745,7 @@ export type WorkoutLogUncheckedUpdateManyWithoutExerciseMasterInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   strength?: Prisma.IntFieldUpdateOperationsInput | number
   reps?: Prisma.IntFieldUpdateOperationsInput | number
@@ -838,7 +832,7 @@ export type $WorkoutLogPayload<ExtArgs extends runtime.Types.Extensions.Internal
     createdAt: Date
     updatedAt: Date
     sortOrder: number
-    userId: number
+    userId: string
     exerciseId: number
     date: Date
     strength: number
@@ -1272,7 +1266,7 @@ export interface WorkoutLogFieldRefs {
   readonly createdAt: Prisma.FieldRef<"WorkoutLog", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"WorkoutLog", 'DateTime'>
   readonly sortOrder: Prisma.FieldRef<"WorkoutLog", 'Int'>
-  readonly userId: Prisma.FieldRef<"WorkoutLog", 'Int'>
+  readonly userId: Prisma.FieldRef<"WorkoutLog", 'String'>
   readonly exerciseId: Prisma.FieldRef<"WorkoutLog", 'Int'>
   readonly date: Prisma.FieldRef<"WorkoutLog", 'DateTime'>
   readonly strength: Prisma.FieldRef<"WorkoutLog", 'Int'>

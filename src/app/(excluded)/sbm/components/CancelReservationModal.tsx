@@ -11,7 +11,7 @@ import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 type CancelReservationModalProps = {
   reservation: ReservationType | null
   onCancel: () => void
-  onConfirm: (reason: string, userId: number) => Promise<void>
+  onConfirm: (reason: string, userId: string) => Promise<void>
 }
 
 export const CancelReservationModal: React.FC<CancelReservationModalProps> = ({ reservation, onCancel, onConfirm }) => {

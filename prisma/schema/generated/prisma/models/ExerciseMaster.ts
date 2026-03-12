@@ -29,13 +29,11 @@ export type AggregateExerciseMaster = {
 export type ExerciseMasterAvgAggregateOutputType = {
   id: number | null
   sortOrder: number | null
-  userId: number | null
 }
 
 export type ExerciseMasterSumAggregateOutputType = {
   id: number | null
   sortOrder: number | null
-  userId: number | null
 }
 
 export type ExerciseMasterMinAggregateOutputType = {
@@ -47,7 +45,7 @@ export type ExerciseMasterMinAggregateOutputType = {
   name: string | null
   unit: string | null
   color: string | null
-  userId: number | null
+  userId: string | null
 }
 
 export type ExerciseMasterMaxAggregateOutputType = {
@@ -59,7 +57,7 @@ export type ExerciseMasterMaxAggregateOutputType = {
   name: string | null
   unit: string | null
   color: string | null
-  userId: number | null
+  userId: string | null
 }
 
 export type ExerciseMasterCountAggregateOutputType = {
@@ -79,13 +77,11 @@ export type ExerciseMasterCountAggregateOutputType = {
 export type ExerciseMasterAvgAggregateInputType = {
   id?: true
   sortOrder?: true
-  userId?: true
 }
 
 export type ExerciseMasterSumAggregateInputType = {
   id?: true
   sortOrder?: true
-  userId?: true
 }
 
 export type ExerciseMasterMinAggregateInputType = {
@@ -220,7 +216,7 @@ export type ExerciseMasterGroupByOutputType = {
   name: string
   unit: string
   color: string | null
-  userId: number
+  userId: string
   _count: ExerciseMasterCountAggregateOutputType | null
   _avg: ExerciseMasterAvgAggregateOutputType | null
   _sum: ExerciseMasterSumAggregateOutputType | null
@@ -255,7 +251,7 @@ export type ExerciseMasterWhereInput = {
   name?: Prisma.StringFilter<"ExerciseMaster"> | string
   unit?: Prisma.StringFilter<"ExerciseMaster"> | string
   color?: Prisma.StringNullableFilter<"ExerciseMaster"> | string | null
-  userId?: Prisma.IntFilter<"ExerciseMaster"> | number
+  userId?: Prisma.StringFilter<"ExerciseMaster"> | string
   User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   WorkoutLog?: Prisma.WorkoutLogListRelationFilter
 }
@@ -286,7 +282,7 @@ export type ExerciseMasterWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"ExerciseMaster"> | string
   unit?: Prisma.StringFilter<"ExerciseMaster"> | string
   color?: Prisma.StringNullableFilter<"ExerciseMaster"> | string | null
-  userId?: Prisma.IntFilter<"ExerciseMaster"> | number
+  userId?: Prisma.StringFilter<"ExerciseMaster"> | string
   User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   WorkoutLog?: Prisma.WorkoutLogListRelationFilter
 }, "id">
@@ -320,7 +316,7 @@ export type ExerciseMasterScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"ExerciseMaster"> | string
   unit?: Prisma.StringWithAggregatesFilter<"ExerciseMaster"> | string
   color?: Prisma.StringNullableWithAggregatesFilter<"ExerciseMaster"> | string | null
-  userId?: Prisma.IntWithAggregatesFilter<"ExerciseMaster"> | number
+  userId?: Prisma.StringWithAggregatesFilter<"ExerciseMaster"> | string
 }
 
 export type ExerciseMasterCreateInput = {
@@ -344,7 +340,7 @@ export type ExerciseMasterUncheckedCreateInput = {
   name: string
   unit: string
   color?: string | null
-  userId: number
+  userId: string
   WorkoutLog?: Prisma.WorkoutLogUncheckedCreateNestedManyWithoutExerciseMasterInput
 }
 
@@ -369,7 +365,7 @@ export type ExerciseMasterUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   WorkoutLog?: Prisma.WorkoutLogUncheckedUpdateManyWithoutExerciseMasterNestedInput
 }
 
@@ -382,7 +378,7 @@ export type ExerciseMasterCreateManyInput = {
   name: string
   unit: string
   color?: string | null
-  userId: number
+  userId: string
 }
 
 export type ExerciseMasterUpdateManyMutationInput = {
@@ -404,7 +400,7 @@ export type ExerciseMasterUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ExerciseMasterListRelationFilter = {
@@ -432,7 +428,6 @@ export type ExerciseMasterCountOrderByAggregateInput = {
 export type ExerciseMasterAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
 }
 
 export type ExerciseMasterMaxOrderByAggregateInput = {
@@ -462,7 +457,6 @@ export type ExerciseMasterMinOrderByAggregateInput = {
 export type ExerciseMasterSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
 }
 
 export type ExerciseMasterScalarRelationFilter = {
@@ -587,7 +581,7 @@ export type ExerciseMasterScalarWhereInput = {
   name?: Prisma.StringFilter<"ExerciseMaster"> | string
   unit?: Prisma.StringFilter<"ExerciseMaster"> | string
   color?: Prisma.StringNullableFilter<"ExerciseMaster"> | string | null
-  userId?: Prisma.IntFilter<"ExerciseMaster"> | number
+  userId?: Prisma.StringFilter<"ExerciseMaster"> | string
 }
 
 export type ExerciseMasterCreateWithoutWorkoutLogInput = {
@@ -610,7 +604,7 @@ export type ExerciseMasterUncheckedCreateWithoutWorkoutLogInput = {
   name: string
   unit: string
   color?: string | null
-  userId: number
+  userId: string
 }
 
 export type ExerciseMasterCreateOrConnectWithoutWorkoutLogInput = {
@@ -649,7 +643,7 @@ export type ExerciseMasterUncheckedUpdateWithoutWorkoutLogInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ExerciseMasterCreateManyUserInput = {
@@ -809,7 +803,7 @@ export type $ExerciseMasterPayload<ExtArgs extends runtime.Types.Extensions.Inte
     name: string
     unit: string
     color: string | null
-    userId: number
+    userId: string
   }, ExtArgs["result"]["exerciseMaster"]>
   composites: {}
 }
@@ -1243,7 +1237,7 @@ export interface ExerciseMasterFieldRefs {
   readonly name: Prisma.FieldRef<"ExerciseMaster", 'String'>
   readonly unit: Prisma.FieldRef<"ExerciseMaster", 'String'>
   readonly color: Prisma.FieldRef<"ExerciseMaster", 'String'>
-  readonly userId: Prisma.FieldRef<"ExerciseMaster", 'Int'>
+  readonly userId: Prisma.FieldRef<"ExerciseMaster", 'String'>
 }
     
 

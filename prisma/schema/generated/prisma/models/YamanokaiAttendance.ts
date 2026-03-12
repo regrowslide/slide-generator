@@ -30,16 +30,12 @@ export type YamanokaiAttendanceAvgAggregateOutputType = {
   id: number | null
   sortOrder: number | null
   yamanokaiEventId: number | null
-  userId: number | null
-  approvedBy: number | null
 }
 
 export type YamanokaiAttendanceSumAggregateOutputType = {
   id: number | null
   sortOrder: number | null
   yamanokaiEventId: number | null
-  userId: number | null
-  approvedBy: number | null
 }
 
 export type YamanokaiAttendanceMinAggregateOutputType = {
@@ -53,8 +49,8 @@ export type YamanokaiAttendanceMinAggregateOutputType = {
   actualAttended: boolean | null
   isDeleted: boolean | null
   yamanokaiEventId: number | null
-  userId: number | null
-  approvedBy: number | null
+  userId: string | null
+  approvedBy: string | null
 }
 
 export type YamanokaiAttendanceMaxAggregateOutputType = {
@@ -68,8 +64,8 @@ export type YamanokaiAttendanceMaxAggregateOutputType = {
   actualAttended: boolean | null
   isDeleted: boolean | null
   yamanokaiEventId: number | null
-  userId: number | null
-  approvedBy: number | null
+  userId: string | null
+  approvedBy: string | null
 }
 
 export type YamanokaiAttendanceCountAggregateOutputType = {
@@ -93,16 +89,12 @@ export type YamanokaiAttendanceAvgAggregateInputType = {
   id?: true
   sortOrder?: true
   yamanokaiEventId?: true
-  userId?: true
-  approvedBy?: true
 }
 
 export type YamanokaiAttendanceSumAggregateInputType = {
   id?: true
   sortOrder?: true
   yamanokaiEventId?: true
-  userId?: true
-  approvedBy?: true
 }
 
 export type YamanokaiAttendanceMinAggregateInputType = {
@@ -248,8 +240,8 @@ export type YamanokaiAttendanceGroupByOutputType = {
   actualAttended: boolean
   isDeleted: boolean
   yamanokaiEventId: number
-  userId: number
-  approvedBy: number | null
+  userId: string
+  approvedBy: string | null
   _count: YamanokaiAttendanceCountAggregateOutputType | null
   _avg: YamanokaiAttendanceAvgAggregateOutputType | null
   _sum: YamanokaiAttendanceSumAggregateOutputType | null
@@ -286,8 +278,8 @@ export type YamanokaiAttendanceWhereInput = {
   actualAttended?: Prisma.BoolFilter<"YamanokaiAttendance"> | boolean
   isDeleted?: Prisma.BoolFilter<"YamanokaiAttendance"> | boolean
   yamanokaiEventId?: Prisma.IntFilter<"YamanokaiAttendance"> | number
-  userId?: Prisma.IntFilter<"YamanokaiAttendance"> | number
-  approvedBy?: Prisma.IntNullableFilter<"YamanokaiAttendance"> | number | null
+  userId?: Prisma.StringFilter<"YamanokaiAttendance"> | string
+  approvedBy?: Prisma.StringNullableFilter<"YamanokaiAttendance"> | string | null
   YamanokaiEvent?: Prisma.XOR<Prisma.YamanokaiEventScalarRelationFilter, Prisma.YamanokaiEventWhereInput>
   User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   ApprovedByUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -326,8 +318,8 @@ export type YamanokaiAttendanceWhereUniqueInput = Prisma.AtLeast<{
   actualAttended?: Prisma.BoolFilter<"YamanokaiAttendance"> | boolean
   isDeleted?: Prisma.BoolFilter<"YamanokaiAttendance"> | boolean
   yamanokaiEventId?: Prisma.IntFilter<"YamanokaiAttendance"> | number
-  userId?: Prisma.IntFilter<"YamanokaiAttendance"> | number
-  approvedBy?: Prisma.IntNullableFilter<"YamanokaiAttendance"> | number | null
+  userId?: Prisma.StringFilter<"YamanokaiAttendance"> | string
+  approvedBy?: Prisma.StringNullableFilter<"YamanokaiAttendance"> | string | null
   YamanokaiEvent?: Prisma.XOR<Prisma.YamanokaiEventScalarRelationFilter, Prisma.YamanokaiEventWhereInput>
   User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   ApprovedByUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -367,8 +359,8 @@ export type YamanokaiAttendanceScalarWhereWithAggregatesInput = {
   actualAttended?: Prisma.BoolWithAggregatesFilter<"YamanokaiAttendance"> | boolean
   isDeleted?: Prisma.BoolWithAggregatesFilter<"YamanokaiAttendance"> | boolean
   yamanokaiEventId?: Prisma.IntWithAggregatesFilter<"YamanokaiAttendance"> | number
-  userId?: Prisma.IntWithAggregatesFilter<"YamanokaiAttendance"> | number
-  approvedBy?: Prisma.IntNullableWithAggregatesFilter<"YamanokaiAttendance"> | number | null
+  userId?: Prisma.StringWithAggregatesFilter<"YamanokaiAttendance"> | string
+  approvedBy?: Prisma.StringNullableWithAggregatesFilter<"YamanokaiAttendance"> | string | null
 }
 
 export type YamanokaiAttendanceCreateInput = {
@@ -396,8 +388,8 @@ export type YamanokaiAttendanceUncheckedCreateInput = {
   actualAttended?: boolean
   isDeleted?: boolean
   yamanokaiEventId: number
-  userId: number
-  approvedBy?: number | null
+  userId: string
+  approvedBy?: string | null
 }
 
 export type YamanokaiAttendanceUpdateInput = {
@@ -425,8 +417,8 @@ export type YamanokaiAttendanceUncheckedUpdateInput = {
   actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiEventId?: Prisma.IntFieldUpdateOperationsInput | number
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
-  approvedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type YamanokaiAttendanceCreateManyInput = {
@@ -440,8 +432,8 @@ export type YamanokaiAttendanceCreateManyInput = {
   actualAttended?: boolean
   isDeleted?: boolean
   yamanokaiEventId: number
-  userId: number
-  approvedBy?: number | null
+  userId: string
+  approvedBy?: string | null
 }
 
 export type YamanokaiAttendanceUpdateManyMutationInput = {
@@ -466,8 +458,8 @@ export type YamanokaiAttendanceUncheckedUpdateManyInput = {
   actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiEventId?: Prisma.IntFieldUpdateOperationsInput | number
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
-  approvedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type YamanokaiAttendanceListRelationFilter = {
@@ -482,7 +474,7 @@ export type YamanokaiAttendanceOrderByRelationAggregateInput = {
 
 export type YamanokaiAttendanceYamanokaiEventIdUserIdCompoundUniqueInput = {
   yamanokaiEventId: number
-  userId: number
+  userId: string
 }
 
 export type YamanokaiAttendanceCountOrderByAggregateInput = {
@@ -504,8 +496,6 @@ export type YamanokaiAttendanceAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   yamanokaiEventId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  approvedBy?: Prisma.SortOrder
 }
 
 export type YamanokaiAttendanceMaxOrderByAggregateInput = {
@@ -542,8 +532,6 @@ export type YamanokaiAttendanceSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   yamanokaiEventId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  approvedBy?: Prisma.SortOrder
 }
 
 export type YamanokaiAttendanceCreateNestedManyWithoutUserInput = {
@@ -696,7 +684,7 @@ export type YamanokaiAttendanceUncheckedCreateWithoutUserInput = {
   actualAttended?: boolean
   isDeleted?: boolean
   yamanokaiEventId: number
-  approvedBy?: number | null
+  approvedBy?: string | null
 }
 
 export type YamanokaiAttendanceCreateOrConnectWithoutUserInput = {
@@ -733,7 +721,7 @@ export type YamanokaiAttendanceUncheckedCreateWithoutApprovedByUserInput = {
   actualAttended?: boolean
   isDeleted?: boolean
   yamanokaiEventId: number
-  userId: number
+  userId: string
 }
 
 export type YamanokaiAttendanceCreateOrConnectWithoutApprovedByUserInput = {
@@ -776,8 +764,8 @@ export type YamanokaiAttendanceScalarWhereInput = {
   actualAttended?: Prisma.BoolFilter<"YamanokaiAttendance"> | boolean
   isDeleted?: Prisma.BoolFilter<"YamanokaiAttendance"> | boolean
   yamanokaiEventId?: Prisma.IntFilter<"YamanokaiAttendance"> | number
-  userId?: Prisma.IntFilter<"YamanokaiAttendance"> | number
-  approvedBy?: Prisma.IntNullableFilter<"YamanokaiAttendance"> | number | null
+  userId?: Prisma.StringFilter<"YamanokaiAttendance"> | string
+  approvedBy?: Prisma.StringNullableFilter<"YamanokaiAttendance"> | string | null
 }
 
 export type YamanokaiAttendanceUpsertWithWhereUniqueWithoutApprovedByUserInput = {
@@ -819,8 +807,8 @@ export type YamanokaiAttendanceUncheckedCreateWithoutYamanokaiEventInput = {
   rejectionReason?: string | null
   actualAttended?: boolean
   isDeleted?: boolean
-  userId: number
-  approvedBy?: number | null
+  userId: string
+  approvedBy?: string | null
 }
 
 export type YamanokaiAttendanceCreateOrConnectWithoutYamanokaiEventInput = {
@@ -860,7 +848,7 @@ export type YamanokaiAttendanceCreateManyUserInput = {
   actualAttended?: boolean
   isDeleted?: boolean
   yamanokaiEventId: number
-  approvedBy?: number | null
+  approvedBy?: string | null
 }
 
 export type YamanokaiAttendanceCreateManyApprovedByUserInput = {
@@ -874,7 +862,7 @@ export type YamanokaiAttendanceCreateManyApprovedByUserInput = {
   actualAttended?: boolean
   isDeleted?: boolean
   yamanokaiEventId: number
-  userId: number
+  userId: string
 }
 
 export type YamanokaiAttendanceUpdateWithoutUserInput = {
@@ -901,7 +889,7 @@ export type YamanokaiAttendanceUncheckedUpdateWithoutUserInput = {
   actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiEventId?: Prisma.IntFieldUpdateOperationsInput | number
-  approvedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type YamanokaiAttendanceUncheckedUpdateManyWithoutUserInput = {
@@ -915,7 +903,7 @@ export type YamanokaiAttendanceUncheckedUpdateManyWithoutUserInput = {
   actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiEventId?: Prisma.IntFieldUpdateOperationsInput | number
-  approvedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type YamanokaiAttendanceUpdateWithoutApprovedByUserInput = {
@@ -942,7 +930,7 @@ export type YamanokaiAttendanceUncheckedUpdateWithoutApprovedByUserInput = {
   actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiEventId?: Prisma.IntFieldUpdateOperationsInput | number
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserInput = {
@@ -956,7 +944,7 @@ export type YamanokaiAttendanceUncheckedUpdateManyWithoutApprovedByUserInput = {
   actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   yamanokaiEventId?: Prisma.IntFieldUpdateOperationsInput | number
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type YamanokaiAttendanceCreateManyYamanokaiEventInput = {
@@ -969,8 +957,8 @@ export type YamanokaiAttendanceCreateManyYamanokaiEventInput = {
   rejectionReason?: string | null
   actualAttended?: boolean
   isDeleted?: boolean
-  userId: number
-  approvedBy?: number | null
+  userId: string
+  approvedBy?: string | null
 }
 
 export type YamanokaiAttendanceUpdateWithoutYamanokaiEventInput = {
@@ -996,8 +984,8 @@ export type YamanokaiAttendanceUncheckedUpdateWithoutYamanokaiEventInput = {
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
-  approvedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiEventInput = {
@@ -1010,8 +998,8 @@ export type YamanokaiAttendanceUncheckedUpdateManyWithoutYamanokaiEventInput = {
   rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actualAttended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
-  approvedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1120,8 +1108,8 @@ export type $YamanokaiAttendancePayload<ExtArgs extends runtime.Types.Extensions
     actualAttended: boolean
     isDeleted: boolean
     yamanokaiEventId: number
-    userId: number
-    approvedBy: number | null
+    userId: string
+    approvedBy: string | null
   }, ExtArgs["result"]["yamanokaiAttendance"]>
   composites: {}
 }
@@ -1558,8 +1546,8 @@ export interface YamanokaiAttendanceFieldRefs {
   readonly actualAttended: Prisma.FieldRef<"YamanokaiAttendance", 'Boolean'>
   readonly isDeleted: Prisma.FieldRef<"YamanokaiAttendance", 'Boolean'>
   readonly yamanokaiEventId: Prisma.FieldRef<"YamanokaiAttendance", 'Int'>
-  readonly userId: Prisma.FieldRef<"YamanokaiAttendance", 'Int'>
-  readonly approvedBy: Prisma.FieldRef<"YamanokaiAttendance", 'Int'>
+  readonly userId: Prisma.FieldRef<"YamanokaiAttendance", 'String'>
+  readonly approvedBy: Prisma.FieldRef<"YamanokaiAttendance", 'String'>
 }
     
 

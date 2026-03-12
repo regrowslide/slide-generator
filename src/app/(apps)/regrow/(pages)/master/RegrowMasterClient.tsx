@@ -54,7 +54,7 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
   const [userFormError, setUserFormError] = useState<string | null>(null)
 
   // ユーザー編集state
-  const [userEditingId, setUserEditingId] = useState<number | null>(null)
+  const [userEditingId, setUserEditingId] = useState<string | null>(null)
   const [userEditForm, setUserEditForm] = useState({ name: '', email: '', password: '' })
   const [userEditFormError, setUserEditFormError] = useState<string | null>(null)
 
@@ -168,7 +168,7 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
   // ============================================================
 
   const handleUpdateUserStore = useCallback(
-    async (userId: number, rgStoreId: number | null) => {
+    async (userId: string, rgStoreId: number | null) => {
       await updateUserRgStore(userId, rgStoreId)
       await fetchUsers()
     },
@@ -176,7 +176,7 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
   )
 
   const handleDeleteUser = useCallback(
-    async (userId: number, userName: string) => {
+    async (userId: string, userName: string) => {
       if (!window.confirm(`「${userName}」を完全に削除しますか？\nこの操作は取り消せません。過去データのスタッフ紐付けは解除されます。`)) return
 
       toggleLoad(async () => {
@@ -188,7 +188,7 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
   )
 
   const handleToggleUserActive = useCallback(
-    async (userId: number, active: boolean) => {
+    async (userId: string, active: boolean) => {
       toggleLoad(async () => {
         await updateUserActive(userId, active)
         await fetchUsers()
@@ -217,6 +217,13 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
       setUserEditFormError('名前は必須です')
       return
     }
+
+    if (!userEditForm.email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
+      setUserEditFormError('メールアドレスが不正です')
+      return
+    }
+
+
     toggleLoad(async () => {
       await updateRegrowUser(userEditingId, {
         name: userEditForm.name.trim(),

@@ -37,7 +37,7 @@ model Store {
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
+  id            String    @id @default(uuid())
   code          String?   @unique
   createdAt     DateTime  @default(now())
   updatedAt     DateTime? @default(now()) @updatedAt()
@@ -69,16 +69,22 @@ model User {
   app                  String?
   apps                 String[]
 
-  // tbm
+  lineUserId String? @unique
+
+  // better-auth
+  emailVerified Boolean @default(false)
+  image         String?
 
   employeeCode String? @unique
   phone        String?
 
-  avatar String? // 子ども用アバター画像URL
+  avatar String?
 
   bcc String?
 
   UserRole UserRole[]
+  Session  Session[]
+  Account  Account[]
 
   SbmReservation        SbmReservation[]
   SbmDeliveryAssignment SbmDeliveryAssignment[]
@@ -108,11 +114,6 @@ model User {
   DentalExaminationDoctor    DentalExamination[] @relation("ExaminationDoctor")
   DentalExaminationHygienist DentalExamination[] @relation("ExaminationHygienist")
 
-  // tennis
-  lineUserId         String?            @unique
-  TennisEventCreator TennisEvent[]      @relation("TennisEventCreator")
-  TennisAttendance   TennisAttendance[] @relation("TennisAttendanceUser")
-
   // regrow
   rgStoreId             Int?
   RgStoreRg             RgStore?            @relation("RgUserStore", fields: [rgStoreId], references: [id])
@@ -121,6 +122,57 @@ model User {
 
   // kids
   KidsChildUser KidsChild[] @relation("KidsChildUser")
+}
+
+// better-auth セッションテーブル
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  impersonatedBy String?
+
+  @@map("session")
+}
+
+// better-auth アカウントテーブル
+model Account {
+  id                    String    @id @default(uuid())
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  idToken               String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("account")
+}
+
+// better-auth メール認証テーブル
+model Verification {
+  id         String    @id @default(uuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  @@map("verification")
 }
 
 model ReleaseNotes {
@@ -133,7 +185,7 @@ model ReleaseNotes {
   title            String?
   msg              String
   imgUrl           String?
-  confirmedUserIds Int[]
+  confirmedUserIds String[]
 }
 
 model Tokens {
@@ -183,7 +235,7 @@ model UserRole {
   sortOrder Float     @default(0)
 
   User         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       Int
+  userId       String
   RoleMaster   RoleMaster @relation(fields: [roleMasterId], references: [id], onDelete: Cascade)
   roleMasterId Int
 

@@ -126,6 +126,9 @@ export const ModelName = {
   Department: 'Department',
   Store: 'Store',
   User: 'User',
+  Session: 'Session',
+  Account: 'Account',
+  Verification: 'Verification',
   ReleaseNotes: 'ReleaseNotes',
   Tokens: 'Tokens',
   GoogleAccessToken: 'GoogleAccessToken',
@@ -134,10 +137,6 @@ export const ModelName = {
   ChainMethodLock: 'ChainMethodLock',
   Calendar: 'Calendar',
   CronExecutionLog: 'CronExecutionLog',
-  TennisCourt: 'TennisCourt',
-  TennisEvent: 'TennisEvent',
-  TennisEventCourt: 'TennisEventCourt',
-  TennisAttendance: 'TennisAttendance',
   ExerciseMaster: 'ExerciseMaster',
   WorkoutLog: 'WorkoutLog',
   YamanokaiDepartment: 'YamanokaiDepartment',
@@ -1417,6 +1416,9 @@ export const UserScalarFieldEnum = {
   color: 'color',
   app: 'app',
   apps: 'apps',
+  lineUserId: 'lineUserId',
+  emailVerified: 'emailVerified',
+  image: 'image',
   employeeCode: 'employeeCode',
   phone: 'phone',
   avatar: 'avatar',
@@ -1425,11 +1427,56 @@ export const UserScalarFieldEnum = {
   storeId: 'storeId',
   departmentId: 'departmentId',
   dentalClinicId: 'dentalClinicId',
-  lineUserId: 'lineUserId',
   rgStoreId: 'rgStoreId'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const SessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  impersonatedBy: 'impersonatedBy'
+} as const
+
+export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
+
+
+export const AccountScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  accountId: 'accountId',
+  providerId: 'providerId',
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  accessTokenExpiresAt: 'accessTokenExpiresAt',
+  refreshTokenExpiresAt: 'refreshTokenExpiresAt',
+  scope: 'scope',
+  idToken: 'idToken',
+  password: 'password',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
+
+
+export const VerificationScalarFieldEnum = {
+  id: 'id',
+  identifier: 'identifier',
+  value: 'value',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
 
 
 export const ReleaseNotesScalarFieldEnum = {
@@ -1540,65 +1587,6 @@ export const CronExecutionLogScalarFieldEnum = {
 } as const
 
 export type CronExecutionLogScalarFieldEnum = (typeof CronExecutionLogScalarFieldEnum)[keyof typeof CronExecutionLogScalarFieldEnum]
-
-
-export const TennisCourtScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  name: 'name',
-  address: 'address',
-  googleMapsUrl: 'googleMapsUrl',
-  courtNumbers: 'courtNumbers',
-  schedulePageKey: 'schedulePageKey',
-  isDeleted: 'isDeleted'
-} as const
-
-export type TennisCourtScalarFieldEnum = (typeof TennisCourtScalarFieldEnum)[keyof typeof TennisCourtScalarFieldEnum]
-
-
-export const TennisEventScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  sortOrder: 'sortOrder',
-  title: 'title',
-  date: 'date',
-  startTime: 'startTime',
-  endTime: 'endTime',
-  memo: 'memo',
-  isDeleted: 'isDeleted',
-  creatorId: 'creatorId'
-} as const
-
-export type TennisEventScalarFieldEnum = (typeof TennisEventScalarFieldEnum)[keyof typeof TennisEventScalarFieldEnum]
-
-
-export const TennisEventCourtScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  courtNumber: 'courtNumber',
-  status: 'status',
-  tennisEventId: 'tennisEventId',
-  tennisCourtId: 'tennisCourtId'
-} as const
-
-export type TennisEventCourtScalarFieldEnum = (typeof TennisEventCourtScalarFieldEnum)[keyof typeof TennisEventCourtScalarFieldEnum]
-
-
-export const TennisAttendanceScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  status: 'status',
-  comment: 'comment',
-  tennisEventId: 'tennisEventId',
-  userId: 'userId'
-} as const
-
-export type TennisAttendanceScalarFieldEnum = (typeof TennisAttendanceScalarFieldEnum)[keyof typeof TennisAttendanceScalarFieldEnum]
 
 
 export const ExerciseMasterScalarFieldEnum = {

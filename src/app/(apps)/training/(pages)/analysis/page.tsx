@@ -22,7 +22,7 @@ import { formatDate } from '@cm/class/Days/date-utils/formatters'
 
 export default function AnalysisPage() {
   const { session } = useGlobal()
-  const userId = session?.id || 1
+  const userId = session?.id || ''
   const [subView, setSubView] = useState<'dashboard' | 'exercise'>('dashboard')
   const [analysisType, setAnalysisType] = useState<'volume' | 'reps'>('volume')
   const [currentMonth, setCurrentMonth] = useState(new Date())

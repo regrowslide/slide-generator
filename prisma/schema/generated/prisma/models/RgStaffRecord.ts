@@ -30,7 +30,6 @@ export type RgStaffRecordAvgAggregateOutputType = {
   id: number | null
   sortOrder: number | null
   monthlyReportId: number | null
-  userId: number | null
   storeId: number | null
   rank: number | null
   sales: number | null
@@ -44,7 +43,6 @@ export type RgStaffRecordSumAggregateOutputType = {
   id: number | null
   sortOrder: number | null
   monthlyReportId: number | null
-  userId: number | null
   storeId: number | null
   rank: number | null
   sales: number | null
@@ -61,7 +59,7 @@ export type RgStaffRecordMinAggregateOutputType = {
   sortOrder: number | null
   monthlyReportId: number | null
   staffName: string | null
-  userId: number | null
+  userId: string | null
   storeId: number | null
   rank: number | null
   sales: number | null
@@ -78,7 +76,7 @@ export type RgStaffRecordMaxAggregateOutputType = {
   sortOrder: number | null
   monthlyReportId: number | null
   staffName: string | null
-  userId: number | null
+  userId: string | null
   storeId: number | null
   rank: number | null
   sales: number | null
@@ -111,7 +109,6 @@ export type RgStaffRecordAvgAggregateInputType = {
   id?: true
   sortOrder?: true
   monthlyReportId?: true
-  userId?: true
   storeId?: true
   rank?: true
   sales?: true
@@ -125,7 +122,6 @@ export type RgStaffRecordSumAggregateInputType = {
   id?: true
   sortOrder?: true
   monthlyReportId?: true
-  userId?: true
   storeId?: true
   rank?: true
   sales?: true
@@ -280,7 +276,7 @@ export type RgStaffRecordGroupByOutputType = {
   sortOrder: number
   monthlyReportId: number
   staffName: string
-  userId: number | null
+  userId: string | null
   storeId: number
   rank: number
   sales: number
@@ -320,7 +316,7 @@ export type RgStaffRecordWhereInput = {
   sortOrder?: Prisma.FloatFilter<"RgStaffRecord"> | number
   monthlyReportId?: Prisma.IntFilter<"RgStaffRecord"> | number
   staffName?: Prisma.StringFilter<"RgStaffRecord"> | string
-  userId?: Prisma.IntNullableFilter<"RgStaffRecord"> | number | null
+  userId?: Prisma.StringNullableFilter<"RgStaffRecord"> | string | null
   storeId?: Prisma.IntFilter<"RgStaffRecord"> | number
   rank?: Prisma.IntFilter<"RgStaffRecord"> | number
   sales?: Prisma.FloatFilter<"RgStaffRecord"> | number
@@ -363,7 +359,7 @@ export type RgStaffRecordWhereUniqueInput = Prisma.AtLeast<{
   sortOrder?: Prisma.FloatFilter<"RgStaffRecord"> | number
   monthlyReportId?: Prisma.IntFilter<"RgStaffRecord"> | number
   staffName?: Prisma.StringFilter<"RgStaffRecord"> | string
-  userId?: Prisma.IntNullableFilter<"RgStaffRecord"> | number | null
+  userId?: Prisma.StringNullableFilter<"RgStaffRecord"> | string | null
   storeId?: Prisma.IntFilter<"RgStaffRecord"> | number
   rank?: Prisma.IntFilter<"RgStaffRecord"> | number
   sales?: Prisma.FloatFilter<"RgStaffRecord"> | number
@@ -408,7 +404,7 @@ export type RgStaffRecordScalarWhereWithAggregatesInput = {
   sortOrder?: Prisma.FloatWithAggregatesFilter<"RgStaffRecord"> | number
   monthlyReportId?: Prisma.IntWithAggregatesFilter<"RgStaffRecord"> | number
   staffName?: Prisma.StringWithAggregatesFilter<"RgStaffRecord"> | string
-  userId?: Prisma.IntNullableWithAggregatesFilter<"RgStaffRecord"> | number | null
+  userId?: Prisma.StringNullableWithAggregatesFilter<"RgStaffRecord"> | string | null
   storeId?: Prisma.IntWithAggregatesFilter<"RgStaffRecord"> | number
   rank?: Prisma.IntWithAggregatesFilter<"RgStaffRecord"> | number
   sales?: Prisma.FloatWithAggregatesFilter<"RgStaffRecord"> | number
@@ -441,7 +437,7 @@ export type RgStaffRecordUncheckedCreateInput = {
   sortOrder?: number
   monthlyReportId: number
   staffName: string
-  userId?: number | null
+  userId?: string | null
   storeId: number
   rank: number
   sales: number
@@ -474,7 +470,7 @@ export type RgStaffRecordUncheckedUpdateInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   monthlyReportId?: Prisma.IntFieldUpdateOperationsInput | number
   staffName?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storeId?: Prisma.IntFieldUpdateOperationsInput | number
   rank?: Prisma.IntFieldUpdateOperationsInput | number
   sales?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -491,7 +487,7 @@ export type RgStaffRecordCreateManyInput = {
   sortOrder?: number
   monthlyReportId: number
   staffName: string
-  userId?: number | null
+  userId?: string | null
   storeId: number
   rank: number
   sales: number
@@ -521,7 +517,7 @@ export type RgStaffRecordUncheckedUpdateManyInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   monthlyReportId?: Prisma.IntFieldUpdateOperationsInput | number
   staffName?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storeId?: Prisma.IntFieldUpdateOperationsInput | number
   rank?: Prisma.IntFieldUpdateOperationsInput | number
   sales?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -562,7 +558,6 @@ export type RgStaffRecordAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   monthlyReportId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
   storeId?: Prisma.SortOrder
   rank?: Prisma.SortOrder
   sales?: Prisma.SortOrder
@@ -610,7 +605,6 @@ export type RgStaffRecordSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   monthlyReportId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
   storeId?: Prisma.SortOrder
   rank?: Prisma.SortOrder
   sales?: Prisma.SortOrder
@@ -768,7 +762,7 @@ export type RgStaffRecordUncheckedCreateWithoutRgStoreInput = {
   sortOrder?: number
   monthlyReportId: number
   staffName: string
-  userId?: number | null
+  userId?: string | null
   rank: number
   sales: number
   customerCount: number
@@ -813,7 +807,7 @@ export type RgStaffRecordScalarWhereInput = {
   sortOrder?: Prisma.FloatFilter<"RgStaffRecord"> | number
   monthlyReportId?: Prisma.IntFilter<"RgStaffRecord"> | number
   staffName?: Prisma.StringFilter<"RgStaffRecord"> | string
-  userId?: Prisma.IntNullableFilter<"RgStaffRecord"> | number | null
+  userId?: Prisma.StringNullableFilter<"RgStaffRecord"> | string | null
   storeId?: Prisma.IntFilter<"RgStaffRecord"> | number
   rank?: Prisma.IntFilter<"RgStaffRecord"> | number
   sales?: Prisma.FloatFilter<"RgStaffRecord"> | number
@@ -844,7 +838,7 @@ export type RgStaffRecordUncheckedCreateWithoutRgMonthlyReportInput = {
   updatedAt?: Date | string | null
   sortOrder?: number
   staffName: string
-  userId?: number | null
+  userId?: string | null
   storeId: number
   rank: number
   sales: number
@@ -944,7 +938,7 @@ export type RgStaffRecordCreateManyRgStoreInput = {
   sortOrder?: number
   monthlyReportId: number
   staffName: string
-  userId?: number | null
+  userId?: string | null
   rank: number
   sales: number
   customerCount: number
@@ -975,7 +969,7 @@ export type RgStaffRecordUncheckedUpdateWithoutRgStoreInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   monthlyReportId?: Prisma.IntFieldUpdateOperationsInput | number
   staffName?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rank?: Prisma.IntFieldUpdateOperationsInput | number
   sales?: Prisma.FloatFieldUpdateOperationsInput | number
   customerCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -991,7 +985,7 @@ export type RgStaffRecordUncheckedUpdateManyWithoutRgStoreInput = {
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   monthlyReportId?: Prisma.IntFieldUpdateOperationsInput | number
   staffName?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rank?: Prisma.IntFieldUpdateOperationsInput | number
   sales?: Prisma.FloatFieldUpdateOperationsInput | number
   customerCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1006,7 +1000,7 @@ export type RgStaffRecordCreateManyRgMonthlyReportInput = {
   updatedAt?: Date | string | null
   sortOrder?: number
   staffName: string
-  userId?: number | null
+  userId?: string | null
   storeId: number
   rank: number
   sales: number
@@ -1037,7 +1031,7 @@ export type RgStaffRecordUncheckedUpdateWithoutRgMonthlyReportInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   staffName?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storeId?: Prisma.IntFieldUpdateOperationsInput | number
   rank?: Prisma.IntFieldUpdateOperationsInput | number
   sales?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1053,7 +1047,7 @@ export type RgStaffRecordUncheckedUpdateManyWithoutRgMonthlyReportInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   staffName?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   storeId?: Prisma.IntFieldUpdateOperationsInput | number
   rank?: Prisma.IntFieldUpdateOperationsInput | number
   sales?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1236,7 +1230,7 @@ export type $RgStaffRecordPayload<ExtArgs extends runtime.Types.Extensions.Inter
     sortOrder: number
     monthlyReportId: number
     staffName: string
-    userId: number | null
+    userId: string | null
     storeId: number
     rank: number
     sales: number
@@ -1676,7 +1670,7 @@ export interface RgStaffRecordFieldRefs {
   readonly sortOrder: Prisma.FieldRef<"RgStaffRecord", 'Float'>
   readonly monthlyReportId: Prisma.FieldRef<"RgStaffRecord", 'Int'>
   readonly staffName: Prisma.FieldRef<"RgStaffRecord", 'String'>
-  readonly userId: Prisma.FieldRef<"RgStaffRecord", 'Int'>
+  readonly userId: Prisma.FieldRef<"RgStaffRecord", 'String'>
   readonly storeId: Prisma.FieldRef<"RgStaffRecord", 'Int'>
   readonly rank: Prisma.FieldRef<"RgStaffRecord", 'Int'>
   readonly sales: Prisma.FieldRef<"RgStaffRecord", 'Float'>

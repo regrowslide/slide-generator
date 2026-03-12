@@ -14,7 +14,7 @@ interface MasterFormProps {
 
 export function MasterForm({ master, onSave, onCancel }: MasterFormProps) {
   const { session } = useGlobal()
-  const userId = session?.id || 1
+  const userId = session?.id || ''
 
   // フォームデータ
   const [formData, setFormData] = useState<any>({

@@ -67,13 +67,13 @@ const StaffMasterClient = ({ staff, clinicId }: StaffMasterClientProps) => {
     router.refresh()
   }
 
-  const handleDelete = async (id: number, name: string) => {
+  const handleDelete = async (id: string, name: string) => {
     if (!window.confirm(`「${name}」をスタッフから外しますか？`)) return
     await removeDentalStaff(id)
     router.refresh()
   }
 
-  const handleReorder = async (id: number, direction: 'up' | 'down') => {
+  const handleReorder = async (id: string, direction: 'up' | 'down') => {
     const members = staff.filter(s => s.role === staff.find(x => x.id === id)?.role)
     const idx = members.findIndex(s => s.id === id)
     if (idx < 0) return

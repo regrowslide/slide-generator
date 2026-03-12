@@ -9,7 +9,7 @@ import {
 import {PART_OPTIONS} from '@app/(apps)/training/(constants)/PART_OPTIONS'
 
 interface UseExerciseMastersProps {
-  userId: number
+  userId: string
 }
 
 export function useExerciseMasters({userId}: UseExerciseMastersProps) {

@@ -28,12 +28,10 @@ export type AggregateSbmReservationChangeHistory = {
 
 export type SbmReservationChangeHistoryAvgAggregateOutputType = {
   sbmReservationId: number | null
-  userId: number | null
 }
 
 export type SbmReservationChangeHistorySumAggregateOutputType = {
   sbmReservationId: number | null
-  userId: number | null
 }
 
 export type SbmReservationChangeHistoryMinAggregateOutputType = {
@@ -41,7 +39,7 @@ export type SbmReservationChangeHistoryMinAggregateOutputType = {
   sbmReservationId: number | null
   changeType: string | null
   changedAt: Date | null
-  userId: number | null
+  userId: string | null
 }
 
 export type SbmReservationChangeHistoryMaxAggregateOutputType = {
@@ -49,7 +47,7 @@ export type SbmReservationChangeHistoryMaxAggregateOutputType = {
   sbmReservationId: number | null
   changeType: string | null
   changedAt: Date | null
-  userId: number | null
+  userId: string | null
 }
 
 export type SbmReservationChangeHistoryCountAggregateOutputType = {
@@ -67,12 +65,10 @@ export type SbmReservationChangeHistoryCountAggregateOutputType = {
 
 export type SbmReservationChangeHistoryAvgAggregateInputType = {
   sbmReservationId?: true
-  userId?: true
 }
 
 export type SbmReservationChangeHistorySumAggregateInputType = {
   sbmReservationId?: true
-  userId?: true
 }
 
 export type SbmReservationChangeHistoryMinAggregateInputType = {
@@ -197,7 +193,7 @@ export type SbmReservationChangeHistoryGroupByOutputType = {
   oldValues: runtime.JsonValue | null
   newValues: runtime.JsonValue | null
   changedAt: Date
-  userId: number | null
+  userId: string | null
   _count: SbmReservationChangeHistoryCountAggregateOutputType | null
   _avg: SbmReservationChangeHistoryAvgAggregateOutputType | null
   _sum: SbmReservationChangeHistorySumAggregateOutputType | null
@@ -231,7 +227,7 @@ export type SbmReservationChangeHistoryWhereInput = {
   oldValues?: Prisma.JsonNullableFilter<"SbmReservationChangeHistory">
   newValues?: Prisma.JsonNullableFilter<"SbmReservationChangeHistory">
   changedAt?: Prisma.DateTimeFilter<"SbmReservationChangeHistory"> | Date | string
-  userId?: Prisma.IntNullableFilter<"SbmReservationChangeHistory"> | number | null
+  userId?: Prisma.StringNullableFilter<"SbmReservationChangeHistory"> | string | null
   SbmReservation?: Prisma.XOR<Prisma.SbmReservationNullableScalarRelationFilter, Prisma.SbmReservationWhereInput> | null
   User?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
@@ -260,7 +256,7 @@ export type SbmReservationChangeHistoryWhereUniqueInput = Prisma.AtLeast<{
   oldValues?: Prisma.JsonNullableFilter<"SbmReservationChangeHistory">
   newValues?: Prisma.JsonNullableFilter<"SbmReservationChangeHistory">
   changedAt?: Prisma.DateTimeFilter<"SbmReservationChangeHistory"> | Date | string
-  userId?: Prisma.IntNullableFilter<"SbmReservationChangeHistory"> | number | null
+  userId?: Prisma.StringNullableFilter<"SbmReservationChangeHistory"> | string | null
   SbmReservation?: Prisma.XOR<Prisma.SbmReservationNullableScalarRelationFilter, Prisma.SbmReservationWhereInput> | null
   User?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id">
@@ -292,7 +288,7 @@ export type SbmReservationChangeHistoryScalarWhereWithAggregatesInput = {
   oldValues?: Prisma.JsonNullableWithAggregatesFilter<"SbmReservationChangeHistory">
   newValues?: Prisma.JsonNullableWithAggregatesFilter<"SbmReservationChangeHistory">
   changedAt?: Prisma.DateTimeWithAggregatesFilter<"SbmReservationChangeHistory"> | Date | string
-  userId?: Prisma.IntNullableWithAggregatesFilter<"SbmReservationChangeHistory"> | number | null
+  userId?: Prisma.StringNullableWithAggregatesFilter<"SbmReservationChangeHistory"> | string | null
 }
 
 export type SbmReservationChangeHistoryCreateInput = {
@@ -314,7 +310,7 @@ export type SbmReservationChangeHistoryUncheckedCreateInput = {
   oldValues?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   newValues?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   changedAt?: Date | string
-  userId?: number | null
+  userId?: string | null
 }
 
 export type SbmReservationChangeHistoryUpdateInput = {
@@ -336,7 +332,7 @@ export type SbmReservationChangeHistoryUncheckedUpdateInput = {
   oldValues?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   newValues?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type SbmReservationChangeHistoryCreateManyInput = {
@@ -347,7 +343,7 @@ export type SbmReservationChangeHistoryCreateManyInput = {
   oldValues?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   newValues?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   changedAt?: Date | string
-  userId?: number | null
+  userId?: string | null
 }
 
 export type SbmReservationChangeHistoryUpdateManyMutationInput = {
@@ -367,7 +363,7 @@ export type SbmReservationChangeHistoryUncheckedUpdateManyInput = {
   oldValues?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   newValues?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type SbmReservationChangeHistoryListRelationFilter = {
@@ -393,7 +389,6 @@ export type SbmReservationChangeHistoryCountOrderByAggregateInput = {
 
 export type SbmReservationChangeHistoryAvgOrderByAggregateInput = {
   sbmReservationId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
 }
 
 export type SbmReservationChangeHistoryMaxOrderByAggregateInput = {
@@ -414,7 +409,6 @@ export type SbmReservationChangeHistoryMinOrderByAggregateInput = {
 
 export type SbmReservationChangeHistorySumOrderByAggregateInput = {
   sbmReservationId?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
 }
 
 export type SbmReservationChangeHistoryCreateNestedManyWithoutSbmReservationInput = {
@@ -518,7 +512,7 @@ export type SbmReservationChangeHistoryUncheckedCreateWithoutSbmReservationInput
   oldValues?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   newValues?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   changedAt?: Date | string
-  userId?: number | null
+  userId?: string | null
 }
 
 export type SbmReservationChangeHistoryCreateOrConnectWithoutSbmReservationInput = {
@@ -558,7 +552,7 @@ export type SbmReservationChangeHistoryScalarWhereInput = {
   oldValues?: Prisma.JsonNullableFilter<"SbmReservationChangeHistory">
   newValues?: Prisma.JsonNullableFilter<"SbmReservationChangeHistory">
   changedAt?: Prisma.DateTimeFilter<"SbmReservationChangeHistory"> | Date | string
-  userId?: Prisma.IntNullableFilter<"SbmReservationChangeHistory"> | number | null
+  userId?: Prisma.StringNullableFilter<"SbmReservationChangeHistory"> | string | null
 }
 
 export type SbmReservationChangeHistoryCreateWithoutUserInput = {
@@ -614,7 +608,7 @@ export type SbmReservationChangeHistoryCreateManySbmReservationInput = {
   oldValues?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   newValues?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   changedAt?: Date | string
-  userId?: number | null
+  userId?: string | null
 }
 
 export type SbmReservationChangeHistoryUpdateWithoutSbmReservationInput = {
@@ -634,7 +628,7 @@ export type SbmReservationChangeHistoryUncheckedUpdateWithoutSbmReservationInput
   oldValues?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   newValues?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type SbmReservationChangeHistoryUncheckedUpdateManyWithoutSbmReservationInput = {
@@ -644,7 +638,7 @@ export type SbmReservationChangeHistoryUncheckedUpdateManyWithoutSbmReservationI
   oldValues?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   newValues?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   changedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type SbmReservationChangeHistoryCreateManyUserInput = {
@@ -767,7 +761,7 @@ export type $SbmReservationChangeHistoryPayload<ExtArgs extends runtime.Types.Ex
     oldValues: runtime.JsonValue | null
     newValues: runtime.JsonValue | null
     changedAt: Date
-    userId: number | null
+    userId: string | null
   }, ExtArgs["result"]["sbmReservationChangeHistory"]>
   composites: {}
 }
@@ -1200,7 +1194,7 @@ export interface SbmReservationChangeHistoryFieldRefs {
   readonly oldValues: Prisma.FieldRef<"SbmReservationChangeHistory", 'Json'>
   readonly newValues: Prisma.FieldRef<"SbmReservationChangeHistory", 'Json'>
   readonly changedAt: Prisma.FieldRef<"SbmReservationChangeHistory", 'DateTime'>
-  readonly userId: Prisma.FieldRef<"SbmReservationChangeHistory", 'Int'>
+  readonly userId: Prisma.FieldRef<"SbmReservationChangeHistory", 'String'>
 }
     
 

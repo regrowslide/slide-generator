@@ -27,28 +27,28 @@ export const createRegrowUser = async (data: {name: string; email?: string; pass
 // ============================================================
 
 export const updateRegrowUser = async (
-  userId: number,
+  userId: string,
   data: {name?: string; email?: string; password?: string}
 ): Promise<User> => RegrowUserService.updateUser(userId, data)
 
-export const updateUserRgStore = async (userId: number, rgStoreId: number | null): Promise<User> =>
+export const updateUserRgStore = async (userId: string, rgStoreId: number | null): Promise<User> =>
   RegrowUserService.updateRgStore(userId, rgStoreId)
 
-export const updateUserActive = async (userId: number, active: boolean): Promise<User> =>
+export const updateUserActive = async (userId: string, active: boolean): Promise<User> =>
   RegrowUserService.updateActive(userId, active)
 
 // ============================================================
 // 権限取得（ログインユーザーのRgロール）
 // ============================================================
 
-export const getCurrentUserRgRole = async (userId: number): Promise<StaffRole> =>
+export const getCurrentUserRgRole = async (userId: string): Promise<StaffRole> =>
   RegrowUserService.getRgRoleByUserId(userId)
 
 // ============================================================
 // Delete
 // ============================================================
 
-export const deleteRegrowUser = async (userId: number): Promise<void> =>
+export const deleteRegrowUser = async (userId: string): Promise<void> =>
   RegrowUserService.deleteUser(userId)
 
 // ============================================================
@@ -70,7 +70,7 @@ export const batchLinkStaffData = async (): Promise<BatchLinkResult> => {
   })
 
   // staffName → userId マップ（同名ユーザーがいる場合はスキップ）
-  const userMap = new Map<string, number>()
+  const userMap = new Map<string, string>()
   const duplicateNames = new Set<string>()
   for (const u of rgUsers) {
     if (userMap.has(u.name)) {

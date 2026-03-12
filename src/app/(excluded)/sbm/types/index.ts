@@ -76,7 +76,7 @@ type ReservationType = {
   pointsUsed: number
   finalAmount: number
   orderStaff: string
-  userId: number | null
+  userId: string | null
   notes: string | null
   createdAt?: Date
   updatedAt?: Date
@@ -110,7 +110,7 @@ type ReservationChangeHistoryType = {
   oldValues: any | null
   newValues: any | null
   changedAt: Date
-  userId: number | null
+  userId: string | null
 }
 
 type DeliveryTeamType = {
@@ -126,7 +126,7 @@ type DeliveryAssignmentType = {
   sbmDeliveryTeamId: number
   sbmReservationId: number
   assignedBy: string
-  userId: number | null
+  userId: string | null
   deliveryDate: Date
   estimatedDuration: number | null
   actualDuration: number | null
@@ -156,7 +156,7 @@ type DeliveryGroupType = {
   id: number
   name: string
   deliveryDate: Date
-  userId: number
+  userId: string
   userName: string
   status: string
   totalReservations: number

@@ -68,7 +68,7 @@ export type StaffRole = 'admin' | 'manager' | 'viewer'
 
 /** スタッフマスタ */
 export type StaffMaster = {
-  userId: number
+  userId: string
   staffName: string
   storeName: StoreName
   role: StaffRole

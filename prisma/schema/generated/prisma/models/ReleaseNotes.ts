@@ -29,13 +29,11 @@ export type AggregateReleaseNotes = {
 export type ReleaseNotesAvgAggregateOutputType = {
   id: number | null
   sortOrder: number | null
-  confirmedUserIds: number | null
 }
 
 export type ReleaseNotesSumAggregateOutputType = {
   id: number | null
   sortOrder: number | null
-  confirmedUserIds: number[]
 }
 
 export type ReleaseNotesMinAggregateOutputType = {
@@ -77,13 +75,11 @@ export type ReleaseNotesCountAggregateOutputType = {
 export type ReleaseNotesAvgAggregateInputType = {
   id?: true
   sortOrder?: true
-  confirmedUserIds?: true
 }
 
 export type ReleaseNotesSumAggregateInputType = {
   id?: true
   sortOrder?: true
-  confirmedUserIds?: true
 }
 
 export type ReleaseNotesMinAggregateInputType = {
@@ -216,7 +212,7 @@ export type ReleaseNotesGroupByOutputType = {
   title: string | null
   msg: string
   imgUrl: string | null
-  confirmedUserIds: number[]
+  confirmedUserIds: string[]
   _count: ReleaseNotesCountAggregateOutputType | null
   _avg: ReleaseNotesAvgAggregateOutputType | null
   _sum: ReleaseNotesSumAggregateOutputType | null
@@ -251,7 +247,7 @@ export type ReleaseNotesWhereInput = {
   title?: Prisma.StringNullableFilter<"ReleaseNotes"> | string | null
   msg?: Prisma.StringFilter<"ReleaseNotes"> | string
   imgUrl?: Prisma.StringNullableFilter<"ReleaseNotes"> | string | null
-  confirmedUserIds?: Prisma.IntNullableListFilter<"ReleaseNotes">
+  confirmedUserIds?: Prisma.StringNullableListFilter<"ReleaseNotes">
 }
 
 export type ReleaseNotesOrderByWithRelationInput = {
@@ -278,7 +274,7 @@ export type ReleaseNotesWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringNullableFilter<"ReleaseNotes"> | string | null
   msg?: Prisma.StringFilter<"ReleaseNotes"> | string
   imgUrl?: Prisma.StringNullableFilter<"ReleaseNotes"> | string | null
-  confirmedUserIds?: Prisma.IntNullableListFilter<"ReleaseNotes">
+  confirmedUserIds?: Prisma.StringNullableListFilter<"ReleaseNotes">
 }, "id">
 
 export type ReleaseNotesOrderByWithAggregationInput = {
@@ -310,7 +306,7 @@ export type ReleaseNotesScalarWhereWithAggregatesInput = {
   title?: Prisma.StringNullableWithAggregatesFilter<"ReleaseNotes"> | string | null
   msg?: Prisma.StringWithAggregatesFilter<"ReleaseNotes"> | string
   imgUrl?: Prisma.StringNullableWithAggregatesFilter<"ReleaseNotes"> | string | null
-  confirmedUserIds?: Prisma.IntNullableListFilter<"ReleaseNotes">
+  confirmedUserIds?: Prisma.StringNullableListFilter<"ReleaseNotes">
 }
 
 export type ReleaseNotesCreateInput = {
@@ -321,7 +317,7 @@ export type ReleaseNotesCreateInput = {
   title?: string | null
   msg: string
   imgUrl?: string | null
-  confirmedUserIds?: Prisma.ReleaseNotesCreateconfirmedUserIdsInput | number[]
+  confirmedUserIds?: Prisma.ReleaseNotesCreateconfirmedUserIdsInput | string[]
 }
 
 export type ReleaseNotesUncheckedCreateInput = {
@@ -333,7 +329,7 @@ export type ReleaseNotesUncheckedCreateInput = {
   title?: string | null
   msg: string
   imgUrl?: string | null
-  confirmedUserIds?: Prisma.ReleaseNotesCreateconfirmedUserIdsInput | number[]
+  confirmedUserIds?: Prisma.ReleaseNotesCreateconfirmedUserIdsInput | string[]
 }
 
 export type ReleaseNotesUpdateInput = {
@@ -344,7 +340,7 @@ export type ReleaseNotesUpdateInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   msg?: Prisma.StringFieldUpdateOperationsInput | string
   imgUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  confirmedUserIds?: Prisma.ReleaseNotesUpdateconfirmedUserIdsInput | number[]
+  confirmedUserIds?: Prisma.ReleaseNotesUpdateconfirmedUserIdsInput | string[]
 }
 
 export type ReleaseNotesUncheckedUpdateInput = {
@@ -356,7 +352,7 @@ export type ReleaseNotesUncheckedUpdateInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   msg?: Prisma.StringFieldUpdateOperationsInput | string
   imgUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  confirmedUserIds?: Prisma.ReleaseNotesUpdateconfirmedUserIdsInput | number[]
+  confirmedUserIds?: Prisma.ReleaseNotesUpdateconfirmedUserIdsInput | string[]
 }
 
 export type ReleaseNotesCreateManyInput = {
@@ -368,7 +364,7 @@ export type ReleaseNotesCreateManyInput = {
   title?: string | null
   msg: string
   imgUrl?: string | null
-  confirmedUserIds?: Prisma.ReleaseNotesCreateconfirmedUserIdsInput | number[]
+  confirmedUserIds?: Prisma.ReleaseNotesCreateconfirmedUserIdsInput | string[]
 }
 
 export type ReleaseNotesUpdateManyMutationInput = {
@@ -379,7 +375,7 @@ export type ReleaseNotesUpdateManyMutationInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   msg?: Prisma.StringFieldUpdateOperationsInput | string
   imgUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  confirmedUserIds?: Prisma.ReleaseNotesUpdateconfirmedUserIdsInput | number[]
+  confirmedUserIds?: Prisma.ReleaseNotesUpdateconfirmedUserIdsInput | string[]
 }
 
 export type ReleaseNotesUncheckedUpdateManyInput = {
@@ -391,15 +387,7 @@ export type ReleaseNotesUncheckedUpdateManyInput = {
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   msg?: Prisma.StringFieldUpdateOperationsInput | string
   imgUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  confirmedUserIds?: Prisma.ReleaseNotesUpdateconfirmedUserIdsInput | number[]
-}
-
-export type IntNullableListFilter<$PrismaModel = never> = {
-  equals?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel> | null
-  has?: number | Prisma.IntFieldRefInput<$PrismaModel> | null
-  hasEvery?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel>
-  hasSome?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel>
-  isEmpty?: boolean
+  confirmedUserIds?: Prisma.ReleaseNotesUpdateconfirmedUserIdsInput | string[]
 }
 
 export type ReleaseNotesCountOrderByAggregateInput = {
@@ -417,7 +405,6 @@ export type ReleaseNotesCountOrderByAggregateInput = {
 export type ReleaseNotesAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
-  confirmedUserIds?: Prisma.SortOrder
 }
 
 export type ReleaseNotesMaxOrderByAggregateInput = {
@@ -445,16 +432,15 @@ export type ReleaseNotesMinOrderByAggregateInput = {
 export type ReleaseNotesSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
-  confirmedUserIds?: Prisma.SortOrder
 }
 
 export type ReleaseNotesCreateconfirmedUserIdsInput = {
-  set: number[]
+  set: string[]
 }
 
 export type ReleaseNotesUpdateconfirmedUserIdsInput = {
-  set?: number[]
-  push?: number | number[]
+  set?: string[]
+  push?: string | string[]
 }
 
 
@@ -521,7 +507,7 @@ export type $ReleaseNotesPayload<ExtArgs extends runtime.Types.Extensions.Intern
     title: string | null
     msg: string
     imgUrl: string | null
-    confirmedUserIds: number[]
+    confirmedUserIds: string[]
   }, ExtArgs["result"]["releaseNotes"]>
   composites: {}
 }
@@ -953,7 +939,7 @@ export interface ReleaseNotesFieldRefs {
   readonly title: Prisma.FieldRef<"ReleaseNotes", 'String'>
   readonly msg: Prisma.FieldRef<"ReleaseNotes", 'String'>
   readonly imgUrl: Prisma.FieldRef<"ReleaseNotes", 'String'>
-  readonly confirmedUserIds: Prisma.FieldRef<"ReleaseNotes", 'Int[]'>
+  readonly confirmedUserIds: Prisma.FieldRef<"ReleaseNotes", 'String[]'>
 }
     
 

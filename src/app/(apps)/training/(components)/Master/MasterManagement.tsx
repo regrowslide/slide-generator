@@ -9,7 +9,7 @@ import { PART_OPTIONS } from '@app/(apps)/training/(constants)/PART_OPTIONS'
 
 export function MasterManagement() {
   const { session } = useGlobal()
-  const userId = session?.id || 1
+  const userId = session?.id || ''
 
   // 種目マスタ一覧
   const [masters, setMasters] = useState<ExerciseMaster[]>([])
