@@ -126,7 +126,6 @@ export const isApiAccessAllowed = async props => {
     const message = 'APIへのアクセスが禁止されています。'
     console.error({ host, basePath, referer, secretKey, authorization, message, body })
     console.error(message)
-    return true
     return res.status(500).json({ succes: false, message: 'APIへのアクセスが禁止されています。' })
   }
   return true
