@@ -76,6 +76,10 @@ export const rootPaths: RootPathConfig[] = [
     rootPath: 'regrow',
     paths: [],
   },
+  {
+    rootPath: 'dental',
+    paths: [],
+  },
 ]
 
 /**

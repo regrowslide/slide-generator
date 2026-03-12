@@ -101,32 +101,3 @@ export const getItem = async () => {
   return
 }
 
-export const isApiAccessAllowed = async props => {
-  const { req, res } = props
-
-  const body = req?.body ?? {}
-  const { rawHeaders } = req
-
-  const headerObject = {}
-  for (let i = 0; i < rawHeaders.length; i += 2) {
-    const key = rawHeaders[i]
-    const value = rawHeaders[i + 1]
-    headerObject[key] = value
-  }
-
-  const host = req.headers['x-forwarded-host'] ?? req.headers['host']
-  const { referer, authorization } = req?.headers ?? {}
-
-  const secretKey = process.env.BETTER_AUTH_SECRET
-  const accessFromApp = basePath?.includes(host)
-  const accessWithAuth = authorization === secretKey
-  const isAllowed = accessFromApp || accessWithAuth
-
-  if (!isAllowed) {
-    const message = 'APIへのアクセスが禁止されています。'
-    console.error({ host, basePath, referer, secretKey, authorization, message, body })
-    console.error(message)
-    return res.status(500).json({ succes: false, message: 'APIへのアクセスが禁止されています。' })
-  }
-  return true
-}

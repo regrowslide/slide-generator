@@ -3,35 +3,35 @@ import { basePath } from '@cm/lib/methods/common'
 import { NextRequest } from 'next/server'
 import { anyObject } from '@cm/types/utility-types'
 import { headers } from 'next/headers'
+import { auth } from 'src/lib/auth'
 
 /**
- * 共通の認証チェックロジック
+ * better-authセッションによる認証チェック
  */
-const checkAccess = (host: string | null, authorization: string | null): boolean => {
-  const secretKey = process.env.BETTER_AUTH_SECRET
-  const accessFromApp = basePath?.includes(host ?? '')
-  const accessWithAuth = authorization === secretKey
-  return accessFromApp || accessWithAuth
+const checkSession = async (reqHeaders: Headers): Promise<boolean> => {
+  try {
+    const session = await auth.api.getSession({ headers: reqHeaders })
+    return !!session?.user
+  } catch {
+    return false
+  }
 }
 
 /**
  * APIルート用の認証チェック
+ * better-authセッションまたはCronジョブからのアクセスを許可
  */
 export const isRouteAccessAllowed = async (req: NextRequest) => {
-  const host = req.headers.get('x-forwarded-host') ?? req.headers.get('host')
-  const authorization = req.headers.get('authorization')
-  return checkAccess(host, authorization) || await isByCronJob()
+  return await checkSession(req.headers) || await isByCronJob()
 }
 
 /**
  * Server Action用の認証チェック
- * アプリクライアントからのアクセスまたはauthorization headerがある場合のみ許可
+ * better-authセッションまたはCronジョブからのアクセスを許可
  */
 export const isServerActionAccessAllowed = async (): Promise<boolean> => {
   const headersList = await headers()
-  const host = headersList.get('x-forwarded-host') ?? headersList.get('host')
-  const authorization = headersList.get('authorization')
-  return checkAccess(host, authorization) || await isByCronJob()
+  return await checkSession(headersList) || await isByCronJob()
 }
 
 export const logObject = (obj: anyObject) => {

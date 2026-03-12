@@ -7,11 +7,12 @@ const LogoutPage = async props => {
   const { session } = await initServerComopnent({ query })
   const { rootPath } = query
 
+
   if (!session?.id) {
     return <Redirector {...{ redirectPath: `/login?rootPath=${rootPath}` }} />
   }
 
-  return <LogoutForm />
+  return <LogoutForm rootPath={rootPath} />
 }
 
 export default LogoutPage

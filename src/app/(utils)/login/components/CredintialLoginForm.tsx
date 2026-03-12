@@ -1,90 +1,77 @@
 'use client'
-import React from 'react'
-import useGlobal from 'src/cm/hooks/globalHooks/useGlobal'
 
+import React, { useState } from 'react'
 import { toast } from 'react-toastify'
-import useBasicFormProps from 'src/cm/hooks/useBasicForm/useBasicFormProps'
-import { Fields } from 'src/cm/class/Fields/Fields'
+import { Input } from '@shadcn/ui/input'
+import { Label } from '@shadcn/ui/label'
 import { Button } from '@cm/components/styles/common-components/Button'
 import { authClient } from 'src/lib/auth-client'
+import useGlobal from 'src/cm/hooks/globalHooks/useGlobal'
 
-export default function CredintialLoginForm(props) {
-  const { error, callbackUrl } = props
-  const { toggleLoad, router } = useGlobal()
-  const columns = Fields.transposeColumns([
-    {
-      id: 'loginKeyField',
-      label: process.env.NEXT_PUBLIC_LOGIN_KEY_FIELD_LABEL ?? 'メールアドレス',
-      form: { register: { required: '必須項目です' } },
-    },
-    {
-      id: 'password',
-      label: 'パスワード',
-      form: {
-        register: { required: '必須項目です' },
+export default function CredintialLoginForm({
+  callbackUrl,
+}: {
+  callbackUrl: string
+}) {
+  const { toggleLoad } = useGlobal()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const loginKeyLabel = process.env.NEXT_PUBLIC_LOGIN_KEY_FIELD_LABEL ?? 'メールアドレス'
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email || !password) {
+      toast.error('必須項目を入力してください。')
+      return
+    }
+    toggleLoad(
+      async () => {
+        const result = await authClient.signIn.email({
+          email,
+          password,
+        })
+        if (result.data) {
+          toast.success('ログインしました。')
+          window.location.href = callbackUrl || '/'
+          return
+        } else if (result.error) {
+          toast.error(`正しい認証情報を入力してください。: ${result.error.message}`)
+        }
       },
-    },
-  ])
-  const { BasicForm, latestFormData } = useBasicFormProps({ columns, focusOnMount: false })
+      { refresh: false, mutate: false }
+    )
+  }
 
   return (
-    <>
-      <section>
-        <div className={`t-paper mx-auto  p-4 `}>
-          <BasicForm
-            {...{
-              alignMode: 'col',
-              latestFormData,
-              wrapperClass: 'col-stack gap-4  text-xl items-center',
-              ControlOptions: {
-                ControlStyle: { width: 250 },
-              },
-              onSubmit: async data => {
-                toggleLoad(
-                  async () => {
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="email">{loginKeyLabel}</Label>
+        <Input
+          id="email"
+          type="text"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder={loginKeyLabel}
+          autoComplete="email"
+        />
+      </div>
 
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="password">パスワード</Label>
+        <Input
+          id="password"
+          type="password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          placeholder="パスワード"
+          autoComplete="current-password"
+        />
+      </div>
 
-                    const result = await authClient.signIn.email({
-                      email: data.loginKeyField,
-                      password: data.password,
-                    })
-
-
-
-                    if (result.data) {
-                      toast.success(`ログインしました。`)
-                      router.refresh()
-                    } else if (result.error) {
-                      toast.error(`正しい認証情報を入力してください。: ${result.error.message}`)
-                    }
-                  },
-                  { refresh: false, mutate: false }
-                )
-              },
-            }}
-          >
-            <Button color={`primary`}>ログイン</Button>
-          </BasicForm>
-
-          {error && <p className={`text-error-main my-4`}>ログイン情報が 正しくありません。</p>}
-        </div>
-      </section>
-      <section>
-        {process.env.NEXT_PUBLIC_NO_LOGIN !== 'false' && (
-          <button
-            type="button"
-            className="text-blue-600 underline text-sm"
-            onClick={() => {
-              const path = prompt('パスワードを入力してください。')
-              if (!path) return
-              router.push(`/${path}`)
-            }}
-          >
-            ログインせずに利用
-          </button>
-
-        )}
-      </section>
-    </>
+      <Button color="primary" className="w-full justify-center py-3">
+        ログイン
+      </Button>
+    </form>
   )
 }
