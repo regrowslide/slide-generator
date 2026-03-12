@@ -7,6 +7,7 @@ import { Input } from '@shadcn/ui/input'
 import { Card, CardContent } from '@shadcn/ui/card'
 import { Checkbox } from '@shadcn/ui/checkbox'
 import { upsertDentalClinic } from '@app/(apps)/dental/_actions/clinic-actions'
+import { seedDentalData, resetDentalData } from '@app/(apps)/dental/_actions/seed-dental-actions'
 import { updateDentalStaffCredentials } from '@app/(apps)/dental/_actions/staff-actions'
 import { CLINIC_QUALIFICATIONS } from '@app/(apps)/dental/lib/constants'
 import type { Clinic, ClinicQualifications } from '@app/(apps)/dental/lib/types'
@@ -18,9 +19,10 @@ type StaffInfo = {id: number; name: string; email: string | null; type: string |
 type ClinicSettingsClientProps = {
   clinic: Clinic | null
   staff?: StaffInfo[]
+  isDev?: boolean
 }
 
-const ClinicSettingsClient = ({ clinic, staff = [] }: ClinicSettingsClientProps) => {
+const ClinicSettingsClient = ({ clinic, staff = [], isDev = false }: ClinicSettingsClientProps) => {
   const router = useRouter()
   const [formData, setFormData] = useState({
     name: clinic?.name || '',
@@ -41,6 +43,32 @@ const ClinicSettingsClient = ({ clinic, staff = [] }: ClinicSettingsClientProps)
       otherText: '',
     }
   )
+
+  const [seedLoading, setSeedLoading] = useState(false)
+
+  const handleSeed = async () => {
+    if (!confirm('既存データをリセットしてシードデータを投入しますか？')) return
+    setSeedLoading(true)
+    try {
+      const result = await seedDentalData()
+      alert(result.message)
+      window.location.reload()
+    } finally {
+      setSeedLoading(false)
+    }
+  }
+
+  const handleReset = async () => {
+    if (!confirm('全データを削除します。この操作は取り消せません。よろしいですか？')) return
+    setSeedLoading(true)
+    try {
+      const result = await resetDentalData()
+      alert(result.message)
+      window.location.reload()
+    } finally {
+      setSeedLoading(false)
+    }
+  }
 
   // スタッフ認証情報編集モーダル
   const staffEditModal = useModal()
@@ -184,6 +212,28 @@ const ClinicSettingsClient = ({ clinic, staff = [] }: ClinicSettingsClientProps)
                 </li>
               ))}
             </ul>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* 開発用: シードデータ */}
+      {isDev && (
+        <Card className="mt-4 border-orange-300">
+          <div className="p-3 border-b border-orange-200 bg-orange-50 rounded-t-lg">
+            <span className="text-sm font-medium text-orange-700">開発用: シードデータ管理</span>
+          </div>
+          <CardContent className="p-4">
+            <p className="text-xs text-gray-500 mb-3">
+              開発環境でのみ利用可能です。シードデータを投入・リセットできます。
+            </p>
+            <div className="flex gap-2">
+              <Button color="red" onClick={handleReset} disabled={seedLoading}>
+                {seedLoading ? '処理中...' : 'データリセット'}
+              </Button>
+              <Button color="primary" onClick={handleSeed} disabled={seedLoading}>
+                {seedLoading ? '処理中...' : 'シードデータ投入'}
+              </Button>
+            </div>
           </CardContent>
         </Card>
       )}

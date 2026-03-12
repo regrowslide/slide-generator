@@ -7,15 +7,13 @@ import ClinicSettingsClient from './ClinicSettingsClient'
 export default async function Page(props: { searchParams: Promise<Record<string, string>> }) {
   const query = await props.searchParams
   const { session } = await initServerComopnent({ query })
-  if (!session.dentalClinicId) {
-    return <div>クリニックが見つかりません</div>
-  }
+
 
   const clinicRaw = await getUserDentalClinic(session.id)
   const clinic = clinicRaw ? toClinic(clinicRaw) : null
 
   // スタッフ一覧を取得（認証情報セクション用）
-  const staffRaw = await getDentalStaffList({dentalClinicId: session.dentalClinicId})
+  const staffRaw = await getDentalStaffList({ dentalClinicId: session.dentalClinicId })
   const staff = staffRaw.map(s => ({
     id: s.id,
     name: s.name,
@@ -23,5 +21,7 @@ export default async function Page(props: { searchParams: Promise<Record<string,
     type: s.type,
   }))
 
-  return <div className='p-4'><ClinicSettingsClient clinic={clinic} staff={staff} /></div>
+  const isDev = process.env.NODE_ENV === 'development'
+
+  return <div className='p-4'><ClinicSettingsClient clinic={clinic} staff={staff} isDev={isDev} /></div>
 }

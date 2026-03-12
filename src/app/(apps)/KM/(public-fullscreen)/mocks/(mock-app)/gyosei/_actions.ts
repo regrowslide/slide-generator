@@ -4,7 +4,7 @@ import { callGeminiForJson } from '@app/api/google/actions/geminiAPI'
 import type { GeminiResponseSchema, GeminiInlineData } from '@app/api/google/actions/geminiAPI'
 import prisma from 'src/lib/prisma'
 import { put, del } from '@vercel/blob'
-import * as XLSX from 'xlsx'
+import ExcelJS from 'exceljs'
 import { knockEmailApi } from 'src/cm/lib/methods/knockEmailApi'
 
 // ===== 型定義 =====
@@ -324,41 +324,35 @@ export async function sendExcelByEmail(
   }
 
   // Excelワークブック作成
-  const wb = XLSX.utils.book_new()
+  const wb = new ExcelJS.Workbook()
 
   // タスク一覧シート
-  const taskData = tasks.map((t) => ({
-    優先度: PRIORITY_LABELS[t.priority] || t.priority,
-    カテゴリ: t.category,
-    タスク: t.task,
-    期限: t.deadline,
-    担当: t.responsible,
-    備考: t.notes,
-  }))
-  const taskSheet = XLSX.utils.json_to_sheet(taskData)
-
-  // カラム幅設定
-  taskSheet['!cols'] = [
-    { wch: 8 },   // 優先度
-    { wch: 12 },  // カテゴリ
-    { wch: 40 },  // タスク
-    { wch: 25 },  // 期限
-    { wch: 12 },  // 担当
-    { wch: 30 },  // 備考
-  ]
-
-  XLSX.utils.book_append_sheet(wb, taskSheet, 'やることリスト')
+  const taskSheet = wb.addWorksheet('やることリスト')
+  const headers = ['優先度', 'カテゴリ', 'タスク', '期限', '担当', '備考']
+  const colWidths = [8, 12, 40, 25, 12, 30]
+  taskSheet.columns = headers.map((header, i) => ({ header, width: colWidths[i] }))
+  for (const t of tasks) {
+    taskSheet.addRow([
+      PRIORITY_LABELS[t.priority] || t.priority,
+      t.category,
+      t.task,
+      t.deadline,
+      t.responsible,
+      t.notes,
+    ])
+  }
 
   // 実績報告ガイドシート
   if (reportGuide) {
-    const guideLines = reportGuide.split('\n').map((line) => [line])
-    const guideSheet = XLSX.utils.aoa_to_sheet(guideLines)
-    guideSheet['!cols'] = [{ wch: 100 }]
-    XLSX.utils.book_append_sheet(wb, guideSheet, '実績報告ガイド')
+    const guideSheet = wb.addWorksheet('実績報告ガイド')
+    guideSheet.getColumn(1).width = 100
+    for (const line of reportGuide.split('\n')) {
+      guideSheet.addRow([line])
+    }
   }
 
   // Bufferとして出力
-  const excelBuffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' }) as Buffer
+  const excelBuffer = Buffer.from(await wb.xlsx.writeBuffer())
 
   // メールアドレスをDBに保存
   await prisma.gyoseiSession.update({

@@ -1,29 +1,36 @@
 /**
  * サーバーサイド用Excelパーサー（担当者別分析表）
- * fs.readFileSyncでファイルを読み込み、xlsxでパース
+ * fs.readFileSyncでファイルを読み込み、exceljsでパース
  */
 
 import fs from 'fs'
 import path from 'path'
-import * as XLSX from 'xlsx'
+import ExcelJS from 'exceljs'
 import type {ExcelParseResult, StoreName, StaffRecord} from '../types'
 
+/** セルの値を取得するヘルパー（1-indexed） */
+const getCellValue = (ws: ExcelJS.Worksheet, row: number, col: number): string | number | undefined => {
+  const cell = ws.getCell(row, col)
+  return cell.value as string | number | undefined
+}
+
 /** Excelファイル1つをパース（サーバーサイド用） */
-export const parseExcelFromPath = (filePath: string, storeShortName: StoreName): ExcelParseResult => {
-  const buffer = fs.readFileSync(filePath)
-  const wb = XLSX.read(buffer, {type: 'buffer'})
-  const ws = wb.Sheets[wb.SheetNames[0]]
+export const parseExcelFromPath = async (filePath: string, storeShortName: StoreName): Promise<ExcelParseResult> => {
+  const fileBuffer = fs.readFileSync(filePath)
+  const wb = new ExcelJS.Workbook()
+  await wb.xlsx.load(fileBuffer.buffer.slice(fileBuffer.byteOffset, fileBuffer.byteOffset + fileBuffer.byteLength) as ArrayBuffer)
+  const ws = wb.worksheets[0]
 
   // B1セルから店舗名取得（フルネーム）
-  const storeCell = ws[XLSX.utils.encode_cell({r: 0, c: 1})]
-  const storeName = storeCell?.v ? String(storeCell.v).replace('店舗名：', '') : storeShortName
+  const storeCell = getCellValue(ws, 1, 2)
+  const storeName = storeCell ? String(storeCell).replace('店舗名：', '') : storeShortName
 
   // V1セルから集計期間取得
-  const periodCell = ws[XLSX.utils.encode_cell({r: 0, c: 21})]
+  const periodCell = getCellValue(ws, 1, 22)
   let periodStart = ''
   let periodEnd = ''
-  if (periodCell?.v) {
-    const periodText = String(periodCell.v).replace('集計期間：', '')
+  if (periodCell) {
+    const periodText = String(periodCell).replace('集計期間：', '')
     const parts = periodText.split('～')
     if (parts.length === 2) {
       periodStart = parts[0].trim()
@@ -34,28 +41,28 @@ export const parseExcelFromPath = (filePath: string, storeShortName: StoreName):
   // スタッフデータ抽出（3行パターン検出）
   const staffList: StaffRecord[] = []
   let rank = 1
-  let row = 3 // 4行目から開始（0-indexed）
+  let row = 4 // 4行目から開始（1-indexed）
 
-  while (row < 100) {
-    const nameCell = ws[XLSX.utils.encode_cell({r: row, c: 0})]
-    if (!nameCell?.v) break
+  while (row < 101) {
+    const nameCell = getCellValue(ws, row, 1)
+    if (!nameCell) break
 
-    const nameStr = String(nameCell.v)
+    const nameStr = String(nameCell)
     if (nameStr.includes('総') && nameStr.includes('合') && nameStr.includes('計')) break
 
     // 順位を削除してスタッフ名を抽出
     const staffName = nameStr.replace(/^\d+位\n/, '').trim()
 
     // 行1: 売上実績（G列）、新規客数（W列）
-    const sales = Number(ws[XLSX.utils.encode_cell({r: row, c: 6})]?.v) || 0
-    const newCustomerCount = Number(ws[XLSX.utils.encode_cell({r: row, c: 22})]?.v) || 0
+    const sales = Number(getCellValue(ws, row, 7)) || 0
+    const newCustomerCount = Number(getCellValue(ws, row, 23)) || 0
 
     // 行2: 客数（G列: 対応客数、C列: 指名数）
-    const customerCount = Number(ws[XLSX.utils.encode_cell({r: row + 1, c: 6})]?.v) || 0
-    const nominationCount = Number(ws[XLSX.utils.encode_cell({r: row + 1, c: 2})]?.v) || 0
+    const customerCount = Number(getCellValue(ws, row + 1, 7)) || 0
+    const nominationCount = Number(getCellValue(ws, row + 1, 3)) || 0
 
     // 行3: 客単価（G列）
-    const unitPrice = Number(ws[XLSX.utils.encode_cell({r: row + 2, c: 6})]?.v) || 0
+    const unitPrice = Number(getCellValue(ws, row + 2, 7)) || 0
 
     staffList.push({
       rank,
@@ -74,22 +81,22 @@ export const parseExcelFromPath = (filePath: string, storeShortName: StoreName):
 
   // 総合計行を検索
   let totalRow = row
-  const totalNameCell = ws[XLSX.utils.encode_cell({r: totalRow, c: 0})]
-  if (!totalNameCell?.v || !(String(totalNameCell.v).includes('総') && String(totalNameCell.v).includes('計'))) {
+  const totalNameCell = getCellValue(ws, totalRow, 1)
+  if (!totalNameCell || !(String(totalNameCell).includes('総') && String(totalNameCell).includes('計'))) {
     totalRow++
     while (totalRow < row + 5) {
-      const cell = ws[XLSX.utils.encode_cell({r: totalRow, c: 0})]
-      if (cell?.v && String(cell.v).includes('合') && String(cell.v).includes('計')) break
+      const cell = getCellValue(ws, totalRow, 1)
+      if (cell && String(cell).includes('合') && String(cell).includes('計')) break
       totalRow++
     }
   }
 
   // 総合計データ抽出
   const total = {
-    sales: Number(ws[XLSX.utils.encode_cell({r: totalRow, c: 6})]?.v) || 0,
-    customerCount: Number(ws[XLSX.utils.encode_cell({r: totalRow + 1, c: 6})]?.v) || 0,
-    nominationCount: Number(ws[XLSX.utils.encode_cell({r: totalRow + 1, c: 2})]?.v) || 0,
-    unitPrice: Number(ws[XLSX.utils.encode_cell({r: totalRow + 2, c: 6})]?.v) || 0,
+    sales: Number(getCellValue(ws, totalRow, 7)) || 0,
+    customerCount: Number(getCellValue(ws, totalRow + 1, 7)) || 0,
+    nominationCount: Number(getCellValue(ws, totalRow + 1, 3)) || 0,
+    unitPrice: Number(getCellValue(ws, totalRow + 2, 7)) || 0,
   }
 
   return {
@@ -102,8 +109,8 @@ export const parseExcelFromPath = (filePath: string, storeShortName: StoreName):
   }
 }
 
-/** ファイル名パターン: YYYYMM_店舗名.xls */
-const FILE_PATTERN = /^(\d{6})_(.+)\.xls$/
+/** ファイル名パターン: YYYYMM_店舗名.xlsx */
+const FILE_PATTERN = /^(\d{6})_(.+)\.xlsx$/
 
 type ParsedFile = {
   yearMonth: string
@@ -112,7 +119,7 @@ type ParsedFile = {
 }
 
 /** ディレクトリ内の全Excelをパースしてまとめて返す */
-export const parseAllExcelFiles = (dirPath: string): ParsedFile[] => {
+export const parseAllExcelFiles = async (dirPath: string): Promise<ParsedFile[]> => {
   const files = fs.readdirSync(dirPath).filter((f) => FILE_PATTERN.test(f)).sort()
   const results: ParsedFile[] = []
 
@@ -125,7 +132,7 @@ export const parseAllExcelFiles = (dirPath: string): ParsedFile[] => {
     const yearMonth = `${yyyymm.slice(0, 4)}-${yyyymm.slice(4, 6)}`
     const filePath = path.join(dirPath, fileName)
 
-    const result = parseExcelFromPath(filePath, storeShortName)
+    const result = await parseExcelFromPath(filePath, storeShortName)
     results.push({yearMonth, storeShortName, result})
   }
 

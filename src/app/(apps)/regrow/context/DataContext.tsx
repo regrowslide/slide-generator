@@ -124,6 +124,32 @@ export const DataContextProvider = ({
     setStaffMaster(data)
   }, [])
 
+  // 該当年の全月データを一括取得（年間推移グラフ用）
+  const loadYearData = useCallback(
+    async (year: string) => {
+      const yearMonths = availableMonths.filter((m) => m.startsWith(year))
+      // キャッシュにない月だけ取得
+      const missing = yearMonths.filter((ym) => !allMonthlyData[ym])
+      if (missing.length === 0) return
+
+      const results = await Promise.all(
+        missing.map(async (ym) => {
+          const data = await getMonthlyReport(ym)
+          return {ym, data}
+        })
+      )
+
+      const newEntries: Record<YearMonth, MonthlyData> = {}
+      for (const {ym, data} of results) {
+        if (data) newEntries[ym] = data
+      }
+      if (Object.keys(newEntries).length > 0) {
+        setAllMonthlyData((prev) => ({...prev, ...newEntries}))
+      }
+    },
+    [availableMonths, allMonthlyData]
+  )
+
   // currentYearMonth変更時のデータロード
   useEffect(() => {
     if (!currentYearMonth) return
@@ -131,22 +157,22 @@ export const DataContextProvider = ({
     // initialDataがある最初のロードはスキップ
     if (initialData && currentYearMonth === initialYearMonth) return
 
-    // キャッシュにあればそこから取得
-    if (allMonthlyData[currentYearMonth]) {
-      setMonthlyData(allMonthlyData[currentYearMonth])
-      return
-    }
-
-    // DB版: Server Actionで取得
     const load = async () => {
-      let data = await getMonthlyReport(currentYearMonth)
+      // 選択月のデータ取得
+      let data: MonthlyData | null = allMonthlyData[currentYearMonth] ?? null
       if (!data) {
-        await upsertMonthlyReport(currentYearMonth)
-        data = createEmptyMonthlyData(currentYearMonth)
+        data = await getMonthlyReport(currentYearMonth)
+        if (!data) {
+          await upsertMonthlyReport(currentYearMonth)
+          data = createEmptyMonthlyData(currentYearMonth)
+        }
+        setAllMonthlyData((prev) => ({...prev, [currentYearMonth]: data!}))
       }
       setMonthlyData(data)
-      // キャッシュに追加
-      setAllMonthlyData((prev) => ({...prev, [currentYearMonth]: data!}))
+
+      // 該当年の全月データも一括取得（年間推移グラフ用）
+      const year = currentYearMonth.split('-')[0]
+      await loadYearData(year)
     }
     load()
   }, [currentYearMonth])

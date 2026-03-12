@@ -202,7 +202,7 @@ export const seedFromExcelFiles = async (): Promise<{message: string}> => {
 
   // ① Excelディレクトリからファイルをパース
   const excelDir = path.join(process.cwd(), 'src/app/(apps)/regrow/regrow-doc/excel')
-  const parsedFiles = parseAllExcelFiles(excelDir)
+  const parsedFiles = await parseAllExcelFiles(excelDir)
 
   if (parsedFiles.length === 0) {
     return {message: 'Excelファイルが見つかりませんでした'}
@@ -278,7 +278,7 @@ export const seedFromExcelFiles = async (): Promise<{message: string}> => {
       data: {
         yearMonth,
         importedAt: new Date(),
-        importedFileName: files.map(f => `${f.yearMonth}_${f.storeShortName}.xls`).join(', '),
+        importedFileName: files.map(f => `${f.yearMonth}_${f.storeShortName}.xlsx`).join(', '),
       },
     })
 

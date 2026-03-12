@@ -37,6 +37,7 @@
     "@pdf-lib/fontkit": "^1.1.1",
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.5.0",
+    "@prisma/internals": "^7.5.0",
     "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-checkbox": "^1.3.3",
     "@radix-ui/react-dialog": "^1.1.14",
@@ -60,6 +61,7 @@
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.7",
     "event-stream": "^4.0.1",
+    "exceljs": "^4.4.0",
     "fetch-ponyfill": "^7.1.0",
     "file-saver": "^2.0.5",
     "file-type": "^21.3.0",
@@ -72,7 +74,7 @@
     "jotai": "^2.17.0",
     "jotai-family": "^1.0.1",
     "jspdf": "^4.2.0",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "lucide-react": "^0.575.0",
     "multer": "^2.1.0",
     "next": "^16.1.3",
@@ -158,6 +160,7 @@
   "overrides": {
     "serialize-javascript": ">=7.0.4",
     "hono": ">=4.12.7",
-    "@hono/node-server": ">=1.19.10"
+    "@hono/node-server": ">=1.19.10",
+    "lodash": "$lodash"
   }
 }
