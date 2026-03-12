@@ -1433,6 +1433,11 @@ export type SbmReservationItemFindManyArgs<ExtArgs extends runtime.Types.Extensi
    * Skip the first `n` SbmReservationItems.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of SbmReservationItems.
+   */
   distinct?: Prisma.SbmReservationItemScalarFieldEnum | Prisma.SbmReservationItemScalarFieldEnum[]
 }
 

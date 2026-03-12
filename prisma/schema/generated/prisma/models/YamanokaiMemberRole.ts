@@ -1609,6 +1609,11 @@ export type YamanokaiMemberRoleFindManyArgs<ExtArgs extends runtime.Types.Extens
    * Skip the first `n` YamanokaiMemberRoles.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of YamanokaiMemberRoles.
+   */
   distinct?: Prisma.YamanokaiMemberRoleScalarFieldEnum | Prisma.YamanokaiMemberRoleScalarFieldEnum[]
 }
 

@@ -2522,6 +2522,11 @@ export type KgMenuRecipeFindManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Skip the first `n` KgMenuRecipes.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of KgMenuRecipes.
+   */
   distinct?: Prisma.KgMenuRecipeScalarFieldEnum | Prisma.KgMenuRecipeScalarFieldEnum[]
 }
 

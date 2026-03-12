@@ -1029,6 +1029,11 @@ export type CalendarFindManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Skip the first `n` Calendars.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Calendars.
+   */
   distinct?: Prisma.CalendarScalarFieldEnum | Prisma.CalendarScalarFieldEnum[]
 }
 

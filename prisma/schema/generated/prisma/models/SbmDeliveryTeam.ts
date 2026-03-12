@@ -1127,6 +1127,11 @@ export type SbmDeliveryTeamFindManyArgs<ExtArgs extends runtime.Types.Extensions
    * Skip the first `n` SbmDeliveryTeams.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of SbmDeliveryTeams.
+   */
   distinct?: Prisma.SbmDeliveryTeamScalarFieldEnum | Prisma.SbmDeliveryTeamScalarFieldEnum[]
 }
 

@@ -1625,6 +1625,11 @@ export type CounselingReservationFindManyArgs<ExtArgs extends runtime.Types.Exte
    * Skip the first `n` CounselingReservations.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of CounselingReservations.
+   */
   distinct?: Prisma.CounselingReservationScalarFieldEnum | Prisma.CounselingReservationScalarFieldEnum[]
 }
 

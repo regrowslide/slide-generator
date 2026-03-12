@@ -1668,6 +1668,11 @@ export type KgProductionItemFindManyArgs<ExtArgs extends runtime.Types.Extension
    * Skip the first `n` KgProductionItems.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of KgProductionItems.
+   */
   distinct?: Prisma.KgProductionItemScalarFieldEnum | Prisma.KgProductionItemScalarFieldEnum[]
 }
 

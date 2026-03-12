@@ -1380,6 +1380,11 @@ export type TennisEventCourtFindManyArgs<ExtArgs extends runtime.Types.Extension
    * Skip the first `n` TennisEventCourts.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of TennisEventCourts.
+   */
   distinct?: Prisma.TennisEventCourtScalarFieldEnum | Prisma.TennisEventCourtScalarFieldEnum[]
 }
 

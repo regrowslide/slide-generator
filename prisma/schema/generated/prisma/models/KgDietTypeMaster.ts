@@ -1329,6 +1329,11 @@ export type KgDietTypeMasterFindManyArgs<ExtArgs extends runtime.Types.Extension
    * Skip the first `n` KgDietTypeMasters.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of KgDietTypeMasters.
+   */
   distinct?: Prisma.KgDietTypeMasterScalarFieldEnum | Prisma.KgDietTypeMasterScalarFieldEnum[]
 }
 

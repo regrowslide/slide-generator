@@ -1057,6 +1057,11 @@ export type YamanokaiRockCategoryFindManyArgs<ExtArgs extends runtime.Types.Exte
    * Skip the first `n` YamanokaiRockCategories.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of YamanokaiRockCategories.
+   */
   distinct?: Prisma.YamanokaiRockCategoryScalarFieldEnum | Prisma.YamanokaiRockCategoryScalarFieldEnum[]
 }
 

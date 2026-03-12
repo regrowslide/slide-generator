@@ -1255,6 +1255,11 @@ export type DailyStaffAssignmentFindManyArgs<ExtArgs extends runtime.Types.Exten
    * Skip the first `n` DailyStaffAssignments.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of DailyStaffAssignments.
+   */
   distinct?: Prisma.DailyStaffAssignmentScalarFieldEnum | Prisma.DailyStaffAssignmentScalarFieldEnum[]
 }
 

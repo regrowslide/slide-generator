@@ -1193,6 +1193,11 @@ export type KidsStreakFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Skip the first `n` KidsStreaks.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of KidsStreaks.
+   */
   distinct?: Prisma.KidsStreakScalarFieldEnum | Prisma.KidsStreakScalarFieldEnum[]
 }
 

@@ -1683,6 +1683,11 @@ export type KgMealSlotFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Skip the first `n` KgMealSlots.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of KgMealSlots.
+   */
   distinct?: Prisma.KgMealSlotScalarFieldEnum | Prisma.KgMealSlotScalarFieldEnum[]
 }
 

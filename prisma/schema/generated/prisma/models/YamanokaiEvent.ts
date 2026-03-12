@@ -3472,6 +3472,11 @@ export type YamanokaiEventFindManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Skip the first `n` YamanokaiEvents.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of YamanokaiEvents.
+   */
   distinct?: Prisma.YamanokaiEventScalarFieldEnum | Prisma.YamanokaiEventScalarFieldEnum[]
 }
 

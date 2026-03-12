@@ -1377,6 +1377,11 @@ export type RawMaterialFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Skip the first `n` RawMaterials.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of RawMaterials.
+   */
   distinct?: Prisma.RawMaterialScalarFieldEnum | Prisma.RawMaterialScalarFieldEnum[]
 }
 

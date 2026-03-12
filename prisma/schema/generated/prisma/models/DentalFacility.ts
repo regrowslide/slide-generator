@@ -1505,6 +1505,11 @@ export type DentalFacilityFindManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Skip the first `n` DentalFacilities.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of DentalFacilities.
+   */
   distinct?: Prisma.DentalFacilityScalarFieldEnum | Prisma.DentalFacilityScalarFieldEnum[]
 }
 

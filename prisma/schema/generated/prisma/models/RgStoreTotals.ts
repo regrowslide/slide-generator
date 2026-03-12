@@ -1526,6 +1526,11 @@ export type RgStoreTotalsFindManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Skip the first `n` RgStoreTotals.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of RgStoreTotals.
+   */
   distinct?: Prisma.RgStoreTotalsScalarFieldEnum | Prisma.RgStoreTotalsScalarFieldEnum[]
 }
 

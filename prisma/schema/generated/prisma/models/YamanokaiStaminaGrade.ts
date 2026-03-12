@@ -1057,6 +1057,11 @@ export type YamanokaiStaminaGradeFindManyArgs<ExtArgs extends runtime.Types.Exte
    * Skip the first `n` YamanokaiStaminaGrades.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of YamanokaiStaminaGrades.
+   */
   distinct?: Prisma.YamanokaiStaminaGradeScalarFieldEnum | Prisma.YamanokaiStaminaGradeScalarFieldEnum[]
 }
 

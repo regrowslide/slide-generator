@@ -1615,6 +1615,11 @@ export type YamanokaiCourseCompletionFindManyArgs<ExtArgs extends runtime.Types.
    * Skip the first `n` YamanokaiCourseCompletions.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of YamanokaiCourseCompletions.
+   */
   distinct?: Prisma.YamanokaiCourseCompletionScalarFieldEnum | Prisma.YamanokaiCourseCompletionScalarFieldEnum[]
 }
 

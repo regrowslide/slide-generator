@@ -1284,6 +1284,11 @@ export type DentalScoringHistoryFindManyArgs<ExtArgs extends runtime.Types.Exten
    * Skip the first `n` DentalScoringHistories.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of DentalScoringHistories.
+   */
   distinct?: Prisma.DentalScoringHistoryScalarFieldEnum | Prisma.DentalScoringHistoryScalarFieldEnum[]
 }
 

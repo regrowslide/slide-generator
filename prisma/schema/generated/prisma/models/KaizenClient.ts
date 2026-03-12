@@ -1515,6 +1515,11 @@ export type KaizenClientFindManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Skip the first `n` KaizenClients.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of KaizenClients.
+   */
   distinct?: Prisma.KaizenClientScalarFieldEnum | Prisma.KaizenClientScalarFieldEnum[]
 }
 

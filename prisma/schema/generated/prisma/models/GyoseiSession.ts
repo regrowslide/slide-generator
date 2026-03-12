@@ -1281,6 +1281,11 @@ export type GyoseiSessionFindManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Skip the first `n` GyoseiSessions.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of GyoseiSessions.
+   */
   distinct?: Prisma.GyoseiSessionScalarFieldEnum | Prisma.GyoseiSessionScalarFieldEnum[]
 }
 

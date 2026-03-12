@@ -1440,6 +1440,11 @@ export type KidsRoutineFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Skip the first `n` KidsRoutines.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of KidsRoutines.
+   */
   distinct?: Prisma.KidsRoutineScalarFieldEnum | Prisma.KidsRoutineScalarFieldEnum[]
 }
 

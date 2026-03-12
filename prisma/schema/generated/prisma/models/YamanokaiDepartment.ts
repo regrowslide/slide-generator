@@ -1564,6 +1564,11 @@ export type YamanokaiDepartmentFindManyArgs<ExtArgs extends runtime.Types.Extens
    * Skip the first `n` YamanokaiDepartments.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of YamanokaiDepartments.
+   */
   distinct?: Prisma.YamanokaiDepartmentScalarFieldEnum | Prisma.YamanokaiDepartmentScalarFieldEnum[]
 }
 

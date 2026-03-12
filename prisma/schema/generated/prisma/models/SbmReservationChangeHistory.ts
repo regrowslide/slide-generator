@@ -1397,6 +1397,11 @@ export type SbmReservationChangeHistoryFindManyArgs<ExtArgs extends runtime.Type
    * Skip the first `n` SbmReservationChangeHistories.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of SbmReservationChangeHistories.
+   */
   distinct?: Prisma.SbmReservationChangeHistoryScalarFieldEnum | Prisma.SbmReservationChangeHistoryScalarFieldEnum[]
 }
 

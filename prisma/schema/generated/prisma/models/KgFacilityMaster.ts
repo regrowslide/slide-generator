@@ -1327,6 +1327,11 @@ export type KgFacilityMasterFindManyArgs<ExtArgs extends runtime.Types.Extension
    * Skip the first `n` KgFacilityMasters.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of KgFacilityMasters.
+   */
   distinct?: Prisma.KgFacilityMasterScalarFieldEnum | Prisma.KgFacilityMasterScalarFieldEnum[]
 }
 

@@ -1750,6 +1750,11 @@ export type SbmDeliveryAssignmentFindManyArgs<ExtArgs extends runtime.Types.Exte
    * Skip the first `n` SbmDeliveryAssignments.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of SbmDeliveryAssignments.
+   */
   distinct?: Prisma.SbmDeliveryAssignmentScalarFieldEnum | Prisma.SbmDeliveryAssignmentScalarFieldEnum[]
 }
 

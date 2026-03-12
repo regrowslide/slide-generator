@@ -1243,6 +1243,11 @@ export type GyoseiFileFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Skip the first `n` GyoseiFiles.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of GyoseiFiles.
+   */
   distinct?: Prisma.GyoseiFileScalarFieldEnum | Prisma.GyoseiFileScalarFieldEnum[]
 }
 

@@ -1141,6 +1141,11 @@ export type CronExecutionLogFindManyArgs<ExtArgs extends runtime.Types.Extension
    * Skip the first `n` CronExecutionLogs.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of CronExecutionLogs.
+   */
   distinct?: Prisma.CronExecutionLogScalarFieldEnum | Prisma.CronExecutionLogScalarFieldEnum[]
 }
 

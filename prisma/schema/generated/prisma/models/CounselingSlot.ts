@@ -1746,6 +1746,11 @@ export type CounselingSlotFindManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Skip the first `n` CounselingSlots.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of CounselingSlots.
+   */
   distinct?: Prisma.CounselingSlotScalarFieldEnum | Prisma.CounselingSlotScalarFieldEnum[]
 }
 

@@ -1,28 +1,27 @@
 import type {NextConfig} from 'next'
-// const withBundleAnalyzer = require('@next/bundle-analyzer')({
-//   enabled: process.env.ANALYZE === 'true',
-// })
+import withPWAInit from '@ducanh2912/next-pwa'
 
 const isProd = process.env.NODE_ENV === 'production'
 
-const withPWA = require('next-pwa')({
+const withPWA = withPWAInit({
   disable: !isProd,
-  skipWaiting: true,
   dest: 'public',
-  include: ['**/*.css'], // すべてのCSSファイルをプリキャッシュする
-  runtimeCaching: [
-    {
-      urlPattern: /.*/,
-      handler: 'StaleWhileRevalidate',
-      options: {
-        cacheName: 'https-cache',
-        expiration: {
-          maxEntries: 150,
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+  workboxOptions: {
+    skipWaiting: true,
+    runtimeCaching: [
+      {
+        urlPattern: /.*/,
+        handler: 'StaleWhileRevalidate',
+        options: {
+          cacheName: 'https-cache',
+          expiration: {
+            maxEntries: 150,
+            maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+          },
         },
       },
-    },
-  ],
+    ],
+  },
 })
 
 const nextConfig: NextConfig = {

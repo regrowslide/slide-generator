@@ -1547,6 +1547,11 @@ export type DentalVisitPlanFindManyArgs<ExtArgs extends runtime.Types.Extensions
    * Skip the first `n` DentalVisitPlans.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of DentalVisitPlans.
+   */
   distinct?: Prisma.DentalVisitPlanScalarFieldEnum | Prisma.DentalVisitPlanScalarFieldEnum[]
 }
 

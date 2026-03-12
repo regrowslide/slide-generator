@@ -1297,6 +1297,11 @@ export type YamanokaiEventRequiredCourseFindManyArgs<ExtArgs extends runtime.Typ
    * Skip the first `n` YamanokaiEventRequiredCourses.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of YamanokaiEventRequiredCourses.
+   */
   distinct?: Prisma.YamanokaiEventRequiredCourseScalarFieldEnum | Prisma.YamanokaiEventRequiredCourseScalarFieldEnum[]
 }
 

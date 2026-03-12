@@ -1357,6 +1357,11 @@ export type CounselingClientFindManyArgs<ExtArgs extends runtime.Types.Extension
    * Skip the first `n` CounselingClients.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of CounselingClients.
+   */
   distinct?: Prisma.CounselingClientScalarFieldEnum | Prisma.CounselingClientScalarFieldEnum[]
 }
 

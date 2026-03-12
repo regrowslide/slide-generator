@@ -2248,6 +2248,11 @@ export type KaizenWorkFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Skip the first `n` KaizenWorks.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of KaizenWorks.
+   */
   distinct?: Prisma.KaizenWorkScalarFieldEnum | Prisma.KaizenWorkScalarFieldEnum[]
 }
 

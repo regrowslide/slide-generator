@@ -1728,6 +1728,11 @@ export type RgStaffManualDataFindManyArgs<ExtArgs extends runtime.Types.Extensio
    * Skip the first `n` RgStaffManualData.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of RgStaffManualData.
+   */
   distinct?: Prisma.RgStaffManualDataScalarFieldEnum | Prisma.RgStaffManualDataScalarFieldEnum[]
 }
 

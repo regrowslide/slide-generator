@@ -1286,6 +1286,11 @@ export type KaizenReviewFindManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Skip the first `n` KaizenReviews.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of KaizenReviews.
+   */
   distinct?: Prisma.KaizenReviewScalarFieldEnum | Prisma.KaizenReviewScalarFieldEnum[]
 }
 

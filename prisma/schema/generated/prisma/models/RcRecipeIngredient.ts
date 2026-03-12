@@ -2118,6 +2118,11 @@ export type RcRecipeIngredientFindManyArgs<ExtArgs extends runtime.Types.Extensi
    * Skip the first `n` RcRecipeIngredients.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of RcRecipeIngredients.
+   */
   distinct?: Prisma.RcRecipeIngredientScalarFieldEnum | Prisma.RcRecipeIngredientScalarFieldEnum[]
 }
 

@@ -1883,6 +1883,11 @@ export type YamanokaiEventPlanParticipantFindManyArgs<ExtArgs extends runtime.Ty
    * Skip the first `n` YamanokaiEventPlanParticipants.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of YamanokaiEventPlanParticipants.
+   */
   distinct?: Prisma.YamanokaiEventPlanParticipantScalarFieldEnum | Prisma.YamanokaiEventPlanParticipantScalarFieldEnum[]
 }
 

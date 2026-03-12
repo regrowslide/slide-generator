@@ -1767,6 +1767,11 @@ export type SbmDeliveryRouteStopFindManyArgs<ExtArgs extends runtime.Types.Exten
    * Skip the first `n` SbmDeliveryRouteStops.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of SbmDeliveryRouteStops.
+   */
   distinct?: Prisma.SbmDeliveryRouteStopScalarFieldEnum | Prisma.SbmDeliveryRouteStopScalarFieldEnum[]
 }
 

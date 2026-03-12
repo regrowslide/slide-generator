@@ -1212,6 +1212,11 @@ export type KaizenWorkImageFindManyArgs<ExtArgs extends runtime.Types.Extensions
    * Skip the first `n` KaizenWorkImages.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of KaizenWorkImages.
+   */
   distinct?: Prisma.KaizenWorkImageScalarFieldEnum | Prisma.KaizenWorkImageScalarFieldEnum[]
 }
 

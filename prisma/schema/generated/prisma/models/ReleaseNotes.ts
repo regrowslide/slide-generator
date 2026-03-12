@@ -1130,6 +1130,11 @@ export type ReleaseNotesFindManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Skip the first `n` ReleaseNotes.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of ReleaseNotes.
+   */
   distinct?: Prisma.ReleaseNotesScalarFieldEnum | Prisma.ReleaseNotesScalarFieldEnum[]
 }
 

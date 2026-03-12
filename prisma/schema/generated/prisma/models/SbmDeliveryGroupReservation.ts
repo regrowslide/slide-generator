@@ -1426,6 +1426,11 @@ export type SbmDeliveryGroupReservationFindManyArgs<ExtArgs extends runtime.Type
    * Skip the first `n` SbmDeliveryGroupReservations.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of SbmDeliveryGroupReservations.
+   */
   distinct?: Prisma.SbmDeliveryGroupReservationScalarFieldEnum | Prisma.SbmDeliveryGroupReservationScalarFieldEnum[]
 }
 

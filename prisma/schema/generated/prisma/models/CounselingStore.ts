@@ -1324,6 +1324,11 @@ export type CounselingStoreFindManyArgs<ExtArgs extends runtime.Types.Extensions
    * Skip the first `n` CounselingStores.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of CounselingStores.
+   */
   distinct?: Prisma.CounselingStoreScalarFieldEnum | Prisma.CounselingStoreScalarFieldEnum[]
 }
 

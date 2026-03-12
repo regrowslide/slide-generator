@@ -1235,6 +1235,11 @@ export type KgDailyMenuFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Skip the first `n` KgDailyMenus.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of KgDailyMenus.
+   */
   distinct?: Prisma.KgDailyMenuScalarFieldEnum | Prisma.KgDailyMenuScalarFieldEnum[]
 }
 

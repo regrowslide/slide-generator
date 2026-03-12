@@ -1425,6 +1425,11 @@ export type YamanokaiRecordFileFindManyArgs<ExtArgs extends runtime.Types.Extens
    * Skip the first `n` YamanokaiRecordFiles.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of YamanokaiRecordFiles.
+   */
   distinct?: Prisma.YamanokaiRecordFileScalarFieldEnum | Prisma.YamanokaiRecordFileScalarFieldEnum[]
 }
 

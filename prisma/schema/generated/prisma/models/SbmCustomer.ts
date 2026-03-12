@@ -1509,6 +1509,11 @@ export type SbmCustomerFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Skip the first `n` SbmCustomers.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of SbmCustomers.
+   */
   distinct?: Prisma.SbmCustomerScalarFieldEnum | Prisma.SbmCustomerScalarFieldEnum[]
 }
 

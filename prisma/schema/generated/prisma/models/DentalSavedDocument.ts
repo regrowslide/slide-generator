@@ -1797,6 +1797,11 @@ export type DentalSavedDocumentFindManyArgs<ExtArgs extends runtime.Types.Extens
    * Skip the first `n` DentalSavedDocuments.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of DentalSavedDocuments.
+   */
   distinct?: Prisma.DentalSavedDocumentScalarFieldEnum | Prisma.DentalSavedDocumentScalarFieldEnum[]
 }
 

@@ -1202,6 +1202,11 @@ export type KidsAchievementFindManyArgs<ExtArgs extends runtime.Types.Extensions
    * Skip the first `n` KidsAchievements.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of KidsAchievements.
+   */
   distinct?: Prisma.KidsAchievementScalarFieldEnum | Prisma.KidsAchievementScalarFieldEnum[]
 }
 

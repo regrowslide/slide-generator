@@ -1391,6 +1391,11 @@ export type SbmProductFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Skip the first `n` SbmProducts.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of SbmProducts.
+   */
   distinct?: Prisma.SbmProductScalarFieldEnum | Prisma.SbmProductScalarFieldEnum[]
 }
 

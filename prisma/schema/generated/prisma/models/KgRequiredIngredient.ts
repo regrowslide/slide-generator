@@ -1555,6 +1555,11 @@ export type KgRequiredIngredientFindManyArgs<ExtArgs extends runtime.Types.Exten
    * Skip the first `n` KgRequiredIngredients.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of KgRequiredIngredients.
+   */
   distinct?: Prisma.KgRequiredIngredientScalarFieldEnum | Prisma.KgRequiredIngredientScalarFieldEnum[]
 }
 

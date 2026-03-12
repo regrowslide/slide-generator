@@ -1677,6 +1677,11 @@ export type KidsChildFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Skip the first `n` KidsChildren.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of KidsChildren.
+   */
   distinct?: Prisma.KidsChildScalarFieldEnum | Prisma.KidsChildScalarFieldEnum[]
 }
 
