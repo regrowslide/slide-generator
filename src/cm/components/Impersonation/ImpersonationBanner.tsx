@@ -1,20 +1,23 @@
 'use client'
 
-import {authClient} from 'src/lib/auth-client'
+import { authClient } from 'src/lib/auth-client'
+import { sleep } from '@cm/lib/methods/common'
 
 type Props = {
   userName: string
 }
 
-const ImpersonationBanner = ({userName}: Props) => {
+const ImpersonationBanner = ({ userName }: Props) => {
   const handleStop = async () => {
     await authClient.admin.stopImpersonating()
+    await authClient.getSession()
     window.location.reload()
+
   }
 
   return (
     <div className="bg-amber-500 text-white text-center py-1 px-4 text-sm font-bold flex items-center justify-center gap-3"
-      style={{position: 'sticky', top: 0, zIndex: 9999}}
+      style={{ position: 'sticky', top: 0, zIndex: 9999 }}
     >
       <span>「{userName}」としてログイン中</span>
       <button

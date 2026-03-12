@@ -7,7 +7,6 @@ model RgStore {
   updatedAt DateTime? @updatedAt
   sortOrder Float     @default(0)
   name      String // '港北店', '青葉店', '中央店'
-  fullName  String? // 'asian relaxation villa新潟西店'
   isActive  Boolean   @default(true)
 
   RgUserList        User[]              @relation("RgUserStore")

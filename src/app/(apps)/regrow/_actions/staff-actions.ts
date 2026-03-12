@@ -34,8 +34,11 @@ export const updateRegrowUser = async (
 export const updateUserRgStore = async (userId: string, rgStoreId: number | null): Promise<User> =>
   RegrowUserService.updateRgStore(userId, rgStoreId)
 
-export const updateUserActive = async (userId: string, active: boolean): Promise<User> =>
-  RegrowUserService.updateActive(userId, active)
+export const banRegrowUser = async (userId: string, banReason?: string): Promise<void> =>
+  RegrowUserService.banUser(userId, banReason)
+
+export const unbanRegrowUser = async (userId: string): Promise<void> =>
+  RegrowUserService.unbanUser(userId)
 
 // ============================================================
 // 権限取得（ログインユーザーのRgロール）
@@ -66,7 +69,7 @@ type BatchLinkResult = {
 export const batchLinkStaffData = async (): Promise<BatchLinkResult> => {
   // regrow Userを全件取得
   const rgUsers = await prisma.user.findMany({
-    where: {apps: {has: 'regrow'}, active: true},
+    where: {apps: {has: 'regrow'}, banned: {not: true}},
   })
 
   // staffName → userId マップ（同名ユーザーがいる場合はスキップ）

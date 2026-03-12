@@ -177,7 +177,7 @@ export const upsertStaff = (staffName: string, storeName: StoreName): boolean =>
     staffName,
     storeName,
     role: 'viewer',
-    isActive: true,
+    isBanned: false,
   })
   saveStaffMaster(master)
   return true

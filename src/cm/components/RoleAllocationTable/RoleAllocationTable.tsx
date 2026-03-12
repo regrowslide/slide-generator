@@ -49,11 +49,21 @@ const ITEMS_PER_PAGE = 50
 
 const RoleAllocationTable = ({
   PageBuilderExtraProps,
-  searchFields = [{
-    id: 'userId',
-    label: 'ユーザー',
-    forSelect: { modelName: 'user' },
-  }],
+  searchFields = [
+    {
+      id: 'userId',
+      label: 'ユーザー',
+      forSelect: {
+        modelName: 'user',
+        select: {
+          id: 'string',
+          name: 'string',
+          email: 'string',
+        }
+
+      },
+    }
+  ],
   appFilter,
   createUserFetchProps,
 }: RoleAllocationTableProps) => {
@@ -121,6 +131,8 @@ const RoleAllocationTable = ({
       skip,
     } = createUserFetchProps?.(query) ?? {}
 
+
+
     const { result: users } = await doStandardPrisma('user', 'findMany', {
       where,
       include,
@@ -140,6 +152,7 @@ const RoleAllocationTable = ({
   const searchFieldValuesKey = JSON.stringify(searchFieldValues)
 
   useEffect(() => {
+
     fetchUsers()
   }, [PageBuilderExtraProps?.where, PageBuilderExtraProps?.where?.userId, PageBuilderExtraProps?.where?.roleMasterId, searchFieldValuesKey])
 

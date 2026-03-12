@@ -13,7 +13,7 @@ import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import useModal from '@cm/components/utils/modal/useModal'
 
 import { createStore, updateStore, deleteStore } from '../../_actions/store-actions'
-import { getAllUsers, updateUserRgStore, updateUserActive, createRegrowUser, deleteRegrowUser, updateRegrowUser } from '../../_actions/staff-actions'
+import { getAllUsers, updateUserRgStore, banRegrowUser, unbanRegrowUser, createRegrowUser, deleteRegrowUser, updateRegrowUser } from '../../_actions/staff-actions'
 import { seedRegrowData, resetRegrowData, seedFromExcelFiles } from '../../_actions/seed-regrow-actions'
 import RoleAllocationTable from '@cm/components/RoleAllocationTable/RoleAllocationTable'
 
@@ -26,13 +26,11 @@ type Props = {
 
 type StoreFormData = {
   name: string
-  fullName: string
   isActive: boolean
 }
 
 const defaultStoreForm: StoreFormData = {
   name: '',
-  fullName: '',
   isActive: true,
 }
 
@@ -91,7 +89,6 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
       setStoreEditingId(store.id)
       setStoreForm({
         name: store.name,
-        fullName: store.fullName ?? '',
         isActive: store.isActive,
       })
       setStoreFormError(null)
@@ -110,14 +107,12 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
       if (storeEditingId) {
         const updated = await updateStore(storeEditingId, {
           name: storeForm.name,
-          fullName: storeForm.fullName || null,
           isActive: storeForm.isActive,
         })
         setStores((prev) => prev.map((s) => (s.id === storeEditingId ? updated : s)))
       } else {
         const created = await createStore({
           name: storeForm.name,
-          fullName: storeForm.fullName || undefined,
         })
         setStores((prev) => [...prev, created])
       }
@@ -187,10 +182,23 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
     [toggleLoad, fetchUsers]
   )
 
-  const handleToggleUserActive = useCallback(
-    async (userId: string, active: boolean) => {
+  const handleBanUser = useCallback(
+    async (userId: string, userName: string) => {
+      const reason = window.prompt(`「${userName}」をBANします。理由を入力してください（任意）:`)
+      if (reason === null) return
       toggleLoad(async () => {
-        await updateUserActive(userId, active)
+        await banRegrowUser(userId, reason || undefined)
+        await fetchUsers()
+      }, { refresh: false })
+    },
+    [toggleLoad, fetchUsers]
+  )
+
+  const handleUnbanUser = useCallback(
+    async (userId: string, userName: string) => {
+      if (!window.confirm(`「${userName}」のBANを解除しますか？`)) return
+      toggleLoad(async () => {
+        await unbanRegrowUser(userId)
         await fetchUsers()
       }, { refresh: false })
     },
@@ -333,7 +341,6 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
                   <TableRow>
                     <TableHead>ID</TableHead>
                     <TableHead>名前</TableHead>
-                    <TableHead>フルネーム</TableHead>
                     <TableHead>状態</TableHead>
                     <TableHead>操作</TableHead>
                   </TableRow>
@@ -341,7 +348,7 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
                 <TableBody>
                   {stores.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center py-8 text-slate-400">
+                      <TableCell colSpan={4} className="text-center py-8 text-slate-400">
                         店舗が登録されていません
                       </TableCell>
                     </TableRow>
@@ -355,7 +362,6 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
                             {store.name}
                           </div>
                         </TableCell>
-                        <TableCell>{store.fullName ?? '-'}</TableCell>
                         <TableCell>
                           <span
                             className={`px-2 py-1 rounded-full text-xs font-medium ${store.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
@@ -393,15 +399,6 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
                   value={storeForm.name}
                   onChange={(e) => setStoreForm({ ...storeForm, name: e.target.value })}
                   placeholder="港北店"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="storeFullName">フルネーム</Label>
-                <Input
-                  id="storeFullName"
-                  value={storeForm.fullName}
-                  onChange={(e) => setStoreForm({ ...storeForm, fullName: e.target.value })}
-                  placeholder="Regrow 港北店"
                 />
               </div>
               <div className="flex items-center gap-2">
@@ -456,7 +453,7 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
                       </TableRow>
                     ) : (
                       users.map((user) => (
-                        <TableRow key={user.id} className={!user.active ? 'opacity-50' : ''}>
+                        <TableRow key={user.id} className={user.banned ? 'opacity-50' : ''}>
                           <TableCell className="font-medium">{user.name}</TableCell>
                           <TableCell className="text-sm text-slate-500">{user.email ?? '-'}</TableCell>
                           <TableCell>
@@ -474,15 +471,14 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
                             </select>
                           </TableCell>
                           <TableCell>
-                            <div className="flex items-center gap-2">
-                              <Switch
-                                checked={user.active}
-                                onCheckedChange={(checked) => handleToggleUserActive(user.id, checked)}
-                              />
-                              <span className={`text-xs font-medium ${user.active ? 'text-green-700' : 'text-gray-500'}`}>
-                                {user.active ? '有効' : '無効'}
-                              </span>
-                            </div>
+                            {user.banned ? (
+                              <div>
+                                <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">BAN</span>
+                                {user.banReason && <p className="text-[10px] text-red-400 mt-0.5">{user.banReason}</p>}
+                              </div>
+                            ) : (
+                              <span className="text-xs text-gray-300">-</span>
+                            )}
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center gap-2">
@@ -492,6 +488,23 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
                               >
                                 <Pencil className="w-4 h-4" />
                               </button>
+                              {user.banned ? (
+                                <button
+                                  className="p-1 hover:bg-gray-100 rounded"
+                                  title="BAN解除"
+                                  onClick={() => handleUnbanUser(user.id, user.name)}
+                                >
+                                  <Shield className="w-4 h-4 text-green-500" />
+                                </button>
+                              ) : (
+                                <button
+                                  className="p-1 hover:bg-gray-100 rounded"
+                                  title="BAN"
+                                  onClick={() => handleBanUser(user.id, user.name)}
+                                >
+                                  <Shield className="w-4 h-4 text-orange-500" />
+                                </button>
+                              )}
                               <button
                                 className="p-1 hover:bg-gray-100 rounded"
                                 onClick={() => handleDeleteUser(user.id, user.name)}

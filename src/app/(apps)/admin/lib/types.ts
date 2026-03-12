@@ -24,7 +24,6 @@ export type AdminSessionRow = Pick<
 /** ユーザー検索パラメータ */
 export type UserSearchParams = {
   search?: string
-  activeFilter?: 'all' | 'active' | 'inactive'
   roleFilter?: 'all' | 'admin' | 'user'
   page?: number
 }

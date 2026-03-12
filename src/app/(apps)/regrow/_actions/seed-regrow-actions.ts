@@ -12,13 +12,7 @@ import {parseAllExcelFiles} from '../lib/excel-parser-server'
 
 export const seedRegrowData = async (): Promise<{message: string}> => {
   // 既存データを削除（依存関係順）
-  await prisma.rgCustomerVoice.deleteMany()
-  await prisma.rgStaffManualData.deleteMany()
-  await prisma.rgStoreKpi.deleteMany()
-  await prisma.rgStoreTotals.deleteMany()
-  await prisma.rgStaffRecord.deleteMany()
-  await prisma.rgMonthlyReport.deleteMany()
-  await prisma.rgStore.deleteMany()
+  await resetRegrowData()
 
   // RoleMaster に regrowロールをupsert
   await Promise.all([
@@ -31,9 +25,9 @@ export const seedRegrowData = async (): Promise<{message: string}> => {
 
   // 1. 店舗作成
   const stores = await Promise.all([
-    prisma.rgStore.create({data: {name: '港北店', fullName: 'asian relaxation villa港北店', sortOrder: 1}}),
-    prisma.rgStore.create({data: {name: '青葉店', fullName: 'asian relaxation villa青葉店', sortOrder: 2}}),
-    prisma.rgStore.create({data: {name: '中央店', fullName: 'asian relaxation villa中央店', sortOrder: 3}}),
+    prisma.rgStore.create({data: {name: '港北店', sortOrder: 1}}),
+    prisma.rgStore.create({data: {name: '青葉店', sortOrder: 2}}),
+    prisma.rgStore.create({data: {name: '中央店', sortOrder: 3}}),
   ])
 
   const storeMap = new Map(stores.map(s => [s.name, s]))
@@ -164,13 +158,7 @@ export const seedRegrowData = async (): Promise<{message: string}> => {
 
 export const seedFromExcelFiles = async (): Promise<{message: string}> => {
   // 既存データを削除（依存関係順）
-  await prisma.rgCustomerVoice.deleteMany()
-  await prisma.rgStaffManualData.deleteMany()
-  await prisma.rgStoreKpi.deleteMany()
-  await prisma.rgStoreTotals.deleteMany()
-  await prisma.rgStaffRecord.deleteMany()
-  await prisma.rgMonthlyReport.deleteMany()
-  await prisma.rgStore.deleteMany()
+  await resetRegrowData()
 
   // RoleMaster に regrowロールをupsert
   await Promise.all([
@@ -190,18 +178,16 @@ export const seedFromExcelFiles = async (): Promise<{message: string}> => {
   }
 
   // ② 店舗名を重複排除して作成
-  const storeEntries = new Map<string, string>() // shortName → fullName
+  const storeNames = new Set<string>()
   for (const file of parsedFiles) {
-    if (!storeEntries.has(file.storeShortName)) {
-      storeEntries.set(file.storeShortName, file.result.storeName)
-    }
+    storeNames.add(file.storeShortName)
   }
 
   let sortOrder = 1
   const storeMap = new Map<string, {id: number; sortOrder: number}>()
-  for (const [shortName, fullName] of storeEntries) {
+  for (const shortName of storeNames) {
     const store = await prisma.rgStore.create({
-      data: {name: shortName, fullName, sortOrder},
+      data: {name: shortName, sortOrder},
     })
     storeMap.set(shortName, {id: store.id, sortOrder: store.sortOrder})
     sortOrder++
@@ -344,8 +330,19 @@ export const resetRegrowData = async (): Promise<{message: string}> => {
   await prisma.rgStoreTotals.deleteMany()
   await prisma.rgStaffRecord.deleteMany()
   await prisma.rgMonthlyReport.deleteMany()
-  await prisma.user.deleteMany()
-  await prisma.roleMaster.deleteMany()
+
+  // regrowシードユーザーを削除（admin以外）
+  const seedUsers = await prisma.user.findMany({
+    where: {role: {not: 'admin'}, apps: {has: 'regrow'}},
+    select: {id: true},
+  })
+  const seedUserIds = seedUsers.map(u => u.id)
+  if (seedUserIds.length > 0) {
+    await prisma.session.deleteMany({where: {userId: {in: seedUserIds}}})
+    await prisma.account.deleteMany({where: {userId: {in: seedUserIds}}})
+    await prisma.user.deleteMany({where: {id: {in: seedUserIds}}})
+  }
+
   await prisma.rgStore.deleteMany()
 
   return {message: '全データをリセットしました'}

@@ -13,12 +13,11 @@ export class AdminService {
   /** ユーザー一覧取得（検索・フィルタ・ページネーション対応） */
   static async getUsers(params: {
     search?: string
-    activeFilter?: 'all' | 'active' | 'inactive'
     roleFilter?: 'all' | 'admin' | 'user'
     page?: number
     perPage?: number
   }) {
-    const {search, activeFilter = 'all', roleFilter = 'all', page = 1, perPage = 20} = params
+    const {search, roleFilter = 'all', page = 1, perPage = 20} = params
 
     const where: Prisma.UserWhereInput = {
       AND: [
@@ -33,9 +32,6 @@ export class AdminService {
               },
             ]
           : []),
-        // activeフィルタ
-        ...(activeFilter === 'active' ? [{active: true}] : []),
-        ...(activeFilter === 'inactive' ? [{active: false}] : []),
         // roleフィルタ
         ...(roleFilter !== 'all' ? [{role: roleFilter}] : []),
       ],
@@ -74,17 +70,31 @@ export class AdminService {
     })
   }
 
-  /** ユーザーの有効/無効切替 */
-  static async toggleUserActive(userId: string, active: boolean) {
-    return prisma.user.update({
-      where: {id: userId},
-      data: {active},
-    })
-  }
-
   /** ユーザー削除（関連Account・Session・UserRoleはCascadeで削除） */
   static async deleteUser(userId: string) {
     return prisma.user.delete({where: {id: userId}})
+  }
+
+  /** ユーザーをBAN（全セッション削除 + ログイン不可） */
+  static async banUser(userId: string, banReason?: string, banExpiresIn?: number) {
+    await prisma.user.update({
+      where: {id: userId},
+      data: {
+        banned: true,
+        banReason: banReason || null,
+        banExpires: banExpiresIn ? new Date(Date.now() + banExpiresIn * 1000) : null,
+      },
+    })
+    // BAN時に全セッションを削除（即ログアウト）
+    await prisma.session.deleteMany({where: {userId}})
+  }
+
+  /** ユーザーのBAN解除 */
+  static async unbanUser(userId: string) {
+    await prisma.user.update({
+      where: {id: userId},
+      data: {banned: false, banReason: null, banExpires: null},
+    })
   }
 
   // ============================================================

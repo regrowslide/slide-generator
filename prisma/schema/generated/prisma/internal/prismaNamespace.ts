@@ -9322,7 +9322,6 @@ export const RgStoreScalarFieldEnum = {
   updatedAt: 'updatedAt',
   sortOrder: 'sortOrder',
   name: 'name',
-  fullName: 'fullName',
   isActive: 'isActive'
 } as const
 
@@ -9685,7 +9684,6 @@ export const UserScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   sortOrder: 'sortOrder',
-  active: 'active',
   hiredAt: 'hiredAt',
   retiredAt: 'retiredAt',
   transferredAt: 'transferredAt',
@@ -9710,6 +9708,9 @@ export const UserScalarFieldEnum = {
   lineUserId: 'lineUserId',
   emailVerified: 'emailVerified',
   image: 'image',
+  banned: 'banned',
+  banReason: 'banReason',
+  banExpires: 'banExpires',
   employeeCode: 'employeeCode',
   phone: 'phone',
   avatar: 'avatar',

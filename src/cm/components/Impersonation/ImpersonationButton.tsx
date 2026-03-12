@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import useModal from '@cm/components/utils/modal/useModal'
 import { authClient } from 'src/lib/auth-client'
 import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
+import { useRouter } from 'next/navigation'
+import { sleep } from '@cm/lib/methods/common'
 
 type UserItem = {
   id: string
@@ -18,7 +20,7 @@ const ImpersonationButton = () => {
   const [users, setUsers] = useState<UserItem[]>([])
   const [loading, setLoading] = useState(false)
   const [search, setSearch] = useState('')
-
+  const router = useRouter()
   // モーダルを開いた時にユーザー一覧を取得（権限情報含む）
   useEffect(() => {
     if (!open) return
@@ -31,7 +33,7 @@ const ImpersonationButton = () => {
         email: true,
         UserRole: { select: { RoleMaster: { select: { name: true } } } },
       },
-      where: { active: true },
+      where: { banned: { not: true } },
       orderBy: [{ name: 'asc' }],
     }).then(({ result }) => {
       const mapped = (result ?? []).map(u => ({
@@ -48,6 +50,7 @@ const ImpersonationButton = () => {
 
   const handleImpersonate = async (userId: string) => {
     await authClient.admin.impersonateUser({ userId })
+    await authClient.getSession()
     window.location.reload()
   }
 

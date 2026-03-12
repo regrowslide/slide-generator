@@ -8,6 +8,10 @@ export default async function Page(props: { searchParams: Promise<Record<string,
   const query = await props.searchParams
   const { session } = await initServerComopnent({ query })
 
+  if (!session.dentalClinicId) {
+    return <div>クリニックが見つかりません</div>
+  }
+
 
   const clinicRaw = await getUserDentalClinic(session.id)
   const clinic = clinicRaw ? toClinic(clinicRaw) : null

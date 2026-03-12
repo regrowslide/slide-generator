@@ -42,7 +42,7 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime? @default(now()) @updatedAt()
   sortOrder     Float     @default(0)
-  active        Boolean   @default(true)
+  // active        Boolean   @default(true)
   hiredAt       DateTime?
   retiredAt     DateTime?
   transferredAt DateTime?
@@ -72,8 +72,11 @@ model User {
   lineUserId String? @unique
 
   // better-auth
-  emailVerified Boolean @default(false)
+  emailVerified Boolean   @default(false)
   image         String?
+  banned        Boolean   @default(false)
+  banReason     String?
+  banExpires    DateTime?
 
   employeeCode String? @unique
   phone        String?

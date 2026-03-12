@@ -48,24 +48,33 @@ export const doStandardPrisma: doStandardPrismaType = async (model, method, quer
   let res: requestResultType
 
 
-  if (model === 'user' && [
-    //
-    // Userレコードに影響を与えるメソッドを列挙
-    'create',
-    'createMany',
-    'update',
-    'updateMany',
-    'upsert',
-    'delete',
-    'deleteMany',
-  ].includes(method)) {
+  if (model === 'user') {
 
-    return {
-      success: false,
-      message: 'Userレコードに影響を与えるメソッドは使用できません',
-      error: 'Unauthorized access',
-      result: null,
-    } as requestResultType
+    if ([
+      //
+      // Userレコードに影響を与えるメソッドを列挙
+      'create',
+      'createMany',
+      'update',
+      'updateMany',
+      'upsert',
+      'delete',
+      'deleteMany',
+    ].includes(method)) {
+      return {
+        success: false,
+        message: 'Userレコードに影響を与えるメソッドは使用できません',
+        error: 'Unauthorized access',
+        result: null,
+      } as requestResultType
+    }
+
+    if (method === 'findMany' || method === 'findUnique') {
+      if (newQueryObject?.where?.id === 0) {
+
+        newQueryObject.where.id = ''
+      }
+    }
   }
 
 

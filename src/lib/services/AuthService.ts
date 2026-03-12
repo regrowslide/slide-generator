@@ -117,6 +117,53 @@ export class AuthService {
   }
 
   /**
+   * ユーザーを Upsert する（email で判定し、存在すれば更新、なければ作成）
+   *
+   * User + Account (credential) を一括で作成/更新する。
+   * reset-account-password.ts スクリプトの代替として使用。
+   */
+  static async upsertUser(input: {
+    email: string
+    name: string
+    role?: 'user' | 'admin'
+    password?: string
+    additionalData?: Prisma.UserUncheckedCreateInput
+  }): Promise<User> {
+    AuthService.validateEmail(input.email)
+
+    const existing = await prisma.user.findUnique({where: {email: input.email}})
+
+    if (existing) {
+      // 更新
+      const user = await prisma.user.update({
+        where: {id: existing.id},
+        data: {
+          name: input.name,
+          role: input.role ?? existing.role,
+        },
+      })
+
+      // パスワード変更
+      if (input.password) {
+        await AuthService.updatePassword(user.id, input.password)
+      }
+
+      return user
+    } else {
+      // 新規作成（User + Account）
+      return AuthService.createUserDirect({
+        password: input.password,
+        prismaData: {
+          name: input.name,
+          email: input.email,
+          role: input.role ?? 'user',
+          ...input.additionalData,
+        },
+      })
+    }
+  }
+
+  /**
    * パスワードを更新する（Account.password を scrypt ハッシュで上書き）
    */
   static async updatePassword(userId: string, newPassword: string): Promise<void> {

@@ -1,18 +1,19 @@
-import {arr__findCommonValues} from '@cm/class/ArrHandler/array-utils/data-operations'
-import {MyFormType} from '@cm/types/form-types'
-import {MyTableType} from '@cm/types/types'
-import {anyObject} from '@cm/types/utility-types'
+import { arr__findCommonValues } from '@cm/class/ArrHandler/array-utils/data-operations'
+import { MyFormType } from '@cm/types/form-types'
+import { MyTableType } from '@cm/types/types'
+import { anyObject } from '@cm/types/utility-types'
 
-import {judgeIsAdmin, roleIs} from 'src/non-common/scope-lib/judgeIsAdmin'
+import { judgeIsAdmin, roleIs } from 'src/non-common/scope-lib/judgeIsAdmin'
 
-type getScopeOptionsProps = {query?: anyObject; roles?: any[]}
+type getScopeOptionsProps = { query?: anyObject; roles?: any[] }
 
 export const getScopes = (session: anyObject, options: getScopeOptionsProps) => {
-  const {query, roles} = options ?? {}
+  const { query, roles } = options ?? {}
 
   const roleNames = (roles ?? []).map(d => d.name)
   const login = session?.id ? true : false
-  const {admin} = judgeIsAdmin(session)
+  const { admin } = judgeIsAdmin(session)
+
 
   const result = {
     login,
@@ -24,14 +25,14 @@ export const getScopes = (session: anyObject, options: getScopeOptionsProps) => 
       const canEdit = isSystemAdmin || isCL
       // better-auth impersonationではsession.idが対象ユーザーのIDになる
       const userId = session?.id ?? ''
-      return {userId, isSystemAdmin, isCL, canEdit}
+      return { userId, isSystemAdmin, isCL, canEdit }
     },
 
     getDentalScopes: () => {
       const isSystemAdmin = !!arr__findCommonValues([`管理者`], roleNames) || admin
       // better-auth impersonationではsession.idが対象ユーザーのIDになる
       const userId = session?.id ?? ''
-      return {userId, isSystemAdmin}
+      return { userId, isSystemAdmin }
     },
 
     getRegrowScopes: () => {
@@ -48,10 +49,10 @@ export const getScopes = (session: anyObject, options: getScopeOptionsProps) => 
   return result
 }
 
-export const limitEditting = (props: {exclusiveTo?: boolean; myTable?: MyTableType; myForm?: MyFormType}) => {
+export const limitEditting = (props: { exclusiveTo?: boolean; myTable?: MyTableType; myForm?: MyFormType }) => {
   const {
     exclusiveTo,
-    myTable = {update: false, delete: false},
+    myTable = { update: false, delete: false },
     myForm = {
       update: false,
       delete: false,

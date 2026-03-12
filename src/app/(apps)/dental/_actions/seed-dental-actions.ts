@@ -746,11 +746,19 @@ export const resetDentalData = async (): Promise<{message: string}> => {
   await prisma.dentalVisitPlan.deleteMany()
   await prisma.dentalPatient.deleteMany()
   await prisma.dentalFacility.deleteMany()
-  // dentalClinicId を持つ User のクリニック紐づけを解除
-  await prisma.user.updateMany({
-    where: {dentalClinicId: {not: null}},
-    data: {dentalClinicId: null},
+
+  // dentalシードユーザーを削除（admin以外）
+  const seedUsers = await prisma.user.findMany({
+    where: {role: {not: 'admin'}, apps: {has: 'dental'}},
+    select: {id: true},
   })
+  const seedUserIds = seedUsers.map(u => u.id)
+  if (seedUserIds.length > 0) {
+    await prisma.session.deleteMany({where: {userId: {in: seedUserIds}}})
+    await prisma.account.deleteMany({where: {userId: {in: seedUserIds}}})
+    await prisma.user.deleteMany({where: {id: {in: seedUserIds}}})
+  }
+
   await prisma.dentalClinic.deleteMany()
 
   return {message: 'Dentalデータをすべてリセットしました'}

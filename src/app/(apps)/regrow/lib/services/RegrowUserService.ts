@@ -38,9 +38,16 @@ export class RegrowUserService {
     return roleName.replace('regrow-', '') as StaffRole
   }
 
-  /** ユーザーの有効/無効を切替 */
-  static async updateActive(userId: string, active: boolean): Promise<User> {
-    return AuthService.updateUser({id: userId}, {active})
+  /** ユーザーをBAN（全セッション削除 + ログイン不可） */
+  static async banUser(userId: string, banReason?: string): Promise<void> {
+    const {AdminService} = await import('src/lib/services/AdminService')
+    await AdminService.banUser(userId, banReason)
+  }
+
+  /** ユーザーのBAN解除 */
+  static async unbanUser(userId: string): Promise<void> {
+    const {AdminService} = await import('src/lib/services/AdminService')
+    await AdminService.unbanUser(userId)
   }
 
   /** ユーザーを完全削除（UserRoleも事前削除） */
@@ -66,7 +73,7 @@ export class RegrowUserService {
   /** regrow UserをStaffMaster形式で取得（レポート画面用・店舗未設定ユーザーも含む） */
   static async getStaffMaster(): Promise<StaffMaster[]> {
     const users = await prisma.user.findMany({
-      where: {apps: {has: 'regrow'}, active: true},
+      where: {apps: {has: 'regrow'}, banned: {not: true}},
       include: {
         RgStoreRg: true,
         UserRole: {
@@ -82,7 +89,7 @@ export class RegrowUserService {
       staffName: u.name,
       storeName: (u.RgStoreRg?.name ?? '未設定') as StoreName,
       role: (u.UserRole[0]?.RoleMaster.name.replace('regrow-', '') ?? 'viewer') as StaffRole,
-      isActive: u.active,
+      isBanned: u.banned ?? false,
     }))
   }
 }

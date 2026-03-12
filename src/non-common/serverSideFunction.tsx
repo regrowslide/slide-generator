@@ -80,7 +80,11 @@ export const sessionOnServer = async () => {
   const sessionData = await auth.api.getSession({
     headers: await headers(),
   })
+
+
   const session: anyObject = (sessionData?.user as anyObject) ?? null
+
+
   return { session }
 }
 

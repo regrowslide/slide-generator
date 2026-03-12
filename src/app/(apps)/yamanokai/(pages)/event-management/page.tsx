@@ -14,7 +14,7 @@ export default async function Page(props) {
     getYamanokaiEvents({ where: { isDeleted: false }, orderBy: { startAt: 'desc' } }),
     prisma.yamanokaiDepartment.findMany({ orderBy: { sortOrder: 'asc' } }),
     prisma.user.findMany({
-      where: { apps: { has: 'yamanokai' }, active: true },
+      where: { apps: { has: 'yamanokai' }, banned: { not: true } },
       orderBy: { name: 'asc' },
     }),
   ])

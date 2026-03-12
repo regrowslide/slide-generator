@@ -65,7 +65,9 @@ npm uninstall next-auth
 | `src/lib/services/AuthService.ts` | User + Account の作成・更新・パスワード管理 |
 | `src/app/api/auth/[...all]/route.ts` | better-auth APIルートハンドラ |
 | `scripts/migrate-to-better-auth.ts` | データ移行スクリプト（Int→String、パスワードハッシュ化等） |
-| `scripts/reset-account-password.ts` | 個別パスワードリセットスクリプト |
+| `scripts/reset-account-password.ts` | User + Account Upsertスクリプト（管理者作成・パスワード再設定） |
+| `src/cm/components/Impersonation/ImpersonationButton.tsx` | なりすまし用ユーザー選択ボタン + モーダル |
+| `src/cm/components/Impersonation/ImpersonationBanner.tsx` | なりすまし中の解除バナー |
 
 ### 書き換え対象ファイル
 
@@ -283,6 +285,35 @@ npx prisma generate
 3. **LINE連携** — LINE OAuth を使っていない場合は Step F の LINE 部分を削除
 4. **ReleaseNotes** — このモデルがない場合は Step D を削除
 5. **DB接続情報** — `DATABASE_URL` 環境変数を確認
+
+### User + Account Upsert スクリプト
+
+`scripts/reset-account-password.ts` は、管理者アカウントの作成やパスワード再設定に使う汎用スクリプト。
+
+```bash
+npx tsx scripts/reset-account-password.ts
+```
+
+**スクリプト上部の `CONFIG` を編集して実行する:**
+
+```typescript
+const CONFIG = {
+  email: 'admin@gmail.com',  // ユーザーのメールアドレス
+  name: '管理者',             // ユーザー名
+  role: 'admin',             // 'admin' | 'user'
+  password: 'admin12345',    // パスワード（scryptでハッシュ化される）
+}
+```
+
+**処理内容:**
+1. `User` テーブルに email で Upsert（存在すれば name / role を更新、なければ新規作成）
+2. `account` テーブルに credential Account を Upsert（存在すればパスワード更新、なければ新規作成）
+3. パスワードは scrypt でハッシュ化して保存
+
+**使用場面:**
+- 移行後の初回管理者アカウント作成
+- パスワードを忘れた場合のリセット
+- 開発環境でのテストユーザー作成
 
 ---
 
@@ -701,36 +732,77 @@ const secretKey = process.env.BETTER_AUTH_SECRET
 
 ## 16. なりすまし機能
 
-### 16-1. next-auth 時代
+### 16-1. 旧方式（廃止済み）
 
 URLクエリパラメータ `__global__userId` でなりすましユーザーを指定し、
-`FakeOrKeepSession` / `SessionFaker` でセッションを差し替えていた。
+`FakeOrKeepSession` / `SessionFaker` / `GlobalIdSelector` でセッションを差し替えていた。
+**この方式は完全に廃止済み。**
 
-### 16-2. better-auth（Admin Plugin）
+### 16-2. better-auth Admin Plugin 方式
+
+better-auth の Admin Plugin が提供する impersonation 機能を使用する。
+セッション自体が対象ユーザーに完全に切り替わるため、既存の `session.id` 参照が
+修正なしで正しく動作する。
 
 ```typescript
-// なりすまし開始
+// クライアント側
+import { authClient } from 'src/lib/auth-client'
+
+// なりすまし開始（role: 'admin' のユーザーのみ実行可能）
 await authClient.admin.impersonateUser({ userId: targetUserId })
+window.location.reload() // セッション切替後にページ全体をリロード
 
 // なりすまし終了
 await authClient.admin.stopImpersonating()
+window.location.reload()
 ```
 
-Session テーブルの `impersonatedBy` フィールドに元の管理者IDが記録される。
+**動作の仕組み:**
+- impersonation 開始で新しいセッションが作成され、Cookie が切り替わる
+- `session.id` / `session.role` が対象ユーザーのものになる
+- Session テーブルの `impersonatedBy` フィールドに元の管理者IDが記録される
+- `impersonationSessionDuration`（`auth.ts` で設定、デフォルト1時間）で自動期限切れ
 
-### 16-3. 廃止対象
+### 16-3. UI コンポーネント
 
-| ファイル | 状態 |
+| ファイル | 内容 |
 |---------|------|
-| `src/non-common/scope-lib/FakeOrKeepSession.tsx` | 廃止 |
-| `src/non-common/SessionFaker.tsx` | 廃止 |
-| `src/app/api/prisma/login/checkLogin.tsx` | 廃止 |
+| `src/cm/components/Impersonation/ImpersonationButton.tsx` | ヘッダーの「ユーザー切替」ボタン + ユーザー選択モーダル |
+| `src/cm/components/Impersonation/ImpersonationBanner.tsx` | なりすまし中の固定バナー（ユーザー名表示 + 解除ボタン） |
 
-### 16-4. globalIds との関係
+**Header.tsx での組み込み:**
+- `ImpersonationButton` — `session.role === 'admin'` かつ impersonation 中でないとき表示
+- `ImpersonationBanner` — `impersonatedBy` が存在するとき画面上部に表示
 
-`src/non-common/searchParamStr.tsx` の `globalIds.globalUserId` （`__global__userId`）は
-一部のスコープ判定（`getScopes.tsx`）で引き続き使用されている。
-なりすましを完全に Admin Plugin に移行する場合は、これらの参照も修正が必要。
+**useMySession での検出:**
+```typescript
+// sessionData.session.impersonatedBy でなりすまし中かを判定
+const impersonatedBy = (sessionData?.session as anyObject)?.impersonatedBy as string | undefined
+```
+
+### 16-4. 廃止対象
+
+| ファイル / 機能 | 状態 |
+|---------|------|
+| `src/non-common/scope-lib/FakeOrKeepSession.tsx` | 削除 |
+| `src/non-common/SessionFaker.tsx` | 削除 |
+| `src/app/api/prisma/login/checkLogin.tsx` | 削除 |
+| `src/cm/components/GlobalIdSelector/GlobalIdSelector.tsx` | 削除 |
+| `globalIds.globalUserId`（`__global__userId`） | 削除 |
+| 各アプリ PageBuilder の `getGlobalIdSelector` | 削除 |
+| `judgeIsAdmin` の `getGlobalUserId` / `adminSelf` | 削除 |
+| `getScopes` の `query.__global__userId` 参照 | 削除 |
+
+### 16-5. `globalIds` の残存項目
+
+`__global__userId` は廃止したが、以下のフィルタ用 globalIds は維持:
+
+- `__global__storeId` — 店舗フィルタ
+- `__global__selectedUserId` — ユーザー選択フィルタ
+- `__global__teacherId` — 講師フィルタ
+- `__global__schoolId` — 学校フィルタ
+
+これらは URL クエリベースのデータフィルタ機能であり、なりすましとは無関係。
 
 ---
 

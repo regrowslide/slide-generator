@@ -1,17 +1,16 @@
 'use client'
 
 import {useState, useEffect, useCallback} from 'react'
-import {Pencil, Trash2, Eye, Search} from 'lucide-react'
+import {Pencil, Trash2, Eye, Search, ShieldBan, ShieldCheck} from 'lucide-react'
 import {Card, CardContent} from '@shadcn/ui/card'
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@shadcn/ui/table'
 import {Input} from '@shadcn/ui/input'
-import {Switch} from '@shadcn/ui/switch'
 import {Button} from '@cm/components/styles/common-components/Button'
 import useModal from '@cm/components/utils/modal/useModal'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import {formatDate} from '@cm/class/Days/date-utils/formatters'
 
-import {getUsers, createUser, updateUser, toggleUserActive, deleteUser} from '../../_actions/user-actions'
+import {getUsers, createUser, updateUser, deleteUser, banUser, unbanUser} from '../../_actions/user-actions'
 import type {AdminUserRow} from '../../lib/types'
 import UserFormModal from '../modals/UserFormModal'
 import UserDetailModal from '../modals/UserDetailModal'
@@ -23,7 +22,6 @@ const UserManagementTab = () => {
   const [totalPages, setTotalPages] = useState(0)
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
-  const [activeFilter, setActiveFilter] = useState<'all' | 'active' | 'inactive'>('all')
   const [roleFilter, setRoleFilter] = useState<'all' | 'admin' | 'user'>('all')
 
   const formModal = useModal()
@@ -31,11 +29,11 @@ const UserManagementTab = () => {
   const [editingUser, setEditingUser] = useState<AdminUserRow | null>(null)
 
   const fetchUsers = useCallback(async () => {
-    const result = await getUsers({search: search || undefined, activeFilter, roleFilter, page})
+    const result = await getUsers({search: search || undefined, roleFilter, page})
     setUsers(result.users as AdminUserRow[])
     setTotal(result.total)
     setTotalPages(result.totalPages)
-  }, [search, activeFilter, roleFilter, page])
+  }, [search, roleFilter, page])
 
   useEffect(() => {
     fetchUsers()
@@ -59,11 +57,7 @@ const UserManagementTab = () => {
   const handleSave = async (data: {name: string; email: string; password: string; role: string}) => {
     await toggleLoad(async () => {
       if (editingUser) {
-        await updateUser(
-          editingUser.id,
-          {name: data.name, email: data.email, role: data.role},
-          data.password || undefined
-        )
+        await updateUser(editingUser.id, {name: data.name, email: data.email, role: data.role}, data.password || undefined)
       } else {
         await createUser({
           name: data.name,
@@ -76,9 +70,19 @@ const UserManagementTab = () => {
     }, {refresh: false})
   }
 
-  const handleToggleActive = async (userId: string, active: boolean) => {
+  const handleBan = async (user: AdminUserRow) => {
+    const reason = window.prompt(`「${user.name}」をBANします。理由を入力してください（任意）:`)
+    if (reason === null) return
     await toggleLoad(async () => {
-      await toggleUserActive(userId, active)
+      await banUser(user.id, reason || undefined)
+      await fetchUsers()
+    }, {refresh: false})
+  }
+
+  const handleUnban = async (user: AdminUserRow) => {
+    if (!window.confirm(`「${user.name}」のBANを解除しますか？`)) return
+    await toggleLoad(async () => {
+      await unbanUser(user.id)
       await fetchUsers()
     }, {refresh: false})
   }
@@ -117,21 +121,6 @@ const UserManagementTab = () => {
               </div>
             </div>
             <div>
-              <label className="text-sm text-gray-500 mb-1 block">状態</label>
-              <select
-                className="border rounded px-3 py-2 text-sm"
-                value={activeFilter}
-                onChange={(e) => {
-                  setActiveFilter(e.target.value as any)
-                  setPage(1)
-                }}
-              >
-                <option value="all">全て</option>
-                <option value="active">有効</option>
-                <option value="inactive">無効</option>
-              </select>
-            </div>
-            <div>
               <label className="text-sm text-gray-500 mb-1 block">ロール</label>
               <select
                 className="border rounded px-3 py-2 text-sm"
@@ -166,7 +155,7 @@ const UserManagementTab = () => {
                   <TableHead>名前</TableHead>
                   <TableHead>メール</TableHead>
                   <TableHead>ロール</TableHead>
-                  <TableHead>状態</TableHead>
+                  <TableHead>BAN</TableHead>
                   <TableHead>プロバイダ</TableHead>
                   <TableHead>作成日</TableHead>
                   <TableHead>操作</TableHead>
@@ -181,7 +170,7 @@ const UserManagementTab = () => {
                   </TableRow>
                 ) : (
                   users.map((user) => (
-                    <TableRow key={user.id} className={!user.active ? 'opacity-50' : ''}>
+                    <TableRow key={user.id} className={user.banned ? 'opacity-50' : ''}>
                       <TableCell className="font-medium">{user.name}</TableCell>
                       <TableCell className="text-sm text-gray-500">{user.email ?? '-'}</TableCell>
                       <TableCell>
@@ -194,10 +183,14 @@ const UserManagementTab = () => {
                         </span>
                       </TableCell>
                       <TableCell>
-                        <Switch
-                          checked={user.active}
-                          onCheckedChange={(checked) => handleToggleActive(user.id, checked)}
-                        />
+                        {user.banned ? (
+                          <div>
+                            <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">BAN</span>
+                            {user.banReason && <p className="text-[10px] text-red-400 mt-0.5">{user.banReason}</p>}
+                          </div>
+                        ) : (
+                          <span className="text-xs text-gray-300">-</span>
+                        )}
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-1">
@@ -209,25 +202,22 @@ const UserManagementTab = () => {
                       <TableCell className="text-sm whitespace-nowrap">{formatJst(user.createdAt)}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-1">
-                          <button
-                            className="p-1 hover:bg-gray-100 rounded"
-                            title="詳細"
-                            onClick={() => detailModal.handleOpen(user.id)}
-                          >
+                          <button className="p-1 hover:bg-gray-100 rounded" title="詳細" onClick={() => detailModal.handleOpen(user.id)}>
                             <Eye className="w-4 h-4 text-blue-500" />
                           </button>
-                          <button
-                            className="p-1 hover:bg-gray-100 rounded"
-                            title="編集"
-                            onClick={() => handleEdit(user)}
-                          >
+                          <button className="p-1 hover:bg-gray-100 rounded" title="編集" onClick={() => handleEdit(user)}>
                             <Pencil className="w-4 h-4" />
                           </button>
-                          <button
-                            className="p-1 hover:bg-gray-100 rounded"
-                            title="削除"
-                            onClick={() => handleDelete(user)}
-                          >
+                          {user.banned ? (
+                            <button className="p-1 hover:bg-gray-100 rounded" title="BAN解除" onClick={() => handleUnban(user)}>
+                              <ShieldCheck className="w-4 h-4 text-green-500" />
+                            </button>
+                          ) : (
+                            <button className="p-1 hover:bg-gray-100 rounded" title="BAN" onClick={() => handleBan(user)}>
+                              <ShieldBan className="w-4 h-4 text-orange-500" />
+                            </button>
+                          )}
+                          <button className="p-1 hover:bg-gray-100 rounded" title="削除" onClick={() => handleDelete(user)}>
                             <Trash2 className="w-4 h-4 text-red-500" />
                           </button>
                         </div>

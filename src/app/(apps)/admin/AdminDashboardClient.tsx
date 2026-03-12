@@ -1,18 +1,20 @@
 'use client'
 
 import {useState} from 'react'
-import {Users, Monitor, Shield} from 'lucide-react'
+import {Users, Monitor, Shield, UserCog} from 'lucide-react'
 
 import UserManagementTab from './components/tabs/UserManagementTab'
 import SessionManagementTab from './components/tabs/SessionManagementTab'
 import RoleMasterTab from './components/tabs/RoleMasterTab'
+import UserSetupTab from './components/tabs/UserSetupTab'
 
-type Tab = 'users' | 'sessions' | 'roles'
+type Tab = 'users' | 'sessions' | 'roles' | 'setup'
 
 const tabs: {id: Tab; label: string; icon: typeof Users}[] = [
   {id: 'users', label: 'ユーザー管理', icon: Users},
   {id: 'sessions', label: 'セッション管理', icon: Monitor},
   {id: 'roles', label: '権限マスタ', icon: Shield},
+  {id: 'setup', label: 'User設定', icon: UserCog},
 ]
 
 const AdminDashboardClient = () => {
@@ -44,6 +46,7 @@ const AdminDashboardClient = () => {
       {activeTab === 'users' && <UserManagementTab />}
       {activeTab === 'sessions' && <SessionManagementTab />}
       {activeTab === 'roles' && <RoleMasterTab />}
+      {activeTab === 'setup' && <UserSetupTab />}
     </div>
   )
 }

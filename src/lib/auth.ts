@@ -41,7 +41,6 @@ export const auth = betterAuth({
     additionalFields: {
       code: {type: 'string', required: false},
       sortOrder: {type: 'number', required: false, defaultValue: 0},
-      active: {type: 'boolean', required: false, defaultValue: true},
       hiredAt: {type: 'string', required: false},
       retiredAt: {type: 'string', required: false},
       transferredAt: {type: 'string', required: false},

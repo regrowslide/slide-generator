@@ -1,6 +1,6 @@
 'use client'
 
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import {Input} from '@shadcn/ui/input'
 import {Label} from '@shadcn/ui/label'
 import {Button} from '@cm/components/styles/common-components/Button'
@@ -22,16 +22,18 @@ const UserFormModal = ({modal, editingUser, onSave}: Props) => {
   })
   const [error, setError] = useState<string | null>(null)
 
-  // editingUser変更時にフォームをリセット
-  const resetForm = (user: AdminUserRow | null) => {
-    setForm({
-      name: user?.name ?? '',
-      email: user?.email ?? '',
-      password: '',
-      role: user?.role ?? 'user',
-    })
-    setError(null)
-  }
+  // モーダルが開かれた時・editingUserが変わった時にフォームをリセット
+  useEffect(() => {
+    if (modal.open) {
+      setForm({
+        name: editingUser?.name ?? '',
+        email: editingUser?.email ?? '',
+        password: '',
+        role: editingUser?.role ?? 'user',
+      })
+      setError(null)
+    }
+  }, [modal.open, editingUser])
 
   const handleSave = async () => {
     if (!form.name.trim()) {
@@ -57,7 +59,6 @@ const UserFormModal = ({modal, editingUser, onSave}: Props) => {
   return (
     <modal.Modal
       title={editingUser ? 'ユーザーを編集' : 'ユーザーを作成'}
-      onOpen={() => resetForm(editingUser)}
     >
       <div className="space-y-4">
         {error && <div className="text-sm text-red-500 bg-red-50 p-2 rounded">{error}</div>}

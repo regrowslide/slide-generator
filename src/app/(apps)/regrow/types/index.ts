@@ -72,7 +72,7 @@ export type StaffMaster = {
   staffName: string
   storeName: StoreName
   role: StaffRole
-  isActive: boolean // 退職者はfalse
+  isBanned: boolean // BANされたユーザーはtrue
 }
 
 /** スタッフ手動入力データ */

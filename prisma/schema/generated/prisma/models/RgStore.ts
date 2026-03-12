@@ -42,7 +42,6 @@ export type RgStoreMinAggregateOutputType = {
   updatedAt: Date | null
   sortOrder: number | null
   name: string | null
-  fullName: string | null
   isActive: boolean | null
 }
 
@@ -52,7 +51,6 @@ export type RgStoreMaxAggregateOutputType = {
   updatedAt: Date | null
   sortOrder: number | null
   name: string | null
-  fullName: string | null
   isActive: boolean | null
 }
 
@@ -62,7 +60,6 @@ export type RgStoreCountAggregateOutputType = {
   updatedAt: number
   sortOrder: number
   name: number
-  fullName: number
   isActive: number
   _all: number
 }
@@ -84,7 +81,6 @@ export type RgStoreMinAggregateInputType = {
   updatedAt?: true
   sortOrder?: true
   name?: true
-  fullName?: true
   isActive?: true
 }
 
@@ -94,7 +90,6 @@ export type RgStoreMaxAggregateInputType = {
   updatedAt?: true
   sortOrder?: true
   name?: true
-  fullName?: true
   isActive?: true
 }
 
@@ -104,7 +99,6 @@ export type RgStoreCountAggregateInputType = {
   updatedAt?: true
   sortOrder?: true
   name?: true
-  fullName?: true
   isActive?: true
   _all?: true
 }
@@ -201,7 +195,6 @@ export type RgStoreGroupByOutputType = {
   updatedAt: Date | null
   sortOrder: number
   name: string
-  fullName: string | null
   isActive: boolean
   _count: RgStoreCountAggregateOutputType | null
   _avg: RgStoreAvgAggregateOutputType | null
@@ -234,7 +227,6 @@ export type RgStoreWhereInput = {
   updatedAt?: Prisma.DateTimeNullableFilter<"RgStore"> | Date | string | null
   sortOrder?: Prisma.FloatFilter<"RgStore"> | number
   name?: Prisma.StringFilter<"RgStore"> | string
-  fullName?: Prisma.StringNullableFilter<"RgStore"> | string | null
   isActive?: Prisma.BoolFilter<"RgStore"> | boolean
   RgUserList?: Prisma.UserListRelationFilter
   RgStoreKpi?: Prisma.RgStoreKpiListRelationFilter
@@ -249,7 +241,6 @@ export type RgStoreOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  fullName?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   RgUserList?: Prisma.UserOrderByRelationAggregateInput
   RgStoreKpi?: Prisma.RgStoreKpiOrderByRelationAggregateInput
@@ -267,7 +258,6 @@ export type RgStoreWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeNullableFilter<"RgStore"> | Date | string | null
   sortOrder?: Prisma.FloatFilter<"RgStore"> | number
   name?: Prisma.StringFilter<"RgStore"> | string
-  fullName?: Prisma.StringNullableFilter<"RgStore"> | string | null
   isActive?: Prisma.BoolFilter<"RgStore"> | boolean
   RgUserList?: Prisma.UserListRelationFilter
   RgStoreKpi?: Prisma.RgStoreKpiListRelationFilter
@@ -282,7 +272,6 @@ export type RgStoreOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  fullName?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   _count?: Prisma.RgStoreCountOrderByAggregateInput
   _avg?: Prisma.RgStoreAvgOrderByAggregateInput
@@ -300,7 +289,6 @@ export type RgStoreScalarWhereWithAggregatesInput = {
   updatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"RgStore"> | Date | string | null
   sortOrder?: Prisma.FloatWithAggregatesFilter<"RgStore"> | number
   name?: Prisma.StringWithAggregatesFilter<"RgStore"> | string
-  fullName?: Prisma.StringNullableWithAggregatesFilter<"RgStore"> | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"RgStore"> | boolean
 }
 
@@ -309,7 +297,6 @@ export type RgStoreCreateInput = {
   updatedAt?: Date | string | null
   sortOrder?: number
   name: string
-  fullName?: string | null
   isActive?: boolean
   RgUserList?: Prisma.UserCreateNestedManyWithoutRgStoreRgInput
   RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgStoreInput
@@ -324,7 +311,6 @@ export type RgStoreUncheckedCreateInput = {
   updatedAt?: Date | string | null
   sortOrder?: number
   name: string
-  fullName?: string | null
   isActive?: boolean
   RgUserList?: Prisma.UserUncheckedCreateNestedManyWithoutRgStoreRgInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgStoreInput
@@ -338,7 +324,6 @@ export type RgStoreUpdateInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   RgUserList?: Prisma.UserUpdateManyWithoutRgStoreRgNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgStoreNestedInput
@@ -353,7 +338,6 @@ export type RgStoreUncheckedUpdateInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   RgUserList?: Prisma.UserUncheckedUpdateManyWithoutRgStoreRgNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgStoreNestedInput
@@ -368,7 +352,6 @@ export type RgStoreCreateManyInput = {
   updatedAt?: Date | string | null
   sortOrder?: number
   name: string
-  fullName?: string | null
   isActive?: boolean
 }
 
@@ -377,7 +360,6 @@ export type RgStoreUpdateManyMutationInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
@@ -387,7 +369,6 @@ export type RgStoreUncheckedUpdateManyInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
@@ -397,7 +378,6 @@ export type RgStoreCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  fullName?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
 }
 
@@ -412,7 +392,6 @@ export type RgStoreMaxOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  fullName?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
 }
 
@@ -422,7 +401,6 @@ export type RgStoreMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  fullName?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
 }
 
@@ -518,7 +496,6 @@ export type RgStoreCreateWithoutRgStaffRecordInput = {
   updatedAt?: Date | string | null
   sortOrder?: number
   name: string
-  fullName?: string | null
   isActive?: boolean
   RgUserList?: Prisma.UserCreateNestedManyWithoutRgStoreRgInput
   RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgStoreInput
@@ -532,7 +509,6 @@ export type RgStoreUncheckedCreateWithoutRgStaffRecordInput = {
   updatedAt?: Date | string | null
   sortOrder?: number
   name: string
-  fullName?: string | null
   isActive?: boolean
   RgUserList?: Prisma.UserUncheckedCreateNestedManyWithoutRgStoreRgInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgStoreInput
@@ -561,7 +537,6 @@ export type RgStoreUpdateWithoutRgStaffRecordInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   RgUserList?: Prisma.UserUpdateManyWithoutRgStoreRgNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgStoreNestedInput
@@ -575,7 +550,6 @@ export type RgStoreUncheckedUpdateWithoutRgStaffRecordInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   RgUserList?: Prisma.UserUncheckedUpdateManyWithoutRgStoreRgNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgStoreNestedInput
@@ -588,7 +562,6 @@ export type RgStoreCreateWithoutRgStoreTotalsInput = {
   updatedAt?: Date | string | null
   sortOrder?: number
   name: string
-  fullName?: string | null
   isActive?: boolean
   RgUserList?: Prisma.UserCreateNestedManyWithoutRgStoreRgInput
   RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgStoreInput
@@ -602,7 +575,6 @@ export type RgStoreUncheckedCreateWithoutRgStoreTotalsInput = {
   updatedAt?: Date | string | null
   sortOrder?: number
   name: string
-  fullName?: string | null
   isActive?: boolean
   RgUserList?: Prisma.UserUncheckedCreateNestedManyWithoutRgStoreRgInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgStoreInput
@@ -631,7 +603,6 @@ export type RgStoreUpdateWithoutRgStoreTotalsInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   RgUserList?: Prisma.UserUpdateManyWithoutRgStoreRgNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgStoreNestedInput
@@ -645,7 +616,6 @@ export type RgStoreUncheckedUpdateWithoutRgStoreTotalsInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   RgUserList?: Prisma.UserUncheckedUpdateManyWithoutRgStoreRgNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgStoreNestedInput
@@ -658,7 +628,6 @@ export type RgStoreCreateWithoutRgStoreKpiInput = {
   updatedAt?: Date | string | null
   sortOrder?: number
   name: string
-  fullName?: string | null
   isActive?: boolean
   RgUserList?: Prisma.UserCreateNestedManyWithoutRgStoreRgInput
   RgStoreTotals?: Prisma.RgStoreTotalsCreateNestedManyWithoutRgStoreInput
@@ -672,7 +641,6 @@ export type RgStoreUncheckedCreateWithoutRgStoreKpiInput = {
   updatedAt?: Date | string | null
   sortOrder?: number
   name: string
-  fullName?: string | null
   isActive?: boolean
   RgUserList?: Prisma.UserUncheckedCreateNestedManyWithoutRgStoreRgInput
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedCreateNestedManyWithoutRgStoreInput
@@ -701,7 +669,6 @@ export type RgStoreUpdateWithoutRgStoreKpiInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   RgUserList?: Prisma.UserUpdateManyWithoutRgStoreRgNestedInput
   RgStoreTotals?: Prisma.RgStoreTotalsUpdateManyWithoutRgStoreNestedInput
@@ -715,7 +682,6 @@ export type RgStoreUncheckedUpdateWithoutRgStoreKpiInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   RgUserList?: Prisma.UserUncheckedUpdateManyWithoutRgStoreRgNestedInput
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedUpdateManyWithoutRgStoreNestedInput
@@ -728,7 +694,6 @@ export type RgStoreCreateWithoutRgStaffManualDataInput = {
   updatedAt?: Date | string | null
   sortOrder?: number
   name: string
-  fullName?: string | null
   isActive?: boolean
   RgUserList?: Prisma.UserCreateNestedManyWithoutRgStoreRgInput
   RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgStoreInput
@@ -742,7 +707,6 @@ export type RgStoreUncheckedCreateWithoutRgStaffManualDataInput = {
   updatedAt?: Date | string | null
   sortOrder?: number
   name: string
-  fullName?: string | null
   isActive?: boolean
   RgUserList?: Prisma.UserUncheckedCreateNestedManyWithoutRgStoreRgInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgStoreInput
@@ -771,7 +735,6 @@ export type RgStoreUpdateWithoutRgStaffManualDataInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   RgUserList?: Prisma.UserUpdateManyWithoutRgStoreRgNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgStoreNestedInput
@@ -785,7 +748,6 @@ export type RgStoreUncheckedUpdateWithoutRgStaffManualDataInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   RgUserList?: Prisma.UserUncheckedUpdateManyWithoutRgStoreRgNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgStoreNestedInput
@@ -798,7 +760,6 @@ export type RgStoreCreateWithoutRgUserListInput = {
   updatedAt?: Date | string | null
   sortOrder?: number
   name: string
-  fullName?: string | null
   isActive?: boolean
   RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgStoreInput
   RgStoreTotals?: Prisma.RgStoreTotalsCreateNestedManyWithoutRgStoreInput
@@ -812,7 +773,6 @@ export type RgStoreUncheckedCreateWithoutRgUserListInput = {
   updatedAt?: Date | string | null
   sortOrder?: number
   name: string
-  fullName?: string | null
   isActive?: boolean
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgStoreInput
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedCreateNestedManyWithoutRgStoreInput
@@ -841,7 +801,6 @@ export type RgStoreUpdateWithoutRgUserListInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgStoreNestedInput
   RgStoreTotals?: Prisma.RgStoreTotalsUpdateManyWithoutRgStoreNestedInput
@@ -855,7 +814,6 @@ export type RgStoreUncheckedUpdateWithoutRgUserListInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgStoreNestedInput
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedUpdateManyWithoutRgStoreNestedInput
@@ -936,7 +894,6 @@ export type RgStoreSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   updatedAt?: boolean
   sortOrder?: boolean
   name?: boolean
-  fullName?: boolean
   isActive?: boolean
   RgUserList?: boolean | Prisma.RgStore$RgUserListArgs<ExtArgs>
   RgStoreKpi?: boolean | Prisma.RgStore$RgStoreKpiArgs<ExtArgs>
@@ -952,7 +909,6 @@ export type RgStoreSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   updatedAt?: boolean
   sortOrder?: boolean
   name?: boolean
-  fullName?: boolean
   isActive?: boolean
 }, ExtArgs["result"]["rgStore"]>
 
@@ -962,7 +918,6 @@ export type RgStoreSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   updatedAt?: boolean
   sortOrder?: boolean
   name?: boolean
-  fullName?: boolean
   isActive?: boolean
 }, ExtArgs["result"]["rgStore"]>
 
@@ -972,11 +927,10 @@ export type RgStoreSelectScalar = {
   updatedAt?: boolean
   sortOrder?: boolean
   name?: boolean
-  fullName?: boolean
   isActive?: boolean
 }
 
-export type RgStoreOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "name" | "fullName" | "isActive", ExtArgs["result"]["rgStore"]>
+export type RgStoreOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "name" | "isActive", ExtArgs["result"]["rgStore"]>
 export type RgStoreInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   RgUserList?: boolean | Prisma.RgStore$RgUserListArgs<ExtArgs>
   RgStoreKpi?: boolean | Prisma.RgStore$RgStoreKpiArgs<ExtArgs>
@@ -1003,7 +957,6 @@ export type $RgStorePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     updatedAt: Date | null
     sortOrder: number
     name: string
-    fullName: string | null
     isActive: boolean
   }, ExtArgs["result"]["rgStore"]>
   composites: {}
@@ -1438,7 +1391,6 @@ export interface RgStoreFieldRefs {
   readonly updatedAt: Prisma.FieldRef<"RgStore", 'DateTime'>
   readonly sortOrder: Prisma.FieldRef<"RgStore", 'Float'>
   readonly name: Prisma.FieldRef<"RgStore", 'String'>
-  readonly fullName: Prisma.FieldRef<"RgStore", 'String'>
   readonly isActive: Prisma.FieldRef<"RgStore", 'Boolean'>
 }
     

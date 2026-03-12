@@ -7,7 +7,7 @@ import type {RgStore} from '@prisma/generated/prisma/client'
 // Create
 // ============================================================
 
-export const createStore = async (data: {name: string; fullName?: string}): Promise<RgStore> =>
+export const createStore = async (data: {name: string}): Promise<RgStore> =>
   RegrowStoreService.createStore(data)
 
 // ============================================================
@@ -26,7 +26,7 @@ export const getAllStores = async (): Promise<RgStore[]> => RegrowStoreService.g
 
 export const updateStore = async (
   id: number,
-  data: Partial<{name: string; fullName: string | null; isActive: boolean; sortOrder: number}>
+  data: Partial<{name: string; isActive: boolean; sortOrder: number}>
 ): Promise<RgStore> => RegrowStoreService.updateStore(id, data)
 
 // ============================================================

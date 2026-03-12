@@ -58,7 +58,6 @@ export type UserMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   sortOrder: number | null
-  active: boolean | null
   hiredAt: Date | null
   retiredAt: Date | null
   transferredAt: Date | null
@@ -82,6 +81,9 @@ export type UserMinAggregateOutputType = {
   lineUserId: string | null
   emailVerified: boolean | null
   image: string | null
+  banned: boolean | null
+  banReason: string | null
+  banExpires: Date | null
   employeeCode: string | null
   phone: string | null
   avatar: string | null
@@ -99,7 +101,6 @@ export type UserMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   sortOrder: number | null
-  active: boolean | null
   hiredAt: Date | null
   retiredAt: Date | null
   transferredAt: Date | null
@@ -123,6 +124,9 @@ export type UserMaxAggregateOutputType = {
   lineUserId: string | null
   emailVerified: boolean | null
   image: string | null
+  banned: boolean | null
+  banReason: string | null
+  banExpires: Date | null
   employeeCode: string | null
   phone: string | null
   avatar: string | null
@@ -140,7 +144,6 @@ export type UserCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   sortOrder: number
-  active: number
   hiredAt: number
   retiredAt: number
   transferredAt: number
@@ -165,6 +168,9 @@ export type UserCountAggregateOutputType = {
   lineUserId: number
   emailVerified: number
   image: number
+  banned: number
+  banReason: number
+  banExpires: number
   employeeCode: number
   phone: number
   avatar: number
@@ -210,7 +216,6 @@ export type UserMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   sortOrder?: true
-  active?: true
   hiredAt?: true
   retiredAt?: true
   transferredAt?: true
@@ -234,6 +239,9 @@ export type UserMinAggregateInputType = {
   lineUserId?: true
   emailVerified?: true
   image?: true
+  banned?: true
+  banReason?: true
+  banExpires?: true
   employeeCode?: true
   phone?: true
   avatar?: true
@@ -251,7 +259,6 @@ export type UserMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   sortOrder?: true
-  active?: true
   hiredAt?: true
   retiredAt?: true
   transferredAt?: true
@@ -275,6 +282,9 @@ export type UserMaxAggregateInputType = {
   lineUserId?: true
   emailVerified?: true
   image?: true
+  banned?: true
+  banReason?: true
+  banExpires?: true
   employeeCode?: true
   phone?: true
   avatar?: true
@@ -292,7 +302,6 @@ export type UserCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   sortOrder?: true
-  active?: true
   hiredAt?: true
   retiredAt?: true
   transferredAt?: true
@@ -317,6 +326,9 @@ export type UserCountAggregateInputType = {
   lineUserId?: true
   emailVerified?: true
   image?: true
+  banned?: true
+  banReason?: true
+  banExpires?: true
   employeeCode?: true
   phone?: true
   avatar?: true
@@ -421,7 +433,6 @@ export type UserGroupByOutputType = {
   createdAt: Date
   updatedAt: Date | null
   sortOrder: number
-  active: boolean
   hiredAt: Date | null
   retiredAt: Date | null
   transferredAt: Date | null
@@ -446,6 +457,9 @@ export type UserGroupByOutputType = {
   lineUserId: string | null
   emailVerified: boolean
   image: string | null
+  banned: boolean
+  banReason: string | null
+  banExpires: Date | null
   employeeCode: string | null
   phone: string | null
   avatar: string | null
@@ -486,7 +500,6 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   sortOrder?: Prisma.FloatFilter<"User"> | number
-  active?: Prisma.BoolFilter<"User"> | boolean
   hiredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   retiredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   transferredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -511,6 +524,9 @@ export type UserWhereInput = {
   lineUserId?: Prisma.StringNullableFilter<"User"> | string | null
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
   image?: Prisma.StringNullableFilter<"User"> | string | null
+  banned?: Prisma.BoolFilter<"User"> | boolean
+  banReason?: Prisma.StringNullableFilter<"User"> | string | null
+  banExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   employeeCode?: Prisma.StringNullableFilter<"User"> | string | null
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   avatar?: Prisma.StringNullableFilter<"User"> | string | null
@@ -551,7 +567,6 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
-  active?: Prisma.SortOrder
   hiredAt?: Prisma.SortOrderInput | Prisma.SortOrder
   retiredAt?: Prisma.SortOrderInput | Prisma.SortOrder
   transferredAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -576,6 +591,9 @@ export type UserOrderByWithRelationInput = {
   lineUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
+  banned?: Prisma.SortOrder
+  banReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  banExpires?: Prisma.SortOrderInput | Prisma.SortOrder
   employeeCode?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -622,7 +640,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   sortOrder?: Prisma.FloatFilter<"User"> | number
-  active?: Prisma.BoolFilter<"User"> | boolean
   hiredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   retiredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   transferredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -645,6 +662,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   apps?: Prisma.StringNullableListFilter<"User">
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
   image?: Prisma.StringNullableFilter<"User"> | string | null
+  banned?: Prisma.BoolFilter<"User"> | boolean
+  banReason?: Prisma.StringNullableFilter<"User"> | string | null
+  banExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   avatar?: Prisma.StringNullableFilter<"User"> | string | null
   bcc?: Prisma.StringNullableFilter<"User"> | string | null
@@ -684,7 +704,6 @@ export type UserOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
-  active?: Prisma.SortOrder
   hiredAt?: Prisma.SortOrderInput | Prisma.SortOrder
   retiredAt?: Prisma.SortOrderInput | Prisma.SortOrder
   transferredAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -709,6 +728,9 @@ export type UserOrderByWithAggregationInput = {
   lineUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
+  banned?: Prisma.SortOrder
+  banReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  banExpires?: Prisma.SortOrderInput | Prisma.SortOrder
   employeeCode?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -734,7 +756,6 @@ export type UserScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   sortOrder?: Prisma.FloatWithAggregatesFilter<"User"> | number
-  active?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   hiredAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   retiredAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   transferredAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
@@ -759,6 +780,9 @@ export type UserScalarWhereWithAggregatesInput = {
   lineUserId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   emailVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  banned?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  banReason?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  banExpires?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   employeeCode?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   phone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   avatar?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -776,7 +800,6 @@ export type UserCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -801,6 +824,9 @@ export type UserCreateInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -836,7 +862,6 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -861,6 +886,9 @@ export type UserUncheckedCreateInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -896,7 +924,6 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -921,6 +948,9 @@ export type UserUpdateInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -956,7 +986,6 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -981,6 +1010,9 @@ export type UserUncheckedUpdateInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1016,7 +1048,6 @@ export type UserCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -1041,6 +1072,9 @@ export type UserCreateManyInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -1058,7 +1092,6 @@ export type UserUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1083,6 +1116,9 @@ export type UserUpdateManyMutationInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1095,7 +1131,6 @@ export type UserUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1120,6 +1155,9 @@ export type UserUncheckedUpdateManyInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1165,7 +1203,6 @@ export type UserCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
-  active?: Prisma.SortOrder
   hiredAt?: Prisma.SortOrder
   retiredAt?: Prisma.SortOrder
   transferredAt?: Prisma.SortOrder
@@ -1190,6 +1227,9 @@ export type UserCountOrderByAggregateInput = {
   lineUserId?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  banned?: Prisma.SortOrder
+  banReason?: Prisma.SortOrder
+  banExpires?: Prisma.SortOrder
   employeeCode?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
@@ -1220,7 +1260,6 @@ export type UserMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
-  active?: Prisma.SortOrder
   hiredAt?: Prisma.SortOrder
   retiredAt?: Prisma.SortOrder
   transferredAt?: Prisma.SortOrder
@@ -1244,6 +1283,9 @@ export type UserMaxOrderByAggregateInput = {
   lineUserId?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  banned?: Prisma.SortOrder
+  banReason?: Prisma.SortOrder
+  banExpires?: Prisma.SortOrder
   employeeCode?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
@@ -1261,7 +1303,6 @@ export type UserMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
-  active?: Prisma.SortOrder
   hiredAt?: Prisma.SortOrder
   retiredAt?: Prisma.SortOrder
   transferredAt?: Prisma.SortOrder
@@ -1285,6 +1326,9 @@ export type UserMinOrderByAggregateInput = {
   lineUserId?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  banned?: Prisma.SortOrder
+  banReason?: Prisma.SortOrder
+  banExpires?: Prisma.SortOrder
   employeeCode?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
@@ -1806,7 +1850,6 @@ export type UserCreateWithoutCounselingStoreInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -1831,6 +1874,9 @@ export type UserCreateWithoutCounselingStoreInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -1865,7 +1911,6 @@ export type UserUncheckedCreateWithoutCounselingStoreInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -1890,6 +1935,9 @@ export type UserUncheckedCreateWithoutCounselingStoreInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -1953,7 +2001,6 @@ export type UserScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   sortOrder?: Prisma.FloatFilter<"User"> | number
-  active?: Prisma.BoolFilter<"User"> | boolean
   hiredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   retiredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   transferredAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -1978,6 +2025,9 @@ export type UserScalarWhereInput = {
   lineUserId?: Prisma.StringNullableFilter<"User"> | string | null
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
   image?: Prisma.StringNullableFilter<"User"> | string | null
+  banned?: Prisma.BoolFilter<"User"> | boolean
+  banReason?: Prisma.StringNullableFilter<"User"> | string | null
+  banExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   employeeCode?: Prisma.StringNullableFilter<"User"> | string | null
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   avatar?: Prisma.StringNullableFilter<"User"> | string | null
@@ -1995,7 +2045,6 @@ export type UserCreateWithoutCounselingSlotInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -2020,6 +2069,9 @@ export type UserCreateWithoutCounselingSlotInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -2054,7 +2106,6 @@ export type UserUncheckedCreateWithoutCounselingSlotInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -2079,6 +2130,9 @@ export type UserUncheckedCreateWithoutCounselingSlotInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -2129,7 +2183,6 @@ export type UserUpdateWithoutCounselingSlotInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2154,6 +2207,9 @@ export type UserUpdateWithoutCounselingSlotInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2188,7 +2244,6 @@ export type UserUncheckedUpdateWithoutCounselingSlotInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2213,6 +2268,9 @@ export type UserUncheckedUpdateWithoutCounselingSlotInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2247,7 +2305,6 @@ export type UserCreateWithoutDentalClinicInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -2272,6 +2329,9 @@ export type UserCreateWithoutDentalClinicInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -2306,7 +2366,6 @@ export type UserUncheckedCreateWithoutDentalClinicInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -2331,6 +2390,9 @@ export type UserUncheckedCreateWithoutDentalClinicInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -2391,7 +2453,6 @@ export type UserCreateWithoutDentalExaminationDoctorInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -2416,6 +2477,9 @@ export type UserCreateWithoutDentalExaminationDoctorInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -2450,7 +2514,6 @@ export type UserUncheckedCreateWithoutDentalExaminationDoctorInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -2475,6 +2538,9 @@ export type UserUncheckedCreateWithoutDentalExaminationDoctorInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -2514,7 +2580,6 @@ export type UserCreateWithoutDentalExaminationHygienistInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -2539,6 +2604,9 @@ export type UserCreateWithoutDentalExaminationHygienistInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -2573,7 +2641,6 @@ export type UserUncheckedCreateWithoutDentalExaminationHygienistInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -2598,6 +2665,9 @@ export type UserUncheckedCreateWithoutDentalExaminationHygienistInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -2648,7 +2718,6 @@ export type UserUpdateWithoutDentalExaminationDoctorInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2673,6 +2742,9 @@ export type UserUpdateWithoutDentalExaminationDoctorInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2707,7 +2779,6 @@ export type UserUncheckedUpdateWithoutDentalExaminationDoctorInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2732,6 +2803,9 @@ export type UserUncheckedUpdateWithoutDentalExaminationDoctorInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2777,7 +2851,6 @@ export type UserUpdateWithoutDentalExaminationHygienistInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2802,6 +2875,9 @@ export type UserUpdateWithoutDentalExaminationHygienistInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2836,7 +2912,6 @@ export type UserUncheckedUpdateWithoutDentalExaminationHygienistInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2861,6 +2936,9 @@ export type UserUncheckedUpdateWithoutDentalExaminationHygienistInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2895,7 +2973,6 @@ export type UserCreateWithoutKidsChildUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -2920,6 +2997,9 @@ export type UserCreateWithoutKidsChildUserInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -2954,7 +3034,6 @@ export type UserUncheckedCreateWithoutKidsChildUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -2979,6 +3058,9 @@ export type UserUncheckedCreateWithoutKidsChildUserInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -3029,7 +3111,6 @@ export type UserUpdateWithoutKidsChildUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3054,6 +3135,9 @@ export type UserUpdateWithoutKidsChildUserInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3088,7 +3172,6 @@ export type UserUncheckedUpdateWithoutKidsChildUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3113,6 +3196,9 @@ export type UserUncheckedUpdateWithoutKidsChildUserInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3147,7 +3233,6 @@ export type UserCreateWithoutRgStoreRgInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -3172,6 +3257,9 @@ export type UserCreateWithoutRgStoreRgInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -3206,7 +3294,6 @@ export type UserUncheckedCreateWithoutRgStoreRgInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -3231,6 +3318,9 @@ export type UserUncheckedCreateWithoutRgStoreRgInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -3291,7 +3381,6 @@ export type UserCreateWithoutRgStaffRecordUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -3316,6 +3405,9 @@ export type UserCreateWithoutRgStaffRecordUserInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -3350,7 +3442,6 @@ export type UserUncheckedCreateWithoutRgStaffRecordUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -3375,6 +3466,9 @@ export type UserUncheckedCreateWithoutRgStaffRecordUserInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -3425,7 +3519,6 @@ export type UserUpdateWithoutRgStaffRecordUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3450,6 +3543,9 @@ export type UserUpdateWithoutRgStaffRecordUserInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3484,7 +3580,6 @@ export type UserUncheckedUpdateWithoutRgStaffRecordUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3509,6 +3604,9 @@ export type UserUncheckedUpdateWithoutRgStaffRecordUserInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3543,7 +3641,6 @@ export type UserCreateWithoutRgStaffManualDataUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -3568,6 +3665,9 @@ export type UserCreateWithoutRgStaffManualDataUserInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -3602,7 +3702,6 @@ export type UserUncheckedCreateWithoutRgStaffManualDataUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -3627,6 +3726,9 @@ export type UserUncheckedCreateWithoutRgStaffManualDataUserInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -3677,7 +3779,6 @@ export type UserUpdateWithoutRgStaffManualDataUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3702,6 +3803,9 @@ export type UserUpdateWithoutRgStaffManualDataUserInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3736,7 +3840,6 @@ export type UserUncheckedUpdateWithoutRgStaffManualDataUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3761,6 +3864,9 @@ export type UserUncheckedUpdateWithoutRgStaffManualDataUserInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3795,7 +3901,6 @@ export type UserCreateWithoutSbmReservationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -3820,6 +3925,9 @@ export type UserCreateWithoutSbmReservationInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -3854,7 +3962,6 @@ export type UserUncheckedCreateWithoutSbmReservationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -3879,6 +3986,9 @@ export type UserUncheckedCreateWithoutSbmReservationInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -3929,7 +4039,6 @@ export type UserUpdateWithoutSbmReservationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3954,6 +4063,9 @@ export type UserUpdateWithoutSbmReservationInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3988,7 +4100,6 @@ export type UserUncheckedUpdateWithoutSbmReservationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4013,6 +4124,9 @@ export type UserUncheckedUpdateWithoutSbmReservationInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4047,7 +4161,6 @@ export type UserCreateWithoutSbmReservationChangeHistoryInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -4072,6 +4185,9 @@ export type UserCreateWithoutSbmReservationChangeHistoryInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -4106,7 +4222,6 @@ export type UserUncheckedCreateWithoutSbmReservationChangeHistoryInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -4131,6 +4246,9 @@ export type UserUncheckedCreateWithoutSbmReservationChangeHistoryInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -4181,7 +4299,6 @@ export type UserUpdateWithoutSbmReservationChangeHistoryInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4206,6 +4323,9 @@ export type UserUpdateWithoutSbmReservationChangeHistoryInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4240,7 +4360,6 @@ export type UserUncheckedUpdateWithoutSbmReservationChangeHistoryInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4265,6 +4384,9 @@ export type UserUncheckedUpdateWithoutSbmReservationChangeHistoryInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4299,7 +4421,6 @@ export type UserCreateWithoutSbmDeliveryAssignmentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -4324,6 +4445,9 @@ export type UserCreateWithoutSbmDeliveryAssignmentInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -4358,7 +4482,6 @@ export type UserUncheckedCreateWithoutSbmDeliveryAssignmentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -4383,6 +4506,9 @@ export type UserUncheckedCreateWithoutSbmDeliveryAssignmentInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -4433,7 +4559,6 @@ export type UserUpdateWithoutSbmDeliveryAssignmentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4458,6 +4583,9 @@ export type UserUpdateWithoutSbmDeliveryAssignmentInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4492,7 +4620,6 @@ export type UserUncheckedUpdateWithoutSbmDeliveryAssignmentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4517,6 +4644,9 @@ export type UserUncheckedUpdateWithoutSbmDeliveryAssignmentInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4551,7 +4681,6 @@ export type UserCreateWithoutDepartmentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -4576,6 +4705,9 @@ export type UserCreateWithoutDepartmentInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -4610,7 +4742,6 @@ export type UserUncheckedCreateWithoutDepartmentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -4635,6 +4766,9 @@ export type UserUncheckedCreateWithoutDepartmentInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -4695,7 +4829,6 @@ export type UserCreateWithoutStoreInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -4720,6 +4853,9 @@ export type UserCreateWithoutStoreInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -4754,7 +4890,6 @@ export type UserUncheckedCreateWithoutStoreInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -4779,6 +4914,9 @@ export type UserUncheckedCreateWithoutStoreInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -4839,7 +4977,6 @@ export type UserCreateWithoutSessionInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -4864,6 +5001,9 @@ export type UserCreateWithoutSessionInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -4898,7 +5038,6 @@ export type UserUncheckedCreateWithoutSessionInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -4923,6 +5062,9 @@ export type UserUncheckedCreateWithoutSessionInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -4973,7 +5115,6 @@ export type UserUpdateWithoutSessionInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4998,6 +5139,9 @@ export type UserUpdateWithoutSessionInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5032,7 +5176,6 @@ export type UserUncheckedUpdateWithoutSessionInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5057,6 +5200,9 @@ export type UserUncheckedUpdateWithoutSessionInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5091,7 +5237,6 @@ export type UserCreateWithoutAccountInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -5116,6 +5261,9 @@ export type UserCreateWithoutAccountInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -5150,7 +5298,6 @@ export type UserUncheckedCreateWithoutAccountInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -5175,6 +5322,9 @@ export type UserUncheckedCreateWithoutAccountInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -5225,7 +5375,6 @@ export type UserUpdateWithoutAccountInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5250,6 +5399,9 @@ export type UserUpdateWithoutAccountInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5284,7 +5436,6 @@ export type UserUncheckedUpdateWithoutAccountInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5309,6 +5460,9 @@ export type UserUncheckedUpdateWithoutAccountInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5343,7 +5497,6 @@ export type UserCreateWithoutUserRoleInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -5368,6 +5521,9 @@ export type UserCreateWithoutUserRoleInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -5402,7 +5558,6 @@ export type UserUncheckedCreateWithoutUserRoleInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -5427,6 +5582,9 @@ export type UserUncheckedCreateWithoutUserRoleInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -5477,7 +5635,6 @@ export type UserUpdateWithoutUserRoleInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5502,6 +5659,9 @@ export type UserUpdateWithoutUserRoleInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5536,7 +5696,6 @@ export type UserUncheckedUpdateWithoutUserRoleInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5561,6 +5720,9 @@ export type UserUncheckedUpdateWithoutUserRoleInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5595,7 +5757,6 @@ export type UserCreateWithoutExerciseMasterInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -5620,6 +5781,9 @@ export type UserCreateWithoutExerciseMasterInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -5654,7 +5818,6 @@ export type UserUncheckedCreateWithoutExerciseMasterInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -5679,6 +5842,9 @@ export type UserUncheckedCreateWithoutExerciseMasterInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -5729,7 +5895,6 @@ export type UserUpdateWithoutExerciseMasterInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5754,6 +5919,9 @@ export type UserUpdateWithoutExerciseMasterInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5788,7 +5956,6 @@ export type UserUncheckedUpdateWithoutExerciseMasterInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5813,6 +5980,9 @@ export type UserUncheckedUpdateWithoutExerciseMasterInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5847,7 +6017,6 @@ export type UserCreateWithoutWorkoutLogInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -5872,6 +6041,9 @@ export type UserCreateWithoutWorkoutLogInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -5906,7 +6078,6 @@ export type UserUncheckedCreateWithoutWorkoutLogInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -5931,6 +6102,9 @@ export type UserUncheckedCreateWithoutWorkoutLogInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -5981,7 +6155,6 @@ export type UserUpdateWithoutWorkoutLogInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6006,6 +6179,9 @@ export type UserUpdateWithoutWorkoutLogInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6040,7 +6216,6 @@ export type UserUncheckedUpdateWithoutWorkoutLogInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6065,6 +6240,9 @@ export type UserUncheckedUpdateWithoutWorkoutLogInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6099,7 +6277,6 @@ export type UserCreateWithoutYamanokaiEventAsCLInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -6124,6 +6301,9 @@ export type UserCreateWithoutYamanokaiEventAsCLInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -6158,7 +6338,6 @@ export type UserUncheckedCreateWithoutYamanokaiEventAsCLInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -6183,6 +6362,9 @@ export type UserUncheckedCreateWithoutYamanokaiEventAsCLInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -6222,7 +6404,6 @@ export type UserCreateWithoutYamanokaiEventAsSLInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -6247,6 +6428,9 @@ export type UserCreateWithoutYamanokaiEventAsSLInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -6281,7 +6465,6 @@ export type UserUncheckedCreateWithoutYamanokaiEventAsSLInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -6306,6 +6489,9 @@ export type UserUncheckedCreateWithoutYamanokaiEventAsSLInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -6356,7 +6542,6 @@ export type UserUpdateWithoutYamanokaiEventAsCLInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6381,6 +6566,9 @@ export type UserUpdateWithoutYamanokaiEventAsCLInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6415,7 +6603,6 @@ export type UserUncheckedUpdateWithoutYamanokaiEventAsCLInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6440,6 +6627,9 @@ export type UserUncheckedUpdateWithoutYamanokaiEventAsCLInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6485,7 +6675,6 @@ export type UserUpdateWithoutYamanokaiEventAsSLInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6510,6 +6699,9 @@ export type UserUpdateWithoutYamanokaiEventAsSLInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6544,7 +6736,6 @@ export type UserUncheckedUpdateWithoutYamanokaiEventAsSLInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6569,6 +6760,9 @@ export type UserUncheckedUpdateWithoutYamanokaiEventAsSLInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6603,7 +6797,6 @@ export type UserCreateWithoutYamanokaiAttendanceInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -6628,6 +6821,9 @@ export type UserCreateWithoutYamanokaiAttendanceInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -6662,7 +6858,6 @@ export type UserUncheckedCreateWithoutYamanokaiAttendanceInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -6687,6 +6882,9 @@ export type UserUncheckedCreateWithoutYamanokaiAttendanceInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -6726,7 +6924,6 @@ export type UserCreateWithoutYamanokaiAttendanceAsApproverInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -6751,6 +6948,9 @@ export type UserCreateWithoutYamanokaiAttendanceAsApproverInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -6785,7 +6985,6 @@ export type UserUncheckedCreateWithoutYamanokaiAttendanceAsApproverInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -6810,6 +7009,9 @@ export type UserUncheckedCreateWithoutYamanokaiAttendanceAsApproverInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -6860,7 +7062,6 @@ export type UserUpdateWithoutYamanokaiAttendanceInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6885,6 +7086,9 @@ export type UserUpdateWithoutYamanokaiAttendanceInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6919,7 +7123,6 @@ export type UserUncheckedUpdateWithoutYamanokaiAttendanceInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6944,6 +7147,9 @@ export type UserUncheckedUpdateWithoutYamanokaiAttendanceInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6989,7 +7195,6 @@ export type UserUpdateWithoutYamanokaiAttendanceAsApproverInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7014,6 +7219,9 @@ export type UserUpdateWithoutYamanokaiAttendanceAsApproverInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7048,7 +7256,6 @@ export type UserUncheckedUpdateWithoutYamanokaiAttendanceAsApproverInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7073,6 +7280,9 @@ export type UserUncheckedUpdateWithoutYamanokaiAttendanceAsApproverInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7107,7 +7317,6 @@ export type UserCreateManyCounselingStoreInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -7132,6 +7341,9 @@ export type UserCreateManyCounselingStoreInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -7148,7 +7360,6 @@ export type UserUpdateWithoutCounselingStoreInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7173,6 +7384,9 @@ export type UserUpdateWithoutCounselingStoreInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7207,7 +7421,6 @@ export type UserUncheckedUpdateWithoutCounselingStoreInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7232,6 +7445,9 @@ export type UserUncheckedUpdateWithoutCounselingStoreInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7266,7 +7482,6 @@ export type UserUncheckedUpdateManyWithoutCounselingStoreInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7291,6 +7506,9 @@ export type UserUncheckedUpdateManyWithoutCounselingStoreInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7307,7 +7525,6 @@ export type UserCreateManyDentalClinicInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -7332,6 +7549,9 @@ export type UserCreateManyDentalClinicInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -7348,7 +7568,6 @@ export type UserUpdateWithoutDentalClinicInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7373,6 +7592,9 @@ export type UserUpdateWithoutDentalClinicInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7407,7 +7629,6 @@ export type UserUncheckedUpdateWithoutDentalClinicInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7432,6 +7653,9 @@ export type UserUncheckedUpdateWithoutDentalClinicInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7466,7 +7690,6 @@ export type UserUncheckedUpdateManyWithoutDentalClinicInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7491,6 +7714,9 @@ export type UserUncheckedUpdateManyWithoutDentalClinicInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7507,7 +7733,6 @@ export type UserCreateManyRgStoreRgInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -7532,6 +7757,9 @@ export type UserCreateManyRgStoreRgInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -7548,7 +7776,6 @@ export type UserUpdateWithoutRgStoreRgInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7573,6 +7800,9 @@ export type UserUpdateWithoutRgStoreRgInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7607,7 +7837,6 @@ export type UserUncheckedUpdateWithoutRgStoreRgInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7632,6 +7861,9 @@ export type UserUncheckedUpdateWithoutRgStoreRgInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7666,7 +7898,6 @@ export type UserUncheckedUpdateManyWithoutRgStoreRgInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7691,6 +7922,9 @@ export type UserUncheckedUpdateManyWithoutRgStoreRgInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7707,7 +7941,6 @@ export type UserCreateManyDepartmentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -7732,6 +7965,9 @@ export type UserCreateManyDepartmentInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -7748,7 +7984,6 @@ export type UserUpdateWithoutDepartmentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7773,6 +8008,9 @@ export type UserUpdateWithoutDepartmentInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7807,7 +8045,6 @@ export type UserUncheckedUpdateWithoutDepartmentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7832,6 +8069,9 @@ export type UserUncheckedUpdateWithoutDepartmentInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7866,7 +8106,6 @@ export type UserUncheckedUpdateManyWithoutDepartmentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7891,6 +8130,9 @@ export type UserUncheckedUpdateManyWithoutDepartmentInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7907,7 +8149,6 @@ export type UserCreateManyStoreInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   sortOrder?: number
-  active?: boolean
   hiredAt?: Date | string | null
   retiredAt?: Date | string | null
   transferredAt?: Date | string | null
@@ -7932,6 +8173,9 @@ export type UserCreateManyStoreInput = {
   lineUserId?: string | null
   emailVerified?: boolean
   image?: string | null
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
   employeeCode?: string | null
   phone?: string | null
   avatar?: string | null
@@ -7948,7 +8192,6 @@ export type UserUpdateWithoutStoreInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7973,6 +8216,9 @@ export type UserUpdateWithoutStoreInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8007,7 +8253,6 @@ export type UserUncheckedUpdateWithoutStoreInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8032,6 +8277,9 @@ export type UserUncheckedUpdateWithoutStoreInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8066,7 +8314,6 @@ export type UserUncheckedUpdateManyWithoutStoreInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   retiredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8091,6 +8338,9 @@ export type UserUncheckedUpdateManyWithoutStoreInput = {
   lineUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8291,7 +8541,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   updatedAt?: boolean
   sortOrder?: boolean
-  active?: boolean
   hiredAt?: boolean
   retiredAt?: boolean
   transferredAt?: boolean
@@ -8316,6 +8565,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   lineUserId?: boolean
   emailVerified?: boolean
   image?: boolean
+  banned?: boolean
+  banReason?: boolean
+  banExpires?: boolean
   employeeCode?: boolean
   phone?: boolean
   avatar?: boolean
@@ -8357,7 +8609,6 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   updatedAt?: boolean
   sortOrder?: boolean
-  active?: boolean
   hiredAt?: boolean
   retiredAt?: boolean
   transferredAt?: boolean
@@ -8382,6 +8633,9 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   lineUserId?: boolean
   emailVerified?: boolean
   image?: boolean
+  banned?: boolean
+  banReason?: boolean
+  banExpires?: boolean
   employeeCode?: boolean
   phone?: boolean
   avatar?: boolean
@@ -8404,7 +8658,6 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   updatedAt?: boolean
   sortOrder?: boolean
-  active?: boolean
   hiredAt?: boolean
   retiredAt?: boolean
   transferredAt?: boolean
@@ -8429,6 +8682,9 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   lineUserId?: boolean
   emailVerified?: boolean
   image?: boolean
+  banned?: boolean
+  banReason?: boolean
+  banExpires?: boolean
   employeeCode?: boolean
   phone?: boolean
   avatar?: boolean
@@ -8451,7 +8707,6 @@ export type UserSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   sortOrder?: boolean
-  active?: boolean
   hiredAt?: boolean
   retiredAt?: boolean
   transferredAt?: boolean
@@ -8476,6 +8731,9 @@ export type UserSelectScalar = {
   lineUserId?: boolean
   emailVerified?: boolean
   image?: boolean
+  banned?: boolean
+  banReason?: boolean
+  banExpires?: boolean
   employeeCode?: boolean
   phone?: boolean
   avatar?: boolean
@@ -8487,7 +8745,7 @@ export type UserSelectScalar = {
   rgStoreId?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "createdAt" | "updatedAt" | "sortOrder" | "active" | "hiredAt" | "retiredAt" | "transferredAt" | "yukyuCategory" | "name" | "kana" | "email" | "password" | "type" | "role" | "tempResetCode" | "tempResetCodeExpired" | "schoolId" | "rentaStoreId" | "type2" | "shopId" | "membershipName" | "damageNameMasterId" | "color" | "app" | "apps" | "lineUserId" | "emailVerified" | "image" | "employeeCode" | "phone" | "avatar" | "bcc" | "counselingStoreId" | "storeId" | "departmentId" | "dentalClinicId" | "rgStoreId", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "createdAt" | "updatedAt" | "sortOrder" | "hiredAt" | "retiredAt" | "transferredAt" | "yukyuCategory" | "name" | "kana" | "email" | "password" | "type" | "role" | "tempResetCode" | "tempResetCodeExpired" | "schoolId" | "rentaStoreId" | "type2" | "shopId" | "membershipName" | "damageNameMasterId" | "color" | "app" | "apps" | "lineUserId" | "emailVerified" | "image" | "banned" | "banReason" | "banExpires" | "employeeCode" | "phone" | "avatar" | "bcc" | "counselingStoreId" | "storeId" | "departmentId" | "dentalClinicId" | "rgStoreId", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   UserRole?: boolean | Prisma.User$UserRoleArgs<ExtArgs>
   Session?: boolean | Prisma.User$SessionArgs<ExtArgs>
@@ -8562,7 +8820,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     createdAt: Date
     updatedAt: Date | null
     sortOrder: number
-    active: boolean
     hiredAt: Date | null
     retiredAt: Date | null
     transferredAt: Date | null
@@ -8587,6 +8844,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     lineUserId: string | null
     emailVerified: boolean
     image: string | null
+    banned: boolean
+    banReason: string | null
+    banExpires: Date | null
     employeeCode: string | null
     phone: string | null
     avatar: string | null
@@ -9047,7 +9307,6 @@ export interface UserFieldRefs {
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly sortOrder: Prisma.FieldRef<"User", 'Float'>
-  readonly active: Prisma.FieldRef<"User", 'Boolean'>
   readonly hiredAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly retiredAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly transferredAt: Prisma.FieldRef<"User", 'DateTime'>
@@ -9072,6 +9331,9 @@ export interface UserFieldRefs {
   readonly lineUserId: Prisma.FieldRef<"User", 'String'>
   readonly emailVerified: Prisma.FieldRef<"User", 'Boolean'>
   readonly image: Prisma.FieldRef<"User", 'String'>
+  readonly banned: Prisma.FieldRef<"User", 'Boolean'>
+  readonly banReason: Prisma.FieldRef<"User", 'String'>
+  readonly banExpires: Prisma.FieldRef<"User", 'DateTime'>
   readonly employeeCode: Prisma.FieldRef<"User", 'String'>
   readonly phone: Prisma.FieldRef<"User", 'String'>
   readonly avatar: Prisma.FieldRef<"User", 'String'>

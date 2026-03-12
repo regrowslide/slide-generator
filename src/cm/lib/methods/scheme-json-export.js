@@ -11075,20 +11075,6 @@
           "isUpdatedAt": false
         },
         {
-          "name": "fullName",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": false,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": false,
-          "type": "String",
-          "nativeType": null,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
           "name": "isActive",
           "kind": "scalar",
           "isList": false,
@@ -16022,21 +16008,6 @@
           "isUpdatedAt": false
         },
         {
-          "name": "active",
-          "kind": "scalar",
-          "isList": false,
-          "isRequired": true,
-          "isUnique": false,
-          "isId": false,
-          "isReadOnly": false,
-          "hasDefaultValue": true,
-          "type": "Boolean",
-          "nativeType": null,
-          "default": true,
-          "isGenerated": false,
-          "isUpdatedAt": false
-        },
-        {
           "name": "hiredAt",
           "kind": "scalar",
           "isList": false,
@@ -16372,6 +16343,49 @@
           "isReadOnly": false,
           "hasDefaultValue": false,
           "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "banned",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": true,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": true,
+          "type": "Boolean",
+          "nativeType": null,
+          "default": false,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "banReason",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "String",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "banExpires",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "DateTime",
           "nativeType": null,
           "isGenerated": false,
           "isUpdatedAt": false

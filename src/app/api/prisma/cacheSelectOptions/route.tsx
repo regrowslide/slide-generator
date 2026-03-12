@@ -37,7 +37,9 @@ const main = async req => {
       const selectId = getSelectId(col)
 
 
+
       const result = await prisma?.[model][method](queryObject)
+
 
       const optionObjArr = result
       options[selectId] = optionObjArr

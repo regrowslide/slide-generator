@@ -29,7 +29,7 @@ export const handleDB = async callback => {
     }
   } catch (error) {
     console.error(error.stack)
-    toast.error(`更新失敗`)
+    toast.error(`更新失敗: ${error.message || '不明なエラー'}`)
     return error
   }
 }

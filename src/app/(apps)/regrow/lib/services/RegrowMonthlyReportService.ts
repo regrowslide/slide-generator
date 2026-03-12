@@ -151,7 +151,7 @@ export class RegrowMonthlyReportService {
 
     // regrow Userを全件取得し、staffName → userId マップ構築（名前のみでマッチング）
     const rgUsers = await prisma.user.findMany({
-      where: {apps: {has: 'regrow'}, active: true},
+      where: {apps: {has: 'regrow'}, banned: {not: true}},
     })
     const userMap = new Map<string, string>()
     const duplicateNames = new Set<string>()
