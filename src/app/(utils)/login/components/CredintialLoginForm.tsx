@@ -7,11 +7,12 @@ import { Label } from '@shadcn/ui/label'
 import { Button } from '@cm/components/styles/common-components/Button'
 import { authClient } from 'src/lib/auth-client'
 import useGlobal from 'src/cm/hooks/globalHooks/useGlobal'
+import { sleep } from '@cm/lib/methods/common'
 
 export default function CredintialLoginForm({
-  callbackUrl,
+  onSuccess,
 }: {
-  callbackUrl: string
+  onSuccess: () => void
 }) {
   const { toggleLoad } = useGlobal()
   const [email, setEmail] = useState('')
@@ -25,22 +26,23 @@ export default function CredintialLoginForm({
       toast.error('必須項目を入力してください。')
       return
     }
-    toggleLoad(
-      async () => {
-        const result = await authClient.signIn.email({
-          email,
-          password,
-        })
-        if (result.data) {
-          toast.success('ログインしました。')
-          window.location.href = callbackUrl || '/'
-          return
-        } else if (result.error) {
-          toast.error(`正しい認証情報を入力してください。: ${result.error.message}`)
-        }
-      },
-      { refresh: false, mutate: false }
-    )
+    const result = await authClient.signIn.email({
+      email,
+      password,
+    })
+    if (result.data) {
+      toast.success('ログインしました。')
+      await sleep(500)
+      onSuccess()
+      return
+    } else if (result.error) {
+      toast.error(`正しい認証情報を入力してください。: ${result.error.message}`)
+    }
+    // toggleLoad(
+    //   async () => {
+    //   },
+    //   { refresh: false, mutate: false }
+    // )
   }
 
   return (

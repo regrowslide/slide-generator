@@ -121,7 +121,8 @@
     "tailwind-variants": "^3.2.2",
     "tar": "^7.5.3",
     "uuid": "^13.0.0",
-    "vaul": "^1.1.2"
+    "vaul": "^1.1.2",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

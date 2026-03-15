@@ -92,7 +92,7 @@ const FLOW_STEPS = [
 
 export default function DentalLpPage() {
   return (
-    <div className='font-sans'>
+    <div className='font-sans print-target'>
       <Header />
       <HeroSection />
       <PainPointSection />
@@ -293,9 +293,8 @@ function FeatureSection() {
           {FEATURES.map((feature, i) => (
             <div
               key={i}
-              className={`flex flex-col items-center gap-8 md:flex-row ${
-                i % 2 === 1 ? 'md:flex-row-reverse' : ''
-              }`}
+              className={`flex flex-col items-center gap-8 md:flex-row ${i % 2 === 1 ? 'md:flex-row-reverse' : ''
+                }`}
             >
               {/* テキスト */}
               <div className='flex-1'>
@@ -380,9 +379,8 @@ function FlowSection() {
             {FLOW_STEPS.map((item, i) => (
               <div
                 key={i}
-                className={`flex items-start gap-6 md:gap-12 ${
-                  i % 2 === 1 ? 'md:flex-row-reverse' : ''
-                }`}
+                className={`flex items-start gap-6 md:gap-12 ${i % 2 === 1 ? 'md:flex-row-reverse' : ''
+                  }`}
               >
                 {/* ステップ番号 */}
                 <div className='relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-teal-600 font-bold text-white shadow-md md:mx-auto'>
@@ -390,9 +388,8 @@ function FlowSection() {
                 </div>
                 {/* 内容 */}
                 <div
-                  className={`flex-1 rounded-xl border border-slate-100 bg-slate-50 p-6 ${
-                    i % 2 === 1 ? 'md:text-right' : ''
-                  }`}
+                  className={`flex-1 rounded-xl border border-slate-100 bg-slate-50 p-6 ${i % 2 === 1 ? 'md:text-right' : ''
+                    }`}
                 >
                   <h3 className='mb-1 text-lg font-bold text-slate-800'>{item.title}</h3>
                   <p className='text-sm text-slate-600'>{item.description}</p>

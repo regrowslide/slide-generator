@@ -4,6 +4,7 @@
 
 import ExcelJS from 'exceljs'
 import type {ExcelParseResult, StoreName, StaffRecord} from '../types'
+import {convertXlsToXlsx, isXlsFile} from './excel-converter'
 
 /** セルの値を取得するヘルパー（1-indexed） */
 const getCellValue = (ws: ExcelJS.Worksheet, row: number, col: number): string | number | undefined => {
@@ -16,7 +17,11 @@ const getCellValue = (ws: ExcelJS.Worksheet, row: number, col: number): string |
  * storeShortName: 手動選択された店舗名（ファイル名からの推測は行わない）
  */
 export const parseStaffAnalysisExcel = async (file: File, storeShortName: StoreName): Promise<ExcelParseResult> => {
-  const arrayBuffer = await file.arrayBuffer()
+  let arrayBuffer = await file.arrayBuffer()
+  // .xlsファイルの場合はxlsx形式に変換
+  if (isXlsFile(file.name)) {
+    arrayBuffer = convertXlsToXlsx(arrayBuffer)
+  }
   const wb = new ExcelJS.Workbook()
   await wb.xlsx.load(arrayBuffer)
   const ws = wb.worksheets[0]

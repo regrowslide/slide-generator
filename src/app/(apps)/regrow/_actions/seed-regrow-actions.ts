@@ -171,6 +171,7 @@ export const seedFromExcelFiles = async (): Promise<{message: string}> => {
 
   // ① Excelディレクトリからファイルをパース
   const excelDir = path.join(process.cwd(), 'src/app/(apps)/regrow/regrow-doc/excel')
+
   const parsedFiles = await parseAllExcelFiles(excelDir)
 
   if (parsedFiles.length === 0) {

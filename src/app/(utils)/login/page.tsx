@@ -2,7 +2,7 @@ import React from 'react'
 
 import Redirector from 'src/cm/components/utils/Redirector'
 import { initServerComopnent } from 'src/non-common/serverSideFunction'
-import LogInForm from '@app/(utils)/login/components/LogInFormWrapper'
+import LogInFormWrapper from '@app/(utils)/login/components/LogInFormWrapper'
 
 const LoginPage = async props => {
   const query = await props.searchParams
@@ -51,7 +51,7 @@ const LoginPage = async props => {
 
         {/* ログインフォーム */}
         <div className="flex justify-center">
-          <LogInForm callbackUrl={`/${redirectRoot}`} />
+          <LogInFormWrapper callbackUrl={`/${redirectRoot}`} />
         </div>
       </div>
     </div>

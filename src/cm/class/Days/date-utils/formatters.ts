@@ -5,6 +5,8 @@ import 'dayjs/locale/ja'
 import {breakLines} from 'src/cm/lib/value-handler'
 import {arrToLines} from 'src/cm/components/utils/texts/MarkdownDisplay'
 import {DateInput} from '@cm/class/Days/date-utils/date-utils-type'
+import {isServer} from '@cm/lib/methods/common'
+import {Days} from '@cm/class/Days/Days'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -73,6 +75,10 @@ export const formatDate = (
     return originalValue ? String(originalValue) : null
   }
 
+  if (isServer) {
+    dateObject = Days.hour.add(dateObject, 9)
+  }
+
   const FORMATTER = (value: Date, f: TimeFormatType): string => {
     const dateObj = new Date(value)
     try {
@@ -84,6 +90,7 @@ export const formatDate = (
   }
 
   let result
+
   if (format === 'iso') {
     result = dayjs(dateObject).format() as unknown as Date
   } else if (format === 'short') {

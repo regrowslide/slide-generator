@@ -1,5 +1,6 @@
 import {DateInput} from '@cm/class/Days/date-utils/date-utils-type'
 import {formatDate} from '@cm/class/Days/date-utils/formatters'
+import {Days} from '@cm/class/Days/Days'
 import {isServer} from '@cm/lib/methods/common'
 
 export const getMidnight = (date = new Date()) => {
@@ -9,13 +10,12 @@ export const getMidnight = (date = new Date()) => {
   const month = Number(formatDate(dt, 'MM'))
   const day = Number(formatDate(dt, 'DD'))
 
-  let midnightDate = new Date(year, month - 1, day, 0, 0, 0)
-  if (isServer) {
-    midnightDate = toUtc(midnightDate)
-  }
+  const midnightDate = new Date(year, month - 1, day, 0, 0, 0)
 
-  if (midnightDate?.toISOString().includes(`15:00`) === false) {
-    console.error(`getMidnightError`, date, new Date(year, month - 1, day, 0, 0, 0), midnightDate.toISOString())
+  const isValidMidnightDate = (date: Date): boolean => date?.toISOString().includes(`15:00`)
+
+  if (!isValidMidnightDate(midnightDate)) {
+    throw new Error(`getMidnight: failed to get midnight date`)
   }
 
   return midnightDate

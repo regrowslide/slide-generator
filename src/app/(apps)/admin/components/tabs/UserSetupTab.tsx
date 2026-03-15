@@ -36,7 +36,6 @@ const UserSetupTab = () => {
           password: form.password.trim() || undefined,
         })
 
-        console.log(user)  //logs
 
         setResult({ type: 'success', message: `${user.name}（${user.email}）を設定しました（ID: ${user.id}）` })
       } catch (e: any) {

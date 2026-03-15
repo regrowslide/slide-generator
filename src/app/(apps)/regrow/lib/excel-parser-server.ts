@@ -7,6 +7,7 @@ import fs from 'fs'
 import path from 'path'
 import ExcelJS from 'exceljs'
 import type {ExcelParseResult, StoreName, StaffRecord} from '../types'
+import {convertXlsToXlsx, isXlsFile} from './excel-converter'
 
 /** セルの値を取得するヘルパー（1-indexed） */
 const getCellValue = (ws: ExcelJS.Worksheet, row: number, col: number): string | number | undefined => {
@@ -17,9 +18,23 @@ const getCellValue = (ws: ExcelJS.Worksheet, row: number, col: number): string |
 /** Excelファイル1つをパース（サーバーサイド用） */
 export const parseExcelFromPath = async (filePath: string, storeShortName: StoreName): Promise<ExcelParseResult> => {
   const fileBuffer = fs.readFileSync(filePath)
+  let arrayBuffer = fileBuffer.buffer.slice(fileBuffer.byteOffset, fileBuffer.byteOffset + fileBuffer.byteLength) as ArrayBuffer
+  // .xlsファイルの場合はxlsx形式に変換
+  if (isXlsFile(filePath)) {
+    arrayBuffer = convertXlsToXlsx(arrayBuffer)
+  }
   const wb = new ExcelJS.Workbook()
-  await wb.xlsx.load(fileBuffer.buffer.slice(fileBuffer.byteOffset, fileBuffer.byteOffset + fileBuffer.byteLength) as ArrayBuffer)
+  await wb.xlsx.load(arrayBuffer)
   const ws = wb.worksheets[0]
+
+  if (!ws) {
+    console.error(`[excel-parser] ワークシートが見つかりません: ${filePath}`, {
+      sheetCount: wb.worksheets.length,
+      isXls: isXlsFile(filePath),
+      bufferSize: arrayBuffer.byteLength,
+    })
+    throw new Error(`ワークシートが見つかりません: ${path.basename(filePath)}`)
+  }
 
   // B1セルから店舗名取得（フルネーム）
   const storeCell = getCellValue(ws, 1, 2)
@@ -109,8 +124,8 @@ export const parseExcelFromPath = async (filePath: string, storeShortName: Store
   }
 }
 
-/** ファイル名パターン: YYYYMM_店舗名.xlsx */
-const FILE_PATTERN = /^(\d{6})_(.+)\.xlsx$/
+/** ファイル名パターン: YYYYMM_店舗名.xlsx または .xls */
+const FILE_PATTERN = /^(\d{6})_(.+)\.xlsx?$/
 
 type ParsedFile = {
   yearMonth: string
@@ -120,9 +135,11 @@ type ParsedFile = {
 
 /** ディレクトリ内の全Excelをパースしてまとめて返す */
 export const parseAllExcelFiles = async (dirPath: string): Promise<ParsedFile[]> => {
-  const files = fs.readdirSync(dirPath).filter((f) => FILE_PATTERN.test(f)).sort()
+  const files = fs
+    .readdirSync(dirPath)
+    .filter(f => FILE_PATTERN.test(f))
+    .sort()
   const results: ParsedFile[] = []
-
   for (const fileName of files) {
     const match = fileName.match(FILE_PATTERN)
     if (!match) continue
