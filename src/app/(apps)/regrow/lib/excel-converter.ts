@@ -7,10 +7,10 @@ import * as XLSX from 'xlsx'
 
 /** .xls の ArrayBuffer を .xlsx の ArrayBuffer に変換 */
 export const convertXlsToXlsx = (xlsBuffer: ArrayBuffer): ArrayBuffer => {
-  const wb = XLSX.read(new Uint8Array(xlsBuffer), {type: 'array', cellStyles: true})
+  const wb = XLSX.read(new Uint8Array(xlsBuffer), {type: 'array'})
   const xlsxOutput = XLSX.write(wb, {type: 'buffer', bookType: 'xlsx'}) as Buffer | Uint8Array
   // Uint8Array/Buffer から正確な範囲の ArrayBuffer を取得
-  return xlsxOutput.buffer.slice(xlsxOutput.byteOffset, xlsxOutput.byteOffset + xlsxOutput.byteLength)
+  return xlsxOutput.buffer.slice(xlsxOutput.byteOffset, xlsxOutput.byteOffset + xlsxOutput.byteLength) as ArrayBuffer
 }
 
 /** ファイル拡張子が .xls かどうか */

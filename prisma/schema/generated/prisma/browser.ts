@@ -103,6 +103,11 @@ export type DentalTimerHistory = Prisma.DentalTimerHistoryModel
  */
 export type DentalScoringHistory = Prisma.DentalScoringHistoryModel
 /**
+ * Model DentalContact
+ * 
+ */
+export type DentalContact = Prisma.DentalContactModel
+/**
  * Model DentalSavedDocument
  * 
  */

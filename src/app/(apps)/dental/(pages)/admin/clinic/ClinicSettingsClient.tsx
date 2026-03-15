@@ -14,7 +14,7 @@ import type { Clinic, ClinicQualifications } from '@app/(apps)/dental/lib/types'
 import { Button } from '@cm/components/styles/common-components/Button'
 import useModal from '@cm/components/utils/modal/useModal'
 
-type StaffInfo = {id: string; name: string; email: string | null; type: string | null}
+type StaffInfo = { id: string; name: string; email: string | null; type: string | null }
 
 type ClinicSettingsClientProps = {
   clinic: Clinic | null
@@ -44,31 +44,7 @@ const ClinicSettingsClient = ({ clinic, staff = [], isDev = false }: ClinicSetti
     }
   )
 
-  const [seedLoading, setSeedLoading] = useState(false)
 
-  const handleSeed = async () => {
-    if (!confirm('既存データをリセットしてシードデータを投入しますか？')) return
-    setSeedLoading(true)
-    try {
-      const result = await seedDentalData()
-      alert(result.message)
-      window.location.reload()
-    } finally {
-      setSeedLoading(false)
-    }
-  }
-
-  const handleReset = async () => {
-    if (!confirm('全データを削除します。この操作は取り消せません。よろしいですか？')) return
-    setSeedLoading(true)
-    try {
-      const result = await resetDentalData()
-      alert(result.message)
-      window.location.reload()
-    } finally {
-      setSeedLoading(false)
-    }
-  }
 
   // スタッフ認証情報編集モーダル
   const staffEditModal = useModal()
@@ -83,7 +59,7 @@ const ClinicSettingsClient = ({ clinic, staff = [], isDev = false }: ClinicSetti
 
   const handleSaveCredentials = async () => {
     if (!editingStaff) return
-    const data: {email?: string; password?: string} = {}
+    const data: { email?: string; password?: string } = {}
     if (credData.email !== (editingStaff.email || '')) data.email = credData.email
     if (credData.password) data.password = credData.password
     if (Object.keys(data).length > 0) {
@@ -216,27 +192,6 @@ const ClinicSettingsClient = ({ clinic, staff = [], isDev = false }: ClinicSetti
         </Card>
       )}
 
-      {/* 開発用: シードデータ */}
-      {isDev && (
-        <Card className="mt-4 border-orange-300">
-          <div className="p-3 border-b border-orange-200 bg-orange-50 rounded-t-lg">
-            <span className="text-sm font-medium text-orange-700">開発用: シードデータ管理</span>
-          </div>
-          <CardContent className="p-4">
-            <p className="text-xs text-gray-500 mb-3">
-              開発環境でのみ利用可能です。シードデータを投入・リセットできます。
-            </p>
-            <div className="flex gap-2">
-              <Button color="red" onClick={handleReset} disabled={seedLoading}>
-                {seedLoading ? '処理中...' : 'データリセット'}
-              </Button>
-              <Button color="primary" onClick={handleSeed} disabled={seedLoading}>
-                {seedLoading ? '処理中...' : 'シードデータ投入'}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
       {/* スタッフ認証情報編集モーダル */}
       <staffEditModal.Modal title={editingStaff ? `${editingStaff.name} の認証情報` : '認証情報の編集'}>
@@ -246,7 +201,7 @@ const ClinicSettingsClient = ({ clinic, staff = [], isDev = false }: ClinicSetti
             <input
               type="email"
               value={credData.email}
-              onChange={e => setCredData(prev => ({...prev, email: e.target.value}))}
+              onChange={e => setCredData(prev => ({ ...prev, email: e.target.value }))}
               className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
               placeholder="example@example.com"
             />
@@ -256,7 +211,7 @@ const ClinicSettingsClient = ({ clinic, staff = [], isDev = false }: ClinicSetti
             <input
               type="text"
               value={credData.password}
-              onChange={e => setCredData(prev => ({...prev, password: e.target.value}))}
+              onChange={e => setCredData(prev => ({ ...prev, password: e.target.value }))}
               className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
               placeholder="新しいパスワード"
             />

@@ -1,5 +1,7 @@
 'use server'
 
+import prisma from 'src/lib/prisma'
+
 type ContactFormData = {
   name: string
   clinicName: string
@@ -23,14 +25,14 @@ export async function submitContactForm(data: ContactFormData) {
   }
 
   try {
-    // DB保存（汎用的なContactテーブルがなければJSON形式でログ出力）
-    console.log('[DentalLP問い合わせ]', {
-      name,
-      clinicName,
-      email,
-      phone,
-      message,
-      submittedAt: new Date().toISOString(),
+    await prisma.dentalContact.create({
+      data: {
+        name,
+        clinicName: clinicName || '',
+        email,
+        phone: phone || '',
+        message: message || '',
+      },
     })
 
     return { success: true }

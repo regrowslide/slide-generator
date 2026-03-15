@@ -68,6 +68,7 @@ export const ModelName = {
   DentalExamination: 'DentalExamination',
   DentalTimerHistory: 'DentalTimerHistory',
   DentalScoringHistory: 'DentalScoringHistory',
+  DentalContact: 'DentalContact',
   DentalSavedDocument: 'DentalSavedDocument',
   GyoseiSession: 'GyoseiSession',
   GyoseiFile: 'GyoseiFile',
@@ -466,6 +467,19 @@ export const DentalScoringHistoryScalarFieldEnum = {
 } as const
 
 export type DentalScoringHistoryScalarFieldEnum = (typeof DentalScoringHistoryScalarFieldEnum)[keyof typeof DentalScoringHistoryScalarFieldEnum]
+
+
+export const DentalContactScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  name: 'name',
+  clinicName: 'clinicName',
+  email: 'email',
+  phone: 'phone',
+  message: 'message'
+} as const
+
+export type DentalContactScalarFieldEnum = (typeof DentalContactScalarFieldEnum)[keyof typeof DentalContactScalarFieldEnum]
 
 
 export const DentalSavedDocumentScalarFieldEnum = {

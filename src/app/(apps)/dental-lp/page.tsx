@@ -1,7 +1,5 @@
-'use client'
-
-import { useState, useRef } from 'react'
-import { submitContactForm } from './_actions/contact-actions'
+import Header from './components/Header'
+import ContactSection from './components/ContactSection'
 
 // ============================
 // 定数
@@ -106,88 +104,6 @@ export default function DentalLpPage() {
   )
 }
 
-// --- ヘッダー ---
-function Header() {
-  const [menuOpen, setMenuOpen] = useState(false)
-
-  const navItems = [
-    { label: 'こんなお悩みありませんか？', href: '#pain' },
-    { label: '機能紹介', href: '#features' },
-    { label: '導入メリット', href: '#benefits' },
-    { label: '導入の流れ', href: '#flow' },
-    { label: 'お問い合わせ', href: '#contact' },
-  ]
-
-  return (
-    <header className='fixed top-0 z-50 w-full border-b border-slate-100 bg-white/95 backdrop-blur-sm'>
-      <div className='mx-auto flex max-w-6xl items-center justify-between px-4 py-3'>
-        <a href='#' className='text-xl font-bold text-slate-800'>
-          <span className='text-teal-600'>Visit</span>Dental Pro
-        </a>
-
-        {/* PC ナビ */}
-        <nav className='hidden items-center gap-6 md:flex'>
-          {navItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className='text-sm text-slate-600 transition-colors hover:text-teal-600'
-            >
-              {item.label}
-            </a>
-          ))}
-          <a
-            href='#contact'
-            className='rounded-full bg-teal-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-teal-700 hover:shadow-md'
-          >
-            無料で相談する
-          </a>
-        </nav>
-
-        {/* モバイルメニューボタン */}
-        <button
-          className='flex h-10 w-10 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 md:hidden'
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label='メニュー'
-        >
-          {menuOpen ? (
-            <svg width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
-              <path d='M18 6L6 18M6 6l12 12' />
-            </svg>
-          ) : (
-            <svg width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
-              <path d='M3 12h18M3 6h18M3 18h18' />
-            </svg>
-          )}
-        </button>
-      </div>
-
-      {/* モバイルメニュー */}
-      {menuOpen && (
-        <div className='border-t border-slate-100 bg-white px-4 py-4 md:hidden'>
-          {navItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className='block py-3 text-sm text-slate-600 hover:text-teal-600'
-              onClick={() => setMenuOpen(false)}
-            >
-              {item.label}
-            </a>
-          ))}
-          <a
-            href='#contact'
-            className='mt-2 block rounded-full bg-teal-600 py-3 text-center text-sm font-semibold text-white'
-            onClick={() => setMenuOpen(false)}
-          >
-            無料で相談する
-          </a>
-        </div>
-      )}
-    </header>
-  )
-}
-
 // --- ヒーロー ---
 function HeroSection() {
   return (
@@ -250,7 +166,7 @@ function HeroSection() {
 // --- 課題提起 ---
 function PainPointSection() {
   return (
-    <section id='pain' className='bg-white py-16 md:py-24'>
+    <section id='pain' className='scroll-mt-20 bg-white py-16 md:py-24'>
       <div className='mx-auto max-w-6xl px-4'>
         <div className='mb-12 text-center'>
           <h2 className='mb-4 text-2xl font-bold text-slate-900 md:text-3xl'>
@@ -279,7 +195,7 @@ function PainPointSection() {
 // --- 機能紹介 ---
 function FeatureSection() {
   return (
-    <section id='features' className='bg-gradient-to-b from-white to-slate-50 py-16 md:py-24'>
+    <section id='features' className='scroll-mt-20 bg-gradient-to-b from-white to-slate-50 py-16 md:py-24'>
       <div className='mx-auto max-w-6xl px-4'>
         <div className='mb-12 text-center'>
           <div className='mb-3 text-sm font-semibold tracking-wider text-teal-600'>FEATURES</div>
@@ -333,7 +249,7 @@ function FeatureSection() {
 // --- 導入メリット ---
 function BenefitSection() {
   return (
-    <section id='benefits' className='bg-slate-900 py-16 text-white md:py-24'>
+    <section id='benefits' className='scroll-mt-20 bg-slate-900 py-16 text-white md:py-24'>
       <div className='mx-auto max-w-6xl px-4'>
         <div className='mb-12 text-center'>
           <div className='mb-3 text-sm font-semibold tracking-wider text-teal-400'>BENEFITS</div>
@@ -363,7 +279,7 @@ function BenefitSection() {
 // --- 導入の流れ ---
 function FlowSection() {
   return (
-    <section id='flow' className='bg-white py-16 md:py-24'>
+    <section id='flow' className='scroll-mt-20 bg-white py-16 md:py-24'>
       <div className='mx-auto max-w-6xl px-4'>
         <div className='mb-12 text-center'>
           <div className='mb-3 text-sm font-semibold tracking-wider text-teal-600'>FLOW</div>
@@ -428,174 +344,6 @@ function PricingSection() {
             無料で相談する
           </a>
         </div>
-      </div>
-    </section>
-  )
-}
-
-// --- 問い合わせフォーム ---
-function ContactSection() {
-  const [formState, setFormState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
-  const [errorMessage, setErrorMessage] = useState('')
-  const formRef = useRef<HTMLFormElement>(null)
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setFormState('submitting')
-    setErrorMessage('')
-
-    const formData = new FormData(e.currentTarget)
-    const data = {
-      name: formData.get('name') as string,
-      clinicName: formData.get('clinicName') as string,
-      email: formData.get('email') as string,
-      phone: formData.get('phone') as string,
-      message: formData.get('message') as string,
-    }
-
-    const result = await submitContactForm(data)
-
-    if (result.success) {
-      setFormState('success')
-      formRef.current?.reset()
-    } else {
-      setFormState('error')
-      setErrorMessage(result.error || '送信に失敗しました')
-    }
-  }
-
-  return (
-    <section id='contact' className='bg-slate-50 py-16 md:py-24'>
-      <div className='mx-auto max-w-2xl px-4'>
-        <div className='mb-10 text-center'>
-          <div className='mb-3 text-sm font-semibold tracking-wider text-teal-600'>CONTACT</div>
-          <h2 className='mb-4 text-2xl font-bold text-slate-900 md:text-3xl'>お問い合わせ</h2>
-          <p className='text-slate-500'>
-            導入に関するご質問やデモのご依頼など、
-            <br className='sm:hidden' />
-            お気軽にお問い合わせください
-          </p>
-        </div>
-
-        {formState === 'success' ? (
-          <div className='rounded-2xl border border-teal-200 bg-white p-8 text-center shadow-sm'>
-            <div className='mb-4 text-5xl'>✅</div>
-            <h3 className='mb-2 text-xl font-bold text-slate-800'>
-              お問い合わせありがとうございます
-            </h3>
-            <p className='mb-6 text-slate-600'>
-              内容を確認の上、2営業日以内にご連絡いたします。
-            </p>
-            <button
-              onClick={() => setFormState('idle')}
-              className='text-sm text-teal-600 underline hover:text-teal-700'
-            >
-              新しいお問い合わせを送る
-            </button>
-          </div>
-        ) : (
-          <form
-            ref={formRef}
-            onSubmit={handleSubmit}
-            className='rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-10'
-          >
-            <div className='space-y-5'>
-              {/* お名前 */}
-              <div>
-                <label htmlFor='name' className='mb-1.5 block text-sm font-medium text-slate-700'>
-                  お名前 <span className='text-red-500'>*</span>
-                </label>
-                <input
-                  id='name'
-                  name='name'
-                  type='text'
-                  required
-                  placeholder='山田 太郎'
-                  className='w-full rounded-lg border border-slate-300 px-4 py-3 text-sm transition-colors focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none'
-                />
-              </div>
-
-              {/* 医院名 */}
-              <div>
-                <label
-                  htmlFor='clinicName'
-                  className='mb-1.5 block text-sm font-medium text-slate-700'
-                >
-                  医院名
-                </label>
-                <input
-                  id='clinicName'
-                  name='clinicName'
-                  type='text'
-                  placeholder='〇〇歯科医院'
-                  className='w-full rounded-lg border border-slate-300 px-4 py-3 text-sm transition-colors focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none'
-                />
-              </div>
-
-              {/* メールアドレス */}
-              <div>
-                <label htmlFor='email' className='mb-1.5 block text-sm font-medium text-slate-700'>
-                  メールアドレス <span className='text-red-500'>*</span>
-                </label>
-                <input
-                  id='email'
-                  name='email'
-                  type='email'
-                  required
-                  placeholder='example@clinic.jp'
-                  className='w-full rounded-lg border border-slate-300 px-4 py-3 text-sm transition-colors focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none'
-                />
-              </div>
-
-              {/* 電話番号 */}
-              <div>
-                <label htmlFor='phone' className='mb-1.5 block text-sm font-medium text-slate-700'>
-                  電話番号
-                </label>
-                <input
-                  id='phone'
-                  name='phone'
-                  type='tel'
-                  placeholder='03-1234-5678'
-                  className='w-full rounded-lg border border-slate-300 px-4 py-3 text-sm transition-colors focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none'
-                />
-              </div>
-
-              {/* お問い合わせ内容 */}
-              <div>
-                <label
-                  htmlFor='message'
-                  className='mb-1.5 block text-sm font-medium text-slate-700'
-                >
-                  お問い合わせ内容
-                </label>
-                <textarea
-                  id='message'
-                  name='message'
-                  rows={4}
-                  placeholder='ご質問やご要望をお気軽にお書きください'
-                  className='w-full resize-none rounded-lg border border-slate-300 px-4 py-3 text-sm transition-colors focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 focus:outline-none'
-                />
-              </div>
-
-              {/* エラーメッセージ */}
-              {formState === 'error' && (
-                <div className='rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600'>
-                  {errorMessage}
-                </div>
-              )}
-
-              {/* 送信ボタン */}
-              <button
-                type='submit'
-                disabled={formState === 'submitting'}
-                className='w-full rounded-full bg-teal-600 py-4 font-semibold text-white shadow-md transition-all hover:bg-teal-700 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60'
-              >
-                {formState === 'submitting' ? '送信中...' : '送信する'}
-              </button>
-            </div>
-          </form>
-        )}
       </div>
     </section>
   )

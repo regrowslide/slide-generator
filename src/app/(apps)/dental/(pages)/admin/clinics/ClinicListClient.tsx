@@ -12,6 +12,8 @@ import { upsertDentalClinic, deleteDentalClinic } from '@app/(apps)/dental/_acti
 import { createDentalStaff, removeDentalStaff } from '@app/(apps)/dental/_actions/staff-actions'
 import { STAFF_ROLES } from '@app/(apps)/dental/lib/constants'
 import { Button } from '@cm/components/styles/common-components/Button'
+import { isDev } from '@cm/lib/methods/common'
+import { resetDentalData, seedDentalData } from '@app/(apps)/dental/_actions/seed-dental-actions'
 
 type ClinicStaff = { id: string; name: string; type: string | null; sortOrder: number }
 type ClinicWithStaff = {
@@ -49,6 +51,32 @@ const ClinicListClient = ({ clinics }: Props) => {
   const [isAdding, setIsAdding] = useState(false)
   const [editingId, setEditingId] = useState<number | null>(null)
   const [formData, setFormData] = useState({ name: '', address: '', phone: '', representative: '' })
+
+  const [seedLoading, setSeedLoading] = useState(false)
+
+  const handleSeed = async () => {
+    if (!confirm('既存データをリセットしてシードデータを投入しますか？')) return
+    setSeedLoading(true)
+    try {
+      const result = await seedDentalData()
+      alert(result.message)
+      window.location.reload()
+    } finally {
+      setSeedLoading(false)
+    }
+  }
+
+  const handleReset = async () => {
+    if (!confirm('全データを削除します。この操作は取り消せません。よろしいですか？')) return
+    setSeedLoading(true)
+    try {
+      const result = await resetDentalData()
+      alert(result.message)
+      window.location.reload()
+    } finally {
+      setSeedLoading(false)
+    }
+  }
 
   // スタッフ追加モーダル
   const [staffModalClinicId, setStaffModalClinicId] = useState<number | null>(null)
@@ -261,7 +289,32 @@ const ClinicListClient = ({ clinics }: Props) => {
           </BasicForm>
         </div>
       </staffModal.Modal>
+
+      {/* 開発用: シードデータ */}
+      {isDev && (
+        <Card className="mt-4 border-orange-300">
+          <div className="p-3 border-b border-orange-200 bg-orange-50 rounded-t-lg">
+            <span className="text-sm font-medium text-orange-700">開発用: シードデータ管理</span>
+          </div>
+          <CardContent className="p-4">
+            <p className="text-xs text-gray-500 mb-3">
+              開発環境でのみ利用可能です。シードデータを投入・リセットできます。
+            </p>
+            <div className="flex gap-2">
+              <Button color="red" onClick={handleReset} disabled={seedLoading}>
+                {seedLoading ? '処理中...' : 'データリセット'}
+              </Button>
+              <Button color="primary" onClick={handleSeed} disabled={seedLoading}>
+                {seedLoading ? '処理中...' : 'シードデータ投入'}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
     </div>
+
+
   )
 }
 

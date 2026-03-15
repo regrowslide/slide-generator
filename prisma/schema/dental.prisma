@@ -167,6 +167,20 @@ model DentalScoringHistory {
   @@map("dental_scoring_histories")
 }
 
+// DentalContact - LP問い合わせ
+model DentalContact {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+
+  name       String @db.VarChar(200)
+  clinicName String @default("") @db.VarChar(200)
+  email      String @db.VarChar(300)
+  phone      String @default("") @db.VarChar(50)
+  message    String @default("") @db.Text
+
+  @@map("dental_contacts")
+}
+
 // DentalSavedDocument - 保存済み文書
 model DentalSavedDocument {
   id        Int       @id @default(autoincrement())
