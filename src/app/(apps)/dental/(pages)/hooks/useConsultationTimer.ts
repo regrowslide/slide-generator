@@ -188,28 +188,8 @@ export const useConsultationTimer = ({
     }
   }, [dhEndTime, dhStartTime, examinationId])
 
-  // ページ離脱時にrunning中のタイマーを保存
-  // beforeunloadではasync処理が完了しない可能性があるため、visibilitychangeも併用
-  useEffect(() => {
-    const savePendingTimers = () => {
-      const now = formatTime(new Date())
-      if (drRunning) {
-        saveTimerTime({examinationId, field: 'drEndTime', value: now})
-      }
-      if (dhRunning) {
-        saveTimerTime({examinationId, field: 'dhEndTime', value: now})
-      }
-    }
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') savePendingTimers()
-    }
-    window.addEventListener('beforeunload', savePendingTimers)
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-    return () => {
-      window.removeEventListener('beforeunload', savePendingTimers)
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
-    }
-  }, [drRunning, dhRunning, examinationId])
+  // ページ離脱時にendTimeを保存しない
+  // → リロード時にstartTimeあり＆endTimeなしの状態が維持され、タイマーが自動復帰する
 
   return {
     drSeconds, dhSeconds, drRunning, dhRunning,

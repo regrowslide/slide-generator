@@ -140,7 +140,7 @@ const RoleAllocationTable = ({
       take,
       skip,
     })
-    setusers(users)
+    setusers(users ?? [])
   }
 
   const fetchRoles = async () => {

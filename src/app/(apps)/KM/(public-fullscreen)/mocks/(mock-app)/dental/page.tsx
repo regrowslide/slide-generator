@@ -14,7 +14,7 @@ import {
   ChevronDown,
   LucideIcon,
 } from 'lucide-react'
-import DentalAppMock from '@app/(apps)/dental/detnal-doc/mock/DentalAppMock'
+import DentalAppMock from './components/DentalAppMock'
 import {
   SplashScreen,
   useInfoModal,
@@ -30,7 +30,7 @@ import {
 // メニュー定義（親メニュー＋サブメニュー）
 // ==========================================
 
-type PageId = 'dashboard' | 'schedule' | 'admin-clinic' | 'admin-facilities' | 'admin-patients' | 'admin-staff' | 'document-list'
+type PageId = 'dashboard' | 'schedule' | 'individual-input' | 'admin-clinic' | 'admin-facilities' | 'admin-patients' | 'admin-staff' | 'document-list' | 'batch-print' | 'scoring-ledger' | 'scoring-reference' | 'summary'
 
 type NavMenu = {
   id: string
@@ -52,7 +52,7 @@ const NAV_MENUS: NavMenu[] = [
     label: 'マスタ',
     icon: Settings,
     items: [
-      { id: 'admin-clinic', label: 'クリニック' },
+      { id: 'admin-clinic', label: 'クリニック設定' },
       { id: 'admin-facilities', label: '施設' },
       { id: 'admin-patients', label: '利用者' },
       { id: 'admin-staff', label: 'スタッフ' },
@@ -65,10 +65,34 @@ const NAV_MENUS: NavMenu[] = [
     directPage: 'schedule',
   },
   {
-    id: 'document-list',
-    label: '文書管理',
+    id: 'individual-input',
+    label: '個別入力',
+    icon: Stethoscope,
+    directPage: 'individual-input',
+  },
+  {
+    id: 'documents',
+    label: '文書',
     icon: FileText,
-    directPage: 'document-list',
+    items: [
+      { id: 'document-list', label: '文書管理' },
+      { id: 'batch-print', label: '履歴・一括印刷' },
+    ],
+  },
+  {
+    id: 'scoring',
+    label: '算定',
+    icon: ClipboardList,
+    items: [
+      { id: 'scoring-ledger', label: '算定対象台帳' },
+      { id: 'scoring-reference', label: '算定項目一覧' },
+    ],
+  },
+  {
+    id: 'summary',
+    label: '日次報告',
+    icon: MapPin,
+    directPage: 'summary',
   },
 ]
 
@@ -287,7 +311,7 @@ const DentalMockPage = () => {
       <DentalAppMock
         externalPage={activePage}
         onPageChange={(page) => {
-          const topLevelPages: PageId[] = ['dashboard', 'schedule', 'admin-patients', 'admin-facilities', 'admin-staff', 'admin-clinic', 'document-list']
+          const topLevelPages: PageId[] = ['dashboard', 'schedule', 'individual-input', 'admin-patients', 'admin-facilities', 'admin-staff', 'admin-clinic', 'document-list', 'batch-print', 'scoring-ledger', 'scoring-reference', 'summary']
           if (topLevelPages.includes(page as PageId)) {
             setActivePage(page as PageId)
           }

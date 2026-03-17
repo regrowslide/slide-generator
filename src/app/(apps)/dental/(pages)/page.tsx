@@ -13,7 +13,7 @@ export default async function Page(props: { searchParams: Promise<Record<string,
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
-  const clinicRaw = await getUserDentalClinic(session.id)
+  const clinicRaw = await getUserDentalClinic(session?.id)
   const clinicId = clinicRaw?.id ?? 0
 
   const [visitPlansRaw, examinationsRaw] = await Promise.all([

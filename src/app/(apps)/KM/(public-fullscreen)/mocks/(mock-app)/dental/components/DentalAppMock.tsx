@@ -25,6 +25,7 @@ import {
   FinalReviewPage,
 } from './ReportPages'
 import {DocumentListPage} from './DocumentPages'
+import {ScoringLedgerPage, ScoringReferencePage, SummaryPage, BatchPrintPage} from './AdditionalPages'
 import {DOCUMENT_TEMPLATES, EXAMINATION_STATUS} from './constants'
 import {formatDate, nextId} from './helpers'
 import type {Examination, VisitPlan, Patient, SavedDocumentEntry} from './types'
@@ -393,6 +394,33 @@ export default function DentalAppMock({hideHeader, onPageChange, externalPage}: 
             documents={savedPdfDocuments}
             facilities={facilities}
             onMergePdfs={mergePdfsAndDownload}
+          />
+        )
+      case 'batch-print':
+        return (
+          <BatchPrintPage
+            documents={savedPdfDocuments}
+            facilities={facilities}
+            patients={patients}
+          />
+        )
+      case 'scoring-ledger':
+        return (
+          <ScoringLedgerPage
+            scoringHistory={scoringHistory}
+            patients={patients}
+          />
+        )
+      case 'scoring-reference':
+        return <ScoringReferencePage />
+      case 'summary':
+        return (
+          <SummaryPage
+            visitPlans={visitPlans}
+            examinations={examinations}
+            facilities={facilities}
+            patients={patients}
+            documents={documents}
           />
         )
       default:

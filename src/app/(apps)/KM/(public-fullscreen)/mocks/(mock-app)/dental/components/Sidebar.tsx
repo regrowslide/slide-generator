@@ -29,7 +29,7 @@ export const HeaderMenu = ({ currentPage, onNavigate }: HeaderMenuProps) => {
       id: 'master',
       label: 'マスタ',
       items: [
-        { id: 'admin-clinic', label: 'クリニック' },
+        { id: 'admin-clinic', label: 'クリニック設定' },
         { id: 'admin-facilities', label: '施設' },
         { id: 'admin-patients', label: '利用者' },
         { id: 'admin-staff', label: 'スタッフ' },
@@ -40,11 +40,31 @@ export const HeaderMenu = ({ currentPage, onNavigate }: HeaderMenuProps) => {
       label: '訪問計画スケジュール',
       directPage: 'schedule',
     },
-
     {
-      id: 'document-list',
-      label: '文書管理',
-      directPage: 'document-list',
+      id: 'individual-input',
+      label: '個別入力',
+      directPage: 'individual-input',
+    },
+    {
+      id: 'documents',
+      label: '文書',
+      items: [
+        { id: 'document-list', label: '文書管理' },
+        { id: 'batch-print', label: '履歴・一括印刷' },
+      ],
+    },
+    {
+      id: 'scoring',
+      label: '算定',
+      items: [
+        { id: 'scoring-ledger', label: '算定対象台帳' },
+        { id: 'scoring-reference', label: '算定項目一覧' },
+      ],
+    },
+    {
+      id: 'summary',
+      label: '日次報告',
+      directPage: 'summary',
     },
   ]
 

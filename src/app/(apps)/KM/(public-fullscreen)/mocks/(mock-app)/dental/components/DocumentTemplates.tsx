@@ -1,6 +1,6 @@
 'use client'
 
-import {useState} from 'react'
+import { useState } from 'react'
 import type {
   TreatmentContentData,
   KanriKeikakuData,
@@ -27,14 +27,14 @@ const pageStyle = {
   padding: '12mm 15mm',
 } as const
 
-const PageWrapper = ({children}: {children: React.ReactNode}) => (
+const PageWrapper = ({ children }: { children: React.ReactNode }) => (
   <div className="bg-white shadow-lg mx-auto print:shadow-none print:mx-0" style={pageStyle}>
     {children}
   </div>
 )
 
 /** チェックボックス（onToggle指定時はクリックで切り替え可能） */
-const Chk = ({checked, label, onToggle}: {checked: boolean; label?: string; onToggle?: () => void}) => (
+const Chk = ({ checked, label, onToggle }: { checked: boolean; label?: string; onToggle?: () => void }) => (
   <span
     className={`inline-flex items-center gap-0.5 text-xs ${onToggle ? 'cursor-pointer' : ''}`}
     onClick={onToggle}
@@ -47,18 +47,18 @@ const Chk = ({checked, label, onToggle}: {checked: boolean; label?: string; onTo
 )
 
 /** セクションヘッダー */
-const SectionTitle = ({children}: {children: React.ReactNode}) => (
+const SectionTitle = ({ children }: { children: React.ReactNode }) => (
   <div className="text-xs font-bold border-b border-gray-800 pb-0.5 mb-1 mt-3">{children}</div>
 )
 
 /** 自動引用ボタンバー（各プレビュー共通） */
-const AutoQuoteBar = ({onQuote, hasHighlights}: {onQuote: () => void; hasHighlights: boolean}) => (
+const AutoQuoteBar = ({ onQuote, hasHighlights }: { onQuote: () => void; hasHighlights: boolean }) => (
   <div className="flex items-center gap-3 mb-2 print:hidden">
     <button
       onClick={onQuote}
       className="px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
     >
-      自動引用する
+      マスタデータから自動引用する
     </button>
     {hasHighlights && (
       <span className="text-[10px] text-gray-500">
@@ -73,7 +73,7 @@ const AutoQuoteBar = ({onQuote, hasHighlights}: {onQuote: () => void; hasHighlig
 const hlClass = (highlighted: Set<string>, field: string) => highlighted.has(field) ? 'bg-yellow-100 rounded px-0.5' : ''
 
 /** プルダウン選択肢付きテキストエリア */
-const PresetTextArea = ({value, onChange, presets, placeholder, rows}: {
+const PresetTextArea = ({ value, onChange, presets, placeholder, rows }: {
   value: string
   onChange: (v: string) => void
   presets: string[]
@@ -103,8 +103,8 @@ const PresetTextArea = ({value, onChange, presets, placeholder, rows}: {
 // A. 訪問歯科診療治療内容説明書（PDF01準拠）
 // =============================================================================
 
-const DEFAULT_POSITIONS = {upper: false, lower: false, front: false, right: false, left: false}
-const DEFAULT_POSITIONS_ALL = {all: false, upper: false, lower: false, front: false, right: false, left: false}
+const DEFAULT_POSITIONS = { upper: false, lower: false, front: false, right: false, left: false }
+const DEFAULT_POSITIONS_ALL = { all: false, upper: false, lower: false, front: false, right: false, left: false }
 
 export const getDefaultTreatmentContentData = (): TreatmentContentData => ({
   documentNo: '',
@@ -113,35 +113,35 @@ export const getDefaultTreatmentContentData = (): TreatmentContentData => ({
   startTime: '',
   endTime: '',
   anesthesia: false,
-  anesthesiaPositions: {...DEFAULT_POSITIONS},
+  anesthesiaPositions: { ...DEFAULT_POSITIONS },
   gumTreatment: false,
-  gumPositions: {...DEFAULT_POSITIONS},
+  gumPositions: { ...DEFAULT_POSITIONS },
   gumExam: false,
   gumScaling: false,
   rootTreatment: false,
-  rootPositions: {...DEFAULT_POSITIONS},
+  rootPositions: { ...DEFAULT_POSITIONS },
   extraction: false,
-  extractionPositions: {...DEFAULT_POSITIONS},
+  extractionPositions: { ...DEFAULT_POSITIONS },
   extractionSuture: false,
   extractionRemoval: false,
   smallCavity: false,
-  smallCavityPositions: {...DEFAULT_POSITIONS},
+  smallCavityPositions: { ...DEFAULT_POSITIONS },
   crownBridge: false,
-  crownPositions: {...DEFAULT_POSITIONS},
+  crownPositions: { ...DEFAULT_POSITIONS },
   crownMold: false,
   crownAttach: false,
   newDenture: false,
-  newDenturePositions: {...DEFAULT_POSITIONS_ALL},
+  newDenturePositions: { ...DEFAULT_POSITIONS_ALL },
   newDentureMold: false,
   newDentureBite: false,
   newDentureTrial: false,
   newDentureAttach: false,
   dentureRepair: false,
-  dentureRepairPositions: {...DEFAULT_POSITIONS_ALL},
+  dentureRepairPositions: { ...DEFAULT_POSITIONS_ALL },
   dentureReline: false,
   dentureRepairFix: false,
   dentureAdjust: false,
-  dentureAdjustPositions: {...DEFAULT_POSITIONS},
+  dentureAdjustPositions: { ...DEFAULT_POSITIONS },
   oralStretch: false,
   xray: false,
   medication: false,
@@ -162,17 +162,17 @@ type HoumonChiryouProps = {
   autoQuoteData?: Partial<TreatmentContentData>
 }
 
-export const HoumonChiryouPreview = ({data, onChange, autoQuoteData}: HoumonChiryouProps) => {
+export const HoumonChiryouPreview = ({ data, onChange, autoQuoteData }: HoumonChiryouProps) => {
   /** 自動引用でハイライトされたフィールド */
   const [highlighted, setHighlighted] = useState<Set<string>>(new Set())
 
   const toggle = (field: keyof TreatmentContentData) => {
-    onChange({...data, [field]: !data[field as keyof TreatmentContentData]})
+    onChange({ ...data, [field]: !data[field as keyof TreatmentContentData] })
   }
 
   const togglePos = (field: string, key: string) => {
     const current = data[field as keyof TreatmentContentData] as Record<string, boolean>
-    onChange({...data, [field]: {...current, [key]: !current[key]}})
+    onChange({ ...data, [field]: { ...current, [key]: !current[key] } })
   }
 
   /** 自動引用実行 */
@@ -180,14 +180,14 @@ export const HoumonChiryouPreview = ({data, onChange, autoQuoteData}: HoumonChir
     if (!autoQuoteData) return
     const keys = Object.keys(autoQuoteData) as (keyof TreatmentContentData)[]
     const filledKeys = keys.filter(k => autoQuoteData[k] !== undefined && autoQuoteData[k] !== '')
-    onChange({...data, ...autoQuoteData} as TreatmentContentData)
+    onChange({ ...data, ...autoQuoteData } as TreatmentContentData)
     setHighlighted(new Set(filledKeys))
   }
 
   const hl = (field: string) => hlClass(highlighted, field)
 
   /** チェックボックスラベル */
-  const C = ({field, label}: {field: keyof TreatmentContentData; label: string}) => (
+  const C = ({ field, label }: { field: keyof TreatmentContentData; label: string }) => (
     <label className="inline-flex items-center gap-0.5 cursor-pointer whitespace-nowrap">
       <input type="checkbox" checked={!!data[field]} onChange={() => toggle(field)} className="w-3 h-3 accent-gray-800" />
       {label}
@@ -195,7 +195,7 @@ export const HoumonChiryouPreview = ({data, onChange, autoQuoteData}: HoumonChir
   )
 
   /** 位置チェック（□上 □下 □前 □右 □左）*/
-  const Pos = ({field, withAll}: {field: string; withAll?: boolean}) => {
+  const Pos = ({ field, withAll }: { field: string; withAll?: boolean }) => {
     const keys = withAll ? ['all', 'upper', 'lower', 'front', 'right', 'left'] : ['upper', 'lower', 'front', 'right', 'left']
     const labels = withAll ? ['全', '上', '下', '前', '右', '左'] : ['上', '下', '前', '右', '左']
     return (
@@ -235,7 +235,7 @@ export const HoumonChiryouPreview = ({data, onChange, autoQuoteData}: HoumonChir
         <input
           type="text"
           value={data.patientName}
-          onChange={e => onChange({...data, patientName: e.target.value})}
+          onChange={e => onChange({ ...data, patientName: e.target.value })}
           className="bg-transparent border-none outline-none w-32 text-[11px]"
           placeholder="患者名"
         />
@@ -254,7 +254,7 @@ export const HoumonChiryouPreview = ({data, onChange, autoQuoteData}: HoumonChir
                   <input
                     type="text"
                     value={data.visitDate}
-                    onChange={e => onChange({...data, visitDate: e.target.value})}
+                    onChange={e => onChange({ ...data, visitDate: e.target.value })}
                     className="bg-transparent border-b border-gray-400 outline-none w-44 text-[11px]"
                     placeholder="令和○年○月○日（○）"
                   />
@@ -264,7 +264,7 @@ export const HoumonChiryouPreview = ({data, onChange, autoQuoteData}: HoumonChir
                   <input
                     type="text"
                     value={data.startTime}
-                    onChange={e => onChange({...data, startTime: e.target.value})}
+                    onChange={e => onChange({ ...data, startTime: e.target.value })}
                     className="bg-transparent border-b border-gray-400 outline-none w-12 text-[11px] text-center"
                     placeholder="00:00"
                   />
@@ -275,7 +275,7 @@ export const HoumonChiryouPreview = ({data, onChange, autoQuoteData}: HoumonChir
                   <input
                     type="text"
                     value={data.endTime}
-                    onChange={e => onChange({...data, endTime: e.target.value})}
+                    onChange={e => onChange({ ...data, endTime: e.target.value })}
                     className="bg-transparent border-b border-gray-400 outline-none w-12 text-[11px] text-center"
                     placeholder="00:00"
                   />
@@ -367,7 +367,7 @@ export const HoumonChiryouPreview = ({data, onChange, autoQuoteData}: HoumonChir
                   <input
                     type="text"
                     value={data.otherTreatmentText}
-                    onChange={e => onChange({...data, otherTreatmentText: e.target.value})}
+                    onChange={e => onChange({ ...data, otherTreatmentText: e.target.value })}
                     className="w-full bg-transparent border-none outline-none text-[11px] px-1 py-0.5"
                   />
                 </div>
@@ -381,7 +381,7 @@ export const HoumonChiryouPreview = ({data, onChange, autoQuoteData}: HoumonChir
             <td className="py-1 px-2">
               <PresetTextArea
                 value={data.contactNotes}
-                onChange={v => onChange({...data, contactNotes: v})}
+                onChange={v => onChange({ ...data, contactNotes: v })}
                 presets={CONTACT_NOTES_PRESETS}
                 placeholder="連絡事項を入力..."
                 rows={3}
@@ -397,7 +397,7 @@ export const HoumonChiryouPreview = ({data, onChange, autoQuoteData}: HoumonChir
             <td className="py-1 px-2">
               <PresetTextArea
                 value={data.careNotes}
-                onChange={v => onChange({...data, careNotes: v})}
+                onChange={v => onChange({ ...data, careNotes: v })}
                 presets={CARE_NOTES_PRESETS}
                 placeholder="療養上の注意点を入力..."
                 rows={3}
@@ -481,7 +481,7 @@ type KanriKeikakuProps = {
   autoQuoteData?: Partial<KanriKeikakuData>
 }
 
-export const KanriKeikakuPreviewNew = ({data, onChange, autoQuoteData}: KanriKeikakuProps) => {
+export const KanriKeikakuPreviewNew = ({ data, onChange, autoQuoteData }: KanriKeikakuProps) => {
   const [highlighted, setHighlighted] = useState<Set<string>>(new Set())
   const hl = (field: string) => hlClass(highlighted, field)
 
@@ -489,17 +489,17 @@ export const KanriKeikakuPreviewNew = ({data, onChange, autoQuoteData}: KanriKei
     if (!autoQuoteData) return
     const keys = Object.keys(autoQuoteData) as (keyof KanriKeikakuData)[]
     const filledKeys = keys.filter(k => autoQuoteData[k] !== undefined && autoQuoteData[k] !== '')
-    onChange({...data, ...autoQuoteData} as KanriKeikakuData)
+    onChange({ ...data, ...autoQuoteData } as KanriKeikakuData)
     setHighlighted(new Set(filledKeys))
   }
 
   const toggle = (field: keyof KanriKeikakuData) => {
-    onChange({...data, [field]: !data[field]})
+    onChange({ ...data, [field]: !data[field] })
   }
 
-  const Radio = ({name, value, current, label}: {name: string; value: string; current: string; label: string}) => (
+  const Radio = ({ name, value, current, label }: { name: string; value: string; current: string; label: string }) => (
     <label className="flex items-center gap-0.5 cursor-pointer">
-      <input type="radio" name={name} checked={current === value} onChange={() => onChange({...data, [name]: value})} className="w-3 h-3 accent-gray-800" />
+      <input type="radio" name={name} checked={current === value} onChange={() => onChange({ ...data, [name]: value })} className="w-3 h-3 accent-gray-800" />
       <span>{label}</span>
     </label>
   )
@@ -524,15 +524,15 @@ export const KanriKeikakuPreviewNew = ({data, onChange, autoQuoteData}: KanriKei
       <div className="border border-gray-600 text-[10px] mb-2">
         <div className={`flex border-b border-gray-300 p-1 ${hl('hasDiseases')}`}>
           <span className="w-24">治療中の疾患</span>
-          <Chk checked={!data.hasDiseases} label="なし" onToggle={() => onChange({...data, hasDiseases: false})} />
-          <span className="mx-2"><Chk checked={data.hasDiseases} label="あり" onToggle={() => onChange({...data, hasDiseases: true})} /></span>
-          {data.hasDiseases && <span>疾患名: <input type="text" value={data.diseaseNames} onChange={e => onChange({...data, diseaseNames: e.target.value})} className="border-b border-gray-400 px-1 w-48" /></span>}
+          <Chk checked={!data.hasDiseases} label="なし" onToggle={() => onChange({ ...data, hasDiseases: false })} />
+          <span className="mx-2"><Chk checked={data.hasDiseases} label="あり" onToggle={() => onChange({ ...data, hasDiseases: true })} /></span>
+          {data.hasDiseases && <span>疾患名: <input type="text" value={data.diseaseNames} onChange={e => onChange({ ...data, diseaseNames: e.target.value })} className="border-b border-gray-400 px-1 w-48" /></span>}
         </div>
         <div className={`flex border-b border-gray-300 p-1 ${hl('hasMedication')}`}>
           <span className="w-24">服薬</span>
-          <Chk checked={!data.hasMedication} label="なし" onToggle={() => onChange({...data, hasMedication: false})} />
-          <span className="mx-2"><Chk checked={data.hasMedication} label="あり" onToggle={() => onChange({...data, hasMedication: true})} /></span>
-          {data.hasMedication && <span>薬剤名: <input type="text" value={data.medicationNames} onChange={e => onChange({...data, medicationNames: e.target.value})} className="border-b border-gray-400 px-1 w-48" /></span>}
+          <Chk checked={!data.hasMedication} label="なし" onToggle={() => onChange({ ...data, hasMedication: false })} />
+          <span className="mx-2"><Chk checked={data.hasMedication} label="あり" onToggle={() => onChange({ ...data, hasMedication: true })} /></span>
+          {data.hasMedication && <span>薬剤名: <input type="text" value={data.medicationNames} onChange={e => onChange({ ...data, medicationNames: e.target.value })} className="border-b border-gray-400 px-1 w-48" /></span>}
         </div>
         <div className={`flex border-b border-gray-300 p-1 ${hl('pneumoniaHistory')}`}>
           <span className="w-24">肺炎の既往</span>
@@ -548,26 +548,26 @@ export const KanriKeikakuPreviewNew = ({data, onChange, autoQuoteData}: KanriKei
         </div>
         <div className={`flex flex-wrap items-center border-b border-gray-300 p-1 ${hl('dietType')}`}>
           <span className="w-24">食事形態</span>
-          <Chk checked={data.dietCategory === 'normal'} label="普通食" onToggle={() => onChange({...data, dietCategory: 'normal'})} />
-          <span className="mx-1"><Chk checked={data.dietCategory === 'care'} label="介護食" onToggle={() => onChange({...data, dietCategory: 'care'})} /></span>
-          <Chk checked={data.dietCategory === 'nonOral'} label="非経口" onToggle={() => onChange({...data, dietCategory: 'nonOral'})} />
+          <Chk checked={data.dietCategory === 'normal'} label="普通食" onToggle={() => onChange({ ...data, dietCategory: 'normal' })} />
+          <span className="mx-1"><Chk checked={data.dietCategory === 'care'} label="介護食" onToggle={() => onChange({ ...data, dietCategory: 'care' })} /></span>
+          <Chk checked={data.dietCategory === 'nonOral'} label="非経口" onToggle={() => onChange({ ...data, dietCategory: 'nonOral' })} />
           {data.dietCategory === 'care' && (
             <div className="ml-4 flex flex-wrap gap-1">
               {['常食', '刻み食', '流動食', '軟菜食', 'ミキサー食', 'ゼリー等'].map(t => (
-                <Chk key={t} checked={data.dietType === t} label={t} onToggle={() => onChange({...data, dietType: t})} />
+                <Chk key={t} checked={data.dietType === t} label={t} onToggle={() => onChange({ ...data, dietType: t })} />
               ))}
             </div>
           )}
         </div>
         <div className={`flex items-center p-1 ${hl('tubeFeeding')}`}>
           <span className="w-24">経管栄養</span>
-          <Chk checked={data.tubeFeeding === 'none'} label="ない" onToggle={() => onChange({...data, tubeFeeding: 'none'})} />
-          <span className="mx-1"><Chk checked={data.tubeFeeding !== 'none'} label="ある" onToggle={() => onChange({...data, tubeFeeding: data.tubeFeeding === 'none' ? 'gastric' : 'none'})} /></span>
+          <Chk checked={data.tubeFeeding === 'none'} label="ない" onToggle={() => onChange({ ...data, tubeFeeding: 'none' })} />
+          <span className="mx-1"><Chk checked={data.tubeFeeding !== 'none'} label="ある" onToggle={() => onChange({ ...data, tubeFeeding: data.tubeFeeding === 'none' ? 'gastric' : 'none' })} /></span>
           {data.tubeFeeding !== 'none' && (
             <span className="ml-2 flex gap-1">
-              （<Chk checked={data.tubeFeeding === 'gastric'} label="胃ろう" onToggle={() => onChange({...data, tubeFeeding: 'gastric'})} />
-              <Chk checked={data.tubeFeeding === 'nasal'} label="経鼻" onToggle={() => onChange({...data, tubeFeeding: 'nasal'})} />
-              <Chk checked={data.tubeFeeding === 'other'} label="その他" onToggle={() => onChange({...data, tubeFeeding: 'other'})} />）
+              （<Chk checked={data.tubeFeeding === 'gastric'} label="胃ろう" onToggle={() => onChange({ ...data, tubeFeeding: 'gastric' })} />
+              <Chk checked={data.tubeFeeding === 'nasal'} label="経鼻" onToggle={() => onChange({ ...data, tubeFeeding: 'nasal' })} />
+              <Chk checked={data.tubeFeeding === 'other'} label="その他" onToggle={() => onChange({ ...data, tubeFeeding: 'other' })} />）
             </span>
           )}
         </div>
@@ -590,16 +590,16 @@ export const KanriKeikakuPreviewNew = ({data, onChange, autoQuoteData}: KanriKei
         </div>
         <div className="flex border-b border-gray-300 p-1">
           <span className="w-24">むし歯</span>
-          <Chk checked={!data.hasCavity} label="なし" onToggle={() => onChange({...data, hasCavity: false, cavityUrgency: false})} />
-          <span className="mx-2"><Chk checked={data.hasCavity} label="あり" onToggle={() => onChange({...data, hasCavity: true})} /></span>
+          <Chk checked={!data.hasCavity} label="なし" onToggle={() => onChange({ ...data, hasCavity: false, cavityUrgency: false })} />
+          <span className="mx-2"><Chk checked={data.hasCavity} label="あり" onToggle={() => onChange({ ...data, hasCavity: true })} /></span>
           {data.hasCavity && (
-            <span className="ml-4">治療の緊急性: <Chk checked={!data.cavityUrgency} label="なし" onToggle={() => onChange({...data, cavityUrgency: false})} /> <Chk checked={data.cavityUrgency} label="あり" onToggle={() => onChange({...data, cavityUrgency: true})} /></span>
+            <span className="ml-4">治療の緊急性: <Chk checked={!data.cavityUrgency} label="なし" onToggle={() => onChange({ ...data, cavityUrgency: false })} /> <Chk checked={data.cavityUrgency} label="あり" onToggle={() => onChange({ ...data, cavityUrgency: true })} /></span>
           )}
         </div>
         <div className="flex border-b border-gray-300 p-1">
           <span className="w-24">歯周疾患</span>
-          <Chk checked={!data.hasPeriodontal} label="なし" onToggle={() => onChange({...data, hasPeriodontal: false})} />
-          <span className="mx-2"><Chk checked={data.hasPeriodontal} label="あり" onToggle={() => onChange({...data, hasPeriodontal: true})} /></span>
+          <Chk checked={!data.hasPeriodontal} label="なし" onToggle={() => onChange({ ...data, hasPeriodontal: false })} />
+          <span className="mx-2"><Chk checked={data.hasPeriodontal} label="あり" onToggle={() => onChange({ ...data, hasPeriodontal: true })} /></span>
         </div>
         {data.hasPeriodontal && (
           <>
@@ -613,23 +613,23 @@ export const KanriKeikakuPreviewNew = ({data, onChange, autoQuoteData}: KanriKei
               <Chk checked={!data.periodontalMobility} label="なし" onToggle={() => toggle('periodontalMobility')} />
               <span className="mx-2"><Chk checked={data.periodontalMobility} label="あり" onToggle={() => toggle('periodontalMobility')} /></span>
               {data.periodontalMobility && (
-                <span className="ml-4">治療の緊急性: <Chk checked={!data.periodontalMobilityUrgency} label="なし" onToggle={() => onChange({...data, periodontalMobilityUrgency: false})} /> <Chk checked={data.periodontalMobilityUrgency} label="あり" onToggle={() => onChange({...data, periodontalMobilityUrgency: true})} /></span>
+                <span className="ml-4">治療の緊急性: <Chk checked={!data.periodontalMobilityUrgency} label="なし" onToggle={() => onChange({ ...data, periodontalMobilityUrgency: false })} /> <Chk checked={data.periodontalMobilityUrgency} label="あり" onToggle={() => onChange({ ...data, periodontalMobilityUrgency: true })} /></span>
               )}
             </div>
           </>
         )}
         <div className="flex border-b border-gray-300 p-1">
           <span className="w-24">口腔軟組織疾患</span>
-          <Chk checked={!data.hasSoftTissueDisease} label="なし" onToggle={() => onChange({...data, hasSoftTissueDisease: false, softTissueDiseaseUrgency: false})} />
-          <span className="mx-2"><Chk checked={data.hasSoftTissueDisease} label="あり" onToggle={() => onChange({...data, hasSoftTissueDisease: true})} /></span>
+          <Chk checked={!data.hasSoftTissueDisease} label="なし" onToggle={() => onChange({ ...data, hasSoftTissueDisease: false, softTissueDiseaseUrgency: false })} />
+          <span className="mx-2"><Chk checked={data.hasSoftTissueDisease} label="あり" onToggle={() => onChange({ ...data, hasSoftTissueDisease: true })} /></span>
           {data.hasSoftTissueDisease && (
-            <span className="ml-4">治療の緊急性: <Chk checked={!data.softTissueDiseaseUrgency} label="なし" onToggle={() => onChange({...data, softTissueDiseaseUrgency: false})} /> <Chk checked={data.softTissueDiseaseUrgency} label="あり" onToggle={() => onChange({...data, softTissueDiseaseUrgency: true})} /></span>
+            <span className="ml-4">治療の緊急性: <Chk checked={!data.softTissueDiseaseUrgency} label="なし" onToggle={() => onChange({ ...data, softTissueDiseaseUrgency: false })} /> <Chk checked={data.softTissueDiseaseUrgency} label="あり" onToggle={() => onChange({ ...data, softTissueDiseaseUrgency: true })} /></span>
           )}
         </div>
         <div className="flex border-b border-gray-300 p-1">
           <span className="w-24">義歯の使用状況</span>
-          <span className="mr-4">上顎 <Chk checked={data.dentureUpperUsed} label="あり" onToggle={() => onChange({...data, dentureUpperUsed: !data.dentureUpperUsed, dentureUpperNotUsed: data.dentureUpperUsed})} /> <Chk checked={data.dentureUpperNotUsed} label="なし" onToggle={() => onChange({...data, dentureUpperNotUsed: !data.dentureUpperNotUsed, dentureUpperUsed: data.dentureUpperNotUsed})} /></span>
-          <span>下顎 <Chk checked={data.dentureLowerUsed} label="あり" onToggle={() => onChange({...data, dentureLowerUsed: !data.dentureLowerUsed, dentureLowerNotUsed: data.dentureLowerUsed})} /> <Chk checked={data.dentureLowerNotUsed} label="なし" onToggle={() => onChange({...data, dentureLowerNotUsed: !data.dentureLowerNotUsed, dentureLowerUsed: data.dentureLowerNotUsed})} /></span>
+          <span className="mr-4">上顎 <Chk checked={data.dentureUpperUsed} label="あり" onToggle={() => onChange({ ...data, dentureUpperUsed: !data.dentureUpperUsed, dentureUpperNotUsed: data.dentureUpperUsed })} /> <Chk checked={data.dentureUpperNotUsed} label="なし" onToggle={() => onChange({ ...data, dentureUpperNotUsed: !data.dentureUpperNotUsed, dentureUpperUsed: data.dentureUpperNotUsed })} /></span>
+          <span>下顎 <Chk checked={data.dentureLowerUsed} label="あり" onToggle={() => onChange({ ...data, dentureLowerUsed: !data.dentureLowerUsed, dentureLowerNotUsed: data.dentureLowerUsed })} /> <Chk checked={data.dentureLowerNotUsed} label="なし" onToggle={() => onChange({ ...data, dentureLowerNotUsed: !data.dentureLowerNotUsed, dentureLowerUsed: data.dentureLowerNotUsed })} /></span>
         </div>
         <div className="flex border-b border-gray-300 p-1">
           <span className="w-24">噛み合わせの安定</span>
@@ -637,15 +637,15 @@ export const KanriKeikakuPreviewNew = ({data, onChange, autoQuoteData}: KanriKei
           <span className="mx-2"><Chk checked={!data.biteStability} label="なし" onToggle={() => toggle('biteStability')} /></span>
           {data.biteStability && (
             <span className="ml-4">
-              <Chk checked={data.biteStabilitySide === 'bilateral'} label="両側" onToggle={() => onChange({...data, biteStabilitySide: 'bilateral'})} />
-              <span className="mx-1"><Chk checked={data.biteStabilitySide === 'unilateral'} label="片側" onToggle={() => onChange({...data, biteStabilitySide: 'unilateral'})} /></span>
+              <Chk checked={data.biteStabilitySide === 'bilateral'} label="両側" onToggle={() => onChange({ ...data, biteStabilitySide: 'bilateral' })} />
+              <span className="mx-1"><Chk checked={data.biteStabilitySide === 'unilateral'} label="片側" onToggle={() => onChange({ ...data, biteStabilitySide: 'unilateral' })} /></span>
             </span>
           )}
         </div>
         <div className="flex p-1">
           <span className="w-40">義歯製作（修理等）の必要性</span>
-          <Chk checked={!data.dentureNeeded} label="なし" onToggle={() => onChange({...data, dentureNeeded: false})} />
-          <span className="mx-2"><Chk checked={data.dentureNeeded} label="あり" onToggle={() => onChange({...data, dentureNeeded: true})} /></span>
+          <Chk checked={!data.dentureNeeded} label="なし" onToggle={() => onChange({ ...data, dentureNeeded: false })} />
+          <span className="mx-2"><Chk checked={data.dentureNeeded} label="あり" onToggle={() => onChange({ ...data, dentureNeeded: true })} /></span>
         </div>
       </div>
 
@@ -699,7 +699,7 @@ export const KanriKeikakuPreviewNew = ({data, onChange, autoQuoteData}: KanriKei
       <div className="border border-gray-600 p-2 mb-2 min-h-[60px]">
         <PresetTextArea
           value={data.managementPolicy}
-          onChange={v => onChange({...data, managementPolicy: v})}
+          onChange={v => onChange({ ...data, managementPolicy: v })}
           presets={MANAGEMENT_POLICY_PRESETS}
           placeholder="管理方針・治療方針を入力..."
           rows={3}
@@ -736,15 +736,15 @@ export const getDefaultHygieneGuidanceData = (): HygieneGuidanceData => ({
   otherCondition: '',
   cleaningImportance: false,
   garglingBrushing: false,
-  brushingMethod: {fones: false, scrubbing: false, bass: false, toothpick: false},
-  instruments: {brush: false, sponge: false, tongue: false, electric: false},
+  brushingMethod: { fones: false, scrubbing: false, bass: false, toothpick: false },
+  instruments: { brush: false, sponge: false, tongue: false, electric: false },
   salivaryMassage: false,
   dentureCleaningGuidance: false,
-  dentureCleaningDetails: {clasp: false, mucosa: false, posterior: false, artificial: false},
+  dentureCleaningDetails: { clasp: false, mucosa: false, posterior: false, artificial: false },
   residualTeethBrushing: false,
   dentureRemovalGuidance: false,
   dentureSleepHandling: false,
-  dentureSleepOptions: {waterStorage: false, cleanserStorage: false, wearing: false},
+  dentureSleepOptions: { waterStorage: false, cleanserStorage: false, wearing: false },
   technicalAdvice: {
     riskBasedCleaning: false,
     cleaningKnowledge: false,
@@ -770,7 +770,7 @@ type HoueishiProps = {
   autoQuoteData?: Partial<HygieneGuidanceData>
 }
 
-export const HoueishiPreviewNew = ({data, onChange, autoQuoteData}: HoueishiProps) => {
+export const HoueishiPreviewNew = ({ data, onChange, autoQuoteData }: HoueishiProps) => {
   const [highlighted, setHighlighted] = useState<Set<string>>(new Set())
   const hl = (field: string) => hlClass(highlighted, field)
 
@@ -778,21 +778,21 @@ export const HoueishiPreviewNew = ({data, onChange, autoQuoteData}: HoueishiProp
     if (!autoQuoteData) return
     const keys = Object.keys(autoQuoteData) as (keyof HygieneGuidanceData)[]
     const filledKeys = keys.filter(k => autoQuoteData[k] !== undefined && autoQuoteData[k] !== '')
-    onChange({...data, ...autoQuoteData} as HygieneGuidanceData)
+    onChange({ ...data, ...autoQuoteData } as HygieneGuidanceData)
     setHighlighted(new Set(filledKeys))
   }
 
   const toggleOral = (key: keyof HygieneGuidanceData['oralCondition']) => {
-    onChange({...data, oralCondition: {...data.oralCondition, [key]: !data.oralCondition[key]}})
+    onChange({ ...data, oralCondition: { ...data.oralCondition, [key]: !data.oralCondition[key] } })
   }
   const toggleBrush = (key: keyof HygieneGuidanceData['brushingMethod']) => {
-    onChange({...data, brushingMethod: {...data.brushingMethod, [key]: !data.brushingMethod[key]}})
+    onChange({ ...data, brushingMethod: { ...data.brushingMethod, [key]: !data.brushingMethod[key] } })
   }
   const toggleInstr = (key: keyof HygieneGuidanceData['instruments']) => {
-    onChange({...data, instruments: {...data.instruments, [key]: !data.instruments[key]}})
+    onChange({ ...data, instruments: { ...data.instruments, [key]: !data.instruments[key] } })
   }
   const toggleSleep = (key: keyof HygieneGuidanceData['dentureSleepOptions']) => {
-    onChange({...data, dentureSleepOptions: {...data.dentureSleepOptions, [key]: !data.dentureSleepOptions[key]}})
+    onChange({ ...data, dentureSleepOptions: { ...data.dentureSleepOptions, [key]: !data.dentureSleepOptions[key] } })
   }
 
   return (
@@ -811,11 +811,11 @@ export const HoueishiPreviewNew = ({data, onChange, autoQuoteData}: HoueishiProp
       {/* 訪問先 */}
       <div className="text-xs mb-2">
         訪問先
-        <label className="cursor-pointer"><input type="radio" name="visitType" checked={data.visitType === 'home'} onChange={() => onChange({...data, visitType: 'home'})} className="w-3 h-3 accent-gray-800" /> 居宅</label>
+        <label className="cursor-pointer"><input type="radio" name="visitType" checked={data.visitType === 'home'} onChange={() => onChange({ ...data, visitType: 'home' })} className="w-3 h-3 accent-gray-800" /> 居宅</label>
         <span className="mx-2">
-          <label className="cursor-pointer"><input type="radio" name="visitType" checked={data.visitType === 'facility'} onChange={() => onChange({...data, visitType: 'facility'})} className="w-3 h-3 accent-gray-800" /> 施設</label>
+          <label className="cursor-pointer"><input type="radio" name="visitType" checked={data.visitType === 'facility'} onChange={() => onChange({ ...data, visitType: 'facility' })} className="w-3 h-3 accent-gray-800" /> 施設</label>
         </span>
-        （<span className={hl('facilityName')}><input type="text" value={data.facilityName} onChange={e => onChange({...data, facilityName: e.target.value})} className="border-b border-gray-400 px-1 w-48" /></span>）
+        （<span className={hl('facilityName')}><input type="text" value={data.facilityName} onChange={e => onChange({ ...data, facilityName: e.target.value })} className="border-b border-gray-400 px-1 w-48" /></span>）
       </div>
 
       {/* 口腔の状況テーブル */}
@@ -824,77 +824,78 @@ export const HoueishiPreviewNew = ({data, onChange, autoQuoteData}: HoueishiProp
         <table className="w-full border-collapse">
           <tbody>
             {([
-              [{label: '歯垢', hasKey: 'plaque' as const}, {label: '口腔乾燥', hasKey: 'oralDryness' as const}],
-              [{label: '歯石', hasKey: 'calculus' as const}, {label: '口臭', hasKey: 'halitosis' as const}],
-              [{label: '食物残渣', hasKey: 'foodDebris' as const}, {label: '義歯清掃状態', goodKey: 'dentureCleanGood' as const, badKey: 'dentureCleanNeedsImprovement' as const}],
-              [{label: '舌苔', hasKey: 'tongueCoating' as const}, {label: '義歯装着状態', goodKey: 'dentureFitGood' as const, badKey: 'dentureFitNeedsImprovement' as const}],
-              [{label: '口腔内出血', hasKey: 'oralBleeding' as const}, {label: '義歯保管状態', goodKey: 'dentureStorageGood' as const, badKey: 'dentureStorageNeedsImprovement' as const}],
-              [{label: 'びらん・潰瘍', hasKey: 'erosionUlcer' as const}, null],
+              [{ label: '歯垢', hasKey: 'plaque' as const }, { label: '口腔乾燥', hasKey: 'oralDryness' as const }],
+              [{ label: '歯石', hasKey: 'calculus' as const }, { label: '口臭', hasKey: 'halitosis' as const }],
+              [{ label: '食物残渣', hasKey: 'foodDebris' as const }, { label: '義歯清掃状態', goodKey: 'dentureCleanGood' as const, badKey: 'dentureCleanNeedsImprovement' as const }],
+              [{ label: '舌苔', hasKey: 'tongueCoating' as const }, { label: '義歯装着状態', goodKey: 'dentureFitGood' as const, badKey: 'dentureFitNeedsImprovement' as const }],
+              [{ label: '口腔内出血', hasKey: 'oralBleeding' as const }, { label: '義歯保管状態', goodKey: 'dentureStorageGood' as const, badKey: 'dentureStorageNeedsImprovement' as const }],
+              [{ label: 'びらん・潰瘍', hasKey: 'erosionUlcer' as const }, null],
             ] as const).map((row, i) => {
               const col0 = row[0]!
               const col1 = row[1]
               return (
-              <tr key={i} className="border-b border-gray-300">
-                <td className="p-1 w-24 border-r border-gray-300">{col0.label}</td>
-                {'hasKey' in col0 ? (
-                  <>
-                    <td className="p-1 w-16 border-r border-gray-300">
-                      <label className="cursor-pointer" onClick={() => toggleOral(col0.hasKey)}><Chk checked={data.oralCondition[col0.hasKey]} label="有" /></label>
-                    </td>
-                    <td className="p-1 w-16 border-r border-gray-300">
-                      <label className="cursor-pointer" onClick={() => toggleOral(col0.hasKey)}><Chk checked={!data.oralCondition[col0.hasKey]} label="無" /></label>
-                    </td>
-                  </>
-                ) : (
-                  <td className="p-1 border-r border-gray-300" colSpan={2}></td>
-                )}
-                {col1 ? (
-                  <>
-                    <td className="p-1 w-24 border-r border-gray-300">{col1.label}</td>
-                    {'hasKey' in col1 ? (
-                      <>
-                        <td className="p-1 w-12 border-r border-gray-300">
-                          <label className="cursor-pointer" onClick={() => toggleOral(col1.hasKey)}><Chk checked={data.oralCondition[col1.hasKey]} label="有" /></label>
-                        </td>
-                        <td className="p-1 w-12">
-                          <label className="cursor-pointer" onClick={() => toggleOral(col1.hasKey)}><Chk checked={!data.oralCondition[col1.hasKey]} label="無" /></label>
-                        </td>
-                      </>
-                    ) : 'goodKey' in col1 ? (
-                      <>
-                        <td className="p-1 w-12 border-r border-gray-300">
-                          <label className="cursor-pointer" onClick={() => toggleOral(col1.goodKey)}><Chk checked={data.oralCondition[col1.goodKey]} label="良" /></label>
-                        </td>
-                        <td className="p-1 w-12">
-                          <label className="cursor-pointer" onClick={() => toggleOral(col1.badKey)}><Chk checked={data.oralCondition[col1.badKey]} label="要改善" /></label>
-                        </td>
-                      </>
-                    ) : null}
-                  </>
-                ) : (
-                  <td colSpan={3}></td>
-                )}
-              </tr>
-            )})}
+                <tr key={i} className="border-b border-gray-300">
+                  <td className="p-1 w-24 border-r border-gray-300">{col0.label}</td>
+                  {'hasKey' in col0 ? (
+                    <>
+                      <td className="p-1 w-16 border-r border-gray-300">
+                        <label className="cursor-pointer" onClick={() => toggleOral(col0.hasKey)}><Chk checked={data.oralCondition[col0.hasKey]} label="有" /></label>
+                      </td>
+                      <td className="p-1 w-16 border-r border-gray-300">
+                        <label className="cursor-pointer" onClick={() => toggleOral(col0.hasKey)}><Chk checked={!data.oralCondition[col0.hasKey]} label="無" /></label>
+                      </td>
+                    </>
+                  ) : (
+                    <td className="p-1 border-r border-gray-300" colSpan={2}></td>
+                  )}
+                  {col1 ? (
+                    <>
+                      <td className="p-1 w-24 border-r border-gray-300">{col1.label}</td>
+                      {'hasKey' in col1 ? (
+                        <>
+                          <td className="p-1 w-12 border-r border-gray-300">
+                            <label className="cursor-pointer" onClick={() => toggleOral(col1.hasKey)}><Chk checked={data.oralCondition[col1.hasKey]} label="有" /></label>
+                          </td>
+                          <td className="p-1 w-12">
+                            <label className="cursor-pointer" onClick={() => toggleOral(col1.hasKey)}><Chk checked={!data.oralCondition[col1.hasKey]} label="無" /></label>
+                          </td>
+                        </>
+                      ) : 'goodKey' in col1 ? (
+                        <>
+                          <td className="p-1 w-12 border-r border-gray-300">
+                            <label className="cursor-pointer" onClick={() => toggleOral(col1.goodKey)}><Chk checked={data.oralCondition[col1.goodKey]} label="良" /></label>
+                          </td>
+                          <td className="p-1 w-12">
+                            <label className="cursor-pointer" onClick={() => toggleOral(col1.badKey)}><Chk checked={data.oralCondition[col1.badKey]} label="要改善" /></label>
+                          </td>
+                        </>
+                      ) : null}
+                    </>
+                  ) : (
+                    <td colSpan={3}></td>
+                  )}
+                </tr>
+              )
+            })}
           </tbody>
         </table>
         <div className="p-1">
-          その他: <input type="text" value={data.otherCondition} onChange={e => onChange({...data, otherCondition: e.target.value})} className="border-b border-gray-400 px-1 w-64" />
+          その他: <input type="text" value={data.otherCondition} onChange={e => onChange({ ...data, otherCondition: e.target.value })} className="border-b border-gray-400 px-1 w-64" />
         </div>
       </div>
 
       {/* 口腔の清掃について */}
       <SectionTitle>口腔の清掃について</SectionTitle>
       <div className="text-[10px] space-y-0.5 mb-2 ml-2">
-        <label className="flex items-center gap-1 cursor-pointer"><input type="checkbox" checked={data.cleaningImportance} onChange={() => onChange({...data, cleaningImportance: !data.cleaningImportance})} className="w-3 h-3 accent-gray-800" /> 口腔清掃の重要性</label>
-        <label className="flex items-center gap-1 cursor-pointer"><input type="checkbox" checked={data.garglingBrushing} onChange={() => onChange({...data, garglingBrushing: !data.garglingBrushing})} className="w-3 h-3 accent-gray-800" /> 含嗽、ブラッシング、歯肉マッサージ励行</label>
+        <label className="flex items-center gap-1 cursor-pointer"><input type="checkbox" checked={data.cleaningImportance} onChange={() => onChange({ ...data, cleaningImportance: !data.cleaningImportance })} className="w-3 h-3 accent-gray-800" /> 口腔清掃の重要性</label>
+        <label className="flex items-center gap-1 cursor-pointer"><input type="checkbox" checked={data.garglingBrushing} onChange={() => onChange({ ...data, garglingBrushing: !data.garglingBrushing })} className="w-3 h-3 accent-gray-800" /> 含嗽、ブラッシング、歯肉マッサージ励行</label>
         <div className="flex items-center gap-2">
           <Chk checked={Object.values(data.brushingMethod).some(v => v)} label="ブラッシング方法" />
           <span className="ml-2">（</span>
           {(['fones', 'scrubbing', 'bass', 'toothpick'] as const).map(k => (
             <label key={k} className="flex items-center gap-0.5 cursor-pointer">
               <input type="checkbox" checked={data.brushingMethod[k]} onChange={() => toggleBrush(k)} className="w-3 h-3 accent-gray-800" />
-              <span>{{fones: 'フォーンズ', scrubbing: 'スクラッビング', bass: 'バス', toothpick: 'ツマヨウジ'}[k]}</span>
+              <span>{{ fones: 'フォーンズ', scrubbing: 'スクラッビング', bass: 'バス', toothpick: 'ツマヨウジ' }[k]}</span>
             </label>
           ))}
           <span>）</span>
@@ -905,36 +906,36 @@ export const HoueishiPreviewNew = ({data, onChange, autoQuoteData}: HoueishiProp
           {(['brush', 'sponge', 'tongue', 'electric'] as const).map(k => (
             <label key={k} className="flex items-center gap-0.5 cursor-pointer">
               <input type="checkbox" checked={data.instruments[k]} onChange={() => toggleInstr(k)} className="w-3 h-3 accent-gray-800" />
-              <span>{{brush: 'ブラシ', sponge: 'スポンジブラシ', tongue: '舌ブラシ', electric: '電動ブラシ'}[k]}</span>
+              <span>{{ brush: 'ブラシ', sponge: 'スポンジブラシ', tongue: '舌ブラシ', electric: '電動ブラシ' }[k]}</span>
             </label>
           ))}
           <span>）</span>
         </div>
-        <label className="flex items-center gap-1 cursor-pointer"><input type="checkbox" checked={data.salivaryMassage} onChange={() => onChange({...data, salivaryMassage: !data.salivaryMassage})} className="w-3 h-3 accent-gray-800" /> 唾液腺のマッサージ、舌・顔面体操、摂食・嚥下等の指導</label>
+        <label className="flex items-center gap-1 cursor-pointer"><input type="checkbox" checked={data.salivaryMassage} onChange={() => onChange({ ...data, salivaryMassage: !data.salivaryMassage })} className="w-3 h-3 accent-gray-800" /> 唾液腺のマッサージ、舌・顔面体操、摂食・嚥下等の指導</label>
       </div>
 
       {/* 有床義歯清掃指導 */}
       <SectionTitle>有床義歯の清掃指導について</SectionTitle>
       <div className="text-[10px] space-y-0.5 mb-2 ml-2">
-        <label className="flex items-center gap-1 cursor-pointer"><input type="checkbox" checked={data.dentureCleaningGuidance} onChange={() => onChange({...data, dentureCleaningGuidance: !data.dentureCleaningGuidance})} className="w-3 h-3 accent-gray-800" /> 義歯の清掃</label>
+        <label className="flex items-center gap-1 cursor-pointer"><input type="checkbox" checked={data.dentureCleaningGuidance} onChange={() => onChange({ ...data, dentureCleaningGuidance: !data.dentureCleaningGuidance })} className="w-3 h-3 accent-gray-800" /> 義歯の清掃</label>
         {data.dentureCleaningGuidance && (
           <div className="flex items-center gap-2 ml-6">
             {(['clasp', 'mucosa', 'posterior', 'artificial'] as const).map(k => (
               <label key={k} className="flex items-center gap-0.5 cursor-pointer">
-                <input type="checkbox" checked={data.dentureCleaningDetails[k]} onChange={() => onChange({...data, dentureCleaningDetails: {...data.dentureCleaningDetails, [k]: !data.dentureCleaningDetails[k]}})} className="w-3 h-3 accent-gray-800" />
-                <span>{{clasp: 'クラスプ', mucosa: '床粘膜面', posterior: '床後縁', artificial: '人工歯'}[k]}</span>
+                <input type="checkbox" checked={data.dentureCleaningDetails[k]} onChange={() => onChange({ ...data, dentureCleaningDetails: { ...data.dentureCleaningDetails, [k]: !data.dentureCleaningDetails[k] } })} className="w-3 h-3 accent-gray-800" />
+                <span>{{ clasp: 'クラスプ', mucosa: '床粘膜面', posterior: '床後縁', artificial: '人工歯' }[k]}</span>
               </label>
             ))}
           </div>
         )}
-        <label className="flex items-center gap-1 cursor-pointer"><input type="checkbox" checked={data.residualTeethBrushing} onChange={() => onChange({...data, residualTeethBrushing: !data.residualTeethBrushing})} className="w-3 h-3 accent-gray-800" /> 鉤歯、残存歯、歯肉のブラッシング</label>
-        <label className="flex items-center gap-1 cursor-pointer"><input type="checkbox" checked={data.dentureRemovalGuidance} onChange={() => onChange({...data, dentureRemovalGuidance: !data.dentureRemovalGuidance})} className="w-3 h-3 accent-gray-800" /> 義歯の着脱指導・着脱介護指導</label>
+        <label className="flex items-center gap-1 cursor-pointer"><input type="checkbox" checked={data.residualTeethBrushing} onChange={() => onChange({ ...data, residualTeethBrushing: !data.residualTeethBrushing })} className="w-3 h-3 accent-gray-800" /> 鉤歯、残存歯、歯肉のブラッシング</label>
+        <label className="flex items-center gap-1 cursor-pointer"><input type="checkbox" checked={data.dentureRemovalGuidance} onChange={() => onChange({ ...data, dentureRemovalGuidance: !data.dentureRemovalGuidance })} className="w-3 h-3 accent-gray-800" /> 義歯の着脱指導・着脱介護指導</label>
         <div className="flex items-center gap-2">
-          <label className="flex items-center gap-1 cursor-pointer"><input type="checkbox" checked={data.dentureSleepHandling} onChange={() => onChange({...data, dentureSleepHandling: !data.dentureSleepHandling})} className="w-3 h-3 accent-gray-800" /> 就寝時の扱い方　清掃後に</label>
+          <label className="flex items-center gap-1 cursor-pointer"><input type="checkbox" checked={data.dentureSleepHandling} onChange={() => onChange({ ...data, dentureSleepHandling: !data.dentureSleepHandling })} className="w-3 h-3 accent-gray-800" /> 就寝時の扱い方　清掃後に</label>
           {(['waterStorage', 'cleanserStorage', 'wearing'] as const).map(k => (
             <label key={k} className="flex items-center gap-0.5 cursor-pointer">
               <input type="checkbox" checked={data.dentureSleepOptions[k]} onChange={() => toggleSleep(k)} className="w-3 h-3 accent-gray-800" />
-              <span>{{waterStorage: '水中で保管', cleanserStorage: '洗浄剤中で保管', wearing: '装着'}[k]}</span>
+              <span>{{ waterStorage: '水中で保管', cleanserStorage: '洗浄剤中で保管', wearing: '装着' }[k]}</span>
             </label>
           ))}
         </div>
@@ -945,7 +946,7 @@ export const HoueishiPreviewNew = ({data, onChange, autoQuoteData}: HoueishiProp
       <div className="border border-gray-600 p-2 mb-2 min-h-[50px]">
         <PresetTextArea
           value={data.careNotes}
-          onChange={v => onChange({...data, careNotes: v})}
+          onChange={v => onChange({ ...data, careNotes: v })}
           presets={HYGIENE_CARE_NOTES_PRESETS}
           placeholder="注意事項を入力..."
           rows={3}
@@ -956,24 +957,24 @@ export const HoueishiPreviewNew = ({data, onChange, autoQuoteData}: HoueishiProp
       <SectionTitle>介護職員への技術的助言等の内容</SectionTitle>
       <div className="border border-gray-600 p-2 mb-4 text-[10px] space-y-0.5">
         {([
-          {key: 'riskBasedCleaning' as const, label: '入所者のリスクに応じた口腔清掃等の実施'},
-          {key: 'cleaningKnowledge' as const, label: '口腔清掃にかかる知識、技術の習得の必要性'},
-          {key: 'oralFunctionImprovement' as const, label: '摂食嚥下等の口腔機能の改善のための取組の実施'},
-          {key: 'dietConfirmation' as const, label: '食事の状態の確認、食形態等の検討の必要性'},
-          {key: 'continueCurrent' as const, label: '現在の取組の継続'},
-        ]).map(({key, label}) => (
+          { key: 'riskBasedCleaning' as const, label: '入所者のリスクに応じた口腔清掃等の実施' },
+          { key: 'cleaningKnowledge' as const, label: '口腔清掃にかかる知識、技術の習得の必要性' },
+          { key: 'oralFunctionImprovement' as const, label: '摂食嚥下等の口腔機能の改善のための取組の実施' },
+          { key: 'dietConfirmation' as const, label: '食事の状態の確認、食形態等の検討の必要性' },
+          { key: 'continueCurrent' as const, label: '現在の取組の継続' },
+        ]).map(({ key, label }) => (
           <label key={key} className="flex items-center gap-1 cursor-pointer">
-            <input type="checkbox" checked={data.technicalAdvice[key]} onChange={() => onChange({...data, technicalAdvice: {...data.technicalAdvice, [key]: !data.technicalAdvice[key]}})} className="w-3 h-3 accent-gray-800" />
+            <input type="checkbox" checked={data.technicalAdvice[key]} onChange={() => onChange({ ...data, technicalAdvice: { ...data.technicalAdvice, [key]: !data.technicalAdvice[key] } })} className="w-3 h-3 accent-gray-800" />
             <span>{label}</span>
           </label>
         ))}
         <div className="flex items-center gap-1">
           <label className="flex items-center gap-1 cursor-pointer">
-            <input type="checkbox" checked={data.technicalAdvice.other} onChange={() => onChange({...data, technicalAdvice: {...data.technicalAdvice, other: !data.technicalAdvice.other}})} className="w-3 h-3 accent-gray-800" />
+            <input type="checkbox" checked={data.technicalAdvice.other} onChange={() => onChange({ ...data, technicalAdvice: { ...data.technicalAdvice, other: !data.technicalAdvice.other } })} className="w-3 h-3 accent-gray-800" />
             <span>その他</span>
           </label>
           {data.technicalAdvice.other && (
-            <input type="text" value={data.technicalAdvice.otherText} onChange={e => onChange({...data, technicalAdvice: {...data.technicalAdvice, otherText: e.target.value}})} className="border-b border-gray-400 px-1 flex-1" placeholder="内容を入力..." />
+            <input type="text" value={data.technicalAdvice.otherText} onChange={e => onChange({ ...data, technicalAdvice: { ...data.technicalAdvice, otherText: e.target.value } })} className="border-b border-gray-400 px-1 flex-1" placeholder="内容を入力..." />
           )}
         </div>
       </div>
@@ -981,10 +982,10 @@ export const HoueishiPreviewNew = ({data, onChange, autoQuoteData}: HoueishiProp
       {/* フッター */}
       <div className="border-t border-gray-600 pt-2 text-xs">
         <div className="flex justify-between mb-2">
-          <div>歯科衛生士　<input type="text" value={data.hygienistName} onChange={e => onChange({...data, hygienistName: e.target.value})} className="border-b border-gray-400 px-1 w-24" /></div>
+          <div>歯科衛生士　<input type="text" value={data.hygienistName} onChange={e => onChange({ ...data, hygienistName: e.target.value })} className="border-b border-gray-400 px-1 w-24" /></div>
           <div>
-            時間　<input type="text" value={data.startTime} onChange={e => onChange({...data, startTime: e.target.value})} className="border-b border-gray-400 px-1 w-12" />
-            　～　<input type="text" value={data.endTime} onChange={e => onChange({...data, endTime: e.target.value})} className="border-b border-gray-400 px-1 w-12" />
+            時間　<input type="text" value={data.startTime} onChange={e => onChange({ ...data, startTime: e.target.value })} className="border-b border-gray-400 px-1 w-12" />
+            ～　<input type="text" value={data.endTime} onChange={e => onChange({ ...data, endTime: e.target.value })} className="border-b border-gray-400 px-1 w-12" />
           </div>
         </div>
         <div className="border border-gray-600">
@@ -1013,7 +1014,7 @@ type SeimitsuKensaProps = {
   onAutoQuoted?: (d: OralExamRecordData) => void
 }
 
-export const SeimitsuKensaPreview = ({data, autoQuoteData, onAutoQuoted}: SeimitsuKensaProps) => {
+export const SeimitsuKensaPreview = ({ data, autoQuoteData, onAutoQuoted }: SeimitsuKensaProps) => {
   const [highlighted, setHighlighted] = useState<Set<string>>(new Set())
   const hl = (field: string) => hlClass(highlighted, field)
 
@@ -1021,7 +1022,7 @@ export const SeimitsuKensaPreview = ({data, autoQuoteData, onAutoQuoted}: Seimit
     if (!autoQuoteData) return
     const keys = Object.keys(autoQuoteData) as (keyof OralExamRecordData)[]
     const filledKeys = keys.filter(k => autoQuoteData[k] !== undefined && autoQuoteData[k] !== '')
-    const newData = {...data, ...autoQuoteData} as OralExamRecordData
+    const newData = { ...data, ...autoQuoteData } as OralExamRecordData
     onAutoQuoted?.(newData)
     setHighlighted(new Set(filledKeys))
   }
@@ -1193,28 +1194,28 @@ export const getDefaultOralFunctionPlanData = (): OralFunctionPlanData => ({
     appetiteReason: '',
   },
   oralFunctionStatus: [
-    {label: '口腔内の衛生状態', testName: '舌苔付着程度', value: '', reference: '基準値 50%以上', status: 'normal'},
-    {label: '口腔内の乾燥程度', testName: '口腔粘膜湿潤度', value: '', reference: '基準値 27未満', status: 'normal'},
-    {label: '咬む力の程度', testName: '残存歯数', value: '', reference: '基準値 20本未満', status: 'normal'},
-    {label: '口唇の動きの程度', testName: 'パ発音速度', value: '', reference: '基準値 6.0回/秒未満', status: 'normal'},
-    {label: '舌尖の動きの程度', testName: 'タ発音速度', value: '', reference: '基準値 6.0回/秒未満', status: 'normal'},
-    {label: '奥舌の動きの程度', testName: 'カ発音速度', value: '', reference: '基準値 6.0回/秒未満', status: 'normal'},
-    {label: '舌の力の程度', testName: '舌圧', value: '', reference: '基準値 30kPa未満', status: 'normal'},
-    {label: '咀嚼の機能の程度', testName: '咀嚼能力検査', value: '', reference: '基準値 100mg/dL未満', status: 'normal'},
-    {label: '嚥下の機能の程度', testName: 'EAT-10', value: '', reference: '基準値 3点以上', status: 'normal'},
+    { label: '口腔内の衛生状態', testName: '舌苔付着程度', value: '', reference: '基準値 50%以上', status: 'normal' },
+    { label: '口腔内の乾燥程度', testName: '口腔粘膜湿潤度', value: '', reference: '基準値 27未満', status: 'normal' },
+    { label: '咬む力の程度', testName: '残存歯数', value: '', reference: '基準値 20本未満', status: 'normal' },
+    { label: '口唇の動きの程度', testName: 'パ発音速度', value: '', reference: '基準値 6.0回/秒未満', status: 'normal' },
+    { label: '舌尖の動きの程度', testName: 'タ発音速度', value: '', reference: '基準値 6.0回/秒未満', status: 'normal' },
+    { label: '奥舌の動きの程度', testName: 'カ発音速度', value: '', reference: '基準値 6.0回/秒未満', status: 'normal' },
+    { label: '舌の力の程度', testName: '舌圧', value: '', reference: '基準値 30kPa未満', status: 'normal' },
+    { label: '咀嚼の機能の程度', testName: '咀嚼能力検査', value: '', reference: '基準値 100mg/dL未満', status: 'normal' },
+    { label: '嚥下の機能の程度', testName: 'EAT-10', value: '', reference: '基準値 3点以上', status: 'normal' },
   ],
-  toothGumStatus: {plaque: false, gumInflammation: false, toothMobility: false},
+  toothGumStatus: { plaque: false, gumInflammation: false, toothMobility: false },
   oralDentureNote: '',
   oralFunctionPlan: [
-    {label: '口腔内の衛生', plan: 'noIssue'},
-    {label: '口腔内の乾燥', plan: 'noIssue'},
-    {label: '咬む力', plan: 'noIssue'},
-    {label: '口唇の動き', plan: 'noIssue'},
-    {label: '舌尖の動き', plan: 'noIssue'},
-    {label: '奥舌の動き', plan: 'noIssue'},
-    {label: '舌の力', plan: 'noIssue'},
-    {label: '咀嚼の機能', plan: 'noIssue'},
-    {label: '嚥下の機能', plan: 'noIssue'},
+    { label: '口腔内の衛生', plan: 'noIssue' },
+    { label: '口腔内の乾燥', plan: 'noIssue' },
+    { label: '咬む力', plan: 'noIssue' },
+    { label: '口唇の動き', plan: 'noIssue' },
+    { label: '舌尖の動き', plan: 'noIssue' },
+    { label: '奥舌の動き', plan: 'noIssue' },
+    { label: '舌の力', plan: 'noIssue' },
+    { label: '咀嚼の機能', plan: 'noIssue' },
+    { label: '嚥下の機能', plan: 'noIssue' },
   ],
   managementGoal: '',
   reevaluationMonths: '',
@@ -1227,7 +1228,7 @@ type KoukuuKanriProps = {
   autoQuoteData?: Partial<OralFunctionPlanData>
 }
 
-export const KoukuuKanriPreview = ({data, onChange, autoQuoteData}: KoukuuKanriProps) => {
+export const KoukuuKanriPreview = ({ data, onChange, autoQuoteData }: KoukuuKanriProps) => {
   const [highlighted, setHighlighted] = useState<Set<string>>(new Set())
   const hl = (field: string) => hlClass(highlighted, field)
 
@@ -1235,20 +1236,20 @@ export const KoukuuKanriPreview = ({data, onChange, autoQuoteData}: KoukuuKanriP
     if (!autoQuoteData) return
     const keys = Object.keys(autoQuoteData) as (keyof OralFunctionPlanData)[]
     const filledKeys = keys.filter(k => autoQuoteData[k] !== undefined && autoQuoteData[k] !== '')
-    onChange({...data, ...autoQuoteData} as OralFunctionPlanData)
+    onChange({ ...data, ...autoQuoteData } as OralFunctionPlanData)
     setHighlighted(new Set(filledKeys))
   }
 
   const updatePlan = (index: number, plan: 'noIssue' | 'maintain' | 'improve') => {
     const newPlans = [...data.oralFunctionPlan]
-    newPlans[index] = {...newPlans[index], plan}
-    onChange({...data, oralFunctionPlan: newPlans})
+    newPlans[index] = { ...newPlans[index], plan }
+    onChange({ ...data, oralFunctionPlan: newPlans })
   }
 
   const updateStatus = (index: number, status: 'normal' | 'decreased') => {
     const newStatus = [...data.oralFunctionStatus]
-    newStatus[index] = {...newStatus[index], status}
-    onChange({...data, oralFunctionStatus: newStatus})
+    newStatus[index] = { ...newStatus[index], status }
+    onChange({ ...data, oralFunctionStatus: newStatus })
   }
 
   return (
@@ -1290,58 +1291,58 @@ export const KoukuuKanriPreview = ({data, onChange, autoQuoteData}: KoukuuKanriP
               const diseases = data.bodyCondition.diseases.includes(d)
                 ? data.bodyCondition.diseases.filter(x => x !== d)
                 : [...data.bodyCondition.diseases, d]
-              onChange({...data, bodyCondition: {...data.bodyCondition, diseases}})
+              onChange({ ...data, bodyCondition: { ...data.bodyCondition, diseases } })
             }} />
           ))).reduce<React.ReactNode[]>((acc, el, i) => [...acc, i > 0 ? <span key={`s${i}`} className="mx-0.5">・</span> : null, el], [])}
         </div>
         <div>
           <span className="font-medium">2 服用薬剤：</span>
-          <Chk checked={data.bodyCondition.medicationStatus === 'none'} label="なし" onToggle={() => onChange({...data, bodyCondition: {...data.bodyCondition, medicationStatus: 'none'}})} />
+          <Chk checked={data.bodyCondition.medicationStatus === 'none'} label="なし" onToggle={() => onChange({ ...data, bodyCondition: { ...data.bodyCondition, medicationStatus: 'none' } })} />
           <span className="mx-1">・</span>
-          <Chk checked={data.bodyCondition.medicationStatus === 'yes'} label="あり" onToggle={() => onChange({...data, bodyCondition: {...data.bodyCondition, medicationStatus: 'yes'}})} />
+          <Chk checked={data.bodyCondition.medicationStatus === 'yes'} label="あり" onToggle={() => onChange({ ...data, bodyCondition: { ...data.bodyCondition, medicationStatus: 'yes' } })} />
           {data.bodyCondition.medicationStatus === 'yes' && (
-            <span>（<input type="text" value={data.bodyCondition.medicationNames} onChange={e => onChange({...data, bodyCondition: {...data.bodyCondition, medicationNames: e.target.value}})} className="border-b border-gray-400 px-1 w-40" placeholder="薬剤名" />）</span>
+            <span>（<input type="text" value={data.bodyCondition.medicationNames} onChange={e => onChange({ ...data, bodyCondition: { ...data.bodyCondition, medicationNames: e.target.value } })} className="border-b border-gray-400 px-1 w-40" placeholder="薬剤名" />）</span>
           )}
         </div>
         <div>
           <span className="font-medium">3 肺炎の既往：</span>
           {(['none', 'once', 'repeat'] as const).map(v => (
             <span key={v} className="mr-2">
-              <Chk checked={data.bodyCondition.pneumoniaHistory === v} label={{none: 'なし', once: 'あり', repeat: '繰り返しあり'}[v]} onToggle={() => onChange({...data, bodyCondition: {...data.bodyCondition, pneumoniaHistory: v}})} />
+              <Chk checked={data.bodyCondition.pneumoniaHistory === v} label={{ none: 'なし', once: 'あり', repeat: '繰り返しあり' }[v]} onToggle={() => onChange({ ...data, bodyCondition: { ...data.bodyCondition, pneumoniaHistory: v } })} />
             </span>
           ))}
         </div>
         <div>
           <span className="font-medium">4 栄養状態：</span>
-          体重<input type="text" value={data.bodyCondition.nutritionWeight} onChange={e => onChange({...data, bodyCondition: {...data.bodyCondition, nutritionWeight: e.target.value}})} className="border-b border-gray-400 px-1 w-12" />kg
-          　身長<input type="text" value={data.bodyCondition.nutritionHeight} onChange={e => onChange({...data, bodyCondition: {...data.bodyCondition, nutritionHeight: e.target.value}})} className="border-b border-gray-400 px-1 w-12" />cm
-          　BMI<input type="text" value={data.bodyCondition.nutritionBMI} onChange={e => onChange({...data, bodyCondition: {...data.bodyCondition, nutritionBMI: e.target.value}})} className="border-b border-gray-400 px-1 w-12" />
-          　<Chk checked={data.bodyCondition.nutritionStatus === 'normal'} label="正常範囲内" onToggle={() => onChange({...data, bodyCondition: {...data.bodyCondition, nutritionStatus: 'normal'}})} />
+          体重<input type="text" value={data.bodyCondition.nutritionWeight} onChange={e => onChange({ ...data, bodyCondition: { ...data.bodyCondition, nutritionWeight: e.target.value } })} className="border-b border-gray-400 px-1 w-12" />kg
+          身長<input type="text" value={data.bodyCondition.nutritionHeight} onChange={e => onChange({ ...data, bodyCondition: { ...data.bodyCondition, nutritionHeight: e.target.value } })} className="border-b border-gray-400 px-1 w-12" />cm
+          BMI<input type="text" value={data.bodyCondition.nutritionBMI} onChange={e => onChange({ ...data, bodyCondition: { ...data.bodyCondition, nutritionBMI: e.target.value } })} className="border-b border-gray-400 px-1 w-12" />
+          <Chk checked={data.bodyCondition.nutritionStatus === 'normal'} label="正常範囲内" onToggle={() => onChange({ ...data, bodyCondition: { ...data.bodyCondition, nutritionStatus: 'normal' } })} />
           <span className="mx-0.5">・</span>
-          <Chk checked={data.bodyCondition.nutritionStatus === 'underweight'} label="低体重" onToggle={() => onChange({...data, bodyCondition: {...data.bodyCondition, nutritionStatus: 'underweight'}})} />
+          <Chk checked={data.bodyCondition.nutritionStatus === 'underweight'} label="低体重" onToggle={() => onChange({ ...data, bodyCondition: { ...data.bodyCondition, nutritionStatus: 'underweight' } })} />
           <span className="mx-0.5">・</span>
-          <Chk checked={data.bodyCondition.nutritionStatus === 'obese'} label="肥満" onToggle={() => onChange({...data, bodyCondition: {...data.bodyCondition, nutritionStatus: 'obese'}})} />
+          <Chk checked={data.bodyCondition.nutritionStatus === 'obese'} label="肥満" onToggle={() => onChange({ ...data, bodyCondition: { ...data.bodyCondition, nutritionStatus: 'obese' } })} />
         </div>
         <div>
           <span className="font-medium">5 体重の変化：</span>
-          <Chk checked={data.bodyCondition.weightChange === 'none'} label="なし" onToggle={() => onChange({...data, bodyCondition: {...data.bodyCondition, weightChange: 'none'}})} />
+          <Chk checked={data.bodyCondition.weightChange === 'none'} label="なし" onToggle={() => onChange({ ...data, bodyCondition: { ...data.bodyCondition, weightChange: 'none' } })} />
           <span className="mx-0.5">・</span>
-          <Chk checked={data.bodyCondition.weightChange === 'yes'} label="あり" onToggle={() => onChange({...data, bodyCondition: {...data.bodyCondition, weightChange: 'yes'}})} />
+          <Chk checked={data.bodyCondition.weightChange === 'yes'} label="あり" onToggle={() => onChange({ ...data, bodyCondition: { ...data.bodyCondition, weightChange: 'yes' } })} />
           {data.bodyCondition.weightChange === 'yes' && (
-            <span>（<input type="text" value={data.bodyCondition.weightChangeDetail} onChange={e => onChange({...data, bodyCondition: {...data.bodyCondition, weightChangeDetail: e.target.value}})} className="border-b border-gray-400 px-1 w-32" placeholder="詳細" />）</span>
+            <span>（<input type="text" value={data.bodyCondition.weightChangeDetail} onChange={e => onChange({ ...data, bodyCondition: { ...data.bodyCondition, weightChangeDetail: e.target.value } })} className="border-b border-gray-400 px-1 w-32" placeholder="詳細" />）</span>
           )}
         </div>
         <div>
           <span className="font-medium">6 食事形態：</span>
-          <input type="text" value={data.bodyCondition.dietType} onChange={e => onChange({...data, bodyCondition: {...data.bodyCondition, dietType: e.target.value}})} className="border-b border-gray-400 px-1 w-40" placeholder="常食/やわらかい食事/その他" />
+          <input type="text" value={data.bodyCondition.dietType} onChange={e => onChange({ ...data, bodyCondition: { ...data.bodyCondition, dietType: e.target.value } })} className="border-b border-gray-400 px-1 w-40" placeholder="常食/やわらかい食事/その他" />
         </div>
         <div>
           <span className="font-medium">7 食欲：</span>
-          <Chk checked={data.bodyCondition.appetite === 'yes'} label="あり" onToggle={() => onChange({...data, bodyCondition: {...data.bodyCondition, appetite: 'yes'}})} />
+          <Chk checked={data.bodyCondition.appetite === 'yes'} label="あり" onToggle={() => onChange({ ...data, bodyCondition: { ...data.bodyCondition, appetite: 'yes' } })} />
           <span className="mx-0.5">・</span>
-          <Chk checked={data.bodyCondition.appetite === 'no'} label="なし" onToggle={() => onChange({...data, bodyCondition: {...data.bodyCondition, appetite: 'no'}})} />
+          <Chk checked={data.bodyCondition.appetite === 'no'} label="なし" onToggle={() => onChange({ ...data, bodyCondition: { ...data.bodyCondition, appetite: 'no' } })} />
           {data.bodyCondition.appetite === 'no' && (
-            <span>（理由：<input type="text" value={data.bodyCondition.appetiteReason} onChange={e => onChange({...data, bodyCondition: {...data.bodyCondition, appetiteReason: e.target.value}})} className="border-b border-gray-400 px-1 w-32" />）</span>
+            <span>（理由：<input type="text" value={data.bodyCondition.appetiteReason} onChange={e => onChange({ ...data, bodyCondition: { ...data.bodyCondition, appetiteReason: e.target.value } })} className="border-b border-gray-400 px-1 w-32" />）</span>
           )}
         </div>
       </div>
@@ -1379,9 +1380,9 @@ export const KoukuuKanriPreview = ({data, onChange, autoQuoteData}: KoukuuKanriP
               <td className="border border-gray-400 p-0.5">歯・歯肉の状態</td>
               <td className="border border-gray-400 p-0.5" colSpan={3}>
                 <div className="flex gap-2">
-                  <Chk checked={data.toothGumStatus.plaque} label="プラーク" onToggle={() => onChange({...data, toothGumStatus: {...data.toothGumStatus, plaque: !data.toothGumStatus.plaque}})} />
-                  <Chk checked={data.toothGumStatus.gumInflammation} label="歯肉の炎症" onToggle={() => onChange({...data, toothGumStatus: {...data.toothGumStatus, gumInflammation: !data.toothGumStatus.gumInflammation}})} />
-                  <Chk checked={data.toothGumStatus.toothMobility} label="歯の動揺" onToggle={() => onChange({...data, toothGumStatus: {...data.toothGumStatus, toothMobility: !data.toothGumStatus.toothMobility}})} />
+                  <Chk checked={data.toothGumStatus.plaque} label="プラーク" onToggle={() => onChange({ ...data, toothGumStatus: { ...data.toothGumStatus, plaque: !data.toothGumStatus.plaque } })} />
+                  <Chk checked={data.toothGumStatus.gumInflammation} label="歯肉の炎症" onToggle={() => onChange({ ...data, toothGumStatus: { ...data.toothGumStatus, gumInflammation: !data.toothGumStatus.gumInflammation } })} />
+                  <Chk checked={data.toothGumStatus.toothMobility} label="歯の動揺" onToggle={() => onChange({ ...data, toothGumStatus: { ...data.toothGumStatus, toothMobility: !data.toothGumStatus.toothMobility } })} />
                 </div>
               </td>
               <td className="border border-gray-400 p-0.5" colSpan={2}></td>
@@ -1391,7 +1392,7 @@ export const KoukuuKanriPreview = ({data, onChange, autoQuoteData}: KoukuuKanriP
               <td className="border border-gray-400 p-0.5 text-center">11</td>
               <td className="border border-gray-400 p-0.5">口腔内・義歯の状態</td>
               <td className="border border-gray-400 p-0.5" colSpan={5}>
-                <input type="text" value={data.oralDentureNote} onChange={e => onChange({...data, oralDentureNote: e.target.value})} className="w-full border-0 text-[9px] focus:outline-none" placeholder="口腔内・義歯の状態を記入..." />
+                <input type="text" value={data.oralDentureNote} onChange={e => onChange({ ...data, oralDentureNote: e.target.value })} className="w-full border-0 text-[9px] focus:outline-none" placeholder="口腔内・義歯の状態を記入..." />
               </td>
             </tr>
           </tbody>
@@ -1430,7 +1431,7 @@ export const KoukuuKanriPreview = ({data, onChange, autoQuoteData}: KoukuuKanriP
       <div className="border border-gray-600 p-2 mb-2 min-h-[50px]">
         <PresetTextArea
           value={data.managementGoal}
-          onChange={v => onChange({...data, managementGoal: v})}
+          onChange={v => onChange({ ...data, managementGoal: v })}
           presets={ORAL_FUNCTION_MANAGEMENT_PRESETS}
           placeholder="管理方針・目標を入力..."
           rows={3}
@@ -1440,7 +1441,7 @@ export const KoukuuKanriPreview = ({data, onChange, autoQuoteData}: KoukuuKanriP
       {/* 再評価の時期 */}
       <SectionTitle>【再評価の時期・治療期間】</SectionTitle>
       <div className="text-xs mb-2">
-        再評価の時期：約（<input type="text" value={data.reevaluationMonths} onChange={e => onChange({...data, reevaluationMonths: e.target.value})} className="border-b border-gray-400 px-1 w-8" />）か月後　・　治療期間：（<input type="text" value={data.treatmentPeriod} onChange={e => onChange({...data, treatmentPeriod: e.target.value})} className="border-b border-gray-400 px-1 w-16" />）程度
+        再評価の時期：約（<input type="text" value={data.reevaluationMonths} onChange={e => onChange({ ...data, reevaluationMonths: e.target.value })} className="border-b border-gray-400 px-1 w-8" />）か月後　・　治療期間：（<input type="text" value={data.treatmentPeriod} onChange={e => onChange({ ...data, treatmentPeriod: e.target.value })} className="border-b border-gray-400 px-1 w-16" />）程度
       </div>
     </PageWrapper>
   )
@@ -1475,8 +1476,8 @@ export const getDefaultOralHygieneManagementData = (): OralHygieneManagementData
       gurglingDifficulty: false, brushingAfterMealDifficulty: false, tongueMovement: false,
     },
     teethCount: 0,
-    toothIssues: {decay: false, fracture: false, restoration: false, residualRoot: false, other: false, otherText: ''},
-    dentureIssues: {mismatch: false, broken: false, needed: false, notUsed: false, other: false, otherText: ''},
+    toothIssues: { decay: false, fracture: false, restoration: false, residualRoot: false, other: false, otherText: '' },
+    dentureIssues: { mismatch: false, broken: false, needed: false, notUsed: false, other: false, otherText: '' },
     periodontalDisease: false,
     mucosalDisease: false,
   },
@@ -1506,7 +1507,7 @@ type KoueiKanriProps = {
   autoQuoteData?: Partial<OralHygieneManagementData>
 }
 
-export const KoueiKanriPreview = ({data, onChange, autoQuoteData}: KoueiKanriProps) => {
+export const KoueiKanriPreview = ({ data, onChange, autoQuoteData }: KoueiKanriProps) => {
   const [highlighted, setHighlighted] = useState<Set<string>>(new Set())
   const hl = (field: string) => hlClass(highlighted, field)
 
@@ -1514,7 +1515,7 @@ export const KoueiKanriPreview = ({data, onChange, autoQuoteData}: KoueiKanriPro
     if (!autoQuoteData) return
     const keys = Object.keys(autoQuoteData) as (keyof OralHygieneManagementData)[]
     const filledKeys = keys.filter(k => autoQuoteData[k] !== undefined && autoQuoteData[k] !== '')
-    onChange({...data, ...autoQuoteData} as OralHygieneManagementData)
+    onChange({ ...data, ...autoQuoteData } as OralHygieneManagementData)
     setHighlighted(new Set(filledKeys))
   }
 
@@ -1523,7 +1524,7 @@ export const KoueiKanriPreview = ({data, onChange, autoQuoteData}: KoueiKanriPro
       ...data,
       managementContent: {
         ...data.managementContent,
-        goals: {...data.managementContent.goals, [key]: value},
+        goals: { ...data.managementContent.goals, [key]: value },
       },
     })
   }
@@ -1532,7 +1533,7 @@ export const KoueiKanriPreview = ({data, onChange, autoQuoteData}: KoueiKanriPro
       ...data,
       managementContent: {
         ...data.managementContent,
-        implementations: {...data.managementContent.implementations, [key]: value},
+        implementations: { ...data.managementContent.implementations, [key]: value },
       },
     })
   }
@@ -1572,40 +1573,40 @@ export const KoueiKanriPreview = ({data, onChange, autoQuoteData}: KoueiKanriPro
 
       {/* 歯科受診 */}
       <div className="text-[9px] mb-1">
-        現在の歯科受診について　かかりつけ歯科医 <Chk checked={data.hasFamilyDentist} label="あり" onToggle={() => onChange({...data, hasFamilyDentist: true})} /> <Chk checked={!data.hasFamilyDentist} label="なし" onToggle={() => onChange({...data, hasFamilyDentist: false})} />
-        　直近1年間の歯科受診 <Chk checked={data.hasRecentDentalVisit} label="あり" onToggle={() => onChange({...data, hasRecentDentalVisit: true})} /> <Chk checked={!data.hasRecentDentalVisit} label="なし" onToggle={() => onChange({...data, hasRecentDentalVisit: false})} />
+        現在の歯科受診について　かかりつけ歯科医 <Chk checked={data.hasFamilyDentist} label="あり" onToggle={() => onChange({ ...data, hasFamilyDentist: true })} /> <Chk checked={!data.hasFamilyDentist} label="なし" onToggle={() => onChange({ ...data, hasFamilyDentist: false })} />
+        直近1年間の歯科受診 <Chk checked={data.hasRecentDentalVisit} label="あり" onToggle={() => onChange({ ...data, hasRecentDentalVisit: true })} /> <Chk checked={!data.hasRecentDentalVisit} label="なし" onToggle={() => onChange({ ...data, hasRecentDentalVisit: false })} />
       </div>
 
       {/* 義歯・栄養・食事形態 */}
       <div className="text-[9px] mb-1 space-y-0.5">
         <div>
-          義歯の使用　<Chk checked={data.dentureUse === 'none'} label="なし" onToggle={() => onChange({...data, dentureUse: 'none'})} />
+          義歯の使用　<Chk checked={data.dentureUse === 'none'} label="なし" onToggle={() => onChange({ ...data, dentureUse: 'none' })} />
           <span className="mx-1">・</span>
-          <Chk checked={data.dentureUse === 'yes_partial'} label="あり（部分）" onToggle={() => onChange({...data, dentureUse: 'yes_partial'})} />
+          <Chk checked={data.dentureUse === 'yes_partial'} label="あり（部分）" onToggle={() => onChange({ ...data, dentureUse: 'yes_partial' })} />
           <span className="mx-1">・</span>
-          <Chk checked={data.dentureUse === 'yes_full'} label="あり（全部）" onToggle={() => onChange({...data, dentureUse: 'yes_full'})} />
+          <Chk checked={data.dentureUse === 'yes_full'} label="あり（全部）" onToggle={() => onChange({ ...data, dentureUse: 'yes_full' })} />
         </div>
         <div>
-          栄養補給法　<Chk checked={data.nutritionMethod === 'oral'} label="経口のみ" onToggle={() => onChange({...data, nutritionMethod: 'oral'})} />
+          栄養補給法　<Chk checked={data.nutritionMethod === 'oral'} label="経口のみ" onToggle={() => onChange({ ...data, nutritionMethod: 'oral' })} />
           <span className="mx-1">・</span>
-          <Chk checked={data.nutritionMethod === 'partialOral'} label="一部経口" onToggle={() => onChange({...data, nutritionMethod: 'partialOral'})} />
+          <Chk checked={data.nutritionMethod === 'partialOral'} label="一部経口" onToggle={() => onChange({ ...data, nutritionMethod: 'partialOral' })} />
           <span className="mx-1">・</span>
-          <Chk checked={data.nutritionMethod === 'tube'} label="経腸栄養" onToggle={() => onChange({...data, nutritionMethod: 'tube'})} />
+          <Chk checked={data.nutritionMethod === 'tube'} label="経腸栄養" onToggle={() => onChange({ ...data, nutritionMethod: 'tube' })} />
           <span className="mx-1">・</span>
-          <Chk checked={data.nutritionMethod === 'iv'} label="静脈栄養" onToggle={() => onChange({...data, nutritionMethod: 'iv'})} />
+          <Chk checked={data.nutritionMethod === 'iv'} label="静脈栄養" onToggle={() => onChange({ ...data, nutritionMethod: 'iv' })} />
         </div>
         <div>
-          食事形態　<input type="text" value={data.dietForm} onChange={e => onChange({...data, dietForm: e.target.value})} className="border-b border-gray-400 px-1 w-48" placeholder="常食/嚥下調整食 等" />
+          食事形態　<input type="text" value={data.dietForm} onChange={e => onChange({ ...data, dietForm: e.target.value })} className="border-b border-gray-400 px-1 w-48" placeholder="常食/嚥下調整食 等" />
         </div>
         <div>
-          誤嚥性肺炎の発症・既往　<Chk checked={data.aspirationPneumoniaHistory} label="あり" onToggle={() => onChange({...data, aspirationPneumoniaHistory: !data.aspirationPneumoniaHistory})} />
+          誤嚥性肺炎の発症・既往　<Chk checked={data.aspirationPneumoniaHistory} label="あり" onToggle={() => onChange({ ...data, aspirationPneumoniaHistory: !data.aspirationPneumoniaHistory })} />
           <span className="mx-1">・</span>
-          <Chk checked={!data.aspirationPneumoniaHistory} label="なし" onToggle={() => onChange({...data, aspirationPneumoniaHistory: false})} />
+          <Chk checked={!data.aspirationPneumoniaHistory} label="なし" onToggle={() => onChange({ ...data, aspirationPneumoniaHistory: false })} />
         </div>
         <div>
-          同一月内の訪問歯科衛生指導（医療保険）　<Chk checked={data.hasHygieneGuidanceSameMonth} label="あり" onToggle={() => onChange({...data, hasHygieneGuidanceSameMonth: !data.hasHygieneGuidanceSameMonth})} />
+          同一月内の訪問歯科衛生指導（医療保険）　<Chk checked={data.hasHygieneGuidanceSameMonth} label="あり" onToggle={() => onChange({ ...data, hasHygieneGuidanceSameMonth: !data.hasHygieneGuidanceSameMonth })} />
           <span className="mx-1">・</span>
-          <Chk checked={!data.hasHygieneGuidanceSameMonth} label="なし" onToggle={() => onChange({...data, hasHygieneGuidanceSameMonth: false})} />
+          <Chk checked={!data.hasHygieneGuidanceSameMonth} label="なし" onToggle={() => onChange({ ...data, hasHygieneGuidanceSameMonth: false })} />
         </div>
       </div>
 
@@ -1614,67 +1615,67 @@ export const KoueiKanriPreview = ({data, onChange, autoQuoteData}: KoueiKanriPro
       <div className="border border-gray-600 text-[9px] mb-2 p-1.5 space-y-1">
         <div>
           <span className="font-medium">口腔衛生状態：</span>
-          <Chk checked={data.oralHealthAssessment.oralHygiene} label="要改善" onToggle={() => onChange({...data, oralHealthAssessment: {...data.oralHealthAssessment, oralHygiene: !data.oralHealthAssessment.oralHygiene}})} />
+          <Chk checked={data.oralHealthAssessment.oralHygiene} label="要改善" onToggle={() => onChange({ ...data, oralHealthAssessment: { ...data.oralHealthAssessment, oralHygiene: !data.oralHealthAssessment.oralHygiene } })} />
         </div>
         <div>
           <span className="font-medium">口腔機能：</span>
           <span className="flex flex-wrap gap-x-2 gap-y-0.5 ml-2 mt-0.5">
             {([
-              {key: 'biteIssue' as const, label: '奥歯のかみ合わせ'},
-              {key: 'foodSpill' as const, label: '食べこぼし'},
-              {key: 'choking' as const, label: 'むせ'},
-              {key: 'oralDryness' as const, label: '口腔乾燥'},
-              {key: 'tongueMovement' as const, label: '舌の動き'},
-              {key: 'brushingAfterMealDifficulty' as const, label: '食後のブラッシング困難'},
-              {key: 'gurglingDifficulty' as const, label: 'ぶくぶくうがい困難'},
-            ]).map(({key, label}) => (
-              <Chk key={key} checked={data.oralHealthAssessment.oralFunction[key]} label={label} onToggle={() => onChange({...data, oralHealthAssessment: {...data.oralHealthAssessment, oralFunction: {...data.oralHealthAssessment.oralFunction, [key]: !data.oralHealthAssessment.oralFunction[key]}}})} />
+              { key: 'biteIssue' as const, label: '奥歯のかみ合わせ' },
+              { key: 'foodSpill' as const, label: '食べこぼし' },
+              { key: 'choking' as const, label: 'むせ' },
+              { key: 'oralDryness' as const, label: '口腔乾燥' },
+              { key: 'tongueMovement' as const, label: '舌の動き' },
+              { key: 'brushingAfterMealDifficulty' as const, label: '食後のブラッシング困難' },
+              { key: 'gurglingDifficulty' as const, label: 'ぶくぶくうがい困難' },
+            ]).map(({ key, label }) => (
+              <Chk key={key} checked={data.oralHealthAssessment.oralFunction[key]} label={label} onToggle={() => onChange({ ...data, oralHealthAssessment: { ...data.oralHealthAssessment, oralFunction: { ...data.oralHealthAssessment.oralFunction, [key]: !data.oralHealthAssessment.oralFunction[key] } } })} />
             ))}
           </span>
         </div>
         <div>
           <span className="font-medium">歯数：</span>
-          <input type="number" value={data.oralHealthAssessment.teethCount || ''} onChange={e => onChange({...data, oralHealthAssessment: {...data.oralHealthAssessment, teethCount: Number(e.target.value)}})} className="border-b border-gray-400 px-1 w-10 text-center" />本
+          <input type="number" value={data.oralHealthAssessment.teethCount || ''} onChange={e => onChange({ ...data, oralHealthAssessment: { ...data.oralHealthAssessment, teethCount: Number(e.target.value) } })} className="border-b border-gray-400 px-1 w-10 text-center" />本
         </div>
         <div>
           <span className="font-medium">歯の問題：</span>
           {([
-            {key: 'decay' as const, label: 'う蝕'},
-            {key: 'fracture' as const, label: '歯の破折'},
-            {key: 'restoration' as const, label: '修復物脱離'},
-            {key: 'residualRoot' as const, label: '残根歯'},
-            {key: 'other' as const, label: 'その他'},
-          ]).map(({key, label}) => (
+            { key: 'decay' as const, label: 'う蝕' },
+            { key: 'fracture' as const, label: '歯の破折' },
+            { key: 'restoration' as const, label: '修復物脱離' },
+            { key: 'residualRoot' as const, label: '残根歯' },
+            { key: 'other' as const, label: 'その他' },
+          ]).map(({ key, label }) => (
             <span key={key} className="mr-1">
-              <Chk checked={data.oralHealthAssessment.toothIssues[key]} label={label} onToggle={() => onChange({...data, oralHealthAssessment: {...data.oralHealthAssessment, toothIssues: {...data.oralHealthAssessment.toothIssues, [key]: !data.oralHealthAssessment.toothIssues[key]}}})} />
+              <Chk checked={data.oralHealthAssessment.toothIssues[key]} label={label} onToggle={() => onChange({ ...data, oralHealthAssessment: { ...data.oralHealthAssessment, toothIssues: { ...data.oralHealthAssessment.toothIssues, [key]: !data.oralHealthAssessment.toothIssues[key] } } })} />
             </span>
           ))}
           {data.oralHealthAssessment.toothIssues.other && (
-            <input type="text" value={data.oralHealthAssessment.toothIssues.otherText} onChange={e => onChange({...data, oralHealthAssessment: {...data.oralHealthAssessment, toothIssues: {...data.oralHealthAssessment.toothIssues, otherText: e.target.value}}})} className="border-b border-gray-400 px-1 w-24" />
+            <input type="text" value={data.oralHealthAssessment.toothIssues.otherText} onChange={e => onChange({ ...data, oralHealthAssessment: { ...data.oralHealthAssessment, toothIssues: { ...data.oralHealthAssessment.toothIssues, otherText: e.target.value } } })} className="border-b border-gray-400 px-1 w-24" />
           )}
         </div>
         <div>
           <span className="font-medium">義歯の問題：</span>
           {([
-            {key: 'mismatch' as const, label: '不適合'},
-            {key: 'broken' as const, label: '破損'},
-            {key: 'needed' as const, label: '必要だが未作製'},
-            {key: 'notUsed' as const, label: '必要だが使用していない'},
-            {key: 'other' as const, label: 'その他'},
-          ]).map(({key, label}) => (
+            { key: 'mismatch' as const, label: '不適合' },
+            { key: 'broken' as const, label: '破損' },
+            { key: 'needed' as const, label: '必要だが未作製' },
+            { key: 'notUsed' as const, label: '必要だが使用していない' },
+            { key: 'other' as const, label: 'その他' },
+          ]).map(({ key, label }) => (
             <span key={key} className="mr-1">
-              <Chk checked={data.oralHealthAssessment.dentureIssues[key]} label={label} onToggle={() => onChange({...data, oralHealthAssessment: {...data.oralHealthAssessment, dentureIssues: {...data.oralHealthAssessment.dentureIssues, [key]: !data.oralHealthAssessment.dentureIssues[key]}}})} />
+              <Chk checked={data.oralHealthAssessment.dentureIssues[key]} label={label} onToggle={() => onChange({ ...data, oralHealthAssessment: { ...data.oralHealthAssessment, dentureIssues: { ...data.oralHealthAssessment.dentureIssues, [key]: !data.oralHealthAssessment.dentureIssues[key] } } })} />
             </span>
           ))}
           {data.oralHealthAssessment.dentureIssues.other && (
-            <input type="text" value={data.oralHealthAssessment.dentureIssues.otherText} onChange={e => onChange({...data, oralHealthAssessment: {...data.oralHealthAssessment, dentureIssues: {...data.oralHealthAssessment.dentureIssues, otherText: e.target.value}}})} className="border-b border-gray-400 px-1 w-24" />
+            <input type="text" value={data.oralHealthAssessment.dentureIssues.otherText} onChange={e => onChange({ ...data, oralHealthAssessment: { ...data.oralHealthAssessment, dentureIssues: { ...data.oralHealthAssessment.dentureIssues, otherText: e.target.value } } })} className="border-b border-gray-400 px-1 w-24" />
           )}
         </div>
         <div>
           <span className="font-medium">その他：</span>
-          <Chk checked={data.oralHealthAssessment.periodontalDisease} label="歯周病" onToggle={() => onChange({...data, oralHealthAssessment: {...data.oralHealthAssessment, periodontalDisease: !data.oralHealthAssessment.periodontalDisease}})} />
+          <Chk checked={data.oralHealthAssessment.periodontalDisease} label="歯周病" onToggle={() => onChange({ ...data, oralHealthAssessment: { ...data.oralHealthAssessment, periodontalDisease: !data.oralHealthAssessment.periodontalDisease } })} />
           <span className="mx-1">・</span>
-          <Chk checked={data.oralHealthAssessment.mucosalDisease} label="口腔粘膜疾患" onToggle={() => onChange({...data, oralHealthAssessment: {...data.oralHealthAssessment, mucosalDisease: !data.oralHealthAssessment.mucosalDisease}})} />
+          <Chk checked={data.oralHealthAssessment.mucosalDisease} label="口腔粘膜疾患" onToggle={() => onChange({ ...data, oralHealthAssessment: { ...data.oralHealthAssessment, mucosalDisease: !data.oralHealthAssessment.mucosalDisease } })} />
         </div>
       </div>
 
@@ -1682,28 +1683,28 @@ export const KoueiKanriPreview = ({data, onChange, autoQuoteData}: KoueiKanriPro
       <div className="text-[9px] font-bold mt-2 mb-1">2　口腔衛生の管理内容</div>
       <div className="border border-gray-600 text-[9px] mb-2">
         <div className="border-b border-gray-400 p-1">
-          記入者　<input type="text" value={data.managementContent.recorder} onChange={e => onChange({...data, managementContent: {...data.managementContent, recorder: e.target.value}})} className="border-b border-gray-400 px-1 w-24" />
-          　（指示を行った歯科医師名：<input type="text" value={data.managementContent.directingDoctorName} onChange={e => onChange({...data, managementContent: {...data.managementContent, directingDoctorName: e.target.value}})} className="border-b border-gray-400 px-1 w-24" />）
+          記入者　<input type="text" value={data.managementContent.recorder} onChange={e => onChange({ ...data, managementContent: { ...data.managementContent, recorder: e.target.value } })} className="border-b border-gray-400 px-1 w-24" />
+          （指示を行った歯科医師名：<input type="text" value={data.managementContent.directingDoctorName} onChange={e => onChange({ ...data, managementContent: { ...data.managementContent, directingDoctorName: e.target.value } })} className="border-b border-gray-400 px-1 w-24" />）
         </div>
         <div className="border-b border-gray-400 p-1">
           <div className="font-medium mb-0.5">実施目標</div>
           <div className="flex flex-wrap gap-x-3 gap-y-0.5 ml-2">
             {[
-              {key: 'dentalDisease', label: '歯科疾患（重症化防止・改善）'},
-              {key: 'oralHygiene', label: '口腔衛生（自立、介護者の口腔清掃の技術向上）'},
-              {key: 'oralFunction', label: '摂食嚥下等の口腔機能（維持、改善）'},
-              {key: 'dietForm', label: '食事形態（維持、改善）'},
-              {key: 'nutritionStatus', label: '栄養状態（維持、改善）'},
-              {key: 'aspirationPrevention', label: '誤嚥性肺炎の予防'},
-              {key: 'other', label: 'その他'},
-            ].map(({key, label}) => (
+              { key: 'dentalDisease', label: '歯科疾患（重症化防止・改善）' },
+              { key: 'oralHygiene', label: '口腔衛生（自立、介護者の口腔清掃の技術向上）' },
+              { key: 'oralFunction', label: '摂食嚥下等の口腔機能（維持、改善）' },
+              { key: 'dietForm', label: '食事形態（維持、改善）' },
+              { key: 'nutritionStatus', label: '栄養状態（維持、改善）' },
+              { key: 'aspirationPrevention', label: '誤嚥性肺炎の予防' },
+              { key: 'other', label: 'その他' },
+            ].map(({ key, label }) => (
               <label key={key} className="flex items-center gap-0.5 cursor-pointer">
                 <input type="checkbox" checked={(data.managementContent.goals as unknown as Record<string, boolean>)[key]} onChange={e => updateGoal(key, e.target.checked)} className="w-3 h-3 accent-gray-800" />
                 <span>{label}</span>
               </label>
             ))}
             {data.managementContent.goals.other && (
-              <input type="text" value={data.managementContent.goals.otherText} onChange={e => onChange({...data, managementContent: {...data.managementContent, goals: {...data.managementContent.goals, otherText: e.target.value}}})} className="border-b border-gray-400 px-1 w-40" placeholder="内容" />
+              <input type="text" value={data.managementContent.goals.otherText} onChange={e => onChange({ ...data, managementContent: { ...data.managementContent, goals: { ...data.managementContent.goals, otherText: e.target.value } } })} className="border-b border-gray-400 px-1 w-40" placeholder="内容" />
             )}
           </div>
         </div>
@@ -1711,26 +1712,26 @@ export const KoueiKanriPreview = ({data, onChange, autoQuoteData}: KoueiKanriPro
           <div className="font-medium mb-0.5">実施内容</div>
           <div className="flex flex-wrap gap-x-3 gap-y-0.5 ml-2">
             {[
-              {key: 'oralCleaning', label: '口腔の清掃'},
-              {key: 'oralCleaningGuidance', label: '口腔の清掃に関する指導'},
-              {key: 'dentureCleaning', label: '義歯の清掃'},
-              {key: 'dentureCleaningGuidance', label: '義歯の清掃に関する指導'},
-              {key: 'oralFunctionGuidance', label: '摂食嚥下等の口腔機能に関する指導'},
-              {key: 'aspirationPrevention', label: '誤嚥性肺炎の予防に関する指導'},
-              {key: 'other', label: 'その他'},
-            ].map(({key, label}) => (
+              { key: 'oralCleaning', label: '口腔の清掃' },
+              { key: 'oralCleaningGuidance', label: '口腔の清掃に関する指導' },
+              { key: 'dentureCleaning', label: '義歯の清掃' },
+              { key: 'dentureCleaningGuidance', label: '義歯の清掃に関する指導' },
+              { key: 'oralFunctionGuidance', label: '摂食嚥下等の口腔機能に関する指導' },
+              { key: 'aspirationPrevention', label: '誤嚥性肺炎の予防に関する指導' },
+              { key: 'other', label: 'その他' },
+            ].map(({ key, label }) => (
               <label key={key} className="flex items-center gap-0.5 cursor-pointer">
                 <input type="checkbox" checked={(data.managementContent.implementations as unknown as Record<string, boolean>)[key]} onChange={e => updateImpl(key, e.target.checked)} className="w-3 h-3 accent-gray-800" />
                 <span>{label}</span>
               </label>
             ))}
             {data.managementContent.implementations.other && (
-              <input type="text" value={data.managementContent.implementations.otherText} onChange={e => onChange({...data, managementContent: {...data.managementContent, implementations: {...data.managementContent.implementations, otherText: e.target.value}}})} className="border-b border-gray-400 px-1 w-40" placeholder="内容" />
+              <input type="text" value={data.managementContent.implementations.otherText} onChange={e => onChange({ ...data, managementContent: { ...data.managementContent, implementations: { ...data.managementContent.implementations, otherText: e.target.value } } })} className="border-b border-gray-400 px-1 w-40" placeholder="内容" />
             )}
           </div>
         </div>
         <div className="p-1">
-          実施頻度　<input type="text" value={data.managementContent.frequency} onChange={e => onChange({...data, managementContent: {...data.managementContent, frequency: e.target.value}})} className="border-b border-gray-400 px-1 w-32" placeholder="月2回程度" />
+          実施頻度　<input type="text" value={data.managementContent.frequency} onChange={e => onChange({ ...data, managementContent: { ...data.managementContent, frequency: e.target.value } })} className="border-b border-gray-400 px-1 w-32" placeholder="月2回程度" />
         </div>
       </div>
 
@@ -1750,27 +1751,27 @@ export const KoueiKanriPreview = ({data, onChange, autoQuoteData}: KoueiKanriPro
               <div className="font-medium">口腔衛生等の管理</div>
               <div className="flex flex-wrap gap-x-3 gap-y-0.5 ml-2">
                 {[
-                  {key: 'oralCleaning', label: '口腔清掃'},
-                  {key: 'oralCleaningGuidance', label: '口腔清掃に関する指導'},
-                  {key: 'dentureCleaning', label: '義歯の清掃'},
-                  {key: 'dentureCleaningGuidance', label: '義歯の清掃に関する指導'},
-                  {key: 'oralFunctionGuidance', label: '摂食嚥下等の口腔機能に関する指導'},
-                  {key: 'aspirationPrevention', label: '誤嚥性肺炎の予防に関する指導'},
-                  {key: 'other', label: 'その他'},
-                ].map(({key, label}) => (
+                  { key: 'oralCleaning', label: '口腔清掃' },
+                  { key: 'oralCleaningGuidance', label: '口腔清掃に関する指導' },
+                  { key: 'dentureCleaning', label: '義歯の清掃' },
+                  { key: 'dentureCleaningGuidance', label: '義歯の清掃に関する指導' },
+                  { key: 'oralFunctionGuidance', label: '摂食嚥下等の口腔機能に関する指導' },
+                  { key: 'aspirationPrevention', label: '誤嚥性肺炎の予防に関する指導' },
+                  { key: 'other', label: 'その他' },
+                ].map(({ key, label }) => (
                   <span key={key}><Chk checked={(record.oralManagement as unknown as Record<string, boolean>)[key]} label={label} /></span>
                 ))}
               </div>
               <div className="font-medium mt-1">介護職員への技術的助言等の内容</div>
               <div className="flex flex-wrap gap-x-3 gap-y-0.5 ml-2">
                 {[
-                  {key: 'riskBasedCleaning', label: '入所者のリスクに応じた口腔清掃等の実施'},
-                  {key: 'cleaningKnowledge', label: '口腔清掃にかかる知識、技術の習得の必要性'},
-                  {key: 'oralFunctionImprovement', label: '摂食嚥下等の口腔機能の改善のための取組の実施'},
-                  {key: 'dietConfirmation', label: '食事の状態の確認、食形態等の検討の必要性'},
-                  {key: 'continueCurrent', label: '現在の取組の継続'},
-                  {key: 'other', label: 'その他'},
-                ].map(({key, label}) => (
+                  { key: 'riskBasedCleaning', label: '入所者のリスクに応じた口腔清掃等の実施' },
+                  { key: 'cleaningKnowledge', label: '口腔清掃にかかる知識、技術の習得の必要性' },
+                  { key: 'oralFunctionImprovement', label: '摂食嚥下等の口腔機能の改善のための取組の実施' },
+                  { key: 'dietConfirmation', label: '食事の状態の確認、食形態等の検討の必要性' },
+                  { key: 'continueCurrent', label: '現在の取組の継続' },
+                  { key: 'other', label: 'その他' },
+                ].map(({ key, label }) => (
                   <span key={key}><Chk checked={(record.technicalAdvice as unknown as Record<string, boolean>)[key]} label={label} /></span>
                 ))}
               </div>
@@ -1782,7 +1783,7 @@ export const KoueiKanriPreview = ({data, onChange, autoQuoteData}: KoueiKanriPro
       {/* 4 その他の事項 */}
       <div className="text-[9px] font-bold mt-2 mb-1">4　その他の事項</div>
       <div className="border border-gray-600 p-1.5 mb-2">
-        <textarea value={data.otherNotes} onChange={e => onChange({...data, otherNotes: e.target.value})} className="w-full border-0 text-[9px] resize-none min-h-[30px] focus:outline-none" placeholder="その他の事項を入力..." rows={2} />
+        <textarea value={data.otherNotes} onChange={e => onChange({ ...data, otherNotes: e.target.value })} className="w-full border-0 text-[9px] resize-none min-h-[30px] focus:outline-none" placeholder="その他の事項を入力..." rows={2} />
       </div>
 
       {/* フッター */}

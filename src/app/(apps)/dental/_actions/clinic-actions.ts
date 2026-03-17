@@ -6,7 +6,7 @@ import prisma from 'src/lib/prisma'
 // ユーザーの所属クリニックを取得（User.dentalClinicId経由）
 export const getUserDentalClinic = async (userId: string) => {
   const user = await prisma.user.findUnique({
-    where: {id: userId},
+    where: {id: userId || ''},
     include: {DentalClinic: true},
   })
   return user?.DentalClinic ?? null

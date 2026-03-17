@@ -34,7 +34,7 @@ export default async function Page(props: Props) {
   }
 
   const [clinicRaw, rawFacilities] = await Promise.all([
-    getUserDentalClinic(session.id),
+    getUserDentalClinic(session?.id),
     getDentalFacilities({ dentalClinicId: clinicId }),
   ])
 

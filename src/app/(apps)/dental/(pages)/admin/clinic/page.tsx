@@ -7,6 +7,7 @@ import ClinicSettingsClient from './ClinicSettingsClient'
 export default async function Page(props: { searchParams: Promise<Record<string, string>> }) {
   const query = await props.searchParams
   const { session } = await initServerComopnent({ query })
+  console.log({ dentalClinicId: session.dentalClinicId })  //logs
 
   if (!session.dentalClinicId) {
     return <div>クリニックが見つかりません</div>
