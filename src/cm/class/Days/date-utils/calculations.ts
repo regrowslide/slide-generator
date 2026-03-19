@@ -3,19 +3,27 @@ import {formatDate} from '@cm/class/Days/date-utils/formatters'
 import {Days} from '@cm/class/Days/Days'
 import {isServer} from '@cm/lib/methods/common'
 
-export const getMidnight = (date = new Date()) => {
-  const dt = new Date(date)
+export const getMidnight = (date?: Date) => {
+  const dt = date ? new Date(date) : new Date()
 
-  const year = Number(formatDate(dt, 'YYYY'))
-  const month = Number(formatDate(dt, 'MM'))
-  const day = Number(formatDate(dt, 'DD'))
+  const year = dt.getFullYear()
+  const month = dt.getMonth() + 1
+  const day = dt.getDate()
+  const hour = dt.getHours()
+  const minute = dt.getMinutes()
 
   const midnightDate = new Date(year, month - 1, day, 0, 0, 0)
+
+  console.log({
+    date,
+    time: `${year}-${month}-${day} ${hour}:${minute}`,
+    midnightDate,
+  }) //logs
 
   const isValidMidnightDate = (date: Date): boolean => date?.toISOString().includes(`15:00`)
 
   if (!isValidMidnightDate(midnightDate)) {
-    throw new Error(`getMidnight: failed to get midnight date`)
+    console.warn(`getMidnight: failed to get midnight date`)
   }
 
   return midnightDate
