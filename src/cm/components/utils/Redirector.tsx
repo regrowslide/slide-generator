@@ -2,11 +2,12 @@
 import useRedirect from 'src/cm/hooks/useRedirect'
 
 import Loader from '@cm/components/utils/loader/Loader'
+import { isDev } from '@cm/lib/methods/common'
 
-const Redirector = ({redirectPath}) => {
+const Redirector = ({ redirectPath }) => {
   useRedirect(true, redirectPath)
 
-  return <Loader>Redirecting</Loader>
+  return <Loader>{isDev ? 'Redirecting' : '...'}</Loader>
 }
 
 export default Redirector

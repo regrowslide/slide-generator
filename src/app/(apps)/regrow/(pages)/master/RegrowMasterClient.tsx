@@ -12,7 +12,7 @@ import { Button } from '@cm/components/styles/common-components/Button'
 import useGlobal from '@cm/hooks/globalHooks/useGlobal'
 import useModal from '@cm/components/utils/modal/useModal'
 
-import { createStore, updateStore, deleteStore } from '../../_actions/store-actions'
+import { getAllStores as fetchAllStores, createStore, updateStore, deleteStore } from '../../_actions/store-actions'
 import { getAllUsers, updateUserRgStore, banRegrowUser, unbanRegrowUser, createRegrowUser, deleteRegrowUser, updateRegrowUser } from '../../_actions/staff-actions'
 import { seedRegrowData, resetRegrowData, seedFromExcelFiles } from '../../_actions/seed-regrow-actions'
 import RoleAllocationTable from '@cm/components/RoleAllocationTable/RoleAllocationTable'
@@ -37,6 +37,8 @@ const defaultStoreForm: StoreFormData = {
 const RegrowMasterClient = ({ stores: initialStores }: Props) => {
   const { query, toggleLoad } = useGlobal()
   const [activeTab, setActiveTab] = useState<'store' | 'user' | 'role'>('store')
+  // roleタブ切り替え時に再マウントさせるためのキー
+  const [roleTabKey, setRoleTabKey] = useState(0)
 
   // 店舗state
   const [stores, setStores] = useState(initialStores)
@@ -61,17 +63,26 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
   const userModal = useModal()
   const userEditModal = useModal()
 
+  // 店舗一覧を取得
+  const fetchStores = useCallback(async () => {
+    const result = await fetchAllStores()
+    setStores(result)
+  }, [])
+
   // ユーザー一覧を取得
   const fetchUsers = useCallback(async () => {
     const result = await getAllUsers()
     setUsers(result)
   }, [])
 
+  // タブ切り替え時にデータを再取得
   useEffect(() => {
-    if (activeTab === 'user') {
+    if (activeTab === 'store') {
+      fetchStores()
+    } else if (activeTab === 'user') {
       fetchUsers()
     }
-  }, [activeTab, fetchUsers])
+  }, [activeTab, fetchStores, fetchUsers])
 
   // ============================================================
   // 店舗マスタ
@@ -318,7 +329,10 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
         <button
           className={`flex items-center gap-2 px-4 py-2 border-b-2 transition-colors ${activeTab === 'role' ? 'border-blue-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700'
             }`}
-          onClick={() => setActiveTab('role')}
+          onClick={() => {
+            setActiveTab('role')
+            setRoleTabKey((prev) => prev + 1)
+          }}
         >
           <Shield className="w-4 h-4" />
           権限割当
@@ -610,7 +624,7 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
           <h3 className="text-lg font-semibold text-slate-700 mb-4">権限割当</h3>
           <Card>
             <CardContent className="pt-4 ">
-              <RoleAllocationTable />
+              <RoleAllocationTable key={roleTabKey} />
             </CardContent>
           </Card>
         </div>

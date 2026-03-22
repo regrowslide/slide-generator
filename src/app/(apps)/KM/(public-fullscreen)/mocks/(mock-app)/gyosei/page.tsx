@@ -49,6 +49,7 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 const STORAGE_KEYS = {
   AGREED: 'gyosei2-agreed',
   SESSION_UUID: 'gyosei2-session-uuid',
+  MOCK_MODE: 'gyosei-mock-mode',
 }
 
 type FileSlot = { name: string; blobUrl: string; fileId: number }
@@ -358,6 +359,7 @@ export default function GyoseiIIPage() {
   const [ready, setReady] = useState(false)
   const [agreed, setAgreed] = usePersistedState<boolean>(STORAGE_KEYS.AGREED, false)
   const [sessionUuid, setSessionUuid] = usePersistedState<string>(STORAGE_KEYS.SESSION_UUID, '')
+  const [isMockMode, setIsMockMode] = usePersistedState<boolean>(STORAGE_KEYS.MOCK_MODE, true)
   const [step, setStep] = useState(1)
   const [planFiles, setPlanFiles] = useState<FileSlot[]>([{ ...EMPTY_FILE }])
   const [guidelinesFiles, setGuidelinesFiles] = useState<FileSlot[]>([{ ...EMPTY_FILE }])
@@ -550,17 +552,14 @@ export default function GyoseiIIPage() {
     setStep(3)
   }, [])
 
-  // デモモード判定
-  const isDemoMode = planFiles[0]?.blobUrl === 'demo' || guidelinesFiles[0]?.blobUrl === 'demo'
-
   // AI分析実行
   const handleAnalyze = useCallback(async () => {
     setStep(4)
     setIsAnalyzing(true)
     setProgressStep(0)
 
-    // STEP3データをDB保存（デモモード以外）
-    if (!isDemoMode && sessionUuid && grantStatus) {
+    // STEP3データをDB保存（モックモード以外）
+    if (!isMockMode && sessionUuid && grantStatus) {
       await updateGyoseiStep3(sessionUuid, {
         grantStatus,
         adoptionDate: adoptionDate || undefined,
@@ -569,70 +568,25 @@ export default function GyoseiIIPage() {
     }
 
     // 擬似プログレス演出
-    const intervals = isDemoMode ? [500, 1000, 1500, 2000] : [2000, 3000, 4000, 5000]
+    const intervals = isMockMode ? [500, 1000, 1500, 2000] : [2000, 3000, 4000, 5000]
     intervals.forEach((delay, idx) => {
       setTimeout(() => setProgressStep(idx + 1), delay)
     })
 
-    // デモモードの場合はモック結果を使う
-    if (isDemoMode) {
-      const demoResult: AnalysisResult = {
-        success: true,
-        tasks: [
-          { priority: 'high', category: '交付申請', task: '交付申請書の作成・提出', deadline: '採択通知受領後30日以内', responsible: '事業者', notes: '事務局指定フォーマットで作成' },
-          { priority: 'high', category: '交付申請', task: '経費明細書の作成', deadline: '交付申請と同時', responsible: '事業者', notes: '見積書を添付' },
-          { priority: 'high', category: '経費管理', task: '補助対象経費の証憑書類整理ルール策定', deadline: '交付決定後すぐ', responsible: '経理担当', notes: '領収書・請求書・振込明細を一元管理' },
-          { priority: 'high', category: '経費管理', task: '専用口座（または経理区分）の設定', deadline: '交付決定後すぐ', responsible: '経理担当', notes: '補助金専用の入出金管理を推奨' },
-          { priority: 'medium', category: '経費管理', task: '相見積もり取得（50万円以上の発注）', deadline: '発注前', responsible: '事業者', notes: '原則2社以上から見積取得' },
-          { priority: 'medium', category: '経費管理', task: '発注書・契約書の締結', deadline: '事業実施前', responsible: '事業者', notes: '交付決定日以降の日付であること' },
-          { priority: 'medium', category: '中間報告', task: '遂行状況報告書の作成・提出', deadline: '事務局指定期日', responsible: '事業者', notes: '求められた場合のみ' },
-          { priority: 'medium', category: '中間報告', task: '計画変更申請（必要な場合）', deadline: '変更が生じた時点で速やかに', responsible: '事業者', notes: '経費の流用・事業内容変更時' },
-          { priority: 'high', category: '実績報告', task: '実績報告書の作成', deadline: '事業完了後30日以内または補助事業期間終了日', responsible: '事業者', notes: '早い方の日付が期限' },
-          { priority: 'high', category: '実績報告', task: '経費エビデンスの最終チェック・整理', deadline: '実績報告前', responsible: '経理担当', notes: '支払証憑・成果物の写真等' },
-          { priority: 'medium', category: '実績報告', task: '成果物・導入設備の写真撮影', deadline: '事業完了時', responsible: '事業者', notes: '導入前後の比較写真も有効' },
-          { priority: 'low', category: 'その他', task: '確定検査への対応準備', deadline: '実績報告後', responsible: '事業者', notes: '書類の原本保管（5年間）' },
-          { priority: 'low', category: 'その他', task: '事業化状況報告の準備', deadline: '補助事業終了後5年間', responsible: '事業者', notes: '毎年度の報告義務あり' },
-        ],
-        reportGuide: `## 実績報告ガイド（デモ）
+    // モック時もセッションが必要（DB保存+メール送信のため）
+    const uuid = await ensureSession()
 
-### 1. 実績報告とは
-補助事業が完了した後、事業の成果と経費の使途を事務局に報告する手続きです。
-
-### 2. 提出期限
-- 補助事業の完了日から**30日以内**
-- または**補助事業期間の終了日**のいずれか早い方
-
-### 3. 必要書類
-- 実績報告書（事務局指定フォーマット）
-- 経費エビデンス一式（領収書、請求書、振込明細書等）
-- 成果物の写真・スクリーンショット
-- その他事務局が指定する書類
-
-### 4. 注意事項
-- **交付決定日より前の支出は補助対象外**です
-- 経費の支払いは原則として**銀行振込**で行ってください
-- 見積書・発注書・納品書・請求書・支払証明の**5点セット**を揃えましょう
-- 書類の原本は**5年間保管**が義務付けられています`,
-      }
+    try {
+      const analysisResult = await analyzeSubsidyPlanII({ sessionUuid: uuid, isMockMode })
+      const lastDelay = intervals[intervals.length - 1]
       setTimeout(() => {
         setProgressStep(4)
         setTimeout(() => {
           setIsAnalyzing(false)
-          setResult(demoResult)
+          setResult(analysisResult)
           setStep(5)
-        }, 800)
-      }, intervals[intervals.length - 1])
-      return
-    }
-
-    try {
-      const analysisResult = await analyzeSubsidyPlanII({ sessionUuid })
-      setProgressStep(4)
-      setTimeout(() => {
-        setIsAnalyzing(false)
-        setResult(analysisResult)
-        setStep(5)
-      }, 1500)
+        }, isMockMode ? 800 : 1500)
+      }, lastDelay)
     } catch {
       setIsAnalyzing(false)
       setResult({
@@ -646,7 +600,8 @@ export default function GyoseiIIPage() {
     grantStatus,
     adoptionDate,
     grantDecisionDate,
-    isDemoMode,
+    isMockMode,
+    ensureSession,
   ])
 
   // Excel配信
@@ -662,15 +617,8 @@ export default function GyoseiIIPage() {
       return
     }
 
-    // デモモードの場合はモック送信
-    if (isDemoMode || !sessionUuid) {
-      setEmailSent(true)
-      setTimeout(() => {
-        setShowEmailInput(false)
-        setEmailSent(false)
-        setEmail('')
-        setEmailConfirm('')
-      }, 3000)
+    if (!sessionUuid) {
+      setEmailError('セッションが見つかりません。ページをリロードしてください。')
       return
     }
 
@@ -693,7 +641,7 @@ export default function GyoseiIIPage() {
     } finally {
       setEmailSending(false)
     }
-  }, [email, emailConfirm, isDemoMode, sessionUuid])
+  }, [email, emailConfirm, sessionUuid])
 
   // リセット
   const handleReset = useCallback(() => {
@@ -717,7 +665,7 @@ export default function GyoseiIIPage() {
   if (!agreed) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50">
-        <Header />
+        <Header isMockMode={isMockMode} onToggleMockMode={setIsMockMode} />
 
         <div className="max-w-2xl mx-auto px-4 py-8">
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
@@ -786,7 +734,7 @@ export default function GyoseiIIPage() {
   if (isAnalyzing && step === 4) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50">
-        <Header onReset={handleReset} />
+        <Header onReset={handleReset} isMockMode={isMockMode} onToggleMockMode={setIsMockMode} />
 
         <div className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] px-4">
           {/* AIアイコン */}
@@ -850,7 +798,7 @@ export default function GyoseiIIPage() {
   if (step === 5 && result) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50">
-        <Header onReset={handleReset} />
+        <Header onReset={handleReset} isMockMode={isMockMode} onToggleMockMode={setIsMockMode} />
 
         <div className="max-w-5xl mx-auto px-4 py-8">
           {!result.success ? (
@@ -1103,7 +1051,7 @@ export default function GyoseiIIPage() {
   // ===== ステップウィザード画面 (STEP 1〜3) =====
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50">
-      <Header onReset={handleReset} />
+      <Header onReset={handleReset} isMockMode={isMockMode} onToggleMockMode={setIsMockMode} />
       <StepIndicator currentStep={step} />
 
       <div className="max-w-2xl mx-auto px-4 pb-8">
@@ -1425,7 +1373,15 @@ export default function GyoseiIIPage() {
 
 // ===== ヘッダーコンポーネント =====
 
-const Header = ({ onReset }: { onReset?: () => void }) => (
+const Header = ({
+  onReset,
+  isMockMode,
+  onToggleMockMode,
+}: {
+  onReset?: () => void
+  isMockMode?: boolean
+  onToggleMockMode?: (v: boolean) => void
+}) => (
   <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-30">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div className="flex items-center gap-3">
@@ -1440,6 +1396,33 @@ const Header = ({ onReset }: { onReset?: () => void }) => (
         </div>
       </div>
       <div className="flex items-center gap-3">
+        {/* モック/本番トグル */}
+        {onToggleMockMode && (
+          <button
+            onClick={() => onToggleMockMode(!isMockMode)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
+              isMockMode
+                ? 'bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100'
+                : 'bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100'
+            }`}
+            title={isMockMode ? 'モックモード（AI分析をスキップ）' : '本番モード（Gemini APIで分析）'}
+          >
+            <div
+              className={`w-7 h-4 rounded-full relative transition-colors ${
+                isMockMode ? 'bg-amber-300' : 'bg-emerald-400'
+              }`}
+            >
+              <div
+                className={`absolute top-0.5 w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${
+                  isMockMode ? 'left-0.5' : 'left-3.5'
+                }`}
+              />
+            </div>
+            <span className="hidden sm:inline">
+              {isMockMode ? 'モック' : '本番'}
+            </span>
+          </button>
+        )}
         {onReset && (
           <button
             onClick={onReset}

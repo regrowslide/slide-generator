@@ -1,18 +1,19 @@
 'use client'
-import React, {createContext, useContext, ReactNode} from 'react'
+import React, { createContext, useContext, ReactNode } from 'react'
 import useMyNavigation from '@cm/hooks/globalHooks/useMyNavigation'
-import {NavigationContextType} from './types'
+import { NavigationContextType } from './types'
 import Loader from '@cm/components/utils/loader/Loader'
 import Redirector from '@cm/components/utils/Redirector'
+import { isDev } from '@cm/lib/methods/common'
 
 const NavigationContext = createContext<NavigationContextType | null>(null)
 
-const NavigationContextProvider = ({children}: {children: ReactNode}) => {
+const NavigationContextProvider = ({ children }: { children: ReactNode }) => {
   const navigationData = useMyNavigation()
-  const {pathname} = navigationData
+  const { pathname } = navigationData
 
   if (navigationData.query === null || navigationData.query === undefined) {
-    return <Loader>Validating Navigation Data</Loader>
+    return <Loader>{isDev ? 'Validating Navigation Data' : ''}</Loader>
   }
 
   if (pathname === `/` && process.env.NEXT_PUBLIC_DEFAULT_REDIRECT_PATH) {

@@ -1,16 +1,14 @@
 'use client'
 
 import React from 'react'
+import { useRouter } from 'next/navigation'
 import { Briefcase, TrendingUp, Target, DollarSign, AlertTriangle, CheckSquare, Square, ArrowRight, Handshake, Calendar, MapPin } from 'lucide-react'
 import { useFrankartMockData } from '../context/MockDataContext'
 import { DEAL_STATUS_CONFIG } from './constants'
 
-type Props = {
-  onNavigate: (page: string) => void
-}
-
-const DashboardPage: React.FC<Props> = ({ onNavigate }) => {
-  const { deals, todos, toggleTodoComplete, selectDeal, meetings } = useFrankartMockData()
+const DashboardPage: React.FC = () => {
+  const router = useRouter()
+  const { deals, todos, toggleTodoComplete, meetings } = useFrankartMockData()
 
   const today = new Date().toISOString().split('T')[0]
 
@@ -39,8 +37,7 @@ const DashboardPage: React.FC<Props> = ({ onNavigate }) => {
 
   // 案件クリック
   const handleDealClick = (dealId: string) => {
-    selectDeal(dealId)
-    onNavigate('deal-room')
+    router.push(`/KM/mocks/frankart/deals/${dealId}`)
   }
 
   return (

@@ -144,6 +144,7 @@ export async function removeGyoseiFile(fileId: number, blobUrl: string) {
 /** DB上のセッションからBlob URLを取得し、Geminiに送信して分析 */
 export async function analyzeSubsidyPlanII(input: {
   sessionUuid: string
+  isMockMode?: boolean
 }): Promise<AnalysisResult> {
   const session = await prisma.gyoseiSession.findUnique({
     where: { uuid: input.sessionUuid },
@@ -159,6 +160,56 @@ export async function analyzeSubsidyPlanII(input: {
     where: { uuid: input.sessionUuid },
     data: { status: 'analyzing' },
   })
+
+  // モックモード: API呼び出しをスキップしてモック結果を返す
+  if (input.isMockMode) {
+    const mockTasks: TaskItem[] = [
+      { priority: 'high', category: '交付申請', task: '交付申請書の作成・提出', deadline: '採択通知受領後30日以内', responsible: '事業者', notes: '事務局指定フォーマットで作成' },
+      { priority: 'high', category: '交付申請', task: '経費明細書の作成', deadline: '交付申請と同時', responsible: '事業者', notes: '見積書を添付' },
+      { priority: 'high', category: '経費管理', task: '補助対象経費の証憑書類整理ルール策定', deadline: '交付決定後すぐ', responsible: '経理担当', notes: '領収書・請求書・振込明細を一元管理' },
+      { priority: 'high', category: '経費管理', task: '専用口座（または経理区分）の設定', deadline: '交付決定後すぐ', responsible: '経理担当', notes: '補助金専用の入出金管理を推奨' },
+      { priority: 'medium', category: '経費管理', task: '相見積もり取得（50万円以上の発注）', deadline: '発注前', responsible: '事業者', notes: '原則2社以上から見積取得' },
+      { priority: 'medium', category: '経費管理', task: '発注書・契約書の締結', deadline: '事業実施前', responsible: '事業者', notes: '交付決定日以降の日付であること' },
+      { priority: 'medium', category: '中間報告', task: '遂行状況報告書の作成・提出', deadline: '事務局指定期日', responsible: '事業者', notes: '求められた場合のみ' },
+      { priority: 'medium', category: '中間報告', task: '計画変更申請（必要な場合）', deadline: '変更が生じた時点で速やかに', responsible: '事業者', notes: '経費の流用・事業内容変更時' },
+      { priority: 'high', category: '実績報告', task: '実績報告書の作成', deadline: '事業完了後30日以内または補助事業期間終了日', responsible: '事業者', notes: '早い方の日付が期限' },
+      { priority: 'high', category: '実績報告', task: '経費エビデンスの最終チェック・整理', deadline: '実績報告前', responsible: '経理担当', notes: '支払証憑・成果物の写真等' },
+      { priority: 'medium', category: '実績報告', task: '成果物・導入設備の写真撮影', deadline: '事業完了時', responsible: '事業者', notes: '導入前後の比較写真も有効' },
+      { priority: 'low', category: 'その他', task: '確定検査への対応準備', deadline: '実績報告後', responsible: '事業者', notes: '書類の原本保管（5年間）' },
+      { priority: 'low', category: 'その他', task: '事業化状況報告の準備', deadline: '補助事業終了後5年間', responsible: '事業者', notes: '毎年度の報告義務あり' },
+    ]
+    const mockReportGuide = `## 実績報告ガイド（モック）
+
+### 1. 実績報告とは
+補助事業が完了した後、事業の成果と経費の使途を事務局に報告する手続きです。
+
+### 2. 提出期限
+- 補助事業の完了日から**30日以内**
+- または**補助事業期間の終了日**のいずれか早い方
+
+### 3. 必要書類
+- 実績報告書（事務局指定フォーマット）
+- 経費エビデンス一式（領収書、請求書、振込明細書等）
+- 成果物の写真・スクリーンショット
+- その他事務局が指定する書類
+
+### 4. 注意事項
+- **交付決定日より前の支出は補助対象外**です
+- 経費の支払いは原則として**銀行振込**で行ってください
+- 見積書・発注書・納品書・請求書・支払証明の**5点セット**を揃えましょう
+- 書類の原本は**5年間保管**が義務付けられています`
+
+    // モック結果をDBに保存
+    await prisma.gyoseiSession.update({
+      where: { uuid: input.sessionUuid },
+      data: {
+        status: 'completed',
+        analysisResult: { tasks: mockTasks, reportGuide: mockReportGuide },
+      },
+    })
+
+    return { success: true, tasks: mockTasks, reportGuide: mockReportGuide }
+  }
 
   // Blob URLからPDFをfetchしてBase64に変換
   const inlineData: GeminiInlineData[] = []
@@ -360,11 +411,12 @@ export async function sendExcelByEmail(
     data: { email },
   })
 
-  // メール送信
+  // メール送信（開発環境でもテスト送信する）
   const result = await knockEmailApi({
     subject: '【AI行政書士君 II】やることリスト（Excel）',
     text: `AI行政書士君 IIをご利用いただきありがとうございます。\n\n分析結果のExcelファイルを添付いたします。\n\n※本メールは自動送信です。\n※本ツールで生成された情報は参考情報としてご活用ください。`,
     to: [email],
+    doSentInTest: true,
     attachments: [
       {
         filename: 'やることリスト.xlsx',
