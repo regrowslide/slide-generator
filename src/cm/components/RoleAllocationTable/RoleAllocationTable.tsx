@@ -13,7 +13,9 @@ import { Button } from '@cm/components/styles/common-components/Button'
 import RoleMasterCrudSection from './RoleMasterCrudSection'
 import PaginationSection from './PaginationSection'
 import RoleFilterSection from './RoleFilterSection'
-import UserRoleTable from './UserRoleTable'
+import UserRoleTable, { type UserColumnConfig, DEFAULT_USER_COLUMNS } from './UserRoleTable'
+export type { UserColumnConfig }
+export { DEFAULT_USER_COLUMNS }
 
 /**
  * 動的検索フィールドの型定義
@@ -30,11 +32,14 @@ export type SearchFieldConfig = {
 
 type user = User & { UserRole: UserRole[] }
 type RoleAllocationTableProps = {
-  PageBuilderExtraProps?: anyObject
+  // PageBuilderExtraProps?: anyObject
+
   /** 動的検索フィールドの定義配列 */
   searchFields?: SearchFieldConfig[]
   /** アプリ名でRoleMasterを絞り込む */
   appFilter?: string
+  /** テーブルに表示するユーザーカラム定義（デフォルト: ユーザー名のみ） */
+  userColumns?: UserColumnConfig[]
   /** Userフィルタ（未指定時はrootPathベースで自動判定） */
   createUserFetchProps?: (query: anyObject) => {
     where?: Prisma.UserFindManyArgs['where']
@@ -48,7 +53,7 @@ type RoleAllocationTableProps = {
 const ITEMS_PER_PAGE = 50
 
 const RoleAllocationTable = ({
-  PageBuilderExtraProps,
+  // PageBuilderExtraProps,
   searchFields = [
     {
       id: 'userId',
@@ -65,6 +70,7 @@ const RoleAllocationTable = ({
     }
   ],
   appFilter,
+  userColumns,
   createUserFetchProps,
 }: RoleAllocationTableProps) => {
   const minWidthClassName = 'min-w-[480px]'
@@ -145,7 +151,7 @@ const RoleAllocationTable = ({
 
   const fetchRoles = async () => {
     const where = appFilter ? { apps: { has: appFilter } } : {}
-    const { result: roles = [] } = await doStandardPrisma('roleMaster', 'findMany', { where })
+    const { result: roles = [] } = await doStandardPrisma('roleMaster', 'findMany', { where, orderBy: { sortOrder: 'asc' } })
     setroles(roles)
   }
 
@@ -154,7 +160,11 @@ const RoleAllocationTable = ({
   useEffect(() => {
 
     fetchUsers()
-  }, [PageBuilderExtraProps?.where, PageBuilderExtraProps?.where?.userId, PageBuilderExtraProps?.where?.roleMasterId, searchFieldValuesKey])
+  }, [
+    // PageBuilderExtraProps?.where,
+    // PageBuilderExtraProps?.where?.userId,
+    // PageBuilderExtraProps?.where?.roleMasterId,
+    searchFieldValuesKey])
 
   useEffect(() => {
     fetchRoles()
@@ -270,6 +280,7 @@ const RoleAllocationTable = ({
               roles={roles}
               onUsersChanged={fetchUsers}
               minWidthClassName={minWidthClassName}
+              userColumns={userColumns}
             />
           </div>
 

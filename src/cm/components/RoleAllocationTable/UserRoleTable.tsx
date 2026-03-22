@@ -5,6 +5,20 @@ import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/d
 import { CsvTable } from '@cm/components/styles/common-components/CsvTable/CsvTable'
 import { cn } from '@cm/shadcn/lib/utils'
 
+/** テーブルに表示するカラムの定義 */
+export type UserColumnConfig = {
+  /** Userオブジェクトのキー */
+  key: keyof User
+  /** カラムヘッダーのラベル */
+  label: string
+  /** セルのスタイル */
+  style?: React.CSSProperties
+}
+
+/** デフォルトカラム: ユーザー名のみ */
+export const DEFAULT_USER_COLUMNS: UserColumnConfig[] = [
+  { key: 'name', label: 'ユーザー', style: { fontSize: 12 } },
+]
 
 type UserWithRole = User & { UserRole: UserRole[] }
 
@@ -13,14 +27,19 @@ type UserRoleTableProps = {
   roles: RoleMaster[]
   onUsersChanged: () => Promise<void>
   minWidthClassName?: string
+  /** 表示するカラム定義（デフォルト: ユーザー名のみ） */
+  userColumns?: UserColumnConfig[]
 }
 
-const UserRoleTable = ({ users, roles, onUsersChanged, minWidthClassName }: UserRoleTableProps) => {
+const UserRoleTable = ({ users, roles, onUsersChanged, minWidthClassName, userColumns = DEFAULT_USER_COLUMNS }: UserRoleTableProps) => {
   return CsvTable({
     records: users.map(u => ({
       csvTableRow: [
-        { cellValue: String(u.code ?? ''), label: 'コード', style: { fontSize: 12 } },
-        { cellValue: u.name, label: 'ユーザー', style: { fontSize: 12 } },
+        ...userColumns.map(col => ({
+          cellValue: String(u[col.key] ?? ''),
+          label: col.label,
+          style: col.style ?? { fontSize: 12 },
+        })),
         ...roles.map(r => {
           const hasRole = !!u.UserRole.find(ur => ur.roleMasterId === r.id)
           return {

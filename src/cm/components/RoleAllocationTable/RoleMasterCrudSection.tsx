@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import type { RoleMaster } from '@prisma/generated/prisma/client'
 import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
-import { Plus, Pencil, Trash2, Check, X } from 'lucide-react'
+import { Plus, Pencil, Trash2, Check, X, ChevronUp, ChevronDown } from 'lucide-react'
 import { Button } from '@cm/components/styles/common-components/Button'
 import ShadModal from '@cm/shadcn/ui/Organisms/ShadModal'
 
@@ -32,12 +32,15 @@ const RoleMasterCrudSection = ({
 
   const handleAddRole = async () => {
     if (!addForm.name.trim()) return
+    // 末尾に追加（既存の最大sortOrder + 1）
+    const maxSortOrder = roles.length > 0 ? Math.max(...roles.map(r => r.sortOrder)) : 0
     await doStandardPrisma('roleMaster', 'create', {
       data: {
         name: addForm.name.trim(),
         description: addForm.description.trim() || null,
         color: addForm.color.trim() || null,
         apps: appFilter ? [appFilter] : [],
+        sortOrder: maxSortOrder + 1,
       },
     })
     setAddForm(emptyForm)
@@ -65,6 +68,27 @@ const RoleMasterCrudSection = ({
       },
     })
     setEditingRoleId(null)
+    await onRolesChanged()
+  }
+
+  /** 並び替え: 対象ロールを上または下に移動 */
+  const handleMoveRole = async (index: number, direction: 'up' | 'down') => {
+    const swapIndex = direction === 'up' ? index - 1 : index + 1
+    if (swapIndex < 0 || swapIndex >= roles.length) return
+
+    // 現在の表示順を配列として複製し、隣接要素を入れ替え
+    const reordered = [...roles]
+    ;[reordered[index], reordered[swapIndex]] = [reordered[swapIndex], reordered[index]]
+
+    // インデックスベースで連番を振り直す（同一sortOrder問題を回避）
+    await Promise.all(
+      reordered.map((role, i) =>
+        doStandardPrisma('roleMaster', 'update', {
+          where: { id: role.id },
+          data: { sortOrder: i },
+        })
+      )
+    )
     await onRolesChanged()
   }
 
@@ -153,42 +177,79 @@ const RoleMasterCrudSection = ({
           )}
 
           {/* 既存ロール一覧 */}
-          <div className="space-y-1">
-            {roles.map(role => (
-              <div key={role.id} className="flex items-center gap-2 bg-white p-1.5 rounded border border-gray-100">
-                {editingRoleId === role.id ? (
-                  <>
-                    {renderFormFields(editForm, setEditForm, 'sm')}
-                    <button onClick={handleSaveEdit} className="text-green-600 hover:text-green-800">
-                      <Check className="h-3.5 w-3.5" />
-                    </button>
-                    <button onClick={() => setEditingRoleId(null)} className="text-gray-400 hover:text-gray-600">
-                      <X className="h-3.5 w-3.5" />
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <span className="text-xs text-gray-500 w-32 truncate">{role.name}</span>
-                    <span className="text-xs text-gray-700 w-32 truncate">{role.description || '-'}</span>
-                    {role.color && (
-                      <span
-                        className="inline-block w-4 h-4 rounded-full border border-gray-200"
-                        style={{ backgroundColor: role.color }}
-                      />
-                    )}
-                    <div className="ml-auto flex items-center gap-1">
-                      <button onClick={() => handleStartEdit(role)} className="text-gray-400 hover:text-blue-600">
-                        <Pencil className="h-3.5 w-3.5" />
-                      </button>
-                      <button onClick={() => handleDeleteRole(role)} className="text-gray-400 hover:text-red-600">
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
-            ))}
-          </div>
+          <table className="min-w-full text-xs bg-white rounded border border-gray-100">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="px-2 py-1 text-center font-medium text-gray-500 w-14">順序</th>
+                <th className="px-2 py-1 text-left font-medium text-gray-500 w-32">名称</th>
+                <th className="px-2 py-1 text-left font-medium text-gray-500 w-32">説明</th>
+                <th className="px-2 py-1 text-left font-medium text-gray-500 w-12">色</th>
+                <th className="px-2 py-1 text-right font-medium text-gray-500 w-20"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {roles.map((role, index) => (
+                <tr key={role.id} className="border-t border-gray-100">
+                  {editingRoleId === role.id ? (
+                    <>
+                      <td colSpan={5} className="px-2 py-1 bg-gray-50">
+                        <div className="flex items-center gap-2">
+                          {renderFormFields(editForm, setEditForm, 'sm')}
+                          <button onClick={handleSaveEdit} className="text-green-600 hover:text-green-800">
+                            <Check className="h-3.5 w-3.5" />
+                          </button>
+                          <button onClick={() => setEditingRoleId(null)} className="text-gray-400 hover:text-gray-600">
+                            <X className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </>
+                  ) : (
+                    <>
+                      <td className="px-2 py-1 w-14">
+                        <div className="flex justify-center items-center gap-0.5">
+                          <button
+                            onClick={() => handleMoveRole(index, 'up')}
+                            disabled={index === 0}
+                            className="text-gray-400 hover:text-blue-600 disabled:opacity-20 disabled:cursor-not-allowed"
+                          >
+                            <ChevronUp className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            onClick={() => handleMoveRole(index, 'down')}
+                            disabled={index === roles.length - 1}
+                            className="text-gray-400 hover:text-blue-600 disabled:opacity-20 disabled:cursor-not-allowed"
+                          >
+                            <ChevronDown className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                      <td className="px-2 py-1 text-gray-500 w-32 truncate">{role.name}</td>
+                      <td className="px-2 py-1 text-gray-700 w-32 truncate">{role.description || '-'}</td>
+                      <td className="px-2 py-1 w-12">
+                        {role.color && (
+                          <span
+                            className="inline-block w-4 h-4 rounded-full border border-gray-200"
+                            style={{ backgroundColor: role.color }}
+                          />
+                        )}
+                      </td>
+                      <td className="px-2 py-1 w-20">
+                        <div className="flex justify-end items-center gap-1">
+                          <button onClick={() => handleStartEdit(role)} className="text-gray-400 hover:text-blue-600">
+                            <Pencil className="h-3.5 w-3.5" />
+                          </button>
+                          <button onClick={() => handleDeleteRole(role)} className="text-gray-400 hover:text-red-600">
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </ShadModal>
     </section>
