@@ -1010,7 +1010,41 @@ const achievementColorClass = (rate: number) =>
   rate >= 100 ? 'bg-green-100 text-green-700' : rate >= 80 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
 
 const achievementBarColor = (rate: number) =>
-  rate >= 100 ? '#34A853' : rate >= 80 ? '#FFA500' : '#DC3545'
+  rate >= 100 ? 'url(#achievementGradient)' : rate >= 80 ? '#FFA500' : '#DC3545'
+
+// 達成グラデーション定義（SVG defs内で使用）
+const AchievementGradientDef = () => (
+  <defs>
+    <linearGradient id="achievementGradient" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stopColor="#3B82F6" />
+      <stop offset="35%" stopColor="#10B981" />
+      <stop offset="70%" stopColor="#22C55E" />
+      <stop offset="100%" stopColor="#F59E0B" />
+    </linearGradient>
+  </defs>
+)
+
+// 達成時にバーを太く描画するカスタムシェイプ
+const AchievementBarShape = (props: Record<string, unknown>) => {
+  const {x, y, width, height, fill, payload} = props as {x: number; y: number; width: number; height: number; fill: string; payload: {達成率: number}}
+  const isAchieved = payload.達成率 >= 100
+  // 達成時は1.8倍の太さ、角丸付き
+  const barHeight = isAchieved ? height * 1.8 : height
+  const barY = y + (height - barHeight) / 2
+  return <rect x={x} y={barY} width={width} height={barHeight} fill={fill} rx={isAchieved ? 4 : 0} ry={isAchieved ? 4 : 0} />
+}
+
+// 達成時に王冠を表示するカスタムラベル
+const CrownLabel = (props: Record<string, unknown>) => {
+  const {x, y, width, height, value} = props as {x: number; y: number; width: number; height: number; value: number}
+  if (value < 100) return null
+  // バーが太くなった分を考慮して中央に配置
+  return (
+    <text x={(x ?? 0) + (width ?? 0) + 6} y={(y ?? 0) + (height ?? 0) / 2 + 6} fontSize={20}>
+      👑
+    </text>
+  )
+}
 
 const buildStaffAchievementData = (
   monthlyData: MonthlyData,
@@ -1062,7 +1096,7 @@ const buildStoreAchievementData = (
 
 const AchievementLegend = () => (
   <div className="mt-4 flex gap-4 text-xs text-gray-500">
-    <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-green-600 inline-block" /> 100%以上</span>
+    <span className="flex items-center gap-1"><span className="w-3 h-3 rounded inline-block" style={{background: 'linear-gradient(to right, #3B82F6, #10B981, #22C55E, #F59E0B)'}} /> 👑 100%以上</span>
     <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-orange-500 inline-block" /> 80-99%</span>
     <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-red-600 inline-block" /> 80%未満</span>
     <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-indigo-500 inline-block" /> 達成率ライン</span>
@@ -1155,7 +1189,8 @@ const Slide11StaffAchievementChart = ({selectedStores, selectedStaffNames}: Stor
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={Math.max(chartData.length * 50 + 80, 300)}>
-          <ComposedChart data={chartData} layout="vertical" margin={{left: 20, right: 60}}>
+          <ComposedChart data={chartData} layout="vertical" margin={{left: 20, right: 80}}>
+            <AchievementGradientDef />
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis xAxisId="sales" type="number" orientation="bottom" style={{fontSize: '11px'}}
               tickFormatter={(v: number) => `¥${(v / 10000).toFixed(0)}万`}
@@ -1170,10 +1205,11 @@ const Slide11StaffAchievementChart = ({selectedStores, selectedStaffNames}: Stor
             />
             <Legend wrapperStyle={{fontSize: '12px'}} />
             <Bar xAxisId="sales" dataKey="目標売上" fill="#94A3B8" name="目標売上" barSize={16} />
-            <Bar xAxisId="sales" dataKey="実績売上" name="実績売上" barSize={16}>
+            <Bar xAxisId="sales" dataKey="実績売上" name="実績売上" barSize={16} shape={<AchievementBarShape />}>
               {chartData.map((entry, index) => (
                 <Cell key={index} fill={achievementBarColor(entry.達成率)} />
               ))}
+              <LabelList dataKey="達成率" content={<CrownLabel />} />
             </Bar>
             <Line xAxisId="rate" dataKey="達成率" stroke="#6366F1" strokeWidth={2} name="達成率" dot={{r: 5, fill: '#6366F1'}} />
           </ComposedChart>
@@ -1266,7 +1302,8 @@ const Slide13StoreAchievementChart = ({selectedStores}: StoreFilterProps) => {
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={Math.max(chartData.length * 70 + 80, 250)}>
-          <ComposedChart data={chartData} layout="vertical" margin={{left: 20, right: 60}}>
+          <ComposedChart data={chartData} layout="vertical" margin={{left: 20, right: 80}}>
+            <AchievementGradientDef />
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis xAxisId="sales" type="number" orientation="bottom" style={{fontSize: '11px'}}
               tickFormatter={(v: number) => `¥${(v / 10000).toFixed(0)}万`}
@@ -1281,10 +1318,11 @@ const Slide13StoreAchievementChart = ({selectedStores}: StoreFilterProps) => {
             />
             <Legend wrapperStyle={{fontSize: '12px'}} />
             <Bar xAxisId="sales" dataKey="目標売上" fill="#94A3B8" name="目標売上" barSize={22} />
-            <Bar xAxisId="sales" dataKey="実績売上" name="実績売上" barSize={22}>
+            <Bar xAxisId="sales" dataKey="実績売上" name="実績売上" barSize={22} shape={<AchievementBarShape />}>
               {chartData.map((entry, index) => (
                 <Cell key={index} fill={achievementBarColor(entry.達成率)} />
               ))}
+              <LabelList dataKey="達成率" content={<CrownLabel />} />
             </Bar>
             <Line xAxisId="rate" dataKey="達成率" stroke="#6366F1" strokeWidth={2} name="達成率" dot={{r: 6, fill: '#6366F1'}} />
           </ComposedChart>
