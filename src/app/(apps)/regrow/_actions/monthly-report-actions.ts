@@ -2,6 +2,8 @@
 
 import {RegrowMonthlyReportService} from '../lib/services/RegrowMonthlyReportService'
 import type {MonthlyData, YearMonth, StaffRecord, StoreTotals, StoreKpi, StaffManualData, StoreName} from '../types'
+import {sessionOnServer, fetchUserRole} from 'src/non-common/serverSideFunction'
+import {getScopes} from 'src/non-common/scope-lib/getScopes'
 
 // ============================================================
 // Read
@@ -18,6 +20,14 @@ export const getAvailableMonths = async (): Promise<YearMonth[]> =>
 // ============================================================
 
 export const upsertMonthlyReport = async (yearMonth: string): Promise<void> => {
+  // 管理者のみ新規作成可能
+  const {session} = await sessionOnServer()
+  const {roles} = await fetchUserRole({session})
+  const scopes = getScopes(session ?? {}, {roles})
+  const {isAdmin} = scopes.getRegrowScopes()
+  if (!isAdmin) {
+    throw new Error('管理者のみ年月データを新規作成できます')
+  }
   await RegrowMonthlyReportService.upsertMonthlyReport(yearMonth)
 }
 

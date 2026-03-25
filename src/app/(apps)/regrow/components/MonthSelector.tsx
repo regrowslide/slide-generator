@@ -11,7 +11,7 @@ import {formatYearMonth, getCurrentYearMonth} from '../lib/storage'
 import type {YearMonth} from '../types'
 
 export const MonthSelector = () => {
-  const {currentYearMonth, availableMonths, setCurrentYearMonth, createNewMonth} = useDataContext()
+  const {currentYearMonth, availableMonths, setCurrentYearMonth, createNewMonth, scopes} = useDataContext()
   const [isCreating, setIsCreating] = useState(false)
   const [newMonth, setNewMonth] = useState('')
 
@@ -58,45 +58,47 @@ export const MonthSelector = () => {
           </select>
         </div>
 
-        {/* 新規作成ボタン */}
-        <div>
-          {!isCreating ? (
-            <button
-              onClick={() => {
-                setIsCreating(true)
-                setNewMonth(getCurrentYearMonth())
-              }}
-              className="px-4 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded text-sm font-medium transition-colors"
-            >
-              + 新規作成
-            </button>
-          ) : (
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                value={newMonth}
-                onChange={(e) => setNewMonth(e.target.value)}
-                placeholder="YYYY-MM"
-                className="px-3 py-1.5 border border-gray-300 rounded text-sm w-32 focus:outline-none focus:ring-2 focus:ring-red-500"
-              />
-              <button
-                onClick={handleCreateNew}
-                className="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded text-sm font-medium transition-colors"
-              >
-                作成
-              </button>
+        {/* 新規作成ボタン（管理者のみ） */}
+        {scopes.isAdmin && (
+          <div>
+            {!isCreating ? (
               <button
                 onClick={() => {
-                  setIsCreating(false)
-                  setNewMonth('')
+                  setIsCreating(true)
+                  setNewMonth(getCurrentYearMonth())
                 }}
-                className="px-3 py-1.5 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded text-sm font-medium transition-colors"
+                className="px-4 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded text-sm font-medium transition-colors"
               >
-                キャンセル
+                + 新規作成
               </button>
-            </div>
-          )}
-        </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={newMonth}
+                  onChange={(e) => setNewMonth(e.target.value)}
+                  placeholder="YYYY-MM"
+                  className="px-3 py-1.5 border border-gray-300 rounded text-sm w-32 focus:outline-none focus:ring-2 focus:ring-red-500"
+                />
+                <button
+                  onClick={handleCreateNew}
+                  className="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded text-sm font-medium transition-colors"
+                >
+                  作成
+                </button>
+                <button
+                  onClick={() => {
+                    setIsCreating(false)
+                    setNewMonth('')
+                  }}
+                  className="px-3 py-1.5 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded text-sm font-medium transition-colors"
+                >
+                  キャンセル
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )
