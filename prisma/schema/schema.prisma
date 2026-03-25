@@ -7,19 +7,6 @@ generator client {
   output   = "./generated/prisma"
 }
 
-model Department {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @default(now()) @updatedAt()
-  sortOrder Float     @default(0)
-
-  code  String? @unique
-  name  String
-  color String?
-
-  User User[]
-}
-
 model Store {
   id        Int       @id @default(autoincrement())
   code      Int       @unique
@@ -89,42 +76,14 @@ model User {
   Session  Session[]
   Account  Account[]
 
-  SbmReservation        SbmReservation[]
-  SbmDeliveryAssignment SbmDeliveryAssignment[]
-
-  // トレーニングアプリ リレーション
-  ExerciseMaster              ExerciseMaster[]
-  WorkoutLog                  WorkoutLog[]
-  SbmReservationChangeHistory SbmReservationChangeHistory[]
-  CounselingStore             CounselingStore?              @relation(fields: [counselingStoreId], references: [id])
-  counselingStoreId           Int?
-  CounselingSlot              CounselingSlot[]
-
   Store   Store? @relation(fields: [storeId], references: [id])
   storeId Int?
-
-  // yamanokai
-  YamanokaiEventAsCL            YamanokaiEvent[]      @relation("YamanokaiEventCL")
-  YamanokaiEventAsSL            YamanokaiEvent[]      @relation("YamanokaiEventSL")
-  YamanokaiAttendance           YamanokaiAttendance[]
-  YamanokaiAttendanceAsApprover YamanokaiAttendance[] @relation("AttendanceApprover")
-  department                    Department?           @relation(fields: [departmentId], references: [id])
-  departmentId                  Int?
-
-  // dental
-  DentalClinic               DentalClinic?       @relation(fields: [dentalClinicId], references: [id])
-  dentalClinicId             Int?
-  DentalExaminationDoctor    DentalExamination[] @relation("ExaminationDoctor")
-  DentalExaminationHygienist DentalExamination[] @relation("ExaminationHygienist")
 
   // regrow
   rgStoreId             Int?
   RgStoreRg             RgStore?            @relation("RgUserStore", fields: [rgStoreId], references: [id])
   RgStaffRecordUser     RgStaffRecord[]     @relation("RgStaffRecordUser")
   RgStaffManualDataUser RgStaffManualData[] @relation("RgStaffManualDataUser")
-
-  // kids
-  KidsChildUser KidsChild[] @relation("KidsChildUser")
 }
 
 // better-auth セッションテーブル

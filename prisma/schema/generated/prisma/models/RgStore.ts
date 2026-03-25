@@ -419,6 +419,38 @@ export type RgStoreNullableScalarRelationFilter = {
   isNot?: Prisma.RgStoreWhereInput | null
 }
 
+export type DateTimeFieldUpdateOperationsInput = {
+  set?: Date | string
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type StringFieldUpdateOperationsInput = {
+  set?: string
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type RgStoreCreateNestedOneWithoutRgStaffRecordInput = {
   create?: Prisma.XOR<Prisma.RgStoreCreateWithoutRgStaffRecordInput, Prisma.RgStoreUncheckedCreateWithoutRgStaffRecordInput>
   connectOrCreate?: Prisma.RgStoreCreateOrConnectWithoutRgStaffRecordInput

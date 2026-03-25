@@ -436,6 +436,10 @@ export type RgMonthlyReportScalarRelationFilter = {
   isNot?: Prisma.RgMonthlyReportWhereInput
 }
 
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
 export type RgMonthlyReportCreateNestedOneWithoutRgStaffRecordInput = {
   create?: Prisma.XOR<Prisma.RgMonthlyReportCreateWithoutRgStaffRecordInput, Prisma.RgMonthlyReportUncheckedCreateWithoutRgStaffRecordInput>
   connectOrCreate?: Prisma.RgMonthlyReportCreateOrConnectWithoutRgStaffRecordInput
