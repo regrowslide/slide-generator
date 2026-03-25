@@ -6,28 +6,28 @@ const defaultSummaryInTdArgs = {
   showShadow: true,
 }
 
-import {colType, colTypeOptional} from '@cm/types/col-types'
-import {aggregateOnSingleTd, aggregateOnSingleTdProps} from 'src/cm/class/Fields/lib/aggregateOnSingleTd'
-import {addColIndexs} from 'src/cm/class/Fields/lib/addColIndex'
-import {setAttribute} from 'src/cm/class/Fields/lib/setAttribute'
-import {transposeColumns} from 'src/cm/class/Fields/lib/transposeColumns'
+import { colType, colTypeOptional } from '@cm/types/col-types'
+import { aggregateOnSingleTd, aggregateOnSingleTdProps } from 'src/cm/class/Fields/lib/aggregateOnSingleTd'
+import { addColIndexs } from 'src/cm/class/Fields/lib/addColIndex'
+import { setAttribute } from 'src/cm/class/Fields/lib/setAttribute'
+import { transposeColumns } from 'src/cm/class/Fields/lib/transposeColumns'
 
-import {NestHandler} from '@cm/class/NestHandler'
+import { NestHandler } from '@cm/class/NestHandler'
 
 import React from 'react'
 
-import {TableInfo, TableInfoWrapper} from '@cm/class/builders/ColBuilderVariables'
-import {DH__convertDataType} from '@cm/class/DataHandler/type-converter'
-import {defaultFormat} from '@cm/class/Fields/lib/defaultFormat'
-import {NumHandler} from '../NumHandler'
+import { TableInfo, TableInfoWrapper } from '@cm/class/builders/ColBuilderVariables'
+import { DH__convertDataType } from '@cm/class/DataHandler/type-converter'
+import { defaultFormat } from '@cm/class/Fields/lib/defaultFormat'
+import { NumHandler } from '../NumHandler'
 import InlineEditableValue from '@cm/components/DataLogic/TFs/MyTable/components/MainTable/TdContent/InlineEditableValue'
-import {UseRecordsReturn} from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/useRecords/useRecords'
+import { UseRecordsReturn } from '@cm/components/DataLogic/TFs/PropAdjustor/hooks/useRecords/useRecords'
 
-export const defaultSelect = {id: true, name: true}
-export const masterDataSelect = {...defaultSelect, color: true}
+export const defaultSelect = { id: true, name: true }
+export const masterDataSelect = { ...defaultSelect, color: true }
 
 type freeColType = Exclude<colTypeOptional, 'id' | 'label'>
-export type setterType = (props: {col: colType}) => freeColType
+export type setterType = (props: { col: colType }) => freeColType
 
 // 編集可能かどうかを判定するヘルパー関数
 const isColEditable = (col: colType, editable): boolean => {
@@ -51,11 +51,11 @@ export class Fields {
     this.plain = array
   }
 
-  setTdMinWidth = ({minWidth, maxWidth = undefined}) => {
-    return this.customAttributes(({col}) => {
+  setTdMinWidth = ({ minWidth, maxWidth = undefined }) => {
+    return this.customAttributes(({ col }) => {
       return {
         ...col,
-        td: {...col?.td, style: {minWidth, maxWidth}},
+        td: { ...col?.td, style: { minWidth, maxWidth } },
       }
     })
   }
@@ -67,7 +67,7 @@ export class Fields {
       labelWidthPx?: number
       hideUndefinedValue?: boolean
       showShadow?: boolean
-      convertColId?: {[key: string]: string}
+      convertColId?: { [key: string]: string }
       editable?: boolean // インライン編集を有効にする
     } & colTypeOptional
   ) => {
@@ -77,7 +77,8 @@ export class Fields {
       return this.cache.get(cacheKey)
     }
 
-    const {hideUndefinedValue, wrapperWidthPx, labelWidthPx, showShadow, editable} = {...defaultSummaryInTdArgs, ...props}
+    const { hideUndefinedValue, wrapperWidthPx, labelWidthPx, showShadow, } = { ...defaultSummaryInTdArgs, ...props }
+
     const id = `readOnly_${columns.map(d => d.id).join('_')}`
 
     // SummaryRowコンポーネント（editable対応）
@@ -93,8 +94,8 @@ export class Fields {
         dataModelName?: string
         UseRecordsReturn?: UseRecordsReturn
       }) => {
-        const existingValues: {label: string; value: React.ReactNode; col?: colType}[] = []
-        const undefinedLabels: {label: string; value: React.ReactNode}[] = []
+        const existingValues: { label: string; value: React.ReactNode; col?: colType }[] = []
+        const undefinedLabels: { label: string; value: React.ReactNode }[] = []
 
         columns
           .filter(col => col.td?.hidden !== true)
@@ -117,7 +118,7 @@ export class Fields {
               colValue = DH__convertDataType(NestHandler.GetNestedValue(pseudoId, row), col.type, 'client')
             }
 
-            const item = {label: col.label, value: colValue, col}
+            const item = { label: col.label, value: colValue, col }
 
             if (hideUndefinedValue && !colValue) {
               undefinedLabels.push(item)
@@ -127,8 +128,11 @@ export class Fields {
           })
 
         return (
-          <TableInfoWrapper {...{showShadow, label: props.wrapperLabel ?? ''}}>
+          <TableInfoWrapper {...{ showShadow, label: props.wrapperLabel ?? '' }}>
             {existingValues.map((d, i) => {
+
+
+              const editable = props.editable || d.col?.td?.editable
               const canEdit = editable && d.col && isColEditable(d.col, editable) && dataModelName && UseRecordsReturn
 
               return (
@@ -144,7 +148,7 @@ export class Fields {
                         <InlineEditableValue
                           col={{
                             ...d.col!,
-                            td: {editable: {}, ...d.col!.td},
+                            td: { editable: {}, ...d.col!.td },
                           }}
                           record={row}
                           displayValue={d.value}
@@ -177,18 +181,23 @@ export class Fields {
       {
         id,
         label: '',
-        form: {hidden: true},
-        td: {withLabel: false},
+        form: { hidden: true },
+        td: { withLabel: false },
         // editable時は関数を返して実行時コンテキストを受け取る
-        format: editable
-          ? (value, row) => {
-              return ({dataModelName, UseRecordsReturn}: {dataModelName: string; UseRecordsReturn: UseRecordsReturn}) => (
-                <SummaryRow value={value} row={row} dataModelName={dataModelName} UseRecordsReturn={UseRecordsReturn} />
-              )
-            }
-          : (value, row) => <SummaryRow value={value} row={row} />,
+        format: (value, row) => {
+          return ({ dataModelName, UseRecordsReturn }: { dataModelName: string; UseRecordsReturn: UseRecordsReturn }) => (
+            <SummaryRow value={value} row={row} dataModelName={dataModelName} UseRecordsReturn={UseRecordsReturn} />
+          )
+        }
+        // format: props.editable
+        //   ? (value, row) => {
+        //     return ({ dataModelName, UseRecordsReturn }: { dataModelName: string; UseRecordsReturn: UseRecordsReturn }) => (
+        //       <SummaryRow value={value} row={row} dataModelName={dataModelName} UseRecordsReturn={UseRecordsReturn} />
+        //     )
+        //   }
+        //   : (value, row) => <SummaryRow value={value} row={row} />,
       },
-      ...new Fields(columns).customAttributes(({col}) => ({...col, td: {hidden: true}})).plain,
+      ...new Fields(columns).customAttributes(({ col }) => ({ ...col, td: { hidden: true } })).plain,
     ])
 
     this.cache.set(cacheKey, result)
@@ -203,21 +212,21 @@ export class Fields {
     }
   ) => {
     const cols = this.plain
-    const cacheKey = JSON.stringify({cols, options})
+    const cacheKey = JSON.stringify({ cols, options })
 
     if (this.cache.has(cacheKey)) {
       return this.cache.get(cacheKey)
     }
 
     const defaultInclude = (cols ?? []).map(col => col.id)
-    const {include = defaultInclude, exclude} = options ?? {}
+    const { include = defaultInclude, exclude } = options ?? {}
 
     const result = cols.map(col => {
       const isInExclude = exclude?.includes(col.id)
       const isInInclude = include?.includes(col.id)
 
       if (isInExclude) return col
-      if (isInInclude) return {...col, ...setter({col})}
+      if (isInInclude) return { ...col, ...setter({ col }) }
       return col
     })
 
@@ -227,22 +236,22 @@ export class Fields {
   }
 
   setNormalTd = () => {
-    const result = this.customAttributes(({col}) => {
+    const result = this.customAttributes(({ col }) => {
       const withLabel = !col?.td?.withLabel
-      return {...col, td: {...col.td, withLabel}}
+      return { ...col, td: { ...col.td, withLabel } }
     })
 
     return result
   }
-  aggregateOnSingleTd = (props?: aggregateOnSingleTdProps & {cols?: any}) => {
-    const result = aggregateOnSingleTd({...props, cols: this.setNormalTd().plain})
+  aggregateOnSingleTd = (props?: aggregateOnSingleTdProps & { cols?: any }) => {
+    const result = aggregateOnSingleTd({ ...props, cols: this.setNormalTd().plain })
     this.plain = result
     return new Fields(result)
   }
 
-  buildFormGroup = ({groupName}) => {
-    return this.customAttributes(({col}) => {
-      return {...col, form: {...col.form, colIndex: groupName}}
+  buildFormGroup = ({ groupName }) => {
+    return this.customAttributes(({ col }) => {
+      return { ...col, form: { ...col.form, colIndex: groupName } }
     })
   }
 
@@ -252,7 +261,7 @@ export class Fields {
   }
 
   static transposeColumns = transposeColumns
-  static mod = {aggregateOnSingleTd, addColIndexs, setAttribute}
+  static mod = { aggregateOnSingleTd, addColIndexs, setAttribute }
 
   static doShowLabel = (col: colType) => col?.td?.withLabel === true
 }

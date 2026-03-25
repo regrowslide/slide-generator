@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regrow ユーザーマニュアル — 月次業績レポートシステム</title>
+  <style>
+    /* ============================================================
+       リセット & ベース
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 15px; }
+    body {
+      font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif;
+      color: #1e293b;
+      background: #f8fafc;
+      line-height: 1.75;
+    }
+
+    /* ============================================================
+       レイアウト
+       ============================================================ */
+    .page-wrapper {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* サイドバー（目次） */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 280px;
+      height: 100vh;
+      background: #1e293b;
+      color: #cbd5e1;
+      overflow-y: auto;
+      padding: 24px 0;
+      z-index: 100;
+    }
+    .sidebar-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      padding: 0 20px 16px;
+      border-bottom: 1px solid #334155;
+      margin-bottom: 12px;
+    }
+    .sidebar-title small {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+    .sidebar a {
+      display: block;
+      padding: 8px 20px;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: background .15s, color .15s;
+    }
+    .sidebar a:hover,
+    .sidebar a.active {
+      background: #334155;
+      color: #f1f5f9;
+    }
+    .sidebar a.sub {
+      padding-left: 36px;
+      font-size: 0.8rem;
+    }
+
+    /* メインコンテンツ */
+    .main {
+      margin-left: 280px;
+      flex: 1;
+      padding: 40px 48px 80px;
+      max-width: 960px;
+    }
+
+    /* ============================================================
+       見出し
+       ============================================================ */
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: #64748b;
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+    }
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-top: 56px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 3px solid #dc2626;
+    }
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-top: 32px;
+      margin-bottom: 12px;
+    }
+    h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #334155;
+      margin-top: 20px;
+      margin-bottom: 8px;
+    }
+
+    /* ============================================================
+       テキスト要素
+       ============================================================ */
+    p { margin-bottom: 12px; }
+    strong { font-weight: 700; }
+    code {
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88em;
+      font-family: "SFMono-Regular", Consolas, monospace;
+    }
+
+    /* ============================================================
+       テーブル
+       ============================================================ */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 20px;
+      font-size: 0.9rem;
+    }
+    th, td {
+      padding: 10px 14px;
+      border: 1px solid #e2e8f0;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #f1f5f9;
+      font-weight: 600;
+      color: #334155;
+      white-space: nowrap;
+    }
+
+    /* ============================================================
+       画像
+       ============================================================ */
+    .screenshot {
+      margin: 16px 0 24px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,.08);
+      border: 1px solid #e2e8f0;
+    }
+    .screenshot img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .screenshot-caption {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #64748b;
+      padding: 8px;
+      background: #f8fafc;
+    }
+
+    /* ============================================================
+       注意ボックス・フロー
+       ============================================================ */
+    .note {
+      background: #eff6ff;
+      border-left: 4px solid #3b82f6;
+      padding: 14px 18px;
+      margin: 16px 0;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.9rem;
+      color: #1e3a5f;
+    }
+    .note.warn {
+      background: #fef3c7;
+      border-left-color: #f59e0b;
+      color: #78350f;
+    }
+    .note.danger {
+      background: #fef2f2;
+      border-left-color: #dc2626;
+      color: #7f1d1d;
+    }
+
+    .flow {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 16px 0 24px;
+    }
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+    }
+    .flow-step + .flow-step {
+      border-top: 1px dashed #e2e8f0;
+    }
+    .flow-num {
+      flex-shrink: 0;
+      width: 30px; height: 30px;
+      background: #dc2626;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    /* リスト */
+    ul, ol { margin: 8px 0 16px 24px; }
+    li { margin-bottom: 4px; }
+
+    /* バッジ */
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-weight: 600;
+    }
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-red   { background: #fee2e2; color: #991b1b; }
+    .badge-amber { background: #fef3c7; color: #92400e; }
+    .badge-blue  { background: #dbeafe; color: #1e40af; }
+    .badge-gray  { background: #f1f5f9; color: #475569; }
+
+    /* 区切り線 */
+    hr {
+      border: none;
+      border-top: 1px solid #e2e8f0;
+      margin: 40px 0;
+    }
+
+    /* ============================================================
+       レスポンシブ
+       ============================================================ */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; padding: 24px 20px 60px; }
+    }
+
+    /* 印刷時 */
+    @media print {
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      body { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     サイドバー（目次）
+     ============================================================ -->
+<nav class="sidebar">
+  <div class="sidebar-title">
+    Regrow マニュアル
+    <small>月次業績レポートシステム</small>
+  </div>
+  <a href="#about">1. 本ツールについて</a>
+  <a href="#environment" class="sub">動作環境・初期設定</a>
+  <a href="#screen">3. 画面の見かた</a>
+  <a href="#excel-import">4. Excel取込</a>
+  <a href="#data-confirm">5. データ確認</a>
+  <a href="#manual-input">6. 手動入力</a>
+  <a href="#target-sales">7. 目標売上</a>
+  <a href="#slides">8. スライド閲覧</a>
+  <a href="#master">9. マスタ管理</a>
+  <a href="#flow">10. 全体フロー</a>
+  <a href="#glossary">用語集</a>
+</nav>
+
+<!-- ============================================================
+     メインコンテンツ
+     ============================================================ -->
+<div class="page-wrapper">
+<main class="main">
+
+  <h1>Regrow — ユーザーマニュアル</h1>
+  <p class="subtitle">
+    月次業績レポートシステム&emsp;|&emsp;提供元：Relaxation Salon 様向け&emsp;|&emsp;開発：合同会社 改善マニア<br>
+    最終更新：2026-03-22
+  </p>
+
+  <!-- ============================================================
+       1. 本ツールについて
+       ============================================================ -->
+  <h2 id="about">1. 本ツールについて</h2>
+
+  <h3>できること</h3>
+  <p>
+    Regrowは、リラクゼーションサロンの<strong>月次業績レポートを自動生成する</strong>ためのシステムです。<br>
+    毎月のExcel「担当者別分析表」と、手動入力するKPIデータを組み合わせて、<strong>18枚のスライド資料</strong>（グラフ・テーブル付き）を自動で作成します。
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>機能</th><th>説明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Excelインポート</td><td>担当者別分析表を取り込み、スタッフの売上・客数等を自動抽出</td></tr>
+      <tr><td>手動データ入力</td><td>店舗KPI（稼働率・コメント等）やスタッフ個別データを入力</td></tr>
+      <tr><td>目標売上入力</td><td>スタッフ別の月間目標売上を入力し、達成率を自動算出</td></tr>
+      <tr><td>スライド資料閲覧</td><td>18枚構成のレポートスライドを自動生成・閲覧</td></tr>
+      <tr><td>マスタ管理</td><td>店舗・ユーザー・権限の管理</td></tr>
+      <tr><td>月別データ管理</td><td>YYYY-MM単位でデータを管理し、過去月の閲覧・比較が可能</td></tr>
+    </tbody>
+  </table>
+
+  <h3>利用の流れ</h3>
+  <div class="flow">
+    <div class="flow-step"><span class="flow-num">1</span><div>新しい月を作成</div></div>
+    <div class="flow-step"><span class="flow-num">2</span><div>各店舗のExcelファイルをインポート</div></div>
+    <div class="flow-step"><span class="flow-num">3</span><div>手動入力（スタッフ稼働率・CS登録数・コメント・お客様の声）</div></div>
+    <div class="flow-step"><span class="flow-num">4</span><div>目標売上を入力</div></div>
+    <div class="flow-step"><span class="flow-num">5</span><div>スライドを確認</div></div>
+  </div>
+
+  <hr>
+
+  <!-- ============================================================
+       2. 動作環境・初期設定
+       ============================================================ -->
+  <h2 id="environment">2. 動作環境・初期設定</h2>
+
+  <h3>動作環境</h3>
+  <table>
+    <thead><tr><th>項目</th><th>要件</th></tr></thead>
+    <tbody>
+      <tr><td>ブラウザ</td><td>Google Chrome / Microsoft Edge / Safari（最新版推奨）</td></tr>
+      <tr><td>インターネット</td><td>必要</td></tr>
+      <tr><td>ログイン</td><td>メールアドレスとパスワード</td></tr>
+      <tr><td>データ保存</td><td>サーバーに自動保存（ブラウザのキャッシュ削除でもデータは消えません）</td></tr>
+    </tbody>
+  </table>
+
+  <h3>用意するもの</h3>
+  <table>
+    <thead><tr><th>書類</th><th>必須</th><th>説明</th></tr></thead>
+    <tbody>
+      <tr><td>担当者別分析表（Excel）</td><td>必須</td><td>業務システムから出力される .xlsx / .xls ファイル。店舗ごとに1ファイル</td></tr>
+      <tr><td>スタッフ稼働率</td><td>必須</td><td>各スタッフの月間稼働率（%）</td></tr>
+      <tr><td>CS登録数</td><td>必須</td><td>各スタッフのCS登録件数</td></tr>
+      <tr><td>お客様の声</td><td>任意</td><td>お客様からのフィードバックテキスト</td></tr>
+      <tr><td>スタッフ目標売上</td><td>任意</td><td>スタッフ別の月間目標売上金額</td></tr>
+    </tbody>
+  </table>
+
+  <h3>権限（ロール）</h3>
+  <table>
+    <thead><tr><th>ロール</th><th>説明</th><th>できること</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-red">管理者（admin）</span></td><td>システム管理者</td><td>全機能の操作、マスタ管理、データ編集</td></tr>
+      <tr><td><span class="badge badge-blue">店長（manager）</span></td><td>店舗責任者</td><td>スライドの閲覧</td></tr>
+      <tr><td><span class="badge badge-gray">閲覧者（viewer）</span></td><td>一般スタッフ</td><td>スライドの閲覧のみ</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    管理者のみがExcel取込・データ確認・手動入力・目標売上タブを操作できます。スライドタブは全ロールで閲覧可能です。
+  </div>
+
+  <hr>
+
+  <!-- ============================================================
+       3. 画面の見かた
+       ============================================================ -->
+  <h2 id="screen">3. 画面の見かた</h2>
+
+  <h3>月選択バー</h3>
+  <p>画面最上部に表示される月選択バーから、対象月の切り替えと新規作成を行います。</p>
+  <table>
+    <thead><tr><th>要素</th><th>説明</th></tr></thead>
+    <tbody>
+      <tr><td>対象月ドロップダウン</td><td>表示する対象月を切り替えます</td></tr>
+      <tr><td><strong>「+ 新規作成」</strong> ボタン</td><td>新しい月を作成します（YYYY-MM形式で入力）</td></tr>
+    </tbody>
+  </table>
+
+  <h3>タブナビゲーション</h3>
+  <p>月選択バーの下に、各機能タブが並びます。</p>
+
+  <div class="screenshot">
+    <img src="screenshots/01-import.png" alt="Excel取込画面 - タブナビゲーション">
+    <div class="screenshot-caption">Excel取込画面（タブナビゲーション）</div>
+  </div>
+
+  <table>
+    <thead><tr><th>タブ</th><th>説明</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Excel取込</strong></td><td>Excelファイルのアップロード</td></tr>
+      <tr><td><strong>データ確認</strong></td><td>インポート済みデータの一覧表示</td></tr>
+      <tr><td><strong>手動入力</strong></td><td>店舗KPI・スタッフ稼働率・CS登録数の入力</td></tr>
+      <tr><td><strong>目標売上</strong></td><td>スタッフ別目標売上の入力</td></tr>
+      <tr><td><strong>スライド</strong></td><td>18枚のスライド資料を閲覧</td></tr>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <!-- ============================================================
+       4. Excel取込
+       ============================================================ -->
+  <h2 id="excel-import">4. Excel取込</h2>
+  <p>Excelファイル（担当者別分析表）を取り込む画面です。</p>
+
+  <div class="screenshot">
+    <img src="screenshots/01-import.png" alt="Excel取込画面">
+    <div class="screenshot-caption">Excel取込画面</div>
+  </div>
+
+  <h3>操作手順</h3>
+  <ol>
+    <li><strong>STEP 1</strong> で取込先の <strong>「年月」</strong> と <strong>「店舗」</strong> をドロップダウンから選択します</li>
+    <li><strong>STEP 2</strong> のエリアにExcelファイルをドラッグ＆ドロップ、またはクリックしてファイルを選択します</li>
+    <li>プレビュー画面が表示されるので、データ内容とスタッフのマッチング結果を確認します</li>
+    <li>問題がなければ <strong>「確認して取り込む」</strong> ボタンをクリックします</li>
+  </ol>
+
+  <h3>プレビュー画面の見かた</h3>
+  <p>プレビューでは以下が表示されます。</p>
+  <ul>
+    <li><strong>取込先情報</strong>：選択した年月・店舗・集計期間</li>
+    <li><strong>店舗合計</strong>：売上合計・対応客数・指名数・客単価</li>
+    <li><strong>スタッフ一覧</strong>：各スタッフの売上データとマッチング状況</li>
+  </ul>
+
+  <h4>マッチング状態</h4>
+  <table>
+    <thead><tr><th>アイコン</th><th>状態</th><th>説明</th></tr></thead>
+    <tbody>
+      <tr><td>✅</td><td>DB登録済</td><td>ユーザー名と一致するユーザーが見つかった</td></tr>
+      <tr><td>⚠️</td><td>未登録</td><td>ユーザー名と一致するユーザーがいない。先にマスタ管理で登録が必要</td></tr>
+      <tr><td>🔄</td><td>同名ユーザー</td><td>同じ名前のユーザーが複数いるため、ドロップダウンで選択が必要</td></tr>
+    </tbody>
+  </table>
+
+  <h3>取込済みデータの表示</h3>
+  <p>画面下部に、現在の年月で取り込み済みの店舗がカードで表示されます。</p>
+  <table>
+    <thead><tr><th>表示項目</th><th>説明</th></tr></thead>
+    <tbody>
+      <tr><td>店舗名 + ✅ 取込済バッジ</td><td>取込完了した店舗</td></tr>
+      <tr><td>スタッフ数</td><td>インポートされたスタッフの人数</td></tr>
+      <tr><td>売上合計</td><td>店舗の月間売上合計</td></tr>
+      <tr><td>客単価</td><td>店舗の平均客単価</td></tr>
+      <tr><td>インポート日時</td><td>取込実行日時</td></tr>
+    </tbody>
+  </table>
+
+  <h3>注意事項</h3>
+  <ul>
+    <li>同じ店舗・年月のデータを再度アップロードすると<strong>上書き</strong>されます</li>
+    <li>未登録スタッフがいる場合は、プレビュー画面から <strong>「新規登録」</strong> ボタンでその場で登録できます</li>
+    <li>対応ファイル形式：<code>.xlsx</code> / <code>.xls</code></li>
+  </ul>
+
+  <h3>Excelから抽出される項目</h3>
+  <table>
+    <thead><tr><th>項目</th><th>説明</th></tr></thead>
+    <tbody>
+      <tr><td>スタッフ名</td><td>担当者の氏名</td></tr>
+      <tr><td>売上合計</td><td>スタッフの月間売上</td></tr>
+      <tr><td>新規客数</td><td>新規のお客様数</td></tr>
+      <tr><td>対応客数</td><td>対応した総客数</td></tr>
+      <tr><td>指名数</td><td>指名された件数</td></tr>
+      <tr><td>客単価</td><td>1人あたりの単価</td></tr>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <!-- ============================================================
+       5. データ確認
+       ============================================================ -->
+  <h2 id="data-confirm">5. データ確認</h2>
+  <p>取り込んだExcelデータを店舗別に一覧表示する画面です。</p>
+
+  <div class="screenshot">
+    <img src="screenshots/02-import-data.png" alt="データ確認画面">
+    <div class="screenshot-caption">データ確認画面</div>
+  </div>
+
+  <h3>操作手順</h3>
+  <ol>
+    <li>画面上部の <strong>店舗タブ</strong> で確認したい店舗を選択します</li>
+    <li>スタッフ一覧がランキング順で表示されます</li>
+  </ol>
+
+  <h3>テーブルの列</h3>
+  <table>
+    <thead><tr><th>列</th><th>説明</th></tr></thead>
+    <tbody>
+      <tr><td>順位</td><td>Excel上のランキング</td></tr>
+      <tr><td>担当者名</td><td>スタッフ名</td></tr>
+      <tr><td>売上合計</td><td>月間売上金額</td></tr>
+      <tr><td>客数</td><td>対応客数</td></tr>
+      <tr><td>指名数</td><td>指名件数</td></tr>
+      <tr><td>客単価</td><td>1人あたりの平均単価</td></tr>
+    </tbody>
+  </table>
+
+  <ul>
+    <li>テーブル最下行に<strong>店舗合計</strong>が表示されます</li>
+    <li>画面下部にインポート日時とレコード数が確認できます</li>
+    <li>未取込の店舗タブには <strong>「（未取込）」</strong> と表示されます</li>
+  </ul>
+
+  <div class="note">この画面は確認専用です。データの修正はできません。</div>
+
+  <hr>
+
+  <!-- ============================================================
+       6. 手動入力
+       ============================================================ -->
+  <h2 id="manual-input">6. 手動入力</h2>
+  <p>Excelから自動取得できないデータを手動で入力する画面です。3つのサブタブに分かれています。</p>
+
+  <h3>6.1 店舗KPIタブ</h3>
+
+  <div class="screenshot">
+    <img src="screenshots/03-manual-input-kpi.png" alt="店舗KPI入力画面">
+    <div class="screenshot-caption">店舗KPI入力画面</div>
+  </div>
+
+  <p>各店舗について以下が表示されます。</p>
+  <table>
+    <thead><tr><th>項目</th><th>入力/自動</th><th>説明</th></tr></thead>
+    <tbody>
+      <tr><td>稼働率 (%)</td><td><span class="badge badge-blue">自動計算</span></td><td>スタッフ稼働率の平均値（編集不可）</td></tr>
+      <tr><td>再来率 (%)</td><td><span class="badge badge-blue">自動計算</span></td><td>(対応客数 − 新規客数) ÷ 対応客数 × 100（編集不可）</td></tr>
+      <tr><td>CS登録数</td><td><span class="badge badge-blue">自動計算</span></td><td>スタッフCS登録数の合計（編集不可）</td></tr>
+      <tr><td>コメント</td><td><span class="badge badge-green">手動入力</span></td><td>月次の店舗振り返りコメント</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    稼働率・再来率・CS登録数は、次の「スタッフ稼働率・CS登録数」タブでスタッフ個別に入力すると自動で反映されます。
+  </div>
+
+  <h3>6.2 スタッフ稼働率・CS登録数タブ</h3>
+
+  <div class="screenshot">
+    <img src="screenshots/04-manual-input-staff.png" alt="スタッフ稼働率入力画面">
+    <div class="screenshot-caption">スタッフ稼働率・CS登録数入力画面</div>
+  </div>
+
+  <p>Excelをインポートすると、スタッフ一覧が自動で表示されます。</p>
+  <table>
+    <thead><tr><th>列</th><th>入力/自動</th><th>説明</th></tr></thead>
+    <tbody>
+      <tr><td>店舗</td><td>自動表示</td><td>スタッフの所属店舗</td></tr>
+      <tr><td>名前</td><td>自動表示</td><td>スタッフ名</td></tr>
+      <tr><td>稼働率 (%)</td><td><span class="badge badge-green">手動入力</span></td><td>スタッフ個人の月間稼働率</td></tr>
+      <tr><td>再来率 (%)</td><td><span class="badge badge-blue">自動計算</span></td><td>(対応客数 − 新規客数) ÷ 対応客数 × 100（編集不可）</td></tr>
+      <tr><td>CS登録数</td><td><span class="badge badge-green">手動入力</span></td><td>スタッフのCS登録件数</td></tr>
+    </tbody>
+  </table>
+
+  <h3>6.3 お客様の声タブ</h3>
+
+  <div class="screenshot">
+    <img src="screenshots/05-manual-input-voice.png" alt="お客様の声入力画面">
+    <div class="screenshot-caption">お客様の声入力画面</div>
+  </div>
+
+  <ul>
+    <li>テキストエリアにお客様からのフィードバックを自由に入力します</li>
+    <li>この内容はスライド18「お客様の声」にそのまま反映されます</li>
+  </ul>
+
+  <h3>自動保存</h3>
+  <ul>
+    <li>入力欄からフォーカスが外れた時点で<strong>自動保存</strong>されます（保存ボタンはありません）</li>
+    <li>保存時に画面右上に「保存完了 ✅」が一時表示されます</li>
+    <li>データはデータベースに直接保存されます</li>
+  </ul>
+
+  <h3>自動計算の計算式</h3>
+  <table>
+    <thead><tr><th>項目</th><th>計算式</th></tr></thead>
+    <tbody>
+      <tr><td>スタッフ再来率</td><td>(対応客数 − 新規客数) ÷ 対応客数 × 100（小数第1位まで）</td></tr>
+      <tr><td>店舗再来率</td><td>店舗内全スタッフの再来客数合計 ÷ 対応客数合計 × 100</td></tr>
+      <tr><td>店舗稼働率</td><td>店舗内全スタッフの稼働率の平均値（小数第1位まで）</td></tr>
+      <tr><td>店舗CS登録数</td><td>店舗内全スタッフのCS登録数の合計</td></tr>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <!-- ============================================================
+       7. 目標売上
+       ============================================================ -->
+  <h2 id="target-sales">7. 目標売上</h2>
+  <p>スタッフ別の月間目標売上を入力する画面です。入力された目標値はスライドの「売上目標達成率」に反映されます。</p>
+
+  <div class="screenshot">
+    <img src="screenshots/06-target-sales.png" alt="目標売上入力画面">
+    <div class="screenshot-caption">目標売上入力画面</div>
+  </div>
+
+  <h3>画面構成</h3>
+
+  <h4>全体合計サマリー（画面上部・紫帯）</h4>
+  <table>
+    <thead><tr><th>項目</th><th>説明</th></tr></thead>
+    <tbody>
+      <tr><td>目標合計</td><td>全店舗の目標売上合計</td></tr>
+      <tr><td>実績合計</td><td>全店舗の実績売上合計（Excelインポートデータ）</td></tr>
+      <tr><td>達成率</td><td>実績合計 ÷ 目標合計 × 100</td></tr>
+    </tbody>
+  </table>
+
+  <h4>店舗別テーブル</h4>
+  <p>各店舗がグループ分けされ、以下の情報が表示されます。</p>
+  <p><strong>店舗ヘッダー（黒帯）</strong>：店舗名、目標合計、実績合計、達成率バッジ</p>
+
+  <table>
+    <thead><tr><th>列</th><th>入力/自動</th><th>説明</th></tr></thead>
+    <tbody>
+      <tr><td>スタッフ名</td><td>自動表示</td><td>スタッフ名</td></tr>
+      <tr><td>目標売上（円）</td><td><span class="badge badge-green">手動入力</span></td><td>月間の目標売上金額</td></tr>
+      <tr><td>実績売上</td><td><span class="badge badge-blue">自動表示</span></td><td>Excelインポートデータの売上（編集不可）</td></tr>
+      <tr><td>達成率</td><td><span class="badge badge-blue">自動計算</span></td><td>実績 ÷ 目標 × 100</td></tr>
+    </tbody>
+  </table>
+
+  <h4>達成率の色分け</h4>
+  <table>
+    <thead><tr><th>色</th><th>条件</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-green">緑</span></td><td>100%以上（目標達成）</td></tr>
+      <tr><td><span class="badge badge-red">赤</span></td><td>100%未満（目標未達）</td></tr>
+    </tbody>
+  </table>
+
+  <p>手動入力と同様に、フォーカスが外れた時点で自動保存されます。</p>
+
+  <hr>
+
+  <!-- ============================================================
+       8. スライド閲覧
+       ============================================================ -->
+  <h2 id="slides">8. スライド閲覧</h2>
+  <p>ExcelデータとKPIデータから自動生成された18枚のスライド資料を閲覧する画面です。</p>
+
+  <div class="screenshot">
+    <img src="screenshots/07-slides-overview.png" alt="スライド一覧（スクロールモード）">
+    <div class="screenshot-caption">スライド一覧（スクロールモード）</div>
+  </div>
+
+  <h3>スライド構成（全18枚）</h3>
+  <table>
+    <thead><tr><th>No.</th><th>タイトル</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>タイトルスライド</td><td>月次業績レポート、対象月の表示</td></tr>
+      <tr><td>2</td><td>目次</td><td>レポートの構成一覧</td></tr>
+      <tr><td>3</td><td>全体サマリー</td><td>店舗別KPIテーブル（売上/稼働率/客単価/再来率）+ 店舗コメント</td></tr>
+      <tr><td>4</td><td>客単価 - 年間推移</td><td>店舗別の客単価を月別折れ線グラフで比較</td></tr>
+      <tr><td>5</td><td>稼働率 - 年間推移</td><td>店舗別の稼働率を月別折れ線グラフで比較</td></tr>
+      <tr><td>6</td><td>再来率 - 年間推移</td><td>店舗別の再来率を月別折れ線グラフで比較</td></tr>
+      <tr><td>7</td><td>全指標統合 - 年間推移</td><td>客単価・稼働率・再来率を1つのグラフに統合表示</td></tr>
+      <tr><td>8</td><td>スタッフ別パフォーマンス</td><td>スタッフ別テーブル（売上・稼働率・指名割合・再来率・CS登録率）</td></tr>
+      <tr><td>9</td><td>スタッフ稼働率チャート</td><td>スタッフ稼働率の縦棒グラフ</td></tr>
+      <tr><td>10</td><td>スタッフ別売上目標達成率（テーブル）</td><td>スタッフ別の目標売上・実績・差額・達成率テーブル</td></tr>
+      <tr><td>11</td><td>スタッフ別売上目標達成率（グラフ）</td><td>目標vs実績の横棒グラフ + 達成率ライン</td></tr>
+      <tr><td>12</td><td>店舗別売上目標達成率（テーブル）</td><td>店舗別の目標合計・実績合計・差額・達成率テーブル</td></tr>
+      <tr><td>13</td><td>店舗別売上目標達成率（グラフ）</td><td>目標vs実績の横棒グラフ + 達成率ライン</td></tr>
+      <tr><td>14</td><td>スタッフ別累計比較①（テーブル）</td><td>売上金額・指名件数の当月/累計平均/差分テーブル</td></tr>
+      <tr><td>15</td><td>スタッフ別累計比較①（グラフ）</td><td>売上（棒グラフ）+ 指名（折れ線）の複合グラフ</td></tr>
+      <tr><td>16</td><td>スタッフ別累計比較②（テーブル）</td><td>再来率・客単価の当月/累計平均/差分テーブル</td></tr>
+      <tr><td>17</td><td>スタッフ別累計比較②（グラフ）</td><td>客単価（棒グラフ）+ 再来率（折れ線）の複合グラフ</td></tr>
+      <tr><td>18</td><td>お客様の声</td><td>手動入力されたお客様のフィードバックを表示</td></tr>
+    </tbody>
+  </table>
+
+  <h3>スライド画面の例</h3>
+
+  <h4>全体サマリー</h4>
+  <div class="screenshot">
+    <img src="screenshots/08-slide-03-summary.png" alt="全体サマリースライド">
+    <div class="screenshot-caption">スライド3：全体サマリー</div>
+  </div>
+  <ul>
+    <li>店舗別の売上・稼働率・客単価・再来率がテーブルで一覧表示されます</li>
+    <li>各店舗のコメント（手動入力で登録したもの）が下部に表示されます</li>
+  </ul>
+
+  <h4>スタッフ別パフォーマンス</h4>
+  <div class="screenshot">
+    <img src="screenshots/09-slide-08-staff-performance.png" alt="スタッフ別パフォーマンス">
+    <div class="screenshot-caption">スライド8：スタッフ別パフォーマンス</div>
+  </div>
+
+  <h4>売上目標達成率</h4>
+  <div class="screenshot">
+    <img src="screenshots/10-slide-10-achievement-table.png" alt="売上目標達成率テーブル">
+    <div class="screenshot-caption">スライド10：売上目標達成率（テーブル）</div>
+  </div>
+  <div class="screenshot">
+    <img src="screenshots/11-slide-11-achievement-chart.png" alt="売上目標達成率グラフ">
+    <div class="screenshot-caption">スライド11：売上目標達成率（グラフ）</div>
+  </div>
+
+  <h4>スタッフ別累計比較</h4>
+  <div class="screenshot">
+    <img src="screenshots/12-slide-14-comparison-table.png" alt="累計比較テーブル">
+    <div class="screenshot-caption">スライド14：スタッフ別累計比較①（テーブル）</div>
+  </div>
+
+  <h3>閲覧モード</h3>
+  <p>画面上部のコントロールバーで閲覧モードを切り替えられます。</p>
+  <table>
+    <thead><tr><th>モード</th><th>説明</th></tr></thead>
+    <tbody>
+      <tr><td>スクロール</td><td>全18枚を縦に並べてスクロール表示（デフォルト）</td></tr>
+      <tr><td>ページ切替</td><td>1枚ずつ表示し、ボタンまたは矢印キーで前後移動</td></tr>
+    </tbody>
+  </table>
+
+  <h4>ページ切替モードの操作</h4>
+  <table>
+    <thead><tr><th>操作</th><th>動作</th></tr></thead>
+    <tbody>
+      <tr><td><strong>「次へ」</strong> ボタン / → キー</td><td>次のスライドへ</td></tr>
+      <tr><td><strong>「前へ」</strong> ボタン / ← キー</td><td>前のスライドへ</td></tr>
+      <tr><td><strong>「全画面」</strong> ボタン</td><td>全画面表示に切り替え</td></tr>
+      <tr><td>Escキー</td><td>全画面を終了</td></tr>
+    </tbody>
+  </table>
+
+  <h3>店舗フィルタ</h3>
+  <p>画面下部の店舗チェックボックスで、表示する店舗を絞り込めます。</p>
+  <ul>
+    <li>複数店舗を同時に表示可能です</li>
+    <li>チェックを外すと、その店舗とスタッフのデータが非表示になります</li>
+  </ul>
+
+  <h3>スタッフフィルタ</h3>
+  <p><strong>「スタッフ: 全員 ▼」</strong> をクリックすると、表示するスタッフを選択できます。</p>
+  <ul>
+    <li>店舗ごとにグルーピングされたチェックボックスで選択します</li>
+    <li>スタッフ別のスライド（8～17）に適用されます</li>
+  </ul>
+
+  <h3>累計平均との比較</h3>
+  <p>スライド14～17の累計比較では、チェックボックスで「当月」「累計平均」の表示を切り替えられます。</p>
+  <ul>
+    <li>デフォルト：当月のみ表示（累計平均はOFF）</li>
+  </ul>
+
+  <hr>
+
+  <!-- ============================================================
+       9. マスタ管理
+       ============================================================ -->
+  <h2 id="master">9. マスタ管理</h2>
+
+  <h3>アクセス方法</h3>
+  <p>サイドメニューから <strong>「マスタ管理」</strong> を選択します。管理者（admin）のみアクセス可能です。</p>
+
+  <h3>9.1 店舗マスタ</h3>
+  <p>店舗の登録・編集・削除を行います。</p>
+
+  <table>
+    <thead><tr><th>項目</th><th>必須</th><th>説明</th></tr></thead>
+    <tbody>
+      <tr><td>ID</td><td>-</td><td>店舗の識別番号（自動採番）</td></tr>
+      <tr><td>名前</td><td>必須</td><td>店舗の略称（スライドに表示される名前）</td></tr>
+      <tr><td>有効/無効</td><td>-</td><td>無効にすると各画面で非表示になります</td></tr>
+    </tbody>
+  </table>
+
+  <h4>操作</h4>
+  <ul>
+    <li><strong>「新規追加」</strong> ボタンで新しい店舗を登録（名前・有効/無効を入力）</li>
+    <li>各行の鉛筆アイコンで編集</li>
+    <li>各行のゴミ箱アイコンで削除（確認ダイアログあり）</li>
+  </ul>
+
+  <h3>9.2 ユーザー・権限管理</h3>
+  <p>ユーザーの登録・編集・担当店舗の割当・BAN/BAN解除の管理を行います。</p>
+
+  <h4>ユーザー一覧テーブル</h4>
+  <table>
+    <thead><tr><th>列</th><th>説明</th></tr></thead>
+    <tbody>
+      <tr><td>名前</td><td>ユーザーの表示名</td></tr>
+      <tr><td>メールアドレス</td><td>ログイン用メールアドレス</td></tr>
+      <tr><td>担当店舗</td><td>ドロップダウンで店舗を選択（未設定も可）</td></tr>
+      <tr><td>状態</td><td>BANされている場合は <span class="badge badge-red">BAN</span> バッジとBAN理由が表示</td></tr>
+      <tr><td>操作</td><td>編集・BAN/BAN解除・削除ボタン</td></tr>
+    </tbody>
+  </table>
+
+  <h4>ユーザーの新規追加</h4>
+  <table>
+    <thead><tr><th>項目</th><th>必須</th><th>説明</th></tr></thead>
+    <tbody>
+      <tr><td>名前</td><td>必須</td><td>ユーザーの表示名（Excel上のスタッフ名と一致させる）</td></tr>
+      <tr><td>メールアドレス</td><td>任意</td><td>ログイン用</td></tr>
+      <tr><td>パスワード</td><td>任意</td><td>ログイン用</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note warn">
+    <strong>重要</strong>：ユーザー名はExcelインポート時のスタッフ名マッチングに使用されます。Excelの担当者名と<strong>完全一致</strong>する名前で登録してください。
+  </div>
+
+  <h4>操作</h4>
+  <ul>
+    <li><strong>「新規追加」</strong> ボタンでユーザーを登録</li>
+    <li><strong>鉛筆アイコン</strong> でユーザー情報を編集（名前・メールアドレス・パスワード変更）</li>
+    <li><strong>担当店舗ドロップダウン</strong> で所属店舗を設定（即時反映）</li>
+    <li><strong>盾アイコン（オレンジ）</strong> でBAN（理由の入力可）。BANされたユーザーはインポート時のマッチング対象外になります</li>
+    <li><strong>盾アイコン（緑）</strong> でBAN解除</li>
+    <li><strong>ゴミ箱アイコン</strong> で完全削除</li>
+  </ul>
+
+  <div class="note danger">
+    <strong>注意</strong>：ユーザーを削除すると、過去データのスタッフ紐付けが解除されます。退職者は「BAN」にすることを推奨します。
+  </div>
+
+  <h3>9.3 権限割当</h3>
+  <p>権限割当テーブルで、各ユーザーにロール（admin / manager / viewer）を設定します。</p>
+
+  <h3>9.4 データ管理（管理者向け）</h3>
+  <p>マスタ管理画面のヘッダーに以下のボタンが用意されています。</p>
+  <table>
+    <thead><tr><th>ボタン</th><th>説明</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-red">データリセット</span></td><td>Regrowアプリの全データを削除します。<strong>この操作は取り消せません。</strong></td></tr>
+      <tr><td><span class="badge badge-blue">シードデータ投入</span></td><td>既存データをリセットした上で、デモ用のサンプルデータを投入します</td></tr>
+      <tr><td><span class="badge badge-green">Excelからシード投入</span></td><td>既存データをリセットし、regrow-doc/excel/ 内のExcelファイルからシードデータを投入します</td></tr>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <!-- ============================================================
+       10. 全体フロー
+       ============================================================ -->
+  <h2 id="flow">10. 月次レポート作成の全体フロー</h2>
+  <p>毎月のレポート作成は以下の手順で行います。</p>
+
+  <table>
+    <thead><tr><th>手順</th><th>操作</th><th>完了条件</th></tr></thead>
+    <tbody>
+      <tr><td>① 新しい月を作成</td><td>月選択バーの <strong>「+ 新規作成」</strong> ボタンから年月を入力</td><td>月が一覧に追加される</td></tr>
+      <tr><td>② Excelをインポート</td><td>各店舗の担当者別分析表をアップロード</td><td>全店舗分のデータがインポート済み</td></tr>
+      <tr><td>③ 手動入力</td><td>スタッフ稼働率・CS登録数・コメント・お客様の声を入力</td><td>全店舗・全スタッフ分の入力完了</td></tr>
+      <tr><td>④ 目標売上を入力</td><td>スタッフ別の月間目標売上を入力</td><td>全スタッフの目標値を設定</td></tr>
+      <tr><td>⑤ スライドを確認</td><td>スライドタブで18枚を閲覧</td><td>データに問題がないことを確認</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    手動入力が未完了の場合、タブに赤い <strong>「!」</strong> バッジが表示されます。
+  </div>
+
+  <hr>
+
+  <!-- ============================================================
+       用語集
+       ============================================================ -->
+  <h2 id="glossary">用語集</h2>
+  <table>
+    <thead><tr><th>用語</th><th>説明</th></tr></thead>
+    <tbody>
+      <tr><td>担当者別分析表</td><td>業務システムから出力されるExcelファイル。スタッフごとの売上・客数等が記載されている</td></tr>
+      <tr><td>稼働率</td><td>スタッフまたは店舗の月間稼働率（%）。スタッフ稼働率の平均が店舗稼働率になる</td></tr>
+      <tr><td>再来率</td><td>リピーターの割合。(対応客数 − 新規客数) ÷ 対応客数 × 100 で算出</td></tr>
+      <tr><td>客単価</td><td>お客様1人あたりの平均売上金額</td></tr>
+      <tr><td>指名数</td><td>お客様から指名を受けた件数</td></tr>
+      <tr><td>CS登録数</td><td>カスタマーサービスへの登録件数</td></tr>
+      <tr><td>累計平均</td><td>当年1月から当月までの平均値</td></tr>
+      <tr><td>目標達成率</td><td>実績売上 ÷ 目標売上 × 100</td></tr>
+      <tr><td>KPI</td><td>重要業績評価指標（Key Performance Indicator）。店舗の業績を測る数値</td></tr>
+      <tr><td>BAN</td><td>ユーザーを無効化する機能。BANされたユーザーはインポート時のマッチング対象外</td></tr>
+      <tr><td>店舗フィルタ</td><td>スライド表示時に、表示対象の店舗を絞り込む機能</td></tr>
+      <tr><td>スタッフフィルタ</td><td>スライド表示時に、表示対象のスタッフを絞り込む機能</td></tr>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <p style="text-align:center; color:#94a3b8; font-size:0.8rem; margin-top:40px;">
+    &copy; 2026 合同会社 改善マニア &mdash; Regrow ユーザーマニュアル v2.0
+  </p>
+
+</main>
+</div>
+
+</body>
+</html>

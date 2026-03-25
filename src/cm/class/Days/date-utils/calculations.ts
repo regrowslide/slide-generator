@@ -18,7 +18,7 @@ export const getMidnight = (date?: Date) => {
     date,
     time: `${year}-${month}-${day} ${hour}:${minute}`,
     midnightDate,
-  }) //logs
+  })
 
   const isValidMidnightDate = (date: Date): boolean => date?.toISOString().includes(`15:00`)
 

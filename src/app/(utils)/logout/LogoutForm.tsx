@@ -9,7 +9,7 @@ const LogoutForm = ({ rootPath }: { rootPath?: string }) => {
   const [done, setDone] = useState(false)
 
   useEffect(() => {
-    console.log({ rootPath })  //logs
+
     if (session?.id) {
       const logout = async () => {
         await authClient.signOut()

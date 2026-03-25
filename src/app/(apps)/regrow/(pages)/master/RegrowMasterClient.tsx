@@ -19,6 +19,7 @@ import RoleAllocationTable from '@cm/components/RoleAllocationTable/RoleAllocati
 
 import type { RgStore, User } from '@prisma/generated/prisma/client'
 import { doStandardPrisma } from '@cm/lib/server-actions/common-server-actions/doStandardPrisma/doStandardPrisma'
+import { isDev } from '@cm/lib/methods/common'
 
 type Props = {
   stores: RgStore[]
@@ -35,7 +36,7 @@ const defaultStoreForm: StoreFormData = {
 }
 
 const RegrowMasterClient = ({ stores: initialStores }: Props) => {
-  const { query, toggleLoad } = useGlobal()
+  const { query, toggleLoad, session } = useGlobal()
   const [activeTab, setActiveTab] = useState<'store' | 'user' | 'role'>('store')
   // roleタブ切り替え時に再マウントさせるためのキー
   const [roleTabKey, setRoleTabKey] = useState(0)
@@ -195,7 +196,7 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
 
   const handleBanUser = useCallback(
     async (userId: string, userName: string) => {
-      const reason = window.prompt(`「${userName}」をBANします。理由を入力してください（任意）:`)
+      const reason = window.prompt(`「${userName}」を非アクティブにさせます。`)
       if (reason === null) return
       toggleLoad(async () => {
         await banRegrowUser(userId, reason || undefined)
@@ -259,7 +260,7 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
       {/* ヘッダー */}
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-slate-800">Regrow マスタ管理</h2>
-        <div className="flex gap-2">
+        {session.role === 'admin' && <div className="flex gap-2">
           <Button
             color="red"
             size="sm"
@@ -305,7 +306,7 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
             <Database className="w-4 h-4 mr-1" />
             Excelからシード投入
           </Button>
-        </div>
+        </div>}
       </div>
 
       {/* タブ */}
@@ -353,7 +354,7 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>ID</TableHead>
+                    {/* <TableHead>ID</TableHead> */}
                     <TableHead>名前</TableHead>
                     <TableHead>状態</TableHead>
                     <TableHead>操作</TableHead>
@@ -369,7 +370,7 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
                   ) : (
                     stores.map((store) => (
                       <TableRow key={store.id} className={!store.isActive ? 'opacity-50' : ''}>
-                        <TableCell>{store.id}</TableCell>
+                        {/* <TableCell>{store.id}</TableCell> */}
                         <TableCell className="font-medium">
                           <div className="flex items-center gap-2">
                             <Building2 className="w-4 h-4 text-slate-400" />
@@ -487,7 +488,7 @@ const RegrowMasterClient = ({ stores: initialStores }: Props) => {
                           <TableCell>
                             {user.banned ? (
                               <div>
-                                <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">BAN</span>
+                                <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">非アクティブ</span>
                                 {user.banReason && <p className="text-[10px] text-red-400 mt-0.5">{user.banReason}</p>}
                               </div>
                             ) : (

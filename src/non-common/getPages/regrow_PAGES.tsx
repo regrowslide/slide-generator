@@ -10,6 +10,7 @@ export const regrow_PAGES = (props: PageGetterType) => {
   const loginPaths = [
     { tabId: '/report', label: 'MTG資料', exclusiveTo: !!login },
     { tabId: '/master', label: 'マスタ管理', exclusiveTo: !!(isAdmin || admin) },
+    { tabId: '/manual', label: 'マニュアル', exclusiveTo: !!login },
 
   ].map((item) => ({
     ...item,
