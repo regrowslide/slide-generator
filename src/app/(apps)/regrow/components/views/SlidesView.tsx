@@ -662,7 +662,7 @@ const MetricComparisonSlide = ({
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={500}>
-          <ComposedChart data={data}>
+          <ComposedChart data={data} margin={{top: 20}}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="month" style={{fontSize: '14px'}} />
             <YAxis style={{fontSize: '14px'}} />
@@ -742,7 +742,7 @@ const Slide7AllMetricsComparison = ({selectedStores}: StoreFilterProps) => {
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={500}>
-          <ComposedChart data={data}>
+          <ComposedChart data={data} margin={{top: 20}}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="month" style={{fontSize: '14px'}} />
             <YAxis yAxisId="left" label={{value: '円', angle: -90, position: 'insideLeft'}} style={{fontSize: '12px'}} />
@@ -966,7 +966,7 @@ const Slide9StaffUtilizationChart = ({selectedStores, selectedStaffNames}: Store
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={450}>
-          <BarChart data={utilizationData}>
+          <BarChart data={utilizationData} margin={{top: 20}}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" style={{fontSize: '12px'}} angle={-45} textAnchor="end" height={100} />
             <YAxis label={{value: '稼働率 (%)', angle: -90, position: 'insideLeft'}} style={{fontSize: '12px'}} />
@@ -1189,7 +1189,7 @@ const Slide11StaffAchievementChart = ({selectedStores, selectedStaffNames}: Stor
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={Math.max(chartData.length * 50 + 80, 300)}>
-          <ComposedChart data={chartData} layout="vertical" margin={{left: 20, right: 80}}>
+          <ComposedChart data={chartData} layout="vertical" margin={{top: 20, left: 20, right: 80}}>
             <AchievementGradientDef />
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis xAxisId="sales" type="number" orientation="bottom" style={{fontSize: '11px'}}
@@ -1302,7 +1302,7 @@ const Slide13StoreAchievementChart = ({selectedStores}: StoreFilterProps) => {
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={Math.max(chartData.length * 70 + 80, 250)}>
-          <ComposedChart data={chartData} layout="vertical" margin={{left: 20, right: 80}}>
+          <ComposedChart data={chartData} layout="vertical" margin={{top: 20, left: 20, right: 80}}>
             <AchievementGradientDef />
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis xAxisId="sales" type="number" orientation="bottom" style={{fontSize: '11px'}}
@@ -1462,7 +1462,7 @@ const Slide15StaffMomChart1 = ({selectedStores, selectedStaffNames}: StoreFilter
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={480}>
-          <ComposedChart data={chartData}>
+          <ComposedChart data={chartData} margin={{top: 20}}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" style={{fontSize: '11px'}} angle={-30} textAnchor="end" height={80} />
             <YAxis yAxisId="left" label={{value: '売上金額', angle: -90, position: 'insideLeft'}} style={{fontSize: '11px'}} />
@@ -1564,7 +1564,7 @@ const Slide17StaffMomChart2 = ({selectedStores, selectedStaffNames}: StoreFilter
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={480}>
-          <ComposedChart data={chartData}>
+          <ComposedChart data={chartData} margin={{top: 20}}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" style={{fontSize: '11px'}} angle={-30} textAnchor="end" height={80} />
             <YAxis yAxisId="left" label={{value: '客単価', angle: -90, position: 'insideLeft'}} style={{fontSize: '11px'}} />
