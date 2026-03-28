@@ -183,9 +183,14 @@ export class RegrowMonthlyReportService {
       throw new Error(`未登録スタッフがいるためインポートできません: ${unmatchedStaff.join(', ')}`)
     }
 
-    // 既存レコードを削除して再作成
-    await prisma.rgStaffRecord.deleteMany({where: {monthlyReportId: report.id}})
-    await prisma.rgStoreTotals.deleteMany({where: {monthlyReportId: report.id}})
+    // 取り込み対象の店舗のみ既存レコードを削除して再作成
+    const importStoreIds = [...new Set(staffRecords.map((r) => storeMap.get(r.storeName)!))]
+    await prisma.rgStaffRecord.deleteMany({
+      where: {monthlyReportId: report.id, storeId: {in: importStoreIds}},
+    })
+    await prisma.rgStoreTotals.deleteMany({
+      where: {monthlyReportId: report.id, storeId: {in: importStoreIds}},
+    })
 
     await prisma.rgStaffRecord.createMany({
       data: staffRecords.map((r) => {
