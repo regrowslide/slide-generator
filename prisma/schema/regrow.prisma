@@ -81,6 +81,7 @@ model RgStoreKpi {
   utilizationRate     Float?
   returnRate          Float?
   csRegistrationCount Int?
+  googleReviewCount   Int? // Google口コミ獲得数
   comment             String    @default("")
 
   RgMonthlyReport RgMonthlyReport @relation(fields: [monthlyReportId], references: [id], onDelete: Cascade)
@@ -100,6 +101,7 @@ model RgStaffManualData {
   userId              String? // Userとの紐付け（任意）
   utilizationRate     Float?
   csRegistrationCount Int?
+  googleReviewCount   Int? // Google口コミ獲得数
   targetSales         Int? // 目標売上（円単位）
 
   RgMonthlyReport RgMonthlyReport @relation(fields: [monthlyReportId], references: [id], onDelete: Cascade)

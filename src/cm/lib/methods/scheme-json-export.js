@@ -1033,6 +1033,20 @@
           "isUpdatedAt": false
         },
         {
+          "name": "googleReviewCount",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
           "name": "comment",
           "kind": "scalar",
           "isList": false,
@@ -1252,6 +1266,20 @@
         },
         {
           "name": "csRegistrationCount",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "Int",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
+          "name": "googleReviewCount",
           "kind": "scalar",
           "isList": false,
           "isRequired": false,

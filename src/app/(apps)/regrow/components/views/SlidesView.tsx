@@ -521,7 +521,7 @@ const Slide2TableOfContents = () => {
         </div>
         <div className="flex items-center gap-3">
           <span className="font-bold text-red-500">5.</span>
-          <span>売上目標達成率（スタッフ別・店舗別）</span>
+          <span>売上目標達成率（スタッフ別）・店舗別パフォーマンス</span>
         </div>
         <div className="flex items-center gap-3">
           <span className="font-bold text-red-500">6.</span>
@@ -561,6 +561,20 @@ const Slide3OverallSummary = ({selectedStores}: StoreFilterProps) => {
     return Math.round((total / staffData.length) * 10) / 10
   }
 
+  // 店舗別の新規客数を集計
+  const calcStoreNewCustomerCount = (storeName: StoreName): number => {
+    const storeRecords = monthlyData.importedData?.staffRecords.filter((r) => r.storeName === storeName) || []
+    return storeRecords.reduce((sum, r) => sum + r.newCustomerCount, 0)
+  }
+
+  // 店舗別の達成率を計算
+  const calcStoreAchievementRate = (storeName: StoreName, actualSales: number): number | null => {
+    const storeManualData = monthlyData.manualData.staffManualData?.filter((m) => m.storeName === storeName) || []
+    const totalTarget = storeManualData.reduce((sum, m) => sum + (m.targetSales ?? 0), 0)
+    if (totalTarget <= 0) return null
+    return Math.round((actualSales / totalTarget) * 100)
+  }
+
   return (
     <div className="h-full p-8 overflow-y-auto">
       <h2 className="text-3xl font-bold mb-6 text-gray-800">全体サマリー</h2>
@@ -576,9 +590,12 @@ const Slide3OverallSummary = ({selectedStores}: StoreFilterProps) => {
                 <tr>
                   <th className="p-2.5 border">店舗</th>
                   <th className="p-2.5 border">売上</th>
+                  <th className="p-2.5 border">来客数</th>
+                  <th className="p-2.5 border">新規数</th>
                   <th className="p-2.5 border">稼働率 <span className="text-xs font-normal">※スタッフ平均</span></th>
                   <th className="p-2.5 border">客単価</th>
                   <th className="p-2.5 border">再来率</th>
+                  <th className="p-2.5 border">達成率</th>
                 </tr>
               </thead>
               <tbody>
@@ -586,14 +603,26 @@ const Slide3OverallSummary = ({selectedStores}: StoreFilterProps) => {
                   const store = stores.find((s) => s.storeName === storeName)
                   const returnRate = calcStoreReturnRate(storeName)
                   const utilization = calcStoreUtilization(storeName)
+                  const customerCount = store?.customerCount || 0
+                  const newCustomerCount = calcStoreNewCustomerCount(storeName)
+                  const achievementRate = calcStoreAchievementRate(storeName, store?.sales || 0)
 
                   return (
                     <tr key={i} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
                       <td className="p-2.5 border font-medium">{storeName}</td>
                       <td className="p-2.5 border text-right">¥{(store?.sales || 0).toLocaleString()}</td>
+                      <td className="p-2.5 border text-right">{customerCount}</td>
+                      <td className="p-2.5 border text-right">{newCustomerCount}</td>
                       <td className="p-2.5 border text-right">{utilization > 0 ? `${utilization}%` : '-'}</td>
                       <td className="p-2.5 border text-right">¥{(store?.unitPrice || 0).toLocaleString()}</td>
                       <td className="p-2.5 border text-right">{returnRate}%</td>
+                      <td className="p-2.5 border text-right">
+                        {achievementRate !== null ? (
+                          <span className={`px-2 py-0.5 rounded text-xs font-bold ${achievementColorClass(achievementRate)}`}>
+                            {achievementRate}%
+                          </span>
+                        ) : '-'}
+                      </td>
                     </tr>
                   )
                 })}
@@ -800,15 +829,74 @@ const Slide7AllMetricsComparison = ({selectedStores}: StoreFilterProps) => {
   )
 }
 
+const PERFORMANCE_METRICS: SortMetricOption[] = [
+  {key: 'sales', label: '売上'},
+  {key: 'utilizationRate', label: '稼働率'},
+  {key: 'customerCount', label: '対応客数'},
+  {key: 'nominationCount', label: '指名数'},
+  {key: 'nominationRate', label: '指名割合'},
+  {key: 'unitPrice', label: '客単価'},
+  {key: 'returnRate', label: '再来率'},
+  {key: 'csRegistrationCount', label: 'CS登録数'},
+  {key: 'csRate', label: 'CS登録率'},
+  {key: 'googleReviewCount', label: 'Google口コミ獲得数'},
+]
+
 const Slide8StaffPerformanceTable = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
   const {monthlyData} = useDataContext()
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
+  const [sortMetric, setSortMetric] = useState('sales')
+
   const allStaffList = monthlyData.importedData?.staffRecords || []
-  const staffList = filterStaffList(allStaffList, selectedStores, selectedStaffNames).slice(0, 15)
+  const staffList = filterStaffList(allStaffList, selectedStores, selectedStaffNames)
+
+  // 行データを事前構築
+  const rawRows = staffList.map((staff) => {
+    const manualData = monthlyData.manualData.staffManualData?.find(
+      (m) => m.staffName === staff.staffName && m.storeName === staff.storeName
+    )
+    const nominationRate =
+      staff.customerCount > 0 ? Number(((staff.nominationCount / staff.customerCount) * 100).toFixed(1)) : 0
+    const returnRate = calculateStaffReturnRate(staff)
+    const csRate =
+      staff.customerCount > 0 && manualData?.csRegistrationCount
+        ? Number((((manualData.csRegistrationCount || 0) / staff.customerCount) * 100).toFixed(1))
+        : 0
+    const utilizationRate = manualData?.utilizationRate ?? 0
+
+    return {
+      staffName: staff.staffName,
+      storeName: staff.storeName,
+      sales: staff.sales,
+      utilizationRate,
+      utilizationRateRaw: manualData?.utilizationRate,
+      customerCount: staff.customerCount,
+      nominationCount: staff.nominationCount,
+      nominationRate,
+      unitPrice: staff.unitPrice,
+      returnRate,
+      csRegistrationCount: manualData?.csRegistrationCount ?? 0,
+      csRate,
+      csRateRaw: manualData?.csRegistrationCount,
+      googleReviewCount: manualData?.googleReviewCount ?? 0,
+    }
+  })
+
+  const rows = sortByKey(rawRows, sortMetric as keyof (typeof rawRows)[0], sortOrder)
 
   return (
     <div className="h-full p-8 overflow-y-auto">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">スタッフ別パフォーマンス</h2>
-      {staffList.length === 0 ? (
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-gray-800">スタッフ別パフォーマンス</h2>
+        <SortToggle
+          value={sortOrder}
+          onChange={setSortOrder}
+          metrics={PERFORMANCE_METRICS}
+          selectedMetric={sortMetric}
+          onMetricChange={setSortMetric}
+        />
+      </div>
+      {rows.length === 0 ? (
         <div className="flex items-center justify-center" style={{height: '400px'}}>
           <p className="text-gray-500 text-lg">選択した店舗にスタッフデータがありません</p>
         </div>
@@ -826,41 +914,32 @@ const Slide8StaffPerformanceTable = ({selectedStores, selectedStaffNames}: Store
                 <th className="p-1.5 border">指名割合</th>
                 <th className="p-1.5 border">客単価</th>
                 <th className="p-1.5 border">再来率</th>
+                <th className="p-1.5 border">CS登録数</th>
                 <th className="p-1.5 border">CS登録率</th>
+                <th className="p-1.5 border">Google口コミ</th>
               </tr>
             </thead>
             <tbody>
-              {staffList.map((staff, i) => {
-                const manualData = monthlyData.manualData.staffManualData?.find(
-                  (m) => m.staffName === staff.staffName && m.storeName === staff.storeName
-                )
-                const nominationRate =
-                  staff.customerCount > 0 ? ((staff.nominationCount / staff.customerCount) * 100).toFixed(1) : '-'
-                const returnRate = calculateStaffReturnRate(staff)
-                const csRate =
-                  staff.customerCount > 0 && manualData?.csRegistrationCount
-                    ? (((manualData.csRegistrationCount || 0) / staff.customerCount) * 100).toFixed(1)
-                    : '-'
-
-                return (
-                  <tr key={i} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                    <td className="p-1.5 border font-medium">{staff.staffName}</td>
-                    <td className="p-1.5 border text-xs">{staff.storeName}</td>
-                    <td className="p-1.5 border text-right">¥{staff.sales.toLocaleString()}</td>
-                    <td className="p-1.5 border text-right">
-                      {manualData?.utilizationRate !== null && manualData?.utilizationRate !== undefined
-                        ? `${manualData.utilizationRate}%`
-                        : '-'}
-                    </td>
-                    <td className="p-1.5 border text-right">{staff.customerCount}</td>
-                    <td className="p-1.5 border text-right">{staff.nominationCount}</td>
-                    <td className="p-1.5 border text-right">{nominationRate !== '-' ? `${nominationRate}%` : '-'}</td>
-                    <td className="p-1.5 border text-right">¥{staff.unitPrice.toLocaleString()}</td>
-                    <td className="p-1.5 border text-right">{returnRate}%</td>
-                    <td className="p-1.5 border text-right">{csRate !== '-' ? `${csRate}%` : '-'}</td>
-                  </tr>
-                )
-              })}
+              {rows.map((row, i) => (
+                <tr key={i} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                  <td className="p-1.5 border font-medium">{i === 0 && sortOrder === 'desc' ? `👑 ${row.staffName}` : row.staffName}</td>
+                  <td className="p-1.5 border text-xs">{row.storeName}</td>
+                  <td className="p-1.5 border text-right">¥{row.sales.toLocaleString()}</td>
+                  <td className="p-1.5 border text-right">
+                    {row.utilizationRateRaw !== null && row.utilizationRateRaw !== undefined
+                      ? `${row.utilizationRateRaw}%`
+                      : '-'}
+                  </td>
+                  <td className="p-1.5 border text-right">{row.customerCount}</td>
+                  <td className="p-1.5 border text-right">{row.nominationCount}</td>
+                  <td className="p-1.5 border text-right">{row.nominationRate > 0 ? `${row.nominationRate}%` : '-'}</td>
+                  <td className="p-1.5 border text-right">¥{row.unitPrice.toLocaleString()}</td>
+                  <td className="p-1.5 border text-right">{row.returnRate}%</td>
+                  <td className="p-1.5 border text-right">{row.csRegistrationCount || '-'}</td>
+                  <td className="p-1.5 border text-right">{row.csRateRaw ? `${row.csRate}%` : '-'}</td>
+                  <td className="p-1.5 border text-right">{row.googleReviewCount || '-'}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -905,12 +984,80 @@ const ChartToggle = ({
   </div>
 )
 
+// ソート順の型と共通トグル
+type SortOrder = 'desc' | 'asc' | 'default'
+
+type SortMetricOption = {key: string; label: string}
+
+const SortToggle = ({
+  value,
+  onChange,
+  metrics,
+  selectedMetric,
+  onMetricChange,
+}: {
+  value: SortOrder
+  onChange: (v: SortOrder) => void
+  metrics?: SortMetricOption[]
+  selectedMetric?: string
+  onMetricChange?: (v: string) => void
+}) => {
+  const orderOptions: {key: SortOrder; label: string}[] = [
+    {key: 'default', label: '登録順'},
+    {key: 'desc', label: '降順'},
+    {key: 'asc', label: '昇順'},
+  ]
+  return (
+    <div className="flex items-center gap-2">
+      {metrics && metrics.length > 1 && selectedMetric && onMetricChange && (
+        <div className="flex items-center gap-1 bg-blue-50 rounded-md p-0.5">
+          {metrics.map((m) => (
+            <button
+              key={m.key}
+              onClick={() => onMetricChange(m.key)}
+              className={`px-2.5 py-1 text-xs font-medium rounded transition-colors ${
+                selectedMetric === m.key ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              {m.label}
+            </button>
+          ))}
+        </div>
+      )}
+      <div className="flex items-center gap-1 bg-gray-100 rounded-md p-0.5">
+        {orderOptions.map((opt) => (
+          <button
+            key={opt.key}
+            onClick={() => onChange(opt.key)}
+            className={`px-2.5 py-1 text-xs font-medium rounded transition-colors ${
+              value === opt.key ? 'bg-white text-purple-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/** 配列をソートして新しい配列を返す（イミュータブル） */
+const sortByKey = <T,>(data: T[], key: keyof T, order: SortOrder): T[] => {
+  if (order === 'default') return data
+  return [...data].sort((a, b) => {
+    const va = Number(a[key]) || 0
+    const vb = Number(b[key]) || 0
+    return order === 'desc' ? vb - va : va - vb
+  })
+}
+
 // スタッフ稼働率（各グラフ内にローカルトグル）
 const Slide9StaffUtilizationChart = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
   const {currentYearMonth, availableMonths, allMonthlyData} = useDataContext()
   const [selectedMonth, setSelectedMonth] = useState<YearMonth>(currentYearMonth)
   const [showCurrent, setShowCurrent] = useState(true)
   const [showCumulative, setShowCumulative] = useState(false)
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
 
   const selectedMonthData = allMonthlyData[selectedMonth]
 
@@ -921,7 +1068,7 @@ const Slide9StaffUtilizationChart = ({selectedStores, selectedStaffNames}: Store
       .filter((u) => selectedStores.includes(u.storeName))
       .map((u) => ({
         name: u.staffName,
-        ...(showCurrent ? {当月: u.utilizationRate || 0} : {}),
+        当月: u.utilizationRate || 0,
         store: u.storeName,
         ...(showCumulative
           ? {累計平均: calculateStaffCumulativeAverage(u.staffName, u.storeName, selectedMonth, 'utilizationRate', allMonthlyData)}
@@ -933,11 +1080,15 @@ const Slide9StaffUtilizationChart = ({selectedStores, selectedStaffNames}: Store
     utilizationData = utilizationData.filter((u) => selectedStaffNames.includes(u.name))
   }
 
+  // ソート適用（稼働率の当月値でソート）
+  utilizationData = sortByKey(utilizationData, '当月', sortOrder)
+
   return (
     <div className="p-12">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-3xl font-bold text-gray-800">スタッフ稼働率</h2>
         <div className="flex items-center gap-4">
+          <SortToggle value={sortOrder} onChange={setSortOrder} />
           <ChartToggle
             showCurrent={showCurrent}
             showCumulative={showCumulative}
@@ -1004,6 +1155,12 @@ type StoreAchievementRow = {
   actualTotal: number
   diff: number
   achievementRate: number
+  customerCount: number
+  newCustomerCount: number
+  unitPrice: number
+  returnRate: number
+  utilizationRate: number
+  googleReviewCount: number
 }
 
 const achievementColorClass = (rate: number) =>
@@ -1079,18 +1236,51 @@ const buildStoreAchievementData = (
   return selectedStores
     .map((storeName) => {
       const storeRecords = monthlyData.importedData?.staffRecords.filter((r) => r.storeName === storeName) || []
+      const storeTotal = monthlyData.importedData?.storeTotals.find((t) => t.storeName === storeName)
       const totalActual = storeRecords.reduce((sum, r) => sum + r.sales, 0)
       const storeManualData = monthlyData.manualData.staffManualData?.filter((m) => m.storeName === storeName) || []
       const totalTarget = storeManualData.reduce((sum, m) => sum + (m.targetSales ?? 0), 0)
-      if (totalTarget <= 0) return null
+
+      // 来客数・新規数
+      const customerCount = storeTotal?.customerCount || storeRecords.reduce((sum, r) => sum + r.customerCount, 0)
+      const newCustomerCount = storeRecords.reduce((sum, r) => sum + r.newCustomerCount, 0)
+
+      // 客単価
+      const unitPrice = storeTotal?.unitPrice || 0
+
+      // 再来率
+      const totalCustomers = storeRecords.reduce((sum, r) => sum + r.customerCount, 0)
+      const totalNewCustomers = storeRecords.reduce((sum, r) => sum + r.newCustomerCount, 0)
+      const returnRate = totalCustomers > 0
+        ? Math.round(((totalCustomers - totalNewCustomers) / totalCustomers) * 100 * 10) / 10
+        : 0
+
+      // 稼働率（スタッフ平均）
+      const staffUtilData = monthlyData.manualData.staffManualData?.filter(
+        (s) => s.storeName === storeName && s.utilizationRate !== null && s.utilizationRate !== undefined
+      ) || []
+      const utilizationRate = staffUtilData.length > 0
+        ? Math.round(staffUtilData.reduce((sum, s) => sum + (s.utilizationRate || 0), 0) / staffUtilData.length * 10) / 10
+        : 0
+
+      // 達成率（目標未入力でも行は表示する）
+      const achievementRate = totalTarget > 0 ? Math.round((totalActual / totalTarget) * 100) : 0
+
       return {
         storeName,
         targetTotal: totalTarget,
         actualTotal: totalActual,
-        diff: totalActual - totalTarget,
-        achievementRate: Math.round((totalActual / totalTarget) * 100),
+        diff: totalTarget > 0 ? totalActual - totalTarget : 0,
+        achievementRate,
+        customerCount,
+        newCustomerCount,
+        unitPrice,
+        returnRate,
+        utilizationRate,
+        googleReviewCount: storeManualData.reduce((sum, m) => sum + (m.googleReviewCount ?? 0), 0),
       }
     })
+    // 目標未入力でも表示する（フィルタを削除）
     .filter(Boolean) as StoreAchievementRow[]
 }
 
@@ -1107,14 +1297,33 @@ const AchievementLegend = () => (
 // スライド10: スタッフ別売上達成率（テーブル）
 // ============================================================
 
+const ACHIEVEMENT_METRICS: SortMetricOption[] = [
+  {key: 'targetSales', label: '目標売上'},
+  {key: 'actualSales', label: '実績売上'},
+  {key: 'diff', label: '差額'},
+  {key: 'achievementRate', label: '達成率'},
+]
+
 const Slide10StaffAchievementTable = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
   const {monthlyData} = useDataContext()
-  const rows = buildStaffAchievementData(monthlyData, selectedStores, selectedStaffNames)
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
+  const [sortMetric, setSortMetric] = useState('achievementRate')
+  const rawRows = buildStaffAchievementData(monthlyData, selectedStores, selectedStaffNames)
+  const rows = sortByKey(rawRows, sortMetric as keyof StaffAchievementRow, sortOrder)
   const hasStaff = (monthlyData.importedData?.staffRecords || []).length > 0
 
   return (
     <div className="h-full p-8 overflow-y-auto">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">スタッフ別 売上目標達成率</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-gray-800">スタッフ別 売上目標達成率</h2>
+        <SortToggle
+          value={sortOrder}
+          onChange={setSortOrder}
+          metrics={ACHIEVEMENT_METRICS}
+          selectedMetric={sortMetric}
+          onMetricChange={setSortMetric}
+        />
+      </div>
       {rows.length === 0 ? (
         <div className="flex items-center justify-center" style={{height: '400px'}}>
           <p className="text-gray-500 text-lg">
@@ -1168,10 +1377,13 @@ const Slide10StaffAchievementTable = ({selectedStores, selectedStaffNames}: Stor
 
 const Slide11StaffAchievementChart = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
   const {monthlyData} = useDataContext()
-  const rows = buildStaffAchievementData(monthlyData, selectedStores, selectedStaffNames)
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
+  const [sortMetric, setSortMetric] = useState('achievementRate')
+  const rawRows = buildStaffAchievementData(monthlyData, selectedStores, selectedStaffNames)
+  const sortedRows = sortByKey(rawRows, sortMetric as keyof StaffAchievementRow, sortOrder)
   const hasStaff = (monthlyData.importedData?.staffRecords || []).length > 0
 
-  const chartData = rows.map((row) => ({
+  const chartData = sortedRows.map((row) => ({
     name: row.staffName,
     目標売上: row.targetSales,
     実績売上: row.actualSales,
@@ -1180,7 +1392,16 @@ const Slide11StaffAchievementChart = ({selectedStores, selectedStaffNames}: Stor
 
   return (
     <div className="p-8">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">スタッフ別 売上目標達成率</h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">スタッフ別 売上目標達成率</h2>
+        <SortToggle
+          value={sortOrder}
+          onChange={setSortOrder}
+          metrics={ACHIEVEMENT_METRICS}
+          selectedMetric={sortMetric}
+          onMetricChange={setSortMetric}
+        />
+      </div>
       {chartData.length === 0 ? (
         <div className="flex items-center justify-center" style={{height: '450px'}}>
           <p className="text-gray-500 text-lg">
@@ -1221,20 +1442,43 @@ const Slide11StaffAchievementChart = ({selectedStores, selectedStaffNames}: Stor
 }
 
 // ============================================================
-// スライド12: 店舗別売上達成率（テーブル）
+// スライド12: 店舗別パフォーマンス（テーブル）
 // ============================================================
+
+const STORE_PERFORMANCE_METRICS: SortMetricOption[] = [
+  {key: 'actualTotal', label: '実績売上'},
+  {key: 'achievementRate', label: '達成率'},
+  {key: 'customerCount', label: '来客数'},
+  {key: 'newCustomerCount', label: '新規数'},
+  {key: 'unitPrice', label: '客単価'},
+  {key: 'utilizationRate', label: '稼働率'},
+  {key: 'returnRate', label: '再来率'},
+  {key: 'googleReviewCount', label: 'Google口コミ'},
+]
 
 const Slide12StoreAchievementTable = ({selectedStores}: StoreFilterProps) => {
   const {monthlyData} = useDataContext()
-  const rows = buildStoreAchievementData(monthlyData, selectedStores)
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
+  const [sortMetric, setSortMetric] = useState('actualTotal')
+  const rawRows = buildStoreAchievementData(monthlyData, selectedStores)
+  const rows = sortByKey(rawRows, sortMetric as keyof StoreAchievementRow, sortOrder)
 
   return (
     <div className="h-full p-8 overflow-y-auto">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">店舗別 売上目標達成率</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-gray-800">店舗別パフォーマンス</h2>
+        <SortToggle
+          value={sortOrder}
+          onChange={setSortOrder}
+          metrics={STORE_PERFORMANCE_METRICS}
+          selectedMetric={sortMetric}
+          onMetricChange={setSortMetric}
+        />
+      </div>
       {rows.length === 0 ? (
         <div className="flex items-center justify-center" style={{height: '400px'}}>
           <p className="text-gray-500 text-lg">
-            {selectedStores.length === 0 ? '店舗を選択してください' : '目標売上が未入力です（目標売上タブで入力してください）'}
+            {selectedStores.length === 0 ? '店舗を選択してください' : 'データがありません'}
           </p>
         </div>
       ) : (
@@ -1243,28 +1487,44 @@ const Slide12StoreAchievementTable = ({selectedStores}: StoreFilterProps) => {
             <thead className="bg-purple-600 text-white">
               <tr>
                 <th className="p-2.5 border">店舗</th>
-                <th className="p-2.5 border">目標合計</th>
-                <th className="p-2.5 border">実績合計</th>
+                <th className="p-2.5 border">実績売上</th>
+                <th className="p-2.5 border">目標売上</th>
                 <th className="p-2.5 border">差額</th>
                 <th className="p-2.5 border">達成率</th>
+                <th className="p-2.5 border">来客数</th>
+                <th className="p-2.5 border">新規数</th>
+                <th className="p-2.5 border">客単価</th>
+                <th className="p-2.5 border">稼働率</th>
+                <th className="p-2.5 border">再来率</th>
+                <th className="p-2.5 border">Google口コミ</th>
               </tr>
             </thead>
             <tbody>
               {rows.map((row, i) => (
                 <tr key={i} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                  <td className="p-2.5 border font-medium">{row.storeName}</td>
-                  <td className="p-2.5 border text-right">¥{row.targetTotal.toLocaleString()}</td>
+                  <td className="p-2.5 border font-medium">{i === 0 && sortOrder === 'desc' ? `👑 ${row.storeName}` : row.storeName}</td>
                   <td className="p-2.5 border text-right">¥{row.actualTotal.toLocaleString()}</td>
+                  <td className="p-2.5 border text-right">{row.targetTotal > 0 ? `¥${row.targetTotal.toLocaleString()}` : '-'}</td>
                   <td className="p-2.5 border text-right">
-                    <span className={row.diff >= 0 ? 'text-green-600 font-medium' : 'text-red-600 font-medium'}>
-                      {row.diff >= 0 ? '+' : ''}¥{row.diff.toLocaleString()}
-                    </span>
+                    {row.targetTotal > 0 ? (
+                      <span className={row.diff >= 0 ? 'text-green-600 font-medium' : 'text-red-600 font-medium'}>
+                        {row.diff >= 0 ? '+' : ''}¥{row.diff.toLocaleString()}
+                      </span>
+                    ) : '-'}
                   </td>
                   <td className="p-2.5 border text-right">
-                    <span className={`px-2 py-0.5 rounded text-xs font-bold ${achievementColorClass(row.achievementRate)}`}>
-                      {row.achievementRate}%
-                    </span>
+                    {row.targetTotal > 0 ? (
+                      <span className={`px-2 py-0.5 rounded text-xs font-bold ${achievementColorClass(row.achievementRate)}`}>
+                        {row.achievementRate}%
+                      </span>
+                    ) : '-'}
                   </td>
+                  <td className="p-2.5 border text-right">{row.customerCount}</td>
+                  <td className="p-2.5 border text-right">{row.newCustomerCount}</td>
+                  <td className="p-2.5 border text-right">¥{row.unitPrice.toLocaleString()}</td>
+                  <td className="p-2.5 border text-right">{row.utilizationRate > 0 ? `${row.utilizationRate}%` : '-'}</td>
+                  <td className="p-2.5 border text-right">{row.returnRate}%</td>
+                  <td className="p-2.5 border text-right">{row.googleReviewCount || '-'}</td>
                 </tr>
               ))}
             </tbody>
@@ -1276,59 +1536,158 @@ const Slide12StoreAchievementTable = ({selectedStores}: StoreFilterProps) => {
 }
 
 // ============================================================
-// スライド13: 店舗別売上達成率（グラフ）
-// 横棒: 目標vs実績（2本並び）+ 達成率ライン
+// スライド13: 店舗別パフォーマンス（グラフ）
+// チェックボックスで表示指標を切り替え
 // ============================================================
+
+type StoreChartMetricKey = 'actualTotal' | 'achievementRate' | 'customerCount' | 'newCustomerCount' | 'unitPrice' | 'utilizationRate' | 'returnRate' | 'googleReviewCount'
+
+const STORE_CHART_METRICS: {key: StoreChartMetricKey; label: string; color: string; unit: 'yen' | 'percent' | 'count'}[] = [
+  {key: 'actualTotal', label: '実績売上', color: '#7C3AED', unit: 'yen'},
+  {key: 'achievementRate', label: '達成率', color: '#DC2626', unit: 'percent'},
+  {key: 'customerCount', label: '来客数', color: '#2563EB', unit: 'count'},
+  {key: 'newCustomerCount', label: '新規数', color: '#16A34A', unit: 'count'},
+  {key: 'unitPrice', label: '客単価', color: '#D97706', unit: 'yen'},
+  {key: 'utilizationRate', label: '稼働率', color: '#DB2777', unit: 'percent'},
+  {key: 'returnRate', label: '再来率', color: '#0891B2', unit: 'percent'},
+  {key: 'googleReviewCount', label: 'Google口コミ', color: '#EA580C', unit: 'count'},
+]
 
 const Slide13StoreAchievementChart = ({selectedStores}: StoreFilterProps) => {
   const {monthlyData} = useDataContext()
-  const rows = buildStoreAchievementData(monthlyData, selectedStores)
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
+  const [sortMetric, setSortMetric] = useState('actualTotal')
+  const [visibleMetrics, setVisibleMetrics] = useState<Set<StoreChartMetricKey>>(new Set(STORE_CHART_METRICS.map((m) => m.key)))
+  const rawRows = buildStoreAchievementData(monthlyData, selectedStores)
+  const rows = sortByKey(rawRows, sortMetric as keyof StoreAchievementRow, sortOrder)
+
+  const toggleMetric = (key: StoreChartMetricKey) => {
+    setVisibleMetrics((prev) => {
+      const next = new Set(prev)
+      if (next.has(key)) {
+        // 最低1つは残す
+        if (next.size > 1) next.delete(key)
+      } else {
+        next.add(key)
+      }
+      return next
+    })
+  }
 
   const chartData = rows.map((row) => ({
     name: row.storeName,
-    目標売上: row.targetTotal,
     実績売上: row.actualTotal,
-    達成率: row.achievementRate,
+    達成率: row.targetTotal > 0 ? row.achievementRate : 0,
+    来客数: row.customerCount,
+    新規数: row.newCustomerCount,
+    客単価: row.unitPrice,
+    稼働率: row.utilizationRate,
+    再来率: row.returnRate,
+    Google口コミ: row.googleReviewCount,
   }))
+
+  // 表示中の指標を単位別に分類
+  const activeMetrics = STORE_CHART_METRICS.filter((m) => visibleMetrics.has(m.key))
+  const hasYen = activeMetrics.some((m) => m.unit === 'yen')
+  const hasPercent = activeMetrics.some((m) => m.unit === 'percent')
+  const hasCount = activeMetrics.some((m) => m.unit === 'count')
+
+  // 軸の割り当て: 単位の種類に応じて左軸・右軸を決定
+  const getAxisId = (unit: 'yen' | 'percent' | 'count'): string => {
+    const units = [hasYen && 'yen', hasPercent && 'percent', hasCount && 'count'].filter(Boolean)
+    if (units.length <= 1) return 'left'
+    if (unit === units[0]) return 'left'
+    return 'right'
+  }
 
   return (
     <div className="p-8">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">店舗別 売上目標達成率</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-gray-800">店舗別パフォーマンス</h2>
+        <SortToggle
+          value={sortOrder}
+          onChange={setSortOrder}
+          metrics={STORE_PERFORMANCE_METRICS}
+          selectedMetric={sortMetric}
+          onMetricChange={setSortMetric}
+        />
+      </div>
+      {/* 指標トグル */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {STORE_CHART_METRICS.map((m) => (
+          <label key={m.key} className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-100 px-2 py-1 rounded">
+            <input
+              type="checkbox"
+              checked={visibleMetrics.has(m.key)}
+              onChange={() => toggleMetric(m.key)}
+              className="w-4 h-4 rounded"
+              style={{accentColor: m.color}}
+            />
+            <span className="text-sm font-medium text-gray-700">{m.label}</span>
+          </label>
+        ))}
+      </div>
       {chartData.length === 0 ? (
-        <div className="flex items-center justify-center" style={{height: '450px'}}>
+        <div className="flex items-center justify-center" style={{height: '400px'}}>
           <p className="text-gray-500 text-lg">
-            {selectedStores.length === 0 ? '店舗を選択してください' : '目標売上が未入力です（目標売上タブで入力してください）'}
+            {selectedStores.length === 0 ? '店舗を選択してください' : 'データがありません'}
           </p>
         </div>
       ) : (
-        <ResponsiveContainer width="100%" height={Math.max(chartData.length * 70 + 80, 250)}>
-          <ComposedChart data={chartData} layout="vertical" margin={{top: 20, left: 20, right: 80}}>
-            <AchievementGradientDef />
+        <ResponsiveContainer width="100%" height={Math.max(chartData.length * 80 + 80, 250)}>
+          <ComposedChart data={chartData} layout="vertical" margin={{top: 20, left: 20, right: 20}}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis xAxisId="sales" type="number" orientation="bottom" style={{fontSize: '11px'}}
-              tickFormatter={(v: number) => `¥${(v / 10000).toFixed(0)}万`}
+            <YAxis dataKey="name" type="category" width={100} style={{fontSize: '13px', fontWeight: 'bold'}} />
+            {/* 左軸 */}
+            <XAxis
+              xAxisId="left"
+              type="number"
+              orientation="bottom"
+              style={{fontSize: '11px'}}
+              tickFormatter={(v: number) => {
+                const leftUnit = activeMetrics.find((m) => getAxisId(m.unit) === 'left')?.unit
+                if (leftUnit === 'yen') return `¥${(v / 10000).toFixed(0)}万`
+                if (leftUnit === 'percent') return `${v}%`
+                return String(v)
+              }}
             />
-            <XAxis xAxisId="rate" type="number" orientation="top" domain={[0, (max: number) => Math.max(max, 130)]} unit="%" style={{fontSize: '11px'}} hide />
-            <YAxis dataKey="name" type="category" width={100} style={{fontSize: '14px', fontWeight: 'bold'}} />
+            {/* 右軸（2種類以上の単位がある場合） */}
+            {[hasYen, hasPercent, hasCount].filter(Boolean).length > 1 && (
+              <XAxis
+                xAxisId="right"
+                type="number"
+                orientation="top"
+                style={{fontSize: '11px'}}
+                tickFormatter={(v: number) => {
+                  const rightUnit = activeMetrics.find((m) => getAxisId(m.unit) === 'right')?.unit
+                  if (rightUnit === 'yen') return `¥${(v / 10000).toFixed(0)}万`
+                  if (rightUnit === 'percent') return `${v}%`
+                  return String(v)
+                }}
+              />
+            )}
             <Tooltip
               formatter={(value: number, name: string) => {
-                if (name === '達成率') return [`${value}%`, name]
-                return [`¥${value.toLocaleString()}`, name]
+                const metric = STORE_CHART_METRICS.find((m) => m.label === name)
+                if (metric?.unit === 'yen') return [`¥${value.toLocaleString()}`, name]
+                if (metric?.unit === 'percent') return [`${value}%`, name]
+                return [value, name]
               }}
             />
             <Legend wrapperStyle={{fontSize: '12px'}} />
-            <Bar xAxisId="sales" dataKey="目標売上" fill="#94A3B8" name="目標売上" barSize={22} />
-            <Bar xAxisId="sales" dataKey="実績売上" name="実績売上" barSize={22} shape={<AchievementBarShape />}>
-              {chartData.map((entry, index) => (
-                <Cell key={index} fill={achievementBarColor(entry.達成率)} />
-              ))}
-              <LabelList dataKey="達成率" content={<CrownLabel />} />
-            </Bar>
-            <Line xAxisId="rate" dataKey="達成率" stroke="#6366F1" strokeWidth={2} name="達成率" dot={{r: 6, fill: '#6366F1'}} />
+            {activeMetrics.map((m) => (
+              <Bar
+                key={m.key}
+                xAxisId={getAxisId(m.unit)}
+                dataKey={m.label}
+                fill={m.color}
+                name={m.label}
+                barSize={22}
+              />
+            ))}
           </ComposedChart>
         </ResponsiveContainer>
       )}
-      <AchievementLegend />
     </div>
   )
 }
@@ -1385,15 +1744,40 @@ const DiffCell = ({value, prefix = '', suffix = ''}: {value: number; prefix?: st
 // スライド14: スタッフ別先月比① テーブル（売上金額/指名件数）
 // ============================================================
 
+const SALES_NOMINATION_METRICS: SortMetricOption[] = [
+  {key: 'currentSales', label: '売上'},
+  {key: 'currentNomination', label: '指名'},
+]
+
+const RETURN_UNIT_METRICS: SortMetricOption[] = [
+  {key: 'currentUnitPrice', label: '客単価'},
+  {key: 'currentReturnRate', label: '再来率'},
+]
+
+type SalesNominationKey = 'currentSales' | 'currentNomination'
+type ReturnUnitKey = 'currentReturnRate' | 'currentUnitPrice'
+
 const Slide14StaffMomTable1 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
   const {monthlyData, currentYearMonth, allMonthlyData} = useDataContext()
-  const rows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData)
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
+  const [sortMetric, setSortMetric] = useState<'currentSales' | 'currentNomination'>('currentSales')
+  const rawRows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData)
+  const rows = sortByKey(rawRows, sortMetric, sortOrder)
 
   return (
     <div className="h-full p-8 overflow-y-auto">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">
-        スタッフ別先月比①（売上金額/指名件数）
-      </h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-gray-800">
+          スタッフ別先月比①（売上金額/指名件数）
+        </h2>
+        <SortToggle
+          value={sortOrder}
+          onChange={setSortOrder}
+          metrics={SALES_NOMINATION_METRICS}
+          selectedMetric={sortMetric}
+          onMetricChange={(v) => setSortMetric(v as never)}
+        />
+      </div>
       {rows.length === 0 ? (
         <div className="flex items-center justify-center" style={{height: '400px'}}>
           <p className="text-gray-500 text-lg">スタッフデータがありません</p>
@@ -1442,7 +1826,10 @@ const Slide15StaffMomChart1 = ({selectedStores, selectedStaffNames}: StoreFilter
   const {monthlyData, currentYearMonth, allMonthlyData} = useDataContext()
   const [showCurrent, setShowCurrent] = useState(true)
   const [showCumulative, setShowCumulative] = useState(false)
-  const rows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData)
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
+  const [sortMetric, setSortMetric] = useState<'currentSales' | 'currentNomination'>('currentSales')
+  const rawRows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData)
+  const rows = sortByKey(rawRows, sortMetric, sortOrder)
 
   const chartData = rows.map((row) => ({
     name: row.staffName,
@@ -1454,7 +1841,16 @@ const Slide15StaffMomChart1 = ({selectedStores, selectedStaffNames}: StoreFilter
     <div className="p-8">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold text-gray-800">スタッフ別先月比グラフ①（売上金額/指名件数）</h2>
-        <ChartToggle showCurrent={showCurrent} showCumulative={showCumulative} onCurrentChange={setShowCurrent} onCumulativeChange={setShowCumulative} />
+        <div className="flex items-center gap-4">
+          <SortToggle
+            value={sortOrder}
+            onChange={setSortOrder}
+            metrics={SALES_NOMINATION_METRICS}
+            selectedMetric={sortMetric}
+            onMetricChange={(v) => setSortMetric(v as never)}
+          />
+          <ChartToggle showCurrent={showCurrent} showCumulative={showCumulative} onCurrentChange={setShowCurrent} onCumulativeChange={setShowCumulative} />
+        </div>
       </div>
       {chartData.length === 0 ? (
         <div className="flex items-center justify-center" style={{height: '450px'}}>
@@ -1489,13 +1885,25 @@ const Slide15StaffMomChart1 = ({selectedStores, selectedStaffNames}: StoreFilter
 
 const Slide16StaffMomTable2 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
   const {monthlyData, currentYearMonth, allMonthlyData} = useDataContext()
-  const rows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData)
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
+  const [sortMetric, setSortMetric] = useState<'currentReturnRate' | 'currentUnitPrice'>('currentUnitPrice')
+  const rawRows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData)
+  const rows = sortByKey(rawRows, sortMetric, sortOrder)
 
   return (
     <div className="h-full p-8 overflow-y-auto">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">
-        スタッフ別先月比②（再来率/客単価）
-      </h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-gray-800">
+          スタッフ別先月比②（再来率/客単価）
+        </h2>
+        <SortToggle
+          value={sortOrder}
+          onChange={setSortOrder}
+          metrics={RETURN_UNIT_METRICS}
+          selectedMetric={sortMetric}
+          onMetricChange={(v) => setSortMetric(v as never)}
+        />
+      </div>
       {rows.length === 0 ? (
         <div className="flex items-center justify-center" style={{height: '400px'}}>
           <p className="text-gray-500 text-lg">スタッフデータがありません</p>
@@ -1544,7 +1952,10 @@ const Slide17StaffMomChart2 = ({selectedStores, selectedStaffNames}: StoreFilter
   const {monthlyData, currentYearMonth, allMonthlyData} = useDataContext()
   const [showCurrent, setShowCurrent] = useState(true)
   const [showCumulative, setShowCumulative] = useState(false)
-  const rows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData)
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
+  const [sortMetric, setSortMetric] = useState<'currentReturnRate' | 'currentUnitPrice'>('currentUnitPrice')
+  const rawRows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData)
+  const rows = sortByKey(rawRows, sortMetric, sortOrder)
 
   const chartData = rows.map((row) => ({
     name: row.staffName,
@@ -1556,7 +1967,16 @@ const Slide17StaffMomChart2 = ({selectedStores, selectedStaffNames}: StoreFilter
     <div className="p-8">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold text-gray-800">スタッフ別先月比グラフ②（再来率/客単価）</h2>
-        <ChartToggle showCurrent={showCurrent} showCumulative={showCumulative} onCurrentChange={setShowCurrent} onCumulativeChange={setShowCumulative} />
+        <div className="flex items-center gap-4">
+          <SortToggle
+            value={sortOrder}
+            onChange={setSortOrder}
+            metrics={RETURN_UNIT_METRICS}
+            selectedMetric={sortMetric}
+            onMetricChange={(v) => setSortMetric(v as never)}
+          />
+          <ChartToggle showCurrent={showCurrent} showCumulative={showCumulative} onCurrentChange={setShowCurrent} onCumulativeChange={setShowCumulative} />
+        </div>
       </div>
       {chartData.length === 0 ? (
         <div className="flex items-center justify-center" style={{height: '450px'}}>

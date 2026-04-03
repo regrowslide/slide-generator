@@ -34,6 +34,7 @@ export type RgStoreKpiAvgAggregateOutputType = {
   utilizationRate: number | null
   returnRate: number | null
   csRegistrationCount: number | null
+  googleReviewCount: number | null
 }
 
 export type RgStoreKpiSumAggregateOutputType = {
@@ -44,6 +45,7 @@ export type RgStoreKpiSumAggregateOutputType = {
   utilizationRate: number | null
   returnRate: number | null
   csRegistrationCount: number | null
+  googleReviewCount: number | null
 }
 
 export type RgStoreKpiMinAggregateOutputType = {
@@ -56,6 +58,7 @@ export type RgStoreKpiMinAggregateOutputType = {
   utilizationRate: number | null
   returnRate: number | null
   csRegistrationCount: number | null
+  googleReviewCount: number | null
   comment: string | null
 }
 
@@ -69,6 +72,7 @@ export type RgStoreKpiMaxAggregateOutputType = {
   utilizationRate: number | null
   returnRate: number | null
   csRegistrationCount: number | null
+  googleReviewCount: number | null
   comment: string | null
 }
 
@@ -82,6 +86,7 @@ export type RgStoreKpiCountAggregateOutputType = {
   utilizationRate: number
   returnRate: number
   csRegistrationCount: number
+  googleReviewCount: number
   comment: number
   _all: number
 }
@@ -95,6 +100,7 @@ export type RgStoreKpiAvgAggregateInputType = {
   utilizationRate?: true
   returnRate?: true
   csRegistrationCount?: true
+  googleReviewCount?: true
 }
 
 export type RgStoreKpiSumAggregateInputType = {
@@ -105,6 +111,7 @@ export type RgStoreKpiSumAggregateInputType = {
   utilizationRate?: true
   returnRate?: true
   csRegistrationCount?: true
+  googleReviewCount?: true
 }
 
 export type RgStoreKpiMinAggregateInputType = {
@@ -117,6 +124,7 @@ export type RgStoreKpiMinAggregateInputType = {
   utilizationRate?: true
   returnRate?: true
   csRegistrationCount?: true
+  googleReviewCount?: true
   comment?: true
 }
 
@@ -130,6 +138,7 @@ export type RgStoreKpiMaxAggregateInputType = {
   utilizationRate?: true
   returnRate?: true
   csRegistrationCount?: true
+  googleReviewCount?: true
   comment?: true
 }
 
@@ -143,6 +152,7 @@ export type RgStoreKpiCountAggregateInputType = {
   utilizationRate?: true
   returnRate?: true
   csRegistrationCount?: true
+  googleReviewCount?: true
   comment?: true
   _all?: true
 }
@@ -243,6 +253,7 @@ export type RgStoreKpiGroupByOutputType = {
   utilizationRate: number | null
   returnRate: number | null
   csRegistrationCount: number | null
+  googleReviewCount: number | null
   comment: string
   _count: RgStoreKpiCountAggregateOutputType | null
   _avg: RgStoreKpiAvgAggregateOutputType | null
@@ -279,6 +290,7 @@ export type RgStoreKpiWhereInput = {
   utilizationRate?: Prisma.FloatNullableFilter<"RgStoreKpi"> | number | null
   returnRate?: Prisma.FloatNullableFilter<"RgStoreKpi"> | number | null
   csRegistrationCount?: Prisma.IntNullableFilter<"RgStoreKpi"> | number | null
+  googleReviewCount?: Prisma.IntNullableFilter<"RgStoreKpi"> | number | null
   comment?: Prisma.StringFilter<"RgStoreKpi"> | string
   RgMonthlyReport?: Prisma.XOR<Prisma.RgMonthlyReportScalarRelationFilter, Prisma.RgMonthlyReportWhereInput>
   RgStore?: Prisma.XOR<Prisma.RgStoreScalarRelationFilter, Prisma.RgStoreWhereInput>
@@ -294,6 +306,7 @@ export type RgStoreKpiOrderByWithRelationInput = {
   utilizationRate?: Prisma.SortOrderInput | Prisma.SortOrder
   returnRate?: Prisma.SortOrderInput | Prisma.SortOrder
   csRegistrationCount?: Prisma.SortOrderInput | Prisma.SortOrder
+  googleReviewCount?: Prisma.SortOrderInput | Prisma.SortOrder
   comment?: Prisma.SortOrder
   RgMonthlyReport?: Prisma.RgMonthlyReportOrderByWithRelationInput
   RgStore?: Prisma.RgStoreOrderByWithRelationInput
@@ -313,6 +326,7 @@ export type RgStoreKpiWhereUniqueInput = Prisma.AtLeast<{
   utilizationRate?: Prisma.FloatNullableFilter<"RgStoreKpi"> | number | null
   returnRate?: Prisma.FloatNullableFilter<"RgStoreKpi"> | number | null
   csRegistrationCount?: Prisma.IntNullableFilter<"RgStoreKpi"> | number | null
+  googleReviewCount?: Prisma.IntNullableFilter<"RgStoreKpi"> | number | null
   comment?: Prisma.StringFilter<"RgStoreKpi"> | string
   RgMonthlyReport?: Prisma.XOR<Prisma.RgMonthlyReportScalarRelationFilter, Prisma.RgMonthlyReportWhereInput>
   RgStore?: Prisma.XOR<Prisma.RgStoreScalarRelationFilter, Prisma.RgStoreWhereInput>
@@ -328,6 +342,7 @@ export type RgStoreKpiOrderByWithAggregationInput = {
   utilizationRate?: Prisma.SortOrderInput | Prisma.SortOrder
   returnRate?: Prisma.SortOrderInput | Prisma.SortOrder
   csRegistrationCount?: Prisma.SortOrderInput | Prisma.SortOrder
+  googleReviewCount?: Prisma.SortOrderInput | Prisma.SortOrder
   comment?: Prisma.SortOrder
   _count?: Prisma.RgStoreKpiCountOrderByAggregateInput
   _avg?: Prisma.RgStoreKpiAvgOrderByAggregateInput
@@ -349,6 +364,7 @@ export type RgStoreKpiScalarWhereWithAggregatesInput = {
   utilizationRate?: Prisma.FloatNullableWithAggregatesFilter<"RgStoreKpi"> | number | null
   returnRate?: Prisma.FloatNullableWithAggregatesFilter<"RgStoreKpi"> | number | null
   csRegistrationCount?: Prisma.IntNullableWithAggregatesFilter<"RgStoreKpi"> | number | null
+  googleReviewCount?: Prisma.IntNullableWithAggregatesFilter<"RgStoreKpi"> | number | null
   comment?: Prisma.StringWithAggregatesFilter<"RgStoreKpi"> | string
 }
 
@@ -359,6 +375,7 @@ export type RgStoreKpiCreateInput = {
   utilizationRate?: number | null
   returnRate?: number | null
   csRegistrationCount?: number | null
+  googleReviewCount?: number | null
   comment?: string
   RgMonthlyReport: Prisma.RgMonthlyReportCreateNestedOneWithoutRgStoreKpiInput
   RgStore: Prisma.RgStoreCreateNestedOneWithoutRgStoreKpiInput
@@ -374,6 +391,7 @@ export type RgStoreKpiUncheckedCreateInput = {
   utilizationRate?: number | null
   returnRate?: number | null
   csRegistrationCount?: number | null
+  googleReviewCount?: number | null
   comment?: string
 }
 
@@ -384,6 +402,7 @@ export type RgStoreKpiUpdateInput = {
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   returnRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  googleReviewCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   comment?: Prisma.StringFieldUpdateOperationsInput | string
   RgMonthlyReport?: Prisma.RgMonthlyReportUpdateOneRequiredWithoutRgStoreKpiNestedInput
   RgStore?: Prisma.RgStoreUpdateOneRequiredWithoutRgStoreKpiNestedInput
@@ -399,6 +418,7 @@ export type RgStoreKpiUncheckedUpdateInput = {
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   returnRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  googleReviewCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   comment?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -412,6 +432,7 @@ export type RgStoreKpiCreateManyInput = {
   utilizationRate?: number | null
   returnRate?: number | null
   csRegistrationCount?: number | null
+  googleReviewCount?: number | null
   comment?: string
 }
 
@@ -422,6 +443,7 @@ export type RgStoreKpiUpdateManyMutationInput = {
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   returnRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  googleReviewCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   comment?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -435,6 +457,7 @@ export type RgStoreKpiUncheckedUpdateManyInput = {
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   returnRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  googleReviewCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   comment?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -463,6 +486,7 @@ export type RgStoreKpiCountOrderByAggregateInput = {
   utilizationRate?: Prisma.SortOrder
   returnRate?: Prisma.SortOrder
   csRegistrationCount?: Prisma.SortOrder
+  googleReviewCount?: Prisma.SortOrder
   comment?: Prisma.SortOrder
 }
 
@@ -474,6 +498,7 @@ export type RgStoreKpiAvgOrderByAggregateInput = {
   utilizationRate?: Prisma.SortOrder
   returnRate?: Prisma.SortOrder
   csRegistrationCount?: Prisma.SortOrder
+  googleReviewCount?: Prisma.SortOrder
 }
 
 export type RgStoreKpiMaxOrderByAggregateInput = {
@@ -486,6 +511,7 @@ export type RgStoreKpiMaxOrderByAggregateInput = {
   utilizationRate?: Prisma.SortOrder
   returnRate?: Prisma.SortOrder
   csRegistrationCount?: Prisma.SortOrder
+  googleReviewCount?: Prisma.SortOrder
   comment?: Prisma.SortOrder
 }
 
@@ -499,6 +525,7 @@ export type RgStoreKpiMinOrderByAggregateInput = {
   utilizationRate?: Prisma.SortOrder
   returnRate?: Prisma.SortOrder
   csRegistrationCount?: Prisma.SortOrder
+  googleReviewCount?: Prisma.SortOrder
   comment?: Prisma.SortOrder
 }
 
@@ -510,6 +537,7 @@ export type RgStoreKpiSumOrderByAggregateInput = {
   utilizationRate?: Prisma.SortOrder
   returnRate?: Prisma.SortOrder
   csRegistrationCount?: Prisma.SortOrder
+  googleReviewCount?: Prisma.SortOrder
 }
 
 export type RgStoreKpiCreateNestedManyWithoutRgStoreInput = {
@@ -619,6 +647,7 @@ export type RgStoreKpiCreateWithoutRgStoreInput = {
   utilizationRate?: number | null
   returnRate?: number | null
   csRegistrationCount?: number | null
+  googleReviewCount?: number | null
   comment?: string
   RgMonthlyReport: Prisma.RgMonthlyReportCreateNestedOneWithoutRgStoreKpiInput
 }
@@ -632,6 +661,7 @@ export type RgStoreKpiUncheckedCreateWithoutRgStoreInput = {
   utilizationRate?: number | null
   returnRate?: number | null
   csRegistrationCount?: number | null
+  googleReviewCount?: number | null
   comment?: string
 }
 
@@ -674,6 +704,7 @@ export type RgStoreKpiScalarWhereInput = {
   utilizationRate?: Prisma.FloatNullableFilter<"RgStoreKpi"> | number | null
   returnRate?: Prisma.FloatNullableFilter<"RgStoreKpi"> | number | null
   csRegistrationCount?: Prisma.IntNullableFilter<"RgStoreKpi"> | number | null
+  googleReviewCount?: Prisma.IntNullableFilter<"RgStoreKpi"> | number | null
   comment?: Prisma.StringFilter<"RgStoreKpi"> | string
 }
 
@@ -684,6 +715,7 @@ export type RgStoreKpiCreateWithoutRgMonthlyReportInput = {
   utilizationRate?: number | null
   returnRate?: number | null
   csRegistrationCount?: number | null
+  googleReviewCount?: number | null
   comment?: string
   RgStore: Prisma.RgStoreCreateNestedOneWithoutRgStoreKpiInput
 }
@@ -697,6 +729,7 @@ export type RgStoreKpiUncheckedCreateWithoutRgMonthlyReportInput = {
   utilizationRate?: number | null
   returnRate?: number | null
   csRegistrationCount?: number | null
+  googleReviewCount?: number | null
   comment?: string
 }
 
@@ -735,6 +768,7 @@ export type RgStoreKpiCreateManyRgStoreInput = {
   utilizationRate?: number | null
   returnRate?: number | null
   csRegistrationCount?: number | null
+  googleReviewCount?: number | null
   comment?: string
 }
 
@@ -745,6 +779,7 @@ export type RgStoreKpiUpdateWithoutRgStoreInput = {
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   returnRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  googleReviewCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   comment?: Prisma.StringFieldUpdateOperationsInput | string
   RgMonthlyReport?: Prisma.RgMonthlyReportUpdateOneRequiredWithoutRgStoreKpiNestedInput
 }
@@ -758,6 +793,7 @@ export type RgStoreKpiUncheckedUpdateWithoutRgStoreInput = {
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   returnRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  googleReviewCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   comment?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -770,6 +806,7 @@ export type RgStoreKpiUncheckedUpdateManyWithoutRgStoreInput = {
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   returnRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  googleReviewCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   comment?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -782,6 +819,7 @@ export type RgStoreKpiCreateManyRgMonthlyReportInput = {
   utilizationRate?: number | null
   returnRate?: number | null
   csRegistrationCount?: number | null
+  googleReviewCount?: number | null
   comment?: string
 }
 
@@ -792,6 +830,7 @@ export type RgStoreKpiUpdateWithoutRgMonthlyReportInput = {
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   returnRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  googleReviewCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   comment?: Prisma.StringFieldUpdateOperationsInput | string
   RgStore?: Prisma.RgStoreUpdateOneRequiredWithoutRgStoreKpiNestedInput
 }
@@ -805,6 +844,7 @@ export type RgStoreKpiUncheckedUpdateWithoutRgMonthlyReportInput = {
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   returnRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  googleReviewCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   comment?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -817,6 +857,7 @@ export type RgStoreKpiUncheckedUpdateManyWithoutRgMonthlyReportInput = {
   utilizationRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   returnRate?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   csRegistrationCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  googleReviewCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   comment?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -832,6 +873,7 @@ export type RgStoreKpiSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   utilizationRate?: boolean
   returnRate?: boolean
   csRegistrationCount?: boolean
+  googleReviewCount?: boolean
   comment?: boolean
   RgMonthlyReport?: boolean | Prisma.RgMonthlyReportDefaultArgs<ExtArgs>
   RgStore?: boolean | Prisma.RgStoreDefaultArgs<ExtArgs>
@@ -847,6 +889,7 @@ export type RgStoreKpiSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   utilizationRate?: boolean
   returnRate?: boolean
   csRegistrationCount?: boolean
+  googleReviewCount?: boolean
   comment?: boolean
   RgMonthlyReport?: boolean | Prisma.RgMonthlyReportDefaultArgs<ExtArgs>
   RgStore?: boolean | Prisma.RgStoreDefaultArgs<ExtArgs>
@@ -862,6 +905,7 @@ export type RgStoreKpiSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   utilizationRate?: boolean
   returnRate?: boolean
   csRegistrationCount?: boolean
+  googleReviewCount?: boolean
   comment?: boolean
   RgMonthlyReport?: boolean | Prisma.RgMonthlyReportDefaultArgs<ExtArgs>
   RgStore?: boolean | Prisma.RgStoreDefaultArgs<ExtArgs>
@@ -877,10 +921,11 @@ export type RgStoreKpiSelectScalar = {
   utilizationRate?: boolean
   returnRate?: boolean
   csRegistrationCount?: boolean
+  googleReviewCount?: boolean
   comment?: boolean
 }
 
-export type RgStoreKpiOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "monthlyReportId" | "storeId" | "utilizationRate" | "returnRate" | "csRegistrationCount" | "comment", ExtArgs["result"]["rgStoreKpi"]>
+export type RgStoreKpiOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "monthlyReportId" | "storeId" | "utilizationRate" | "returnRate" | "csRegistrationCount" | "googleReviewCount" | "comment", ExtArgs["result"]["rgStoreKpi"]>
 export type RgStoreKpiInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   RgMonthlyReport?: boolean | Prisma.RgMonthlyReportDefaultArgs<ExtArgs>
   RgStore?: boolean | Prisma.RgStoreDefaultArgs<ExtArgs>
@@ -910,6 +955,7 @@ export type $RgStoreKpiPayload<ExtArgs extends runtime.Types.Extensions.Internal
     utilizationRate: number | null
     returnRate: number | null
     csRegistrationCount: number | null
+    googleReviewCount: number | null
     comment: string
   }, ExtArgs["result"]["rgStoreKpi"]>
   composites: {}
@@ -1345,6 +1391,7 @@ export interface RgStoreKpiFieldRefs {
   readonly utilizationRate: Prisma.FieldRef<"RgStoreKpi", 'Float'>
   readonly returnRate: Prisma.FieldRef<"RgStoreKpi", 'Float'>
   readonly csRegistrationCount: Prisma.FieldRef<"RgStoreKpi", 'Int'>
+  readonly googleReviewCount: Prisma.FieldRef<"RgStoreKpi", 'Int'>
   readonly comment: Prisma.FieldRef<"RgStoreKpi", 'String'>
 }
     

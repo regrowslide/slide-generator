@@ -57,3 +57,19 @@ export const saveStaffManualData = async (
 
 export const saveCustomerVoice = async (yearMonth: string, content: string): Promise<void> =>
   RegrowMonthlyReportService.saveCustomerVoice(yearMonth, content)
+
+// ============================================================
+// 売上振替（isDev限定）
+// ============================================================
+
+export const transferStaffToStore = async (
+  yearMonth: string,
+  staffName: string,
+  fromStoreId: number,
+  toStoreId: number
+): Promise<void> => {
+  if (process.env.NODE_ENV !== 'development') {
+    throw new Error('この機能は開発環境でのみ使用できます')
+  }
+  await RegrowMonthlyReportService.transferStaffStore(yearMonth, staffName, fromStoreId, toStoreId)
+}

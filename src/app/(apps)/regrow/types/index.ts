@@ -57,6 +57,7 @@ export type StoreKpi = {
   utilizationRate: number | null // 稼働率 (%)
   returnRate: number | null // 再来率 (%)
   csRegistrationCount: number | null // CS登録数
+  googleReviewCount: number | null // Google口コミ獲得数
   comment: string // コメント
 }
 
@@ -81,6 +82,7 @@ export type StaffManualData = {
   storeName: StoreName
   utilizationRate: number | null // 稼働率 (%)
   csRegistrationCount: number | null // CS登録数
+  googleReviewCount: number | null // Google口コミ獲得数
   targetSales: number | null // 目標売上（円単位）
 }
 

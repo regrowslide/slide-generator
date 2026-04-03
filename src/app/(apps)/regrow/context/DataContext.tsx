@@ -18,6 +18,7 @@ import {
   saveStaffManualData,
   saveCustomerVoice,
   upsertMonthlyReport,
+  transferStaffToStore,
 } from '../_actions/monthly-report-actions'
 import {getStaffMaster} from '../_actions/staff-actions'
 
@@ -65,6 +66,9 @@ export type DataContextType = {
 
   // 権限スコープ
   scopes: RegrowScopes
+
+  // 売上振替（isDev限定）
+  transferStaff: (staffName: string, fromStoreId: number, toStoreId: number) => Promise<void>
 
   // ナビゲーション
   goToPreviousMonth: () => void
@@ -273,6 +277,7 @@ export const DataContextProvider = ({
                   utilizationRate: null,
                   returnRate: null,
                   csRegistrationCount: null,
+                  googleReviewCount: null,
                   comment: '',
                   ...updates,
                 },
@@ -314,6 +319,7 @@ export const DataContextProvider = ({
                   storeName,
                   utilizationRate: null,
                   csRegistrationCount: null,
+                  googleReviewCount: null,
                   targetSales: null,
                   ...updates,
                 },
@@ -339,6 +345,15 @@ export const DataContextProvider = ({
       await saveCustomerVoice(currentYearMonth, content)
     },
     [updateMonthlyData, currentYearMonth]
+  )
+
+  // 売上振替（isDev限定）
+  const transferStaff = useCallback(
+    async (staffName: string, fromStoreId: number, toStoreId: number) => {
+      await transferStaffToStore(currentYearMonth, staffName, fromStoreId, toStoreId)
+      await refreshData()
+    },
+    [currentYearMonth, refreshData]
   )
 
   // 前月へ移動
@@ -388,6 +403,7 @@ export const DataContextProvider = ({
         stores,
         currentUserRole,
         scopes,
+        transferStaff,
         goToPreviousMonth,
         goToNextMonth,
         createNewMonth,

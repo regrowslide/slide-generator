@@ -160,6 +160,7 @@ export const RgStoreKpiScalarFieldEnum = {
   utilizationRate: 'utilizationRate',
   returnRate: 'returnRate',
   csRegistrationCount: 'csRegistrationCount',
+  googleReviewCount: 'googleReviewCount',
   comment: 'comment'
 } as const
 
@@ -177,6 +178,7 @@ export const RgStaffManualDataScalarFieldEnum = {
   userId: 'userId',
   utilizationRate: 'utilizationRate',
   csRegistrationCount: 'csRegistrationCount',
+  googleReviewCount: 'googleReviewCount',
   targetSales: 'targetSales'
 } as const
 

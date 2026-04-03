@@ -8,6 +8,15 @@ import type {
   RgCustomerVoice,
   RgStore,
 } from '@prisma/generated/prisma/client'
+
+// トランザクション内で使用するPrismaクライアントの型
+// $transaction のコールバック引数は一部メソッドが除外されるため、
+// モデル操作に必要なプロパティのみを要求する
+type TransactionClient = {
+  rgStaffRecord: typeof prisma.rgStaffRecord
+  rgStaffManualData: typeof prisma.rgStaffManualData
+  rgStoreTotals: typeof prisma.rgStoreTotals
+}
 import type {
   MonthlyData,
   YearMonth,
@@ -54,6 +63,7 @@ export class RegrowMonthlyReportService {
       utilizationRate: k.utilizationRate,
       returnRate: k.returnRate,
       csRegistrationCount: k.csRegistrationCount,
+      googleReviewCount: k.googleReviewCount,
       comment: k.comment,
     }))
 
@@ -62,6 +72,7 @@ export class RegrowMonthlyReportService {
       storeName: m.RgStore.name as StoreName,
       utilizationRate: m.utilizationRate,
       csRegistrationCount: m.csRegistrationCount,
+      googleReviewCount: m.googleReviewCount,
       targetSales: m.targetSales,
     }))
 
@@ -254,12 +265,14 @@ export class RegrowMonthlyReportService {
         utilizationRate: data.utilizationRate ?? null,
         returnRate: data.returnRate ?? null,
         csRegistrationCount: data.csRegistrationCount ?? null,
+        googleReviewCount: data.googleReviewCount ?? null,
         comment: data.comment ?? '',
       },
       update: {
         ...(data.utilizationRate !== undefined && {utilizationRate: data.utilizationRate}),
         ...(data.returnRate !== undefined && {returnRate: data.returnRate}),
         ...(data.csRegistrationCount !== undefined && {csRegistrationCount: data.csRegistrationCount}),
+        ...(data.googleReviewCount !== undefined && {googleReviewCount: data.googleReviewCount}),
         ...(data.comment !== undefined && {comment: data.comment}),
       },
     })
@@ -293,14 +306,175 @@ export class RegrowMonthlyReportService {
         userId: user?.id ?? null,
         utilizationRate: data.utilizationRate ?? null,
         csRegistrationCount: data.csRegistrationCount ?? null,
+        googleReviewCount: data.googleReviewCount ?? null,
         targetSales: data.targetSales ?? null,
       },
       update: {
         ...(data.utilizationRate !== undefined && {utilizationRate: data.utilizationRate}),
         ...(data.csRegistrationCount !== undefined && {csRegistrationCount: data.csRegistrationCount}),
+        ...(data.googleReviewCount !== undefined && {googleReviewCount: data.googleReviewCount}),
         ...(data.targetSales !== undefined && {targetSales: data.targetSales}),
       },
     })
+  }
+
+  /**
+   * スタッフの売上レコードを別店舗に振り替え、両店舗の合計を再計算する
+   * 全操作をトランザクションで実行し、途中失敗時はロールバックする
+   */
+  static async transferStaffStore(
+    yearMonth: string,
+    staffName: string,
+    fromStoreId: number,
+    toStoreId: number
+  ): Promise<void> {
+    const report = await prisma.rgMonthlyReport.findUnique({where: {yearMonth}})
+    if (!report) throw new Error(`月次レポートが見つかりません: ${yearMonth}`)
+
+    await prisma.$transaction(async (tx) => {
+      // 振替元のスタッフレコードを取得
+      const fromRecords = await tx.rgStaffRecord.findMany({
+        where: {monthlyReportId: report.id, staffName, storeId: fromStoreId},
+      })
+      if (fromRecords.length === 0) {
+        throw new Error(`対象のスタッフレコードが見つかりません: ${staffName}（${yearMonth}）`)
+      }
+
+      // 振替先に同じスタッフのレコードがあるか確認
+      const toRecords = await tx.rgStaffRecord.findMany({
+        where: {monthlyReportId: report.id, staffName, storeId: toStoreId},
+      })
+
+      if (toRecords.length > 0) {
+        // 振替先に既存データがある場合 → 加算して統合
+        const toRecord = toRecords[0]
+        const fromRecord = fromRecords[0]
+        const mergedCustomerCount = toRecord.customerCount + fromRecord.customerCount
+        await tx.rgStaffRecord.update({
+          where: {id: toRecord.id},
+          data: {
+            sales: toRecord.sales + fromRecord.sales,
+            customerCount: mergedCustomerCount,
+            newCustomerCount: toRecord.newCustomerCount + fromRecord.newCustomerCount,
+            nominationCount: toRecord.nominationCount + fromRecord.nominationCount,
+            unitPrice: mergedCustomerCount > 0
+              ? Math.round((toRecord.sales + fromRecord.sales) / mergedCustomerCount)
+              : 0,
+          },
+        })
+        // 振替元のレコードを削除
+        await tx.rgStaffRecord.deleteMany({
+          where: {monthlyReportId: report.id, staffName, storeId: fromStoreId},
+        })
+      } else {
+        // 振替先にデータがない場合 → storeId を変更するだけ
+        await tx.rgStaffRecord.updateMany({
+          where: {monthlyReportId: report.id, staffName, storeId: fromStoreId},
+          data: {storeId: toStoreId},
+        })
+      }
+
+      // RgStaffManualData の振替
+      const fromManualData = await tx.rgStaffManualData.findUnique({
+        where: {
+          monthlyReportId_staffName_storeId: {
+            monthlyReportId: report.id,
+            staffName,
+            storeId: fromStoreId,
+          },
+        },
+      })
+      if (fromManualData) {
+        const toManualData = await tx.rgStaffManualData.findUnique({
+          where: {
+            monthlyReportId_staffName_storeId: {
+              monthlyReportId: report.id,
+              staffName,
+              storeId: toStoreId,
+            },
+          },
+        })
+
+        if (toManualData) {
+          // 振替先に既存データがある場合 → 加算して統合、振替元を削除
+          await tx.rgStaffManualData.update({
+            where: {id: toManualData.id},
+            data: {
+              utilizationRate: toManualData.utilizationRate ?? fromManualData.utilizationRate,
+              csRegistrationCount: (toManualData.csRegistrationCount ?? 0) + (fromManualData.csRegistrationCount ?? 0) || null,
+              googleReviewCount: (toManualData.googleReviewCount ?? 0) + (fromManualData.googleReviewCount ?? 0) || null,
+              targetSales: (toManualData.targetSales ?? 0) + (fromManualData.targetSales ?? 0) || null,
+            },
+          })
+          await tx.rgStaffManualData.delete({where: {id: fromManualData.id}})
+        } else {
+          // 振替先にデータがない場合 → delete + create で移動
+          await tx.rgStaffManualData.delete({where: {id: fromManualData.id}})
+          await tx.rgStaffManualData.create({
+            data: {
+              monthlyReportId: report.id,
+              staffName,
+              storeId: toStoreId,
+              userId: fromManualData.userId,
+              utilizationRate: fromManualData.utilizationRate,
+              csRegistrationCount: fromManualData.csRegistrationCount,
+              googleReviewCount: fromManualData.googleReviewCount,
+              targetSales: fromManualData.targetSales,
+            },
+          })
+        }
+      }
+
+      // 影響を受ける両店舗の RgStoreTotals を再計算
+      await RegrowMonthlyReportService.recalcStoreTotals(tx, report.id, fromStoreId)
+      await RegrowMonthlyReportService.recalcStoreTotals(tx, report.id, toStoreId)
+    })
+  }
+
+  /**
+   * 指定店舗の RgStoreTotals を RgStaffRecord から再計算する
+   */
+  private static async recalcStoreTotals(
+    tx: TransactionClient,
+    monthlyReportId: number,
+    storeId: number
+  ): Promise<void> {
+    const records = await tx.rgStaffRecord.findMany({
+      where: {monthlyReportId, storeId},
+    })
+
+    const sales = records.reduce((sum, r) => sum + r.sales, 0)
+    const customerCount = records.reduce((sum, r) => sum + r.customerCount, 0)
+    const nominationCount = records.reduce((sum, r) => sum + r.nominationCount, 0)
+    const unitPrice = customerCount > 0 ? Math.round(sales / customerCount) : 0
+
+    const existing = await tx.rgStoreTotals.findFirst({
+      where: {monthlyReportId, storeId},
+    })
+
+    if (existing) {
+      await tx.rgStoreTotals.update({
+        where: {id: existing.id},
+        data: {sales, customerCount, nominationCount, unitPrice},
+      })
+    } else if (records.length > 0) {
+      // 振替先に StoreTotals がなければ新規作成
+      const maxSortOrder = await tx.rgStoreTotals.aggregate({
+        where: {monthlyReportId},
+        _max: {sortOrder: true},
+      })
+      await tx.rgStoreTotals.create({
+        data: {
+          monthlyReportId,
+          storeId,
+          sales,
+          customerCount,
+          nominationCount,
+          unitPrice,
+          sortOrder: (maxSortOrder._max.sortOrder ?? 0) + 1,
+        },
+      })
+    }
   }
 
   static async saveCustomerVoice(yearMonth: string, content: string): Promise<void> {

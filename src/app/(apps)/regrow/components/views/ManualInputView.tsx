@@ -71,6 +71,15 @@ export const ManualInputView = () => {
     return Number.isNaN(total) ? '-' : String(total)
   }
 
+  // 店舗のGoogle口コミ獲得数を計算（スタッフの合計）
+  const calculateStoreGoogleReview = (storeName: StoreName): string => {
+    const total =
+      monthlyData.manualData.staffManualData
+        ?.filter((s) => s.storeName === storeName)
+        .reduce((sum, s) => sum + (s.googleReviewCount || 0), 0) || 0
+    return Number.isNaN(total) ? '-' : String(total)
+  }
+
   // 店舗の再来率を計算
   const calculateStoreReturnRate = (storeName: StoreName): string => {
     const storeRecords = monthlyData.importedData?.staffRecords.filter((r) => r.storeName === storeName) || []
@@ -178,6 +187,14 @@ export const ManualInputView = () => {
                         {calculateStoreCS(store)}
                       </div>
                     </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Google口コミ獲得数 <span className="text-xs text-gray-500">※自動計算</span>
+                      </label>
+                      <div className="w-full px-3 py-2 border rounded bg-gray-50 text-gray-700 font-medium">
+                        {calculateStoreGoogleReview(store)}
+                      </div>
+                    </div>
                     <div className="col-span-2">
                       <label className="block text-sm font-medium text-gray-700 mb-1">コメント</label>
                       <textarea
@@ -199,84 +216,123 @@ export const ManualInputView = () => {
 
       {/* スタッフ稼働率・CS登録数タブ */}
       {activeTab === 'staff-utilization' && (
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div>
           <h2 className="text-lg font-bold mb-4">スタッフ稼働率・CS登録数</h2>
           {allStaff.length === 0 ? (
-            <p className="text-gray-500">Excelを取り込むとスタッフが自動表示されます</p>
+            <div className="bg-white rounded-lg shadow-sm p-12 text-center">
+              <p className="text-gray-500 text-lg">Excelを取り込むとスタッフが自動表示されます</p>
+            </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead className="bg-purple-600 text-white">
-                  <tr>
-                    <th className="p-3 text-left">店舗</th>
-                    <th className="p-3 text-left">名前</th>
-                    <th className="p-3 text-left">稼働率 (%)</th>
-                    <th className="p-3 text-left">再来率 (%)</th>
-                    <th className="p-3 text-left">CS登録数</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {allStaff.map((staff, i) => {
-                    const manualData = getStaffManualData(staff.staffName, staff.storeName)
-                    const returnRate = calculateStaffReturnRate(staff.staffName, staff.storeName)
-                    return (
-                      <tr key={i} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                        <td className="p-3 text-sm">{staff.storeName}</td>
-                        <td className="p-3 font-medium">{staff.staffName}</td>
-                        <td className="p-3">
-                          <input
-                            type="number"
-                            value={manualData?.utilizationRate ?? ''}
-                            onBlur={(e) =>
-                              isEditable &&
-                              handleSave(() =>
-                                updateStaffManualData(staff.staffName, staff.storeName, storeIdMap.get(staff.storeName) ?? 0, {
-                                  utilizationRate: e.target.value ? Number(e.target.value) : null,
-                                })
-                              )
-                            }
-                            onChange={(e) =>
-                              isEditable &&
-                              updateStaffManualData(staff.staffName, staff.storeName, storeIdMap.get(staff.storeName) ?? 0, {
-                                utilizationRate: e.target.value ? Number(e.target.value) : null,
-                              })
-                            }
-                            disabled={!isEditable}
-                            className="w-24 px-2 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-50 disabled:cursor-not-allowed"
-                          />
-                        </td>
-                        <td className="p-3">
-                          <div className="px-2 py-1 bg-gray-50 text-gray-700 text-sm font-medium rounded">
-                            {returnRate}
-                          </div>
-                        </td>
-                        <td className="p-3">
-                          <input
-                            type="number"
-                            value={manualData?.csRegistrationCount ?? ''}
-                            onBlur={(e) =>
-                              isEditable &&
-                              handleSave(() =>
-                                updateStaffManualData(staff.staffName, staff.storeName, storeIdMap.get(staff.storeName) ?? 0, {
-                                  csRegistrationCount: e.target.value ? Number(e.target.value) : null,
-                                })
-                              )
-                            }
-                            onChange={(e) =>
-                              isEditable &&
-                              updateStaffManualData(staff.staffName, staff.storeName, storeIdMap.get(staff.storeName) ?? 0, {
-                                csRegistrationCount: e.target.value ? Number(e.target.value) : null,
-                              })
-                            }
-                            disabled={!isEditable}
-                            className="w-24 px-2 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-50 disabled:cursor-not-allowed"
-                          />
-                        </td>
+            <div className="space-y-6">
+              {Object.entries(
+                allStaff.reduce<Record<string, typeof allStaff>>((groups, staff) => {
+                  if (!groups[staff.storeName]) groups[staff.storeName] = []
+                  groups[staff.storeName].push(staff)
+                  return groups
+                }, {})
+              ).map(([storeName, staffList]) => (
+                <div key={storeName} className="bg-white rounded-lg shadow-sm overflow-hidden">
+                  {/* 店舗ヘッダー */}
+                  <div className="bg-gray-800 text-white px-4 py-3">
+                    <h3 className="font-bold text-lg">{storeName}</h3>
+                  </div>
+
+                  {/* スタッフテーブル */}
+                  <table className="w-full border-collapse">
+                    <thead className="bg-gray-100">
+                      <tr>
+                        <th className="p-3 text-left text-sm font-medium text-gray-700">スタッフ名</th>
+                        <th className="p-3 text-left text-sm font-medium text-gray-700">稼働率 (%)</th>
+                        <th className="p-3 text-left text-sm font-medium text-gray-700">再来率 (%)</th>
+                        <th className="p-3 text-left text-sm font-medium text-gray-700">CS登録数</th>
+                        <th className="p-3 text-left text-sm font-medium text-gray-700">Google口コミ獲得数</th>
                       </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
+                    </thead>
+                    <tbody>
+                      {staffList.map((staff, i) => {
+                        const manualData = getStaffManualData(staff.staffName, staff.storeName)
+                        const returnRate = calculateStaffReturnRate(staff.staffName, staff.storeName)
+                        return (
+                          <tr key={i} className={`border-t ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                            <td className="p-3 font-medium">{staff.staffName}</td>
+                            <td className="p-3">
+                              <input
+                                type="number"
+                                value={manualData?.utilizationRate ?? ''}
+                                onBlur={(e) =>
+                                  isEditable &&
+                                  handleSave(() =>
+                                    updateStaffManualData(staff.staffName, staff.storeName, storeIdMap.get(staff.storeName) ?? 0, {
+                                      utilizationRate: e.target.value ? Number(e.target.value) : null,
+                                    })
+                                  )
+                                }
+                                onChange={(e) =>
+                                  isEditable &&
+                                  updateStaffManualData(staff.staffName, staff.storeName, storeIdMap.get(staff.storeName) ?? 0, {
+                                    utilizationRate: e.target.value ? Number(e.target.value) : null,
+                                  })
+                                }
+                                disabled={!isEditable}
+                                className="w-24 px-2 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-50 disabled:cursor-not-allowed"
+                              />
+                            </td>
+                            <td className="p-3">
+                              <div className="px-2 py-1 bg-gray-50 text-gray-700 text-sm font-medium rounded">
+                                {returnRate}
+                              </div>
+                            </td>
+                            <td className="p-3">
+                              <input
+                                type="number"
+                                value={manualData?.csRegistrationCount ?? ''}
+                                onBlur={(e) =>
+                                  isEditable &&
+                                  handleSave(() =>
+                                    updateStaffManualData(staff.staffName, staff.storeName, storeIdMap.get(staff.storeName) ?? 0, {
+                                      csRegistrationCount: e.target.value ? Number(e.target.value) : null,
+                                    })
+                                  )
+                                }
+                                onChange={(e) =>
+                                  isEditable &&
+                                  updateStaffManualData(staff.staffName, staff.storeName, storeIdMap.get(staff.storeName) ?? 0, {
+                                    csRegistrationCount: e.target.value ? Number(e.target.value) : null,
+                                  })
+                                }
+                                disabled={!isEditable}
+                                className="w-24 px-2 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-50 disabled:cursor-not-allowed"
+                              />
+                            </td>
+                            <td className="p-3">
+                              <input
+                                type="number"
+                                value={manualData?.googleReviewCount ?? ''}
+                                onBlur={(e) =>
+                                  isEditable &&
+                                  handleSave(() =>
+                                    updateStaffManualData(staff.staffName, staff.storeName, storeIdMap.get(staff.storeName) ?? 0, {
+                                      googleReviewCount: e.target.value ? Number(e.target.value) : null,
+                                    })
+                                  )
+                                }
+                                onChange={(e) =>
+                                  isEditable &&
+                                  updateStaffManualData(staff.staffName, staff.storeName, storeIdMap.get(staff.storeName) ?? 0, {
+                                    googleReviewCount: e.target.value ? Number(e.target.value) : null,
+                                  })
+                                }
+                                disabled={!isEditable}
+                                className="w-24 px-2 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-50 disabled:cursor-not-allowed"
+                              />
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              ))}
             </div>
           )}
         </div>
