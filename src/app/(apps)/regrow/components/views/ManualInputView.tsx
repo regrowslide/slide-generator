@@ -10,6 +10,48 @@ import { useDataContext } from '../../context/DataContext'
 import type { StoreName } from '../../types'
 
 type TabKey = 'store-kpi' | 'staff-utilization' | 'customer-voice'
+type StaffManualFieldName = 'utilizationRate' | 'csRegistrationCount' | 'googleReviewCount'
+
+const StaffNumericField = ({
+  value,
+  fieldName,
+  staffName,
+  storeName,
+  storeId,
+  isEditable,
+  onSave,
+  onUpdate,
+}: {
+  value: number | null | undefined
+  fieldName: StaffManualFieldName
+  staffName: string
+  storeName: StoreName
+  storeId: number
+  isEditable: boolean
+  onSave: (fn: () => void) => void
+  onUpdate: (staffName: string, storeName: StoreName, storeId: number, data: Record<string, number | null>) => void
+}) => (
+  <input
+    type="number"
+    value={value ?? ''}
+    onBlur={(e) =>
+      isEditable &&
+      onSave(() =>
+        onUpdate(staffName, storeName, storeId, {
+          [fieldName]: e.target.value ? Number(e.target.value) : null,
+        })
+      )
+    }
+    onChange={(e) =>
+      isEditable &&
+      onUpdate(staffName, storeName, storeId, {
+        [fieldName]: e.target.value ? Number(e.target.value) : null,
+      })
+    }
+    disabled={!isEditable}
+    className="w-24 px-2 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-50 disabled:cursor-not-allowed"
+  />
+)
 
 export const ManualInputView = () => {
   const { monthlyData, updateStoreKpi, updateStaffManualData, updateCustomerVoice, scopes, stores } = useDataContext()
@@ -256,25 +298,15 @@ export const ManualInputView = () => {
                           <tr key={i} className={`border-t ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
                             <td className="p-3 font-medium">{staff.staffName}</td>
                             <td className="p-3">
-                              <input
-                                type="number"
-                                value={manualData?.utilizationRate ?? ''}
-                                onBlur={(e) =>
-                                  isEditable &&
-                                  handleSave(() =>
-                                    updateStaffManualData(staff.staffName, staff.storeName, storeIdMap.get(staff.storeName) ?? 0, {
-                                      utilizationRate: e.target.value ? Number(e.target.value) : null,
-                                    })
-                                  )
-                                }
-                                onChange={(e) =>
-                                  isEditable &&
-                                  updateStaffManualData(staff.staffName, staff.storeName, storeIdMap.get(staff.storeName) ?? 0, {
-                                    utilizationRate: e.target.value ? Number(e.target.value) : null,
-                                  })
-                                }
-                                disabled={!isEditable}
-                                className="w-24 px-2 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-50 disabled:cursor-not-allowed"
+                              <StaffNumericField
+                                value={manualData?.utilizationRate}
+                                fieldName="utilizationRate"
+                                staffName={staff.staffName}
+                                storeName={staff.storeName}
+                                storeId={storeIdMap.get(staff.storeName) ?? 0}
+                                isEditable={isEditable}
+                                onSave={handleSave}
+                                onUpdate={updateStaffManualData}
                               />
                             </td>
                             <td className="p-3">
@@ -283,47 +315,27 @@ export const ManualInputView = () => {
                               </div>
                             </td>
                             <td className="p-3">
-                              <input
-                                type="number"
-                                value={manualData?.csRegistrationCount ?? ''}
-                                onBlur={(e) =>
-                                  isEditable &&
-                                  handleSave(() =>
-                                    updateStaffManualData(staff.staffName, staff.storeName, storeIdMap.get(staff.storeName) ?? 0, {
-                                      csRegistrationCount: e.target.value ? Number(e.target.value) : null,
-                                    })
-                                  )
-                                }
-                                onChange={(e) =>
-                                  isEditable &&
-                                  updateStaffManualData(staff.staffName, staff.storeName, storeIdMap.get(staff.storeName) ?? 0, {
-                                    csRegistrationCount: e.target.value ? Number(e.target.value) : null,
-                                  })
-                                }
-                                disabled={!isEditable}
-                                className="w-24 px-2 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-50 disabled:cursor-not-allowed"
+                              <StaffNumericField
+                                value={manualData?.csRegistrationCount}
+                                fieldName="csRegistrationCount"
+                                staffName={staff.staffName}
+                                storeName={staff.storeName}
+                                storeId={storeIdMap.get(staff.storeName) ?? 0}
+                                isEditable={isEditable}
+                                onSave={handleSave}
+                                onUpdate={updateStaffManualData}
                               />
                             </td>
                             <td className="p-3">
-                              <input
-                                type="number"
-                                value={manualData?.googleReviewCount ?? ''}
-                                onBlur={(e) =>
-                                  isEditable &&
-                                  handleSave(() =>
-                                    updateStaffManualData(staff.staffName, staff.storeName, storeIdMap.get(staff.storeName) ?? 0, {
-                                      googleReviewCount: e.target.value ? Number(e.target.value) : null,
-                                    })
-                                  )
-                                }
-                                onChange={(e) =>
-                                  isEditable &&
-                                  updateStaffManualData(staff.staffName, staff.storeName, storeIdMap.get(staff.storeName) ?? 0, {
-                                    googleReviewCount: e.target.value ? Number(e.target.value) : null,
-                                  })
-                                }
-                                disabled={!isEditable}
-                                className="w-24 px-2 py-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-50 disabled:cursor-not-allowed"
+                              <StaffNumericField
+                                value={manualData?.googleReviewCount}
+                                fieldName="googleReviewCount"
+                                staffName={staff.staffName}
+                                storeName={staff.storeName}
+                                storeId={storeIdMap.get(staff.storeName) ?? 0}
+                                isEditable={isEditable}
+                                onSave={handleSave}
+                                onUpdate={updateStaffManualData}
                               />
                             </td>
                           </tr>

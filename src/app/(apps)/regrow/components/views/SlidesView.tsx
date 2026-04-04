@@ -11,8 +11,9 @@
  * Phase6: スタッフフィルタ機能
  */
 
-import React, {useState, useEffect, useCallback, useRef} from 'react'
+import React, {useState, useMemo, useEffect, useCallback, useRef} from 'react'
 import {useDataContext} from '../../context/DataContext'
+import {arr__sortByKey} from '@cm/class/ArrHandler/array-utils/sorting'
 import {
   BarChart,
   Bar,
@@ -850,11 +851,17 @@ const Slide8StaffPerformanceTable = ({selectedStores, selectedStaffNames}: Store
   const allStaffList = monthlyData.importedData?.staffRecords || []
   const staffList = filterStaffList(allStaffList, selectedStores, selectedStaffNames)
 
-  // 行データを事前構築
+  // manualDataをMapで事前インデックス化（O(1)ルックアップ）
+  const manualDataMap = useMemo(() => {
+    const map = new Map<string, (typeof monthlyData.manualData.staffManualData)[number]>()
+    for (const m of monthlyData.manualData.staffManualData ?? []) {
+      map.set(`${m.staffName}::${m.storeName}`, m)
+    }
+    return map
+  }, [monthlyData.manualData.staffManualData])
+
   const rawRows = staffList.map((staff) => {
-    const manualData = monthlyData.manualData.staffManualData?.find(
-      (m) => m.staffName === staff.staffName && m.storeName === staff.storeName
-    )
+    const manualData = manualDataMap.get(`${staff.staffName}::${staff.storeName}`)
     const nominationRate =
       staff.customerCount > 0 ? Number(((staff.nominationCount / staff.customerCount) * 100).toFixed(1)) : 0
     const returnRate = calculateStaffReturnRate(staff)
@@ -987,9 +994,9 @@ const ChartToggle = ({
 // ソート順の型と共通トグル
 type SortOrder = 'desc' | 'asc' | 'default'
 
-type SortMetricOption = {key: string; label: string}
+type SortMetricOption<T extends string = string> = {key: T; label: string}
 
-const SortToggle = ({
+const SortToggle = <T extends string = string>({
   value,
   onChange,
   metrics,
@@ -998,9 +1005,9 @@ const SortToggle = ({
 }: {
   value: SortOrder
   onChange: (v: SortOrder) => void
-  metrics?: SortMetricOption[]
-  selectedMetric?: string
-  onMetricChange?: (v: string) => void
+  metrics?: SortMetricOption<T>[]
+  selectedMetric?: T
+  onMetricChange?: (v: T) => void
 }) => {
   const orderOptions: {key: SortOrder; label: string}[] = [
     {key: 'default', label: '登録順'},
@@ -1041,14 +1048,10 @@ const SortToggle = ({
   )
 }
 
-/** 配列をソートして新しい配列を返す（イミュータブル） */
+/** 'default'（元順序）対応のソートラッパー */
 const sortByKey = <T,>(data: T[], key: keyof T, order: SortOrder): T[] => {
   if (order === 'default') return data
-  return [...data].sort((a, b) => {
-    const va = Number(a[key]) || 0
-    const vb = Number(b[key]) || 0
-    return order === 'desc' ? vb - va : va - vb
-  })
+  return arr__sortByKey(data, key as string, order)
 }
 
 // スタッフ稼働率（各グラフ内にローカルトグル）
@@ -1308,7 +1311,7 @@ const Slide10StaffAchievementTable = ({selectedStores, selectedStaffNames}: Stor
   const {monthlyData} = useDataContext()
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
   const [sortMetric, setSortMetric] = useState('achievementRate')
-  const rawRows = buildStaffAchievementData(monthlyData, selectedStores, selectedStaffNames)
+  const rawRows = useMemo(() => buildStaffAchievementData(monthlyData, selectedStores, selectedStaffNames), [monthlyData, selectedStores, selectedStaffNames])
   const rows = sortByKey(rawRows, sortMetric as keyof StaffAchievementRow, sortOrder)
   const hasStaff = (monthlyData.importedData?.staffRecords || []).length > 0
 
@@ -1379,7 +1382,7 @@ const Slide11StaffAchievementChart = ({selectedStores, selectedStaffNames}: Stor
   const {monthlyData} = useDataContext()
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
   const [sortMetric, setSortMetric] = useState('achievementRate')
-  const rawRows = buildStaffAchievementData(monthlyData, selectedStores, selectedStaffNames)
+  const rawRows = useMemo(() => buildStaffAchievementData(monthlyData, selectedStores, selectedStaffNames), [monthlyData, selectedStores, selectedStaffNames])
   const sortedRows = sortByKey(rawRows, sortMetric as keyof StaffAchievementRow, sortOrder)
   const hasStaff = (monthlyData.importedData?.staffRecords || []).length > 0
 
@@ -1460,7 +1463,7 @@ const Slide12StoreAchievementTable = ({selectedStores}: StoreFilterProps) => {
   const {monthlyData} = useDataContext()
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
   const [sortMetric, setSortMetric] = useState('actualTotal')
-  const rawRows = buildStoreAchievementData(monthlyData, selectedStores)
+  const rawRows = useMemo(() => buildStoreAchievementData(monthlyData, selectedStores), [monthlyData, selectedStores])
   const rows = sortByKey(rawRows, sortMetric as keyof StoreAchievementRow, sortOrder)
 
   return (
@@ -1558,7 +1561,7 @@ const Slide13StoreAchievementChart = ({selectedStores}: StoreFilterProps) => {
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
   const [sortMetric, setSortMetric] = useState('actualTotal')
   const [visibleMetrics, setVisibleMetrics] = useState<Set<StoreChartMetricKey>>(new Set(STORE_CHART_METRICS.map((m) => m.key)))
-  const rawRows = buildStoreAchievementData(monthlyData, selectedStores)
+  const rawRows = useMemo(() => buildStoreAchievementData(monthlyData, selectedStores), [monthlyData, selectedStores])
   const rows = sortByKey(rawRows, sortMetric as keyof StoreAchievementRow, sortOrder)
 
   const toggleMetric = (key: StoreChartMetricKey) => {
@@ -1744,24 +1747,24 @@ const DiffCell = ({value, prefix = '', suffix = ''}: {value: number; prefix?: st
 // スライド14: スタッフ別先月比① テーブル（売上金額/指名件数）
 // ============================================================
 
-const SALES_NOMINATION_METRICS: SortMetricOption[] = [
+type SalesNominationKey = 'currentSales' | 'currentNomination'
+type ReturnUnitKey = 'currentReturnRate' | 'currentUnitPrice'
+
+const SALES_NOMINATION_METRICS: SortMetricOption<SalesNominationKey>[] = [
   {key: 'currentSales', label: '売上'},
   {key: 'currentNomination', label: '指名'},
 ]
 
-const RETURN_UNIT_METRICS: SortMetricOption[] = [
+const RETURN_UNIT_METRICS: SortMetricOption<ReturnUnitKey>[] = [
   {key: 'currentUnitPrice', label: '客単価'},
   {key: 'currentReturnRate', label: '再来率'},
 ]
 
-type SalesNominationKey = 'currentSales' | 'currentNomination'
-type ReturnUnitKey = 'currentReturnRate' | 'currentUnitPrice'
-
 const Slide14StaffMomTable1 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
   const {monthlyData, currentYearMonth, allMonthlyData} = useDataContext()
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
-  const [sortMetric, setSortMetric] = useState<'currentSales' | 'currentNomination'>('currentSales')
-  const rawRows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData)
+  const [sortMetric, setSortMetric] = useState<SalesNominationKey>('currentSales')
+  const rawRows = useMemo(() => buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData), [currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData])
   const rows = sortByKey(rawRows, sortMetric, sortOrder)
 
   return (
@@ -1770,12 +1773,12 @@ const Slide14StaffMomTable1 = ({selectedStores, selectedStaffNames}: StoreFilter
         <h2 className="text-2xl font-bold text-gray-800">
           スタッフ別先月比①（売上金額/指名件数）
         </h2>
-        <SortToggle
+        <SortToggle<SalesNominationKey>
           value={sortOrder}
           onChange={setSortOrder}
           metrics={SALES_NOMINATION_METRICS}
           selectedMetric={sortMetric}
-          onMetricChange={(v) => setSortMetric(v as never)}
+          onMetricChange={setSortMetric}
         />
       </div>
       {rows.length === 0 ? (
@@ -1827,8 +1830,8 @@ const Slide15StaffMomChart1 = ({selectedStores, selectedStaffNames}: StoreFilter
   const [showCurrent, setShowCurrent] = useState(true)
   const [showCumulative, setShowCumulative] = useState(false)
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
-  const [sortMetric, setSortMetric] = useState<'currentSales' | 'currentNomination'>('currentSales')
-  const rawRows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData)
+  const [sortMetric, setSortMetric] = useState<SalesNominationKey>('currentSales')
+  const rawRows = useMemo(() => buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData), [currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData])
   const rows = sortByKey(rawRows, sortMetric, sortOrder)
 
   const chartData = rows.map((row) => ({
@@ -1842,12 +1845,12 @@ const Slide15StaffMomChart1 = ({selectedStores, selectedStaffNames}: StoreFilter
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold text-gray-800">スタッフ別先月比グラフ①（売上金額/指名件数）</h2>
         <div className="flex items-center gap-4">
-          <SortToggle
+          <SortToggle<SalesNominationKey>
             value={sortOrder}
             onChange={setSortOrder}
             metrics={SALES_NOMINATION_METRICS}
             selectedMetric={sortMetric}
-            onMetricChange={(v) => setSortMetric(v as never)}
+            onMetricChange={setSortMetric}
           />
           <ChartToggle showCurrent={showCurrent} showCumulative={showCumulative} onCurrentChange={setShowCurrent} onCumulativeChange={setShowCumulative} />
         </div>
@@ -1886,8 +1889,8 @@ const Slide15StaffMomChart1 = ({selectedStores, selectedStaffNames}: StoreFilter
 const Slide16StaffMomTable2 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
   const {monthlyData, currentYearMonth, allMonthlyData} = useDataContext()
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
-  const [sortMetric, setSortMetric] = useState<'currentReturnRate' | 'currentUnitPrice'>('currentUnitPrice')
-  const rawRows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData)
+  const [sortMetric, setSortMetric] = useState<ReturnUnitKey>('currentUnitPrice')
+  const rawRows = useMemo(() => buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData), [currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData])
   const rows = sortByKey(rawRows, sortMetric, sortOrder)
 
   return (
@@ -1896,12 +1899,12 @@ const Slide16StaffMomTable2 = ({selectedStores, selectedStaffNames}: StoreFilter
         <h2 className="text-2xl font-bold text-gray-800">
           スタッフ別先月比②（再来率/客単価）
         </h2>
-        <SortToggle
+        <SortToggle<ReturnUnitKey>
           value={sortOrder}
           onChange={setSortOrder}
           metrics={RETURN_UNIT_METRICS}
           selectedMetric={sortMetric}
-          onMetricChange={(v) => setSortMetric(v as never)}
+          onMetricChange={setSortMetric}
         />
       </div>
       {rows.length === 0 ? (
@@ -1953,8 +1956,8 @@ const Slide17StaffMomChart2 = ({selectedStores, selectedStaffNames}: StoreFilter
   const [showCurrent, setShowCurrent] = useState(true)
   const [showCumulative, setShowCumulative] = useState(false)
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
-  const [sortMetric, setSortMetric] = useState<'currentReturnRate' | 'currentUnitPrice'>('currentUnitPrice')
-  const rawRows = buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData)
+  const [sortMetric, setSortMetric] = useState<ReturnUnitKey>('currentUnitPrice')
+  const rawRows = useMemo(() => buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData), [currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData])
   const rows = sortByKey(rawRows, sortMetric, sortOrder)
 
   const chartData = rows.map((row) => ({
@@ -1968,12 +1971,12 @@ const Slide17StaffMomChart2 = ({selectedStores, selectedStaffNames}: StoreFilter
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold text-gray-800">スタッフ別先月比グラフ②（再来率/客単価）</h2>
         <div className="flex items-center gap-4">
-          <SortToggle
+          <SortToggle<ReturnUnitKey>
             value={sortOrder}
             onChange={setSortOrder}
             metrics={RETURN_UNIT_METRICS}
             selectedMetric={sortMetric}
-            onMetricChange={(v) => setSortMetric(v as never)}
+            onMetricChange={setSortMetric}
           />
           <ChartToggle showCurrent={showCurrent} showCumulative={showCumulative} onCurrentChange={setShowCurrent} onCumulativeChange={setShowCumulative} />
         </div>

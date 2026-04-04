@@ -4,6 +4,7 @@ import {RegrowMonthlyReportService} from '../lib/services/RegrowMonthlyReportSer
 import type {MonthlyData, YearMonth, StaffRecord, StoreTotals, StoreKpi, StaffManualData, StoreName} from '../types'
 import {sessionOnServer, fetchUserRole} from 'src/non-common/serverSideFunction'
 import {getScopes} from 'src/non-common/scope-lib/getScopes'
+import {isDev} from '@cm/lib/methods/common'
 
 // ============================================================
 // Read
@@ -68,7 +69,7 @@ export const transferStaffToStore = async (
   fromStoreId: number,
   toStoreId: number
 ): Promise<void> => {
-  if (process.env.NODE_ENV !== 'development') {
+  if (!isDev) {
     throw new Error('この機能は開発環境でのみ使用できます')
   }
   await RegrowMonthlyReportService.transferStaffStore(yearMonth, staffName, fromStoreId, toStoreId)
