@@ -81,6 +81,7 @@ export type StaffManualData = {
   staffName: string
   storeName: StoreName
   utilizationRate: number | null // 稼働率 (%)
+  proposalRate: number | null // 提案力実施率 (%)
   csRegistrationCount: number | null // CS登録数
   googleReviewCount: number | null // Google口コミ獲得数
   targetSales: number | null // 目標売上（円単位）

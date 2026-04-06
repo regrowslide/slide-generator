@@ -318,6 +318,7 @@ export const DataContextProvider = ({
                   staffName,
                   storeName,
                   utilizationRate: null,
+                  proposalRate: null,
                   csRegistrationCount: null,
                   googleReviewCount: null,
                   targetSales: null,

@@ -835,7 +835,7 @@ const PERFORMANCE_METRICS: SortMetricOption[] = [
   {key: 'utilizationRate', label: '稼働率'},
   {key: 'customerCount', label: '対応客数'},
   {key: 'nominationCount', label: '指名数'},
-  {key: 'nominationRate', label: '指名割合'},
+  {key: 'nominationRate', label: '指名率'},
   {key: 'unitPrice', label: '客単価'},
   {key: 'returnRate', label: '再来率'},
   {key: 'csRegistrationCount', label: 'CS登録数'},
@@ -918,7 +918,7 @@ const Slide8StaffPerformanceTable = ({selectedStores, selectedStaffNames}: Store
                 <th className="p-1.5 border">稼働率</th>
                 <th className="p-1.5 border">対応客数</th>
                 <th className="p-1.5 border">指名数</th>
-                <th className="p-1.5 border">指名割合</th>
+                <th className="p-1.5 border">指名率</th>
                 <th className="p-1.5 border">客単価</th>
                 <th className="p-1.5 border">再来率</th>
                 <th className="p-1.5 border">CS登録数</th>
@@ -1163,6 +1163,7 @@ type StoreAchievementRow = {
   unitPrice: number
   returnRate: number
   utilizationRate: number
+  proposalRate: number
   googleReviewCount: number
 }
 
@@ -1266,6 +1267,14 @@ const buildStoreAchievementData = (
         ? Math.round(staffUtilData.reduce((sum, s) => sum + (s.utilizationRate || 0), 0) / staffUtilData.length * 10) / 10
         : 0
 
+      // 提案力実施率（スタッフ平均）
+      const staffProposalData = monthlyData.manualData.staffManualData?.filter(
+        (s) => s.storeName === storeName && s.proposalRate !== null && s.proposalRate !== undefined
+      ) || []
+      const proposalRate = staffProposalData.length > 0
+        ? Math.round(staffProposalData.reduce((sum, s) => sum + (s.proposalRate || 0), 0) / staffProposalData.length * 10) / 10
+        : 0
+
       // 達成率（目標未入力でも行は表示する）
       const achievementRate = totalTarget > 0 ? Math.round((totalActual / totalTarget) * 100) : 0
 
@@ -1280,6 +1289,7 @@ const buildStoreAchievementData = (
         unitPrice,
         returnRate,
         utilizationRate,
+        proposalRate,
         googleReviewCount: storeManualData.reduce((sum, m) => sum + (m.googleReviewCount ?? 0), 0),
       }
     })
@@ -1455,6 +1465,7 @@ const STORE_PERFORMANCE_METRICS: SortMetricOption[] = [
   {key: 'newCustomerCount', label: '新規数'},
   {key: 'unitPrice', label: '客単価'},
   {key: 'utilizationRate', label: '稼働率'},
+  {key: 'proposalRate', label: '提案力実施率'},
   {key: 'returnRate', label: '再来率'},
   {key: 'googleReviewCount', label: 'Google口コミ'},
 ]
@@ -1498,6 +1509,7 @@ const Slide12StoreAchievementTable = ({selectedStores}: StoreFilterProps) => {
                 <th className="p-2.5 border">新規数</th>
                 <th className="p-2.5 border">客単価</th>
                 <th className="p-2.5 border">稼働率</th>
+                <th className="p-2.5 border">提案力実施率</th>
                 <th className="p-2.5 border">再来率</th>
                 <th className="p-2.5 border">Google口コミ</th>
               </tr>
@@ -1526,6 +1538,7 @@ const Slide12StoreAchievementTable = ({selectedStores}: StoreFilterProps) => {
                   <td className="p-2.5 border text-right">{row.newCustomerCount}</td>
                   <td className="p-2.5 border text-right">¥{row.unitPrice.toLocaleString()}</td>
                   <td className="p-2.5 border text-right">{row.utilizationRate > 0 ? `${row.utilizationRate}%` : '-'}</td>
+                  <td className="p-2.5 border text-right">{row.proposalRate > 0 ? `${row.proposalRate}%` : '-'}</td>
                   <td className="p-2.5 border text-right">{row.returnRate}%</td>
                   <td className="p-2.5 border text-right">{row.googleReviewCount || '-'}</td>
                 </tr>
@@ -1543,7 +1556,7 @@ const Slide12StoreAchievementTable = ({selectedStores}: StoreFilterProps) => {
 // チェックボックスで表示指標を切り替え
 // ============================================================
 
-type StoreChartMetricKey = 'actualTotal' | 'achievementRate' | 'customerCount' | 'newCustomerCount' | 'unitPrice' | 'utilizationRate' | 'returnRate' | 'googleReviewCount'
+type StoreChartMetricKey = 'actualTotal' | 'achievementRate' | 'customerCount' | 'newCustomerCount' | 'unitPrice' | 'utilizationRate' | 'proposalRate' | 'returnRate' | 'googleReviewCount'
 
 const STORE_CHART_METRICS: {key: StoreChartMetricKey; label: string; color: string; unit: 'yen' | 'percent' | 'count'}[] = [
   {key: 'actualTotal', label: '実績売上', color: '#7C3AED', unit: 'yen'},
@@ -1552,6 +1565,7 @@ const STORE_CHART_METRICS: {key: StoreChartMetricKey; label: string; color: stri
   {key: 'newCustomerCount', label: '新規数', color: '#16A34A', unit: 'count'},
   {key: 'unitPrice', label: '客単価', color: '#D97706', unit: 'yen'},
   {key: 'utilizationRate', label: '稼働率', color: '#DB2777', unit: 'percent'},
+  {key: 'proposalRate', label: '提案力実施率', color: '#8B5CF6', unit: 'percent'},
   {key: 'returnRate', label: '再来率', color: '#0891B2', unit: 'percent'},
   {key: 'googleReviewCount', label: 'Google口コミ', color: '#EA580C', unit: 'count'},
 ]
@@ -1585,6 +1599,7 @@ const Slide13StoreAchievementChart = ({selectedStores}: StoreFilterProps) => {
     新規数: row.newCustomerCount,
     客単価: row.unitPrice,
     稼働率: row.utilizationRate,
+    提案力実施率: row.proposalRate,
     再来率: row.returnRate,
     Google口コミ: row.googleReviewCount,
   }))

@@ -1265,6 +1265,20 @@
           "isUpdatedAt": false
         },
         {
+          "name": "proposalRate",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "Float",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
           "name": "csRegistrationCount",
           "kind": "scalar",
           "isList": false,

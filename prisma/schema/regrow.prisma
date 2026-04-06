@@ -100,6 +100,7 @@ model RgStaffManualData {
   storeId             Int // 店舗FK
   userId              String? // Userとの紐付け（任意）
   utilizationRate     Float?
+  proposalRate        Float? // 提案力実施率 (%)
   csRegistrationCount Int?
   googleReviewCount   Int? // Google口コミ獲得数
   targetSales         Int? // 目標売上（円単位）

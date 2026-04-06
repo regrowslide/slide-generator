@@ -2030,6 +2030,7 @@ export const RgStaffManualDataScalarFieldEnum = {
   storeId: 'storeId',
   userId: 'userId',
   utilizationRate: 'utilizationRate',
+  proposalRate: 'proposalRate',
   csRegistrationCount: 'csRegistrationCount',
   googleReviewCount: 'googleReviewCount',
   targetSales: 'targetSales'

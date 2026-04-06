@@ -10,7 +10,7 @@ import { useDataContext } from '../../context/DataContext'
 import type { StoreName } from '../../types'
 
 type TabKey = 'store-kpi' | 'staff-utilization' | 'customer-voice'
-type StaffManualFieldName = 'utilizationRate' | 'csRegistrationCount' | 'googleReviewCount'
+type StaffManualFieldName = 'utilizationRate' | 'proposalRate' | 'csRegistrationCount' | 'googleReviewCount'
 
 const StaffNumericField = ({
   value,
@@ -215,6 +215,25 @@ export const ManualInputView = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
+                        提案力実施率 (%) <span className="text-xs text-gray-500">※スタッフ平均で自動計算</span>
+                      </label>
+                      <div className="w-full px-3 py-2 border rounded bg-gray-50 text-gray-700 font-medium">
+                        {(() => {
+                          const staffData = monthlyData.manualData.staffManualData?.filter(
+                            (s) =>
+                              s.storeName === store &&
+                              s.proposalRate !== null &&
+                              s.proposalRate !== undefined
+                          ) || []
+                          if (staffData.length === 0) return '-'
+                          const avg =
+                            staffData.reduce((sum, s) => sum + (s.proposalRate || 0), 0) / staffData.length
+                          return `${(Math.round(avg * 10) / 10).toFixed(1)}`
+                        })()}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
                         再来率 (%) <span className="text-xs text-gray-500">※自動計算</span>
                       </label>
                       <div className="w-full px-3 py-2 border rounded bg-gray-50 text-gray-700 font-medium">
@@ -285,6 +304,7 @@ export const ManualInputView = () => {
                       <tr>
                         <th className="p-3 text-left text-sm font-medium text-gray-700">スタッフ名</th>
                         <th className="p-3 text-left text-sm font-medium text-gray-700">稼働率 (%)</th>
+                        <th className="p-3 text-left text-sm font-medium text-gray-700">提案力実施率 (%)</th>
                         <th className="p-3 text-left text-sm font-medium text-gray-700">再来率 (%)</th>
                         <th className="p-3 text-left text-sm font-medium text-gray-700">CS登録数</th>
                         <th className="p-3 text-left text-sm font-medium text-gray-700">Google口コミ獲得数</th>
@@ -301,6 +321,18 @@ export const ManualInputView = () => {
                               <StaffNumericField
                                 value={manualData?.utilizationRate}
                                 fieldName="utilizationRate"
+                                staffName={staff.staffName}
+                                storeName={staff.storeName}
+                                storeId={storeIdMap.get(staff.storeName) ?? 0}
+                                isEditable={isEditable}
+                                onSave={handleSave}
+                                onUpdate={updateStaffManualData}
+                              />
+                            </td>
+                            <td className="p-3">
+                              <StaffNumericField
+                                value={manualData?.proposalRate}
+                                fieldName="proposalRate"
                                 staffName={staff.staffName}
                                 storeName={staff.storeName}
                                 storeId={storeIdMap.get(staff.storeName) ?? 0}
