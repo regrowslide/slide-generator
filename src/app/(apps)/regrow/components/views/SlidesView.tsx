@@ -833,6 +833,7 @@ const Slide7AllMetricsComparison = ({selectedStores}: StoreFilterProps) => {
 const PERFORMANCE_METRICS: SortMetricOption[] = [
   {key: 'sales', label: '売上'},
   {key: 'utilizationRate', label: '稼働率'},
+  {key: 'proposalRate', label: '提案力実施率'},
   {key: 'customerCount', label: '対応客数'},
   {key: 'nominationCount', label: '指名数'},
   {key: 'nominationRate', label: '指名率'},
@@ -870,6 +871,7 @@ const Slide8StaffPerformanceTable = ({selectedStores, selectedStaffNames}: Store
         ? Number((((manualData.csRegistrationCount || 0) / staff.customerCount) * 100).toFixed(1))
         : 0
     const utilizationRate = manualData?.utilizationRate ?? 0
+    const proposalRate = manualData?.proposalRate ?? 0
 
     return {
       staffName: staff.staffName,
@@ -877,6 +879,8 @@ const Slide8StaffPerformanceTable = ({selectedStores, selectedStaffNames}: Store
       sales: staff.sales,
       utilizationRate,
       utilizationRateRaw: manualData?.utilizationRate,
+      proposalRate,
+      proposalRateRaw: manualData?.proposalRate,
       customerCount: staff.customerCount,
       nominationCount: staff.nominationCount,
       nominationRate,
@@ -916,6 +920,7 @@ const Slide8StaffPerformanceTable = ({selectedStores, selectedStaffNames}: Store
                 <th className="p-1.5 border">店舗</th>
                 <th className="p-1.5 border">売上</th>
                 <th className="p-1.5 border">稼働率</th>
+                <th className="p-1.5 border">提案力実施率</th>
                 <th className="p-1.5 border">対応客数</th>
                 <th className="p-1.5 border">指名数</th>
                 <th className="p-1.5 border">指名率</th>
@@ -935,6 +940,11 @@ const Slide8StaffPerformanceTable = ({selectedStores, selectedStaffNames}: Store
                   <td className="p-1.5 border text-right">
                     {row.utilizationRateRaw !== null && row.utilizationRateRaw !== undefined
                       ? `${row.utilizationRateRaw}%`
+                      : '-'}
+                  </td>
+                  <td className="p-1.5 border text-right">
+                    {row.proposalRateRaw !== null && row.proposalRateRaw !== undefined
+                      ? `${row.proposalRateRaw}%`
                       : '-'}
                   </td>
                   <td className="p-1.5 border text-right">{row.customerCount}</td>
