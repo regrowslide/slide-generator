@@ -6,7 +6,7 @@
  * Server Actions経由でDB操作
  */
 
-import React, {createContext, useContext, useState, useCallback, useEffect} from 'react'
+import React, {createContext, useContext, useState, useCallback, useEffect, useRef} from 'react'
 import type {MonthlyData, YearMonth, ExcelParseResult, StoreKpi, StaffManualData, StaffMaster, StaffRole, StoreName, RegrowScopes} from '../types'
 import type {RgStore} from '@prisma/generated/prisma/client'
 import {createEmptyMonthlyData, getPreviousMonth, getNextMonth} from '../lib/storage'
@@ -119,6 +119,13 @@ export const DataContextProvider = ({
   const [staffMaster, setStaffMaster] = useState<StaffMaster[]>(initialStaffMaster ?? [])
   const [stores] = useState<RgStore[]>(initialStores ?? [])
   const [allMonthlyData, setAllMonthlyData] = useState<Record<YearMonth, MonthlyData>>(initialAllMonthlyData ?? {})
+  const allMonthlyDataRef = useRef(allMonthlyData)
+  useEffect(() => {
+    allMonthlyDataRef.current = allMonthlyData
+  }, [allMonthlyData])
+
+  // initialYearMonthのスキップは初回のみ
+  const isFirstLoad = useRef(true)
 
   // ============================================================
   // スタッフマスタ再読み込み
@@ -129,11 +136,18 @@ export const DataContextProvider = ({
   }, [])
 
   // 該当年の全月データを一括取得（年間推移グラフ用）
+  const availableMonthsRef = useRef(availableMonths)
+  useEffect(() => {
+    availableMonthsRef.current = availableMonths
+  }, [availableMonths])
+
   const loadYearData = useCallback(
     async (year: string) => {
-      const yearMonths = availableMonths.filter((m) => m.startsWith(year))
+      const currentAvailableMonths = availableMonthsRef.current
+      const currentAllData = allMonthlyDataRef.current
+      const yearMonths = currentAvailableMonths.filter((m) => m.startsWith(year))
       // キャッシュにない月だけ取得
-      const missing = yearMonths.filter((ym) => !allMonthlyData[ym])
+      const missing = yearMonths.filter((ym) => !currentAllData[ym])
       if (missing.length === 0) return
 
       const results = await Promise.all(
@@ -151,27 +165,45 @@ export const DataContextProvider = ({
         setAllMonthlyData((prev) => ({...prev, ...newEntries}))
       }
     },
-    [availableMonths, allMonthlyData]
+    [] // Refを使うので依存配列は空
   )
 
   // currentYearMonth変更時のデータロード
   useEffect(() => {
     if (!currentYearMonth) return
 
-    // initialDataがある最初のロードはスキップ
-    if (initialData && currentYearMonth === initialYearMonth) return
+    // initialDataがある最初のロードは1回だけスキップ
+    if (isFirstLoad.current && initialData && currentYearMonth === initialYearMonth) {
+      isFirstLoad.current = false
+      // 初回はinitialDataをallMonthlyDataにも反映
+      if (initialData) {
+        setAllMonthlyData((prev) => ({...prev, [initialYearMonth]: initialData}))
+      }
+      // 年間データのロードは実行する
+      const year = currentYearMonth.split('-')[0]
+      loadYearData(year)
+      return
+    }
+    isFirstLoad.current = false
+
+    // レースコンディション防止
+    let cancelled = false
 
     const load = async () => {
-      // 選択月のデータ取得
-      let data: MonthlyData | null = allMonthlyData[currentYearMonth] ?? null
+      // Refから最新のキャッシュを参照
+      const cachedData = allMonthlyDataRef.current[currentYearMonth] ?? null
+      let data: MonthlyData | null = cachedData
       if (!data) {
         data = await getMonthlyReport(currentYearMonth)
+        if (cancelled) return
         if (!data) {
           await upsertMonthlyReport(currentYearMonth)
+          if (cancelled) return
           data = createEmptyMonthlyData(currentYearMonth)
         }
         setAllMonthlyData((prev) => ({...prev, [currentYearMonth]: data!}))
       }
+      if (cancelled) return
       setMonthlyData(data)
 
       // 該当年の全月データも一括取得（年間推移グラフ用）
@@ -179,7 +211,11 @@ export const DataContextProvider = ({
       await loadYearData(year)
     }
     load()
-  }, [currentYearMonth])
+
+    return () => {
+      cancelled = true
+    }
+  }, [currentYearMonth, loadYearData])
 
   // 利用可能な月リストを再取得
   const refreshAvailableMonths = useCallback(async () => {
