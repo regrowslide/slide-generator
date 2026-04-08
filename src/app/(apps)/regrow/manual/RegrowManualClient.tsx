@@ -116,7 +116,7 @@ const RegrowManualClient = () => {
         <div className="px-6 md:px-10 pt-5 pb-3">
           <h1 className="text-2xl font-extrabold text-gray-900 mb-0.5">Regrow — ユーザーマニュアル</h1>
           <p className="text-sm text-gray-500">
-            月次業績レポートシステム&emsp;|&emsp;開発：合同会社 改善マニア&emsp;|&emsp;最終更新：2026-03-22
+            月次業績レポートシステム&emsp;
           </p>
         </div>
         <nav className="px-6 md:px-10 pb-2 flex gap-1 overflow-x-auto">
