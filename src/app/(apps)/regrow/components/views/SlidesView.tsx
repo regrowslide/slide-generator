@@ -255,7 +255,7 @@ export const SlidesView = () => {
     <Slide7AllMetricsComparison key="s7" {...commonProps} />,
     <Slide8StaffPerformanceTable key="s8" {...commonProps} />,
     <Slide9StaffUtilizationChart key="s9" {...commonProps} />,
-    <SlideMenuCompositionChart key="s10" {...commonProps} />,
+    // <SlideMenuCompositionChart key="s10" {...commonProps} />,
     <Slide10StaffAchievementTable key="s10a" {...commonProps} />,
     <Slide11StaffAchievementChart key="s11" {...commonProps} />,
     <Slide12StoreAchievementTable key="s12" {...commonProps} />,
