@@ -4,7 +4,7 @@
  */
 
 import ExcelJS from 'exceljs'
-import type {ExcelParseResult, StoreName, StaffRecord} from '../types'
+import type {ExcelParseResult, StoreName, StaffRecord, StaffMenuRecord, MenuCategory} from '../types'
 
 /** セルの値を取得するヘルパー（1-indexed） */
 export const getCellValue = (ws: ExcelJS.Worksheet, row: number, col: number): string | number | undefined => {
@@ -43,8 +43,18 @@ export const parseWorkbook = (wb: ExcelJS.Workbook, storeShortName: StoreName, s
     }
   }
 
+  // メニュー列の定義（担当者別分析表の列構成）
+  const MENU_COLUMNS: {category: MenuCategory; salesCol: number; ratioCol: number}[] = [
+    {category: 'もみほぐし', salesCol: 10, ratioCol: 11},
+    {category: 'タイ古式マッサージ', salesCol: 12, ratioCol: 13},
+    {category: 'バリ式リンパマッサージ', salesCol: 14, ratioCol: 15},
+    {category: 'オプション', salesCol: 16, ratioCol: 17},
+    {category: 'その他', salesCol: 18, ratioCol: 19},
+  ]
+
   // スタッフデータ抽出（3行パターン検出）
   const staffList: StaffRecord[] = []
+  const staffMenuList: StaffMenuRecord[] = []
   let rank = 1
   let row = 4 // 4行目から開始（1-indexed）
 
@@ -82,6 +92,24 @@ export const parseWorkbook = (wb: ExcelJS.Workbook, storeShortName: StoreName, s
       unitPrice,
     })
 
+    // メニュー別データ抽出
+    for (const {category, salesCol, ratioCol} of MENU_COLUMNS) {
+      const menuSales = Number(getCellValue(ws, row, salesCol)) || 0 // 行1: メニュー別売上
+      const menuCustomerCount = Number(getCellValue(ws, row + 1, salesCol)) || 0 // 行2: メニュー別客数
+      const menuRatio = Number(getCellValue(ws, row + 1, ratioCol)) || 0 // 行2: 割合
+      const menuUnitPrice = Number(getCellValue(ws, row + 2, salesCol)) || 0 // 行3: メニュー別客単価
+
+      staffMenuList.push({
+        staffName,
+        storeName: storeShortName,
+        menuCategory: category,
+        sales: menuSales,
+        customerCount: menuCustomerCount,
+        ratio: menuRatio,
+        unitPrice: menuUnitPrice,
+      })
+    }
+
     rank++
     row += 3 // 次の3行パターンへ
   }
@@ -113,6 +141,7 @@ export const parseWorkbook = (wb: ExcelJS.Workbook, storeShortName: StoreName, s
     periodStart,
     periodEnd,
     staffList,
+    staffMenuList,
     total,
   }
 }

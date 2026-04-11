@@ -233,6 +233,7 @@ export type RgStoreWhereInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsListRelationFilter
   RgStaffRecord?: Prisma.RgStaffRecordListRelationFilter
   RgStaffManualData?: Prisma.RgStaffManualDataListRelationFilter
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordListRelationFilter
 }
 
 export type RgStoreOrderByWithRelationInput = {
@@ -247,6 +248,7 @@ export type RgStoreOrderByWithRelationInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsOrderByRelationAggregateInput
   RgStaffRecord?: Prisma.RgStaffRecordOrderByRelationAggregateInput
   RgStaffManualData?: Prisma.RgStaffManualDataOrderByRelationAggregateInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordOrderByRelationAggregateInput
 }
 
 export type RgStoreWhereUniqueInput = Prisma.AtLeast<{
@@ -264,6 +266,7 @@ export type RgStoreWhereUniqueInput = Prisma.AtLeast<{
   RgStoreTotals?: Prisma.RgStoreTotalsListRelationFilter
   RgStaffRecord?: Prisma.RgStaffRecordListRelationFilter
   RgStaffManualData?: Prisma.RgStaffManualDataListRelationFilter
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordListRelationFilter
 }, "id">
 
 export type RgStoreOrderByWithAggregationInput = {
@@ -303,6 +306,7 @@ export type RgStoreCreateInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsCreateNestedManyWithoutRgStoreInput
   RgStaffRecord?: Prisma.RgStaffRecordCreateNestedManyWithoutRgStoreInput
   RgStaffManualData?: Prisma.RgStaffManualDataCreateNestedManyWithoutRgStoreInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordCreateNestedManyWithoutRgStoreInput
 }
 
 export type RgStoreUncheckedCreateInput = {
@@ -317,6 +321,7 @@ export type RgStoreUncheckedCreateInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedCreateNestedManyWithoutRgStoreInput
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutRgStoreInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutRgStoreInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedCreateNestedManyWithoutRgStoreInput
 }
 
 export type RgStoreUpdateInput = {
@@ -330,6 +335,7 @@ export type RgStoreUpdateInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsUpdateManyWithoutRgStoreNestedInput
   RgStaffRecord?: Prisma.RgStaffRecordUpdateManyWithoutRgStoreNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUpdateManyWithoutRgStoreNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUpdateManyWithoutRgStoreNestedInput
 }
 
 export type RgStoreUncheckedUpdateInput = {
@@ -344,6 +350,7 @@ export type RgStoreUncheckedUpdateInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedUpdateManyWithoutRgStoreNestedInput
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutRgStoreNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutRgStoreNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedUpdateManyWithoutRgStoreNestedInput
 }
 
 export type RgStoreCreateManyInput = {
@@ -507,6 +514,20 @@ export type RgStoreUpdateOneRequiredWithoutRgStaffManualDataNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.RgStoreUpdateToOneWithWhereWithoutRgStaffManualDataInput, Prisma.RgStoreUpdateWithoutRgStaffManualDataInput>, Prisma.RgStoreUncheckedUpdateWithoutRgStaffManualDataInput>
 }
 
+export type RgStoreCreateNestedOneWithoutRgStaffMenuRecordInput = {
+  create?: Prisma.XOR<Prisma.RgStoreCreateWithoutRgStaffMenuRecordInput, Prisma.RgStoreUncheckedCreateWithoutRgStaffMenuRecordInput>
+  connectOrCreate?: Prisma.RgStoreCreateOrConnectWithoutRgStaffMenuRecordInput
+  connect?: Prisma.RgStoreWhereUniqueInput
+}
+
+export type RgStoreUpdateOneRequiredWithoutRgStaffMenuRecordNestedInput = {
+  create?: Prisma.XOR<Prisma.RgStoreCreateWithoutRgStaffMenuRecordInput, Prisma.RgStoreUncheckedCreateWithoutRgStaffMenuRecordInput>
+  connectOrCreate?: Prisma.RgStoreCreateOrConnectWithoutRgStaffMenuRecordInput
+  upsert?: Prisma.RgStoreUpsertWithoutRgStaffMenuRecordInput
+  connect?: Prisma.RgStoreWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RgStoreUpdateToOneWithWhereWithoutRgStaffMenuRecordInput, Prisma.RgStoreUpdateWithoutRgStaffMenuRecordInput>, Prisma.RgStoreUncheckedUpdateWithoutRgStaffMenuRecordInput>
+}
+
 export type RgStoreCreateNestedOneWithoutRgUserListInput = {
   create?: Prisma.XOR<Prisma.RgStoreCreateWithoutRgUserListInput, Prisma.RgStoreUncheckedCreateWithoutRgUserListInput>
   connectOrCreate?: Prisma.RgStoreCreateOrConnectWithoutRgUserListInput
@@ -533,6 +554,7 @@ export type RgStoreCreateWithoutRgStaffRecordInput = {
   RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgStoreInput
   RgStoreTotals?: Prisma.RgStoreTotalsCreateNestedManyWithoutRgStoreInput
   RgStaffManualData?: Prisma.RgStaffManualDataCreateNestedManyWithoutRgStoreInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordCreateNestedManyWithoutRgStoreInput
 }
 
 export type RgStoreUncheckedCreateWithoutRgStaffRecordInput = {
@@ -546,6 +568,7 @@ export type RgStoreUncheckedCreateWithoutRgStaffRecordInput = {
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgStoreInput
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedCreateNestedManyWithoutRgStoreInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutRgStoreInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedCreateNestedManyWithoutRgStoreInput
 }
 
 export type RgStoreCreateOrConnectWithoutRgStaffRecordInput = {
@@ -574,6 +597,7 @@ export type RgStoreUpdateWithoutRgStaffRecordInput = {
   RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgStoreNestedInput
   RgStoreTotals?: Prisma.RgStoreTotalsUpdateManyWithoutRgStoreNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUpdateManyWithoutRgStoreNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUpdateManyWithoutRgStoreNestedInput
 }
 
 export type RgStoreUncheckedUpdateWithoutRgStaffRecordInput = {
@@ -587,6 +611,7 @@ export type RgStoreUncheckedUpdateWithoutRgStaffRecordInput = {
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgStoreNestedInput
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedUpdateManyWithoutRgStoreNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutRgStoreNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedUpdateManyWithoutRgStoreNestedInput
 }
 
 export type RgStoreCreateWithoutRgStoreTotalsInput = {
@@ -599,6 +624,7 @@ export type RgStoreCreateWithoutRgStoreTotalsInput = {
   RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgStoreInput
   RgStaffRecord?: Prisma.RgStaffRecordCreateNestedManyWithoutRgStoreInput
   RgStaffManualData?: Prisma.RgStaffManualDataCreateNestedManyWithoutRgStoreInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordCreateNestedManyWithoutRgStoreInput
 }
 
 export type RgStoreUncheckedCreateWithoutRgStoreTotalsInput = {
@@ -612,6 +638,7 @@ export type RgStoreUncheckedCreateWithoutRgStoreTotalsInput = {
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgStoreInput
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutRgStoreInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutRgStoreInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedCreateNestedManyWithoutRgStoreInput
 }
 
 export type RgStoreCreateOrConnectWithoutRgStoreTotalsInput = {
@@ -640,6 +667,7 @@ export type RgStoreUpdateWithoutRgStoreTotalsInput = {
   RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgStoreNestedInput
   RgStaffRecord?: Prisma.RgStaffRecordUpdateManyWithoutRgStoreNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUpdateManyWithoutRgStoreNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUpdateManyWithoutRgStoreNestedInput
 }
 
 export type RgStoreUncheckedUpdateWithoutRgStoreTotalsInput = {
@@ -653,6 +681,7 @@ export type RgStoreUncheckedUpdateWithoutRgStoreTotalsInput = {
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgStoreNestedInput
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutRgStoreNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutRgStoreNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedUpdateManyWithoutRgStoreNestedInput
 }
 
 export type RgStoreCreateWithoutRgStoreKpiInput = {
@@ -665,6 +694,7 @@ export type RgStoreCreateWithoutRgStoreKpiInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsCreateNestedManyWithoutRgStoreInput
   RgStaffRecord?: Prisma.RgStaffRecordCreateNestedManyWithoutRgStoreInput
   RgStaffManualData?: Prisma.RgStaffManualDataCreateNestedManyWithoutRgStoreInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordCreateNestedManyWithoutRgStoreInput
 }
 
 export type RgStoreUncheckedCreateWithoutRgStoreKpiInput = {
@@ -678,6 +708,7 @@ export type RgStoreUncheckedCreateWithoutRgStoreKpiInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedCreateNestedManyWithoutRgStoreInput
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutRgStoreInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutRgStoreInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedCreateNestedManyWithoutRgStoreInput
 }
 
 export type RgStoreCreateOrConnectWithoutRgStoreKpiInput = {
@@ -706,6 +737,7 @@ export type RgStoreUpdateWithoutRgStoreKpiInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsUpdateManyWithoutRgStoreNestedInput
   RgStaffRecord?: Prisma.RgStaffRecordUpdateManyWithoutRgStoreNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUpdateManyWithoutRgStoreNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUpdateManyWithoutRgStoreNestedInput
 }
 
 export type RgStoreUncheckedUpdateWithoutRgStoreKpiInput = {
@@ -719,6 +751,7 @@ export type RgStoreUncheckedUpdateWithoutRgStoreKpiInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedUpdateManyWithoutRgStoreNestedInput
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutRgStoreNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutRgStoreNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedUpdateManyWithoutRgStoreNestedInput
 }
 
 export type RgStoreCreateWithoutRgStaffManualDataInput = {
@@ -731,6 +764,7 @@ export type RgStoreCreateWithoutRgStaffManualDataInput = {
   RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgStoreInput
   RgStoreTotals?: Prisma.RgStoreTotalsCreateNestedManyWithoutRgStoreInput
   RgStaffRecord?: Prisma.RgStaffRecordCreateNestedManyWithoutRgStoreInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordCreateNestedManyWithoutRgStoreInput
 }
 
 export type RgStoreUncheckedCreateWithoutRgStaffManualDataInput = {
@@ -744,6 +778,7 @@ export type RgStoreUncheckedCreateWithoutRgStaffManualDataInput = {
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgStoreInput
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedCreateNestedManyWithoutRgStoreInput
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutRgStoreInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedCreateNestedManyWithoutRgStoreInput
 }
 
 export type RgStoreCreateOrConnectWithoutRgStaffManualDataInput = {
@@ -772,6 +807,7 @@ export type RgStoreUpdateWithoutRgStaffManualDataInput = {
   RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgStoreNestedInput
   RgStoreTotals?: Prisma.RgStoreTotalsUpdateManyWithoutRgStoreNestedInput
   RgStaffRecord?: Prisma.RgStaffRecordUpdateManyWithoutRgStoreNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUpdateManyWithoutRgStoreNestedInput
 }
 
 export type RgStoreUncheckedUpdateWithoutRgStaffManualDataInput = {
@@ -785,6 +821,77 @@ export type RgStoreUncheckedUpdateWithoutRgStaffManualDataInput = {
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgStoreNestedInput
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedUpdateManyWithoutRgStoreNestedInput
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutRgStoreNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedUpdateManyWithoutRgStoreNestedInput
+}
+
+export type RgStoreCreateWithoutRgStaffMenuRecordInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  name: string
+  isActive?: boolean
+  RgUserList?: Prisma.UserCreateNestedManyWithoutRgStoreRgInput
+  RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgStoreInput
+  RgStoreTotals?: Prisma.RgStoreTotalsCreateNestedManyWithoutRgStoreInput
+  RgStaffRecord?: Prisma.RgStaffRecordCreateNestedManyWithoutRgStoreInput
+  RgStaffManualData?: Prisma.RgStaffManualDataCreateNestedManyWithoutRgStoreInput
+}
+
+export type RgStoreUncheckedCreateWithoutRgStaffMenuRecordInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  name: string
+  isActive?: boolean
+  RgUserList?: Prisma.UserUncheckedCreateNestedManyWithoutRgStoreRgInput
+  RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgStoreInput
+  RgStoreTotals?: Prisma.RgStoreTotalsUncheckedCreateNestedManyWithoutRgStoreInput
+  RgStaffRecord?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutRgStoreInput
+  RgStaffManualData?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutRgStoreInput
+}
+
+export type RgStoreCreateOrConnectWithoutRgStaffMenuRecordInput = {
+  where: Prisma.RgStoreWhereUniqueInput
+  create: Prisma.XOR<Prisma.RgStoreCreateWithoutRgStaffMenuRecordInput, Prisma.RgStoreUncheckedCreateWithoutRgStaffMenuRecordInput>
+}
+
+export type RgStoreUpsertWithoutRgStaffMenuRecordInput = {
+  update: Prisma.XOR<Prisma.RgStoreUpdateWithoutRgStaffMenuRecordInput, Prisma.RgStoreUncheckedUpdateWithoutRgStaffMenuRecordInput>
+  create: Prisma.XOR<Prisma.RgStoreCreateWithoutRgStaffMenuRecordInput, Prisma.RgStoreUncheckedCreateWithoutRgStaffMenuRecordInput>
+  where?: Prisma.RgStoreWhereInput
+}
+
+export type RgStoreUpdateToOneWithWhereWithoutRgStaffMenuRecordInput = {
+  where?: Prisma.RgStoreWhereInput
+  data: Prisma.XOR<Prisma.RgStoreUpdateWithoutRgStaffMenuRecordInput, Prisma.RgStoreUncheckedUpdateWithoutRgStaffMenuRecordInput>
+}
+
+export type RgStoreUpdateWithoutRgStaffMenuRecordInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  RgUserList?: Prisma.UserUpdateManyWithoutRgStoreRgNestedInput
+  RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgStoreNestedInput
+  RgStoreTotals?: Prisma.RgStoreTotalsUpdateManyWithoutRgStoreNestedInput
+  RgStaffRecord?: Prisma.RgStaffRecordUpdateManyWithoutRgStoreNestedInput
+  RgStaffManualData?: Prisma.RgStaffManualDataUpdateManyWithoutRgStoreNestedInput
+}
+
+export type RgStoreUncheckedUpdateWithoutRgStaffMenuRecordInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  RgUserList?: Prisma.UserUncheckedUpdateManyWithoutRgStoreRgNestedInput
+  RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgStoreNestedInput
+  RgStoreTotals?: Prisma.RgStoreTotalsUncheckedUpdateManyWithoutRgStoreNestedInput
+  RgStaffRecord?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutRgStoreNestedInput
+  RgStaffManualData?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutRgStoreNestedInput
 }
 
 export type RgStoreCreateWithoutRgUserListInput = {
@@ -797,6 +904,7 @@ export type RgStoreCreateWithoutRgUserListInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsCreateNestedManyWithoutRgStoreInput
   RgStaffRecord?: Prisma.RgStaffRecordCreateNestedManyWithoutRgStoreInput
   RgStaffManualData?: Prisma.RgStaffManualDataCreateNestedManyWithoutRgStoreInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordCreateNestedManyWithoutRgStoreInput
 }
 
 export type RgStoreUncheckedCreateWithoutRgUserListInput = {
@@ -810,6 +918,7 @@ export type RgStoreUncheckedCreateWithoutRgUserListInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedCreateNestedManyWithoutRgStoreInput
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutRgStoreInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutRgStoreInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedCreateNestedManyWithoutRgStoreInput
 }
 
 export type RgStoreCreateOrConnectWithoutRgUserListInput = {
@@ -838,6 +947,7 @@ export type RgStoreUpdateWithoutRgUserListInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsUpdateManyWithoutRgStoreNestedInput
   RgStaffRecord?: Prisma.RgStaffRecordUpdateManyWithoutRgStoreNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUpdateManyWithoutRgStoreNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUpdateManyWithoutRgStoreNestedInput
 }
 
 export type RgStoreUncheckedUpdateWithoutRgUserListInput = {
@@ -851,6 +961,7 @@ export type RgStoreUncheckedUpdateWithoutRgUserListInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedUpdateManyWithoutRgStoreNestedInput
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutRgStoreNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutRgStoreNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedUpdateManyWithoutRgStoreNestedInput
 }
 
 
@@ -864,6 +975,7 @@ export type RgStoreCountOutputType = {
   RgStoreTotals: number
   RgStaffRecord: number
   RgStaffManualData: number
+  RgStaffMenuRecord: number
 }
 
 export type RgStoreCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -872,6 +984,7 @@ export type RgStoreCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   RgStoreTotals?: boolean | RgStoreCountOutputTypeCountRgStoreTotalsArgs
   RgStaffRecord?: boolean | RgStoreCountOutputTypeCountRgStaffRecordArgs
   RgStaffManualData?: boolean | RgStoreCountOutputTypeCountRgStaffManualDataArgs
+  RgStaffMenuRecord?: boolean | RgStoreCountOutputTypeCountRgStaffMenuRecordArgs
 }
 
 /**
@@ -919,6 +1032,13 @@ export type RgStoreCountOutputTypeCountRgStaffManualDataArgs<ExtArgs extends run
   where?: Prisma.RgStaffManualDataWhereInput
 }
 
+/**
+ * RgStoreCountOutputType without action
+ */
+export type RgStoreCountOutputTypeCountRgStaffMenuRecordArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RgStaffMenuRecordWhereInput
+}
+
 
 export type RgStoreSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -932,6 +1052,7 @@ export type RgStoreSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   RgStoreTotals?: boolean | Prisma.RgStore$RgStoreTotalsArgs<ExtArgs>
   RgStaffRecord?: boolean | Prisma.RgStore$RgStaffRecordArgs<ExtArgs>
   RgStaffManualData?: boolean | Prisma.RgStore$RgStaffManualDataArgs<ExtArgs>
+  RgStaffMenuRecord?: boolean | Prisma.RgStore$RgStaffMenuRecordArgs<ExtArgs>
   _count?: boolean | Prisma.RgStoreCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["rgStore"]>
 
@@ -969,6 +1090,7 @@ export type RgStoreInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   RgStoreTotals?: boolean | Prisma.RgStore$RgStoreTotalsArgs<ExtArgs>
   RgStaffRecord?: boolean | Prisma.RgStore$RgStaffRecordArgs<ExtArgs>
   RgStaffManualData?: boolean | Prisma.RgStore$RgStaffManualDataArgs<ExtArgs>
+  RgStaffMenuRecord?: boolean | Prisma.RgStore$RgStaffMenuRecordArgs<ExtArgs>
   _count?: boolean | Prisma.RgStoreCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type RgStoreIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -982,6 +1104,7 @@ export type $RgStorePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     RgStoreTotals: Prisma.$RgStoreTotalsPayload<ExtArgs>[]
     RgStaffRecord: Prisma.$RgStaffRecordPayload<ExtArgs>[]
     RgStaffManualData: Prisma.$RgStaffManualDataPayload<ExtArgs>[]
+    RgStaffMenuRecord: Prisma.$RgStaffMenuRecordPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1389,6 +1512,7 @@ export interface Prisma__RgStoreClient<T, Null = never, ExtArgs extends runtime.
   RgStoreTotals<T extends Prisma.RgStore$RgStoreTotalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RgStore$RgStoreTotalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RgStoreTotalsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   RgStaffRecord<T extends Prisma.RgStore$RgStaffRecordArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RgStore$RgStaffRecordArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RgStaffRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   RgStaffManualData<T extends Prisma.RgStore$RgStaffManualDataArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RgStore$RgStaffManualDataArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RgStaffManualDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  RgStaffMenuRecord<T extends Prisma.RgStore$RgStaffMenuRecordArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RgStore$RgStaffMenuRecordArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RgStaffMenuRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1934,6 +2058,30 @@ export type RgStore$RgStaffManualDataArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.RgStaffManualDataScalarFieldEnum | Prisma.RgStaffManualDataScalarFieldEnum[]
+}
+
+/**
+ * RgStore.RgStaffMenuRecord
+ */
+export type RgStore$RgStaffMenuRecordArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RgStaffMenuRecord
+   */
+  select?: Prisma.RgStaffMenuRecordSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RgStaffMenuRecord
+   */
+  omit?: Prisma.RgStaffMenuRecordOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RgStaffMenuRecordInclude<ExtArgs> | null
+  where?: Prisma.RgStaffMenuRecordWhereInput
+  orderBy?: Prisma.RgStaffMenuRecordOrderByWithRelationInput | Prisma.RgStaffMenuRecordOrderByWithRelationInput[]
+  cursor?: Prisma.RgStaffMenuRecordWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RgStaffMenuRecordScalarFieldEnum | Prisma.RgStaffMenuRecordScalarFieldEnum[]
 }
 
 /**

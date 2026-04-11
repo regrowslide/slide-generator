@@ -18,6 +18,27 @@ export type StoreName = string
 // インポートデータ（担当者別分析表から）
 // ============================================================
 
+/** メニューカテゴリ */
+export const MENU_CATEGORIES = [
+  'もみほぐし',
+  'タイ古式マッサージ',
+  'バリ式リンパマッサージ',
+  'オプション',
+  'その他',
+] as const
+export type MenuCategory = (typeof MENU_CATEGORIES)[number]
+
+/** スタッフ別メニューレコード（Excelから抽出） */
+export type StaffMenuRecord = {
+  staffName: string
+  storeName: StoreName
+  menuCategory: MenuCategory
+  sales: number // メニュー別売上
+  customerCount: number // メニュー別客数
+  ratio: number // 割合 (0.0-1.0、対応客数に対する比率)
+  unitPrice: number // メニュー別客単価
+}
+
 /** スタッフ売上レコード（Excelから抽出） */
 export type StaffRecord = {
   rank: number
@@ -43,6 +64,7 @@ export type StoreTotals = {
 export type ImportedData = {
   staffRecords: StaffRecord[]
   storeTotals: StoreTotals[]
+  staffMenuRecords: StaffMenuRecord[] // メニュー別データ
   importedAt: Date
   fileName: string
 }
@@ -123,6 +145,7 @@ export type ExcelParseResult = {
   periodStart: string // 集計期間開始（例: "2026-02-01"）
   periodEnd: string // 集計期間終了（例: "2026-02-28"）
   staffList: StaffRecord[]
+  staffMenuList: StaffMenuRecord[] // メニュー別データ
   total: Omit<StoreTotals, 'storeName'>
 }
 

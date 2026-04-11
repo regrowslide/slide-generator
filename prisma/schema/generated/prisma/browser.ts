@@ -53,6 +53,11 @@ export type RgStaffManualData = Prisma.RgStaffManualDataModel
  */
 export type RgCustomerVoice = Prisma.RgCustomerVoiceModel
 /**
+ * Model RgStaffMenuRecord
+ * 
+ */
+export type RgStaffMenuRecord = Prisma.RgStaffMenuRecordModel
+/**
  * Model Store
  * 
  */

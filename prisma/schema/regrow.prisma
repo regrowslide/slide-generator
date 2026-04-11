@@ -14,6 +14,7 @@ model RgStore {
   RgStoreTotals     RgStoreTotals[]
   RgStaffRecord     RgStaffRecord[]
   RgStaffManualData RgStaffManualData[]
+  RgStaffMenuRecord RgStaffMenuRecord[]
 }
 
 model RgMonthlyReport {
@@ -30,6 +31,7 @@ model RgMonthlyReport {
   RgStoreKpi        RgStoreKpi[]
   RgStaffManualData RgStaffManualData[]
   RgCustomerVoice   RgCustomerVoice[]
+  RgStaffMenuRecord RgStaffMenuRecord[]
 
   @@unique([yearMonth])
 }
@@ -123,4 +125,23 @@ model RgCustomerVoice {
   RgMonthlyReport RgMonthlyReport @relation(fields: [monthlyReportId], references: [id], onDelete: Cascade)
 
   @@unique([monthlyReportId])
+}
+
+model RgStaffMenuRecord {
+  id              Int       @id @default(autoincrement())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime? @updatedAt
+  monthlyReportId Int
+  staffName       String
+  storeId         Int
+  menuCategory    String // 'もみほぐし' | 'タイ古式マッサージ' | 'バリ式リンパマッサージ' | 'オプション' | 'その他'
+  sales           Float
+  customerCount   Int
+  ratio           Float // 0.0-1.0（対応客数に対する比率）
+  unitPrice       Float
+
+  RgMonthlyReport RgMonthlyReport @relation(fields: [monthlyReportId], references: [id], onDelete: Cascade)
+  RgStore         RgStore         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@unique([monthlyReportId, staffName, storeId, menuCategory])
 }

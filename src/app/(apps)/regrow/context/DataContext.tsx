@@ -261,8 +261,9 @@ export const DataContextProvider = ({
           ...parseResult.total,
         },
       ]
+      const staffMenuRecords = parseResult.staffMenuList ?? []
 
-      await saveImportedData(saveYearMonth, staffRecords, storeTotals as any, nameToUserIdMap)
+      await saveImportedData(saveYearMonth, staffRecords, storeTotals as any, staffMenuRecords, nameToUserIdMap)
 
       // DB再取得で最新データを反映
       setCurrentYearMonth(saveYearMonth)

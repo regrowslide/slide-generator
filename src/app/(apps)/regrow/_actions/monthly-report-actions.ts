@@ -1,7 +1,7 @@
 'use server'
 
 import {RegrowMonthlyReportService} from '../lib/services/RegrowMonthlyReportService'
-import type {MonthlyData, YearMonth, StaffRecord, StoreTotals, StoreKpi, StaffManualData, StoreName} from '../types'
+import type {MonthlyData, YearMonth, StaffRecord, StoreTotals, StoreKpi, StaffManualData, StoreName, StaffMenuRecord} from '../types'
 import {sessionOnServer, fetchUserRole} from 'src/non-common/serverSideFunction'
 import {getScopes} from 'src/non-common/scope-lib/getScopes'
 import {isDev} from '@cm/lib/methods/common'
@@ -36,8 +36,9 @@ export const saveImportedData = async (
   yearMonth: string,
   staffRecords: StaffRecord[],
   storeTotals: StoreTotals[],
+  staffMenuRecords: StaffMenuRecord[],
   nameToUserIdOverrides?: Record<string, string>
-): Promise<void> => RegrowMonthlyReportService.saveImportedData(yearMonth, staffRecords, storeTotals, nameToUserIdOverrides)
+): Promise<void> => RegrowMonthlyReportService.saveImportedData(yearMonth, staffRecords, storeTotals, staffMenuRecords, nameToUserIdOverrides)
 
 // ============================================================
 // Update（手動入力データ保存）

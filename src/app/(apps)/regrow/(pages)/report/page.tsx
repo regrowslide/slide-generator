@@ -1,14 +1,15 @@
-import {initServerComopnent} from 'src/non-common/serverSideFunction'
-import {getAvailableMonths, getMonthlyReport} from '../../_actions/monthly-report-actions'
-import {getStaffMaster} from '../../_actions/staff-actions'
-import {getStores} from '../../_actions/store-actions'
-import {getCurrentYearMonth} from '../../lib/storage'
-import type {MonthlyData, YearMonth} from '../../types'
+import { initServerComopnent } from 'src/non-common/serverSideFunction'
+import { getAvailableMonths, getMonthlyReport } from '../../_actions/monthly-report-actions'
+import { getStaffMaster } from '../../_actions/staff-actions'
+import { getStores } from '../../_actions/store-actions'
+import { getCurrentYearMonth } from '../../lib/storage'
+import type { MonthlyData, YearMonth } from '../../types'
 import RegrowReportClient from './RegrowReportClient'
+import Redirector from '@cm/components/utils/Redirector'
 
-export default async function RegrowReportPage(props: {searchParams: Promise<any>}) {
+export default async function RegrowReportPage(props: { searchParams: Promise<any> }) {
   const query = await props.searchParams
-  const {scopes} = await initServerComopnent({query})
+  const { scopes, session, } = await initServerComopnent({ query })
   const regrowScopes = scopes.getRegrowScopes()
 
   const [availableMonths, staffMaster, stores] = await Promise.all([
@@ -26,19 +27,23 @@ export default async function RegrowReportPage(props: {searchParams: Promise<any
     currentYearMonths.map(async (ym) => {
       // 既に取得済みのデフォルト月はスキップ
       if (ym === defaultYearMonth && monthlyData) {
-        return {yearMonth: ym, data: monthlyData}
+        return { yearMonth: ym, data: monthlyData }
       }
       const data = await getMonthlyReport(ym)
-      return {yearMonth: ym, data}
+      return { yearMonth: ym, data }
     })
   )
 
   const allMonthlyData: Record<YearMonth, MonthlyData> = {}
-  monthlyDataResults.forEach(({yearMonth, data}) => {
+  monthlyDataResults.forEach(({ yearMonth, data }) => {
     if (data) {
       allMonthlyData[yearMonth] = data
     }
   })
+
+  if (!session?.id) {
+    return <Redirector redirectPath={`/login?rootPath=regrow`} />
+  }
 
   return (
     <RegrowReportClient

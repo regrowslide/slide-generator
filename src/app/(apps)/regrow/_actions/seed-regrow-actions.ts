@@ -310,6 +310,23 @@ export const seedFromExcelFiles = async (): Promise<{message: string}> => {
           sortOrder: storeInfo.sortOrder,
         },
       })
+
+      // メニュー別データ
+      if (file.result.staffMenuList && file.result.staffMenuList.length > 0) {
+        await prisma.rgStaffMenuRecord.createMany({
+          data: file.result.staffMenuList.map((m) => ({
+            monthlyReportId: report.id,
+            staffName: m.staffName,
+            storeId: storeInfo.id,
+            menuCategory: m.menuCategory,
+            sales: m.sales,
+            customerCount: m.customerCount,
+            ratio: m.ratio,
+            unitPrice: m.unitPrice,
+          })),
+          skipDuplicates: true,
+        })
+      }
     }
 
     totalMonths++

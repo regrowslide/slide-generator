@@ -11,9 +11,9 @@
  * Phase6: スタッフフィルタ機能
  */
 
-import React, {useState, useMemo, useEffect, useCallback, useRef} from 'react'
-import {useDataContext} from '../../context/DataContext'
-import {arr__sortByKey} from '@cm/class/ArrHandler/array-utils/sorting'
+import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react'
+import { useDataContext } from '../../context/DataContext'
+import { arr__sortByKey } from '@cm/class/ArrHandler/array-utils/sorting'
 import {
   BarChart,
   Bar,
@@ -28,10 +28,21 @@ import {
   ComposedChart,
   Line,
 } from 'recharts'
-import type {MonthlyData, StoreName, YearMonth, StaffRecord, SlideViewMode} from '../../types'
-import {formatYearMonth} from '../../lib/storage'
+import type { MonthlyData, StoreName, YearMonth, StaffRecord, SlideViewMode, MenuCategory } from '../../types'
+import { MENU_CATEGORIES } from '../../types'
+import { formatYearMonth } from '../../lib/storage'
+import Image from 'next/image'
 
-const TOTAL_SLIDES = 18
+const TOTAL_SLIDES = 19
+
+// メニューカテゴリのカラーパレット
+const MENU_COLORS: Record<MenuCategory, string> = {
+  もみほぐし: '#4285F4',
+  タイ古式マッサージ: '#34A853',
+  バリ式リンパマッサージ: '#FBBC04',
+  オプション: '#EA4335',
+  その他: '#9AA0A6',
+}
 
 // ============================================================
 // ヘルパー関数
@@ -146,7 +157,7 @@ const calculateStaffCumulativeAverage = (
 const STORE_COLORS = ['#DC3545', '#4285F4', '#34A853', '#FF9800', '#9C27B0', '#00BCD4', '#795548', '#607D8B']
 
 export const SlidesView = () => {
-  const {monthlyData, stores: storesMaster} = useDataContext()
+  const { monthlyData, stores: storesMaster } = useDataContext()
   const allStores = storesMaster.map((s) => s.name)
 
   // グローバルな店舗フィルタ
@@ -170,7 +181,7 @@ export const SlidesView = () => {
   // 選択された店舗のスタッフ一覧
   const availableStaff = monthlyData.importedData?.staffRecords
     .filter((r) => selectedStores.includes(r.storeName))
-    .map((r) => ({staffName: r.staffName, storeName: r.storeName})) || []
+    .map((r) => ({ staffName: r.staffName, storeName: r.storeName })) || []
 
   // ユニークなスタッフリスト
   const uniqueStaffNames = [...new Set(availableStaff.map((s) => s.staffName))]
@@ -231,7 +242,7 @@ export const SlidesView = () => {
   }, [viewMode, isFullscreen])
 
   // 共通props
-  const commonProps = {selectedStores, selectedStaffNames}
+  const commonProps = { selectedStores, selectedStaffNames }
 
   // スライド配列を定義（10枚構成）
   const slides = [
@@ -244,7 +255,8 @@ export const SlidesView = () => {
     <Slide7AllMetricsComparison key="s7" {...commonProps} />,
     <Slide8StaffPerformanceTable key="s8" {...commonProps} />,
     <Slide9StaffUtilizationChart key="s9" {...commonProps} />,
-    <Slide10StaffAchievementTable key="s10" {...commonProps} />,
+    <SlideMenuCompositionChart key="s10" {...commonProps} />,
+    <Slide10StaffAchievementTable key="s10a" {...commonProps} />,
     <Slide11StaffAchievementChart key="s11" {...commonProps} />,
     <Slide12StoreAchievementTable key="s12" {...commonProps} />,
     <Slide13StoreAchievementChart key="s13" {...commonProps} />,
@@ -259,7 +271,7 @@ export const SlidesView = () => {
     <div
       ref={containerRef}
       className={`w-full bg-gray-100 ${isFullscreen ? 'overflow-auto' : ''}`}
-      style={isFullscreen ? {padding: '0'} : {}}
+      style={isFullscreen ? { padding: '0' } : {}}
     >
       {/* コントロールバー（上部） */}
       {!isFullscreen && (
@@ -270,17 +282,15 @@ export const SlidesView = () => {
               <span className="text-sm font-bold text-gray-700">表示:</span>
               <button
                 onClick={() => setViewMode('scroll')}
-                className={`px-3 py-1.5 text-sm rounded ${
-                  viewMode === 'scroll' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
+                className={`px-3 py-1.5 text-sm rounded ${viewMode === 'scroll' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
               >
                 スクロール
               </button>
               <button
                 onClick={() => setViewMode('pagination')}
-                className={`px-3 py-1.5 text-sm rounded ${
-                  viewMode === 'pagination' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
+                className={`px-3 py-1.5 text-sm rounded ${viewMode === 'pagination' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
               >
                 ページ切替
               </button>
@@ -361,9 +371,8 @@ export const SlidesView = () => {
                   <button
                     key={i}
                     onClick={() => setCurrentSlide(i)}
-                    className={`w-3 h-3 rounded-full ${
-                      i === currentSlide ? 'bg-purple-600' : 'bg-gray-300 hover:bg-gray-400'
-                    }`}
+                    className={`w-3 h-3 rounded-full ${i === currentSlide ? 'bg-purple-600' : 'bg-gray-300 hover:bg-gray-400'
+                      }`}
                   />
                 ))}
               </div>
@@ -445,11 +454,11 @@ export const SlidesView = () => {
 }
 
 // スライドコンテナ
-const SlideContainer = ({slideNumber, children, isFullscreen = false}: {slideNumber: number; children: React.ReactNode; isFullscreen?: boolean}) => {
+const SlideContainer = ({ slideNumber, children, isFullscreen = false }: { slideNumber: number; children: React.ReactNode; isFullscreen?: boolean }) => {
   return (
     <div
       className="bg-white shadow-xl rounded-lg overflow-hidden relative"
-      style={isFullscreen ? {height: 'calc(100vh - 48px)'} : {minHeight: '600px'}}
+      style={isFullscreen ? { height: 'calc(100vh - 48px)' } : { minHeight: '600px' }}
     >
       <div className="absolute top-4 right-4 bg-gray-800 text-white px-3 py-1 rounded text-sm font-medium z-10">
         {slideNumber} / {TOTAL_SLIDES}
@@ -486,15 +495,17 @@ const filterStaffList = (
 // ============================================================
 
 const Slide1TitleSlide = () => {
-  const {currentYearMonth} = useDataContext()
+  const { currentYearMonth } = useDataContext()
   const year = currentYearMonth.split('-')[0]
   const month = parseInt(currentYearMonth.split('-')[1])
 
   return (
-    <div className="h-full min-h-[600px] flex flex-col items-center justify-center bg-gradient-to-br from-red-500 to-pink-600 text-white">
+    <div className="h-full min-h-[600px] flex flex-col items-center gap-8 justify-center bg-[#221E1F] text-white">
+      <Image src="/logo.jpg" width={160} height={160} alt="logo" />
+      <p className="text-3xl  ">ReGrow × relaxation villa</p>
       <h1 className="text-5xl font-bold mb-4">月次業績レポート</h1>
       <p className="text-2xl">{year}年{month}月</p>
-      <p className="text-lg mt-8">Relaxation Salon SAMPLE</p>
+
     </div>
   )
 }
@@ -537,8 +548,8 @@ const Slide2TableOfContents = () => {
   )
 }
 
-const Slide3OverallSummary = ({selectedStores}: StoreFilterProps) => {
-  const {monthlyData} = useDataContext()
+const Slide3OverallSummary = ({ selectedStores }: StoreFilterProps) => {
+  const { monthlyData } = useDataContext()
   const stores = monthlyData.importedData?.storeTotals || []
   const filteredStores = selectedStores
 
@@ -580,7 +591,7 @@ const Slide3OverallSummary = ({selectedStores}: StoreFilterProps) => {
     <div className="h-full p-8 overflow-y-auto">
       <h2 className="text-3xl font-bold mb-6 text-gray-800">全体サマリー</h2>
       {filteredStores.length === 0 ? (
-        <div className="flex items-center justify-center" style={{height: '400px'}}>
+        <div className="flex items-center justify-center" style={{ height: '400px' }}>
           <p className="text-gray-500 text-lg">店舗を選択してください</p>
         </div>
       ) : (
@@ -657,15 +668,15 @@ const MetricComparisonSlide = ({
   metric: '客単価' | '稼働率' | '再来率'
   selectedStores: StoreName[]
 }) => {
-  const {currentYearMonth, allMonthlyData} = useDataContext()
+  const { currentYearMonth, allMonthlyData } = useDataContext()
   const currentYear = currentYearMonth.split('-')[0]
 
-  const data = Array.from({length: 12}, (_, i) => {
+  const data = Array.from({ length: 12 }, (_, i) => {
     const month = String(i + 1).padStart(2, '0')
     const yearMonth = `${currentYear}-${month}` as YearMonth
     const monthData = allMonthlyData[yearMonth]
 
-    const result: any = {month: `${i + 1}月`}
+    const result: any = { month: `${i + 1}月` }
     selectedStores.forEach((storeName) => {
       result[storeName] = getStoreMetricFromMonthlyData(monthData, storeName, metric)
     })
@@ -683,19 +694,19 @@ const MetricComparisonSlide = ({
     <div className="p-12">
       <h2 className="text-3xl font-bold mb-8 text-gray-800">{metric} - 年間推移</h2>
       {selectedStores.length === 0 ? (
-        <div className="flex items-center justify-center" style={{height: '500px'}}>
+        <div className="flex items-center justify-center" style={{ height: '500px' }}>
           <p className="text-gray-500 text-lg">店舗を選択してください</p>
         </div>
       ) : !hasData ? (
-        <div className="flex items-center justify-center" style={{height: '500px'}}>
+        <div className="flex items-center justify-center" style={{ height: '500px' }}>
           <p className="text-gray-500 text-lg">データがありません</p>
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={500}>
-          <ComposedChart data={data} margin={{top: 20}}>
+          <ComposedChart data={data} margin={{ top: 20 }}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" style={{fontSize: '14px'}} />
-            <YAxis style={{fontSize: '14px'}} />
+            <XAxis dataKey="month" style={{ fontSize: '14px' }} />
+            <YAxis style={{ fontSize: '14px' }} />
             <Tooltip />
             <Legend />
             {selectedStores.map((storeName, i) => (
@@ -708,28 +719,28 @@ const MetricComparisonSlide = ({
   )
 }
 
-const Slide4MetricComparison = ({metric, selectedStores}: StoreFilterProps & {metric: '客単価' | '稼働率' | '再来率'}) => (
+const Slide4MetricComparison = ({ metric, selectedStores }: StoreFilterProps & { metric: '客単価' | '稼働率' | '再来率' }) => (
   <MetricComparisonSlide metric={metric} selectedStores={selectedStores} />
 )
-const Slide5MetricComparison = ({metric, selectedStores}: StoreFilterProps & {metric: '客単価' | '稼働率' | '再来率'}) => (
+const Slide5MetricComparison = ({ metric, selectedStores }: StoreFilterProps & { metric: '客単価' | '稼働率' | '再来率' }) => (
   <MetricComparisonSlide metric={metric} selectedStores={selectedStores} />
 )
-const Slide6MetricComparison = ({metric, selectedStores}: StoreFilterProps & {metric: '客単価' | '稼働率' | '再来率'}) => (
+const Slide6MetricComparison = ({ metric, selectedStores }: StoreFilterProps & { metric: '客単価' | '稼働率' | '再来率' }) => (
   <MetricComparisonSlide metric={metric} selectedStores={selectedStores} />
 )
 
 // Phase4: 統合グラフ（ComposedChart: 客単価=Bar左軸円、稼働率/再来率=Line右軸%）
-const Slide7AllMetricsComparison = ({selectedStores}: StoreFilterProps) => {
-  const {currentYearMonth, allMonthlyData} = useDataContext()
+const Slide7AllMetricsComparison = ({ selectedStores }: StoreFilterProps) => {
+  const { currentYearMonth, allMonthlyData } = useDataContext()
   const currentYear = currentYearMonth.split('-')[0]
   const metrics: Array<'客単価' | '稼働率' | '再来率'> = ['客単価', '稼働率', '再来率']
 
-  const data = Array.from({length: 12}, (_, i) => {
+  const data = Array.from({ length: 12 }, (_, i) => {
     const month = String(i + 1).padStart(2, '0')
     const yearMonth = `${currentYear}-${month}` as YearMonth
     const monthData = allMonthlyData[yearMonth]
 
-    const result: any = {month: `${i + 1}月`}
+    const result: any = { month: `${i + 1}月` }
     selectedStores.forEach((storeName) => {
       metrics.forEach((metric) => {
         result[`${storeName}_${metric}`] = getStoreMetricFromMonthlyData(monthData, storeName, metric)
@@ -763,22 +774,22 @@ const Slide7AllMetricsComparison = ({selectedStores}: StoreFilterProps) => {
     <div className="p-12">
       <h2 className="text-3xl font-bold mb-8 text-gray-800">全指標 年間推移（統合）</h2>
       {selectedStores.length === 0 ? (
-        <div className="flex items-center justify-center" style={{height: '500px'}}>
+        <div className="flex items-center justify-center" style={{ height: '500px' }}>
           <p className="text-gray-500 text-lg">店舗を選択してください</p>
         </div>
       ) : !hasData ? (
-        <div className="flex items-center justify-center" style={{height: '500px'}}>
+        <div className="flex items-center justify-center" style={{ height: '500px' }}>
           <p className="text-gray-500 text-lg">データがありません</p>
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={500}>
-          <ComposedChart data={data} margin={{top: 20}}>
+          <ComposedChart data={data} margin={{ top: 20 }}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" style={{fontSize: '14px'}} />
-            <YAxis yAxisId="left" label={{value: '円', angle: -90, position: 'insideLeft'}} style={{fontSize: '12px'}} />
-            <YAxis yAxisId="right" orientation="right" label={{value: '%', angle: 90, position: 'insideRight'}} style={{fontSize: '12px'}} />
+            <XAxis dataKey="month" style={{ fontSize: '14px' }} />
+            <YAxis yAxisId="left" label={{ value: '円', angle: -90, position: 'insideLeft' }} style={{ fontSize: '12px' }} />
+            <YAxis yAxisId="right" orientation="right" label={{ value: '%', angle: 90, position: 'insideRight' }} style={{ fontSize: '12px' }} />
             <Tooltip />
-            <Legend wrapperStyle={{fontSize: '11px'}} />
+            <Legend wrapperStyle={{ fontSize: '11px' }} />
             {/* 客単価 = Bar（左軸・円） */}
             {selectedStores.map((storeName) => (
               <Bar
@@ -801,7 +812,7 @@ const Slide7AllMetricsComparison = ({selectedStores}: StoreFilterProps) => {
                 strokeWidth={2}
                 strokeDasharray={metricDash['稼働率']}
                 name={`${storeName} 稼働率`}
-                dot={{r: 3}}
+                dot={{ r: 3 }}
               />
             ))}
             {/* 再来率 = Line（右軸・%） */}
@@ -815,7 +826,7 @@ const Slide7AllMetricsComparison = ({selectedStores}: StoreFilterProps) => {
                 strokeWidth={2}
                 strokeDasharray={metricDash['再来率']}
                 name={`${storeName} 再来率`}
-                dot={{r: 3, strokeWidth: 2, fill: '#fff'}}
+                dot={{ r: 3, strokeWidth: 2, fill: '#fff' }}
               />
             ))}
           </ComposedChart>
@@ -831,21 +842,21 @@ const Slide7AllMetricsComparison = ({selectedStores}: StoreFilterProps) => {
 }
 
 const PERFORMANCE_METRICS: SortMetricOption[] = [
-  {key: 'sales', label: '売上'},
-  {key: 'utilizationRate', label: '稼働率'},
-  {key: 'proposalRate', label: '提案力実施率'},
-  {key: 'customerCount', label: '対応客数'},
-  {key: 'nominationCount', label: '指名数'},
-  {key: 'nominationRate', label: '指名率'},
-  {key: 'unitPrice', label: '客単価'},
-  {key: 'returnRate', label: '再来率'},
-  {key: 'csRegistrationCount', label: 'CS登録数'},
-  {key: 'csRate', label: 'CS登録率'},
-  {key: 'googleReviewCount', label: 'Google口コミ獲得数'},
+  { key: 'sales', label: '売上' },
+  { key: 'utilizationRate', label: '稼働率' },
+  { key: 'proposalRate', label: '提案力実施率' },
+  { key: 'customerCount', label: '対応客数' },
+  { key: 'nominationCount', label: '指名数' },
+  { key: 'nominationRate', label: '指名率' },
+  { key: 'unitPrice', label: '客単価' },
+  { key: 'returnRate', label: '再来率' },
+  { key: 'csRegistrationCount', label: 'CS登録数' },
+  { key: 'csRate', label: 'CS登録率' },
+  { key: 'googleReviewCount', label: 'Google口コミ獲得数' },
 ]
 
-const Slide8StaffPerformanceTable = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
-  const {monthlyData} = useDataContext()
+const Slide8StaffPerformanceTable = ({ selectedStores, selectedStaffNames }: StoreFilterProps) => {
+  const { monthlyData } = useDataContext()
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
   const [sortMetric, setSortMetric] = useState('sales')
 
@@ -908,7 +919,7 @@ const Slide8StaffPerformanceTable = ({selectedStores, selectedStaffNames}: Store
         />
       </div>
       {rows.length === 0 ? (
-        <div className="flex items-center justify-center" style={{height: '400px'}}>
+        <div className="flex items-center justify-center" style={{ height: '400px' }}>
           <p className="text-gray-500 text-lg">選択した店舗にスタッフデータがありません</p>
         </div>
       ) : (
@@ -1004,7 +1015,7 @@ const ChartToggle = ({
 // ソート順の型と共通トグル
 type SortOrder = 'desc' | 'asc' | 'default'
 
-type SortMetricOption<T extends string = string> = {key: T; label: string}
+type SortMetricOption<T extends string = string> = { key: T; label: string }
 
 const SortToggle = <T extends string = string>({
   value,
@@ -1019,10 +1030,10 @@ const SortToggle = <T extends string = string>({
   selectedMetric?: T
   onMetricChange?: (v: T) => void
 }) => {
-  const orderOptions: {key: SortOrder; label: string}[] = [
-    {key: 'default', label: '登録順'},
-    {key: 'desc', label: '降順'},
-    {key: 'asc', label: '昇順'},
+  const orderOptions: { key: SortOrder; label: string }[] = [
+    { key: 'default', label: '登録順' },
+    { key: 'desc', label: '降順' },
+    { key: 'asc', label: '昇順' },
   ]
   return (
     <div className="flex items-center gap-2">
@@ -1032,9 +1043,8 @@ const SortToggle = <T extends string = string>({
             <button
               key={m.key}
               onClick={() => onMetricChange(m.key)}
-              className={`px-2.5 py-1 text-xs font-medium rounded transition-colors ${
-                selectedMetric === m.key ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'
-              }`}
+              className={`px-2.5 py-1 text-xs font-medium rounded transition-colors ${selectedMetric === m.key ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                }`}
             >
               {m.label}
             </button>
@@ -1046,9 +1056,8 @@ const SortToggle = <T extends string = string>({
           <button
             key={opt.key}
             onClick={() => onChange(opt.key)}
-            className={`px-2.5 py-1 text-xs font-medium rounded transition-colors ${
-              value === opt.key ? 'bg-white text-purple-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'
-            }`}
+            className={`px-2.5 py-1 text-xs font-medium rounded transition-colors ${value === opt.key ? 'bg-white text-purple-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+              }`}
           >
             {opt.label}
           </button>
@@ -1065,8 +1074,8 @@ const sortByKey = <T,>(data: T[], key: keyof T, order: SortOrder): T[] => {
 }
 
 // スタッフ稼働率（各グラフ内にローカルトグル）
-const Slide9StaffUtilizationChart = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
-  const {currentYearMonth, availableMonths, allMonthlyData} = useDataContext()
+const Slide9StaffUtilizationChart = ({ selectedStores, selectedStaffNames }: StoreFilterProps) => {
+  const { currentYearMonth, availableMonths, allMonthlyData } = useDataContext()
   const [selectedMonth, setSelectedMonth] = useState<YearMonth>(currentYearMonth)
   const [showCurrent, setShowCurrent] = useState(true)
   const [showCumulative, setShowCumulative] = useState(false)
@@ -1084,7 +1093,7 @@ const Slide9StaffUtilizationChart = ({selectedStores, selectedStaffNames}: Store
         当月: u.utilizationRate || 0,
         store: u.storeName,
         ...(showCumulative
-          ? {累計平均: calculateStaffCumulativeAverage(u.staffName, u.storeName, selectedMonth, 'utilizationRate', allMonthlyData)}
+          ? { 累計平均: calculateStaffCumulativeAverage(u.staffName, u.storeName, selectedMonth, 'utilizationRate', allMonthlyData) }
           : {}),
       })) || []
 
@@ -1123,22 +1132,22 @@ const Slide9StaffUtilizationChart = ({selectedStores, selectedStaffNames}: Store
       </div>
 
       {utilizationData.length === 0 ? (
-        <div className="flex items-center justify-center" style={{height: '450px'}}>
+        <div className="flex items-center justify-center" style={{ height: '450px' }}>
           <p className="text-gray-500">
             {selectedStores.length === 0 ? '店舗を選択してください' : 'スタッフ稼働率データがありません'}
           </p>
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={450}>
-          <BarChart data={utilizationData} margin={{top: 20}}>
+          <BarChart data={utilizationData} margin={{ top: 20 }}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" style={{fontSize: '12px'}} angle={-45} textAnchor="end" height={100} />
-            <YAxis label={{value: '稼働率 (%)', angle: -90, position: 'insideLeft'}} style={{fontSize: '12px'}} />
+            <XAxis dataKey="name" style={{ fontSize: '12px' }} angle={-45} textAnchor="end" height={100} />
+            <YAxis label={{ value: '稼働率 (%)', angle: -90, position: 'insideLeft' }} style={{ fontSize: '12px' }} />
             <Tooltip />
             <Legend />
             {showCurrent && (
               <Bar dataKey="当月" fill="#DC3545" name="当月">
-                <LabelList dataKey="当月" position="top" style={{fontSize: '11px'}} />
+                <LabelList dataKey="当月" position="top" style={{ fontSize: '11px' }} />
               </Bar>
             )}
             {showCumulative && <Bar dataKey="累計平均" fill="#87CEEB" name="累計平均" />}
@@ -1197,7 +1206,7 @@ const AchievementGradientDef = () => (
 
 // 達成時にバーを太く描画するカスタムシェイプ
 const AchievementBarShape = (props: Record<string, unknown>) => {
-  const {x, y, width, height, fill, payload} = props as {x: number; y: number; width: number; height: number; fill: string; payload: {達成率: number}}
+  const { x, y, width, height, fill, payload } = props as { x: number; y: number; width: number; height: number; fill: string; payload: { 達成率: number } }
   const isAchieved = payload.達成率 >= 100
   // 達成時は1.8倍の太さ、角丸付き
   const barHeight = isAchieved ? height * 1.8 : height
@@ -1207,7 +1216,7 @@ const AchievementBarShape = (props: Record<string, unknown>) => {
 
 // 達成時に王冠を表示するカスタムラベル
 const CrownLabel = (props: Record<string, unknown>) => {
-  const {x, y, width, height, value} = props as {x: number; y: number; width: number; height: number; value: number}
+  const { x, y, width, height, value } = props as { x: number; y: number; width: number; height: number; value: number }
   if (value < 100) return null
   // バーが太くなった分を考慮して中央に配置
   return (
@@ -1309,7 +1318,7 @@ const buildStoreAchievementData = (
 
 const AchievementLegend = () => (
   <div className="mt-4 flex gap-4 text-xs text-gray-500">
-    <span className="flex items-center gap-1"><span className="w-3 h-3 rounded inline-block" style={{background: 'linear-gradient(to right, #3B82F6, #10B981, #22C55E, #F59E0B)'}} /> 👑 100%以上</span>
+    <span className="flex items-center gap-1"><span className="w-3 h-3 rounded inline-block" style={{ background: 'linear-gradient(to right, #3B82F6, #10B981, #22C55E, #F59E0B)' }} /> 👑 100%以上</span>
     <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-orange-500 inline-block" /> 80-99%</span>
     <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-red-600 inline-block" /> 80%未満</span>
     <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-indigo-500 inline-block" /> 達成率ライン</span>
@@ -1321,14 +1330,14 @@ const AchievementLegend = () => (
 // ============================================================
 
 const ACHIEVEMENT_METRICS: SortMetricOption[] = [
-  {key: 'targetSales', label: '目標売上'},
-  {key: 'actualSales', label: '実績売上'},
-  {key: 'diff', label: '差額'},
-  {key: 'achievementRate', label: '達成率'},
+  { key: 'targetSales', label: '目標売上' },
+  { key: 'actualSales', label: '実績売上' },
+  { key: 'diff', label: '差額' },
+  { key: 'achievementRate', label: '達成率' },
 ]
 
-const Slide10StaffAchievementTable = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
-  const {monthlyData} = useDataContext()
+const Slide10StaffAchievementTable = ({ selectedStores, selectedStaffNames }: StoreFilterProps) => {
+  const { monthlyData } = useDataContext()
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
   const [sortMetric, setSortMetric] = useState('achievementRate')
   const rawRows = useMemo(() => buildStaffAchievementData(monthlyData, selectedStores, selectedStaffNames), [monthlyData, selectedStores, selectedStaffNames])
@@ -1348,7 +1357,7 @@ const Slide10StaffAchievementTable = ({selectedStores, selectedStaffNames}: Stor
         />
       </div>
       {rows.length === 0 ? (
-        <div className="flex items-center justify-center" style={{height: '400px'}}>
+        <div className="flex items-center justify-center" style={{ height: '400px' }}>
           <p className="text-gray-500 text-lg">
             {!hasStaff ? 'スタッフデータがありません' : '目標売上が未入力です（目標売上タブで入力してください）'}
           </p>
@@ -1398,8 +1407,8 @@ const Slide10StaffAchievementTable = ({selectedStores, selectedStaffNames}: Stor
 // 横棒: 目標vs実績（2本並び）+ 達成率ライン
 // ============================================================
 
-const Slide11StaffAchievementChart = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
-  const {monthlyData} = useDataContext()
+const Slide11StaffAchievementChart = ({ selectedStores, selectedStaffNames }: StoreFilterProps) => {
+  const { monthlyData } = useDataContext()
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
   const [sortMetric, setSortMetric] = useState('achievementRate')
   const rawRows = useMemo(() => buildStaffAchievementData(monthlyData, selectedStores, selectedStaffNames), [monthlyData, selectedStores, selectedStaffNames])
@@ -1426,28 +1435,28 @@ const Slide11StaffAchievementChart = ({selectedStores, selectedStaffNames}: Stor
         />
       </div>
       {chartData.length === 0 ? (
-        <div className="flex items-center justify-center" style={{height: '450px'}}>
+        <div className="flex items-center justify-center" style={{ height: '450px' }}>
           <p className="text-gray-500 text-lg">
             {!hasStaff ? 'スタッフデータがありません' : '目標売上が未入力です（目標売上タブで入力してください）'}
           </p>
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={Math.max(chartData.length * 50 + 80, 300)}>
-          <ComposedChart data={chartData} layout="vertical" margin={{top: 20, left: 20, right: 80}}>
+          <ComposedChart data={chartData} layout="vertical" margin={{ top: 20, left: 20, right: 80 }}>
             <AchievementGradientDef />
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis xAxisId="sales" type="number" orientation="bottom" style={{fontSize: '11px'}}
+            <XAxis xAxisId="sales" type="number" orientation="bottom" style={{ fontSize: '11px' }}
               tickFormatter={(v: number) => `¥${(v / 10000).toFixed(0)}万`}
             />
-            <XAxis xAxisId="rate" type="number" orientation="top" domain={[0, (max: number) => Math.max(max, 130)]} unit="%" style={{fontSize: '11px'}} hide />
-            <YAxis dataKey="name" type="category" width={80} style={{fontSize: '12px'}} />
+            <XAxis xAxisId="rate" type="number" orientation="top" domain={[0, (max: number) => Math.max(max, 130)]} unit="%" style={{ fontSize: '11px' }} hide />
+            <YAxis dataKey="name" type="category" width={80} style={{ fontSize: '12px' }} />
             <Tooltip
               formatter={(value: number, name: string) => {
                 if (name === '達成率') return [`${value}%`, name]
                 return [`¥${value.toLocaleString()}`, name]
               }}
             />
-            <Legend wrapperStyle={{fontSize: '12px'}} />
+            <Legend wrapperStyle={{ fontSize: '12px' }} />
             <Bar xAxisId="sales" dataKey="目標売上" fill="#94A3B8" name="目標売上" barSize={16} />
             <Bar xAxisId="sales" dataKey="実績売上" name="実績売上" barSize={16} shape={<AchievementBarShape />}>
               {chartData.map((entry, index) => (
@@ -1455,7 +1464,7 @@ const Slide11StaffAchievementChart = ({selectedStores, selectedStaffNames}: Stor
               ))}
               <LabelList dataKey="達成率" content={<CrownLabel />} />
             </Bar>
-            <Line xAxisId="rate" dataKey="達成率" stroke="#6366F1" strokeWidth={2} name="達成率" dot={{r: 5, fill: '#6366F1'}} />
+            <Line xAxisId="rate" dataKey="達成率" stroke="#6366F1" strokeWidth={2} name="達成率" dot={{ r: 5, fill: '#6366F1' }} />
           </ComposedChart>
         </ResponsiveContainer>
       )}
@@ -1469,19 +1478,19 @@ const Slide11StaffAchievementChart = ({selectedStores, selectedStaffNames}: Stor
 // ============================================================
 
 const STORE_PERFORMANCE_METRICS: SortMetricOption[] = [
-  {key: 'actualTotal', label: '実績売上'},
-  {key: 'achievementRate', label: '達成率'},
-  {key: 'customerCount', label: '来客数'},
-  {key: 'newCustomerCount', label: '新規数'},
-  {key: 'unitPrice', label: '客単価'},
-  {key: 'utilizationRate', label: '稼働率'},
-  {key: 'proposalRate', label: '提案力実施率'},
-  {key: 'returnRate', label: '再来率'},
-  {key: 'googleReviewCount', label: 'Google口コミ'},
+  { key: 'actualTotal', label: '実績売上' },
+  { key: 'achievementRate', label: '達成率' },
+  { key: 'customerCount', label: '来客数' },
+  { key: 'newCustomerCount', label: '新規数' },
+  { key: 'unitPrice', label: '客単価' },
+  { key: 'utilizationRate', label: '稼働率' },
+  { key: 'proposalRate', label: '提案力実施率' },
+  { key: 'returnRate', label: '再来率' },
+  { key: 'googleReviewCount', label: 'Google口コミ' },
 ]
 
-const Slide12StoreAchievementTable = ({selectedStores}: StoreFilterProps) => {
-  const {monthlyData} = useDataContext()
+const Slide12StoreAchievementTable = ({ selectedStores }: StoreFilterProps) => {
+  const { monthlyData } = useDataContext()
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
   const [sortMetric, setSortMetric] = useState('actualTotal')
   const rawRows = useMemo(() => buildStoreAchievementData(monthlyData, selectedStores), [monthlyData, selectedStores])
@@ -1500,7 +1509,7 @@ const Slide12StoreAchievementTable = ({selectedStores}: StoreFilterProps) => {
         />
       </div>
       {rows.length === 0 ? (
-        <div className="flex items-center justify-center" style={{height: '400px'}}>
+        <div className="flex items-center justify-center" style={{ height: '400px' }}>
           <p className="text-gray-500 text-lg">
             {selectedStores.length === 0 ? '店舗を選択してください' : 'データがありません'}
           </p>
@@ -1568,20 +1577,20 @@ const Slide12StoreAchievementTable = ({selectedStores}: StoreFilterProps) => {
 
 type StoreChartMetricKey = 'actualTotal' | 'achievementRate' | 'customerCount' | 'newCustomerCount' | 'unitPrice' | 'utilizationRate' | 'proposalRate' | 'returnRate' | 'googleReviewCount'
 
-const STORE_CHART_METRICS: {key: StoreChartMetricKey; label: string; color: string; unit: 'yen' | 'percent' | 'count'}[] = [
-  {key: 'actualTotal', label: '実績売上', color: '#7C3AED', unit: 'yen'},
-  {key: 'achievementRate', label: '達成率', color: '#DC2626', unit: 'percent'},
-  {key: 'customerCount', label: '来客数', color: '#2563EB', unit: 'count'},
-  {key: 'newCustomerCount', label: '新規数', color: '#16A34A', unit: 'count'},
-  {key: 'unitPrice', label: '客単価', color: '#D97706', unit: 'yen'},
-  {key: 'utilizationRate', label: '稼働率', color: '#DB2777', unit: 'percent'},
-  {key: 'proposalRate', label: '提案力実施率', color: '#8B5CF6', unit: 'percent'},
-  {key: 'returnRate', label: '再来率', color: '#0891B2', unit: 'percent'},
-  {key: 'googleReviewCount', label: 'Google口コミ', color: '#EA580C', unit: 'count'},
+const STORE_CHART_METRICS: { key: StoreChartMetricKey; label: string; color: string; unit: 'yen' | 'percent' | 'count' }[] = [
+  { key: 'actualTotal', label: '実績売上', color: '#7C3AED', unit: 'yen' },
+  { key: 'achievementRate', label: '達成率', color: '#DC2626', unit: 'percent' },
+  { key: 'customerCount', label: '来客数', color: '#2563EB', unit: 'count' },
+  { key: 'newCustomerCount', label: '新規数', color: '#16A34A', unit: 'count' },
+  { key: 'unitPrice', label: '客単価', color: '#D97706', unit: 'yen' },
+  { key: 'utilizationRate', label: '稼働率', color: '#DB2777', unit: 'percent' },
+  { key: 'proposalRate', label: '提案力実施率', color: '#8B5CF6', unit: 'percent' },
+  { key: 'returnRate', label: '再来率', color: '#0891B2', unit: 'percent' },
+  { key: 'googleReviewCount', label: 'Google口コミ', color: '#EA580C', unit: 'count' },
 ]
 
-const Slide13StoreAchievementChart = ({selectedStores}: StoreFilterProps) => {
-  const {monthlyData} = useDataContext()
+const Slide13StoreAchievementChart = ({ selectedStores }: StoreFilterProps) => {
+  const { monthlyData } = useDataContext()
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
   const [sortMetric, setSortMetric] = useState('actualTotal')
   const [visibleMetrics, setVisibleMetrics] = useState<Set<StoreChartMetricKey>>(new Set(STORE_CHART_METRICS.map((m) => m.key)))
@@ -1649,29 +1658,29 @@ const Slide13StoreAchievementChart = ({selectedStores}: StoreFilterProps) => {
               checked={visibleMetrics.has(m.key)}
               onChange={() => toggleMetric(m.key)}
               className="w-4 h-4 rounded"
-              style={{accentColor: m.color}}
+              style={{ accentColor: m.color }}
             />
             <span className="text-sm font-medium text-gray-700">{m.label}</span>
           </label>
         ))}
       </div>
       {chartData.length === 0 ? (
-        <div className="flex items-center justify-center" style={{height: '400px'}}>
+        <div className="flex items-center justify-center" style={{ height: '400px' }}>
           <p className="text-gray-500 text-lg">
             {selectedStores.length === 0 ? '店舗を選択してください' : 'データがありません'}
           </p>
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={Math.max(chartData.length * 80 + 80, 250)}>
-          <ComposedChart data={chartData} layout="vertical" margin={{top: 20, left: 20, right: 20}}>
+          <ComposedChart data={chartData} layout="vertical" margin={{ top: 20, left: 20, right: 20 }}>
             <CartesianGrid strokeDasharray="3 3" />
-            <YAxis dataKey="name" type="category" width={100} style={{fontSize: '13px', fontWeight: 'bold'}} />
+            <YAxis dataKey="name" type="category" width={100} style={{ fontSize: '13px', fontWeight: 'bold' }} />
             {/* 左軸 */}
             <XAxis
               xAxisId="left"
               type="number"
               orientation="bottom"
-              style={{fontSize: '11px'}}
+              style={{ fontSize: '11px' }}
               tickFormatter={(v: number) => {
                 const leftUnit = activeMetrics.find((m) => getAxisId(m.unit) === 'left')?.unit
                 if (leftUnit === 'yen') return `¥${(v / 10000).toFixed(0)}万`
@@ -1685,7 +1694,7 @@ const Slide13StoreAchievementChart = ({selectedStores}: StoreFilterProps) => {
                 xAxisId="right"
                 type="number"
                 orientation="top"
-                style={{fontSize: '11px'}}
+                style={{ fontSize: '11px' }}
                 tickFormatter={(v: number) => {
                   const rightUnit = activeMetrics.find((m) => getAxisId(m.unit) === 'right')?.unit
                   if (rightUnit === 'yen') return `¥${(v / 10000).toFixed(0)}万`
@@ -1702,7 +1711,7 @@ const Slide13StoreAchievementChart = ({selectedStores}: StoreFilterProps) => {
                 return [value, name]
               }}
             />
-            <Legend wrapperStyle={{fontSize: '12px'}} />
+            <Legend wrapperStyle={{ fontSize: '12px' }} />
             {activeMetrics.map((m) => (
               <Bar
                 key={m.key}
@@ -1762,7 +1771,7 @@ const buildStaffMomData = (
 }
 
 /** 差分セルの色付け */
-const DiffCell = ({value, prefix = '', suffix = ''}: {value: number; prefix?: string; suffix?: string}) => {
+const DiffCell = ({ value, prefix = '', suffix = '' }: { value: number; prefix?: string; suffix?: string }) => {
   const color = value > 0 ? 'text-green-600' : value < 0 ? 'text-red-600' : 'text-gray-500'
   const sign = value > 0 ? '+' : ''
   return <span className={`font-medium ${color}`}>{sign}{prefix}{value.toLocaleString()}{suffix}</span>
@@ -1776,17 +1785,17 @@ type SalesNominationKey = 'currentSales' | 'currentNomination'
 type ReturnUnitKey = 'currentReturnRate' | 'currentUnitPrice'
 
 const SALES_NOMINATION_METRICS: SortMetricOption<SalesNominationKey>[] = [
-  {key: 'currentSales', label: '売上'},
-  {key: 'currentNomination', label: '指名'},
+  { key: 'currentSales', label: '売上' },
+  { key: 'currentNomination', label: '指名' },
 ]
 
 const RETURN_UNIT_METRICS: SortMetricOption<ReturnUnitKey>[] = [
-  {key: 'currentUnitPrice', label: '客単価'},
-  {key: 'currentReturnRate', label: '再来率'},
+  { key: 'currentUnitPrice', label: '客単価' },
+  { key: 'currentReturnRate', label: '再来率' },
 ]
 
-const Slide14StaffMomTable1 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
-  const {monthlyData, currentYearMonth, allMonthlyData} = useDataContext()
+const Slide14StaffMomTable1 = ({ selectedStores, selectedStaffNames }: StoreFilterProps) => {
+  const { monthlyData, currentYearMonth, allMonthlyData } = useDataContext()
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
   const [sortMetric, setSortMetric] = useState<SalesNominationKey>('currentSales')
   const rawRows = useMemo(() => buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData), [currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData])
@@ -1807,7 +1816,7 @@ const Slide14StaffMomTable1 = ({selectedStores, selectedStaffNames}: StoreFilter
         />
       </div>
       {rows.length === 0 ? (
-        <div className="flex items-center justify-center" style={{height: '400px'}}>
+        <div className="flex items-center justify-center" style={{ height: '400px' }}>
           <p className="text-gray-500 text-lg">スタッフデータがありません</p>
         </div>
       ) : (
@@ -1850,8 +1859,8 @@ const Slide14StaffMomTable1 = ({selectedStores, selectedStaffNames}: StoreFilter
 // スライド15: スタッフ別先月比① グラフ（売上金額/指名件数）
 // ============================================================
 
-const Slide15StaffMomChart1 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
-  const {monthlyData, currentYearMonth, allMonthlyData} = useDataContext()
+const Slide15StaffMomChart1 = ({ selectedStores, selectedStaffNames }: StoreFilterProps) => {
+  const { monthlyData, currentYearMonth, allMonthlyData } = useDataContext()
   const [showCurrent, setShowCurrent] = useState(true)
   const [showCumulative, setShowCumulative] = useState(false)
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
@@ -1861,8 +1870,8 @@ const Slide15StaffMomChart1 = ({selectedStores, selectedStaffNames}: StoreFilter
 
   const chartData = rows.map((row) => ({
     name: row.staffName,
-    ...(showCurrent ? {'売上（当月）': row.currentSales, '指名（当月）': row.currentNomination} : {}),
-    ...(showCumulative ? {'売上（累計平均）': row.cumSales, '指名（累計平均）': row.cumNomination} : {}),
+    ...(showCurrent ? { '売上（当月）': row.currentSales, '指名（当月）': row.currentNomination } : {}),
+    ...(showCumulative ? { '売上（累計平均）': row.cumSales, '指名（累計平均）': row.cumNomination } : {}),
   }))
 
   return (
@@ -1881,25 +1890,25 @@ const Slide15StaffMomChart1 = ({selectedStores, selectedStaffNames}: StoreFilter
         </div>
       </div>
       {chartData.length === 0 ? (
-        <div className="flex items-center justify-center" style={{height: '450px'}}>
+        <div className="flex items-center justify-center" style={{ height: '450px' }}>
           <p className="text-gray-500 text-lg">スタッフデータがありません</p>
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={480}>
-          <ComposedChart data={chartData} margin={{top: 20}}>
+          <ComposedChart data={chartData} margin={{ top: 20 }}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" style={{fontSize: '11px'}} angle={-30} textAnchor="end" height={80} />
-            <YAxis yAxisId="left" label={{value: '売上金額', angle: -90, position: 'insideLeft'}} style={{fontSize: '11px'}} />
-            <YAxis yAxisId="right" orientation="right" label={{value: '指名件数', angle: 90, position: 'insideRight'}} style={{fontSize: '11px'}} />
+            <XAxis dataKey="name" style={{ fontSize: '11px' }} angle={-30} textAnchor="end" height={80} />
+            <YAxis yAxisId="left" label={{ value: '売上金額', angle: -90, position: 'insideLeft' }} style={{ fontSize: '11px' }} />
+            <YAxis yAxisId="right" orientation="right" label={{ value: '指名件数', angle: 90, position: 'insideRight' }} style={{ fontSize: '11px' }} />
             <Tooltip formatter={(value: number, name: string) => {
               if (name.includes('売上')) return [`¥${value.toLocaleString()}`, name]
               return [value, name]
             }} />
-            <Legend wrapperStyle={{fontSize: '12px'}} />
+            <Legend wrapperStyle={{ fontSize: '12px' }} />
             {showCurrent && <Bar yAxisId="left" dataKey="売上（当月）" fill="#DC3545" barSize={20} />}
             {showCumulative && <Bar yAxisId="left" dataKey="売上（累計平均）" fill="#F4A460" barSize={20} />}
-            {showCurrent && <Line yAxisId="right" type="monotone" dataKey="指名（当月）" stroke="#1a3a5c" strokeWidth={2} dot={{r: 4}} />}
-            {showCumulative && <Line yAxisId="right" type="monotone" dataKey="指名（累計平均）" stroke="#87CEEB" strokeWidth={2} dot={{r: 4, fill: '#fff'}} />}
+            {showCurrent && <Line yAxisId="right" type="monotone" dataKey="指名（当月）" stroke="#1a3a5c" strokeWidth={2} dot={{ r: 4 }} />}
+            {showCumulative && <Line yAxisId="right" type="monotone" dataKey="指名（累計平均）" stroke="#87CEEB" strokeWidth={2} dot={{ r: 4, fill: '#fff' }} />}
           </ComposedChart>
         </ResponsiveContainer>
       )}
@@ -1911,8 +1920,8 @@ const Slide15StaffMomChart1 = ({selectedStores, selectedStaffNames}: StoreFilter
 // スライド16: スタッフ別先月比② テーブル（再来率/客単価）
 // ============================================================
 
-const Slide16StaffMomTable2 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
-  const {monthlyData, currentYearMonth, allMonthlyData} = useDataContext()
+const Slide16StaffMomTable2 = ({ selectedStores, selectedStaffNames }: StoreFilterProps) => {
+  const { monthlyData, currentYearMonth, allMonthlyData } = useDataContext()
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
   const [sortMetric, setSortMetric] = useState<ReturnUnitKey>('currentUnitPrice')
   const rawRows = useMemo(() => buildStaffMomData(currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData), [currentYearMonth, monthlyData, selectedStores, selectedStaffNames, allMonthlyData])
@@ -1933,7 +1942,7 @@ const Slide16StaffMomTable2 = ({selectedStores, selectedStaffNames}: StoreFilter
         />
       </div>
       {rows.length === 0 ? (
-        <div className="flex items-center justify-center" style={{height: '400px'}}>
+        <div className="flex items-center justify-center" style={{ height: '400px' }}>
           <p className="text-gray-500 text-lg">スタッフデータがありません</p>
         </div>
       ) : (
@@ -1976,8 +1985,8 @@ const Slide16StaffMomTable2 = ({selectedStores, selectedStaffNames}: StoreFilter
 // スライド17: スタッフ別先月比② グラフ（再来率/客単価）
 // ============================================================
 
-const Slide17StaffMomChart2 = ({selectedStores, selectedStaffNames}: StoreFilterProps) => {
-  const {monthlyData, currentYearMonth, allMonthlyData} = useDataContext()
+const Slide17StaffMomChart2 = ({ selectedStores, selectedStaffNames }: StoreFilterProps) => {
+  const { monthlyData, currentYearMonth, allMonthlyData } = useDataContext()
   const [showCurrent, setShowCurrent] = useState(true)
   const [showCumulative, setShowCumulative] = useState(false)
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
@@ -1987,8 +1996,8 @@ const Slide17StaffMomChart2 = ({selectedStores, selectedStaffNames}: StoreFilter
 
   const chartData = rows.map((row) => ({
     name: row.staffName,
-    ...(showCurrent ? {'客単価（当月）': row.currentUnitPrice, '再来率（当月）': row.currentReturnRate} : {}),
-    ...(showCumulative ? {'客単価（累計平均）': row.cumUnitPrice, '再来率（累計平均）': row.cumReturnRate} : {}),
+    ...(showCurrent ? { '客単価（当月）': row.currentUnitPrice, '再来率（当月）': row.currentReturnRate } : {}),
+    ...(showCumulative ? { '客単価（累計平均）': row.cumUnitPrice, '再来率（累計平均）': row.cumReturnRate } : {}),
   }))
 
   return (
@@ -2007,26 +2016,146 @@ const Slide17StaffMomChart2 = ({selectedStores, selectedStaffNames}: StoreFilter
         </div>
       </div>
       {chartData.length === 0 ? (
-        <div className="flex items-center justify-center" style={{height: '450px'}}>
+        <div className="flex items-center justify-center" style={{ height: '450px' }}>
           <p className="text-gray-500 text-lg">スタッフデータがありません</p>
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={480}>
-          <ComposedChart data={chartData} margin={{top: 20}}>
+          <ComposedChart data={chartData} margin={{ top: 20 }}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" style={{fontSize: '11px'}} angle={-30} textAnchor="end" height={80} />
-            <YAxis yAxisId="left" label={{value: '客単価', angle: -90, position: 'insideLeft'}} style={{fontSize: '11px'}} />
-            <YAxis yAxisId="right" orientation="right" label={{value: '再来率（%）', angle: 90, position: 'insideRight'}} style={{fontSize: '11px'}} />
+            <XAxis dataKey="name" style={{ fontSize: '11px' }} angle={-30} textAnchor="end" height={80} />
+            <YAxis yAxisId="left" label={{ value: '客単価', angle: -90, position: 'insideLeft' }} style={{ fontSize: '11px' }} />
+            <YAxis yAxisId="right" orientation="right" label={{ value: '再来率（%）', angle: 90, position: 'insideRight' }} style={{ fontSize: '11px' }} />
             <Tooltip formatter={(value: number, name: string) => {
               if (name.includes('客単価')) return [`¥${value.toLocaleString()}`, name]
               return [`${value}%`, name]
             }} />
-            <Legend wrapperStyle={{fontSize: '12px'}} />
+            <Legend wrapperStyle={{ fontSize: '12px' }} />
             {showCurrent && <Bar yAxisId="left" dataKey="客単価（当月）" fill="#DC3545" barSize={20} />}
             {showCumulative && <Bar yAxisId="left" dataKey="客単価（累計平均）" fill="#F4A460" barSize={20} />}
-            {showCurrent && <Line yAxisId="right" type="monotone" dataKey="再来率（当月）" stroke="#1a3a5c" strokeWidth={2} dot={{r: 4}} />}
-            {showCumulative && <Line yAxisId="right" type="monotone" dataKey="再来率（累計平均）" stroke="#87CEEB" strokeWidth={2} dot={{r: 4, fill: '#fff'}} />}
+            {showCurrent && <Line yAxisId="right" type="monotone" dataKey="再来率（当月）" stroke="#1a3a5c" strokeWidth={2} dot={{ r: 4 }} />}
+            {showCumulative && <Line yAxisId="right" type="monotone" dataKey="再来率（累計平均）" stroke="#87CEEB" strokeWidth={2} dot={{ r: 4, fill: '#fff' }} />}
           </ComposedChart>
+        </ResponsiveContainer>
+      )}
+    </div>
+  )
+}
+
+// ============================================================
+// メニュー構成割合グラフ: スタッフ別メニュー構成（100%積み上げ棒グラフ）
+// ============================================================
+
+const SlideMenuCompositionChart = ({ selectedStores, selectedStaffNames }: StoreFilterProps) => {
+  const { monthlyData, availableMonths, allMonthlyData } = useDataContext()
+  const [selectedMonth, setSelectedMonth] = useState<YearMonth>(monthlyData.yearMonth)
+
+  const selectedMonthData = allMonthlyData[selectedMonth]
+  const staffMenuRecords = selectedMonthData?.importedData?.staffMenuRecords ?? []
+
+  // 店舗・スタッフフィルタ適用後のスタッフ名一覧
+  const filteredStaffNames = staffMenuRecords
+    .filter((r) => selectedStores.includes(r.storeName))
+    .reduce<string[]>((acc, r) => {
+      if (!acc.includes(r.staffName)) acc.push(r.staffName)
+      return acc
+    }, [])
+    .filter((name) => selectedStaffNames.length === 0 || selectedStaffNames.includes(name))
+
+  // recharts用データに変換（客数を正規化して100%積み上げ）
+  // `${category}_count` キーに実客数も保持してTooltipで表示
+  const chartData = filteredStaffNames.map((staffName) => {
+    const menus = staffMenuRecords.filter((r) => r.staffName === staffName)
+    const totalMenuCustomers = menus.reduce((sum, m) => sum + m.customerCount, 0)
+
+    const entry: Record<string, string | number> = { name: staffName }
+    for (const category of MENU_CATEGORIES) {
+      const menu = menus.find((m) => m.menuCategory === category)
+      const count = menu?.customerCount ?? 0
+      entry[category] =
+        totalMenuCustomers > 0 ? Math.round((count / totalMenuCustomers) * 1000) / 10 : 0
+      entry[`${category}_count`] = count
+    }
+    return entry
+  })
+
+  return (
+    <div className="p-12">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-3xl font-bold text-gray-800">メニュー構成割合（スタッフ別）</h2>
+        <select
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(e.target.value as YearMonth)}
+          className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500"
+        >
+          {availableMonths.map((month) => (
+            <option key={month} value={month}>
+              {formatYearMonth(month)}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {chartData.length === 0 ? (
+        <div className="flex items-center justify-center" style={{ height: '450px' }}>
+          <p className="text-gray-500">
+            {selectedStores.length === 0 ? '店舗を選択してください' : 'メニューデータがありません'}
+          </p>
+        </div>
+      ) : (
+        <ResponsiveContainer width="100%" height={Math.max(300, chartData.length * 48 + 60)}>
+          <BarChart data={chartData} layout="vertical" margin={{ top: 10, right: 40, bottom: 20, left: 80 }}>
+            <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+            <XAxis
+              type="number"
+              domain={[0, 100]}
+              tickFormatter={(v: number) => `${v}%`}
+              style={{ fontSize: '12px' }}
+            />
+            <YAxis
+              type="category"
+              dataKey="name"
+              style={{ fontSize: '12px' }}
+              width={75}
+            />
+            <Tooltip
+              content={({ active, payload, label }) => {
+                if (!active || !payload?.length) return null
+                return (
+                  <div className="bg-white border border-gray-200 rounded shadow-md p-3 text-sm">
+                    <p className="font-bold mb-2">{label}</p>
+                    {payload.map((p) => {
+                      const count = p.payload[`${p.name}_count`] as number
+                      return (
+                        <p key={p.name} style={{ color: p.fill }} className="leading-5">
+                          {p.name}: {(p.value as number).toFixed(1)}%（{count}人）
+                        </p>
+                      )
+                    })}
+                  </div>
+                )
+              }}
+            />
+            <Legend />
+            {MENU_CATEGORIES.map((category) => (
+              <Bar key={category} dataKey={category} stackId="menu" fill={MENU_COLORS[category]} name={category}>
+                <LabelList
+                  dataKey={category}
+                  content={(props: any) => {
+                    const { x, y, width, height, value, index } = props
+                    if (!value || value < 7 || width < 32) return null
+                    const count = (chartData[index]?.[`${category}_count`] as number) ?? 0
+                    return (
+                      <text textAnchor="middle" fill="#fff" fontSize={10} fontWeight="bold">
+                        <tspan x={x + width / 2} y={y + height / 2 - 5}>{(value as number).toFixed(0)}%</tspan>
+                        <tspan x={x + width / 2} y={y + height / 2 + 8}>{count}人</tspan>
+                      </text>
+                    )
+                  }}
+                />
+              </Bar>
+            ))}
+          </BarChart>
         </ResponsiveContainer>
       )}
     </div>
@@ -2038,7 +2167,7 @@ const Slide17StaffMomChart2 = ({selectedStores, selectedStaffNames}: StoreFilter
 // ============================================================
 
 const Slide18CustomerVoice = () => {
-  const {monthlyData} = useDataContext()
+  const { monthlyData } = useDataContext()
   const customerVoice = monthlyData.manualData.customerVoice.content
 
   return (

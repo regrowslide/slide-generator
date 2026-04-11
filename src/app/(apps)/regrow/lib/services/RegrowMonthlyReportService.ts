@@ -26,7 +26,10 @@ import type {
   StoreKpi,
   StaffManualData as StaffManualDataType,
   CustomerVoice,
+  StaffMenuRecord,
+  MenuCategory,
 } from '../../types'
+import type {RgStaffMenuRecord} from '@prisma/generated/prisma/client'
 
 type RgMonthlyReportWithRelations = RgMonthlyReport & {
   RgStaffRecord: (RgStaffRecord & {RgStore: RgStore})[]
@@ -34,6 +37,7 @@ type RgMonthlyReportWithRelations = RgMonthlyReport & {
   RgStoreKpi: (RgStoreKpi & {RgStore: RgStore})[]
   RgStaffManualData: (RgStaffManualData & {RgStore: RgStore})[]
   RgCustomerVoice: RgCustomerVoice[]
+  RgStaffMenuRecord: (RgStaffMenuRecord & {RgStore: RgStore})[]
 }
 
 export class RegrowMonthlyReportService {
@@ -81,6 +85,16 @@ export class RegrowMonthlyReportService {
       content: report.RgCustomerVoice[0]?.content ?? '',
     }
 
+    const staffMenuRecords: StaffMenuRecord[] = report.RgStaffMenuRecord.map((m) => ({
+      staffName: m.staffName,
+      storeName: m.RgStore.name as StoreName,
+      menuCategory: m.menuCategory as MenuCategory,
+      sales: m.sales,
+      customerCount: m.customerCount,
+      ratio: m.ratio,
+      unitPrice: m.unitPrice,
+    }))
+
     return {
       yearMonth: report.yearMonth,
       importedData:
@@ -88,6 +102,7 @@ export class RegrowMonthlyReportService {
           ? {
               staffRecords,
               storeTotals,
+              staffMenuRecords,
               importedAt: report.importedAt ?? new Date(),
               fileName: report.importedFileName ?? '',
             }
@@ -123,6 +138,9 @@ export class RegrowMonthlyReportService {
           orderBy: {sortOrder: 'asc'},
         },
         RgCustomerVoice: true,
+        RgStaffMenuRecord: {
+          include: {RgStore: true},
+        },
       },
     })
 
@@ -150,6 +168,7 @@ export class RegrowMonthlyReportService {
     yearMonth: string,
     staffRecords: StaffRecord[],
     storeTotals: StoreTotals[],
+    staffMenuRecords: StaffMenuRecord[],
     nameToUserIdOverrides?: Record<string, string>
   ): Promise<void> {
     const report = await RegrowMonthlyReportService.upsertMonthlyReport(yearMonth)
@@ -203,6 +222,9 @@ export class RegrowMonthlyReportService {
     await prisma.rgStoreTotals.deleteMany({
       where: {monthlyReportId: report.id, storeId: {in: importStoreIds}},
     })
+    await prisma.rgStaffMenuRecord.deleteMany({
+      where: {monthlyReportId: report.id, storeId: {in: importStoreIds}},
+    })
 
     await prisma.rgStaffRecord.createMany({
       data: staffRecords.map((r) => {
@@ -238,6 +260,24 @@ export class RegrowMonthlyReportService {
         }
       }),
     })
+
+    if (staffMenuRecords.length > 0) {
+      await prisma.rgStaffMenuRecord.createMany({
+        data: staffMenuRecords.map((m) => {
+          const storeId = storeMap.get(m.storeName)!
+          return {
+            monthlyReportId: report.id,
+            staffName: m.staffName,
+            storeId,
+            menuCategory: m.menuCategory,
+            sales: m.sales,
+            customerCount: m.customerCount,
+            ratio: m.ratio,
+            unitPrice: m.unitPrice,
+          }
+        }),
+      })
+    }
 
     await prisma.rgMonthlyReport.update({
       where: {id: report.id},

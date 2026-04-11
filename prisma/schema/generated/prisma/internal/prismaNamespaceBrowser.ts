@@ -58,6 +58,7 @@ export const ModelName = {
   RgStoreKpi: 'RgStoreKpi',
   RgStaffManualData: 'RgStaffManualData',
   RgCustomerVoice: 'RgCustomerVoice',
+  RgStaffMenuRecord: 'RgStaffMenuRecord',
   Store: 'Store',
   User: 'User',
   Session: 'Session',
@@ -196,6 +197,23 @@ export const RgCustomerVoiceScalarFieldEnum = {
 } as const
 
 export type RgCustomerVoiceScalarFieldEnum = (typeof RgCustomerVoiceScalarFieldEnum)[keyof typeof RgCustomerVoiceScalarFieldEnum]
+
+
+export const RgStaffMenuRecordScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  monthlyReportId: 'monthlyReportId',
+  staffName: 'staffName',
+  storeId: 'storeId',
+  menuCategory: 'menuCategory',
+  sales: 'sales',
+  customerCount: 'customerCount',
+  ratio: 'ratio',
+  unitPrice: 'unitPrice'
+} as const
+
+export type RgStaffMenuRecordScalarFieldEnum = (typeof RgStaffMenuRecordScalarFieldEnum)[keyof typeof RgStaffMenuRecordScalarFieldEnum]
 
 
 export const StoreScalarFieldEnum = {

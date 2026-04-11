@@ -241,6 +241,7 @@ export type RgMonthlyReportWhereInput = {
   RgStoreKpi?: Prisma.RgStoreKpiListRelationFilter
   RgStaffManualData?: Prisma.RgStaffManualDataListRelationFilter
   RgCustomerVoice?: Prisma.RgCustomerVoiceListRelationFilter
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordListRelationFilter
 }
 
 export type RgMonthlyReportOrderByWithRelationInput = {
@@ -256,6 +257,7 @@ export type RgMonthlyReportOrderByWithRelationInput = {
   RgStoreKpi?: Prisma.RgStoreKpiOrderByRelationAggregateInput
   RgStaffManualData?: Prisma.RgStaffManualDataOrderByRelationAggregateInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceOrderByRelationAggregateInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordOrderByRelationAggregateInput
 }
 
 export type RgMonthlyReportWhereUniqueInput = Prisma.AtLeast<{
@@ -274,6 +276,7 @@ export type RgMonthlyReportWhereUniqueInput = Prisma.AtLeast<{
   RgStoreKpi?: Prisma.RgStoreKpiListRelationFilter
   RgStaffManualData?: Prisma.RgStaffManualDataListRelationFilter
   RgCustomerVoice?: Prisma.RgCustomerVoiceListRelationFilter
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordListRelationFilter
 }, "id" | "yearMonth">
 
 export type RgMonthlyReportOrderByWithAggregationInput = {
@@ -316,6 +319,7 @@ export type RgMonthlyReportCreateInput = {
   RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgMonthlyReportInput
   RgStaffManualData?: Prisma.RgStaffManualDataCreateNestedManyWithoutRgMonthlyReportInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceCreateNestedManyWithoutRgMonthlyReportInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordCreateNestedManyWithoutRgMonthlyReportInput
 }
 
 export type RgMonthlyReportUncheckedCreateInput = {
@@ -331,6 +335,7 @@ export type RgMonthlyReportUncheckedCreateInput = {
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceUncheckedCreateNestedManyWithoutRgMonthlyReportInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedCreateNestedManyWithoutRgMonthlyReportInput
 }
 
 export type RgMonthlyReportUpdateInput = {
@@ -345,6 +350,7 @@ export type RgMonthlyReportUpdateInput = {
   RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgMonthlyReportNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUpdateManyWithoutRgMonthlyReportNestedInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceUpdateManyWithoutRgMonthlyReportNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUpdateManyWithoutRgMonthlyReportNestedInput
 }
 
 export type RgMonthlyReportUncheckedUpdateInput = {
@@ -360,6 +366,7 @@ export type RgMonthlyReportUncheckedUpdateInput = {
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
 }
 
 export type RgMonthlyReportCreateManyInput = {
@@ -510,6 +517,20 @@ export type RgMonthlyReportUpdateOneRequiredWithoutRgCustomerVoiceNestedInput = 
   update?: Prisma.XOR<Prisma.XOR<Prisma.RgMonthlyReportUpdateToOneWithWhereWithoutRgCustomerVoiceInput, Prisma.RgMonthlyReportUpdateWithoutRgCustomerVoiceInput>, Prisma.RgMonthlyReportUncheckedUpdateWithoutRgCustomerVoiceInput>
 }
 
+export type RgMonthlyReportCreateNestedOneWithoutRgStaffMenuRecordInput = {
+  create?: Prisma.XOR<Prisma.RgMonthlyReportCreateWithoutRgStaffMenuRecordInput, Prisma.RgMonthlyReportUncheckedCreateWithoutRgStaffMenuRecordInput>
+  connectOrCreate?: Prisma.RgMonthlyReportCreateOrConnectWithoutRgStaffMenuRecordInput
+  connect?: Prisma.RgMonthlyReportWhereUniqueInput
+}
+
+export type RgMonthlyReportUpdateOneRequiredWithoutRgStaffMenuRecordNestedInput = {
+  create?: Prisma.XOR<Prisma.RgMonthlyReportCreateWithoutRgStaffMenuRecordInput, Prisma.RgMonthlyReportUncheckedCreateWithoutRgStaffMenuRecordInput>
+  connectOrCreate?: Prisma.RgMonthlyReportCreateOrConnectWithoutRgStaffMenuRecordInput
+  upsert?: Prisma.RgMonthlyReportUpsertWithoutRgStaffMenuRecordInput
+  connect?: Prisma.RgMonthlyReportWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RgMonthlyReportUpdateToOneWithWhereWithoutRgStaffMenuRecordInput, Prisma.RgMonthlyReportUpdateWithoutRgStaffMenuRecordInput>, Prisma.RgMonthlyReportUncheckedUpdateWithoutRgStaffMenuRecordInput>
+}
+
 export type RgMonthlyReportCreateWithoutRgStaffRecordInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
@@ -521,6 +542,7 @@ export type RgMonthlyReportCreateWithoutRgStaffRecordInput = {
   RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgMonthlyReportInput
   RgStaffManualData?: Prisma.RgStaffManualDataCreateNestedManyWithoutRgMonthlyReportInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceCreateNestedManyWithoutRgMonthlyReportInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordCreateNestedManyWithoutRgMonthlyReportInput
 }
 
 export type RgMonthlyReportUncheckedCreateWithoutRgStaffRecordInput = {
@@ -535,6 +557,7 @@ export type RgMonthlyReportUncheckedCreateWithoutRgStaffRecordInput = {
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceUncheckedCreateNestedManyWithoutRgMonthlyReportInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedCreateNestedManyWithoutRgMonthlyReportInput
 }
 
 export type RgMonthlyReportCreateOrConnectWithoutRgStaffRecordInput = {
@@ -564,6 +587,7 @@ export type RgMonthlyReportUpdateWithoutRgStaffRecordInput = {
   RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgMonthlyReportNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUpdateManyWithoutRgMonthlyReportNestedInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceUpdateManyWithoutRgMonthlyReportNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUpdateManyWithoutRgMonthlyReportNestedInput
 }
 
 export type RgMonthlyReportUncheckedUpdateWithoutRgStaffRecordInput = {
@@ -578,6 +602,7 @@ export type RgMonthlyReportUncheckedUpdateWithoutRgStaffRecordInput = {
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
 }
 
 export type RgMonthlyReportCreateWithoutRgStoreTotalsInput = {
@@ -591,6 +616,7 @@ export type RgMonthlyReportCreateWithoutRgStoreTotalsInput = {
   RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgMonthlyReportInput
   RgStaffManualData?: Prisma.RgStaffManualDataCreateNestedManyWithoutRgMonthlyReportInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceCreateNestedManyWithoutRgMonthlyReportInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordCreateNestedManyWithoutRgMonthlyReportInput
 }
 
 export type RgMonthlyReportUncheckedCreateWithoutRgStoreTotalsInput = {
@@ -605,6 +631,7 @@ export type RgMonthlyReportUncheckedCreateWithoutRgStoreTotalsInput = {
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceUncheckedCreateNestedManyWithoutRgMonthlyReportInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedCreateNestedManyWithoutRgMonthlyReportInput
 }
 
 export type RgMonthlyReportCreateOrConnectWithoutRgStoreTotalsInput = {
@@ -634,6 +661,7 @@ export type RgMonthlyReportUpdateWithoutRgStoreTotalsInput = {
   RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgMonthlyReportNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUpdateManyWithoutRgMonthlyReportNestedInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceUpdateManyWithoutRgMonthlyReportNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUpdateManyWithoutRgMonthlyReportNestedInput
 }
 
 export type RgMonthlyReportUncheckedUpdateWithoutRgStoreTotalsInput = {
@@ -648,6 +676,7 @@ export type RgMonthlyReportUncheckedUpdateWithoutRgStoreTotalsInput = {
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
 }
 
 export type RgMonthlyReportCreateWithoutRgStoreKpiInput = {
@@ -661,6 +690,7 @@ export type RgMonthlyReportCreateWithoutRgStoreKpiInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsCreateNestedManyWithoutRgMonthlyReportInput
   RgStaffManualData?: Prisma.RgStaffManualDataCreateNestedManyWithoutRgMonthlyReportInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceCreateNestedManyWithoutRgMonthlyReportInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordCreateNestedManyWithoutRgMonthlyReportInput
 }
 
 export type RgMonthlyReportUncheckedCreateWithoutRgStoreKpiInput = {
@@ -675,6 +705,7 @@ export type RgMonthlyReportUncheckedCreateWithoutRgStoreKpiInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceUncheckedCreateNestedManyWithoutRgMonthlyReportInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedCreateNestedManyWithoutRgMonthlyReportInput
 }
 
 export type RgMonthlyReportCreateOrConnectWithoutRgStoreKpiInput = {
@@ -704,6 +735,7 @@ export type RgMonthlyReportUpdateWithoutRgStoreKpiInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsUpdateManyWithoutRgMonthlyReportNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUpdateManyWithoutRgMonthlyReportNestedInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceUpdateManyWithoutRgMonthlyReportNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUpdateManyWithoutRgMonthlyReportNestedInput
 }
 
 export type RgMonthlyReportUncheckedUpdateWithoutRgStoreKpiInput = {
@@ -718,6 +750,7 @@ export type RgMonthlyReportUncheckedUpdateWithoutRgStoreKpiInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
 }
 
 export type RgMonthlyReportCreateWithoutRgStaffManualDataInput = {
@@ -731,6 +764,7 @@ export type RgMonthlyReportCreateWithoutRgStaffManualDataInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgMonthlyReportInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceCreateNestedManyWithoutRgMonthlyReportInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordCreateNestedManyWithoutRgMonthlyReportInput
 }
 
 export type RgMonthlyReportUncheckedCreateWithoutRgStaffManualDataInput = {
@@ -745,6 +779,7 @@ export type RgMonthlyReportUncheckedCreateWithoutRgStaffManualDataInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceUncheckedCreateNestedManyWithoutRgMonthlyReportInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedCreateNestedManyWithoutRgMonthlyReportInput
 }
 
 export type RgMonthlyReportCreateOrConnectWithoutRgStaffManualDataInput = {
@@ -774,6 +809,7 @@ export type RgMonthlyReportUpdateWithoutRgStaffManualDataInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgMonthlyReportNestedInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceUpdateManyWithoutRgMonthlyReportNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUpdateManyWithoutRgMonthlyReportNestedInput
 }
 
 export type RgMonthlyReportUncheckedUpdateWithoutRgStaffManualDataInput = {
@@ -788,6 +824,7 @@ export type RgMonthlyReportUncheckedUpdateWithoutRgStaffManualDataInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgCustomerVoice?: Prisma.RgCustomerVoiceUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
 }
 
 export type RgMonthlyReportCreateWithoutRgCustomerVoiceInput = {
@@ -801,6 +838,7 @@ export type RgMonthlyReportCreateWithoutRgCustomerVoiceInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgMonthlyReportInput
   RgStaffManualData?: Prisma.RgStaffManualDataCreateNestedManyWithoutRgMonthlyReportInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordCreateNestedManyWithoutRgMonthlyReportInput
 }
 
 export type RgMonthlyReportUncheckedCreateWithoutRgCustomerVoiceInput = {
@@ -815,6 +853,7 @@ export type RgMonthlyReportUncheckedCreateWithoutRgCustomerVoiceInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutRgMonthlyReportInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedCreateNestedManyWithoutRgMonthlyReportInput
 }
 
 export type RgMonthlyReportCreateOrConnectWithoutRgCustomerVoiceInput = {
@@ -844,6 +883,7 @@ export type RgMonthlyReportUpdateWithoutRgCustomerVoiceInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgMonthlyReportNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUpdateManyWithoutRgMonthlyReportNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUpdateManyWithoutRgMonthlyReportNestedInput
 }
 
 export type RgMonthlyReportUncheckedUpdateWithoutRgCustomerVoiceInput = {
@@ -858,6 +898,81 @@ export type RgMonthlyReportUncheckedUpdateWithoutRgCustomerVoiceInput = {
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
+  RgStaffMenuRecord?: Prisma.RgStaffMenuRecordUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
+}
+
+export type RgMonthlyReportCreateWithoutRgStaffMenuRecordInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  yearMonth: string
+  importedAt?: Date | string | null
+  importedFileName?: string | null
+  RgStaffRecord?: Prisma.RgStaffRecordCreateNestedManyWithoutRgMonthlyReportInput
+  RgStoreTotals?: Prisma.RgStoreTotalsCreateNestedManyWithoutRgMonthlyReportInput
+  RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgMonthlyReportInput
+  RgStaffManualData?: Prisma.RgStaffManualDataCreateNestedManyWithoutRgMonthlyReportInput
+  RgCustomerVoice?: Prisma.RgCustomerVoiceCreateNestedManyWithoutRgMonthlyReportInput
+}
+
+export type RgMonthlyReportUncheckedCreateWithoutRgStaffMenuRecordInput = {
+  id?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  sortOrder?: number
+  yearMonth: string
+  importedAt?: Date | string | null
+  importedFileName?: string | null
+  RgStaffRecord?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutRgMonthlyReportInput
+  RgStoreTotals?: Prisma.RgStoreTotalsUncheckedCreateNestedManyWithoutRgMonthlyReportInput
+  RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgMonthlyReportInput
+  RgStaffManualData?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutRgMonthlyReportInput
+  RgCustomerVoice?: Prisma.RgCustomerVoiceUncheckedCreateNestedManyWithoutRgMonthlyReportInput
+}
+
+export type RgMonthlyReportCreateOrConnectWithoutRgStaffMenuRecordInput = {
+  where: Prisma.RgMonthlyReportWhereUniqueInput
+  create: Prisma.XOR<Prisma.RgMonthlyReportCreateWithoutRgStaffMenuRecordInput, Prisma.RgMonthlyReportUncheckedCreateWithoutRgStaffMenuRecordInput>
+}
+
+export type RgMonthlyReportUpsertWithoutRgStaffMenuRecordInput = {
+  update: Prisma.XOR<Prisma.RgMonthlyReportUpdateWithoutRgStaffMenuRecordInput, Prisma.RgMonthlyReportUncheckedUpdateWithoutRgStaffMenuRecordInput>
+  create: Prisma.XOR<Prisma.RgMonthlyReportCreateWithoutRgStaffMenuRecordInput, Prisma.RgMonthlyReportUncheckedCreateWithoutRgStaffMenuRecordInput>
+  where?: Prisma.RgMonthlyReportWhereInput
+}
+
+export type RgMonthlyReportUpdateToOneWithWhereWithoutRgStaffMenuRecordInput = {
+  where?: Prisma.RgMonthlyReportWhereInput
+  data: Prisma.XOR<Prisma.RgMonthlyReportUpdateWithoutRgStaffMenuRecordInput, Prisma.RgMonthlyReportUncheckedUpdateWithoutRgStaffMenuRecordInput>
+}
+
+export type RgMonthlyReportUpdateWithoutRgStaffMenuRecordInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  yearMonth?: Prisma.StringFieldUpdateOperationsInput | string
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  importedFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  RgStaffRecord?: Prisma.RgStaffRecordUpdateManyWithoutRgMonthlyReportNestedInput
+  RgStoreTotals?: Prisma.RgStoreTotalsUpdateManyWithoutRgMonthlyReportNestedInput
+  RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgMonthlyReportNestedInput
+  RgStaffManualData?: Prisma.RgStaffManualDataUpdateManyWithoutRgMonthlyReportNestedInput
+  RgCustomerVoice?: Prisma.RgCustomerVoiceUpdateManyWithoutRgMonthlyReportNestedInput
+}
+
+export type RgMonthlyReportUncheckedUpdateWithoutRgStaffMenuRecordInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sortOrder?: Prisma.FloatFieldUpdateOperationsInput | number
+  yearMonth?: Prisma.StringFieldUpdateOperationsInput | string
+  importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  importedFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  RgStaffRecord?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
+  RgStoreTotals?: Prisma.RgStoreTotalsUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
+  RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
+  RgStaffManualData?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
+  RgCustomerVoice?: Prisma.RgCustomerVoiceUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
 }
 
 
@@ -871,6 +986,7 @@ export type RgMonthlyReportCountOutputType = {
   RgStoreKpi: number
   RgStaffManualData: number
   RgCustomerVoice: number
+  RgStaffMenuRecord: number
 }
 
 export type RgMonthlyReportCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -879,6 +995,7 @@ export type RgMonthlyReportCountOutputTypeSelect<ExtArgs extends runtime.Types.E
   RgStoreKpi?: boolean | RgMonthlyReportCountOutputTypeCountRgStoreKpiArgs
   RgStaffManualData?: boolean | RgMonthlyReportCountOutputTypeCountRgStaffManualDataArgs
   RgCustomerVoice?: boolean | RgMonthlyReportCountOutputTypeCountRgCustomerVoiceArgs
+  RgStaffMenuRecord?: boolean | RgMonthlyReportCountOutputTypeCountRgStaffMenuRecordArgs
 }
 
 /**
@@ -926,6 +1043,13 @@ export type RgMonthlyReportCountOutputTypeCountRgCustomerVoiceArgs<ExtArgs exten
   where?: Prisma.RgCustomerVoiceWhereInput
 }
 
+/**
+ * RgMonthlyReportCountOutputType without action
+ */
+export type RgMonthlyReportCountOutputTypeCountRgStaffMenuRecordArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RgStaffMenuRecordWhereInput
+}
+
 
 export type RgMonthlyReportSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -940,6 +1064,7 @@ export type RgMonthlyReportSelect<ExtArgs extends runtime.Types.Extensions.Inter
   RgStoreKpi?: boolean | Prisma.RgMonthlyReport$RgStoreKpiArgs<ExtArgs>
   RgStaffManualData?: boolean | Prisma.RgMonthlyReport$RgStaffManualDataArgs<ExtArgs>
   RgCustomerVoice?: boolean | Prisma.RgMonthlyReport$RgCustomerVoiceArgs<ExtArgs>
+  RgStaffMenuRecord?: boolean | Prisma.RgMonthlyReport$RgStaffMenuRecordArgs<ExtArgs>
   _count?: boolean | Prisma.RgMonthlyReportCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["rgMonthlyReport"]>
 
@@ -980,6 +1105,7 @@ export type RgMonthlyReportInclude<ExtArgs extends runtime.Types.Extensions.Inte
   RgStoreKpi?: boolean | Prisma.RgMonthlyReport$RgStoreKpiArgs<ExtArgs>
   RgStaffManualData?: boolean | Prisma.RgMonthlyReport$RgStaffManualDataArgs<ExtArgs>
   RgCustomerVoice?: boolean | Prisma.RgMonthlyReport$RgCustomerVoiceArgs<ExtArgs>
+  RgStaffMenuRecord?: boolean | Prisma.RgMonthlyReport$RgStaffMenuRecordArgs<ExtArgs>
   _count?: boolean | Prisma.RgMonthlyReportCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type RgMonthlyReportIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -993,6 +1119,7 @@ export type $RgMonthlyReportPayload<ExtArgs extends runtime.Types.Extensions.Int
     RgStoreKpi: Prisma.$RgStoreKpiPayload<ExtArgs>[]
     RgStaffManualData: Prisma.$RgStaffManualDataPayload<ExtArgs>[]
     RgCustomerVoice: Prisma.$RgCustomerVoicePayload<ExtArgs>[]
+    RgStaffMenuRecord: Prisma.$RgStaffMenuRecordPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1401,6 +1528,7 @@ export interface Prisma__RgMonthlyReportClient<T, Null = never, ExtArgs extends 
   RgStoreKpi<T extends Prisma.RgMonthlyReport$RgStoreKpiArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RgMonthlyReport$RgStoreKpiArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RgStoreKpiPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   RgStaffManualData<T extends Prisma.RgMonthlyReport$RgStaffManualDataArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RgMonthlyReport$RgStaffManualDataArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RgStaffManualDataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   RgCustomerVoice<T extends Prisma.RgMonthlyReport$RgCustomerVoiceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RgMonthlyReport$RgCustomerVoiceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RgCustomerVoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  RgStaffMenuRecord<T extends Prisma.RgMonthlyReport$RgStaffMenuRecordArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RgMonthlyReport$RgStaffMenuRecordArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RgStaffMenuRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1947,6 +2075,30 @@ export type RgMonthlyReport$RgCustomerVoiceArgs<ExtArgs extends runtime.Types.Ex
   take?: number
   skip?: number
   distinct?: Prisma.RgCustomerVoiceScalarFieldEnum | Prisma.RgCustomerVoiceScalarFieldEnum[]
+}
+
+/**
+ * RgMonthlyReport.RgStaffMenuRecord
+ */
+export type RgMonthlyReport$RgStaffMenuRecordArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RgStaffMenuRecord
+   */
+  select?: Prisma.RgStaffMenuRecordSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RgStaffMenuRecord
+   */
+  omit?: Prisma.RgStaffMenuRecordOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RgStaffMenuRecordInclude<ExtArgs> | null
+  where?: Prisma.RgStaffMenuRecordWhereInput
+  orderBy?: Prisma.RgStaffMenuRecordOrderByWithRelationInput | Prisma.RgStaffMenuRecordOrderByWithRelationInput[]
+  cursor?: Prisma.RgStaffMenuRecordWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RgStaffMenuRecordScalarFieldEnum | Prisma.RgStaffMenuRecordScalarFieldEnum[]
 }
 
 /**

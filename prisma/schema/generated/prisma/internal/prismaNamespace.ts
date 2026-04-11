@@ -391,6 +391,7 @@ export const ModelName = {
   RgStoreKpi: 'RgStoreKpi',
   RgStaffManualData: 'RgStaffManualData',
   RgCustomerVoice: 'RgCustomerVoice',
+  RgStaffMenuRecord: 'RgStaffMenuRecord',
   Store: 'Store',
   User: 'User',
   Session: 'Session',
@@ -419,7 +420,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "rgStore" | "rgMonthlyReport" | "rgStaffRecord" | "rgStoreTotals" | "rgStoreKpi" | "rgStaffManualData" | "rgCustomerVoice" | "store" | "user" | "session" | "account" | "verification" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "cronExecutionLog"
+    modelProps: "rgStore" | "rgMonthlyReport" | "rgStaffRecord" | "rgStoreTotals" | "rgStoreKpi" | "rgStaffManualData" | "rgCustomerVoice" | "rgStaffMenuRecord" | "store" | "user" | "session" | "account" | "verification" | "releaseNotes" | "tokens" | "googleAccessToken" | "roleMaster" | "userRole" | "chainMethodLock" | "calendar" | "cronExecutionLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -938,6 +939,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.RgCustomerVoiceCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.RgCustomerVoiceCountAggregateOutputType> | number
+        }
+      }
+    }
+    RgStaffMenuRecord: {
+      payload: Prisma.$RgStaffMenuRecordPayload<ExtArgs>
+      fields: Prisma.RgStaffMenuRecordFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RgStaffMenuRecordFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffMenuRecordPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RgStaffMenuRecordFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffMenuRecordPayload>
+        }
+        findFirst: {
+          args: Prisma.RgStaffMenuRecordFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffMenuRecordPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RgStaffMenuRecordFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffMenuRecordPayload>
+        }
+        findMany: {
+          args: Prisma.RgStaffMenuRecordFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffMenuRecordPayload>[]
+        }
+        create: {
+          args: Prisma.RgStaffMenuRecordCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffMenuRecordPayload>
+        }
+        createMany: {
+          args: Prisma.RgStaffMenuRecordCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RgStaffMenuRecordCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffMenuRecordPayload>[]
+        }
+        delete: {
+          args: Prisma.RgStaffMenuRecordDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffMenuRecordPayload>
+        }
+        update: {
+          args: Prisma.RgStaffMenuRecordUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffMenuRecordPayload>
+        }
+        deleteMany: {
+          args: Prisma.RgStaffMenuRecordDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RgStaffMenuRecordUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RgStaffMenuRecordUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffMenuRecordPayload>[]
+        }
+        upsert: {
+          args: Prisma.RgStaffMenuRecordUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RgStaffMenuRecordPayload>
+        }
+        aggregate: {
+          args: Prisma.RgStaffMenuRecordAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRgStaffMenuRecord>
+        }
+        groupBy: {
+          args: Prisma.RgStaffMenuRecordGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RgStaffMenuRecordGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RgStaffMenuRecordCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RgStaffMenuRecordCountAggregateOutputType> | number
         }
       }
     }
@@ -2051,6 +2126,23 @@ export const RgCustomerVoiceScalarFieldEnum = {
 export type RgCustomerVoiceScalarFieldEnum = (typeof RgCustomerVoiceScalarFieldEnum)[keyof typeof RgCustomerVoiceScalarFieldEnum]
 
 
+export const RgStaffMenuRecordScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  monthlyReportId: 'monthlyReportId',
+  staffName: 'staffName',
+  storeId: 'storeId',
+  menuCategory: 'menuCategory',
+  sales: 'sales',
+  customerCount: 'customerCount',
+  ratio: 'ratio',
+  unitPrice: 'unitPrice'
+} as const
+
+export type RgStaffMenuRecordScalarFieldEnum = (typeof RgStaffMenuRecordScalarFieldEnum)[keyof typeof RgStaffMenuRecordScalarFieldEnum]
+
+
 export const StoreScalarFieldEnum = {
   id: 'id',
   code: 'code',
@@ -2461,6 +2553,7 @@ export type GlobalOmitConfig = {
   rgStoreKpi?: Prisma.RgStoreKpiOmit
   rgStaffManualData?: Prisma.RgStaffManualDataOmit
   rgCustomerVoice?: Prisma.RgCustomerVoiceOmit
+  rgStaffMenuRecord?: Prisma.RgStaffMenuRecordOmit
   store?: Prisma.StoreOmit
   user?: Prisma.UserOmit
   session?: Prisma.SessionOmit
