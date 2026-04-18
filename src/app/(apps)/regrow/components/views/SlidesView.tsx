@@ -31,6 +31,7 @@ import {
 import type { MonthlyData, StoreName, YearMonth, StaffRecord, SlideViewMode, MenuCategory } from '../../types'
 import { MENU_CATEGORIES } from '../../types'
 import { formatYearMonth } from '../../lib/storage'
+import { formatDate } from '@cm/class/Days/date-utils/formatters'
 import Image from 'next/image'
 
 const TOTAL_SLIDES = 19
@@ -157,7 +158,7 @@ const calculateStaffCumulativeAverage = (
 const STORE_COLORS = ['#DC3545', '#4285F4', '#34A853', '#FF9800', '#9C27B0', '#00BCD4', '#795548', '#607D8B']
 
 export const SlidesView = () => {
-  const { monthlyData, stores: storesMaster } = useDataContext()
+  const { monthlyData, stores: storesMaster, scopes, updateReportUpdatedAt } = useDataContext()
   const allStores = storesMaster.map((s) => s.name)
 
   // グローバルな店舗フィルタ
@@ -255,7 +256,7 @@ export const SlidesView = () => {
     <Slide7AllMetricsComparison key="s7" {...commonProps} />,
     <Slide8StaffPerformanceTable key="s8" {...commonProps} />,
     <Slide9StaffUtilizationChart key="s9" {...commonProps} />,
-    // <SlideMenuCompositionChart key="s10" {...commonProps} />,
+    <SlideMenuCompositionChart key="s10" {...commonProps} />,
     <Slide10StaffAchievementTable key="s10a" {...commonProps} />,
     <Slide11StaffAchievementChart key="s11" {...commonProps} />,
     <Slide12StoreAchievementTable key="s12" {...commonProps} />,
@@ -296,13 +297,22 @@ export const SlidesView = () => {
               </button>
             </div>
 
-            {/* 全画面ボタン */}
-            <button
-              onClick={toggleFullscreen}
-              className="px-3 py-1.5 text-sm bg-gray-800 text-white rounded hover:bg-gray-700"
-            >
-              全画面
-            </button>
+            <div className="flex items-center gap-3">
+              {/* 最終更新日時 */}
+              <ReportUpdatedAtControl
+                reportUpdatedAt={monthlyData.reportUpdatedAt}
+                isAdmin={scopes.isAdmin}
+                onUpdate={updateReportUpdatedAt}
+              />
+
+              {/* 全画面ボタン */}
+              <button
+                onClick={toggleFullscreen}
+                className="px-3 py-1.5 text-sm bg-gray-800 text-white rounded hover:bg-gray-700"
+              >
+                全画面
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -453,6 +463,54 @@ export const SlidesView = () => {
   )
 }
 
+// 最終更新日時の表示と手動更新ボタン
+const ReportUpdatedAtControl = ({
+  reportUpdatedAt,
+  isAdmin,
+  onUpdate,
+}: {
+  reportUpdatedAt: Date | null
+  isAdmin: boolean
+  onUpdate: (date: Date | null) => Promise<void>
+}) => {
+  const handleSetNow = async () => {
+    if (!window.confirm('最終更新日時を現在時刻に更新しますか？')) return
+    await onUpdate(new Date())
+  }
+  const handleClear = async () => {
+    if (!window.confirm('最終更新日時をクリアしますか？')) return
+    await onUpdate(null)
+  }
+
+  const label = reportUpdatedAt
+    ? `最終更新: ${formatDate(reportUpdatedAt, 'YYYY/MM/DD HH:mm')}`
+    : '最終更新: 未設定'
+
+  return (
+    <div className="flex items-center gap-2 text-xs text-gray-600">
+      <span>{label}</span>
+      {isAdmin && (
+        <>
+          <button
+            onClick={handleSetNow}
+            className="px-2 py-1 text-xs bg-purple-600 text-white rounded hover:bg-purple-700"
+          >
+            今の時刻で更新
+          </button>
+          {reportUpdatedAt && (
+            <button
+              onClick={handleClear}
+              className="px-2 py-1 text-xs bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+            >
+              クリア
+            </button>
+          )}
+        </>
+      )}
+    </div>
+  )
+}
+
 // スライドコンテナ
 const SlideContainer = ({ slideNumber, children, isFullscreen = false }: { slideNumber: number; children: React.ReactNode; isFullscreen?: boolean }) => {
   return (
@@ -495,7 +553,7 @@ const filterStaffList = (
 // ============================================================
 
 const Slide1TitleSlide = () => {
-  const { currentYearMonth } = useDataContext()
+  const { currentYearMonth, monthlyData } = useDataContext()
   const year = currentYearMonth.split('-')[0]
   const month = parseInt(currentYearMonth.split('-')[1])
 
@@ -505,7 +563,11 @@ const Slide1TitleSlide = () => {
       <p className="text-3xl  ">ReGrow × relaxation villa</p>
       <h1 className="text-5xl font-bold mb-4">月次業績レポート</h1>
       <p className="text-2xl">{year}年{month}月</p>
-
+      {monthlyData.reportUpdatedAt && (
+        <p className="text-base text-gray-300 mt-4">
+          最終更新: {formatDate(monthlyData.reportUpdatedAt, 'YYYY年MM月DD日')}
+        </p>
+      )}
     </div>
   )
 }
@@ -2136,7 +2198,18 @@ const SlideMenuCompositionChart = ({ selectedStores, selectedStaffNames }: Store
                 )
               }}
             />
-            <Legend />
+            <Legend
+              content={() => (
+                <div className="flex justify-center gap-4 mt-2 text-sm flex-wrap">
+                  {MENU_CATEGORIES.map((category) => (
+                    <span key={category} className="flex items-center gap-1">
+                      <span style={{ display: 'inline-block', width: 12, height: 12, background: MENU_COLORS[category] }} />
+                      {category}
+                    </span>
+                  ))}
+                </div>
+              )}
+            />
             {MENU_CATEGORIES.map((category) => (
               <Bar key={category} dataKey={category} stackId="menu" fill={MENU_COLORS[category]} name={category}>
                 <LabelList

@@ -114,6 +114,7 @@ export class RegrowMonthlyReportService {
       },
       createdAt: report.createdAt,
       updatedAt: report.updatedAt ?? report.createdAt,
+      reportUpdatedAt: report.reportUpdatedAt ?? null,
     }
   }
 
@@ -529,6 +530,17 @@ export class RegrowMonthlyReportService {
       where: {monthlyReportId: report.id},
       create: {monthlyReportId: report.id, content},
       update: {content},
+    })
+  }
+
+  /**
+   * 手動設定の最終更新日時を保存する（null でクリア）
+   */
+  static async saveReportUpdatedAt(yearMonth: string, date: Date | null): Promise<void> {
+    const report = await RegrowMonthlyReportService.upsertMonthlyReport(yearMonth)
+    await prisma.rgMonthlyReport.update({
+      where: {id: report.id},
+      data: {reportUpdatedAt: date},
     })
   }
 }

@@ -18,6 +18,7 @@ export const createEmptyMonthlyData = (yearMonth: YearMonth): MonthlyData => {
     },
     createdAt: new Date(),
     updatedAt: new Date(),
+    reportUpdatedAt: null,
   }
 }
 

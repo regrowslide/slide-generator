@@ -132,6 +132,7 @@ export type MonthlyData = {
   manualData: ManualData
   createdAt: Date
   updatedAt: Date
+  reportUpdatedAt: Date | null
 }
 
 // ============================================================

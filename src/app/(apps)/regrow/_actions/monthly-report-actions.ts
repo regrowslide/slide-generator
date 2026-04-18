@@ -60,6 +60,15 @@ export const saveStaffManualData = async (
 export const saveCustomerVoice = async (yearMonth: string, content: string): Promise<void> =>
   RegrowMonthlyReportService.saveCustomerVoice(yearMonth, content)
 
+export const saveReportUpdatedAt = async (yearMonth: string, date: Date | null): Promise<void> => {
+  const {session} = await sessionOnServer()
+  const {roles} = await fetchUserRole({session})
+  const scopes = getScopes(session ?? {}, {roles})
+  const {isAdmin} = scopes.getRegrowScopes()
+  if (!isAdmin) throw new Error('管理者のみ最終更新日時を変更できます')
+  await RegrowMonthlyReportService.saveReportUpdatedAt(yearMonth, date)
+}
+
 // ============================================================
 // 売上振替（isDev限定）
 // ============================================================

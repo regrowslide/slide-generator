@@ -322,6 +322,20 @@
           "isUpdatedAt": false
         },
         {
+          "name": "reportUpdatedAt",
+          "kind": "scalar",
+          "isList": false,
+          "isRequired": false,
+          "isUnique": false,
+          "isId": false,
+          "isReadOnly": false,
+          "hasDefaultValue": false,
+          "type": "DateTime",
+          "nativeType": null,
+          "isGenerated": false,
+          "isUpdatedAt": false
+        },
+        {
           "name": "RgStaffRecord",
           "kind": "object",
           "isList": true,

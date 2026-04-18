@@ -109,7 +109,8 @@ export const RgMonthlyReportScalarFieldEnum = {
   sortOrder: 'sortOrder',
   yearMonth: 'yearMonth',
   importedAt: 'importedAt',
-  importedFileName: 'importedFileName'
+  importedFileName: 'importedFileName',
+  reportUpdatedAt: 'reportUpdatedAt'
 } as const
 
 export type RgMonthlyReportScalarFieldEnum = (typeof RgMonthlyReportScalarFieldEnum)[keyof typeof RgMonthlyReportScalarFieldEnum]

@@ -25,6 +25,7 @@ model RgMonthlyReport {
   yearMonth        String // "2026-02"
   importedAt       DateTime?
   importedFileName String?
+  reportUpdatedAt  DateTime? // 手動設定の最終更新日時（UTC保存）
 
   RgStaffRecord     RgStaffRecord[]
   RgStoreTotals     RgStoreTotals[]

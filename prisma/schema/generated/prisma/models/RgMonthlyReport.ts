@@ -44,6 +44,7 @@ export type RgMonthlyReportMinAggregateOutputType = {
   yearMonth: string | null
   importedAt: Date | null
   importedFileName: string | null
+  reportUpdatedAt: Date | null
 }
 
 export type RgMonthlyReportMaxAggregateOutputType = {
@@ -54,6 +55,7 @@ export type RgMonthlyReportMaxAggregateOutputType = {
   yearMonth: string | null
   importedAt: Date | null
   importedFileName: string | null
+  reportUpdatedAt: Date | null
 }
 
 export type RgMonthlyReportCountAggregateOutputType = {
@@ -64,6 +66,7 @@ export type RgMonthlyReportCountAggregateOutputType = {
   yearMonth: number
   importedAt: number
   importedFileName: number
+  reportUpdatedAt: number
   _all: number
 }
 
@@ -86,6 +89,7 @@ export type RgMonthlyReportMinAggregateInputType = {
   yearMonth?: true
   importedAt?: true
   importedFileName?: true
+  reportUpdatedAt?: true
 }
 
 export type RgMonthlyReportMaxAggregateInputType = {
@@ -96,6 +100,7 @@ export type RgMonthlyReportMaxAggregateInputType = {
   yearMonth?: true
   importedAt?: true
   importedFileName?: true
+  reportUpdatedAt?: true
 }
 
 export type RgMonthlyReportCountAggregateInputType = {
@@ -106,6 +111,7 @@ export type RgMonthlyReportCountAggregateInputType = {
   yearMonth?: true
   importedAt?: true
   importedFileName?: true
+  reportUpdatedAt?: true
   _all?: true
 }
 
@@ -203,6 +209,7 @@ export type RgMonthlyReportGroupByOutputType = {
   yearMonth: string
   importedAt: Date | null
   importedFileName: string | null
+  reportUpdatedAt: Date | null
   _count: RgMonthlyReportCountAggregateOutputType | null
   _avg: RgMonthlyReportAvgAggregateOutputType | null
   _sum: RgMonthlyReportSumAggregateOutputType | null
@@ -236,6 +243,7 @@ export type RgMonthlyReportWhereInput = {
   yearMonth?: Prisma.StringFilter<"RgMonthlyReport"> | string
   importedAt?: Prisma.DateTimeNullableFilter<"RgMonthlyReport"> | Date | string | null
   importedFileName?: Prisma.StringNullableFilter<"RgMonthlyReport"> | string | null
+  reportUpdatedAt?: Prisma.DateTimeNullableFilter<"RgMonthlyReport"> | Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordListRelationFilter
   RgStoreTotals?: Prisma.RgStoreTotalsListRelationFilter
   RgStoreKpi?: Prisma.RgStoreKpiListRelationFilter
@@ -252,6 +260,7 @@ export type RgMonthlyReportOrderByWithRelationInput = {
   yearMonth?: Prisma.SortOrder
   importedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   importedFileName?: Prisma.SortOrderInput | Prisma.SortOrder
+  reportUpdatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   RgStaffRecord?: Prisma.RgStaffRecordOrderByRelationAggregateInput
   RgStoreTotals?: Prisma.RgStoreTotalsOrderByRelationAggregateInput
   RgStoreKpi?: Prisma.RgStoreKpiOrderByRelationAggregateInput
@@ -271,6 +280,7 @@ export type RgMonthlyReportWhereUniqueInput = Prisma.AtLeast<{
   sortOrder?: Prisma.FloatFilter<"RgMonthlyReport"> | number
   importedAt?: Prisma.DateTimeNullableFilter<"RgMonthlyReport"> | Date | string | null
   importedFileName?: Prisma.StringNullableFilter<"RgMonthlyReport"> | string | null
+  reportUpdatedAt?: Prisma.DateTimeNullableFilter<"RgMonthlyReport"> | Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordListRelationFilter
   RgStoreTotals?: Prisma.RgStoreTotalsListRelationFilter
   RgStoreKpi?: Prisma.RgStoreKpiListRelationFilter
@@ -287,6 +297,7 @@ export type RgMonthlyReportOrderByWithAggregationInput = {
   yearMonth?: Prisma.SortOrder
   importedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   importedFileName?: Prisma.SortOrderInput | Prisma.SortOrder
+  reportUpdatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.RgMonthlyReportCountOrderByAggregateInput
   _avg?: Prisma.RgMonthlyReportAvgOrderByAggregateInput
   _max?: Prisma.RgMonthlyReportMaxOrderByAggregateInput
@@ -305,6 +316,7 @@ export type RgMonthlyReportScalarWhereWithAggregatesInput = {
   yearMonth?: Prisma.StringWithAggregatesFilter<"RgMonthlyReport"> | string
   importedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"RgMonthlyReport"> | Date | string | null
   importedFileName?: Prisma.StringNullableWithAggregatesFilter<"RgMonthlyReport"> | string | null
+  reportUpdatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"RgMonthlyReport"> | Date | string | null
 }
 
 export type RgMonthlyReportCreateInput = {
@@ -314,6 +326,7 @@ export type RgMonthlyReportCreateInput = {
   yearMonth: string
   importedAt?: Date | string | null
   importedFileName?: string | null
+  reportUpdatedAt?: Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreTotals?: Prisma.RgStoreTotalsCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgMonthlyReportInput
@@ -330,6 +343,7 @@ export type RgMonthlyReportUncheckedCreateInput = {
   yearMonth: string
   importedAt?: Date | string | null
   importedFileName?: string | null
+  reportUpdatedAt?: Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgMonthlyReportInput
@@ -345,6 +359,7 @@ export type RgMonthlyReportUpdateInput = {
   yearMonth?: Prisma.StringFieldUpdateOperationsInput | string
   importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   importedFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reportUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreTotals?: Prisma.RgStoreTotalsUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgMonthlyReportNestedInput
@@ -361,6 +376,7 @@ export type RgMonthlyReportUncheckedUpdateInput = {
   yearMonth?: Prisma.StringFieldUpdateOperationsInput | string
   importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   importedFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reportUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
@@ -377,6 +393,7 @@ export type RgMonthlyReportCreateManyInput = {
   yearMonth: string
   importedAt?: Date | string | null
   importedFileName?: string | null
+  reportUpdatedAt?: Date | string | null
 }
 
 export type RgMonthlyReportUpdateManyMutationInput = {
@@ -386,6 +403,7 @@ export type RgMonthlyReportUpdateManyMutationInput = {
   yearMonth?: Prisma.StringFieldUpdateOperationsInput | string
   importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   importedFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reportUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type RgMonthlyReportUncheckedUpdateManyInput = {
@@ -396,6 +414,7 @@ export type RgMonthlyReportUncheckedUpdateManyInput = {
   yearMonth?: Prisma.StringFieldUpdateOperationsInput | string
   importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   importedFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reportUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type RgMonthlyReportCountOrderByAggregateInput = {
@@ -406,6 +425,7 @@ export type RgMonthlyReportCountOrderByAggregateInput = {
   yearMonth?: Prisma.SortOrder
   importedAt?: Prisma.SortOrder
   importedFileName?: Prisma.SortOrder
+  reportUpdatedAt?: Prisma.SortOrder
 }
 
 export type RgMonthlyReportAvgOrderByAggregateInput = {
@@ -421,6 +441,7 @@ export type RgMonthlyReportMaxOrderByAggregateInput = {
   yearMonth?: Prisma.SortOrder
   importedAt?: Prisma.SortOrder
   importedFileName?: Prisma.SortOrder
+  reportUpdatedAt?: Prisma.SortOrder
 }
 
 export type RgMonthlyReportMinOrderByAggregateInput = {
@@ -431,6 +452,7 @@ export type RgMonthlyReportMinOrderByAggregateInput = {
   yearMonth?: Prisma.SortOrder
   importedAt?: Prisma.SortOrder
   importedFileName?: Prisma.SortOrder
+  reportUpdatedAt?: Prisma.SortOrder
 }
 
 export type RgMonthlyReportSumOrderByAggregateInput = {
@@ -538,6 +560,7 @@ export type RgMonthlyReportCreateWithoutRgStaffRecordInput = {
   yearMonth: string
   importedAt?: Date | string | null
   importedFileName?: string | null
+  reportUpdatedAt?: Date | string | null
   RgStoreTotals?: Prisma.RgStoreTotalsCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgMonthlyReportInput
   RgStaffManualData?: Prisma.RgStaffManualDataCreateNestedManyWithoutRgMonthlyReportInput
@@ -553,6 +576,7 @@ export type RgMonthlyReportUncheckedCreateWithoutRgStaffRecordInput = {
   yearMonth: string
   importedAt?: Date | string | null
   importedFileName?: string | null
+  reportUpdatedAt?: Date | string | null
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutRgMonthlyReportInput
@@ -583,6 +607,7 @@ export type RgMonthlyReportUpdateWithoutRgStaffRecordInput = {
   yearMonth?: Prisma.StringFieldUpdateOperationsInput | string
   importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   importedFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reportUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   RgStoreTotals?: Prisma.RgStoreTotalsUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgMonthlyReportNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUpdateManyWithoutRgMonthlyReportNestedInput
@@ -598,6 +623,7 @@ export type RgMonthlyReportUncheckedUpdateWithoutRgStaffRecordInput = {
   yearMonth?: Prisma.StringFieldUpdateOperationsInput | string
   importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   importedFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reportUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
@@ -612,6 +638,7 @@ export type RgMonthlyReportCreateWithoutRgStoreTotalsInput = {
   yearMonth: string
   importedAt?: Date | string | null
   importedFileName?: string | null
+  reportUpdatedAt?: Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgMonthlyReportInput
   RgStaffManualData?: Prisma.RgStaffManualDataCreateNestedManyWithoutRgMonthlyReportInput
@@ -627,6 +654,7 @@ export type RgMonthlyReportUncheckedCreateWithoutRgStoreTotalsInput = {
   yearMonth: string
   importedAt?: Date | string | null
   importedFileName?: string | null
+  reportUpdatedAt?: Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutRgMonthlyReportInput
@@ -657,6 +685,7 @@ export type RgMonthlyReportUpdateWithoutRgStoreTotalsInput = {
   yearMonth?: Prisma.StringFieldUpdateOperationsInput | string
   importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   importedFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reportUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgMonthlyReportNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUpdateManyWithoutRgMonthlyReportNestedInput
@@ -672,6 +701,7 @@ export type RgMonthlyReportUncheckedUpdateWithoutRgStoreTotalsInput = {
   yearMonth?: Prisma.StringFieldUpdateOperationsInput | string
   importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   importedFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reportUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
@@ -686,6 +716,7 @@ export type RgMonthlyReportCreateWithoutRgStoreKpiInput = {
   yearMonth: string
   importedAt?: Date | string | null
   importedFileName?: string | null
+  reportUpdatedAt?: Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreTotals?: Prisma.RgStoreTotalsCreateNestedManyWithoutRgMonthlyReportInput
   RgStaffManualData?: Prisma.RgStaffManualDataCreateNestedManyWithoutRgMonthlyReportInput
@@ -701,6 +732,7 @@ export type RgMonthlyReportUncheckedCreateWithoutRgStoreKpiInput = {
   yearMonth: string
   importedAt?: Date | string | null
   importedFileName?: string | null
+  reportUpdatedAt?: Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedCreateNestedManyWithoutRgMonthlyReportInput
@@ -731,6 +763,7 @@ export type RgMonthlyReportUpdateWithoutRgStoreKpiInput = {
   yearMonth?: Prisma.StringFieldUpdateOperationsInput | string
   importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   importedFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reportUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreTotals?: Prisma.RgStoreTotalsUpdateManyWithoutRgMonthlyReportNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUpdateManyWithoutRgMonthlyReportNestedInput
@@ -746,6 +779,7 @@ export type RgMonthlyReportUncheckedUpdateWithoutRgStoreKpiInput = {
   yearMonth?: Prisma.StringFieldUpdateOperationsInput | string
   importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   importedFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reportUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStaffManualData?: Prisma.RgStaffManualDataUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
@@ -760,6 +794,7 @@ export type RgMonthlyReportCreateWithoutRgStaffManualDataInput = {
   yearMonth: string
   importedAt?: Date | string | null
   importedFileName?: string | null
+  reportUpdatedAt?: Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreTotals?: Prisma.RgStoreTotalsCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgMonthlyReportInput
@@ -775,6 +810,7 @@ export type RgMonthlyReportUncheckedCreateWithoutRgStaffManualDataInput = {
   yearMonth: string
   importedAt?: Date | string | null
   importedFileName?: string | null
+  reportUpdatedAt?: Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgMonthlyReportInput
@@ -805,6 +841,7 @@ export type RgMonthlyReportUpdateWithoutRgStaffManualDataInput = {
   yearMonth?: Prisma.StringFieldUpdateOperationsInput | string
   importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   importedFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reportUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreTotals?: Prisma.RgStoreTotalsUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgMonthlyReportNestedInput
@@ -820,6 +857,7 @@ export type RgMonthlyReportUncheckedUpdateWithoutRgStaffManualDataInput = {
   yearMonth?: Prisma.StringFieldUpdateOperationsInput | string
   importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   importedFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reportUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
@@ -834,6 +872,7 @@ export type RgMonthlyReportCreateWithoutRgCustomerVoiceInput = {
   yearMonth: string
   importedAt?: Date | string | null
   importedFileName?: string | null
+  reportUpdatedAt?: Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreTotals?: Prisma.RgStoreTotalsCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgMonthlyReportInput
@@ -849,6 +888,7 @@ export type RgMonthlyReportUncheckedCreateWithoutRgCustomerVoiceInput = {
   yearMonth: string
   importedAt?: Date | string | null
   importedFileName?: string | null
+  reportUpdatedAt?: Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgMonthlyReportInput
@@ -879,6 +919,7 @@ export type RgMonthlyReportUpdateWithoutRgCustomerVoiceInput = {
   yearMonth?: Prisma.StringFieldUpdateOperationsInput | string
   importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   importedFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reportUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreTotals?: Prisma.RgStoreTotalsUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgMonthlyReportNestedInput
@@ -894,6 +935,7 @@ export type RgMonthlyReportUncheckedUpdateWithoutRgCustomerVoiceInput = {
   yearMonth?: Prisma.StringFieldUpdateOperationsInput | string
   importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   importedFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reportUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
@@ -908,6 +950,7 @@ export type RgMonthlyReportCreateWithoutRgStaffMenuRecordInput = {
   yearMonth: string
   importedAt?: Date | string | null
   importedFileName?: string | null
+  reportUpdatedAt?: Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreTotals?: Prisma.RgStoreTotalsCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreKpi?: Prisma.RgStoreKpiCreateNestedManyWithoutRgMonthlyReportInput
@@ -923,6 +966,7 @@ export type RgMonthlyReportUncheckedCreateWithoutRgStaffMenuRecordInput = {
   yearMonth: string
   importedAt?: Date | string | null
   importedFileName?: string | null
+  reportUpdatedAt?: Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedCreateNestedManyWithoutRgMonthlyReportInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedCreateNestedManyWithoutRgMonthlyReportInput
@@ -953,6 +997,7 @@ export type RgMonthlyReportUpdateWithoutRgStaffMenuRecordInput = {
   yearMonth?: Prisma.StringFieldUpdateOperationsInput | string
   importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   importedFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reportUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreTotals?: Prisma.RgStoreTotalsUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUpdateManyWithoutRgMonthlyReportNestedInput
@@ -968,6 +1013,7 @@ export type RgMonthlyReportUncheckedUpdateWithoutRgStaffMenuRecordInput = {
   yearMonth?: Prisma.StringFieldUpdateOperationsInput | string
   importedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   importedFileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reportUpdatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   RgStaffRecord?: Prisma.RgStaffRecordUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreTotals?: Prisma.RgStoreTotalsUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
   RgStoreKpi?: Prisma.RgStoreKpiUncheckedUpdateManyWithoutRgMonthlyReportNestedInput
@@ -1059,6 +1105,7 @@ export type RgMonthlyReportSelect<ExtArgs extends runtime.Types.Extensions.Inter
   yearMonth?: boolean
   importedAt?: boolean
   importedFileName?: boolean
+  reportUpdatedAt?: boolean
   RgStaffRecord?: boolean | Prisma.RgMonthlyReport$RgStaffRecordArgs<ExtArgs>
   RgStoreTotals?: boolean | Prisma.RgMonthlyReport$RgStoreTotalsArgs<ExtArgs>
   RgStoreKpi?: boolean | Prisma.RgMonthlyReport$RgStoreKpiArgs<ExtArgs>
@@ -1076,6 +1123,7 @@ export type RgMonthlyReportSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   yearMonth?: boolean
   importedAt?: boolean
   importedFileName?: boolean
+  reportUpdatedAt?: boolean
 }, ExtArgs["result"]["rgMonthlyReport"]>
 
 export type RgMonthlyReportSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1086,6 +1134,7 @@ export type RgMonthlyReportSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   yearMonth?: boolean
   importedAt?: boolean
   importedFileName?: boolean
+  reportUpdatedAt?: boolean
 }, ExtArgs["result"]["rgMonthlyReport"]>
 
 export type RgMonthlyReportSelectScalar = {
@@ -1096,9 +1145,10 @@ export type RgMonthlyReportSelectScalar = {
   yearMonth?: boolean
   importedAt?: boolean
   importedFileName?: boolean
+  reportUpdatedAt?: boolean
 }
 
-export type RgMonthlyReportOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "yearMonth" | "importedAt" | "importedFileName", ExtArgs["result"]["rgMonthlyReport"]>
+export type RgMonthlyReportOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "sortOrder" | "yearMonth" | "importedAt" | "importedFileName" | "reportUpdatedAt", ExtArgs["result"]["rgMonthlyReport"]>
 export type RgMonthlyReportInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   RgStaffRecord?: boolean | Prisma.RgMonthlyReport$RgStaffRecordArgs<ExtArgs>
   RgStoreTotals?: boolean | Prisma.RgMonthlyReport$RgStoreTotalsArgs<ExtArgs>
@@ -1129,6 +1179,7 @@ export type $RgMonthlyReportPayload<ExtArgs extends runtime.Types.Extensions.Int
     yearMonth: string
     importedAt: Date | null
     importedFileName: string | null
+    reportUpdatedAt: Date | null
   }, ExtArgs["result"]["rgMonthlyReport"]>
   composites: {}
 }
@@ -1565,6 +1616,7 @@ export interface RgMonthlyReportFieldRefs {
   readonly yearMonth: Prisma.FieldRef<"RgMonthlyReport", 'String'>
   readonly importedAt: Prisma.FieldRef<"RgMonthlyReport", 'DateTime'>
   readonly importedFileName: Prisma.FieldRef<"RgMonthlyReport", 'String'>
+  readonly reportUpdatedAt: Prisma.FieldRef<"RgMonthlyReport", 'DateTime'>
 }
     
 

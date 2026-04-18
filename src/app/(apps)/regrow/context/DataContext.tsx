@@ -19,6 +19,7 @@ import {
   saveCustomerVoice,
   upsertMonthlyReport,
   transferStaffToStore,
+  saveReportUpdatedAt,
 } from '../_actions/monthly-report-actions'
 import {getStaffMaster} from '../_actions/staff-actions'
 
@@ -53,6 +54,9 @@ export type DataContextType = {
   updateStoreKpi: (storeName: StoreName, updates: Partial<StoreKpi>) => void
   updateStaffManualData: (staffName: string, storeName: StoreName, storeId: number, updates: Partial<StaffManualData>) => void
   updateCustomerVoice: (content: string) => void
+
+  // 最終更新日時を手動設定
+  updateReportUpdatedAt: (date: Date | null) => Promise<void>
 
   // スタッフマスタ
   staffMaster: StaffMaster[]
@@ -385,6 +389,15 @@ export const DataContextProvider = ({
     [updateMonthlyData, currentYearMonth]
   )
 
+  // 最終更新日時を手動設定（null でクリア）
+  const updateReportUpdatedAt = useCallback(
+    async (date: Date | null) => {
+      updateMonthlyData((prev) => ({...prev, reportUpdatedAt: date}))
+      await saveReportUpdatedAt(currentYearMonth, date)
+    },
+    [updateMonthlyData, currentYearMonth]
+  )
+
   // 売上振替（isDev限定）
   const transferStaff = useCallback(
     async (staffName: string, fromStoreId: number, toStoreId: number) => {
@@ -436,6 +449,7 @@ export const DataContextProvider = ({
         updateStoreKpi,
         updateStaffManualData,
         updateCustomerVoice,
+        updateReportUpdatedAt,
         staffMaster,
         refreshStaffMaster,
         stores,
